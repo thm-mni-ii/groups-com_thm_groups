@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="THM-Groups - List View">
+		<message>
+			<![CDATA[THM_GROUPS_LIST_DESC]]>
+		</message>
+	</layout>
+	<fields name="params">
+		<fieldset name="basic">
+			<field addfieldpath="/administrator/components/com_thm_groups/elements/" name="selGroup" type="groupitemselect" label="Select Group" description="Select a Group which should be displayed!" />	
+			<field name="showAll" type="radio" label="Show all Names" default="1" description="Alle Namen werden auf einer Seite angezeigt, sonst nur ein Buchstabe">
+				<option value="0">No</option>
+				<option value="1">Yes</option>
+			</field>
+		</fieldset>
+		<fieldset name="advanced">
+			<field name="spacer1" type="spacer" label="&lt;span style=&quot;width:474px;display:block;font-weight:bold&quot;&gt;Standard color for Alphabet Chars &lt;/span&gt;" />
+			<field addfieldpath="/administrator/components/com_thm_groups/elements/" name="alphabet_exists_color" id="alphabet_exists_color" type="alphabetColor" label="Background color" description="Select the background color for the existing chars in the alphabet" />	
+			<field addfieldpath="/administrator/components/com_thm_groups/elements/" name="alphabet_exists_font_color" id="alphabet_exists_font_color" type="alphabetColor" label="Font Color" description="Select the background color for the existing chars in the alphabet" />	
+			<field name="spacer2" type="spacer" label="&lt;span style=&quot;width:474px;display:block;font-weight:bold&quot;&gt;Inactive color for Alphabet Chars &lt;/span&gt;" />
+			<field addfieldpath="/administrator/components/com_thm_groups/elements/" name="alphabet_inactive_color" type="alphabetColor" label="Background color" description="Select the background color for the existing chars in the alphabet" />	
+			<field addfieldpath="/administrator/components/com_thm_groups/elements/" name="alphabet_inactive_font_color" type="alphabetColor" label="Font Color" description="Select the background color for the existing chars in the alphabet" />	
+			<field name="spacer3" type="spacer" label="&lt;span style=&quot;width:474px;display:block;font-weight:bold&quot;&gt;Active color for Alphabet Chars &lt;/span&gt;" />
+			<field addfieldpath="/administrator/components/com_thm_groups/elements/" name="alphabet_active_color" type="alphabetColor" label="Background color" description="Select the background color for the existing chars in the alphabet" />	
+			<field addfieldpath="/administrator/components/com_thm_groups/elements/" name="alphabet_active_font_color" type="alphabetColor" label="Font Color" description="Select the background color for the existing chars in the alphabet" />	
+			<field name="spacer4" type="spacer" label="&lt;span style=&quot;width:474px;display:block;font-weight:bold&quot;&gt;Spacing of Elements &lt;/span&gt;" />			
+			<field name="lineSpacing" type="text" label="Names Spacing in px" default="1" description="Names Spacing in px"  />
+			<field name="zSpacing" type="text" label="Line Spacing in px" default="1" description="Line Spacing in px" />
+		</fieldset>
+	</fields>
+</metadata>
+	
+	
+						
