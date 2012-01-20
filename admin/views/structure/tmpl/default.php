@@ -28,10 +28,10 @@ $saveOrder	= $listOrder == 'a.order';
 					<input type="checkbox" name="checkall-toggle" value="" onclick="checkAll(this)" />
 				</th>
 				<th width="44%">
-					<?php echo JHtml::_('grid.sort', 'COM_THM_STRUCTURE_HEADING_FIELD', 'a.field', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort', 'COM_THM_GROUPS_STRUCTURE_HEADING_FIELD', 'a.field', $listDirn, $listOrder); ?>
 				</th>
 				<th width="44%">
-					<?php echo JHtml::_('grid.sort', 'COM_THM_STRUCTURE_HEADING_TYPE', 'a.type', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort', 'COM_THM_GROUPS_STRUCTURE_HEADING_TYPE', 'a.type', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%">
 					<?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ORDERING', 'a.order', $listDirn, $listOrder); ?>
@@ -63,10 +63,10 @@ $saveOrder	= $listOrder == 'a.order';
 					<?php echo JHtml::_('grid.id', $i, $item->id); ?>
 				</td>
 				<td align="center">
-					<?php 
-						if($item->id<5)
-							echo $item->field; 
-						else 
+					<?php
+						if($item->id<7)
+							echo $item->field;
+						else
 							echo "<a href='$link'>".$item->field."</a>";
 					?>
 				</td>

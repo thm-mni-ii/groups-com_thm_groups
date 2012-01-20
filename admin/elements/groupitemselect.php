@@ -17,7 +17,9 @@
 defined('_JEXEC') or die( 'Restricted access' );
 
 jimport('joomla.html.html');
-jimport('joomla.form.formfield'); 
+jimport('joomla.form.formfield');
+
+require_once(JPATH_BASE.DS.'components'.DS.'com_thm_groups'.DS.'classes'.DS.'SQLAbstractionLayer.php');
 
 class JFormFieldGroupItemSelect extends JFormField {
 	/**
@@ -28,29 +30,39 @@ class JFormFieldGroupItemSelect extends JFormField {
 	 */
 
 	function getInput() {
-        $queryGroup="SELECT id,name FROM `#__thm_groups_groups` Order by name";
         $db =& JFactory::getDBO();
-        $db->setQuery($queryGroup);
-        $listG= $db->loadObjectList();
-        $html='<select name="'.$this->name.'" size="5" id="'.$this->name.'" onchange="getGroupItemSelect(this.value)" class = "selGroup" style="display:block"">';
-        	foreach($listG as $groupRow){
-          		if($groupRow->id==$this->value){
-          			$query = 'SELECT distinct id FROM `#__thm_groups_roles`,`#__thm_groups_groups_map` WHERE id=rid and gid='.$groupRow->id . ' Order By id';
-          			$db->setQuery($query);
-          			$listR[$groupRow->id]= $db->loadObjectList();
-          			$listR[$groupRow->id]['groupid']=$groupRow->id;
-          			$html.='<option value='.$groupRow->id.' selected="selected" >'.$groupRow->name.' </option>';
+		$SQLAL = new SQLAbstractionLayer;
 
-          		}
-          		else{
-          			$query = 'SELECT distinct id, name FROM `#__thm_groups_roles`,`#__thm_groups_groups_map` WHERE id=rid and gid='.$groupRow->id . ' Order By id';
-          			$db->setQuery($query);
-          			$listR[$groupRow->id]= $db->loadObjectList();
-          			$listR[$groupRow->id]['groupid']=$groupRow->id;
-          			$html.='<option value='.$groupRow->id.'>'.$groupRow->name.'</option>';
-          		}
-      		}
-      	$html.='</select>';
+		$groups = $SQLAL->getGroupsHirarchy();
+		$jgroups = $SQLAL->getJoomlaGroups();
+		$injoomla = false;
+		$wasinjoomla = false;
+		$selectOptions = array();
+		foreach($groups as $group){
+      		$query = 'SELECT distinct id, name FROM `#__thm_groups_roles`,`#__thm_groups_groups_map` WHERE id=rid and gid='.$group->id . ' Order By id';
+      		$db->setQuery($query);
+  			$listR[$group->id]= $db->loadObjectList();
+  			$listR[$group->id]['groupid']=$group->id;
+
+			$injoomla = $group->injoomla == 1 ? true : false;
+			if ($injoomla != $wasinjoomla) {
+				$selectOptions[] = JHTML::_('select.option', -1, '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -', 'value', 'text', true);
+			}
+			//finde die Anzahl der parents
+			$tempgroup=$group;
+			$hirarchy = "";
+			while($tempgroup->parent_id != 0){
+				$hirarchy .= "- ";
+				foreach($jgroups as $actualgroup){
+					if( $tempgroup->parent_id == $actualgroup->id ){
+						$tempgroup = $actualgroup;
+					}
+				}
+			}
+			$selectOptions[] = JHTML::_('select.option', $group->id, $hirarchy.$group->name );
+			$wasinjoomla = $injoomla;
+		}
+        $html = JHTML::_('select.genericlist', $selectOptions, $this->name, 'size="1" onchange="getGroupItemSelect(this.value)" class = "selGroup" style="display:block"', 'value', 'text', $this->value);
 
       	// alle Rollen in Hidden-Felder schreiben, um Selectbox immer wieder zu füllen
       	$query = 'SELECT id, name FROM `#__thm_groups_roles` Order By name';

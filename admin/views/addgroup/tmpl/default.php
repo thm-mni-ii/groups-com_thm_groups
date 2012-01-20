@@ -16,7 +16,7 @@
  * @link     http://www.mni.fh-giessen.de
  **/
 defined('_JEXEC') or die ('Restricted access');
-JHTML::_('behavior.modal', 'a.modal-button');	
+JHTML::_('behavior.modal', 'a.modal-button');
 // Include database class
 require_once(JPATH_COMPONENT_ADMINISTRATOR.DS.'classes'.DS.'SQLAbstractionLayer.php');
 ?>
@@ -41,11 +41,45 @@ require_once(JPATH_COMPONENT_ADMINISTRATOR.DS.'classes'.DS.'SQLAbstractionLayer.
 				<tr>
 					<td width="110" class="key">
 						<label for="title">
+	  						<?php echo JText::_( 'PARENT' ); ?>:
+						</label>
+					</td>
+					<td>
+						<select name="gr_parent">
+							<?php
+								$gap = 0;
+								foreach($this->groups as $group){
+									//finde die Anzahl der parents
+									$tempgroup=$group;
+									$gap=0;
+									while($tempgroup->parent_id != 0)
+									{
+										$gap++;
+										foreach($this->groups as $actualgroup)
+											if( $tempgroup->parent_id == $actualgroup->id )
+												$tempgroup = $actualgroup;
+									}
+	            					echo "<option value=$group->id>";
+	            					while($gap > 0) {
+	            						$gap--;
+	            						echo "- ";
+	            					}
+	            					echo "$group->title </option>";
+	            				}
+            				?>
+
+        				</select>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="110" class="key">
+						<label for="title">
 	  						<?php echo JText::_( 'INFO' ); ?>:
 						</label>
 					</td>
 					<td>
-						<textarea rows='10' name='gr_info' id='gr_info'></textarea>
+						<?php echo $this->form->getInput('groupinfo'); //<textarea rows='10' name='gr_info' id='gr_info'></textarea> ?>
 					</td>
 				</tr>
 				<tr>
@@ -58,7 +92,7 @@ require_once(JPATH_COMPONENT_ADMINISTRATOR.DS.'classes'.DS.'SQLAbstractionLayer.
 						<img src='../components/com_thm_groups/img/portraits/anonym.jpg' />
 						<input type='file' accept='image' name='gr_picture' id='gr_picture' />
 					</td>
-				</tr>	
+				</tr>
 				<tr>
 					<td width="110" class="key">
 						<label for="title">

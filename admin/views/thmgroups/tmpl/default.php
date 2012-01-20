@@ -28,9 +28,7 @@ $document->addStyleSheet("components/com_thm_groups/css/thmgroups/thmgroups.css"
 
 <div class="descriptiontext">
 	<p>
-		Diese Komponente dient zur Darstellung von erstellten Benutzergruppen und ihren zugeh&ouml;rigen Rollen.
-		Diese Komponente dient zur Darstellung von erstellten Benutzergruppen und ihren zugeh&ouml;rigen Rollen.
-		Diese Komponente dient zur Darstellung von erstellten Benutzergruppen und ihren zugeh&ouml;rigen Rollen.
+		<?php echo JText::_( 'COM_THM_GROUPS_MAIN_INFO' );?>
 	</p>
 
 
@@ -52,11 +50,7 @@ $document->addStyleSheet("components/com_thm_groups/css/thmgroups/thmgroups.css"
     	</div>
     	
 		<div class="menudescription">
-		    	Mebermanager Mebermanager Mebermanager Mebermanager Mebermanager Mebermanager Mebermanager 
-		    	Mebermanager Mebermanager Mebermanager Mebermanager Mebermanager Mebermanager Mebermanager 
-		    	Mebermanager Mebermanager Mebermanager Mebermanager Mebermanager Mebermanager Mebermanager 
-		    	Mebermanager Mebermanager Mebermanager Mebermanager Mebermanager Mebermanager Mebermanager 
-		    	Mebermanager Mebermanager Mebermanager Mebermanager Mebermanager Mebermanager Mebermanager 
+		    	<?php echo JText::_( 'COM_THM_GROUPS_MEMBERMANAGER_INFO' );?>
 		</div>
 	</div>
 	
@@ -69,11 +63,7 @@ $document->addStyleSheet("components/com_thm_groups/css/thmgroups/thmgroups.css"
 	         <div class="description2">Group Manager</div>
 	    </div>
 		<div class="menudescription">
-		    	Groupmanager Groupmanager Groupmanager Groupmanager Groupmanager Groupmanager Groupmanager 
-		    	Groupmanager Groupmanager Groupmanager Groupmanager Groupmanager Groupmanager Groupmanager 
-		    	Groupmanager Groupmanager Groupmanager Groupmanager Groupmanager Groupmanager Groupmanager 
-		    	Groupmanager Groupmanager Groupmanager Groupmanager Groupmanager Groupmanager Groupmanager 
-		    	Groupmanager Groupmanager Groupmanager Groupmanager Groupmanager Groupmanager Groupmanager 
+		    	<?php echo JText::_( 'COM_THM_GROUPS_GROUPMANAGER_INFO' );?>
 		</div>
 	</div>
 	<div class="menuitem">
@@ -85,11 +75,7 @@ $document->addStyleSheet("components/com_thm_groups/css/thmgroups/thmgroups.css"
 	        <div class="description2">Role Manager</div>
 	    </div>
 	    <div class="menudescription">
-		    	Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager 
-		    	Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager 
-		    	Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager 
-		    	Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager 
-		    	Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager Rolemanager 
+		    	<?php echo JText::_( 'COM_THM_GROUPS_ROLEMANAGER_INFO' );?>
 		</div>
 	</div>
     <div class="menuitem">    
@@ -102,11 +88,7 @@ $document->addStyleSheet("components/com_thm_groups/css/thmgroups/thmgroups.css"
         
     </div>
     <div class="menudescription">
-		    	Structure Structure Structure Structure Structure Structure Structure Structure Structure Structure 
-		    	Structure Structure Structure Structure Structure Structure Structure Structure Structure Structure 
-		    	Structure Structure Structure Structure Structure Structure Structure Structure Structure Structure 
-		    	Structure Structure Structure Structure Structure Structure Structure Structure Structure Structure 
-		    	Structure Structure Structure Structure Structure Structure Structure Structure Structure Structure 
+		    	<?php echo JText::_( 'COM_THM_GROUPS_STRUCTURE_INFO' );?>
 		</div>
 	</div>
     <!-- About

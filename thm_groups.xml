@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.6/component-install.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
 <extension type="component" version="1.6.0" method="upgrade">
 	<name>COM_THM_GROUPS</name>
 	<creationDate>March 2010</creationDate>
@@ -39,6 +38,8 @@
 	<languages>
 		<language tag="en-GB" client="site">language/en-GB/en-GB.com_thm_groups.ini</language>
 		<language tag="en-GB" client="site">language/en-GB/en-GB.com_thm_groups.sys.ini</language>
+		<language tag="de-DE" client="site">language/de-DE/de-DE.com_thm_groups.ini</language>
+		<language tag="de-DE" client="site">language/de-DE/de-DE.com_thm_groups.sys.ini</language>
 	</languages>
 
 	<administration>
@@ -76,6 +77,8 @@
 		<languages>
 			<language tag="en-GB">language/en-GB/en-GB.com_thm_groups.ini</language>
 			<language tag="en-GB">language/en-GB/en-GB.com_thm_groups.sys.ini</language>
+			<language tag="de-DE" client="site">language/de-DE/de-DE.com_thm_groups.ini</language>
+			<language tag="de-DE" client="site">language/de-DE/de-DE.com_thm_groups.sys.ini</language>
 		</languages>
 	</administration>
 </extension>

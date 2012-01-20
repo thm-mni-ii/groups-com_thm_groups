@@ -108,7 +108,7 @@ a:visited {color:black; text-decoration:none}
 a:active {color:black; text-decoration:none}
 a:hover {color:black; text-decoration: none}
 
-/* ------------------------ Übernehmen in extensions.css ------------------------ */
+/* ------------------------ ï¿½bernehmen in extensions.css ------------------------ */
 /*********************************************************************************************/
 /* com_giessen_staff                                                                         */
 /*********************************************************************************************/

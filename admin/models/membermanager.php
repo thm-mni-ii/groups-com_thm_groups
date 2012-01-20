@@ -19,6 +19,7 @@ defined('_JEXEC') or die();
 jimport( 'joomla.application.component.modellist' );
 
 require_once(JPATH_COMPONENT.DS.'classes'.DS.'membermanagerdb.php');
+require_once(JPATH_COMPONENT.DS.'classes'.DS.'SQLAbstractionLayer.php');
 
 class THMGroupsModelmembermanager extends JModelList {
 
@@ -34,13 +35,14 @@ class THMGroupsModelmembermanager extends JModelList {
   	 */
   	var $_pagination = null;
 
+
 	function sync() {
 		$mm = new MemeberManagerDB();
 		$mm->sync();
 	}
-	
+
 	protected function populateState()
-	{			
+	{
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
 
@@ -48,24 +50,24 @@ class THMGroupsModelmembermanager extends JModelList {
 		$search = $app->getUserStateFromRequest($this->context.'.search', 'search');
 		$search = $this->_db->getEscaped( trim(JString::strtolower( $search ) ) );
 		$this->setState('search', $search);
-		
+
 		$groupFilter = $app->getUserStateFromRequest( $this->context.'.groupFilters', 'groupFilters');
 		$this->setState('groupFilters', $groupFilter);
-		
+
 		$rolesFilter = $app->getUserStateFromRequest( $this->context.'.rolesFilters', 'rolesFilters');
 		$this->setState('rolesFilters', $rolesFilter);
 		// Load the parameters.
-		
+
 		$params = JComponentHelper::getParams('com_thm_groups');
 		$this->setState('params', $params);
-		
+
 		$order = $app->getUserStateFromRequest($this->context.'.filter_order', 'filter_order', '');
 		$dir = $app->getUserStateFromRequest($this->context.'.filter_order_Dir', 'filter_order_Dir', '');
-		
+
 		$this->setState('list.ordering', $order);
 		$this->setState('list.direction', $dir);
-		
-		
+
+
 		if($order == '') {
 			parent::populateState("username", "ASC");
 		} else {
@@ -73,7 +75,7 @@ class THMGroupsModelmembermanager extends JModelList {
 		}
 		// List state information.
 	}
-  	
+
   	protected function getListQuery() 	{
 		// Create a new query object.
 
@@ -82,7 +84,7 @@ class THMGroupsModelmembermanager extends JModelList {
 		$search 	= $this->state->get('search');
 		$groupFilter= $this->state->get('groupFilters');
 		$rolesFilter = $this->state->get('rolesFilters');
-  		
+
 		$db = $this->getDbo();
 		$query = $db->getQuery(true);
 
@@ -118,7 +120,7 @@ class THMGroupsModelmembermanager extends JModelList {
 		$query.= ' OR LOWER(c.value) LIKE \'%'.$searchUm2.'%\' ';
 		$query.= ' OR LOWER(b.value) LIKE \'%'.$searchUm2.'%\' ';
 		$query.= ' OR LOWER(e.value) LIKE \'%'.$searchUm2.'%\') ';
-		
+
 		$query .= "inner join #__thm_groups_groups_map as g on g.uid = f.userid";
 
 		if ($groupFilter>0) {
@@ -128,10 +130,102 @@ class THMGroupsModelmembermanager extends JModelList {
 		if ($rolesFilter>0) {
 			$query.= ' AND g.rid = ' . $rolesFilter . ' ';
 		}
-		
+
 		$query.= " ORDER BY $orderCol $orderDirn";
-		
+
 		return $query;
 	}
+
+	/**
+	 *
+	 * fügt dem Benutzer zu einer Gruppe hinzu (Joomla-seitig)
+	 */
+	function addGroupToUser($uids, $gid)
+	{
+		// Get database descriptor
+		$db =& JFactory::getDBO();
+		foreach ($uids as $uid)
+		{
+			$query = "INSERT INTO #__user_usergroup_map (user_id,group_id)";
+			$query .= "VALUES( $uid , $gid )";
+
+			$db->setQuery($query);
+			$db->query();
+		}
+	}
+
+	/**
+	 *
+	 * entfernt den Benutzer aus einer o. mehreren Gruppen (Joomla-seitig)
+	 */
+	function delGroupsToUser($uids, $gid)
+	{
+		// Get database descriptor
+		$db =& JFactory::getDBO();
+
+		foreach ($uids as $uid)
+		{
+			$query = "SELECT COUNT(1) AS num FROM #__user_usergroup_map AS user INNER JOIN #__thm_groups_groups_map AS thm ON user.user_id = thm.uid AND user.group_id = thm.gid WHERE user.user_id = $uid AND user.group_id = $gid";
+
+			$db->setQuery($query);
+			$aRes = $db->loadAssoc();
+			if($aRes['num'] == 0)
+			{
+				$query = "DELETE FROM #__user_usergroup_map WHERE user_id = $uid AND group_id = $gid";
+				$db->setQuery($query);
+				$db->query();
+			}
+		}
+	}
+
+	// Ausgabe XXdelAllGrouprolesByUserXXBenutzer
+	function delGroupToUser($uid, $gid)
+	{
+		// Get database descriptor
+		$db =& JFactory::getDBO();
+
+		$query = "DELETE FROM #__user_usergroup_map WHERE user_id = $uid AND group_id = $gid";
+
+		$db->setQuery($query);
+		$db->query();
+	}
+
+	function getGroupSelectOptions(){
+
+		$SQLAL = new SQLAbstractionLayer;
+
+		$groups = $SQLAL->getGroupsHirarchy();
+		$jgroups = $SQLAL->getJoomlaGroups();
+
+		$injoomla = false;
+		$wasinjoomla = false;
+		$selectOptions = array();
+
+		foreach($groups as $group){
+			$injoomla = $group->injoomla == 1 ? true : false;
+			if ($injoomla != $wasinjoomla) {
+				$selectOptions[] = JHTML::_('select.option', -1, '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -', 'value', 'text', true);
+			}
+			//finde die Anzahl der parents
+			$tempgroup=$group;
+			$hirarchy = "";
+			while($tempgroup->parent_id != 0){
+				$hirarchy .= "- ";
+				foreach($jgroups as $actualgroup){
+					if( $tempgroup->parent_id == $actualgroup->id ){
+						$tempgroup = $actualgroup;
+					}
+				}
+			}
+			$selectOptions[] = JHTML::_('select.option', $group->id, $hirarchy.$group->name );
+			$wasinjoomla = $injoomla;
+		}
+		return $selectOptions;
+	}
+
+
+
 }
 ?>
+
+

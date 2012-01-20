@@ -17,12 +17,36 @@
  **/
 defined('_JEXEC') or die();
 
-jimport( 'joomla.application.component.model' );
+
+jimport( 'joomla.application.component.modelform' );
+
 // Include database class
 require_once(JPATH_COMPONENT_ADMINISTRATOR.DS.'classes'.DS.'SQLAbstractionLayer.php');
 
-class THMGroupsModeledit extends JModel {
-
+class THMGroupsModeledit extends JModelForm {
+	
+	function __construct()
+	{
+		parent::__construct();
+		$this->getForm();
+		
+	}
+	
+	    /**
+     * Method to get the record form.
+     *
+     * @param array   $data Data for the form.
+     * @param boolean $loadData True if the form is to load its own data (default case), false if not.
+     * @return mixed A JForm object on success, false on failure
+     */
+    public function getForm($data = array(), $loadData = true)
+    {
+        $form = $this->loadForm('com_thm_groups.edit', 'edit',
+                                array('load_data' => $loadData));
+        if(empty($form)) return false;
+        return $form;
+    }
+	
 	function getData()
 	{
 		$cid = JRequest::getVar('gsuid', '');
@@ -77,7 +101,8 @@ class THMGroupsModeledit extends JModel {
 		$err = 0;
 		foreach($structure as $structureItem) {
 			$puffer = null;
-			$field = JRequest::getVar($structureItem->field);
+			$field = JRequest::getVar($structureItem->field, '', 'post', 'string', JREQUEST_ALLOWHTML);
+			
 			$publish = 0;
 			if($structureItem->type == 'MULTISELECT')
 				$field = implode(';', $field);

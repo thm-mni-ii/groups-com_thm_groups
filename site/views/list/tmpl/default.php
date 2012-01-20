@@ -75,7 +75,6 @@
 <div id="gslistview">
 <?php 
 
-
 echo $this->list; 
 ?>
 </div>

@@ -13,14 +13,14 @@
  * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  * @link     http://www.mni.fh-giessen.de
  **/
-	defined('_JEXEC') or die ('Restricted access');	
+	defined('_JEXEC') or die ('Restricted access');
 	?>
-	
+
 	<form action="index.php" method="post" name="adminForm" enctype='multipart/form-data'>
 	<div>
 		<fieldset class="adminform">
 			<legend>
-				<?php echo   JText::_( 'COM_THM_GROUPS_EDITGROUP' ); ?>
+				<?php echo   JText::_( 'COM_THM_GROUPS_EDITROLE' ); ?>
 			</legend>
 			<table class="admintable">
 				<tr>

@@ -3,7 +3,7 @@
  * PHP version 5
  *
  * @category Joomla Programming Weeks WS2008/2009: FH Giessen-Friedberg
- * @package  com_staff 
+ * @package  com_staff
  * (enhanced from SS2008
  * (@Sascha Henry<sascha.henry@mni.fh-giessen.de>, @Christian Gueth<christian.gueth@mni.fh-giessen.de,Severin Rotsch <severin.rotsch@mni.fh-giessen.de>,@author   Martin Karry <martin.karry@mni.fh-giessen.de>)
  * @author   Sascha Henry <sascha.henry@mni.fh-giessen.de>
@@ -16,6 +16,11 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.controller');
+
+require_once(JPATH_COMPONENT_ADMINISTRATOR.DS.'classes'.DS.'confdb.php');
+
+$confdb = new ConfDB();
+$confdb->sync();
 
 $controller=Jcontroller::getInstance('thmgroups');
 

@@ -17,11 +17,17 @@
  **/
 defined('_JEXEC') or die();
 
-jimport( 'joomla.application.component.model' );
+jimport( 'joomla.application.component.modelform' );
 // Include database class
 require_once(JPATH_COMPONENT_ADMINISTRATOR.DS.'classes'.DS.'SQLAbstractionLayer.php');
 
-class THMGroupsModeledit extends JModel {
+class THMGroupsModeledit extends JModelForm {
+	function __construct()
+	{
+		parent::__construct();
+		$this->getForm();
+
+	}
 
 	function getData()
 	{
@@ -31,24 +37,24 @@ class THMGroupsModeledit extends JModel {
 		$db = & JFactory::getDBO();
 		$puffer = array();
 		$result = array();
-		
+
 		foreach ($types as $type) {
-			
+
 			$query = "SELECT structid, value, publish FROM #__thm_groups_".strtolower($type->Type)." as a where a.userid = " . $cid[0];
-			
+
 			$db->setQuery($query);
 			array_push($puffer, $db->loadObjectList());
 		}
-		
+
 		foreach ($puffer as $type) {
 			foreach ($type as $row) {
 				array_push($result, $row);
 			}
-			
+
 		}
 		return $result;
 	}
-	
+
 	function getStructure()
 	{
 		$db = & JFactory::getDBO();
@@ -56,7 +62,7 @@ class THMGroupsModeledit extends JModel {
 		$db->setQuery($query);
 		return $db->loadObjectList();
 	}
-	
+
 	function getTypes() {
 		$db = & JFactory::getDBO();
 		$query = "SELECT Type FROM #__thm_groups_relationtable " .
@@ -78,24 +84,24 @@ class THMGroupsModeledit extends JModel {
 		$err = 0;
 		foreach($structure as $structureItem) {
 			$puffer = null;
-			$field = JRequest::getVar($structureItem->field);
+			 $field = JRequest::getVar($structureItem->field, '', 'post', 'string', JREQUEST_ALLOWHTML);
+			//$field = JRequest::getVar(mysql_escape_string($structureItem->field));
 			$publish = 0;
-			if($structureItem->type == 'MULTISELECT')
+			if($strucctIdemtureItem->type == 'MULTISELECT')
 				$field = implode(';', $field);
-			
+
 			$publishPuffer = JRequest::getVar('publish'.$structureItem->field);
-			
+
 			if(isset($publishPuffer))
 				$publish = 1;
-				
+
 			$query = "SELECT structid FROM #__thm_groups_".strtolower($structureItem->type).
 					 " WHERE userid=".$userid." AND structid=" . $structureItem->id;
 			$db->setQuery($query);
 			$puffer=$db->loadObject();
-			
+
 			if(isset($structureItem->field)) {
 				if(isset($puffer)) {
-					//var_dump($structureItem->type);
 					$query="UPDATE #__thm_groups_".strtolower($structureItem->type)." SET";
 							if($structureItem->type != 'PICTURE' && $structureItem->type != 'TABLE')
 		        				$query .= " value='".$field."',";
@@ -108,21 +114,22 @@ class THMGroupsModeledit extends JModel {
 					        .", '".$field."'"
 					        .", ".$publish.")";
 				}
+
 				$db->setQuery($query);
-        		if(!$db->query()) 
+        		if(!$db->query())
 	        		$err = 1;
 			}
 			if($structureItem->type == 'PICTURE' && $_FILES[$structureItem->field]['name'] != "") {
 				if(!$this->updatePic($userid, $structureItem->id, $structureItem->field))
 					$err = 1;
-			}			
+			}
 		}
 		if(!$err)
         	return true;
-        else 
+        else
         	return false;
 	}
-	
+
 	/**
 	 * Method to delete a picture
 	 *
@@ -135,13 +142,13 @@ class THMGroupsModeledit extends JModel {
 		$structid = JRequest::getVar('structid');
 		$query = "UPDATE #__thm_groups_picture SET value='anonym.jpg' WHERE userid = $uid AND structid=$structid";
 		$db->setQuery( $query );
-		
+
 		if($db->query())
         	return true;
-        else 
+        else
         	return false;
 	}
-	
+
 	/**
 	 * Method to update a picture
 	 *
@@ -149,7 +156,7 @@ class THMGroupsModeledit extends JModel {
 	 * @return	boolean	True on success
 	 */
 	function updatePic($uid, $structid, $picField) {
-		
+
 		require_once(JPATH_ROOT.DS."components".DS."com_thm_groups".DS."helper".DS."thm_groups_pictransform.php");
 		try {
 			$pt = new PicTransform($_FILES[$picField]);
@@ -159,19 +166,19 @@ class THMGroupsModeledit extends JModel {
 			if (JModuleHelper::isEnabled( 'mod_thm_groups_smallview' )->id != 0)
 				$pt->safeSpecial(JPATH_ROOT.DS."modules".DS."mod_thm_groups_smallview".DS."images".DS, $uid."_".$structid, 200, 200, "JPG");
 		} catch(Exception $e) {
-			
+
 			return false;
 		}
 		$db =& JFactory::getDBO();
 		$query = "UPDATE #__thm_groups_picture SET value='".$uid."_".$structid.".jpg' WHERE userid = $uid AND structid=$structid";
 		$db->setQuery( $query );
-		
+
 		if($db->query())
         	return true;
-        else 
+        else
         	return false;
 	}
-	
+
 	function getExtra($structid, $type) {
 		$db =& JFactory::getDBO();
 		$query = "SELECT value FROM #__thm_groups_".strtolower($type)."_extra WHERE structid=".$structid;
@@ -181,32 +188,32 @@ class THMGroupsModeledit extends JModel {
 		   	return $res->value;
 		else return "";
 	}
-	
+
 	function addTableRow() {
 		$db =& JFactory::getDBO();
 		$uid = JRequest::getVar('userid');
 		$structid = JRequest::getVar('structid');
 		$arrRow = array();
 		$arrValue = array();
-		$err = 0;	
-		
+		$err = 0;
+
 		$query = "SELECT value FROM #__thm_groups_table WHERE structid=$structid AND userid=$uid";
 		$db->setQuery( $query );
 		$res = $db->loadObject();
 		$oValue = json_decode($res->value);
-		foreach($oValue as $row) 
+		foreach($oValue as $row)
 			$arrValue[] = $row;
 
 		$query = "SELECT value FROM #__thm_groups_table_extra WHERE structid=".$structid;
 		$db->setQuery( $query );
 		$resHead = $db->loadObject();
 		$head = explode(';', $resHead->value);
-		
+
 		foreach($head as $headItem) {
-			$arrRow[$headItem] = JRequest::getVar("TABLE$structid$headItem");   	
+			$arrRow[$headItem] = JRequest::getVar("TABLE$structid$headItem");
 		}
 		$arrValue[] = $arrRow;
-		
+
 		$jsonValue = json_encode($arrValue);
 		if(isset($res)) {
 			$query = "UPDATE #__thm_groups_table SET value='$jsonValue' WHERE userid = $uid AND structid=$structid";
@@ -217,15 +224,15 @@ class THMGroupsModeledit extends JModel {
 		        .", '".$jsonValue."')";
 		}
 		$db->setQuery($query);
-        if(!$db->query()) 
+        if(!$db->query())
 	    	$err = 1;
-		
+
 	    if(!$err)
 		   	return true;
-		else 	
+		else
 			return false;
 	}
-	
+
 	function delTableRow() {
 		$db =& JFactory::getDBO();
 		$uid = JRequest::getVar('userid');
@@ -233,28 +240,28 @@ class THMGroupsModeledit extends JModel {
 		$key = JRequest::getVar('tablekey');
 		$arrRow = array();
 		$arrValue = array();
-		$err = 0;	
-		
+		$err = 0;
+
 		$query = "SELECT value FROM #__thm_groups_table WHERE structid=$structid AND userid=$uid";
 		$db->setQuery( $query );
 		$res = $db->loadObject();
 		$oValue = json_decode($res->value);
-		foreach($oValue as $row) 
+		foreach($oValue as $row)
 			$arrValue[] = $row;
 		array_splice($arrValue, $key, 1);
-		
+
 		$jsonValue = json_encode($arrValue);
 		$query = "UPDATE #__thm_groups_table SET value='$jsonValue' WHERE userid = $uid AND structid=$structid";
 		$db->setQuery($query);
-        if(!$db->query()) 
+        if(!$db->query())
 	    	$err = 1;
-		
+
 	    if(!$err)
 		   	return true;
-		else 	
+		else
 			return false;
 	}
-	
+
 	function editTableRow() {
 		$db =& JFactory::getDBO();
 		$uid = JRequest::getVar('userid');
@@ -262,13 +269,13 @@ class THMGroupsModeledit extends JModel {
 		$key = JRequest::getVar('tablekey');
 		$arrRow = array();
 		$arrValue = array();
-		$err = 0;	
-		
+		$err = 0;
+
 		$query = "SELECT value FROM #__thm_groups_table WHERE structid=$structid AND userid=$uid";
 		$db->setQuery( $query );
 		$res = $db->loadObject();
 		$oValue = json_decode($res->value);
-		foreach($oValue as $row) 
+		foreach($oValue as $row)
 			$arrValue[] = $row;
 		foreach($arrValue[$key] as $field=>$row) {
 			$arrRow[$field] = JRequest::getVar('TABLE'.$structid.$field);
@@ -277,20 +284,28 @@ class THMGroupsModeledit extends JModel {
 		$jsonValue = json_encode($arrValue);
 		$query = "UPDATE #__thm_groups_table SET value='$jsonValue' WHERE userid = $uid AND structid=$structid";
 		$db->setQuery($query);
-        if(!$db->query()) 
+        if(!$db->query())
 	    	$err = 1;
-		
+
 	    if(!$err)
 		   	return true;
-		else 	
+		else
 			return false;
 	}
 
 
 	function apply(){
-		
+
 		$this->store();
 	}
+
+	public function getForm($data = array(), $loadData = true)
+    {
+        $form = $this->loadForm('com_thm_groups.edit', 'edit',
+                                array('load_data' => $loadData));
+        if(empty($form)) return false;
+        return $form;
+    }
 
 }
 ?>

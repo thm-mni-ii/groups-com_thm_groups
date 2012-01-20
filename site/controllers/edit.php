@@ -11,7 +11,7 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.controller');
 
-class THMGroupsControllerEdit extends JController {
+class THMGroupsControlleredit extends JController {
 
 	var $uid = null;
 	var $uname = null;
@@ -22,6 +22,8 @@ class THMGroupsControllerEdit extends JController {
 	function __construct() {
 		parent::__construct();
 		$this->registerTask('delPic', '');
+		$this->registerTask('backToRefUrl', '');
+		$this->registerTask('addTableRow', '');
 	}
 
 	function getLink() {
@@ -46,16 +48,20 @@ class THMGroupsControllerEdit extends JController {
 		$this->uname = JRequest :: getVar('name', 0);
 		$gsgid = JRequest :: getVar('gsgid', 1);
 		
+		$layout_old = JRequest :: getVar('layout_old', /*0*/'LLLL');
+		$view_old = JRequest :: getVar('view_old', /*0*/'VVVV');
+		
     	$model = $this->getModel('edit');
     	
     	$itemid = JRequest :: getVar('item_id', 0);
 
-	    if ($model->store()) {
+    	$link = JRoute :: _("index.php?option=com_thm_groups&view=edit&layout=default&Itemid=" . $itemid . "&gsuid=" . $this->uid . "&name=" . $this->uname . "&gsgid=".$gsgid. "&layout_old=" .$layout_old. "&view_old=" .$view_old);
+    	
+    	if ($model->store()) {
     	    $msg = JText::_( 'Data Saved!' );
     	} else {
     	    $msg = JText::_( 'Error Saving' );
     	}
-    	$link = JRoute :: _("index.php?option=com_thm_groups&view=edit&layout=default&Itemid=" . $itemid . "&gsuid=" . $this->uid . "&name=" . $this->uname . "&gsgid=".$gsgid);
     	
     	$this->setRedirect($link, $msg);
 	}
@@ -106,6 +112,24 @@ class THMGroupsControllerEdit extends JController {
 		
     	$this->save();	
 	}
+	
+	public function backToRefUrl(){
+
+		$this->uid = JRequest :: getVar('userid', 0);
+		$this->uname = JRequest :: getVar('name', 0);
+		$gsgid = JRequest :: getVar('gsgid', 1);
+		
+		$option_old = JRequest :: getVar('option_old', 0);
+		$layout_old = JRequest :: getVar('layout_old', 0);
+		$view_old = JRequest :: getVar('view_old', 0);
+		$itemid_old = JRequest :: getVar('item_id',0);
+		
+		
+		$msg = JText ::_( 'Aktion abgebrochen ' );
+    	$link = JRoute::_('index.php?option='.$option_old.'&view='.$view_old.'&layout='.$layout_old.'&Itemid='.$itemid_old. '&gsuid=' . $this->uid . '&name=' . $this->uname . '&gsgid='.$gsgid);
+  		
+  		$this->setRedirect($link,$msg);
+	}	
 }
 
 ?>

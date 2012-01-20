@@ -16,7 +16,7 @@
  * @link     http://www.mni.fh-giessen.de
  **/
 	defined('_JEXEC') or die ('Restricted access');
-JHTML::_('behavior.modal', 'a.modal-button');	
+JHTML::_('behavior.modal', 'a.modal-button');
 JHTML::_('behavior.calendar');
 	// Include database class
 	require_once(JPATH_COMPONENT_ADMINISTRATOR.DS.'classes'.DS.'SQLAbstractionLayer.php');
@@ -33,7 +33,7 @@ JHTML::_('behavior.calendar');
 	<div>
 		<fieldset class="adminform">
 		<legend>
-			<?php echo   JText::_( 'Details' ); ?>
+			<?php echo   JText::_( 'COM_THM_GROUPS_EDIT_FORMS_TEXT_DETAILS' ); ?>
 		</legend>
 
 		<table class="admintable">
@@ -41,12 +41,12 @@ JHTML::_('behavior.calendar');
 				<td/><td/>
 				<td width="110" class="op">
 					<label for="title">
-  						<?php echo JText::_( 'intern freigeben' ); ?>:
+  						<?php echo JText::_( 'COM_THM_GROUPS_EDIT_FORMS_TEXT_ENABLE_INTERN' ); ?>:
 					</label>
 				</td>
 				<td width="110" class="op">
 					<label for="title">
-  						<?php echo JText::_( 'extern freigeben' ); ?>:
+  						<?php echo JText::_( 'COM_THM_GROUPS_EDIT_FORMS_TEXT_ENABLE_EXTERN' ); ?>:
 					</label>
 				</td>
 			</tr>
@@ -63,8 +63,8 @@ JHTML::_('behavior.calendar');
 			<tr>
 				<td/>------------------------------------<td/>
 			</tr>
-			
-			<?php 
+
+			<?php
 				foreach($this->structure as $structureItem) {
 			?>
 			<tr>
@@ -75,15 +75,15 @@ JHTML::_('behavior.calendar');
 				</td>
 				<td>
 					<?php
-						$publish = 0;	
+						$publish = 0;
 						$value = "";
 						foreach ($this->items as $item){
-							if($item->structid == $structureItem->id) {	
-								$value = $item->value; 
+							if($item->structid == $structureItem->id) {
+								$value = $item->value;
 								$publish = $item->publish;
 							}
 						}
-						
+
 						switch ($structureItem->type) {
 							case "TEXT":
 								$this->getTextForm($structureItem->field, 60, $value, $structureItem->id);
@@ -92,7 +92,11 @@ JHTML::_('behavior.calendar');
 								$this->getTextForm($structureItem->field, 30, $value, $structureItem->id);
 								break;
 							case "TEXTFIELD":
-								$this->getTextArea($structureItem->field, 10, $value, $structureItem->id);
+								//$this->getTextArea($structureItem->field, 10, $value, $structureItem->id);
+								echo $this->form->getInput($structureItem->field);
+								break;
+							case "LINK":
+								$this->getTextForm($structureItem->field, 100, $value, $structureItem->id);
 								break;
 							case "PICTURE":
 								$this->getPictureArea($structureItem->field, $structureItem->id, $value);
@@ -117,19 +121,19 @@ JHTML::_('behavior.calendar');
 					ToDo...
 				</td>
 			</tr>
-			<?php 		
+			<?php
 				}
 			?>
-			
-			
+
+
 			<tr>
 				<td/>------------------------------------<td/>
-				
+
 			</tr>
 			<tr>
 				<td width="110" class="key">
 					<label for="title">
-  						<?php echo JText::_( 'Aktuelle Gruppe/Rolle' ); ?>:
+  						<?php echo JText::_( 'GROUPS_AND_ROLES' ); ?>:
 					</label>
 				</td>
 				<td>
@@ -144,7 +148,7 @@ JHTML::_('behavior.calendar');
 				</td>
 			</tr>
 
-			
+
 		</table>
 	<input type='hidden' name='structid' value='' />
 	<input type="hidden" name="option" value="com_thm_groups" />
@@ -152,8 +156,8 @@ JHTML::_('behavior.calendar');
 	<input type="hidden" name="userid" value="<?php echo $this->userid[0]; ?>" />
 	<input type="hidden" name="tablekey" value="" />
 	<input type="hidden" name="controller" value="membermanager" />
-	
+
 	</fieldset>
-	
+
 </div>
 

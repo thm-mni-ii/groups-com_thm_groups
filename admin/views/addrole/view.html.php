@@ -22,10 +22,10 @@ jimport('joomla.filesystem.path');
 class THMGroupsViewAddRole extends JView {
 	function display($tpl = null) {
 
-		$document   = & JFactory::getDocument(); 
+		$document   = & JFactory::getDocument();
 		$document->addStyleSheet("components/com_staff/css/membermanager/icon.css");
 
-		JToolBarHelper::title(JText::_( 'COM_THM_GROUPS_ADDRole_TITLE' ), 'generic.png');
+		JToolBarHelper::title(JText::_( 'COM_THM_GROUPS_ADDROLE_TITLE' ), 'generic.png');
 		JToolBarHelper::apply('addrole.apply', 'JTOOLBAR_APPLY');
 		JToolBarHelper::save('addrole.save', 'JTOOLBAR_SAVE');
 		JToolBarHelper::custom('addrole.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);

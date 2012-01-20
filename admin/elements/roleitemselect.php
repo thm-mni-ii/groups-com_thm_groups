@@ -23,7 +23,7 @@ defined('_JEXEC') or die( 'Restricted access' );
  * parameter_pattern:	Comma-seperated items ids (selected_itemid_1,selected_itemid_2)
  */
 jimport('joomla.html.html');
-jimport('joomla.form.formfield'); 
+jimport('joomla.form.formfield');
 
 class JFormFieldRoleItemSelect extends JFormField {
 	/**
@@ -32,7 +32,7 @@ class JFormFieldRoleItemSelect extends JFormField {
 	 * @access	protected
 	 * @var		string
 	 */
-	
+
 
 	function getInput() {
 		$scriptDir = str_replace(JPATH_SITE.DS,'',"administrator/components/com_thm_groups/elements/");
@@ -51,12 +51,12 @@ class JFormFieldRoleItemSelect extends JFormField {
 	        $db =& JFactory::getDBO();
 	        $db->setQuery($queryParams);
 	        $params= $db->loadObjectList();
-		
+
 
         $paramRoles = substr($params[0]->params, stripos($params[0]->params, "sortedgrouproles")+ strlen("':sortedgrouproles:"), stripos(substr($params[0]->params, stripos($params[0]->params, "sortedgrouproles")+ strlen("':sortedgrouproles:")), "\",\"menu-anchor_title"));
         $paramRoles = trim($paramRoles);
 		}
-        //var_dump(substr($params[0]->params, stripos($params[0]->params, "sortedgrouproles")+ strlen("':sortedgrouproles:"), stripos(substr($params[0]->params, stripos($params[0]->params, "sortedgrouproles")+ strlen("':sortedgrouproles:")), "\",\"menu-anchor_title")));
+
         $arrParamRoles = explode(",", $paramRoles);
         $queryRoles="SELECT id, name FROM `#__thm_groups_roles` Order by name";
         $db =& JFactory::getDBO();
@@ -85,7 +85,7 @@ class JFormFieldRoleItemSelect extends JFormField {
 	      	$html.='<a onclick="roledown()" id="sortdown" style="visibility:hidden"><img src="../administrator/components/com_thm_groups/img/downarrow.png" title="Rolle eine Position niedriger" /></a>';
       	}
       	$html.='<!--<input type="hidden" name="jform[params][sortedgrouproles]" id="sortedgrouproles" value="'. $paramRoles .'" />-->';
-      	
+
      	return $html;
 	}
 }

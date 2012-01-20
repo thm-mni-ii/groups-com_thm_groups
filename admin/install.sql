@@ -9,9 +9,11 @@ DROP TABLE IF EXISTS `#__thm_groups_text_extra`,
 					 `#__thm_groups_relationtable`,
 					 `#__thm_groups_publishrelation`,
 					 `#__thm_groups_picture`,
+					 `#__thm_groups_picture_extra`,
 					 `#__thm_groups_number`,
 					 `#__thm_groups_multiselect_extra`,
 					 `#__thm_groups_multiselect`,
+					 `#__thm_groups_link`,
 					 `#__thm_groups_groups_map`,
 					 `#__thm_groups_groups`,
 					 `#__thm_groups_date`,
@@ -81,6 +83,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_groups` (
   `info` varchar(255) DEFAULT NULL,
   `picture` varchar(64) DEFAULT NULL,
   `mode` text,
+  `injoomla` TINYINT( 4 ) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=32 ;
 
@@ -88,11 +91,11 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_groups` (
 -- Daten f�r Tabelle `#__thm_groups_groups`
 --
 
-INSERT INTO `#__thm_groups_groups` (`id`, `name`, `info`, `picture`, `mode`) VALUES
-(1, 'User', '', '', '0'),
-(2, 'MNI Student', '', '', '0'),
-(3, 'FH Student', '', '', '0'),
-(4, 'Mitarbeiter', '', '', '0');
+-- INSERT INTO `#__thm_groups_groups` (`id`, `name`, `info`, `picture`, `mode`) VALUES
+-- (1, 'User', '', '', '0'),
+-- (2, 'MNI Student', '', '', '0'),
+-- (3, 'FH Student', '', '', '0'),
+-- (4, 'Mitarbeiter', '', '', '0');
 
 -- --------------------------------------------------------
 
@@ -106,6 +109,21 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_groups_map` (
   `rid` int(11) NOT NULL,
   PRIMARY KEY (`uid`,`gid`,`rid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur f�r Tabelle `#__thm_groups_link`
+--
+
+CREATE TABLE IF NOT EXISTS `#__thm_groups_link` (
+  `userid` int(11) NOT NULL,
+  `structid` int(11) NOT NULL,
+  `value` text,
+  `publish` int(11) NOT NULL DEFAULT '1',
+  `group` int(1) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 
 -- --------------------------------------------------------
 
@@ -170,6 +188,19 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_picture` (
   `group` int(1) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur f�r Tabelle `#__thm_groups_picture_extra`
+--
+
+CREATE TABLE IF NOT EXISTS `#__thm_groups_picture_extra` (
+  `structid` int(11) NOT NULL,
+  `value` text NOT NULL,
+  PRIMARY KEY (`structid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 -- --------------------------------------------------------
 
 --
@@ -214,7 +245,8 @@ INSERT INTO `#__thm_groups_relationtable` (`Type`, `Relation`) VALUES
 ('TEXTFIELD', 'textfield'),
 ('TABLE', 'table'),
 ('PICTURE', 'picture'),
-('MULTISELECT', 'multiselect');
+('MULTISELECT', 'multiselect'),
+('LINK', 'link');
 
 -- --------------------------------------------------------
 

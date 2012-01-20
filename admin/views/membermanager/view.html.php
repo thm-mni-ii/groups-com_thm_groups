@@ -23,9 +23,9 @@ jimport('joomla.filesystem.path');
 require_once(JPATH_COMPONENT_ADMINISTRATOR.DS.'classes'.DS.'SQLAbstractionLayer.php');
 
 class THMGroupsViewmembermanager extends JView {
-	
+
 	protected $state;
-	
+
 	function display($tpl = null) {
 		$SQLAL = new SQLAbstractionLayer;
 		$document   = & JFactory::getDocument();
@@ -36,36 +36,38 @@ class THMGroupsViewmembermanager extends JView {
 
 		JToolBarHelper::title( JText::_( 'COM_THM_GROUPS_MEMBERMANAGER_TITLE' ), 'membermanager.png', JPATH_COMPONENT.DS.'img'.DS.'membermanager.png' );
 
-		JToolBarHelper::custom( 'membermanager.setGroupsAndRoles', 'moderate.png',   JPATH_COMPONENT.DS.'img'.DS.'moderate.png',   'Gruppen/Rollen hinzufuegen', true, true );
-		JToolBarHelper::custom( 'membermanager.delGroupsAndRoles', 'unmoderate.png', JPATH_COMPONENT.DS.'img'.DS.'unmoderate.png', 'Gruppen/Rollen entfernen',  true, true );
-		JToolBarHelper::deleteList('Wirklich l&ouml;schen?','membermanager.delete', 'L&ouml;schen');
-		JToolBarHelper::publishList('membermanager.publish', 'Ver&ouml;ffentlichen');
-		JToolBarHelper::unpublishList('membermanager.unpublish', 'Sperren');
-		JToolBarHelper::cancel('membermanager.cancel', 'Abbrechen');
-		JToolBarHelper::editListX('membermanager.edit', 'Bearbeiten');
-		JToolBarHelper::back('Zur&uuml;ck');
+		JToolBarHelper::custom( 'membermanager.setGroupsAndRoles', 'moderate.png',   JPATH_COMPONENT.DS.'img'.DS.'moderate.png',   'COM_THM_GROUPS_MEMBERMANAGER_ADD', true, true );
+		JToolBarHelper::custom( 'membermanager.delGroupsAndRoles', 'unmoderate.png', JPATH_COMPONENT.DS.'img'.DS.'unmoderate.png', 'COM_THM_GROUPS_MEMBERMANAGER_DELETE',  true, true );
+		JToolBarHelper::deleteList('Wirklich l&ouml;schen?','membermanager.delete', 'JTOOLBAR_DELETE');
+		JToolBarHelper::publishList('membermanager.publish', 'COM_THM_GROUPS_MEMBERMANAGER_PUBLISH');
+		JToolBarHelper::unpublishList('membermanager.unpublish', 'COM_THM_GROUPS_MEMBERMANAGER_DISABLE');
+		JToolBarHelper::cancel('membermanager.cancel', 'JTOOLBAR_CANCEL');
+		JToolBarHelper::editListX('membermanager.edit', 'COM_THM_GROUPS_MEMBERMANAGER_EDIT');
+		JToolBarHelper::back('JTOOLBAR_BACK');
 
 
 		/* Joomla 1.5
 		//global $mainframe, $option;
 		*/
- 		
+
  		// begin Joomla 1.6
- 		$mainframe = Jfactory::getApplication('Administrator'); 
+ 		$mainframe = Jfactory::getApplication('Administrator');
  		// end Joomla 1.6
 		$db  		= & JFactory::getDBO();
-		
+
 		$this->state		= $this->get('State');
-		
+
 		$search 			= $mainframe->getUserStateFromRequest( "com_thm_groups.search", 'search', '', 'string' );
-		$search 			= $db->getEscaped( trim(JString::strtolower( $search ) ) );		
-		
+		$search 			= $db->getEscaped( trim(JString::strtolower( $search ) ) );
+
 		$model =& $this->getModel();
 		$model->sync();
 
 		// Get data from the model
 		$items = $this->get( 'Items');
 		$pagination = $this->get('Pagination');
+		$groupOptions = $model->getGroupSelectOptions();
+
 		$groups = $SQLAL->getGroups();
 		$roles = $SQLAL->getRoles();
 
@@ -74,20 +76,26 @@ class THMGroupsViewmembermanager extends JView {
 		$filters[] = JHTML::_('select.option', '1', JText::_( 'Nachname' ) );
 		$filters[] = JHTML::_('select.option', '2', JText::_( 'Vorname' ) );
 		$filters[] = JHTML::_('select.option', '3', JText::_( 'Benutzername' ) );
-		if(isset($lists['filter'])) 
+		if(isset($lists['filter']))
 			$lists['filter'] = JHTML::_('select.genericlist', $filters, 'filter', 'size="1" class="inputbox"', 'value', 'text', $_POST['filter'] );
+
+		if (!isset($_POST['groupFilters'])) {
+			$_POST['groupFilters'] = null;
+		}
+		if (!isset($_POST['rolesFilters'])) {
+			$_POST['rolesFilters'] = null;
+		}
 
 		//group filter
 		$groupFilters = array();
 		$groupFilters[] = JHTML::_('select.option', 0, JText::_( 'Alle' ) );
 
-		foreach($groups as $group){
-			$groupFilters[] = JHTML::_('select.option', $group->id, $group->name );
+		foreach($groupOptions as $option){
+			$groupFilters[] = $option;
 		}
-		
 		$lists['groups'] = JHTML::_('select.genericlist', $groupFilters, 'groupFilters', 'size="1" class="inputbox"', 'value', 'text', $_POST['groupFilters'] );
 
-		
+
 		//roles filter
 		$rolesFilters = array();
 		$rolesFilters[] = JHTML::_('select.option', 0, JText::_( 'Alle' ) );
@@ -111,12 +119,11 @@ class THMGroupsViewmembermanager extends JView {
 		$lists['search']= $search;
 
 		//assign data to template
-		//$this->assignRef('lists'  , $lists);
-		//var_dump($items);
 		$this->assignRef( 'items', $items );
 		$this->assignRef('pagination', $pagination);
 		$this->assignRef('lists', $lists);
 		$this->assignRef('groups',$groups);
+		$this->assignRef('groupOptions',$groupOptions);
 		$this->assignRef('roles',$roles);
 		$this->assignRef('rolesFilters', $_POST['rolesFilters']);
 		$this->assignRef('groupFilters', $_POST['groupFilters']);

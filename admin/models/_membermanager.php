@@ -38,12 +38,12 @@ class staffsModelmembermanager extends JModelList {
 		$mm = new MemeberManagerDB();
 		$mm->sync();
 	}
-	
+
 	protected function populateState()
 	{
-		
-		
-		$mainframe = Jfactory::getApplication('administrator'); 
+
+
+		$mainframe = Jfactory::getApplication('administrator');
  		// end Joomla 1.6
 
 		$filter_order		= $mainframe->getUserStateFromRequest( "$option.filter_order",		'filter_order',		'lastName',	'cmd' );
@@ -56,9 +56,8 @@ class staffsModelmembermanager extends JModelList {
 		$rolesFilter 		= $mainframe->getUserStateFromRequest( $option.'.rolesFilters', 'rolesFilters', '', 'int' );
 		$search 			= $this->_db->getEscaped( trim(JString::strtolower( $search ) ) );
 		$this->setState('filter.search', $search);
-		var_dump($search);
 		//----------
-		
+
 		/*
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
@@ -87,18 +86,18 @@ class staffsModelmembermanager extends JModelList {
 		parent::populateState('title', 'asc');
 	}
 
-	
+
 	function __construct(){
  		parent::__construct();
 
 		/* Joomla 1.5
 		//global $mainframe, $option;
 		*/
- 		
+
  		// begin Joomla 1.6
- 		$mainframe = Jfactory::getApplication(); 
+ 		$mainframe = Jfactory::getApplication();
  		// end Joomla 1.6
- 		
+
 		// Get pagination request variables
 		$limit = $mainframe->getUserStateFromRequest('global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
 		$limitstart = $mainframe->getUserStateFromRequest($option.'.limitstart', 'limitstart', 0, 'int');
@@ -115,9 +114,9 @@ class staffsModelmembermanager extends JModelList {
 		/* Joomla 1.5
 		//global $mainframe, $option;
 		*/
- 		
+
  		// begin Joomla 1.6
- 		$mainframe = Jfactory::getApplication(); 
+ 		$mainframe = Jfactory::getApplication();
  		// end Joomla 1.6
 
 		$filter_order		= $mainframe->getUserStateFromRequest( "$option.filter_order",		'filter_order',		'lastName',	'cmd' );
@@ -233,7 +232,7 @@ class staffsModelmembermanager extends JModelList {
  		}
  		return $this->_pagination;
   	}
-  	
+
   	protected function getListQuery() 	{
 		// Create a new query object.
 		$db = $this->getDbo();

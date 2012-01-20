@@ -30,7 +30,7 @@ $listDirn	= $this->state->get('list.direction');
 				onclick="checkAll(<?php echo count( $this->items ); ?>);" /></th>
 
 			<th width="95%" align="center">
-				<?php echo JHTML::_('grid.sort', 'Rollen Name', 'rname', $listDirn, $listOrder ); ?>
+				<?php echo JHTML::_('grid.sort', 'NAME', 'rname', $listDirn, $listOrder ); ?>
 			</th>
 		</tr>
 	</thead>

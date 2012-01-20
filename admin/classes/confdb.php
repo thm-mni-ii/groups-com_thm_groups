@@ -204,5 +204,65 @@ class ConfDB {
 		    $this->db->Query();
 
 	}
+
+
+	/****************    SYNCHRONISATION AFTER INSTALL   *********************/
+
+    /*
+     * @returns Number of users
+     */
+	public function getUserCount(){
+		$query="SELECT count(*) as cnt FROM #__thm_groups_text";
+		$this->db->setQuery($query);
+		return $this->db->loadObject()->cnt;
+	}
+
+	public function sync(){
+		$userCount = $this->getUserCount();
+		if ($userCount == 0) {
+			// Synchronisiere
+			// Gruppen kopieren
+			$query="INSERT INTO #__thm_groups_groups (id, name) ".
+				   "SELECT id, title ".
+				   "FROM #__usergroups";
+			$this->db->setQuery($query);
+			$this->db->query();
+
+			// Gruppenzugehöigkeit kopieren
+			$query="INSERT INTO #__thm_groups_groups_map (uid, gid) ".
+				   "SELECT user_id, group_id ".
+				   "FROM #__user_usergroup_map;";
+			$this->db->setQuery($query);
+			$this->db->query();
+			$query="UPDATE #__thm_groups_groups_map SET rid = 1";
+			$this->db->setQuery($query);
+			$this->db->query();
+
+			// Benutzer kopieren
+			$query = "SELECT * FROM #__users";
+			$this->db->setQuery($query);
+			$users = $this->db->loadObjectList();
+			$user = $users[0];
+			foreach ($users as $user) {
+				// Namen zerlegen
+				$nameArray = explode(" ", $user->name);
+				$firstName = $nameArray[0];
+				$lastName = $nameArray[1];
+
+				for ($i = 2; $i < sizeof($nameArray); $i++) {
+					$lastName .= " ".$nameArray[$i];
+				}
+
+				$query = "INSERT INTO #__thm_groups_text (userid, structid, value, publish) VALUES ";
+				$query .= "(".$user->id.", 1, '".$firstName."', 1), ";
+				$query .= "(".$user->id.", 2, '".$lastName."', 1), ";
+				$query .= "(".$user->id.", 4, '".$user->email."', 1), ";
+				$query .= "(".$user->id.", 3, '".$user->username."', 1)";
+
+				$this->db->setQuery($query);
+				$this->db->query();
+			}
+		} // if ($userCount == 0)
+	}
 }
 ?>

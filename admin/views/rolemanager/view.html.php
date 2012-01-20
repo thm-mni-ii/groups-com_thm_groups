@@ -20,43 +20,43 @@ jimport('joomla.filesystem.path');
 
 
 class THMGroupsViewRolemanager extends JView {
-	
+
 	protected $state;
-	
+
 	function display($tpl = null) {
 
 		$document   = & JFactory::getDocument();
 		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
 
 		JToolBarHelper::title( JText::_( 'COM_THM_GROUPS_ROLEMANAGER_TITLE' ), 'membermanager.png', JPATH_COMPONENT.DS.'img'.DS.'membermanager.png' );
-		JToolBarHelper::custom( 'rolemanager.addRole', 'moderate.png',   JPATH_COMPONENT.DS.'img'.DS.'moderate.png','COM_THM_GROUPS_ADD_ROLE', false, false );
-		JToolBarHelper::editListX('rolemanager.edit', 'COM_THM_GROUPS_EDIT_ROLE');
+		JToolBarHelper::custom( 'rolemanager.addRole', 'moderate.png',   JPATH_COMPONENT.DS.'img'.DS.'moderate.png','COM_THM_GROUPS_ROLEMANAGER_ADD', false, false );
+		JToolBarHelper::editListX('rolemanager.edit', 'COM_THM_GROUPS_ROLEMANAGER_EDIT');
 		JToolBarHelper::deleteList('COM_THM_GROUPS_REALLY_DELETE','rolemanager.remove', 'JTOOLBAR_DELETE');
 		JToolBarHelper::cancel('rolemanager.cancel', 'JTOOLBAR_CANCEL');
 		JToolBarHelper::back('JTOOLBAR_BACK');
 
 		$uri =& JFactory::getURI();
-		$query=$uri->getQuery();		
-		
+		$query=$uri->getQuery();
+
 		/* Joomla 1.5
 		//global $mainframe, $option;
 		*/
- 		
+
  		// begin Joomla 1.6
- 		$mainframe = Jfactory::getApplication('Administrator'); 
+ 		$mainframe = Jfactory::getApplication('Administrator');
  		// end Joomla 1.6
-		
-		
+
+
 		$this->state = $this->get('State');
-		
+
 		$items = $this->get( 'Items');
 		$pagination = $this->get('Pagination');
-		
+
 		// push data into the template
 		$this->assignRef('items', $items );
-		$this->assignRef('pagination', $pagination);	
+		$this->assignRef('pagination', $pagination);
 		$this->assignRef('request_url', $uri->toString());
-		
+
 		parent::display($tpl);
 	}
 }

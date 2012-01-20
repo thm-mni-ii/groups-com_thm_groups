@@ -31,7 +31,7 @@ class THMGroupsModelAdvanced extends JModel {
 	function getView() {
 		return $this->getHead() . $this->getList();
 	}
-	
+
 	function getViewParams() {
 		$mainframe = Jfactory::getApplication(); ;
 		return $mainframe->getParams();
@@ -90,7 +90,7 @@ class THMGroupsModelAdvanced extends JModel {
 		return $canEdit;
 
 	}
-	
+
 	function getTypes() {
 		$db = & JFactory::getDBO();
 		$query = "SELECT Type FROM #__thm_groups_relationtable " .
@@ -99,8 +99,10 @@ class THMGroupsModelAdvanced extends JModel {
 		return $db->loadObjectList();
 	}
 
+	/**
+	 * Gibt ein Array von Gruppenmitgliedern zurueck.
+	 */
 	public function getData() {
-		
 		$itemid = JRequest :: getVar('Itemid', 0);
 		$db = & JFactory :: getDBO();
 		$groupid = $this->getGroupNumber(); //contains the number of the group, e.g. 10
@@ -113,25 +115,35 @@ class THMGroupsModelAdvanced extends JModel {
 			$arrSortedRoles = $this->getUnsortedRoles($groupid);
 		else
 			$arrSortedRoles = explode(",", $sortedRoles);
-		$struct = $params->get('structid');
-		
+
 		$types = $this->getTypes();
-		
+
 		$puffer = array();
 		$result = array();
 		$usedUser = array();
-		$showStruct = $params->get('structid');
+		$showStructure = array();
+		$param_structselect = $params->get('struct');
+		if (isset($param_structselect)) {
+	        foreach ($param_structselect as $item) {
+				$tempItem = array();
+				$tempItem['id'] = substr($item, 0, strlen($item) - 2);
+				$tempItem['showName'] = substr($item, -2, 1) == "1" ? true : false;
+				$tempItem['wrapAfter'] = substr($item, -1, 1) == "1" ? true : false;
+				$showStructure[] = $tempItem;
+	        }
+		}
+
 		$_data = array();
 		foreach ($arrSortedRoles as $sortRole) {
 			$query = "SELECT distinct gm.uid, t.value FROM #__thm_groups_groups_map as gm, #__thm_groups_text as t " .
 			"WHERE gm.gid = $groupid AND gm.rid != 2 AND gm.uid=t.userid and t.structid=2 and gm.rid=$sortRole Order By t.value";
 			$db->setQuery($query);
 			$groupMember = $db->loadObjectList();
-			
+
 			foreach ($groupMember as $member) {
 				foreach ($types as $type) {
 					$query = "SELECT structid, value, publish FROM #__thm_groups_".strtolower($type->Type)." as a, #__thm_groups_groups_map as gm where a.userid = " . $member->uid ." and a.userid = gm.uid and gm.rid=$sortRole and gm.gid = $groupid";
-					
+
 					$db->setQuery($query);
 					$puffer = $db->loadObjectList();
 
@@ -145,26 +157,34 @@ class THMGroupsModelAdvanced extends JModel {
 			}
 		}
 		$structure=$this->getStructure();
-		
+
 		foreach($sortedMember as $key=>$memberdata) {
 			$_data[$key] = array();
 			foreach($structure as $structureItem){
 				foreach ($memberdata as $type) {
 					foreach ($type as $struct) {
-						if (in_array($struct->structid,$showStruct) && ($struct->structid == $structureItem->id)) {	
-							$puffer['structid'] = $struct->structid;
-							$puffer['type'] = $structureItem->type;
-							$puffer['value'] = $struct->value;
-							array_push($_data[$key], $puffer);
+						foreach ($showStructure as $selection) {
+							if ($struct->structid == $selection['id'] && $struct->structid == $structureItem->id) {
+								$puffer['structid'] = $struct->structid;
+								$puffer['structname'] = $selection['showName'];
+								$puffer['structwrap'] = $selection['wrapAfter'];
+								$puffer['type'] = $structureItem->type;
+								if ($struct->value == "" && $structureItem->type == "PICTURE") {
+									$puffer['value'] = $this->getExtra($struct->structid, $structureItem->type);
+								} else {
+									$puffer['value'] = $struct->value;
+								}
+								array_push($_data[$key], $puffer);
+							}
 						}
 					}
 				}
 			}
 		}
-		
+
 		return $_data;
 	}
-	
+
 	function getStructure()
 	{
 		$db = & JFactory::getDBO();
@@ -173,67 +193,25 @@ class THMGroupsModelAdvanced extends JModel {
 		return $db->loadObjectList();
 	}
 
-	public function getDataTable() {
-		$itemid = JRequest :: getVar('Itemid', 0);
-		$db = & JFactory :: getDBO();
-		$groupid = $this->getGroupNumber(); //contains the number of the group, e.g. 10
-
-		$params = $this->getViewParams();
-		$margin = $params->get('lineSpacing');
-
-		$sortedRoles = $params->get('sortedgrouproles');
-		if ($sortedRoles == "")
-			$arrSortedRoles = $this->getUnsortedRoles($groupid);
+	function getExtra($structid, $type) {
+		$db =& JFactory::getDBO();
+		$query = "SELECT value FROM #__thm_groups_".strtolower($type)."_extra WHERE structid=".$structid;
+		$db->setQuery( $query );
+		$res = $db->loadObject();
+		if(isset($res))
+		   	return $res->value;
 		else
-			$arrSortedRoles = explode(",", $sortedRoles);
-		$struct = $params->get('structid');
-		
-		$types = $this->getTypes();
-		
-		$puffer = array();
-		$result = array();
-		$usedUser = array();
-		$showStruct = $params->get('structid');
-		$_data = array();
-		foreach ($arrSortedRoles as $sortRole) {
-			$query = "SELECT distinct gm.uid, t.value FROM #__thm_groups_groups_map as gm, #__thm_groups_text as t " .
-			"WHERE gm.gid = $groupid AND gm.rid != 2 AND gm.uid=t.userid and t.structid=2 and gm.rid=$sortRole Order By t.value";
-			
-			$db->setQuery($query);
-			$groupMember = $db->loadObjectList();
-			foreach ($groupMember as $member) {
-				foreach ($types as $type) {
-					$query = "SELECT structid, value, publish FROM #__thm_groups_".strtolower($type->Type)." as a, #__thm_groups_groups_map as gm where a.userid = " . $member->uid ." and a.userid = gm.uid and gm.rid=$sortRole and gm.gid = $groupid";
-					//echo $query;
-					$db->setQuery($query);
-					$puffer = $db->loadObjectList();
-					$result[$member->uid][]= $puffer;
-				}
+			return null;
+	}
 
-				if(!in_array($member->uid, $usedUser)) {
-					$sortedMember[$member->uid] = $result[$member->uid];
-					$usedUser[] = $member->uid;
-				}
-			}
-		}
-		$structure=$this->getStructure();
-		
-		foreach($sortedMember as $key=>$memberdata) {
-			$_data[$key] = array();
-			foreach($structure as $structureItem){
-				foreach ($memberdata as $type) {
-					foreach ($type as $struct) {
-						if (in_array($struct->structid,$showStruct) && ($struct->structid == $structureItem->id)) {	
-							$puffer['structid'] = $struct->structid;
-							$puffer['type'] = $structureItem->type;
-							$puffer['value'] = $struct->value;
-							array_push($_data[$key], $puffer);
-						}
-					}
-				}
-			}
-		}		
+	/**
+	 * Gibt eine zweidimensionales Array (left/right) von Gruppenmitgliedern zurueck.
+	 */
+	public function getDataTable() {
+		$memberleft = array();
+		$memberright = array();
 		$i = 0;
+		$_data = $this->getData();
 		if (!empty($_data))
 			foreach($_data as $key => $member) {
 				if($i==0){

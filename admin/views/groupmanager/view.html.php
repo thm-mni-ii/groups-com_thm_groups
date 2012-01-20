@@ -20,42 +20,45 @@ jimport('joomla.filesystem.path');
 
 
 class THMGroupsViewgroupmanager extends JView {
-	
+
 	protected $state;
-	
-	function display($tpl = null) {				
-		
-		$document   = & JFactory::getDocument(); 
+
+	function display($tpl = null) {
+
+		$document   = & JFactory::getDocument();
 		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
-				
+
 		JToolBarHelper::title( JText::_( 'COM_THM_GROUPS_GROUPMANAGER_TITLE' ), 'membermanager.png', JPATH_COMPONENT.DS.'img'.DS.'membermanager.png' );
-		JToolBarHelper::custom( 'groupmanager.addGroup', 'moderate.png',   JPATH_COMPONENT.DS.'img'.DS.'moderate.png','COM_THM_GROUPS_ADD_GROUP', false, false );
-		JToolBarHelper::editListX('groupmanager.edit', 'COM_THM_GROUPS_EDIT_GROUP');
-		JToolBarHelper::deleteList('COM_THM_GROUPS_REALLY_DELETE','groupmanager.remove', 'JTOOLBAR_DELETE');
+		JToolBarHelper::custom( 'groupmanager.addGroup', 'moderate.png',   JPATH_COMPONENT.DS.'img'.DS.'moderate.png','COM_THM_GROUPS_GROUPMANAGER_ADD', false, false );
+		JToolBarHelper::editListX('groupmanager.edit', 'COM_THM_GROUPS_GROUPMANAGER_EDIT');
+		JToolBarHelper::deleteList('COM_THM_GROUPS_GROUPMANAGER_REALLY_DELETE','groupmanager.remove', 'JTOOLBAR_DELETE');
 		JToolBarHelper::cancel('groupmanager.cancel', 'JTOOLBAR_CANCEL');
 		JToolBarHelper::back('JTOOLBAR_BACK');
-		
+
 		$uri =& JFactory::getURI();
-		$query=$uri->getQuery();		
-		
+		$query=$uri->getQuery();
+
 		/* Joomla 1.5
 		//global $mainframe, $option;
 		*/
- 		
+
  		// begin Joomla 1.6
- 		$mainframe = Jfactory::getApplication('Administrator'); 
+ 		$mainframe = Jfactory::getApplication('Administrator');
  		// end Joomla 1.6
-		
-		
-		$this->state		= $this->get('State');
+
+
+		$this->state = $this->get('State');
 		$items = $this->get('Items');
 		$pagination = $this->get('Pagination');
-		
+
 		// push data into the template
 		$this->assignRef('items', $items );
-		$this->assignRef('pagination', $pagination);	
+		$this->assignRef('pagination', $pagination);
 		$this->assignRef('request_url', $uri->toString());
-		
+
+		$jgroups =& $this->get('JoomlaGroups');
+		$this->assignRef('jgroups', $jgroups);
+
 		parent::display($tpl);
 	}
 }

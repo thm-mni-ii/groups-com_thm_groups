@@ -32,18 +32,37 @@ class THMGroupsViewAdvanced extends JView {
 		$showpagetitle = $params->get('show_page_heading');
 		if($showpagetitle)
 	    	$title = $pagetitle;
-	    else 	
+	    else
 	    	$title = "";
 		$this->assignRef('title' , $title);
 		$itemid = JRequest :: getVar('Itemid', 0);
-	
+			
 		$this->assignRef( 'gsgid',  $model->getGroupNumber());
 		$this->assignRef( 'itemid',  $itemid);
 		$this->assignRef( 'canEdit',  $model->canEdit());
 		$this->assignRef( 'data',  $model->getData());
 		$this->assignRef( 'dataTable',  $model->getDataTable());
+		$this->assignRef( 'structure',  $model->getStructure());
 
 		parent::display($tpl);
+	}
+
+	function make_table($data) {
+		$jsonTable = json_decode($data);
+		$table = "<table class='table'><tr>";
+		foreach ($jsonTable[0] as $key=>$value) {
+			$table = $table . "<th>" . $key . "</th>";
+		}
+		$table = $table . "</tr>";
+		foreach ($jsonTable as $item) {
+			$table = $table . "<tr>";
+			foreach ($item as $value) {
+				$table = $table . "<td>" . $value . "</td>";
+			}
+			$table = $table . "</tr>";
+		}
+		$table = $table . "</table>";
+		return $table;
 	}
 }
 ?>

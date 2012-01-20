@@ -3,7 +3,7 @@
  * PHP version 5
  *
  * @category Joomla Programming Weeks WS2008/2009: FH Giessen-Friedberg
- * @package  com_thm_groups 
+ * @package  com_thm_groups
  * (enhanced from SS2008
  * (@Sascha Henry<sascha.henry@mni.fh-giessen.de>, @Christian Gueth<christian.gueth@mni.fh-giessen.de,Severin Rotsch <severin.rotsch@mni.fh-giessen.de>,@author   Martin Karry <martin.karry@mni.fh-giessen.de>)
  * @author   Daniel Schmidt <daniel.schmidt-3@mni.fh-giessen.de>
@@ -17,7 +17,7 @@ defined('_JEXEC') or die();
 require_once(JPATH_COMPONENT.DS.'classes'.DS.'confdb.php');
  jimport('joomla.application.component.controllerform');
 class THMGroupsControllerGroupmanager extends JControllerForm {
-	
+
 	/**
  	 * constructor (registers additional tasks to methods)
  	 * @return void
@@ -25,7 +25,7 @@ class THMGroupsControllerGroupmanager extends JControllerForm {
 	function __construct() {
 		parent::__construct();
 	}
-	
+
 	/**
   	 * display the groupedit form
  	 * @return void
@@ -36,12 +36,12 @@ class THMGroupsControllerGroupmanager extends JControllerForm {
     	JRequest::setVar( 'hidemainmenu', 1);
     	parent::display();
 	}
-	
+
 	function cancel(){
 	    $msg =   JText::_( 'Operation Cancelled' );
 	    $this->setRedirect(   'index.php?option=com_thm_groups', $msg );
 	}
-	
+
 	function addGroup(){
 		JRequest::setVar( 'view', 'addgroup' );
     	JRequest::setVar( 'layout', 'default' );
@@ -50,28 +50,47 @@ class THMGroupsControllerGroupmanager extends JControllerForm {
 	}
 	//If-Else-Verzweigung Abfrage nach aktiven Usern noch wichtig.
 	function remove(){
-	    $dbcon = new ConfDB();
 	    $db =& JFactory::getDBO();
     	$cid = JRequest::getVar( 'cid',   array(), 'post', 'array' );
 
-    	
-    	$freeGroups=$dbcon->getfreeGroupIDs();
-    	$fullGroups=$dbcon->getfullGroupIDs();
-    	$stringNotToDel;
-    	$stringToDel;
-    		
+    	$model = $this->getModel();
+
+    	$freeGroups=$model->getfreeGroups();
+
+    	$deleted = 0;
     	foreach($cid as $toDel){
-    		
     		foreach($freeGroups as $canDel){
-    			if($toDel==$canDel->id) $stringToDel.=$toDel." ";
+    			if($toDel==$canDel->id && $canDel->injoomla==0) {
+    				$model->delGroup($toDel);
+    				$deleted++;
+    			}
     		}
     	}
-    	$arrayToDel=explode(" ",$stringToDel);
-    	foreach($arrayToDel as $del){
-    		if(strlen($del)!=0)$dbcon->delGroup($del);	
+
+    	$delCount = count($cid);
+    	switch ($delCount) {
+    		case 0:
+    			$answer = "";
+    			break;
+    		case 1:
+    			if ($deleted == 1) {
+    				$answer = "Gruppe erfolgreich entfernt";
+    			} else {
+    				$answer = "Gruppe konnte nicht entfernt werden";
+    			}
+    			break;
+    		default:
+    			if ($deleted == 0) {
+    				$answer = "Keine Gruppe konnte entfernt werden";
+    			} else if ($deleted == $delCount) {
+    				$answer = "Alle Gruppen wurden erfolgreich entfernt";
+    			} else {
+    				$answer = "Nicht alle Gruppen konnten entfernt werden";
+    			}
+    			break;
     	}
-    	$this->setRedirect( 'index.php?option=com_thm_groups&view=groupmanager',"Gruppe(n) erfolgreich entfernt");
-	   
+
+    	$this->setRedirect( 'index.php?option=com_thm_groups&view=groupmanager', $answer);
 	}
 }
 ?>

@@ -23,7 +23,7 @@ defined('_JEXEC') or die( 'Restricted access' );
  * parameter_pattern:	Comma-seperated items ids (selected_itemid_1,selected_itemid_2)
  */
 jimport('joomla.html.html');
-jimport('joomla.form.formfield'); 
+jimport('joomla.form.formfield');
 
 class JFormFieldStructureSelect extends JFormField {
 	/**
@@ -32,37 +32,131 @@ class JFormFieldStructureSelect extends JFormField {
 	 * @access	protected
 	 * @var		string
 	 */
-	
+
 
 	function getInput() {
 		$scriptDir = str_replace(JPATH_SITE.DS,'',"administrator/components/com_thm_groups/elements/");
 		$sortButtons = true;
 
 		// add script-code to the document head
-		JHTML::script('roleitemselect.js', $scriptDir, false);
-		$id=JRequest::getVar('cid');
-		if(isset($id))
-			$id=$id[0];
-		else
-			$id=JRequest::getVar('id');
-        $selected = $this->value;
-        $query="SELECT a.id, a.field FROM `#__thm_groups_structure` as a Order by a.order";
-        $db =& JFactory::getDBO();
-        $db->setQuery($query);
-        $list= $db->loadObjectList();
+		JHTML::script('structureselect.js', $scriptDir, false);
 
-      	$html='<select name="'.$this->name.'[]" size="'.count($list).'" id="paramsstructid" class = "selStructure" style="display:block" multiple>';
-        foreach($list as $structureRow){
-        	$sel = '';
-          	if($selected != "")
-          		foreach($selected as $selectedItem)
-          			if($structureRow->id == $selectedItem)
-          				$sel = "selected";
-            $html.="<option value=".$structureRow->id." $sel>".$structureRow->field." </option>";
+     	// Initialize variables.
+		$html = array();
+
+		// Initialize some field attributes.
+		$class = $this->element['class'] ? ' class="checkboxes '.(string) $this->element['class'].'"' : ' class="checkboxes"';
+
+		// Start the checkbox field output.
+		$html[] = '<fieldset id="'.$this->name.'"'.$class.'>';
+
+		// Get selected items
+        $selected = $this->value;
+
+        // Parse selected items
+        $selectedItems = array();
+        if ($selected != "") {
+	        foreach ($selected as $item) {
+				$tempItem = array();
+				$tempItem['id'] = substr($item, 0, strlen($item) - 2);
+				$tempItem['showName'] = substr($item, -2, 1);
+				$tempItem['wrapAfter'] = substr($item, -1, 1);
+				$selectedItems[] = $tempItem;
+	        }
         }
-      		
-      	$html.='</select>';
-     	return $html;
+
+		// Get the field options.
+		$options = $this->getOptions($selectedItems);
+
+		// Build the checkbox field output.
+		$html[] = '<table>' .
+				'<thead>' .
+				'<tr><th>' .
+				JText::_( 'Attribute' ) .
+				'</th><th>' .
+				JText::_( 'Show' ) .
+				'</th><th>' .
+				JText::_( 'Name' ) .
+				'</th><th>' .
+				JText::_( 'Wrap' ) .
+				'</th></tr>' .
+				'</thead>' .
+				'<tbody>';
+		foreach ($options as $i => $option) {
+			// Initialize some option attributes.
+			$value = null;
+			$checked = '';
+			$checkedShowName = '';
+			$checkedWrapAfter = '';
+			$disabled = '';
+			foreach ($selectedItems as $item) {
+				if ($item['id'] == $option->value) {
+					$checked = ' checked="checked"';
+					if ($item['showName'] == "1") {
+						$checkedShowName = ' checked="checked"';
+					} else {
+						$checkedShowName = '';
+					}
+					if ($item['wrapAfter'] == "1") {
+						$checkedWrapAfter = ' checked="checked"';
+					} else {
+						$checkedWrapAfter = '';
+					}
+					$value = $option->value.$item['showName'].$item['wrapAfter'];
+				}
+			}
+			if (!isset($value)) {
+				$value = $option->value."00";
+				$disabled = ' disabled="disabled"';
+			}
+			//$class = !empty($option->class) ? ' class="'.$option->class.'"' : '';
+			//$disabled = !empty($option->disable) ? ' disabled="disabled"' : '';
+
+			$html[] = '<tr><td>' .
+					'<label for="'.$this->name.$i.'"'.$class.'>'.JText::_($option->text).'</label>' .
+					'</td><td>' .
+					'<input type="checkbox" id="'.$this->name.$i.'" name="'.$this->name.'['.$i.']"'.' value="'.$value.'" onchange="switchEnablingAdditionalAttr('."'".$this->name.$i."'".')"'.$checked.' />' .
+					'</td><td>' .
+					'<input type="checkbox" id="'.$this->name.$i.'ShowName" onchange="switchAttributeName('."'".$this->name.$i."'".')"'.$checkedShowName.$disabled.' />' .
+					'</td><td>' .
+					'<input type="checkbox" id="'.$this->name.$i.'WrapAfter" onchange="switchAttributeWrap('."'".$this->name.$i."'".')"'.$checkedWrapAfter.$disabled.' />' .
+					'</td></tr>';
+		}
+		$html[] = '</tbody>' .
+				'</table>';
+
+		// End the checkbox field output.
+		$html[] = '</fieldset>';
+
+		return implode($html);
 	}
+
+	/**
+	 * Method to get the field options.
+	 *
+	 * @return	array	The field option objects.
+	 */
+	protected function getOptions($selected) {
+		$query="SELECT a.id, a.field FROM `#__thm_groups_structure` as a Order by a.order";
+		$db =& JFactory::getDBO();
+		$db->setQuery($query);
+		$list= $db->loadObjectList();
+
+		// Initialize variables.
+		$options = array();
+
+		foreach ($list as $i => $structure) {
+			// Create a new option object based on the <option /> element.
+			$tmp = JHtml::_('select.option', $structure->id, $structure->field);
+
+			// Add the option object to the result set.
+			$options[] = $tmp;
+		}
+
+		reset($structure);
+
+		return $options;
+	}
+
 }
 ?>

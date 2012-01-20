@@ -20,23 +20,25 @@ jimport('joomla.filesystem.path');
 
 
 class THMGroupsViewedit extends JView {
-	
+
+	protected $form;
+
 	function getTextForm ($name, $size, $value, $structid) {
 		$model =& $this->getModel();
 		$extra =$model->getExtra($structid, 'TEXT');
-		$output =  "<input " . 
+		$output =  "<input " .
 				"class='inputbox' " .
-				"type='text' name='$name' " . 
+				"type='text' name='$name' " .
 				"id='$name' " ;
 				if (isset($extra))
 					$output .= "size='$extra'";
 				else
-					$output .= "size='$size'"; 
+					$output .= "size='$size'";
        			$output .= "value='$value'" .
 			  	" />";
        	echo $output;
 	}
-	
+
 	function getTextArea ($name, $rows, $value, $structid) {
 		$model =& $this->getModel();
 		$extra =$model->getExtra($structid, 'TEXTFIELD');
@@ -45,17 +47,17 @@ class THMGroupsViewedit extends JView {
 				$output .= "rows='$extra' ";
 			else
 				$output .= "rows='$rows' " ;
-					
+
 			$output .= "name='$name' >" .
 		 	$value.
 		 "</textarea>";
 		 echo $output;
 	}
-	
+
 	function getPictureArea ($name, $structid, $value) {
 		if($value!="")
 			$output = "<img src='../components/com_thm_groups/img/portraits/$value' />";
-		else 	
+		else
 			$output = "<img src='../components/com_thm_groups/img/portraits/anonym.jpg' />";
 		$output .= "<input type='file' accept='image' name='$name' />".
 		"<br /><br /><br /><br /><input type='submit' id='3' ".
@@ -64,7 +66,7 @@ class THMGroupsViewedit extends JView {
 		"value='Bild l&ouml;schen' name='del".$name. "' task='membermanager.delPic' />";
 		echo $output;
 	}
-	
+
 	function getTableArea ($name, $value, $structid) {
 		$model =& $this->getModel();
 		$cid = JRequest::getVar('cid', array(0), '', 'array');
@@ -84,8 +86,8 @@ class THMGroupsViewedit extends JView {
 						   		"<td>".($key+1)."</td>";*/
 					foreach($row as $rowItem)
 						$output .= "<td>".$rowItem."</td>";
-					$output .= "<td><a href='javascript:delTableRow($key, $structid );' title='Zeile: ".($key+1)."::Zeile entfernen.' class='hasTip'><img src='components/com_thm_groups/img/icon-16-trash.png' /></a> </td>";	
-					$output .= "<td><a href='index.php?option=com_thm_groups&view=edit&layout=edit_table&tmpl=component&cid=$cid[0]&structid=$structid&key=$key' title='Zeile: ".($key+1)."::Zeile bearbeiten.' class='modal-button hasTip' rel=\"{handler: 'iframe', size: {x: 400, y: 300}}\"><img src='components/com_thm_groups/img/icon-16-edit.png' /></a> </td>";	
+					$output .= "<td><a href='javascript:delTableRow($key, $structid );' title='Zeile: ".($key+1)."::Zeile entfernen.' class='hasTip'><img src='components/com_thm_groups/img/icon-16-trash.png' /></a> </td>";
+					$output .= "<td><a href='index.php?option=com_thm_groups&view=edit&layout=edit_table&tmpl=component&cid=$cid[0]&structid=$structid&key=$key' title='Zeile: ".($key+1)."::Zeile bearbeiten.' class='modal-button hasTip' rel=\"{handler: 'iframe', size: {x: 400, y: 300}}\"><img src='components/com_thm_groups/img/icon-16-edit.png' /></a> </td>";
 					$output .= "</tr>";
 				}
 			} else {
@@ -95,9 +97,9 @@ class THMGroupsViewedit extends JView {
 			}
 			$output .= "</table>";
 			foreach($head as $headItem) {
-				$output .= "<input " . 
+				$output .= "<input " .
 				"class='inputbox' " .
-				"type='text' name='TABLE$structid$headItem' " . 
+				"type='text' name='TABLE$structid$headItem' " .
 				"id='TABLE$structid$headItem' " .
 				"size='20'".
 				"onFocus=\"if(this.value=='$headItem eintragen') this.value=''\"".
@@ -108,18 +110,18 @@ class THMGroupsViewedit extends JView {
 				"onclick='document.forms[\"adminForm\"].elements[\"structid\"].value = $structid,".
 				"document.forms[\"adminForm\"].elements[\"task\"].value = \"membermanager.addTableRow\"' ".
 				"value='In Tabelle eintragen' name='addTableRow".$name. "' task='membermanager.addTableRow' />";
-			
+
 		} else {
 			$output = "Keine Parameter angegeben...";
 		}
-		
+
 		echo $output;
 	}
-	
+
 	function getDateForm ($name, $size, $value) {
 		echo JHTML::calendar($value, $name, $name,'%Y-%m-%d');
 	}
-	
+
 	function getMultiSelectForm ($name, $size, $value, $structid) {
 		$arrValue = explode(';', $value);
 		$model =& $this->getModel();
@@ -138,22 +140,38 @@ class THMGroupsViewedit extends JView {
 			$output .= "</SELECT>";
        	echo $output;
 	}
-	
-	function display($tpl = null) {				
-		
-		$document   = & JFactory::getDocument(); 
+
+	function display($tpl = null) {
+
+		$document   = & JFactory::getDocument();
 		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
-		
+
 		JToolBarHelper::title(JText::_( 'COM_THM_GROUPS_EDITUSER_TITLE' ), 'generic.png');
 		JToolBarHelper::apply('membermanager.apply', 'JTOOLBAR_APPLY');
 		JToolBarHelper::save('membermanager.save', 'JTOOLBAR_SAVE');
 		JToolBarHelper::cancel('membermanager.cancel', 'JTOOLBAR_CANCEL');
-		
+
 		$cid = JRequest::getVar('cid', array(0), '', 'array');
 		$model =& $this->getModel();
 		$items =& $this->get( 'Data');
 		$structure =& $this->get( 'Structure');
-		
+
+		$textField = array();
+		foreach($structure as $structureItem) {
+			foreach ($items as $item){
+		    	if($item->structid == $structureItem->id)
+		     		$value = $item->value;
+		   	}
+			if($structureItem->type == "TEXTFIELD") {
+		 		$textField[$structureItem->field] = $value;
+		 	}
+		}
+		$this->form = $this->get('Form');
+
+		if (!empty($textField)) {
+			$this->form->bind($textField);
+		}
+
 		$this->assignRef( 'items', $items );
 		$this->assignRef( 'userid', $cid );
 		$this->assignRef( 'structure', $structure );

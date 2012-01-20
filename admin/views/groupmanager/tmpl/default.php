@@ -29,21 +29,25 @@ $listDirn	= $this->state->get('list.direction');
 			<th width="1%" ><input type="checkbox" name="toggle" value=""
 				onclick="checkAll(<?php echo count( $this->items ); ?>);" /></th>
 
-			<th width="20%" align="center">
+			<th width="30%" align="center">
 				<?php echo JHTML::_('grid.sort', 'Name', 'name', $listDirn, $listOrder ); ?>
 			</th>
 			<th width="40%" align="center">
-				<?php echo JHTML::_('grid.sort','Info', 'info', $listDirn, $listOrder ); ?>
+				<?php echo JHTML::_('grid.sort', 'INFO', 'info', $listDirn, $listOrder ); ?>
 			</th>
-			<th width="15%" align="center">
-				<?php echo JHTML::_('grid.sort','Picture', 'picture', $listDirn, $listOrder ); ?>
+			<th width="10%" align="center">
+				<?php echo JHTML::_('grid.sort', 'PICTURE', 'picture', $listDirn, $listOrder ); ?>
 			</th>
-			<th width="20%" align="center">
-				<?php echo JHTML::_('grid.sort','Mode', 'mode', $listDirn, $listOrder ); ?>
+			<th width="10%" align="center">
+				<?php echo JHTML::_('grid.sort', 'MODE', 'mode', $listDirn, $listOrder ); ?>
 			</th>
 			<th width="5%" align="center">
-				<?php echo JHTML::_('grid.sort','ID', 'picture', $listDirn, $listOrder ); ?>
+				<?php echo JHTML::_('grid.sort', 'ID', 'picture', $listDirn, $listOrder ); ?>
 			</th>
+			<th width="5%" nowrap="nowrap">
+				<?php echo JHTML::_('grid.sort', 'COM_THM_GROUPS_GROUPMANAGER_HEADING_PUBLISHED_JOOMLA', 'injoomla', $listDirn, $listOrder  ); ?>
+			</th>
+
 		</tr>
 	</thead>
 
@@ -53,15 +57,42 @@ $listDirn	= $this->state->get('list.direction');
 		$row = $this->items[$i];
         $link='index.php?option=com_thm_groups&view=editgroup&task=groupmanager.edit&cid='.$row->id;
 		$checked  = JHTML::_('grid.id',   $i, $row->id );
-		
+
 		?>
 		<tr class="<?php echo "row$k"; ?>">
 			<td> <?php echo $checked; ?> </td>
-			<td> <a href="<?php echo $link; ?>"> <?php echo $row->name; ?></a> </td>
+			<td>
+				<?php
+					$tempgroup=$row;
+					$gap=0;
+					while($tempgroup->parent_id != 0)
+					{
+						$gap++;
+						foreach($this->jgroups as $actualgroup)
+							if( $tempgroup->parent_id == $actualgroup->id )
+								$tempgroup = $actualgroup;
+					}
+					while($gap > 0) {
+						$gap--;
+						echo "<span style='color: #D7D7D7; font-weight: bold; margin-right: 5px;'>|&mdash;</span>";
+					}
+				?>
+				<a href="<?php echo " $link"; ?>">
+					<?php
+						if ($row->name == null) {
+							echo $row->title;
+						} else {
+							echo $row->name;
+						}
+					?>
+				</a>
+			</td>
 			<td> <?php echo $row->info; ?> </td>
 			<td> <?php echo $row->picture?>
 			<td> <?php echo $row->mode?>
 			<td> <?php echo $row->id?>
+			<td valign="top" align="center"><?php if($row->injoomla=='0'){echo JHtml::_('jgrid.published', 0, 'groupmanager.', 1);}
+			                                      if($row->injoomla=='1'){echo JHtml::_('jgrid.published', 1, 'groupmanager.', 1);}; ?></td>
 		    </td>
 		</tr>
 		<?php

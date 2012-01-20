@@ -117,7 +117,7 @@ class MemeberManagerDB {
 
 				$this->db->setQuery($query);
 				$this->db->query();
-				
+
 				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
 				$query .= "VALUES ($id, '$username', 3)";
 
@@ -143,7 +143,7 @@ class MemeberManagerDB {
 		}
 		
 		// Nochmal testen...
-		$count=$this->conf->getValue('mm_counter');// holt die Anzahl der Membermanager aufrufe
+		/*$count=$this->conf->getValue('mm_counter');// holt die Anzahl der Membermanager aufrufe
 
 		if($count==10){//Wenn MM 10 mal aufgerufen soll er nach gelöschten Joomla-Usern schauen
 
@@ -153,7 +153,7 @@ class MemeberManagerDB {
 		else{//sonst den Counter erhöhen
 			$count++;
 			$this->conf->setValue('mm_counter',$count);
-		}
+		}*/
 	}
 }
 ?>

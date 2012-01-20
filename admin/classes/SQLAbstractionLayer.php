@@ -158,7 +158,7 @@ class SQLAbstractionLayer extends JDatabaseMySQL {
 			$query .= ';';
 		}
 
-		
+
 		// Encapsulate executeDbData() with transaction-safety enabled
 		return($this->executeDbData($query, true));
 	}
@@ -228,6 +228,62 @@ class SQLAbstractionLayer extends JDatabaseMySQL {
 		// Get and return SQL data
 		return ($this->getDbData($query));
 	}
+
+
+	/**
+	* Gets list of joomla groups.
+	*
+	* @access  public
+	* @return	bool|array  "false" on error|indexed rows with associative colums.
+	*/
+	public function getJoomlaGroups(){
+
+		$query = "SELECT * FROM #__usergroups ORDER BY lft";
+
+		return ($this->getDbData($query));
+
+	}
+
+
+
+
+	/**
+	* Gets list of all groups.
+	*
+	* @access  public
+	* @return	bool|array  "false" on error|indexed rows with associative colums.
+	*/
+	public function getGroupsHirarchy() {
+
+		//$orderCol	= $this->state->get('list.ordering');
+		//$orderDirn	= $this->state->get('list.direction');
+
+		// Create SQL query string
+		$query="SELECT thm.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla ";
+		$query.="FROM jos_usergroups AS joo ";
+		$query.="RIGHT JOIN (";
+		$query.="  SELECT * ";
+		$query.="  FROM jos_thm_groups_groups ";
+		$query.="  WHERE injoomla = 0 ";
+		$query.="  ORDER BY name";
+		//$query.="  ORDER BY $orderCol $orderDirn";
+		$query.=") AS thm ";
+		$query.="ON joo.id = thm.id ";
+		$query.="UNION ";
+		$query.="SELECT joo.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla ";
+		$query.="FROM jos_usergroups AS joo ";
+		$query.="LEFT JOIN (";
+		$query.="  SELECT * ";
+		$query.="  FROM jos_thm_groups_groups ";
+		//$query.="  ORDER BY $orderCol $orderDirn";
+		$query.=") AS thm ";
+		$query.="ON joo.id = thm.id ";
+		$query.="ORDER BY lft";
+
+		// Get and return SQL data
+		return ($this->getDbData($query));
+	}
+
 
 
 	/**
@@ -327,7 +383,6 @@ class SQLAbstractionLayer extends JDatabaseMySQL {
 	 * @return	bool          "true" on success, "false" on error.
 	 */
 	public function delGroupsAndRoles($uids, $gid, $rid) {
-		//var_dump($uids);
 		// Create SQL query string
 		$query = '';
 		foreach($uids as $uid) {

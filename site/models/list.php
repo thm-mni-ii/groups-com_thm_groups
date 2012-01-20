@@ -33,7 +33,7 @@ class THMGroupsModelList extends JModel {
 	function getView() {
 		return $this->getHead() . $this->getList();
 	}
-	
+
 	function getViewParams() {
 		$mainframe = Jfactory::getApplication(); ;
 		return $mainframe->getParams();
@@ -51,7 +51,7 @@ class THMGroupsModelList extends JModel {
 
 	public function getgListAll() {
 		$params = $this->getViewParams();
-		
+
 		$db = & JFactory :: getDBO();
 		$showAll = $this->getShowMode();
 		$groupid = $this->getGroupNumber(); //contains the number of the group, e.g. 10
@@ -75,7 +75,7 @@ class THMGroupsModelList extends JModel {
 										."`#__thm_groups_additional_userdata` as ud, "
 										."`#__thm_groups_groups_map` as gm "
 										."where t.structid = 2 and t.userid = ud.userid and ud.published = 1 and t.userid = gm.uid and gm.gid=$groupid and gm.rid != 2";
-		
+
 		$db->setQuery($queryGetDiffLettersToFirstletter);
 		$allLastNames = $db->loadObjectList();
 
@@ -120,7 +120,7 @@ class THMGroupsModelList extends JModel {
 		//Anzahl der verschiedenen Anfangsbuchstaben ermitteln
 
 		$alleAnfangsbuchstaben = array ();
-		
+
 		foreach ($allLastNames as $name) {
 			if (!in_array(strtoupper(substr($name->lastName, 0, 1)), $alleAnfangsbuchstaben)) {
 				$alleAnfangsbuchstaben[] = strtoupper(substr($name->lastName, 0, 1));
@@ -170,7 +170,7 @@ class THMGroupsModelList extends JModel {
 			if (sizeof($rows) <= 0) {
 				continue;
 			}
-			
+
 			$placedChar++;
 
 			//kein Umbruch nÃ¶tig
@@ -186,7 +186,7 @@ class THMGroupsModelList extends JModel {
 					$placedChar++;
 				}
 				$retString .= "</div>";
-				
+
 				$retString .= "</ul>";
 			}
 
@@ -202,6 +202,7 @@ class THMGroupsModelList extends JModel {
 					$retString .= "<a class='list' margin-bottom:" . $margin . "px;\">".$char;
 					$retString .= "</a>";
 					$retString .= "<div class='listitem'>";
+
 					foreach ($rows as $row) {
 						$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href=" . JRoute :: _('index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid='.$groupid) . ">" . trim($row->lastName) . "</a></div><br/>";
 						$placedChar++;
@@ -211,7 +212,7 @@ class THMGroupsModelList extends JModel {
 				}
 				//nur noch GENAU 2 frei und auf dem nÃ¤chsten wÃ¤re nur einer, daher alles auf das nÃ¤chste
 				else
-				if (sizeof($rows) + placedChar == $maxColumnSize -2 && sizeof($rows) == 3) {
+				if (sizeof($rows) + $placedChar == $maxColumnSize -2 && sizeof($rows) == 3) {
 					$placedChar = 1;
 					$retString .= "</div><div id='row_" . $rowCount . "_column_" . $columnCount . "_max_" . $maxColumnSize . "' $divStyle>"; //ist  das div richtig so?
 					$retString .= "<ul class='alphabet'>";
@@ -231,24 +232,25 @@ class THMGroupsModelList extends JModel {
 				if ($placedChar <= $maxColumnSize -2 && $placedChar +sizeof($rows) == $maxColumnSize +1 && sizeof($rows) > 3) {
 					$retString .= "<ul class='alphabet'>";
 					$retString .= "<a class='list' margin-bottom:" . $margin . "px;\">".$char;
-					
+					$retString .= "</a>";
 					foreach ($rows as $row) {
-
+						$retString .= "<div class='listitem'>";
 						//jetzt beginnt ein neues Column
 						if ($placedChar == $maxColumnSize -1) {
 
-							$retString .= "</a></ul>";
+							$retString .= "</div></a></ul>";
 							$retString .= "</div><div id='row_" . $rowCount . "_column_" . $columnCount . "_max_" . $maxColumnSize . "' $divStyle>"; //ist  das div richtig so?
 							$retString .= "<ul class='alphabet'>";
 							$retString .= "<a class='list' margin-bottom:" . $margin . "px;\">".$char;
 							$retString .= "</a>";
 							$placedChar = 1;
 						}
-						$retString .= "<div class='listitem'>";
+
 						$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href=" . JRoute :: _('index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid='.$groupid) . ">" . trim($row->lastName) . "</a></div><br/>";
-						$retString .= "</div>";
+						//$retString .= "</div>";
 						$placedChar++;
 					}
+					$retString .= "</div>";
 					$retString .= "</ul>";
 				}
 				///es sind MEHR als 2 frei aber auf dem nÃ¤chsten column ist nur noch ein Name - hier sonderfall: da insgesamt nur 3 Buchstaben -> alles auf das folge-column
@@ -265,18 +267,21 @@ class THMGroupsModelList extends JModel {
 						//jetzt beginnt ein neues Column
 						if ($placedChar == $maxColumnSize -1) {
 
-							$retString .= "</a></ul>";
+							$retString .= "</a></div></ul>";
 							$retString .= "</div><div id='row_" . $rowCount . "_column_" . $columnCount . "_max_" . $maxColumnSize . "' $divStyle>"; //ist  das div richtig so?
 							$retString .= "<ul class='alphabet'>";
-						$retString .= "<a class='list' margin-bottom:" . $margin . "px;\">".$char;
-						$retString .= "</a>";
-						$placedChar = 0;
+
+							$retString .= "<a class='list' margin-bottom:" . $margin . "px;\">".$char;
+							$retString .= "</a>";
+							$retString .= "<div class='listitem'>";
+
+							$placedChar = 0;
 						}
-						$retString .= "<div class='listitem'>";
+
 						$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href=" . JRoute :: _('index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid='.$groupid) . ">" . trim($row->lastName) . "</a></div><br/>";
-						$retString .= "</div>";
 						$placedChar++;
 					}
+					$retString .= "</div>";
 					$retString .= "</ul>";
 				}
 
@@ -285,22 +290,28 @@ class THMGroupsModelList extends JModel {
 				if ((sizeof($rows) + $placedChar) >= $maxColumnSize +2) {
 					$retString .= "<ul class='alphabet'>";
 					$retString .= "<a class='list' margin-bottom:" . $margin . "px;\">".$char;
+					$retString .= "</a>";
 					foreach ($rows as $row) {
+						$retString .= "<div class='listitem'>";
 						//jetzt beginnt ein neues Column
 						if ($placedChar >= $maxColumnSize) {
 
-							$retString .= "</a></ul>";
+							$retString .= "</div></ul>";
 							$retString .= "</div><div id='row_" . $rowCount . "_column_" . $columnCount . "_max_" . $maxColumnSize . "' $divStyle>"; //ist  das div richtig so?
 							$retString .= "<ul class='alphabet'>";
 							$retString .= "<a class='list' margin-bottom:" . $margin . "px;\">".$char;
+							//$retString .= "X";
 							$retString .= "</a>";
+							$retString .= "<div class='listitem'>";
 							$placedChar = 1;
 						}
-						$retString .= "<div class='listitem'>";
+
 						$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href=" . JRoute :: _('index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid='.$groupid) . ">" . trim($row->lastName) . "</a></div><br/>";
-						$retString .= "</div>";
+
 						$placedChar++;
 					}
+					$retString .= "</div>";
+					$retString .= "</a>";
 					$retString .= "</ul>";
 				} else {
 					try {
@@ -333,7 +344,7 @@ class THMGroupsModelList extends JModel {
 										."where t.structid = 2 and t.userid = ud.userid and ud.published = 1 and t.userid = gm.uid and gm.gid=$groupid and gm.rid != 2";
 		$db->setQuery($queryGetDiffLettersToFirstletter);
 		$allLastNames = $db->loadObjectList();
-		
+
 		$itemid = JRequest :: getVar('Itemid', 0);
 		$abc = array (
 		'A',
@@ -423,7 +434,7 @@ class THMGroupsModelList extends JModel {
 
 
 		$retString .= "<ul><br /><br />";
-		
+
 		$query = 	"SELECT distinct b.userid as id, ".
 					"b.value as firstName, ".
 					"c.value as lastName, ".
@@ -443,7 +454,7 @@ class THMGroupsModelList extends JModel {
 					"`#__thm_groups_groups_map` ".
 				"WHERE published = 1 and c.value like '$shownLetter%' and e.userid = uid and gid = $groupid ".
 				"ORDER BY lastName";
-		
+
 		$db->setQuery($query);
 		$groupMember = $db->loadAssocList();
 

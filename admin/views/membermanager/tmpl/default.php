@@ -23,12 +23,12 @@ $SQLAL = new SQLAbstractionLayer;
 JHTML::_('behavior.tooltip');
 
 function countGroupRoles($gid, $grouproles){
-	$count = 0;				
+	$count = 0;
 	foreach ($grouproles as $grouprole) {
 		if($grouprole->groupid == $gid)
 			$count++;
 	}
-	
+
 	return $count;
 }
 
@@ -59,8 +59,8 @@ $listDirn	= $this->state->get('list.direction');
 <table class="adminlist">
 	<thead>
 		<tr>
-			<th style="width: 20%; text-align: left; color: #0B55C4">Gruppen</th>
-			<th style="width: 20%; text-align: left; color: #0B55C4">Rollen</th>
+			<th style="width: 20%; text-align: left; color: #0B55C4"><?php JText::_( 'GROUPS' ); ?></th>
+			<th style="width: 20%; text-align: left; color: #0B55C4"><?php JText::_( 'ROLES' ); ?></th>
 			<th style="width: 60%"></th>
 		</tr>
 	</thead>
@@ -68,11 +68,12 @@ $listDirn	= $this->state->get('list.direction');
 		<td style="width: 20%; text-align: left">
 			<select name="groups" size="10" style="display: block" id="groups">
 				<?php
-					foreach($SQLAL->getGroups() as $group) {
+					foreach($this->groupOptions as $groupOption) {
+						$disabled = $groupOption->disable ? ' disabled="disabled"' : '';
 						if(1 == $group->id) {
-							echo '<option value="1" selected>'.$group->name.' </option>';
+							echo '<option value="'.$groupOption->value.'"'.$disabled.' selected>'.$groupOption->text.'</option>';
 						} else {
-							echo '<option value="'.$group->id.'"'.$selected.'>'.$group->name.' </option>';
+							echo '<option value="'.$groupOption->value.'"'.$disabled.$selected.'>'.$groupOption->text.'</option>';
 						}
 					}
 				?>
@@ -108,19 +109,19 @@ $listDirn	= $this->state->get('list.direction');
 			</td>
 			<td width="20%">
 				<?php
-				echo JText::_( 'Gruppe' );
+				echo JText::_( 'GROUP' );
 				echo "&nbsp;" . $this->lists['groups'];
 				?>
 			</td>
 			<td width="20%">
 				<?php
-				echo JText::_( 'Rolle' );
+				echo JText::_( 'ROLE' );
 				echo "&nbsp;" . $this->lists['roles'];
 				?>
 			</td>
 			<td width="11%">
 				<?php
-				echo JText::_('Nur Ausgew&auml;hlte anzeigen ');
+				echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_TEXT_SELECTED_ONLY');
 				//echo "&nbsp;" . $this->lists['groupsrolesoption'];
 				?>
 			</td>
@@ -130,8 +131,8 @@ $listDirn	= $this->state->get('list.direction');
 				?>
 			</td>
 			<td width="24%">
-				<button onclick="this.form.submit();"><?php echo JText::_( 'Go' ); ?></button>
-				<button onclick="this.form.getElementById('search').value='';this.form.getElementById('groupFilters').value='0';this.form.getElementById('rolesFilters').value='0';this.form.submit();"><?php echo JText::_( 'Reset' ); ?></button>
+				<button onclick="this.form.submit();"><?php echo JText::_( 'COM_THM_GROUPS_MEMBERMANAGER_BUTTON_GO' ); ?></button>
+				<button onclick="this.form.getElementById('search').value='';this.form.getElementById('groupFilters').value='0';this.form.getElementById('rolesFilters').value='0';this.form.submit();"><?php echo JText::_( 'COM_THM_GROUPS_MEMBERMANAGER_BUTTON_RESET' ); ?></button>
 			</td>
 		</tr>
 	</table>
@@ -139,25 +140,25 @@ $listDirn	= $this->state->get('list.direction');
 <table class="adminlist">
 	<thead>
 		<tr>
-			<th width="1"><?php echo JText::_( 'NUM' ); ?></th>
+			<th width="1"><?php echo JText::_( 'ID' ); ?></th>
 			<th width="1"><input type="checkbox" name="toggle" value=""
 				onclick="checkAll(<?php echo count( $this->items ); ?>);" /></th>
 
-			<th width="7%" nowrap="nowrap"><?php echo JHTML::_('grid.sort', 'Titel', 'title', $listDirn, $listOrder ); ?>
+			<th width="7%" nowrap="nowrap"><?php echo JHTML::_('grid.sort', 'TITEL', 'title', $listDirn, $listOrder ); ?>
 			</th>
-			<th width="8%" align="center"><?php echo JHTML::_('grid.sort', 'Benutzer', 'username', $listDirn, $listOrder  ); ?>
+			<th width="8%" align="center"><?php echo JHTML::_('grid.sort', 'USER', 'username', $listDirn, $listOrder  ); ?>
 			</th>
-			<th width="15%" align="center"><?php echo JHTML::_('grid.sort', 'Nachname', 'lastName', $listDirn, $listOrder  ); ?>
+			<th width="15%" align="center"><?php echo JHTML::_('grid.sort', 'NACHNAME', 'lastName', $listDirn, $listOrder  ); ?>
 			</th>
-			<th width="15%" align="center"><?php echo JHTML::_('grid.sort','Vorname', 'firstName', $listDirn, $listOrder  ); ?>
+			<th width="15%" align="center"><?php echo JHTML::_('grid.sort', 'VORNAME', 'firstName', $listDirn, $listOrder  ); ?>
 			</th>
-			<th width="43%" align="center"><?php echo JHTML::_('grid.sort', 'Gruppe/Rolle(n)', 'g.gid', $listDirn, $listOrder  ); ?>
+			<th width="43%" align="center"><?php echo JHTML::_('grid.sort', 'GROUPS_AND_ROLES', 'g.gid', $listDirn, $listOrder  ); ?>
 			</th>
-			<th width="10%" nowrap="nowrap"><?php echo JHTML::_('grid.sort', 'Benutzertyp', 'usertype', $listDirn, $listOrder  ); ?>
+			<th width="10%" nowrap="nowrap"><?php echo JHTML::_('grid.sort', 'COM_THM_GROUPS_MEMBERMANAGER_HEADING_USER_TYPE', 'usertype', $listDirn, $listOrder  ); ?>
 			</th>
-			<th width="1%" nowrap="nowrap"><?php echo JHTML::_('grid.sort', 'Published', 'published', $listDirn, $listOrder ); ?>
+			<th width="1%" nowrap="nowrap"><?php echo JHTML::_('grid.sort', 'COM_THM_GROUPS_MEMBERMANAGER_HEADING_PUBLISHED', 'published', $listDirn, $listOrder ); ?>
 			</th>
-			<th width="1%" nowrap="nowrap"><?php echo JHTML::_('grid.sort', 'InJoomla?', 'injoomla', $listDirn, $listOrder  ); ?>
+			<th width="1%" nowrap="nowrap"><?php echo JHTML::_('grid.sort', 'COM_THM_GROUPS_MEMBERMANAGER_HEADING_PUBLISHED_JOOMLA', 'injoomla', $listDirn, $listOrder  ); ?>
 			</th>
 
 		</tr>
@@ -168,7 +169,7 @@ $listDirn	= $this->state->get('list.direction');
 		$row = &$this->items[$i];
 		//$mymoderate->published = $row->moderate;
 		$checked  = JHTML::_('grid.id',   $i, $row->userid );
-		
+
 		/* Joomla 1.5
 		//$published  = JHTML::_('grid.published',$row, $i  );
 		*/
@@ -220,7 +221,7 @@ $listDirn	= $this->state->get('list.direction');
 							$grouproles .= ', ' . $grouprole->rolename . "<a href='javascript:delGrouprole(".$row->userid.", ".$grouprole->groupid.", ". $grouprole->roleid .");' title='Gruppe: ".$grouprole->groupname." - Rolle: ".$grouprole->rolename."::Rolle entfernen.' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
 						} else {
 							if ($groupname == ''){
-								$grouproles .= "<a href='javascript:delAllGrouproles(".$row->userid.", ".$grouprole->groupid.");' title='Gruppe: ".$grouprole->groupname."::Alle Gruppenrollen entfernen.' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";								
+								$grouproles .= "<a href='javascript:delAllGrouproles(".$row->userid.", ".$grouprole->groupid.");' title='Gruppe: ".$grouprole->groupname."::Alle Gruppenrollen entfernen.' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
 								$grouproles .= '<b>' . $grouprole->groupname.': </b>'.$grouprole->rolename;
 								if($countRoles > 1)
 									$grouproles .= "<a href='javascript:delGrouprole(".$row->userid.", ".$grouprole->groupid.", ". $grouprole->roleid .");' title='Gruppe: ".$grouprole->groupname." - Rolle: ".$grouprole->rolename."::Rolle entfernen.' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
@@ -235,7 +236,7 @@ $listDirn	= $this->state->get('list.direction');
 							}
 						}
 					}
-				}	
+				}
 				echo trim($grouproles, ', ');
 			?>
 		</td>
@@ -248,15 +249,15 @@ $listDirn	= $this->state->get('list.direction');
 	$k = 1 -   $k;
 	}
 	?>
-	
+
 	<tfoot>
-		<?php 
+		<?php
 			if (empty($this->items)) {
 		?>
 		<tr>
 			<td colspan="10"><blink><big><b><font color="#FF0000">Kein User verf&uuml;gbar. Um in der Liste aufgef&uuml;hrt zu werden, muss man mindestens einmal im System eingeloggt gewesen sein.</font></b></big></blink></td>
 		</tr>
-		<?php 
+		<?php
 			}
 		?>
 		<tr>

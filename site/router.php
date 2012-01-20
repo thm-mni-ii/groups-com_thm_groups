@@ -30,7 +30,6 @@ function THM_GroupsBuildRoute(&$query)
 		$segments[] = $query['layout'];
 		unset($query['layout']);
 	};
-	//var_dump($query);
 	if(isset($query['gsuid']))
 	{
 		if(isset($query['name'])){
