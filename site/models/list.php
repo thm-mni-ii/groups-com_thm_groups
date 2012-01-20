@@ -243,11 +243,11 @@ class THMGroupsModelList extends JModel {
 							$retString .= "<ul class='alphabet'>";
 							$retString .= "<a class='list' margin-bottom:" . $margin . "px;\">".$char;
 							$retString .= "</a>";
+							$retString .= "<div class='listitem'>";
 							$placedChar = 1;
 						}
 
 						$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href=" . JRoute :: _('index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid='.$groupid) . ">" . trim($row->lastName) . "</a></div><br/>";
-						//$retString .= "</div>";
 						$placedChar++;
 					}
 					$retString .= "</div>";

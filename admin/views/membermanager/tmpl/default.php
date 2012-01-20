@@ -193,6 +193,8 @@ $listDirn	= $this->state->get('list.direction');
 				$groupname = '';
 				$groupRoles = $SQLAL->getGroupsAndRoles($row->userid);
 				foreach($groupRoles as $grouprole) {
+					if (!isset($grouprole->rolename))
+						$grouprole->rolename = "Mitglied";
 					$countRoles = countGroupRoles($grouprole->groupid, $groupRoles);
 					// Falls 'Nur ausgewählte anzeigen' ausgewählt ist
 					if($this->grcheckon){
@@ -202,16 +204,20 @@ $listDirn	= $this->state->get('list.direction');
 							} else {
 								if ($groupname == ''){
 									$grouproles .= "<a href='javascript:delAllGrouproles(".$row->userid.", ".$grouprole->groupid.");' title='Gruppe: ".$grouprole->groupname."::Alle Gruppenrollen entfernen.' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
-									$grouproles .= '<b>' . $grouprole->groupname.': </b>'.$grouprole->rolename;
+									$grouproles .= '<span><b>' . $grouprole->groupname.': </b>'.$grouprole->rolename;
 									if($countRoles > 1)
 										$grouproles .= "<a href='javascript:delGrouprole(".$row->userid.", ".$grouprole->groupid.", ". $grouprole->roleid .");' title='Gruppe: ".$grouprole->groupname." - Rolle: ".$grouprole->rolename."::Rolle entfernen' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+									else
+										$grouproles .= "</span>";
 									$groupname = $grouprole->groupname;
 								}else{
 									$grouproles .= ' <br />';
 									$grouproles .= "<a href='javascript:delAllGrouproles(".$row->userid.", ".$grouprole->groupid.");' title='Gruppe: ".$grouprole->groupname."::Alle Gruppenrollen entfernen.' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
-									$grouproles .= '<b>' . $grouprole->groupname.': </b>'.$grouprole->rolename;
+									$grouproles .= '<span><b>' . $grouprole->groupname.': </b>'.$grouprole->rolename;
 									if($countRoles > 1)
 										$grouproles .= "<a href='javascript:delGrouprole(".$row->userid.", ".$grouprole->groupid.", ". $grouprole->roleid .");' title='Gruppe: ".$grouprole->groupname." - Rolle: ".$grouprole->rolename."::Rolle entfernen' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>  ";
+									else
+										$grouproles .= "</span>";
 									$groupname = $grouprole->groupname;
 								}
 							}
@@ -222,16 +228,20 @@ $listDirn	= $this->state->get('list.direction');
 						} else {
 							if ($groupname == ''){
 								$grouproles .= "<a href='javascript:delAllGrouproles(".$row->userid.", ".$grouprole->groupid.");' title='Gruppe: ".$grouprole->groupname."::Alle Gruppenrollen entfernen.' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
-								$grouproles .= '<b>' . $grouprole->groupname.': </b>'.$grouprole->rolename;
+								$grouproles .= '<span><b>' . $grouprole->groupname.': </b>'.$grouprole->rolename;
 								if($countRoles > 1)
 									$grouproles .= "<a href='javascript:delGrouprole(".$row->userid.", ".$grouprole->groupid.", ". $grouprole->roleid .");' title='Gruppe: ".$grouprole->groupname." - Rolle: ".$grouprole->rolename."::Rolle entfernen.' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+								else
+									$grouproles .= "</span>";
 								$groupname = $grouprole->groupname;
 							}else{
 								$grouproles .= ' <br />';
 								$grouproles .= "<a href='javascript:delAllGrouproles(".$row->userid.", ".$grouprole->groupid.");' title='Gruppe: ".$grouprole->groupname."::Alle Gruppenrollen entfernen.' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
-								$grouproles .= '<b>' . $grouprole->groupname.': </b>'.$grouprole->rolename;
+								$grouproles .= '<span><b>' . $grouprole->groupname.': </b>'.$grouprole->rolename;
 								if($countRoles > 1)
 									$grouproles .= "<a href='javascript:delGrouprole(".$row->userid.", ".$grouprole->groupid.", ". $grouprole->roleid .");' title='Gruppe: ".$grouprole->groupname." - Rolle: ".$grouprole->rolename."::Rolle entfernen.' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+								else
+									$grouproles .= "</span>";
 								$groupname = $grouprole->groupname;
 							}
 						}
