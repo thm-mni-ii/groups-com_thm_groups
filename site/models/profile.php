@@ -24,12 +24,13 @@ jimport( 'joomla.application.component.modelform' );
 require_once(JPATH_COMPONENT_ADMINISTRATOR.DS.'classes'.DS.'SQLAbstractionLayer.php');
 
 class THMGroupsModelProfile extends JModelForm {
+	var $db;	
 	
 	function __construct()
 	{
 		parent::__construct();
 		$this->getForm();
-		
+		$this->db = & JFactory :: getDBO();
 	}
 	
 	    /**
@@ -46,6 +47,24 @@ class THMGroupsModelProfile extends JModelForm {
         if(empty($form)) return false;
         return $form;
     }
+    
+	//------- Abfrage ob Moderator oder nicht---------------
+	function canEdit() {
+
+		$canEdit = 0;
+		$groupid = $this->getGroupNumber();
+		$user = & JFactory::getUser();
+		$query = "SELECT rid FROM #__thm_groups_groups_map " .
+		"WHERE uid = $user->id AND gid = $groupid";
+		$this->db->setQuery($query);
+		$userRoles = $this->db->loadObjectList();
+		foreach($userRoles as $userRole){
+			if($userRole->rid == 2)
+				$canEdit = 1;
+		}
+		return $canEdit;
+
+	}
 	
 	function getData()
 	{

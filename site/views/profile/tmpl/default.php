@@ -22,6 +22,9 @@ defined('_JEXEC') or die('Restricted access');
 
 JHTML::_('behavior.modal', 'a.modal-button');
 JHTML::_('behavior.calendar');
+
+$canEdit = ($user->id == $this->userid || $this->canEdit);
+
 ?>
 <div id="title"><?php 
 	foreach ($this->items as $item) {
@@ -49,8 +52,22 @@ JHTML::_('behavior.calendar');
 	<div>
 		<table>
 			<?php
-				echo "<h2 class='contentheading'>" . $title . " " . $firstName . " " . $lastName . "</h2>";
+				echo "<h2 class='contentheading'>" . $title . " " . $firstName . " " . $lastName;
 				//echo "<h1>" . $title . " " . $firstName . " " . $lastName . "</h1>";
+				
+				if ($canEdit) {
+					$attribs['title'] = 'bearbeiten';
+		
+					// Daten fuer die EditForm
+					$option = JRequest :: getVar('option', 0);
+					$layout = JRequest :: getVar('layout', 0);
+					$view = JRequest :: getVar('view', 0);
+					echo "<span style='float:right;'><a href='" . JRoute :: _('index.php?option=com_thm_groups&view=edit&layout=default&Itemid=' . $this->itemid . '&gsuid=' . $this->userid . '&name=' . trim($lastName) .'&gsgid='.$this->gsgid. '&option_old='.$option. '&view_old='.$view. '&layout_old='.$layout). "'> " . JHTML :: image("components/com_thm_groups/img/icon-32-edit.png", 'bearbeiten', $attribs) . "</a></span>";
+		
+				}
+				
+				echo "</h2>";
+				
 				if($picture != null){
 					echo	JHTML :: image("components/com_thm_groups/img/portraits/".$picture, "Portrait", array ());
 				}

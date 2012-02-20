@@ -70,6 +70,8 @@ class THMGroupsViewProfile extends JView {
 		if (!empty($textField)) {
 			$this->form->bind($textField);
 		}
+		
+		$itemid = JRequest :: getVar('Itemid', 0);
 
 		/* ZURÜCK BUTTON */
 		$option_old = JRequest :: getVar('option_old');
@@ -82,7 +84,9 @@ class THMGroupsViewProfile extends JView {
 
 		/* ###########   */
 
-		$this->assignRef( 'items', $items );
+		$this->assignRef( 'items', $items );			
+		$this->assignRef( 'itemid',  $itemid);
+		$this->assignRef( 'canEdit',  $model->canEdit());
 		$this->assignRef( 'userid', $cid );
 		$this->assignRef( 'structure', $structure );
 		$this->assignRef( 'gsgid', $gsgid );
