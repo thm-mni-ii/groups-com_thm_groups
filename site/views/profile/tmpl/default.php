@@ -23,6 +23,7 @@ defined('_JEXEC') or die('Restricted access');
 JHTML::_('behavior.modal', 'a.modal-button');
 JHTML::_('behavior.calendar');
 
+$user = & JFactory::getUser();
 $canEdit = ($user->id == $this->userid || $this->canEdit);
 
 ?>
