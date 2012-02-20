@@ -23,7 +23,7 @@ jimport( 'joomla.application.component.modelform' );
 // Include database class
 require_once(JPATH_COMPONENT_ADMINISTRATOR.DS.'classes'.DS.'SQLAbstractionLayer.php');
 
-class THMGroupsModeledit extends JModelForm {
+class THMGroupsModelProfile extends JModelForm {
 	
 	function __construct()
 	{
@@ -107,7 +107,7 @@ class THMGroupsModeledit extends JModelForm {
 			if($structureItem->type == 'MULTISELECT')
 				$field = implode(';', $field);
 			
-			$publishPuffer = JRequest::getVar('publish'. str_replace(" ", "",$structureItem->field));
+			$publishPuffer = JRequest::getVar('publish'.$structureItem->field);
 			
 			if(isset($publishPuffer))
 				$publish = 1;

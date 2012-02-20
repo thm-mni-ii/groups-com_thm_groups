@@ -89,8 +89,8 @@ class THMGroupsModeledit extends JModelForm {
 			$publish = 0;
 			if($strucctIdemtureItem->type == 'MULTISELECT')
 				$field = implode(';', $field);
-
-			$publishPuffer = JRequest::getVar('publish'.$structureItem->field);
+			
+			$publishPuffer = JRequest::getVar('publish'. str_replace(" ", "",$structureItem->field));
 
 			if(isset($publishPuffer))
 				$publish = 1;
@@ -114,7 +114,7 @@ class THMGroupsModeledit extends JModelForm {
 					        .", '".$field."'"
 					        .", ".$publish.")";
 				}
-
+				echo $query . "<br />";
 				$db->setQuery($query);
         		if(!$db->query())
 	        		$err = 1;

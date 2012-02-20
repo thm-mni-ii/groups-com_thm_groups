@@ -4,14 +4,14 @@
  *
  * PHP version 5
  *
- * @category Web Programming Weeks SS / WS 2011: THM Gießen
- * @package  com_thm_groups
- * @author   Markus Kaiser <markus.kaiser@mni.thm.de>
- * @author   Daniel Bellof <daniel.bellof@mni.thm.de>
- * @author   Jacek Sokalla <jacek.sokalla@mni.thm.de>
- * @author   Peter May <peter.may@mni.thm.de>
+ * @category Joomla Programming Weeks SS2008: FH Giessen-Friedberg
+ * @package  com_staff
+ * @author   Sascha Henry <sascha.henry@mni.fh-giessen.de>
+ * @author   Christian G�th <christian.gueth@mni.fh-giessen.de>
+ * @author   Severin Rotsch <severin.rotsch@mni.fh-giessen.de>
+ * @author   Martin Karry <martin.karry@mni.fh-giessen.de>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @link     http://www.mni.thm.de
+ * @link     http://www.mni.fh-giessen.de
  **/
 defined( '_JEXEC' ) or die( 'Restricted access' );
 

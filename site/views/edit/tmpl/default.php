@@ -69,14 +69,15 @@ JHTML::_('behavior.calendar');
 				<td/><td/>
 				<td width="110" class="op">
 					<label for="title">
-  						<?php echo JText::_( 'intern freigeben' ); ?>:
+  						<?php echo JText::_( 'COM_THM_GROUPS_EDIT_FORMS_TEXT_ENABLE_INTERN' ); ?>
 					</label>
 				</td>
-				<td width="110" class="op">
+				<!-- <td width="110" class="op">
 					<label for="title">
-  						<?php echo JText::_( 'extern freigeben' ); ?>:
+  						<?php echo JText::_( 'COM_THM_GROUPS_EDIT_FORMS_TEXT_ENABLE_EXTERN' ); ?>
 					</label>
 				</td>
+				-->
 			</tr>
 			<tr>
 				<td width="110" class="key">
@@ -141,11 +142,11 @@ JHTML::_('behavior.calendar');
 					?>
 				</td>
 				<td align="center" width="110">
-					<input type="checkbox" name="publish<?php echo $structureItem->field;?>" value="on" <?php if($publish) echo "checked";?>/>
+					<input type="checkbox" name="publish<?php echo str_replace(" ", "", $structureItem->field);?>" value="on" <?php if($publish) echo "checked";?>/>
 				</td>
-				<td align="center" width="110">
+				<!-- <td align="center" width="110">
 					ToDo...
-				</td>
+				</td>-->
 			</tr>
 			<?php
 				}
@@ -153,7 +154,7 @@ JHTML::_('behavior.calendar');
 
 
 			<tr>
-				<td colspan="4"><hr></td>
+				<td colspan="3"><hr></td>
 			</tr>
 			<tr>
 				<td>

@@ -8,9 +8,9 @@
  * (enhanced from SS2008
  * (@Sascha Henry<sascha.henry@mni.fh-giessen.de>, @Christian Gueth<christian.gueth@mni.fh-giessen.de,Severin Rotsch <severin.rotsch@mni.fh-giessen.de>,@author   Martin Karry <martin.karry@mni.fh-giessen.de>)
  * @author   Daniel Schmidt <daniel.schmidt-3@mni.fh-giessen.de>
- * @author   Christian GÃ¼th <christian.gueth@mni.fh-giessen.de>
+ * @author   Christian GÃƒÂ¼th <christian.gueth@mni.fh-giessen.de>
  * @author   Steffen Rupp <steffen.rupp@mni.fh-giessen.de>
- * @author   RÃªne Bartsch <rene.bartsch@mni.fh-giessen.de>
+ * @author   RÃƒÂªne Bartsch <rene.bartsch@mni.fh-giessen.de>
  * @author   Dennis Priefer <dennis.priefer@mni.fh-giessen.de>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  * @link     http://www.mni.fh-giessen.de
@@ -57,6 +57,7 @@ class THMGroupsModelList extends JModel {
 		$groupid = $this->getGroupNumber(); //contains the number of the group, e.g. 10
 		$margin = $params->get('lineSpacing');
 		$zmargin = $params->get('zSpacing') -12;
+		$paramLinkTarget = $params->get('linkTarget');
 		$retString = "";
 		$queryGetUserCountToGid = "SELECT count(*) AS anzahl FROM #__thm_groups_groups_map WHERE gid=$groupid";
 		$db->setQuery($queryGetUserCountToGid);
@@ -69,7 +70,7 @@ class THMGroupsModelList extends JModel {
 		$numColumns = $numColtemp[0]->numColumns;*/
 		$numColumns = 4;
 		/**********************************************************************************************************************/
-
+		
 		$queryGetDiffLettersToFirstletter = "SELECT distinct t.value as lastName "
 										."FROM `#__thm_groups_text` as t , "
 										."`#__thm_groups_additional_userdata` as ud, "
@@ -80,7 +81,7 @@ class THMGroupsModelList extends JModel {
 		$allLastNames = $db->loadObjectList();
 
 		$itemid = JRequest :: getVar('Itemid', 0);
-		//		$numColumns = $this->conf->getValue('numColumns');		//		$query = "select count(*) as anzahl from #__giessen_staff where published=1";//		$db->setQuery($query);//		$rows = $db->loadObjectList();				// Array mit dem Alphabet zum Scannen der Benutzer, somit ist es mÃ¶glich in einer For-Schleife das Alphabet durchzugehen
+		//		$numColumns = $this->conf->getValue('numColumns');		//		$query = "select count(*) as anzahl from #__giessen_staff where published=1";//		$db->setQuery($query);//		$rows = $db->loadObjectList();				// Array mit dem Alphabet zum Scannen der Benutzer, somit ist es mÃƒÂ¶glich in einer For-Schleife das Alphabet durchzugehen
 		$abc = array (
 		'A',
 		'&Auml;',
@@ -136,11 +137,25 @@ class THMGroupsModelList extends JModel {
 
 		$divStyle = "style='width: " . floor(100 / $numColumns) . "%; float: left;'";
 
-		// Tabelle starten und fÃ¼r jeden Buchstaben ein "div" erzeugen
+		// Tabelle starten und fÃƒÂ¼r jeden Buchstaben ein "div" erzeugen
 		$retString .= "<div id='row_" . $rowCount . "_column_" . $columnCount . "_max_" . $maxColumnSize . "' $divStyle>";
-
-		// Durchgehen aller Buchstaben des Alphabets
-
+		
+		// Welche Detailansicht bei Klick auf Person? Modul oder Profilview?
+		$linkTarget = ""; 
+		switch ($paramLinkTarget) {
+			case "module":
+				$linkTarget = 'index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid;
+				break;
+			case "profile":
+				$linkTarget = 'index.php?option=com_thm_groups&view=profile&layout=default';
+				break;
+			default:
+				$linkTarget = 'index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid;
+				
+			
+		}
+		
+		// Durchgehen aller Buchstaben des Alphabets		
 		foreach ($abc as $char) {
 
 			// Alle Benutzer suchen dessen Nachname mit dem aktuellen Buchstaben beginnt
@@ -173,7 +188,7 @@ class THMGroupsModelList extends JModel {
 
 			$placedChar++;
 
-			//kein Umbruch nÃ¶tig
+			//kein Umbruch nÃƒÂ¶tig
 			if ((sizeof($rows) + $placedChar) <= $maxColumnSize) {
 
 				$retString .= "<ul class='alphabet'>";
@@ -181,7 +196,7 @@ class THMGroupsModelList extends JModel {
 				$retString .= "</a>";
 				$retString .= "<div class='listitem'>";
 				foreach ($rows as $row) {
-					$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href=" . JRoute :: _('index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid='.$groupid) . ">" . trim($row->lastName) . "</a></div><br/>";
+					$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href=" . JRoute :: _($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid='.$groupid) . ">" . trim($row->lastName) . "</a></div><br/>";
 					$rowCount++;
 					$placedChar++;
 				}
@@ -190,10 +205,10 @@ class THMGroupsModelList extends JModel {
 				$retString .= "</ul>";
 			}
 
-			//Umbruch nÃ¶tig
+			//Umbruch nÃƒÂ¶tig
 			else
 			if ((sizeof($rows) + $placedChar) > $maxColumnSize) {
-				//nur noch eins frei, daher alles aufs nÃ¤chste
+				//nur noch eins frei, daher alles aufs nÃƒÂ¤chste
 				if ($placedChar >= $maxColumnSize -1) {
 
 					$placedChar = 1;
@@ -204,13 +219,13 @@ class THMGroupsModelList extends JModel {
 					$retString .= "<div class='listitem'>";
 
 					foreach ($rows as $row) {
-						$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href=" . JRoute :: _('index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid='.$groupid) . ">" . trim($row->lastName) . "</a></div><br/>";
+						$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href=" . JRoute :: _($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid='.$groupid) . ">" . trim($row->lastName) . "</a></div><br/>";
 						$placedChar++;
 					}
 					$retString .= "</div>";
 					$retString .= "</ul>";
 				}
-				//nur noch GENAU 2 frei und auf dem nÃ¤chsten wÃ¤re nur einer, daher alles auf das nÃ¤chste
+				//nur noch GENAU 2 frei und auf dem nÃƒÂ¤chsten wÃƒÂ¤re nur einer, daher alles auf das nÃƒÂ¤chste
 				else
 				if (sizeof($rows) + $placedChar == $maxColumnSize -2 && sizeof($rows) == 3) {
 					$placedChar = 1;
@@ -220,14 +235,14 @@ class THMGroupsModelList extends JModel {
 					$retString .= "</a>";
 					$retString .= "<div class='listitem'>";
 					foreach ($rows as $row) {
-						$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href=" . JRoute :: _('index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid . '&gsuid=' . $row->id .'&name=' . trim($row->lastName) . '&gsgid='.$groupid) . ">" . trim($row->lastName) . "</a></div><br/>";
+						$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href=" . JRoute :: _($linkTarget . '&gsuid=' . $row->id .'&name=' . trim($row->lastName) . '&gsgid='.$groupid) . ">" . trim($row->lastName) . "</a></div><br/>";
 						$placedChar++;
 					}
 					$retString .= "</div>";
 					$retString .= "</ul>";
 				}
 
-				//es sind MEHR als 2 frei aber auf dem nÃ¤chsten column ist nur noch ein Name
+				//es sind MEHR als 2 frei aber auf dem nÃƒÂ¤chsten column ist nur noch ein Name
 				else
 				if ($placedChar <= $maxColumnSize -2 && $placedChar +sizeof($rows) == $maxColumnSize +1 && sizeof($rows) > 3) {
 					$retString .= "<ul class='alphabet'>";
@@ -247,13 +262,14 @@ class THMGroupsModelList extends JModel {
 							$placedChar = 1;
 						}
 
-						$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href=" . JRoute :: _('index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid='.$groupid) . ">" . trim($row->lastName) . "</a></div><br/>";
+						$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href=" . JRoute :: _($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid='.$groupid) . ">" . trim($row->lastName) . "</a></div><br/>";
+						//$retString .= "</div>";
 						$placedChar++;
 					}
 					$retString .= "</div>";
 					$retString .= "</ul>";
 				}
-				///es sind MEHR als 2 frei aber auf dem nÃ¤chsten column ist nur noch ein Name - hier sonderfall: da insgesamt nur 3 Buchstaben -> alles auf das folge-column
+				///es sind MEHR als 2 frei aber auf dem nÃƒÂ¤chsten column ist nur noch ein Name - hier sonderfall: da insgesamt nur 3 Buchstaben -> alles auf das folge-column
 				else
 				if ($placedChar <= $maxColumnSize -2 && $placedChar +sizeof($rows) == $maxColumnSize +1 && sizeof($rows) <= 3) {
 					$retString .= "</a></ul>";
@@ -278,7 +294,7 @@ class THMGroupsModelList extends JModel {
 							$placedChar = 0;
 						}
 
-						$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href=" . JRoute :: _('index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid='.$groupid) . ">" . trim($row->lastName) . "</a></div><br/>";
+						$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href=" . JRoute :: _($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid='.$groupid) . ">" . trim($row->lastName) . "</a></div><br/>";
 						$placedChar++;
 					}
 					$retString .= "</div>";
@@ -306,7 +322,7 @@ class THMGroupsModelList extends JModel {
 							$placedChar = 1;
 						}
 
-						$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href=" . JRoute :: _('index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid='.$groupid) . ">" . trim($row->lastName) . "</a></div><br/>";
+						$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href=" . JRoute :: _($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid='.$groupid) . ">" . trim($row->lastName) . "</a></div><br/>";
 
 						$placedChar++;
 					}
@@ -376,19 +392,19 @@ class THMGroupsModelList extends JModel {
 		);
 		$alleAnfangsbuchstaben = array ();
 		foreach ($allLastNames as $name) {
-			$searchUm = str_replace("Ã–", "O", $name->lastName);
-			$searchUm = str_replace("Ã¶", "o", $searchUm);
-			$searchUm = str_replace("Ã„", "A", $searchUm);
-			$searchUm = str_replace("Ã¤", "a", $searchUm);
-			$searchUm = str_replace("Ãœ", "U", $searchUm);
-			$searchUm = str_replace("Ã¼", "u", $searchUm);
-
-			$searchUm = str_replace("ÃƒÂ¶", "O", $searchUm);
+			$searchUm = str_replace("Ãƒâ€“", "O", $name->lastName);
 			$searchUm = str_replace("ÃƒÂ¶", "o", $searchUm);
+			$searchUm = str_replace("Ãƒâ€ž", "A", $searchUm);
 			$searchUm = str_replace("ÃƒÂ¤", "a", $searchUm);
-			$searchUm = str_replace("ÃƒÂ¤", "A", $searchUm);
+			$searchUm = str_replace("ÃƒÅ“", "U", $searchUm);
 			$searchUm = str_replace("ÃƒÂ¼", "u", $searchUm);
-			$searchUm = str_replace("ÃƒÂ¼", "U", $searchUm);
+
+			$searchUm = str_replace("ÃƒÆ’Ã‚Â¶", "O", $searchUm);
+			$searchUm = str_replace("ÃƒÆ’Ã‚Â¶", "o", $searchUm);
+			$searchUm = str_replace("ÃƒÆ’Ã‚Â¤", "a", $searchUm);
+			$searchUm = str_replace("ÃƒÆ’Ã‚Â¤", "A", $searchUm);
+			$searchUm = str_replace("ÃƒÆ’Ã‚Â¼", "u", $searchUm);
+			$searchUm = str_replace("ÃƒÆ’Ã‚Â¼", "U", $searchUm);
 
 			$searchUm = str_replace("&Ouml;", "O", $searchUm);
 			$searchUm = str_replace("&ouml;", "o", $searchUm);
@@ -397,12 +413,12 @@ class THMGroupsModelList extends JModel {
 			$searchUm = str_replace("&uuml;", "u", $searchUm);
 			$searchUm = str_replace("&Uuml;", "U", $searchUm);
 
-			$searchUm = str_replace("Ö", "O", $searchUm);
-			$searchUm = str_replace("ö", "o", $searchUm);
-			$searchUm = str_replace("Ä", "A", $searchUm);
-			$searchUm = str_replace("ä", "a", $searchUm);
-			$searchUm = str_replace("ü", "u", $searchUm);
-			$searchUm = str_replace("Ü", "U", $searchUm);
+			$searchUm = str_replace("Ã–", "O", $searchUm);
+			$searchUm = str_replace("Ã¶", "o", $searchUm);
+			$searchUm = str_replace("Ã„", "A", $searchUm);
+			$searchUm = str_replace("Ã¤", "a", $searchUm);
+			$searchUm = str_replace("Ã¼", "u", $searchUm);
+			$searchUm = str_replace("Ãœ", "U", $searchUm);
 
 			if (!in_array(strtoupper(substr($searchUm, 0, 1)), $alleAnfangsbuchstaben)) {
 				$alleAnfangsbuchstaben[] = strtoupper(substr($searchUm, 0, 1));
@@ -429,7 +445,7 @@ class THMGroupsModelList extends JModel {
 		$retString .= "</div>";
 		if($alleAnfangsbuchstaben == null)
 		$retString .= "<div style='float:left'><br />Keine Mitglieder vorhanden.</div>";
-		// Tabelle starten und fÃ¼r jeden Buchstaben ein "div" erzeugen
+		// Tabelle starten und fÃƒÂ¼r jeden Buchstaben ein "div" erzeugen
 		// Durchgehen aller Buchstaben des Alphabets
 
 
@@ -462,19 +478,19 @@ class THMGroupsModelList extends JModel {
 		$memberWithU = array();
 		foreach ($groupMember as $member) {
 
-			$searchUm = str_replace("Ã–", "&Ouml;", $member['lastName']);
-			$searchUm = str_replace("Ã¶", "&ouml;", $searchUm);
-			$searchUm = str_replace("Ã„", "&Auml;", $searchUm);
-			$searchUm = str_replace("Ã¤", "&auml;", $searchUm);
-			$searchUm = str_replace("Ãœ", "&Uuml;", $searchUm);
-			$searchUm = str_replace("Ã¼", "&uuml;", $searchUm);
-
-			$searchUm = str_replace("ÃƒÂ¶", "&Ouml;", $searchUm);
+			$searchUm = str_replace("Ãƒâ€“", "&Ouml;", $member['lastName']);
 			$searchUm = str_replace("ÃƒÂ¶", "&ouml;", $searchUm);
+			$searchUm = str_replace("Ãƒâ€ž", "&Auml;", $searchUm);
 			$searchUm = str_replace("ÃƒÂ¤", "&auml;", $searchUm);
-			$searchUm = str_replace("ÃƒÂ¤", "&Auml;", $searchUm);
+			$searchUm = str_replace("ÃƒÅ“", "&Uuml;", $searchUm);
 			$searchUm = str_replace("ÃƒÂ¼", "&uuml;", $searchUm);
-			$searchUm = str_replace("ÃƒÂ¼", "&Uuml;", $searchUm);
+
+			$searchUm = str_replace("ÃƒÆ’Ã‚Â¶", "&Ouml;", $searchUm);
+			$searchUm = str_replace("ÃƒÆ’Ã‚Â¶", "&ouml;", $searchUm);
+			$searchUm = str_replace("ÃƒÆ’Ã‚Â¤", "&auml;", $searchUm);
+			$searchUm = str_replace("ÃƒÆ’Ã‚Â¤", "&Auml;", $searchUm);
+			$searchUm = str_replace("ÃƒÆ’Ã‚Â¼", "&uuml;", $searchUm);
+			$searchUm = str_replace("ÃƒÆ’Ã‚Â¼", "&Uuml;", $searchUm);
 
 			if(substr($searchUm,0,6) == "&Auml;" || substr($searchUm,0,6) == "&Ouml;" || substr($searchUm,0,6) == "&Uuml;")
 			$memberWithU[] = $member;
@@ -509,5 +525,4 @@ class THMGroupsModelList extends JModel {
 	}
 }
 ?>
-
 

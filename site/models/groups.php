@@ -1,18 +1,13 @@
 <?php
 
 /**
- * This file contains the data type class Image.
- *
  * PHP version 5
  *
- * @category Web Programming Weeks SS / WS 2011: THM Gießen
+ * @category Web Programming Weeks 2011 Technische Hochschule Mittelhessen
  * @package  com_thm_groups
- * @author   Markus Kaiser <markus.kaiser@mni.thm.de>
- * @author   Daniel Bellof <daniel.bellof@mni.thm.de>
- * @author   Jacek Sokalla <jacek.sokalla@mni.thm.de>
- * @author   Peter May <peter.may@mni.thm.de>
+ * @author   Jacek Sokalla <jacek.sokalla@mni.fh-giessen.de>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @link     http://www.mni.thm.de
+ * @link     http://www.mni.fh-giessen.de
  **/
 defined('_JEXEC') or die();
 

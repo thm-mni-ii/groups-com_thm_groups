@@ -1,19 +1,7 @@
 <?php
-/**
-* PHP version 5
-*
-* @package  com_thm_groups
-* @author   Daniel Bellof <daniel.bellof@mni.fh-giessen.de>
-* @author   Jacek Sokalla <jacek.sokalla@mni.fh-giessen.de>
-* @author   Peter May <peter.may@mni.fh-giessen.de>
-* @author   Markus Kaiser <markus.kaiser@mni.fh-giessen.de>
-* @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
-* @link     http://www.mni.fh-giessen.de
-**/
- defined('_JEXEC') or die();
- 
+//require_once(JPATH_COMPONENT.DS.'classes'.DS.'confdb.php');
+// jimport('joomla.application.component.controllerform');
  jimport('joomla.application.component.controller');
- 
 class THMGroupsControllereditgroup extends JController {
 
 /**

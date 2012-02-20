@@ -196,7 +196,7 @@ $listDirn	= $this->state->get('list.direction');
 					if (!isset($grouprole->rolename))
 						$grouprole->rolename = "Mitglied";
 					$countRoles = countGroupRoles($grouprole->groupid, $groupRoles);
-					// Falls 'Nur ausgewählte anzeigen' ausgewählt ist
+					// Falls 'Nur ausgewÃ¤hlte anzeigen' ausgewÃ¤hlt ist
 					if($this->grcheckon){
 						if(($grouprole->roleid == $this->rolesFilters || $this->rolesFilters == 0) && ($grouprole->groupid == $this->groupFilters || $this->groupFilters==0 )) {
 							if($groupname == $grouprole->groupname){
