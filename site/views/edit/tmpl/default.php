@@ -121,7 +121,10 @@ JHTML::_('behavior.calendar');
 								$this->getTextForm($structureItem->field, 30, $value, $structureItem->id);
 								break;
 							case "TEXTFIELD":
-								echo $this->form->getInput($structureItem->field);
+								//$this->getTextArea($structureItem->field, 10, $value, $structureItem->id);
+								//echo $this->form->getInput($structureItem->field);
+								$editor =& JFactory::getEditor();
+								echo $editor->display($structureItem->field, $value, '', '', '', '', false);
 								break;
 							case "PICTURE":
 								$this->getPictureArea($structureItem->field, $structureItem->id, $value);

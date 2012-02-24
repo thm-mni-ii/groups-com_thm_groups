@@ -93,7 +93,9 @@ JHTML::_('behavior.calendar');
 								break;
 							case "TEXTFIELD":
 								//$this->getTextArea($structureItem->field, 10, $value, $structureItem->id);
-								echo $this->form->getInput($structureItem->field);
+								//echo $this->form->getInput($structureItem->field);
+								$editor =& JFactory::getEditor();
+								echo $editor->display($structureItem->field, $value, '', '', '', '', false);
 								break;
 							case "LINK":
 								$this->getTextForm($structureItem->field, 100, $value, $structureItem->id);
