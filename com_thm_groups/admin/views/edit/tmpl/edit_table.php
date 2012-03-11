@@ -7,7 +7,7 @@
  * @category Joomla Programming Weeks SS2008: FH Giessen-Friedberg
  * @package  com_thm_groups
  * @author   Sascha Henry <sascha.henry@mni.fh-giessen.de>
- * @author   Christian GÃ¯Â¿Â½th <christian.gueth@mni.fh-giessen.de>
+ * @author   Christian GÃÂ¯ÃÂ¿ÃÂ½th <christian.gueth@mni.fh-giessen.de>
  * @author   Severin Rotsch <severin.rotsch@mni.fh-giessen.de>
  * @author   Martin Karry <martin.karry@mni.fh-giessen.de>
  * @author   Dennis Priefer <dennis.priefer@mni.fh-giessen.de>
@@ -33,6 +33,14 @@ $key = JRequest::getVar('key');
 
 		<?php 
 			foreach($arrValue[JRequest::getVar('key')] as $key=>$row) {
+				$key = str_replace("&Auml;", "Ä", $key);
+				$key = str_replace("&auml;", "ä", $key);
+				$key = str_replace("&Ouml;", "Ö", $key);
+				$key = str_replace("&ouml;", "ö", $key);
+				$key = str_replace("&Uuml;", "Ü", $key);
+				$key = str_replace("&uuml;", "ü", $key);
+				$key = str_replace("&szlig;", "ß", $key);
+				$key = str_replace("&euro;", "€", $key);
 		?>
 				window.parent.document.forms['adminForm'].elements['TABLE<?php echo $structid.$key;?>'].value = document.forms['IFrameAdminForm'].elements['<?php echo $key;?>'].value;
 		<?php }?>

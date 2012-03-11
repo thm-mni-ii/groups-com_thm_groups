@@ -52,7 +52,7 @@ function THM_GroupsBuildRoute(&$query)
 
 //berechnet wieder den parametrisierten Teil aus SEF
 function THM_GroupsParseRoute($segments)
-{
+{	
 	$vars = array();
 	if($segments[0]!=""){
 		if(isset($segments[2]))
@@ -60,10 +60,16 @@ function THM_GroupsParseRoute($segments)
 		$vars['view']=$segments[0];
 		$vars['layout']=$segments[1];
 		if(isset($arrVar1[0])) {
-			$vars['gsgid']=$arrVar1[0];
 			$arrVar2 = explode('-',$arrVar1[1]);
-			$vars['gsuid']=$arrVar2[0];
-			$vars['name']=$arrVar2[1];
+			if(isset($arrVar2[1])) {
+				$vars['gsgid']=$arrVar1[0];
+				$vars['gsuid']=$arrVar2[0];
+				$vars['name']=$arrVar2[1];
+			} else {
+				$vars['gsuid']=$arrVar1[0];
+				$vars['name']=$arrVar1[1];
+			}
+				
 		}
 	}
 return $vars;

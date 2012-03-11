@@ -227,11 +227,21 @@ class THMGroupsModeledit extends JModelForm {
 		$head = explode(';', $resHead->value);
 		
 		foreach($head as $headItem) {
-			$arrRow[$headItem] = JRequest::getVar("TABLE$structid$headItem");   	
+			$arrRow[$headItem] =  JRequest::getVar("TABLE$structid$headItem");   	
 		}
 		$arrValue[] = $arrRow;
 		
 		$jsonValue = json_encode($arrValue);
+
+		$jsonValue = str_replace("\u00c4", "&Auml;", $jsonValue);
+		$jsonValue = str_replace("\u00e4", "&auml;", $jsonValue);
+		$jsonValue = str_replace("\u00d6", "&Ouml;", $jsonValue);
+		$jsonValue = str_replace("\u00f6", "&ouml;", $jsonValue);
+		$jsonValue = str_replace("\u00dc", "&Uuml;", $jsonValue);
+		$jsonValue = str_replace("\u00fc", "&uuml;", $jsonValue);
+		$jsonValue = str_replace("\u00df", "&szlig;", $jsonValue);
+		$jsonValue = str_replace("\u20ac", "&euro;", $jsonValue);
+		
 		if(isset($res)) {
 			$query = "UPDATE #__thm_groups_table SET value='$jsonValue' WHERE userid = $uid AND structid=$structid";
 		} else {
@@ -294,11 +304,30 @@ class THMGroupsModeledit extends JModelForm {
 		$oValue = json_decode($res->value);
 		foreach($oValue as $row) 
 			$arrValue[] = $row;
-		foreach($arrValue[$key] as $field=>$row) {
-			$arrRow[$field] = JRequest::getVar('TABLE'.$structid.$field);
+			
+		$query = "SELECT value FROM #__thm_groups_table_extra WHERE structid=".$structid;
+		$db->setQuery( $query );
+		$resHead = $db->loadObject();
+		$head = explode(';', $resHead->value);
+		
+		foreach($head as $headItem) {
+			$arrRow[$headItem] =  JRequest::getVar("TABLE$structid$headItem");   	
 		}
+		/*foreach($arrValue[$key] as $field=>$row) {
+			$arrRow[$field] = JRequest::getVar('TABLE'.$structid.$field);
+			var_dump('TABLE'.$structid.utf8_decode($field));
+		}*/
+		
 		$arrValue[$key] = $arrRow;
 		$jsonValue = json_encode($arrValue);
+		$jsonValue = str_replace("\u00c4", "&Auml;", $jsonValue);
+		$jsonValue = str_replace("\u00e4", "&auml;", $jsonValue);
+		$jsonValue = str_replace("\u00d6", "&Ouml;", $jsonValue);
+		$jsonValue = str_replace("\u00f6", "&ouml;", $jsonValue);
+		$jsonValue = str_replace("\u00dc", "&Uuml;", $jsonValue);
+		$jsonValue = str_replace("\u00fc", "&uuml;", $jsonValue);
+		$jsonValue = str_replace("\u00df", "&szlig;", $jsonValue);
+		$jsonValue = str_replace("\u20ac", "&euro;", $jsonValue);
 		$query = "UPDATE #__thm_groups_table SET value='$jsonValue' WHERE userid = $uid AND structid=$structid";
 		$db->setQuery($query);
         if(!$db->query()) 
@@ -319,16 +348,17 @@ class THMGroupsModeledit extends JModelForm {
 		$user = & JFactory::getUser();
 		$id = $user->id;
 		$gid = $this->getGroupNumber();
-		$db = & JFactory :: getDBO();
-		$query = "SELECT rid FROM `#__thm_groups_groups_map` where uid=$id AND gid=$gid";
-		$db->setQuery($query);
-		$roles = $db->loadObjectList();
 		$this->_isModerator = false;
-		foreach($roles as $role){
-			if($role->rid == 2)
-				$this->_isModerator = true;
+		$db = & JFactory :: getDBO();
+		if(!empty($id) && !empty($gid)) {
+			$query = "SELECT rid FROM `#__thm_groups_groups_map` where uid=$id AND gid=$gid";
+			$db->setQuery($query);
+			$roles = $db->loadObjectList();
+			foreach($roles as $role){
+				if($role->rid == 2)
+					$this->_isModerator = true;
+			}
 		}
-
 		return $this->_isModerator;
 	}
 

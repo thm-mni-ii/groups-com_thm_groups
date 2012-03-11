@@ -97,11 +97,16 @@ $canEdit = ($user->id == $this->userid || $this->canEdit);
 												</tr>
 											<?php 
 												if($item->value != "" && $item->value != "[]") {
+													$k = 0;
 													foreach($arrValue as $row) {
-														echo "<tr>";
+														if($k)
+															echo "<tr style='background-color:#F7F7F7;'>";
+														else
+															echo "<tr>";
 														foreach($row as $rowItem)
 															echo "<td>".$rowItem."</td>";
 														echo "</tr>";
+														$k = 1-$k;
 													}
 												}
 											?>
@@ -110,11 +115,21 @@ $canEdit = ($user->id == $this->userid || $this->canEdit);
 											break;
 										case 'PICTURE':
 											break;
+										case "LINK":
+												if (trim($item->value) != "") {
+													echo "<a href='$item->value'>$item->value</a>";
+													//echo "<div>". THMGroupsHelper::getLink(trim($data->value), THMGroupsHelper::getImage('modules/mod_thm_groups/icons/icon_www.png', 'WWW', 'mod_gs_icon'), 'link'). "</div>";
+												}
+												break;
 										case 'MULTISELECT':
 											// ToDo
 											break;
 										default:
-											echo JText::_($item->value);
+											if($item->structid=='4')
+												echo JHTML :: _('email.cloak', $item->value, 1, $item->value, 0);
+													
+											else
+												echo JText::_($item->value);
 									} //switch				
 								} //if
 							} // foreach	

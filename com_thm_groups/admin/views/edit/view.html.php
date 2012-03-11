@@ -79,16 +79,26 @@ class THMGroupsViewedit extends JView {
 						/*"<th>ID</th>";*/
 			foreach($head as $headItem)
 						$output .= "<th>$headItem </th>";
+			$output .= "<th>".JText::_( 'JACTION_DELETE' )."</th>";
+			$output .= "<th>".JText::_( 'JACTION_EDIT' )."</th>";
 			$output .= "</tr>";
 			if($value != "" && $value != "[]") {
+			$k = 0;
 				foreach($arrValue as $key=>$row) {
 					/*$output .= "<tr>".
 						   		"<td>".($key+1)."</td>";*/
-					foreach($row as $rowItem)
+					if($k)
+						$output.="<tr style='background-color:#F7F7F7;'>";
+					foreach($row as $rowItem) {
+						
 						$output .= "<td>".$rowItem."</td>";
-					$output .= "<td><a href='javascript:delTableRow($key, $structid );' title='Zeile: ".($key+1)."::Zeile entfernen.' class='hasTip'><img src='components/com_thm_groups/img/icon-16-trash.png' /></a> </td>";
+					
+					}
+					$output .= "<td><a href='javascript:delTableRow($key, $structid );' title='Zeile: ".($key+1)."::Zeile entfernen.' class='hasTip'><img src='".JURI::root(true)."/components/com_thm_groups/img/icon-16-trash.png' /></a> </td>";
 					$output .= "<td><a href='index.php?option=com_thm_groups&view=edit&layout=edit_table&tmpl=component&cid=$cid[0]&structid=$structid&key=$key' title='Zeile: ".($key+1)."::Zeile bearbeiten.' class='modal-button hasTip' rel=\"{handler: 'iframe', size: {x: 400, y: 300}}\"><img src='components/com_thm_groups/img/icon-16-edit.png' /></a> </td>";
 					$output .= "</tr>";
+					$k = 1-$k;
+
 				}
 			} else {
 				$output .= "<tr>".

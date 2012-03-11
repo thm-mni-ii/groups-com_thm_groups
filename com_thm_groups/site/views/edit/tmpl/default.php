@@ -164,7 +164,7 @@ JHTML::_('behavior.calendar');
 					<input type="submit" id="gs_editView_buttons" name="save" value="Speichern" />
 				</td>
 				<td>
-					<input type='submit' id="gs_editView_buttons" onclick='return confirm("Wirklich zurück?"), document.forms["adminForm"].elements["task"].value = "edit.backToRefUrl"' value='Zurück' name='backToRefUrl' task='edit.backToRefUrl' />
+					<input type='submit' id="gs_editView_buttons" onclick='document.forms["adminForm"].elements["task"].value = "edit.backToRefUrl"' value='Zur�ck' name='backToRefUrl' task='edit.backToRefUrl' />
 				</td>
 			</tr>
 

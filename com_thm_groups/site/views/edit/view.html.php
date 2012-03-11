@@ -81,16 +81,25 @@ class THMGroupsViewEdit extends JView {
 						/*"<th>ID</th>";*/
 			foreach($head as $headItem)
 						$output .= "<th>$headItem </th>";
+			$output .= "<th>".JText::_( 'JACTION_DELETE' )."</th>";
+			$output .= "<th>".JText::_( 'JACTION_EDIT' )."</th>";
 			$output .= "</tr>";
 			if($value != "" && $value != "[]") {
+				$k = 0;
 				foreach($arrValue as $key=>$row) {
 					/*$output .= "<tr>".
 						   		"<td>".($key+1)."</td>";*/
-					foreach($row as $rowItem)
-					$output .= "<td>".$rowItem."</td>";
+					if($k)
+						$output.="<tr style='background-color:#F7F7F7;'>";
+					foreach($row as $rowItem) {
+						
+						$output .= "<td>".$rowItem."</td>";
+					
+					}
 					$output .= "<td><a href='javascript:delTableRow($key, $structid );' title='Zeile: ".($key+1)."::Zeile entfernen.' class='hasTip'><img src='".JURI::root(true)."/components/com_thm_groups/img/icon-16-trash.png' /></a> </td>";
 					$output .= "<td><a href='index.php?option=com_thm_groups&view=edit&layout=edit_table&tmpl=component&gsuid=$gsuid&structid=$structid&key=$key' title='Zeile: ".($key+1)."::Zeile bearbeiten.' class='modal-button hasTip' rel=\"{handler: 'iframe', size: {x: 400, y: 300}}\"><img src='".JURI::root(true)."/components/com_thm_groups/img/icon-16-edit.png' /></a> </td>";
 					$output .= "</tr>";
+					$k = 1-$k;
 
 				}
 			} else {
@@ -110,16 +119,16 @@ class THMGroupsViewEdit extends JView {
 			  	" />";
 			}
 
-			$option_old = JRequest :: getVar('option_old', 'joomla', 'post');
-		    $layout_old = JRequest :: getVar('layout_old', 'ist', 'post');
-		    $view_old = JRequest :: getVar('view_old', 'gay', 'post');
+			$option_old = JRequest :: getVar('option_old', '0', 'post');
+		    $layout_old = JRequest :: getVar('layout_old', '0', 'post');
+		    $view_old = JRequest :: getVar('view_old', '0', 'post');
 
 			$output .= "<br /><br /><input type='submit' id='addTableRow".$name. "' ".
 				"onclick='document.forms[\"adminForm\"].elements[\"structid\"].value =". $structid.",".
-				"document.forms[\"adminForm\"].elements[\"task\"].value = \"edit.addTableRow\"' ".
+				"document.forms[\"adminForm\"].elements[\"task\"].value = \"edit.addTableRow\", ".
 			    "document.forms[\"adminForm\"].elements[\"option_old\"].value=".$option_old.",".
 				"document.forms[\"adminForm\"].elements[\"layout_old\"].value=".$layout_old.",".
-				"document.forms[\"adminForm\"].elements[\"view_old\"].value=".$view_old.",".
+				"document.forms[\"adminForm\"].elements[\"view_old\"].value=".$view_old."' ".
 				"value='In Tabelle eintragen' name='addTableRow".$name. "' task='edit.addTableRow' />";
 
 		} else {
