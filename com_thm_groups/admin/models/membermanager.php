@@ -18,8 +18,8 @@ defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.modellist' );
 
-require_once(JPATH_COMPONENT.DS.'classes'.DS.'membermanagerdb.php');
-require_once(JPATH_COMPONENT.DS.'classes'.DS.'SQLAbstractionLayer.php');
+//require_once(JPATH_COMPONENT.DS.'classes'.DS.'membermanagerdb.php');
+//require_once(JPATH_COMPONENT.DS.'classes'.DS.'SQLAbstractionLayer.php');
 
 class THMGroupsModelmembermanager extends JModelList {
 
@@ -36,10 +36,10 @@ class THMGroupsModelmembermanager extends JModelList {
   	var $_pagination = null;
 
 
-	function sync() {
+	/*function sync() {
 		$mm = new MemeberManagerDB();
 		$mm->sync();
-	}
+	}*/
 
 	protected function populateState()
 	{
@@ -87,7 +87,7 @@ class THMGroupsModelmembermanager extends JModelList {
 
 		$db = $this->getDbo();
 		$query = $db->getQuery(true);
-
+				
 		$query = "SELECT distinct b.userid, b.value as firstName, c.value as lastName, d.value as EMail, e.value as userName, f.usertype as usertype, f.published as published, f.injoomla as injoomla, t.value as title ".
 				 "FROM `#__thm_groups_structure` as a ".
 				 "inner join #__thm_groups_text as b on a.id = b.structid and b.structid=1 ".
@@ -97,19 +97,19 @@ class THMGroupsModelmembermanager extends JModelList {
 				 "left outer join #__thm_groups_text as t on e.userid=t.userid and t.structid=5 ".
 				 "inner join #__thm_groups_additional_userdata as f on f.userid = e.userid";
 
-		$searchUm = str_replace("Ö", "&Ouml;", $search);
-		$searchUm = str_replace("ö", "&öuml;", $searchUm);
-		$searchUm = str_replace("Ä", "&Auml;", $searchUm);
-		$searchUm = str_replace("ä", "&auml;", $searchUm);
-		$searchUm = str_replace("Ü", "&Uuml;", $searchUm);
-		$searchUm = str_replace("ü", "&uuml;", $searchUm);
+		$searchUm = str_replace("�", "&Ouml;", $search);
+		$searchUm = str_replace("�", "&ouml;", $searchUm);
+		$searchUm = str_replace("�", "&Auml;", $searchUm);
+		$searchUm = str_replace("�", "&auml;", $searchUm);
+		$searchUm = str_replace("�", "&Uuml;", $searchUm);
+		$searchUm = str_replace("�", "&uuml;", $searchUm);
 
-		$searchUm2 = str_replace("Ã¶", "&Ouml;", $search);
-		$searchUm2 = str_replace("Ã¶", "&öuml;", $searchUm2);
-		$searchUm2 = str_replace("Ã¤", "&Auml;", $searchUm2);
-		$searchUm2 = str_replace("Ã¤", "&auml;", $searchUm2);
-		$searchUm2 = str_replace("Ã¼", "&Uuml;", $searchUm2);
-		$searchUm2 = str_replace("Ã¼", "&uuml;", $searchUm2);
+		$searchUm2 = str_replace("ö", "&Ouml;", $search);
+		$searchUm2 = str_replace("ö", "&ouml;", $searchUm2);
+		$searchUm2 = str_replace("ä", "&Auml;", $searchUm2);
+		$searchUm2 = str_replace("ä", "&auml;", $searchUm2);
+		$searchUm2 = str_replace("ü", "&Uuml;", $searchUm2);
+		$searchUm2 = str_replace("ü", "&uuml;", $searchUm2);
 
 		$query.= ' AND (LOWER(c.value) LIKE \'%'.$search.'%\' ';
 		$query.= ' OR LOWER(b.value) LIKE \'%'.$search.'%\' ';
@@ -132,7 +132,7 @@ class THMGroupsModelmembermanager extends JModelList {
 		}
 
 		$query.= " ORDER BY $orderCol $orderDirn";
-
+		
 		return $query;
 	}
 

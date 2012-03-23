@@ -41,8 +41,10 @@ $key = JRequest::getVar('key');
 				$key = str_replace("&uuml;", "ü", $key);
 				$key = str_replace("&szlig;", "ß", $key);
 				$key = str_replace("&euro;", "€", $key);
+				$key = str_replace("_"," ",$key);
 		?>
 				window.parent.document.forms['adminForm'].elements['TABLE<?php echo $structid.$key;?>'].value = document.forms['IFrameAdminForm'].elements['<?php echo $key;?>'].value;
+				
 		<?php }?>
 		
 		window.parent.document.forms['adminForm'].submit();
@@ -58,6 +60,7 @@ $key = JRequest::getVar('key');
 		<table class="admintable">
 			<?php 
 			foreach($arrValue[JRequest::getVar('key')] as $key=>$row) {
+				$key = str_replace("_"," ",$key);
 			?>
 			<tr>
 				<td width="110" class="op">

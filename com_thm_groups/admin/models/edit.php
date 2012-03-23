@@ -210,7 +210,9 @@ class THMGroupsModeledit extends JModelForm {
 		$head = explode(';', $resHead->value);
 
 		foreach($head as $headItem) {
-			$arrRow[$headItem] = JRequest::getVar("TABLE$structid$headItem");
+			$headItem = str_replace(" ","_",$headItem);
+			$value = JRequest::getVar("TABLE$structid$headItem",'','POST','STRING', JREQUEST_ALLOWRAW);
+			$arrRow[$headItem] =  $value;
 		}
 		$arrValue[] = $arrRow;
 
@@ -292,7 +294,9 @@ class THMGroupsModeledit extends JModelForm {
 		$head = explode(';', $resHead->value);
 		
 		foreach($head as $headItem) {
-			$arrRow[$headItem] =  JRequest::getVar("TABLE$structid$headItem");   	
+			$headItem = str_replace(" ","_",$headItem);
+			$value = JRequest::getVar("TABLE$structid$headItem",'','POST','STRING', JREQUEST_ALLOWRAW);
+			$arrRow[$headItem] =  $value;
 		}
 		/*foreach($arrValue[$key] as $field=>$row) {
 			$arrRow[$field] = JRequest::getVar('TABLE'.$structid.$field);
