@@ -146,15 +146,11 @@ $listDirn	= $this->state->get('list.direction');
 
 			<th width="7%" nowrap="nowrap"><?php echo JHTML::_('grid.sort', 'TITEL', 'title', $listDirn, $listOrder ); ?>
 			</th>
-			<th width="8%" align="center"><?php echo JHTML::_('grid.sort', 'USER', 'username', $listDirn, $listOrder  ); ?>
-			</th>
 			<th width="15%" align="center"><?php echo JHTML::_('grid.sort', 'NACHNAME', 'lastName', $listDirn, $listOrder  ); ?>
 			</th>
 			<th width="15%" align="center"><?php echo JHTML::_('grid.sort', 'VORNAME', 'firstName', $listDirn, $listOrder  ); ?>
 			</th>
-			<th width="43%" align="center"><?php echo JHTML::_('grid.sort', 'GROUPS_AND_ROLES', 'g.gid', $listDirn, $listOrder  ); ?>
-			</th>
-			<th width="10%" nowrap="nowrap"><?php echo JHTML::_('grid.sort', 'COM_THM_GROUPS_MEMBERMANAGER_HEADING_USER_TYPE', 'usertype', $listDirn, $listOrder  ); ?>
+			<th width="59%" align="center"><?php echo JHTML::_('grid.sort', 'GROUPS_AND_ROLES', 'g.gid', $listDirn, $listOrder  ); ?>
 			</th>
 			<th width="1%" nowrap="nowrap"><?php echo JHTML::_('grid.sort', 'COM_THM_GROUPS_MEMBERMANAGER_HEADING_PUBLISHED', 'published', $listDirn, $listOrder ); ?>
 			</th>
@@ -183,7 +179,6 @@ $listDirn	= $this->state->get('list.direction');
 		<td valign="top"><?php echo $checked; ?></td>
 
 		<td valign="top"><?php echo $row->title; ?></td>
-		<td valign="top"><?php echo $row->userName; ?></td>
 		<td valign="top"><a href="<?php echo $link; ?>"> <?php echo $row->lastName; ?></a>
 		</td>
 		<td valign="top"><?php echo $row->firstName; ?></td>
@@ -250,7 +245,6 @@ $listDirn	= $this->state->get('list.direction');
 				echo trim($grouproles, ', ');
 			?>
 		</td>
-		<td valign="top"><?php echo $row->usertype; ?></td>
 		<td valign="top" align="center"><?php echo $published; ?></td>
 		<td valign="top" align="center"><?php if($row->injoomla=='0'){echo JHtml::_('jgrid.published', 0, 'membermanager.', 1);}
 		if($row->injoomla=='1'){echo JHtml::_('jgrid.published', 1, 'membermanager.', 1);}; ?></td>
