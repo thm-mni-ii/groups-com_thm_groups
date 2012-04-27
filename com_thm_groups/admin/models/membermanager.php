@@ -69,7 +69,7 @@ class THMGroupsModelmembermanager extends JModelList {
 
 
 		if($order == '') {
-			parent::populateState("username", "ASC");
+			parent::populateState("id", "ASC");
 		} else {
 			parent::populateState($order, $dir);
 		}
@@ -86,30 +86,29 @@ class THMGroupsModelmembermanager extends JModelList {
 		$rolesFilter = $this->state->get('rolesFilters');
 
 		$db = $this->getDbo();
-		$query = $db->getQuery(true);
+		//$query = $db->getQuery(true);
 
-		$query = "SELECT distinct b.userid, b.value as firstName, c.value as lastName, d.value as EMail, e.value as userName, f.usertype as usertype, f.published as published, f.injoomla as injoomla, t.value as title ".
+		$query = "SELECT distinct b.userid, b.value as firstName, c.value as lastName, e.value as EMail, f.published as published, f.injoomla as injoomla, t.value as title ".
 				 "FROM `#__thm_groups_structure` as a ".
 				 "inner join #__thm_groups_text as b on a.id = b.structid and b.structid=1 ".
-				 "inner join #__thm_groups_text as c on b.userid=c.userid and c.structid=2 ".
-				 "inner join #__thm_groups_text as d on c.userid=d.userid and d.structid=3 ".
-				 "inner join #__thm_groups_text as e on d.userid=e.userid and e.structid=4 ".
-				 "left outer join #__thm_groups_text as t on e.userid=t.userid and t.structid=5 ".
+				 "inner join (Select * From #__thm_groups_text order by userid) as c on b.userid=c.userid and c.structid=2 ".
+				 "inner join (Select * From #__thm_groups_text order by userid) as e on c.userid=e.userid and e.structid=4 ".
+				 "left outer join (Select * From #__thm_groups_text order by userid) as t on e.userid=t.userid and t.structid=5 ".
 				 "inner join #__thm_groups_additional_userdata as f on f.userid = e.userid";
 
-		$searchUm = str_replace("Ö", "&Ouml;", $search);
-		$searchUm = str_replace("ö", "&öuml;", $searchUm);
-		$searchUm = str_replace("Ä", "&Auml;", $searchUm);
-		$searchUm = str_replace("ä", "&auml;", $searchUm);
-		$searchUm = str_replace("Ü", "&Uuml;", $searchUm);
-		$searchUm = str_replace("ü", "&uuml;", $searchUm);
+		$searchUm = str_replace("�", "&Ouml;", $search);
+		$searchUm = str_replace("�", "&ouml;", $searchUm);
+		$searchUm = str_replace("�", "&Auml;", $searchUm);
+		$searchUm = str_replace("�", "&auml;", $searchUm);
+		$searchUm = str_replace("�", "&Uuml;", $searchUm);
+		$searchUm = str_replace("�", "&uuml;", $searchUm);
 
-		$searchUm2 = str_replace("Ã¶", "&Ouml;", $search);
-		$searchUm2 = str_replace("Ã¶", "&öuml;", $searchUm2);
-		$searchUm2 = str_replace("Ã¤", "&Auml;", $searchUm2);
-		$searchUm2 = str_replace("Ã¤", "&auml;", $searchUm2);
-		$searchUm2 = str_replace("Ã¼", "&Uuml;", $searchUm2);
-		$searchUm2 = str_replace("Ã¼", "&uuml;", $searchUm2);
+		$searchUm2 = str_replace("ö", "&Ouml;", $search);
+		$searchUm2 = str_replace("ö", "&ouml;", $searchUm2);
+		$searchUm2 = str_replace("ä", "&Auml;", $searchUm2);
+		$searchUm2 = str_replace("ä", "&auml;", $searchUm2);
+		$searchUm2 = str_replace("ü", "&Uuml;", $searchUm2);
+		$searchUm2 = str_replace("ü", "&uuml;", $searchUm2);
 
 		$query.= ' AND (LOWER(c.value) LIKE \'%'.$search.'%\' ';
 		$query.= ' OR LOWER(b.value) LIKE \'%'.$search.'%\' ';
@@ -132,7 +131,10 @@ class THMGroupsModelmembermanager extends JModelList {
 		}
 
 		$query.= " ORDER BY $orderCol $orderDirn";
-
+		
+		//$query = str_replace('#_', 'jos', $query);
+		
+		//echo $query;
 		return $query;
 	}
 
