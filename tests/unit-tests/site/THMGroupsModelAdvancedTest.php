@@ -16,6 +16,10 @@ class THMGroupsModelAdvancedTest extends PHPUnit_TestCase
 
 	// PHPUnit_TestCase funtcion - overwritten
 	function setUp() {
+		$params = new JDispatcher();
+		$testStruct = "10";
+		$params->set('selGroup', $testStruct);
+		
 		$this->instance = new THMGroupsModelAdvanced();
 	}
 
@@ -83,18 +87,32 @@ class THMGroupsModelAdvancedTest extends PHPUnit_TestCase
 		$this->assertTrue($expected[1] == $result[1]);
 	}
 	
-	function testcanEdit() {
-		$user->id = "1337";
-		$user->username = "THMTest";
-		$user->name = "THM";
-		$user->email = "test@test.de";
-		$user->usertype = "Administrator";
-		$user->guest = "false";
-		
-		$result = $this->instance->canEdit();
-		
-		var_dump($result);
+	function testgetStructure() {
+		$result = $this->instance->getStructure();
+		$expected = "TEXT";
+		$this->assertEquals($expected, $result[0]->type);
 	}
+	
+	function testgetExtra() {
+		$structid = "999999";
+		$type = "picture";
+		
+		$db =& JFactory::getDBO();
+		$sql = "INSERT INTO #__thm_groups_picture_extra (structid, value)";
+		$sql .= "VALUES ('999999' ,'THMGroupsTest.jpg')";
+		$db->setQuery( $sql);
+		$db->query();
+		
+		$result = $this->instance->getExtra($structid, $type);
+		
+		$sql = "DELETE FROM #__thm_groups_picture_extra WHERE structid = '999999'";
+		$db->setQuery( $sql);
+		$db->query();
+		
+		$expected = "THMGroupsTest.jpg";
+		$this->assertEquals($expected, $result);
+	}
+	
 }
 
 ?>
