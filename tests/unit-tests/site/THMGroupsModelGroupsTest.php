@@ -1,6 +1,6 @@
 <?php
 
-//require_once JPATH_BASE.'/components/com_thm_groups/models/advanced.php';
+require_once JPATH_BASE.'/components/com_thm_groups/models/groups.php';
 require_once 'PHPUnit.php';
 
 class THMGroupsModelGroupsTest extends PHPUnit_TestCase
@@ -14,20 +14,14 @@ class THMGroupsModelGroupsTest extends PHPUnit_TestCase
 
 	// PHPUnit_TestCase funtcion - overwritten
 	function setUp() {
-		//$this->instance = new THMGroupsModelAdvanced();
+		$this->instance = new THMGroupsModelGroups();
 	}
 
 	// Kill instance
 	function tearDown() {
-		//unset($this->instance);
+		unset($this->instance);
 	}
-	
-	function testgetViewParams(){
-		//$result = $this->instance->isComponentAvailable($comp);
-		$result = true;
-		$expected = true;
-		$this->assertTrue($result == $expected);
-	}
+
 }
 
 ?>

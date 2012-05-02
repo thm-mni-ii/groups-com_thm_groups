@@ -17,9 +17,11 @@ class THMGroupsModelAdvancedTest extends PHPUnit_TestCase
 	// PHPUnit_TestCase funtcion - overwritten
 	function setUp() {
 		$params = new JDispatcher();
-		$testStruct = "10";
-		$params->set('selGroup', $testStruct);
-		
+		$params->set('selGroup','10');
+		/*
+		$array['selGroup'] = '1';
+		JRequest::set($array, 'post');
+		*/
 		$this->instance = new THMGroupsModelAdvanced();
 	}
 
@@ -28,19 +30,31 @@ class THMGroupsModelAdvancedTest extends PHPUnit_TestCase
 		//unset($this->instance);
 	}
 	
+	/*
+	 * Cannot test
+	 * getGroupNumber -> simulate selGroup as params
+	 * canEdit -> simulate selGroup & and User
+	 */
+	
+	// tests getViewParams()
+	// sholud return an object with siteinfos
 	function testgetViewParams(){
 		$frameParams = Jfactory::getApplication(); ;
 		$expected = $frameParams->getParams();
+		
 		$result = $this->instance->getViewParams();
-
 		$this->assertTrue($result == $expected);
 	}
 	
+	// tets getGroupNumber
+	// Cannot get siteparams, object should be null
 	function testgetGroupNumber(){
 		$result = $this->instance->getGroupNumber();
 		$this->assertTrue($result == null);
 	}
 	
+	// tests getImage
+	// returns an html string
 	function testgetImage(){
 		$path = "PfadZuGroup";
 		$text = "THMGroupsTest";
@@ -51,6 +65,8 @@ class THMGroupsModelAdvancedTest extends PHPUnit_TestCase
 		$this->assertTrue($result == $expected);
 	}
 	
+	// tests getLink
+	// returns an html string
 	function testgetLink(){
 		$path = "PfadZuGroup";
 		$text = "THMGroupsTest";
@@ -61,6 +77,10 @@ class THMGroupsModelAdvancedTest extends PHPUnit_TestCase
 		$this->assertTrue($result == $expected);
 	}
 	
+	// tests getUnsortedRoles
+	// insert 2 values
+	// returns an objectlist with Groupids
+	// first objectid should be 0 (last value)and second 1.
 	function testgetUnsortedRoles() {
 		$db =& JFactory::getDBO();
 		$sql = "INSERT INTO #__thm_groups_groups_map (uid, gid, rid)";
@@ -87,12 +107,19 @@ class THMGroupsModelAdvancedTest extends PHPUnit_TestCase
 		$this->assertTrue($expected[1] == $result[1]);
 	}
 	
+	// tests getStructure()
+	// returns an objectlist
+	// first object is "Titel", type -> Texts
 	function testgetStructure() {
 		$result = $this->instance->getStructure();
 		$expected = "TEXT";
+		
 		$this->assertEquals($expected, $result[0]->type);
 	}
 	
+	// tests getExtra
+	// insert value in database
+	// returns value vom inserted query (THMGroupsTest.jpg)
 	function testgetExtra() {
 		$structid = "999999";
 		$type = "picture";
