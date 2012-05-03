@@ -31,9 +31,9 @@ class THMGroupsModelAdvancedTest extends PHPUnit_TestCase
 	}
 	
 	/*
-	 * Cannot test
-	 * getGroupNumber -> simulate selGroup as params
-	 * canEdit -> simulate selGroup & and User
+	 * Np tests:
+	 * getGroupNumber
+	 * canEdit
 	 */
 	
 	// tests getViewParams()

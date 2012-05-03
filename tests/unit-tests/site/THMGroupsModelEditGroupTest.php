@@ -27,23 +27,9 @@ class THMGroupsModelEditGroupTest extends PHPUnit_TestCase
 	}
 	
 	/*
-	 * Cannot test store()
-	 * returns nothing
-	
-	function teststore(){
-		
-	}
-	
-	 * Cannot test getForm()
-	 * returned objekt is protected
-	 
-	function testgetForm(){
-		$data = null;
-		$loadData = true;
-		
-		$result = $this->instance->getForm($data, $loadData);
-		var_dump($result);
-	}
+	 * No tests:
+	 * store
+	 * getForm
 	*/
 	
 	// tests function getData() and _buildQuery()
@@ -59,7 +45,7 @@ class THMGroupsModelEditGroupTest extends PHPUnit_TestCase
 		$this->assertEquals($result[0]->injoomla,"1");
 	}
 	
-	// tests function updatePicturePic
+	// tests function updatePic
 	// insert value in database
 	// updatPic() creates pictures and update inserted value
 	// delete database entry

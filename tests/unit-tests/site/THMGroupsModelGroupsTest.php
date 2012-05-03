@@ -21,6 +21,19 @@ class THMGroupsModelGroupsTest extends PHPUnit_TestCase
 	function tearDown() {
 		unset($this->instance);
 	}
+	
+	/*
+	 * No tests:
+	* canEdit
+	*/
+	
+	function testgetGroups(){
+		$result = $this->instance->getGroups();
+		
+		$this->assertEquals($result[34]->id,"7");
+		$this->assertEquals($result[34]->name,"Administrator");
+		$this->assertEquals($result[34]->injoomla,"1");
+	}
 
 }
 
