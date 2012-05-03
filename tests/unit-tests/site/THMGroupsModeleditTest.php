@@ -37,7 +37,7 @@ class THMGroupsModeleditTest extends PHPUnit_TestCase
 		JRequest::set($array, 'post');
 		
 		$db =& JFactory::getDBO();
-		$query = "INSERT INTO #__thm_groups_picture (userid, structid, value, publish, group";
+		$query = "INSERT INTO #__thm_groups_picture (userid, structid, value, publish, group)";
 		$query .= "VALUES ('99999','88888',' ','0','0')";
 		$db->setQuery( $query );
 		$db->query();

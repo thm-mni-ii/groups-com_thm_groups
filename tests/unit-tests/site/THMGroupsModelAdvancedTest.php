@@ -31,7 +31,7 @@ class THMGroupsModelAdvancedTest extends PHPUnit_TestCase
 	}
 	
 	/*
-	 * Np tests:
+	 * No tests:
 	 * getGroupNumber
 	 * canEdit
 	 */
