@@ -4,36 +4,46 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://webmedia06.mni.fh-giessen.de/" />
-<title>F08X0</title>
+<title>F10X0</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">F08X0</td></tr>
+<tr><td rowspan="1" colspan="3">F10X0</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/administrator/index.php?option=com_thm_groups&amp;view=structure</td>
+	<td>/</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Test</td>
+	<td>link=FACHBEREICH</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>xpath=(//a[contains(text(),'Mitarbeiter')])[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=TestNachname</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertElementPresent</td>
-	<td>id=name</td>
+	<td>link=T</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertElementPresent</td>
-	<td>id=relation</td>
+	<td>link=TestNachname</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertElementPresent</td>
-	<td>name=TABLE_extra</td>
+	<td>xpath=/html/body/div/div[3]/div/div[5]/div[2]/div/div/div/div</td>
 	<td></td>
 </tr>
 
