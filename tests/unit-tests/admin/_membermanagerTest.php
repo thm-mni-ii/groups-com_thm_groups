@@ -25,10 +25,41 @@ class _membermanagerTest extends PHPUnit_TestCase
 	function tearDown() {
 		//unset($this->instance);
 	}
+	
+	/*
+	 * No tests:
+	 * getData
+	 * getAnz
+	 * getTotal
+	 * getListQuery (protected)
+	 * populateState (protected)
+	*/
 
-	function test(){
-		
+	// tests _buildQuery()
+	// function returns an SQL query
+	// should start with SELECT
+	function test_buildQuery(){
+		$result = $this->instance->_buildQuery();
+		$expected = "SELECT ";
+		$this->assertContains($expected, $result);
 	}
+	
+	// tests getTotal
+	// functin returns JPagination object
+	// ???
+	function testgetPagination(){
+		$result = $this->instance->getPagination();
+		$expected = new JPagination( null, 0, 20 );
+		$this->assertNotSame($expected, $result);
+	}
+	
+	/* cannot test, function protected
+	function testgetListQuery(){
+		$result = $this->instance->getListQuery();
+		var_dump($result);
+	}
+	*/
+	
 	
 }
 
