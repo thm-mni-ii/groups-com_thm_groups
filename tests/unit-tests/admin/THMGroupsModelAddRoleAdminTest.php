@@ -22,8 +22,24 @@ class THMGroupsModelAddRoleAdminTest extends PHPUnit_TestCase
 		unset($this->instance);
 	}
 	
-	function test(){
-	
+	// tests store()
+	// function inserts value in database
+	// should return true
+	// delete value
+	function teststore(){
+		
+		$array['role_name'] = 'THMGroupsTestSuite';
+		JRequest::set($array, 'post');
+		
+		$result = $this->instance->store();
+		$expected = true;
+		
+		$db =& JFactory::getDBO();
+		$query = "DELETE FROM #__thm_groups_roles WHERE name = 'THMGroupsTestSuite'";
+		$db->setQuery($query);
+		$db->query();
+		
+		$this->assertTrue($result == $expected);
 	}
 }
 
