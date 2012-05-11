@@ -22,8 +22,34 @@ class THMGroupsModelGroupmanagerAdminTest extends PHPUnit_TestCase
 		unset($this->instance);
 	}
 	
-	function test(){
+	/*
+	 * No tests:
+	* populateState (protected)
+	* getListQuery (protected)
+	* getfreeGroups
+	* getfullGroupIDs
+	*/
 	
+	// tests getJoomlaGroups
+	// returns objectlist with all groups
+	// first object->title = Public
+	function testgetJoomlaGroups(){
+		$result = $this->instance->getJoomlaGroups();
+		$this->assertTrue($result[0]->title == "Public");
+	}
+	
+	// tests delGroup
+	// insert value in database
+	// function deletes inserted value
+	function testdelGroup(){
+		
+		$db =& JFactory::getDBO();
+		$query = "INSERT INTO #__thm_groups_groups (id, name, info, picture, mode, injoomla)";
+		$query .= "VALUES ('99999','THMGroupsTest','TestSuite','','','1')";
+		$db->setQuery( $query );
+		$db->query();
+		
+		$result = $this->instance->delGroup('99999');
 	}
 }
 
