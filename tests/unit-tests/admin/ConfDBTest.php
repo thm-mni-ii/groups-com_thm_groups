@@ -159,7 +159,7 @@ class ConfDBTest extends PHPUnit_TestCase
 	// test method delRole($rid)
 	public function testDelRole(){
 		$db =& JFactory::getDBO();
-		// set testgroup in table #__thm_groups_groups
+		// set testrole in table #__thm_groups_roles
 		$query = "INSERT INTO `#__thm_groups_roles` (`id`, `name`) ".
 				 "VALUES (100000, 'testrole')";
 		$db->setQuery( $query );

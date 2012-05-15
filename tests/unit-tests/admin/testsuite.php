@@ -18,6 +18,7 @@ require_once 'THMGroupsControllerAddGroupTest.php';
 require_once 'THMGroupsViewTHMGroupsTest.php';
 require_once 'ConfDBTest.php';
 require_once 'MemberManagerDBTest.php';
+require_once 'SQLAbstractionLayerTest.php';
 
 
 class testsuite{}
@@ -44,6 +45,7 @@ $suiteAdmin->addTestSuite("THMGroupsControllerAddGroupTest");
 $suiteAdmin->addTestSuite("THMGroupsViewTHMGroupsTest");
 $suiteAdmin->addTestSuite("ConfDBTest");
 $suiteAdmin->addTestSuite("MemberManagerDBTest");
+$suiteAdmin->addTestSuite("SQLAbstractionLayerTest");
 
 //---
 echo "Number of test cases: " . $suiteAdmin->countTestCases() . "\n\n";
