@@ -36,9 +36,16 @@ class ConfDB {
 		return $result['value'];
 	}
 /***************************************************************************************************/
-
-
-	public function setTitle($gid,$title){
+	/* @return -1 if $numColumns >4 || <0
+	 *
+	 */
+	public function setQuery($query){
+		$this->db->setQuery($query);
+		$this->db->Query();
+	}
+	
+	// legacy, can be deleted.
+	/*public function setTitle($gid,$title){
 		$query = "UPDATE #__thm_groups_groups SET title='$title' WHERE id = $gid ";
 		$this->db->setQuery($query);
 		$this->db->Query();
@@ -47,14 +54,8 @@ class ConfDB {
 		$query = "UPDATE #__thm_groups_groups SET description='$title' WHERE id = $gid ";
 		$this->db->setQuery($query);
 		$this->db->Query();
-	}
-	/* @return -1 if $numColumns >4 || <0
-	 *
-	 */
-	public function setQuery($query){
-		$this->db->setQuery($query);
-		$this->db->Query();
-	}
+	}	
+	
 	public function setNumColumns($gid,$numColumns){
 		if (($numColumns>4) || ($numColumns <0)) return -1; //4 is maximum of Columns! and it shoud not be < 0!
 	    $query = "UPDATE #__thm_groups_groups SET numColumns=$numColumns WHERE id = $gid ";
@@ -72,7 +73,6 @@ class ConfDB {
 		$this->db->setQuery($query);
 		$this->db->Query();
 	}
-
 	public function setDescriptionVisible($gid){
 	    $query = "UPDATE #__thm_groups_groups SET show_description=1 WHERE id = $gid ";
 		$this->db->setQuery($query);
@@ -83,7 +83,6 @@ class ConfDB {
 		$this->db->setQuery($query);
 		$this->db->Query();
 	}
-
 	public function getDescriptionState($gid){
 		$query = "SELECT show_description FROM #__thm_groups_groups WHERE id = $gid ";
 		$this->db->setQuery($query);
@@ -113,22 +112,25 @@ class ConfDB {
 		if($list[0]->description=='NULL') return "";
 		else                              return $list[0]->description;
 	}
-
 	public function getTitle($gid){
 		$query = "SELECT title FROM #__thm_groups_groups WHERE id = $gid ";
 		$this->db->setQuery($query);
 		$list=$this->db->loadObjectList();
 		return $list[0]->title;
 	}
+	*/
 	/* @return 1 if group is free and can be deleted
 	 *          0 if group has users in and cannot be deleted
 	 */
+	/*
 	public function isGroupFree($gid){
 		$query="SELECT ";
 	}
+	*/
 	/* @return an array containing all free group id's
 	 *
 	 */
+	
 	public function getfreeGroupIDs(){
 		$query="SELECT id FROM #__thm_groups_groups WHERE id NOT IN (SELECT gid FROM #__thm_groups_groups_map)";
 		$this->db->setQuery($query);
@@ -171,7 +173,7 @@ class ConfDB {
 	/* @return 1 if Group could be created
 	 *         0 if Group couldn't be created
 	 * toUpdate Get the first free id, but actually i don't have time for this.
-	 */
+	 * may be legacy, have to be tested later
 	public function addGroup($name,$alias,$title,$show_title,$description,$show_description,$numColumns){
 		//First get the lowest possible id, then add to table
 		$query="INSERT INTO #__thm_groups_groups (`name`,`alias`,`title`,`show_title`,`description`,`show_description`,`numColumns`) VALUES ";
@@ -188,7 +190,7 @@ class ConfDB {
 		    $this->db->setQuery($query);
 		    $this->db->Query();
 
-	}
+	} */
 	/* @return 1 if Role could be created
 	 *         0 if Role couldn't be created
 	 * toUpdate Get the first free id, but actually i don't have time for this.
@@ -216,7 +218,8 @@ class ConfDB {
 		$this->db->setQuery($query);
 		return $this->db->loadObject()->cnt;
 	}
-
+	/* Legacy, can be removed.
+	 * 
 	public function sync(){
 		$userCount = $this->getUserCount();
 		if ($userCount == 0) {
@@ -228,7 +231,7 @@ class ConfDB {
 			$this->db->setQuery($query);
 			$this->db->query();
 
-			// Gruppenzugehöigkeit kopieren
+			// Gruppenzugehï¿½igkeit kopieren
 			$query="INSERT INTO #__thm_groups_groups_map (uid, gid) ".
 				   "SELECT user_id, group_id ".
 				   "FROM #__user_usergroup_map;";
@@ -262,7 +265,7 @@ class ConfDB {
 				$this->db->setQuery($query);
 				$this->db->query();
 			}
-		} // if ($userCount == 0)
+		} // if ($userCount == 0)*/
 	}
 }
 ?>

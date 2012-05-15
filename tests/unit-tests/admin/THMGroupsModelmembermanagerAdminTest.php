@@ -22,9 +22,12 @@ class THMGroupsModelmembermanagerAdminTest extends PHPUnit_TestCase
 		unset($this->instance);
 	}
 	
-	function test(){
-	
-	}
+	/*
+	 * No tests:
+	* populateState (protected)
+	* getListQuery (protected)
+	*/
+
 }
 
 ?>
