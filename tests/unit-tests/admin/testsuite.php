@@ -17,6 +17,7 @@ require_once 'THMGroupsModelStructureAdminTest.php';
 require_once 'THMGroupsControllerAddGroupTest.php';
 require_once 'THMGroupsViewTHMGroupsTest.php';
 require_once 'ConfDBTest.php';
+require_once 'MemberManagerDBTest.php';
 
 
 class testsuite{}
@@ -42,6 +43,7 @@ $suiteAdmin->addTestSuite("THMGroupsModelStructureAdminTest");
 $suiteAdmin->addTestSuite("THMGroupsControllerAddGroupTest");
 $suiteAdmin->addTestSuite("THMGroupsViewTHMGroupsTest");
 $suiteAdmin->addTestSuite("ConfDBTest");
+$suiteAdmin->addTestSuite("MemberManagerDBTest");
 
 //---
 echo "Number of test cases: " . $suiteAdmin->countTestCases() . "\n\n";

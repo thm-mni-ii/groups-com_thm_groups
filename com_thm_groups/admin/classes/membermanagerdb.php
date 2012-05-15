@@ -18,14 +18,13 @@ defined('_JEXEC') or die('Restricted access');
 
 require_once(JPATH_COMPONENT_ADMINISTRATOR.DS.'classes'.DS.'confdb.php');
 
-class MemeberManagerDB {
+class MemberManagerDB {
 	private $db;
 
 	function __construct() {
 		$this->db =& JFactory::getDBO();
 		$this->conf = new ConfDB();
 	}
-
 
 	private function umlautReplace($string) {
 		// Umlaute sollen nicht mehr geändert werden, muss noch refaktorisiert werden
@@ -41,7 +40,7 @@ class MemeberManagerDB {
 		return $string;
 	}
 
-	private function userInJoomla(){
+	function userInJoomla(){
 
 		$query='SELECT userid FROM #__thm_groups_additional_userdata WHERE userid NOT IN (SELECT id FROM #__users)';
 		$this->db->setQuery($query);

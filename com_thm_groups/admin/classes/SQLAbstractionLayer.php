@@ -398,7 +398,7 @@ class SQLAbstractionLayer extends JDatabaseMySQL {
 		return($this->setDbData($query));
 	}
 
-
+	
 	/**
 	 * Inserts/updates user in the com_staff tables.
 	 *
@@ -417,7 +417,7 @@ class SQLAbstractionLayer extends JDatabaseMySQL {
 	 * @param	array  $object  User parameters (array of indexed rows with associative colums).
 	 * @param	bool            "true" for insert, "false" for update.
 	 * @return	bool            "true" on success, "false" on error.
-	 */
+	 *//* legacy, can be removed
 	public function setUser($object, $insert = false) {
 
 		if($insert) {
@@ -428,7 +428,7 @@ class SQLAbstractionLayer extends JDatabaseMySQL {
 
 		// Execute SQL query and return success or error
 		return($this->setDBInsertUpdate('#__giessen_staff', $object, $insert, true, $key));
-	}
+	}*/
 
 
 	/**
