@@ -18,39 +18,193 @@ class ConfDBTest extends PHPUnit_TestCase
 	// here
 	function setUp() {
 		$this->instance = new ConfDB();
+		$db =& JFactory::getDBO();
+		
+		// Set testrow in table #__thm_groups_conf
+		$query = "INSERT INTO #__thm_groups_conf (name, value) ".
+				 "VALUES ('test_name','Test_Value')";
+		$db->setQuery( $query );
+		$db->query();
+		
+		// Set testgroup in table #__thm_groups_groups
+		$query = "INSERT INTO `#__thm_groups_groups` (`id`, `name`, `info`, `picture`, `mode`, `injoomla`) ".
+				 "VALUES (99999, 'testgroup', 'testinfo', 'testpicture.jpg', 'testmode', '1')";
+		$db->setQuery( $query );
+		$db->query();
 	}
 
 	// called after the test functions are executed
 	// this function is defined in PHPUnit_TestCase and overwritten
 	// here
 	function tearDown() {
-		// delete your instance
+		$db =& JFactory::getDBO();
+		$query = "DELETE FROM #__thm_groups_conf WHERE name = 'test_name'";
+		$db->setQuery( $query);
+		$db->query();
 		
+		$query = "DELETE FROM #__thm_groups_groups WHERE id = 99999";
+		$db->setQuery( $query);
+		$db->query();
+		
+		$query = "DELETE FROM #__thm_groups_groups WHERE id = 100000";
+		$db->setQuery( $query);
+		$db->query();
+		
+		$query = "DELETE FROM #__thm_groups_roles WHERE id = 100000";
+		$db->setQuery( $query);
+		$db->query();
+		
+		$query = "DELETE FROM #__thm_groups_roles WHERE name = 'testrole'";
+		$db->setQuery( $query);
+		$db->query();
+		
+		$query = "DELETE FROM #__thm_groups_groups_map WHERE uid = 99999";
+		$db->setQuery( $query);
+		$db->query();
+		// delete your instance
 		unset($this->instance);
-	}
-	
-	// test method setValue($name, $value)
-	function testSetValue() {
-		$this->assertTrue(true);
 	}
 	
 	// test method getValue($name)
 	function testGetValue() {
-		$this->assertTrue(true);
+		$result = $this->instance->getValue('test_name');
+		$expected = 'Test_Value';
+		$this->assertEquals($expected, $result);
 	}
 	
-	// test method setTitle($gid,$title)
+	// test method getValue($name) with wrong $expected
+	function testGetValue2() {
+		$result = $this->instance->getValue('test_name');
+		$expected = 'Wrong_Test_Value';
+		$this->assertFalse($expected == $result);
+	}
+	
+	// test method setValue($name, $value)
+	function testSetValue() {
+		$this->instance->setValue('test_name', 'test_value_update');
+		$result = $this->instance->getValue('test_name');
+		$expected = 'test_value_update';
+		$this->assertEquals($expected, $result);
+	}
+	
+	// test method getfreeGroupIDs()
+	public function testGetfreeGroupIDs(){
+		$resultArray = $this->instance->getfreeGroupIDs();
+		$result = false;
+		foreach ($resultArray as $resultItem)
+		{
+			if ($resultItem->id == 99999)
+			{
+				$result = true;
+			}
+		}
+		$this->assertTrue($result);
+	}
+	
+	// test method getfullGroupIDs()
+	public function testGetfullGroupIDs(){
+		$resultArray = $this->instance->getfullGroupIDs();
+		$result = false;
+		foreach ($resultArray as $resultItem)
+		{
+			if ($resultItem->id == 1)
+			{
+				$result = true;
+			}
+		}
+		$this->assertTrue($result);
+	}
+	
+	// test method getUserCountFromGroup($gid)
+	public function testGetUserCountFromGroup(){
+		// Set testrow in table #__thm_groups_groups_map
+		$db =& JFactory::getDBO();
+		$query = "INSERT INTO `#__thm_groups_groups_map` (`uid`, `gid`, `rid`) VALUES (99999, 99999, 1)";
+		$db->setQuery( $query );
+		$db->query();
+		
+		$gid = '99999';
+		$result = $this->instance->getUserCountFromGroup($gid);
+		$this->assertNotNull($result);
+	}
+	
+	// test method delGroup($gid)
+	public function testDelGroup(){
+		$db =& JFactory::getDBO();
+		// set testgroup in table #__thm_groups_groups
+		$query = "INSERT INTO `#__thm_groups_groups` (`id`, `name`, `info`, `picture`, `mode`, `injoomla`) ".
+				 "VALUES (100000, 'testgroup', 'testinfo', 'testpicture.jpg', 'testmode', '1')";
+		$db->setQuery( $query );
+		$db->query();
+		
+		// get testgroup in table #__thm_groups_groups
+		$query = "SELECT * FROM `#__thm_groups_groups` WHERE `id` = 100000";
+		$db->setQuery( $query );
+		$item = $db->loadObject();
+		if (!isset($item))
+			$this->assertTrue(false);
+		$gid = '100000';
+		$result = $this->instance->delGroup($gid);
+		
+		// get testgroup in table #__thm_groups_groups
+		$query = "SELECT * FROM `#__thm_groups_groups` WHERE `id` = 100000";
+		$db->setQuery( $query );
+		$item = $db->loadObject();
+		if (isset($item))
+			$this->assertTrue(false);
+		else
+			$this->assertTrue(true);
+	}
+	
+	// test method delRole($rid)
+	public function testDelRole(){
+		$db =& JFactory::getDBO();
+		// set testgroup in table #__thm_groups_groups
+		$query = "INSERT INTO `#__thm_groups_roles` (`id`, `name`) ".
+				 "VALUES (100000, 'testrole')";
+		$db->setQuery( $query );
+		$db->query();
+		
+		// get test role in table #__thm_groups_roles
+		$query = "SELECT * FROM `#__thm_groups_roles` WHERE `id` = 100000";
+		$db->setQuery( $query );
+		$item = $db->loadObject();
+		if (!isset($item))
+			$this->assertTrue(false);
+		$rid = '100000';
+		$result = $this->instance->delRole($rid);
+		
+		// get test role in table #__thm_groups_roles
+		$query = "SELECT * FROM `#__thm_groups_roles` WHERE `id` = 100000";
+		$db->setQuery( $query );
+		$item = $db->loadObject();
+		if (isset($item))
+			$this->assertTrue(false);
+		else
+			$this->assertTrue(true);
+	}
+	
+	// test method addRole($name)
+	public function testAddRole(){
+		$result = $this->instance->addRole('testrole');
+		$db =& JFactory::getDBO();
+		// get test role in table #__thm_groups_roles
+		$query = "SELECT * FROM `#__thm_groups_roles` WHERE `name` = 'testrole'";
+		$db->setQuery( $query );
+		$item = $db->loadObject();
+		if (!isset($item))
+			$this->assertTrue(false);
+		else
+			$this->assertTrue(true);
+	}
+
+	/*// test method setTitle($gid,$title)
 	public function testSetTitle(){
 		$this->assertTrue(true);
 	}
 	
 	// test method setDescription()
 	public function testSetDescription(){
-		$this->assertTrue(true);
-	}
-	
-	// test method setQuery($query)
-	public function testSetQuery(){
 		$this->assertTrue(true);
 	}
 	
@@ -109,28 +263,8 @@ class ConfDBTest extends PHPUnit_TestCase
 		$this->assertTrue(true);
 	}
 	
-	// test method getfreeGroupIDs()
-	public function testGetfreeGroupIDs(){
-		$this->assertTrue(true);
-	}
-	
-	// test method getfullGroupIDs()
-	public function testGetfullGroupIDs(){
-		$this->assertTrue(true);
-	}
-	
-	// test method getUserCountFromGroup($gid)
-	public function testGetUserCountFromGroup(){
-		$this->assertTrue(true);
-	}
-	
-	// test method delGroup($gid)
-	public function testDelGroup(){
-		$this->assertTrue(true);
-	}
-	
-	// test method delRole($rid)
-	public function testDelRole(){
+	// test method sync()
+	public function testSync(){
 		$this->assertTrue(true);
 	}
 	
@@ -139,20 +273,13 @@ class ConfDBTest extends PHPUnit_TestCase
 		$this->assertTrue(true);
 	}
 	
-	// test method addRole($name)
-	public function testAddRole(){
-		$this->assertTrue(true);
-	}
-	
 	// test method getUserCount()
 	public function testGetUserCount(){
 		$this->assertTrue(true);
 	}
 	
-	// test method sync()
-	public function testSync(){
-		$this->assertTrue(true);
-	}
+	
+	*/
 }
 
 ?>
