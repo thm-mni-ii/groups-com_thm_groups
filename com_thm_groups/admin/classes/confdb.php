@@ -265,7 +265,7 @@ class ConfDB {
 				$this->db->setQuery($query);
 				$this->db->query();
 			}
-		} // if ($userCount == 0)*/
-	}
+		} // if ($userCount == 0)
+	}*/
 }
 ?>
