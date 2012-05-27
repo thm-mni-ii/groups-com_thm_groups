@@ -14,7 +14,7 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTrue($this->isElementPresent("link=Speichern & Schließen"));
     $this->assertTrue($this->isElementPresent("link=Speichern & Neu"));
     $this->assertTrue($this->isElementPresent("css=span.icon-32-cancel"));
-    $ = $this->isElementPresent("css=span.icon-32-back");
+    $this->assertTrue($this->isElementPresent("css=span.icon-32-back"));
     $this->assertTrue($this->isElementPresent("css=span.icon-32-back"));
   }
 }
