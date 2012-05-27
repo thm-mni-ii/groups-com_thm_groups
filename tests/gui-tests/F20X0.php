@@ -23,7 +23,6 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("css=img[alt=\"bearbeiten\"]");
     $this->waitForPageToLoad("30000");
     $this->assertTrue($this->isElementPresent("id=Titel"));
-    $ = $this->isElementPresent("id=Vorname");
     $this->assertTrue($this->isElementPresent("id=Vorname"));
     $this->assertTrue($this->isElementPresent("id=Nachname"));
     $this->assertTrue($this->isElementPresent("id=Username"));
