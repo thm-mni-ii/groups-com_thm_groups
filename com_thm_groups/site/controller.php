@@ -1,26 +1,43 @@
 <?php
 /**
- * PHP version 5
- *
- * @category Joomla Programming Weeks WS2008/2009: FH Giessen-Friedberg
- * @package  com_staff 
- * (enhanced from SS2008
- * (@Sascha Henry<sascha.henry@mni.fh-giessen.de>, @Christian Gueth<christian.gueth@mni.fh-giessen.de,Severin Rotsch <severin.rotsch@mni.fh-giessen.de>,@author   Martin Karry <martin.karry@mni.fh-giessen.de>)
- * @author   Sascha Henry <sascha.henry@mni.fh-giessen.de>
- * @author   Christian Güth <christian.gueth@mni.fh-giessen.de>
- * @author   Severin Rotsch <severin.rotsch@mni.fh-giessen.de>
- * @author   Martin Karry <martin.karry@mni.fh-giessen.de>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @link     http://www.mni.fh-giessen.de
- **/
-defined( '_JEXEC' ) or die( 'Restricted access' );
-
+ *@category     Joomla component
+ *@package		Joomla.Site
+ *@subpackage	thm_groups
+ *@name			THMGroupsController
+ *@description	THMGroups component site controller
+ *@author		Dennis Priefer, dennis.priefer@mni.thm.de
+ *@author   	Christian GÃ¼th, christian.gueth@mni.fh-giessen.de
+ *@author		Sascha Henry, sascha.henry@mni.fh-giessen.de
+ *@author		Severin Rotsch, severin.rotsch@mni.fh-giessen.de
+ *@author   	Martin Karry, martin.karry@mni.fh-giessen.de
+ *@copyright	TH Mittelhessen 2012
+ *@license		GNU GPL v.2
+ *@link			www.mni.thm.de
+ *@version		3.0
+ */
+defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.controller');
 
-class THMGroupsController extends JController {
-	function display() {
+/**
+ * Site controller class for component com_thm_groups
+ *
+ * Main controller for the site section of the component
+ *
+ *@package 	Joomla.Site
+ *@subpackage  thm_groups
+ *@link  www.mni.thm.de
+ *@since  Class available since Release 1.0
+ */
+class THMGroupsController extends JController
+{
+	/**
+	 *  Inherited method, which calls the method display() of parent JController.
+	 *@since  Method available since Release 1.0
+	 *
+	 *@return void
+	 */
+	public function display()
+	{
 		parent::display();
 	}
-	
 }
-?>

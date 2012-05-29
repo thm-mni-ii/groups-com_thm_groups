@@ -1,56 +1,72 @@
 <?php
 /**
- * PHP version 5
- *
- * @package  com_thm_groups
- * @author   Dennis Priefer <dennis.priefer@mni.fh-giessen.de>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @link     http://www.mni.fh-giessen.de
- **/
+ *@category     Joomla component
+ *@package		Joomla.Site
+ *@subpackage	thm_groups
+ *@name			THMGroupsControllerProfile
+ *@description	THMGroups component site profile controller
+ *@author		Dennis Priefer, dennis.priefer@mni.thm.de
+ *@copyright	TH Mittelhessen 2012
+ *@license		GNU GPL v.2
+ *@link			www.mni.thm.de
+ *@version		3.0
+ */
 defined('_JEXEC') or die();
-
 jimport('joomla.application.component.controller');
 
-class THMGroupsControllerProfile extends JController {
-
-	var $uid = null;
-	var $uname = null;
+/**
+ * Site profile controller class for component com_thm_groups
+ *
+ * Profile controller for the site section of the component
+ *
+ *@package 	Joomla.Site
+ *@subpackage  thm_groups
+ *@link  www.mni.thm.de
+ *@since  Class available since Release 2.1
+ */
+class THMGroupsControllerProfile extends JController
+{
 	/**
- 	 * constructor (registers additional tasks to methods)
- 	 * @return void
- 	 */
-	function __construct() {
+	 *  Constructor (registers additional tasks to methods)
+	 *@since  Method available since Release 2.1
+	 */
+	public function __construct()
+	{
 		parent::__construct();
 		$this->registerTask('backToRefUrl', '');
 	}
 
-	function getLink() {
-		$itemid = $itemid = JRequest :: getVar('Itemid', 0);
-		$id = JRequest :: getVar('id',0);
-		$userInfo['lastName'] = JRequest :: getVar('lastName',0);
-		$letter=strtoupper(substr($userInfo['lastName'], 0, 1));
-		$db =& JFactory::getDBO();
-		$query = "SELECT link FROM `#__menu` where id= $itemid";
-		$db->setQuery( $query );
-		$item = $db->loadObject();
-		$link = substr($item->link . "&Itemid=" . $itemid, 0, strlen($item->link . "&Itemid=" . $itemid));
-		return $link . "&/$id-". $userInfo['lastName'] ."&letter=$letter";
+	/**
+	 *  Method to get the link, where the redirect has to go
+	 *@since  Method available since Release 2.1
+	 *
+	 *@return   string  link.
+	 */
+	public function getLink()
+	{
+		$model = $this->getModel('profile');
+		return $model->getLink();
 	}
 
-	
-	public function backToRefUrl(){
+	/**
+	 *  Method, which sets the redirect for the 'back' button.
+	 *@since  Method available since Release 2.1
+	 *
+	 *@return   void
+	 */
+	public function backToRefUrl()
+	{
+		$option_old = JRequest::getVar('option_old', 0);
+		$layout_old = JRequest::getVar('layout_old', 0);
+		$view_old   = JRequest::getVar('view_old', 0);
+		$itemid_old = JRequest::getVar('item_id', 0);
 
-		
-		$option_old = JRequest :: getVar('option_old', 0);
-		$layout_old = JRequest :: getVar('layout_old', 0);
-		$view_old = JRequest :: getVar('view_old', 0);
-		$itemid_old = JRequest :: getVar('item_id',0);
-		
-		
-    	$link = JRoute::_('index.php?option='.$option_old.'&view='.$view_old.'&layout='.$layout_old.'&Itemid='.$itemid_old);
-  		
+    	$link = JRoute::_('index.php'
+    						. '?option=' . $option_old
+    						. '&view=' . $view_old
+    						. '&layout=' . $layout_old
+    						. '&Itemid=' . $itemid_old
+    					);
   		$this->setRedirect($link);
-	}	
+	}
 }
-
-?>
