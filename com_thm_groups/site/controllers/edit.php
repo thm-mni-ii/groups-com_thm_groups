@@ -32,7 +32,7 @@ class THMGroupsControllerEdit extends JController
 	 * @var    integer
 	 * @since  1.0
 	 */
-	public var $uid = null;
+	public $uid = null;
 
 	/**
 	 * UserName
@@ -40,7 +40,7 @@ class THMGroupsControllerEdit extends JController
 	 * @var    string
 	 * @since  1.0
 	 */
-	public var $uname = null;
+	public $uname = null;
 
 	/**
 	 *  Constructor (registers additional tasks to methods)
