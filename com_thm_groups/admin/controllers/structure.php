@@ -1,43 +1,36 @@
 <?php
 /**
- * This file contains the data type class Image.
+ *@category Joomla module
  *
- * PHP version 5
- *@package Joomla.Site
- *@subpackage mod_thm_groups
- *@name Modul THM Groups
- *@description THMGroupsControllerStructure
- *@author   Sascha Henry, sascha.henry@mni.thm.de
- *@author   Christian Gueth, christian.gueth@mni.thm.de
- *@author   Severin Rotsch, severin.rotsch@mni.thm.de
- *@author   Martin Karry, martin.karry@mni.thm.de
- *@author   Rene Bartsch, rene.bartsch@mni.thm.de
- *@author   Dennis Priefer, dennis.priefer@mni.thm.de
- *@author   Niklas Simonis, niklas.simonis@mni.thm.de
- *@author   Alexander Becker, alexander.becker@mni.thm.de
- *@copyright TH-Mittelhessen
- *@license GNU GPL v.2
- *@link http://www.mni.thm.de
- *@version 3.0
- **/
+ *@package     THM_Groups
+ *
+ *@subpackage  com_thm_groups
+ *@name        THMGroupsControllerStructure
+ *@description THMGroupsControllerStructure class from com_thm_groups
+ *@author      Dennis Priefer, dennis.priefer@mni.thm.de
+ *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
+ *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
+ *@author      Jacek Sokalla,  jacek.sokalla@mni.thm.de
+ *@author      Peter May,  peter.may@mni.thm.de
+ *
+ *@copyright   2012 TH Mittelhessen
+ *
+ *@license     GNU GPL v.2
+ *@link        www.mni.thm.de
+ *@version     3.0
+ */
 defined('_JEXEC') or die();
 require_once JPATH_COMPONENT . DS . 'classes' . DS . 'confdb.php';
 jimport('joomla.application.component.controllerform');
 
 /**
- * THMGroupsControllerStructure
- *@package Joomla.Site
+ * THMGroupsControllerStructure class for component com_thm_groups
  *
- *@subpackage  com_thm_groups
- *
- *@link        http://www.mni.thm.de
- *
- *@see         THMGroupsControllerStructure
- *
- *@since       Class available since Release 1.0
- *
- *@deprecated  Class deprecated in Release 3.0
- **/
+ * @package     Joomla.Site
+ * @subpackage  thm_groups
+ * @link        www.mni.thm.de
+ * @since       Class available since Release 2.0
+ */
 class THMGroupsControllerStructure extends JControllerForm
 {
 	/**

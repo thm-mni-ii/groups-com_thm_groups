@@ -5,8 +5,8 @@
  *@package     THM_Groups
  *
  *@subpackage  com_thm_groups
- *@name        THMGroupsControllermembermanager
- *@description THMGroupsControllermembermanager class from com_thm_groups
+ *@name        THMGroupsControllerRolemanager
+ *@description THMGroupsControllerRolemanager class from com_thm_groups
  *@author      Dennis Priefer, dennis.priefer@mni.thm.de
  *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
  *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
@@ -24,19 +24,13 @@ require_once JPATH_COMPONENT . DS . 'classes' . DS . 'confdb.php';
 jimport('joomla.application.component.controllerform');
 
 /**
- * THMGroupsControllerRolemanager
- *@package Joomla.Site
+ * THMGroupsControllerRolemanager class for component com_thm_groups
  *
- *@subpackage  com_thm_groups
- *
- *@link        http://www.mni.thm.de
- *
- *@see         THMGroupsControllerRolemanager
- *
- *@since       Class available since Release 1.0
- *
- *@deprecated  Class deprecated in Release 3.0
- **/
+ * @package     Joomla.Site
+ * @subpackage  thm_groups
+ * @link        www.mni.thm.de
+ * @since       Class available since Release 2.0
+ */
 class THMGroupsControllerRolemanager extends JControllerForm
 {
 
