@@ -1,42 +1,56 @@
 <?php
 /**
- * @version		$Id: mod_giessen_staff.php
- * @package		Joomla
- * @subpackage	GiessenStaff
- * @author		Dennis Priefer
- * @copyright	Copyright (C) 2008 FH Giessen-Friedberg / University of Applied Sciences
- * @license		GNU/GPL, see LICENSE.php
- * Joomla! is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
- * See COPYRIGHT.php for copyright notices and details.
+ *@category Joomla module
+ *
+ *@package     THM_Groups
+ *
+ *@subpackage  com_thm_groups
+ *@name        JFormFieldAlphabetColor
+ *@description JFormFieldAlphabetColor file from com_thm_groups
+ *@author      Dennis Priefer, dennis.priefer@mni.thm.de
+ *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
+ *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
+ *@author      Jacek Sokalla,  jacek.sokalla@mni.thm.de
+ *@author      Peter May,  peter.may@mni.thm.de
+ *
+ *@copyright   2012 TH Mittelhessen
+ *
+ *@license     GNU GPL v.2
+ *@link        www.mni.thm.de
+ *@version     3.0
  */
-
-// Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die( 'Restricted access' );
-
 jimport('joomla.html.html');
-jimport('joomla.form.formfield'); 
-?>
+jimport('joomla.form.formfield');
 
-
-<?php
-class JFormFieldAlphabetColor extends JFormField {
+/**
+ * JFormFieldAlphabetColor class for component com_thm_groups
+ *
+ * @package     Joomla.Site
+ * @subpackage  thm_groups
+ * @link        www.mni.thm.de
+ * @since       Class available since Release 2.0
+ */
+class JFormFieldAlphabetColor extends JFormField
+{
 	/**
 	 * Element name
 	 *
 	 * @access	protected
 	 * @var		string
+	 * 
+	 * @return html
 	 */
 
-	function getInput() {
-		$scriptDir = str_replace(JPATH_SITE.DS,'',"administrator/components/com_thm_groups/elements/");
+	public function getInput()
+	{
+		$scriptDir = str_replace(JPATH_SITE . DS, '', "administrator/components/com_thm_groups/elements/");
 		$document =& JFactory::getDocument();
-		$document->addStyleSheet(JUri::root().'/administrator/components/com_thm_groups/elements/mooRainbow.css');
-		// add script-code to the document head
+		$document->addStyleSheet(JUri::root() . '/administrator/components/com_thm_groups/elements/mooRainbow.css');
+
+		// Add script-code to the document head
 		JHTML::script('mooRainbow.js', $scriptDir, false);
-		$img = JUri::root().'/administrator/components/com_thm_groups/elements/images/';
+		$img = JUri::root() . '/administrator/components/com_thm_groups/elements/images/';
 ?>
 <script>
 var i=0;
@@ -54,11 +68,10 @@ function change_<?php echo $this->fieldname?>(){
 	}
 
 </script>
-<?php 		
-		
-        $html = "<input id='".$this->name."' name='".$this->name."' type='text' size='13' value='".$this->value."' style='background-color:".$this->value.";' onfocus='change_".$this->fieldname."()'/>";
-      	
+<?php
+
+        $html = "<input id='" . $this->name . "' name='" . $this->name . "' type='text' size='13' value='"
+        . $this->value . "' style='background-color:" . $this->value . ";' onfocus='change_" . $this->fieldname . "()'/>";
      	return $html;
 	}
 }
-?>
