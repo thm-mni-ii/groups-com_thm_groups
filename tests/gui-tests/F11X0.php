@@ -21,9 +21,9 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("css=#advanced-options > a > span");
     $this->assertTrue($this->isElementPresent("id=jformparamsselGroup"));
     $this->assertTrue($this->isElementPresent("id=jform_params_showAll-lbl"));
-    $ = $this->isElementPresent("id=jform_params_linkTarget1");
-    $ = $this->isElementPresent("id=jform_params_linkTarget0");
-    $ = $this->isElementPresent("id=jform_params_linkTarget-lbl");
+    $this->assertTrue($this->isElementPresent("id=jform_params_linkTarget1"));
+    $this->assertTrue($this->isElementPresent("id=jform_params_linkTarget0"));
+    $this->assertTrue($this->isElementPresent("id=jform_params_linkTarget-lbl"));
     $this->assertTrue($this->isElementPresent("id=jform[params][alphabet_active_color]"));
     $this->assertTrue($this->isElementPresent("id=jform[params][alphabet_active_font_color]"));
     $this->assertTrue($this->isElementPresent("id=jform_params_lineSpacing"));

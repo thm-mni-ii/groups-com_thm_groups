@@ -356,6 +356,27 @@ class THMGroupsModelProfile extends JModelForm {
 		
 		$this->store();
 	}
+	
+	/**
+	 *  Method to get the link, where the redirect has to go
+	 *@since  Method available since Release 2.0
+	 *
+	 *@return   string  link.
+	 */
+	public function getLink()
+	{
+		// To do :auslagern in model
+		$itemid = $itemid = JRequest::getVar('Itemid', 0);
+		$id = JRequest::getVar('id', 0);
+		$userInfo['lastName'] = JRequest::getVar('lastName', 0);
+		$letter = strtoupper(substr($userInfo['lastName'], 0, 1));
+		$db =& JFactory::getDBO();
+		$query = "SELECT link FROM `#__menu` where id= $itemid";
+		$db->setQuery($query);
+		$item = $db->loadObject();
+		$link = substr($item->link . "&Itemid=" . $itemid, 0, strlen($item->link . "&Itemid=" . $itemid));
+		return $link . "&/$id-" . $userInfo['lastName'] . "&letter=$letter";
+	}
 
 }
 ?>
