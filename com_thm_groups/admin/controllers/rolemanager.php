@@ -1,68 +1,107 @@
 <?php
 /**
- * PHP version 5
+ *@category Joomla module
  *
- * @category Joomla Programming Weeks WS2008/2009: FH Giessen-Friedberg
- * @package  com_thm_groups
- * (enhanced from SS2008
- * (@Sascha Henry<sascha.henry@mni.fh-giessen.de>, @Christian Gueth<christian.gueth@mni.fh-giessen.de,Severin Rotsch <severin.rotsch@mni.fh-giessen.de>,@author   Martin Karry <martin.karry@mni.fh-giessen.de>)
- * @author   Daniel Schmidt <daniel.schmidt-3@mni.fh-giessen.de>
- * @author   Christian G�th <christian.gueth@mni.fh-giessen.de>
- * @author   Steffen Rupp <steffen.rupp@mni.fh-giessen.de>
- * @author   R�ne Bartsch <rene.bartsch@mni.fh-giessen.de>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @link     http://www.mni.fh-giessen.de
- **/
+ *@package     THM_Groups
+ *
+ *@subpackage  com_thm_groups
+ *@name        THMGroupsControllermembermanager
+ *@description THMGroupsControllermembermanager class from com_thm_groups
+ *@author      Dennis Priefer, dennis.priefer@mni.thm.de
+ *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
+ *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
+ *@author      Jacek Sokalla,  jacek.sokalla@mni.thm.de
+ *@author      Peter May,  peter.may@mni.thm.de
+ *
+ *@copyright   2012 TH Mittelhessen
+ *
+ *@license     GNU GPL v.2
+ *@link        www.mni.thm.de
+ *@version     3.0
+ */
 defined('_JEXEC') or die();
-require_once(JPATH_COMPONENT.DS.'classes'.DS.'confdb.php');
- jimport('joomla.application.component.controllerform');
-class THMGroupsControllerRolemanager extends JControllerForm {
+require_once JPATH_COMPONENT . DS . 'classes' . DS . 'confdb.php';
+jimport('joomla.application.component.controllerform');
+
+/**
+ * THMGroupsControllerRolemanager
+ *@package Joomla.Site
+ *
+ *@subpackage  com_thm_groups
+ *
+ *@link        http://www.mni.thm.de
+ *
+ *@see         THMGroupsControllerRolemanager
+ *
+ *@since       Class available since Release 1.0
+ *
+ *@deprecated  Class deprecated in Release 3.0
+ **/
+class THMGroupsControllerRolemanager extends JControllerForm
+{
 
 	/**
  	 * constructor (registers additional tasks to methods)
- 	 * @return void
+ 	 * 
  	 */
-	function __construct() {
+	public function __construct()
+	{
 		parent::__construct();
-		
 	}
 
 	/**
-  	 * display the groupedit form
+  	 * Edit
+  	 * 
  	 * @return void
  	 */
-	function edit(){
-    	JRequest::setVar( 'view', 'editrole' );
-    	JRequest::setVar( 'layout', 'default' );
-    	JRequest::setVar( 'hidemainmenu', 1);
+	public function edit()
+	{
+    	JRequest::setVar('view', 'editrole');
+    	JRequest::setVar('layout', 'default');
+    	JRequest::setVar('hidemainmenu', 1);
     	parent::display();
 	}
 
-	function cancel(){
-	    $msg =   JText::_( 'Operation Cancelled' );
-	    $this->setRedirect(   'index.php?option=com_thm_groups', $msg );
+	/**
+	 * Cancel
+	 *
+	 * @return void
+	 */
+	public function cancel()
+	{
+	    $msg = JText::_('Operation Cancelled');
+	    $this->setRedirect('index.php?option=com_thm_groups', $msg);
 	}
 
-	function addRole(){
-		JRequest::setVar( 'view', 'addrole' );
-    	JRequest::setVar( 'layout', 'default' );
-    	JRequest::setVar( 'hidemainmenu', 1);
+	/**
+	 * AddRole
+	 *
+	 * @return void
+	 */
+	public function addRole()
+	{
+		JRequest::setVar('view', 'addrole');
+    	JRequest::setVar('layout', 'default');
+    	JRequest::setVar('hidemainmenu', 1);
     	parent::display();
 	}
-	//If-Else-Verzweigung Abfrage nach aktiven Usern noch wichtig.
-	function remove(){
-	    $dbcon = new ConfDB();
+
+	/**
+	 * Remove
+	 *
+	 * @return void
+	 */
+	public function remove()
+	{
+	    $dbcon = new ConfDB;
 	    $db =& JFactory::getDBO();
-    	$cid = JRequest::getVar( 'cid',   array(), 'post', 'array' );
+    	$cid = JRequest::getVar('cid', array(), 'post', 'array');
 
-
-    	foreach($cid as $toDel){
-
+    	foreach ($cid as $toDel)
+    	{
     		$dbcon->delRole($toDel);
     	}
 
-    	$this->setRedirect( 'index.php?option=com_thm_groups&view=rolemanager',"Rolle(n) erfolgreich entfernt");
-
+    	$this->setRedirect('index.php?option=com_thm_groups&view=rolemanager', "Rolle(n) erfolgreich entfernt");
 	}
 }
-?>
