@@ -1,15 +1,19 @@
 <?php
 /**
- *@category     Joomla component
- *@package		Joomla.Site
- *@subpackage	thm_groups
- *@name			THMGroupsControllerProfile
- *@description	THMGroups component site profile controller
- *@author		Dennis Priefer, dennis.priefer@mni.thm.de
- *@copyright	TH Mittelhessen 2012
- *@license		GNU GPL v.2
- *@link			www.mni.thm.de
- *@version		3.0
+ *@category    Joomla component
+ *
+ *@package     THM_Groups
+ *
+ *@subpackage  com_thm_groups.site
+ *@name		   THMGroupsControllerProfile
+ *@description THMGroups component site profile controller
+ *@author	   Dennis Priefer, dennis.priefer@mni.thm.de
+ *
+ *@copyright   2012 TH Mittelhessen
+ *
+ *@license	   GNU GPL v.2
+ *@link		   www.mni.thm.de
+ *@version	   3.0
  */
 defined('_JEXEC') or die();
 jimport('joomla.application.component.controller');
@@ -19,10 +23,10 @@ jimport('joomla.application.component.controller');
  *
  * Profile controller for the site section of the component
  *
- *@package 	Joomla.Site
- *@subpackage  thm_groups
- *@link  www.mni.thm.de
- *@since  Class available since Release 2.1
+ * @package 	THM_Groups
+ * @subpackage  com_thm_groups.site
+ * @link        www.mni.thm.de
+ * @since       Class available since Release 2.1
  */
 class THMGroupsControllerProfile extends JController
 {
