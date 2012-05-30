@@ -179,7 +179,7 @@ class THMGroupsControllerEditStructure extends JControllerForm
 				. "size='40'"
        			. "value='" . $value->value . "' "
        			. "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXTFIELD") . "' "
-			  	"/>";
+			  	. "/>";
 				break;
 			case "TABLE":
 				$output .= "<textarea "

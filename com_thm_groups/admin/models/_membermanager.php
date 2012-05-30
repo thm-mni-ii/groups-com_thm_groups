@@ -1,27 +1,38 @@
 <?php
 /**
- * PHP version 5
+ *@category Joomla module
  *
- * @category Joomla Programming Weeks WS2008/2009: FH Giessen-Friedberg
- * @package  com_staff
- * (enhanced from SS2008
- * (@Sascha Henry<sascha.henry@mni.fh-giessen.de>, @Christian Gueth<christian.gueth@mni.fh-giessen.de,Severin Rotsch <severin.rotsch@mni.fh-giessen.de>,@author   Martin Karry <martin.karry@mni.fh-giessen.de>)
- * @author   Daniel Schmidt <daniel.schmidt-3@mni.fh-giessen.de>
- * @author   Christian Gï¿½th <christian.gueth@mni.fh-giessen.de>
- * @author   Steffen Rupp <steffen.rupp@mni.fh-giessen.de>
- * @author   Rï¿½ne Bartsch <rene.bartsch@mni.fh-giessen.de>
- * @author   Dennis Priefer <dennis.priefer@mni.fh-giessen.de>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @link     http://www.mni.fh-giessen.de
- **/
+ *@package     THM_Groups
+ *
+ *@subpackage  com_thm_groups
+ *@name        staffsModelmembermanager
+ *@description staffsModelmembermanager file from com_thm_groups
+ *@author      Dennis Priefer, dennis.priefer@mni.thm.de
+ *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
+ *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
+ *@author      Jacek Sokalla,  jacek.sokalla@mni.thm.de
+ *@author      Peter May,  peter.may@mni.thm.de
+ *
+ *@copyright   2012 TH Mittelhessen
+ *
+ *@license     GNU GPL v.2
+ *@link        www.mni.thm.de
+ *@version     3.0
+ */
 defined('_JEXEC') or die();
+jimport('joomla.application.component.modellist');
+require_once JPATH_COMPONENT . DS . 'classes' . DS . 'membermanagerdb.php';
 
-jimport( 'joomla.application.component.modellist' );
-
-require_once(JPATH_COMPONENT.DS.'classes'.DS.'membermanagerdb.php');
-
-class staffsModelmembermanager extends JModelList {
-
+/**
+ * staffsModelmembermanager class for component com_thm_groups
+ *
+ * @package     Joomla.Site
+ * @subpackage  thm_groups
+ * @link        www.mni.thm.de
+ * @since       Class available since Release 2.0
+ */
+class StaffsModelmembermanager extends JModelList
+{
 	/**
    	 * Items total
      * @var integer
@@ -34,73 +45,53 @@ class staffsModelmembermanager extends JModelList {
   	 */
   	var $_pagination = null;
 
-	function sync() {
-		$mm = new MemeberManagerDB();
+  	/**
+  	 * Sync
+  	 * 
+  	 * @return void
+  	 */
+	public function sync()
+	{
+		$mm = new MemeberManagerDB;
 		$mm->sync();
 	}
 
+	/**
+	 * Populate
+	 * 
+	 * @return void
+	 */
 	protected function populateState()
 	{
-
-
 		$mainframe = Jfactory::getApplication('administrator');
- 		// end Joomla 1.6
 
-		$filter_order		= $mainframe->getUserStateFromRequest( "$option.filter_order",		'filter_order',		'lastName',	'cmd' );
-		$filter_order_Dir	= $mainframe->getUserStateFromRequest( "$option.filter_order_Dir",	'filter_order_Dir',	'',			'word' );
-		$filter_type		= $mainframe->getUserStateFromRequest( "$option.filter_type",		'filter_type', 		0,			'string' );
-		$filter_logged		= $mainframe->getUserStateFromRequest( "$option.filter_logged",		'filter_logged', 	0,			'int' );
-		$filter 			= $mainframe->getUserStateFromRequest( $option.'.filter', 'filter', '', 'int' );
-		$search = $mainframe->getUserStateFromRequest($this->context.'.search', 'search');
-		$groupFilter 		= $mainframe->getUserStateFromRequest( $option.'.groupFilters', 'groupFilters', '', 'int' );
-		$rolesFilter 		= $mainframe->getUserStateFromRequest( $option.'.rolesFilters', 'rolesFilters', '', 'int' );
-		$search 			= $this->_db->getEscaped( trim(JString::strtolower( $search ) ) );
-		$this->setState('filter.search', $search);
-		//----------
-
-		/*
-		// Initialise variables.
-		$app = JFactory::getApplication('administrator');
-
-		// Load the filter state.
-		$search = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
+		$filter_order = $mainframe->getUserStateFromRequest("$option.filter_order", 'filter_order', 'lastName', 'cmd');
+		$filter_order_Dir = $mainframe->getUserStateFromRequest("$option.filter_order_Dir",	'filter_order_Dir',	'',	'word');
+		$filter_type = $mainframe->getUserStateFromRequest("$option.filter_type", 'filter_type', 0, 'string');
+		$filter_logged = $mainframe->getUserStateFromRequest("$option.filter_logged", 'filter_logged', 0, 'int');
+		$filter	= $mainframe->getUserStateFromRequest($option . '.filter', 'filter', '', 'int');
+		$search = $mainframe->getUserStateFromRequest($this->context . '.search', 'search');
+		$groupFilter = $mainframe->getUserStateFromRequest($option . '.groupFilters', 'groupFilters', '', 'int');
+		$rolesFilter = $mainframe->getUserStateFromRequest($option . '.rolesFilters', 'rolesFilters', '', 'int');
+		$search = $this->_db->getEscaped(trim(JString::strtolower($search)));
 		$this->setState('filter.search', $search);
 
-		$accessId = $app->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', null, 'int');
-		$this->setState('filter.access', $accessId);
-
-		$published = $app->getUserStateFromRequest($this->context.'.filter.state', 'filter_published', '', 'string');
-		$this->setState('filter.state', $published);
-
-		$categoryId = $app->getUserStateFromRequest($this->context.'.filter.category_id', 'filter_category_id', '');
-		$this->setState('filter.category_id', $categoryId);
-
-		$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
-		$this->setState('filter.language', $language);
-
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_weblinks');
-		$this->setState('params', $params);
-
-		// List state information.*/
 		parent::populateState('title', 'asc');
 	}
 
-
-	function __construct(){
+	/**
+	 * constructor
+	 *
+	 */
+	public function __construct()
+	{
  		parent::__construct();
 
-		/* Joomla 1.5
-		//global $mainframe, $option;
-		*/
-
- 		// begin Joomla 1.6
  		$mainframe = Jfactory::getApplication();
- 		// end Joomla 1.6
 
 		// Get pagination request variables
 		$limit = $mainframe->getUserStateFromRequest('global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int');
-		$limitstart = $mainframe->getUserStateFromRequest($option.'.limitstart', 'limitstart', 0, 'int');
+		$limitstart = $mainframe->getUserStateFromRequest($option . '.limitstart', 'limitstart', 0, 'int');
 
 		// In case limit has been changed, adjust it
 		$limitstart = ($limit != 0 ? (floor($limitstart / $limit) * $limit) : 0);
@@ -109,40 +100,40 @@ class staffsModelmembermanager extends JModelList {
 		$this->setState('limitstart', $limitstart);
   	}
 
-	function _buildQuery()
+  	/**
+  	 * _buildQuery
+  	 *
+  	 * @return query
+  	 */
+	public function _buildQuery()
 	{
-		/* Joomla 1.5
-		//global $mainframe, $option;
-		*/
-
- 		// begin Joomla 1.6
  		$mainframe = Jfactory::getApplication();
- 		// end Joomla 1.6
 
-		$filter_order		= $mainframe->getUserStateFromRequest( "$option.filter_order",		'filter_order',		'lastName',	'cmd' );
-		$filter_order_Dir	= $mainframe->getUserStateFromRequest( "$option.filter_order_Dir",	'filter_order_Dir',	'',			'word' );
-		$filter_type		= $mainframe->getUserStateFromRequest( "$option.filter_type",		'filter_type', 		0,			'string' );
-		$filter_logged		= $mainframe->getUserStateFromRequest( "$option.filter_logged",		'filter_logged', 	0,			'int' );
-		$filter 			= $mainframe->getUserStateFromRequest( $option.'.filter', 'filter', '', 'int' );
-		$search 			= $mainframe->getUserStateFromRequest( $option.'.search', 'search', '', 'string' );
-		$groupFilter 		= $mainframe->getUserStateFromRequest( $option.'.groupFilters', 'groupFilters', '', 'int' );
-		$rolesFilter 		= $mainframe->getUserStateFromRequest( $option.'.rolesFilters', 'rolesFilters', '', 'int' );
-		$search 			= $this->_db->getEscaped( trim(JString::strtolower( $search ) ) );
+		$filter_order = $mainframe->getUserStateFromRequest("$option.filter_order", 'filter_order', 'lastName', 'cmd');
+		$filter_order_Dir = $mainframe->getUserStateFromRequest("$option.filter_order_Dir",	'filter_order_Dir',	'',	'word');
+		$filter_type = $mainframe->getUserStateFromRequest("$option.filter_type", 'filter_type', 0, 'string');
+		$filter_logged = $mainframe->getUserStateFromRequest("$option.filter_logged", 'filter_logged', 0, 'int');
+		$filter = $mainframe->getUserStateFromRequest($option . '.filter', 'filter', '', 'int');
+		$search = $mainframe->getUserStateFromRequest($option . '.search', 'search', '', 'string');
+		$groupFilter = $mainframe->getUserStateFromRequest($option . '.groupFilters', 'groupFilters', '', 'int');
+		$rolesFilter = $mainframe->getUserStateFromRequest($option . '.rolesFilters', 'rolesFilters', '', 'int');
+		$search = $this->_db->getEscaped(trim(JString::strtolower($search)));
 
-		//$filter_order= $mainframe->getUserStateFromRequest($context.'filter_order', 'filter_order','' );
-		if (!$filter_order) { $filter_order = 'lastName';    }
+		if (!$filter_order)
+		{
+			$filter_order = 'lastName';
+		}
+		else
+		{
+		}
 
 		$orderby     = "\n ORDER BY $filter_order $filter_order_Dir";
 
-//		$query ='SELECT #__giessen_staff.id AS id, #__giessen_staff.injoomla AS injoomla, #__giessen_staff.title AS title, ' .
-//				'#__giessen_staff.lastName AS lastName, #__giessen_staff.firstName AS firstName, ' .
-//				'#__giessen_staff.usertype AS usertype, #__giessen_staff.published AS published ' .
-//				'FROM #__giessen_staff '.$orderby;
-		$query='SELECT  '.
+		$query = 'SELECT  ' .
 	       '#__giessen_staff.id as id, #__giessen_staff.injoomla as injoomla, #__giessen_staff.title as title, ' .
-	       '#__giessen_staff.lastName as lastName, #__giessen_staff.firstName as firstName, #__giessen_staff.username as username,'.
-	       '#__giessen_staff.usertype as usertype, #__giessen_staff.published as published, '.
-	       'count(#__giessen_staff_groups_map.uid) as gr_name '.
+	       '#__giessen_staff.lastName as lastName, #__giessen_staff.firstName as firstName, #__giessen_staff.username as username,' .
+	       '#__giessen_staff.usertype as usertype, #__giessen_staff.published as published, ' .
+	       'count(#__giessen_staff_groups_map.uid) as gr_name ' .
 	       'FROM #__giessen_staff join #__giessen_staff_groups_map where #__giessen_staff.id=#__giessen_staff_groups_map.uid';
 
 			$searchUm = str_replace("Ö", "&Ouml;", $search);
@@ -159,64 +150,87 @@ class staffsModelmembermanager extends JModelList {
 			$searchUm2 = str_replace("Ã¼", "&Uuml;", $searchUm2);
 			$searchUm2 = str_replace("Ã¼", "&uuml;", $searchUm2);
 
-			$query.= ' AND (LOWER(#__giessen_staff.lastName) LIKE \'%'.$search.'%\' ';
-			$query.= ' OR LOWER(#__giessen_staff.firstName) LIKE \'%'.$search.'%\' ';
-			$query.= ' OR LOWER(#__giessen_staff.username) LIKE \'%'.$search.'%\' ';
-			$query.= ' OR LOWER(#__giessen_staff.lastName) LIKE \'%'.$searchUm.'%\' ';
-			$query.= ' OR LOWER(#__giessen_staff.firstName) LIKE \'%'.$searchUm.'%\' ';
-			$query.= ' OR LOWER(#__giessen_staff.username) LIKE \'%'.$searchUm.'%\' ';
-			$query.= ' OR LOWER(#__giessen_staff.lastName) LIKE \'%'.$searchUm2.'%\' ';
-			$query.= ' OR LOWER(#__giessen_staff.firstName) LIKE \'%'.$searchUm2.'%\' ';
-			$query.= ' OR LOWER(#__giessen_staff.username) LIKE \'%'.$searchUm2.'%\') ';
+			$query .= ' AND (LOWER(#__giessen_staff.lastName) LIKE \'%' . $search . '%\' ';
+			$query .= ' OR LOWER(#__giessen_staff.firstName) LIKE \'%' . $search . '%\' ';
+			$query .= ' OR LOWER(#__giessen_staff.username) LIKE \'%' . $search . '%\' ';
+			$query .= ' OR LOWER(#__giessen_staff.lastName) LIKE \'%' . $searchUm . '%\' ';
+			$query .= ' OR LOWER(#__giessen_staff.firstName) LIKE \'%' . $searchUm . '%\' ';
+			$query .= ' OR LOWER(#__giessen_staff.username) LIKE \'%' . $searchUm . '%\' ';
+			$query .= ' OR LOWER(#__giessen_staff.lastName) LIKE \'%' . $searchUm2 . '%\' ';
+			$query .= ' OR LOWER(#__giessen_staff.firstName) LIKE \'%' . $searchUm2 . '%\' ';
+			$query .= ' OR LOWER(#__giessen_staff.username) LIKE \'%' . $searchUm2 . '%\') ';
 
-		if ($groupFilter>0) {
-			$query.= ' AND #__giessen_staff_groups_map.gid = ' . $groupFilter . ' ';
-			//$this->setState('limit', 0);
-			//$this->setState('limitstart', 0);
+		if ($groupFilter > 0)
+		{
+			$query .= ' AND #__giessen_staff_groups_map.gid = ' . $groupFilter . ' ';
+		}
+		else
+		{
 		}
 
-		if ($rolesFilter>0) {
-			$query.= ' AND #__giessen_staff_groups_map.rid = ' . $rolesFilter . ' ';
-			//$this->setState('limit', 0);
-			//$this->setState('limitstart', 0);
+		if ($rolesFilter > 0)
+		{
+			$query .= ' AND #__giessen_staff_groups_map.rid = ' . $rolesFilter . ' ';
+		}
+		else
+		{
 		}
 
-		$query.=	' group by #__giessen_staff.id '.$orderby;
-       //'order by '.$orderby;
+		$query .= ' group by #__giessen_staff.id ' . $orderby;
+
        return $query;
 	}
 
-	function getData() {
-
-		// Lets load the data if it doesn't already exist
-		if (empty( $this->_data ))
+	/**
+	 * getData
+	 *
+	 * @return data
+	 */
+	function getData()
+	{
+		if (empty($this->_data))
 		{
-
 			$query = $this->_buildQuery();
 			$this->_data = $this->_getList($query, $this->getState('limitstart'), $this->getState('limit'));
+		}
+		else
+		{
 		}
 
 		return $this->_data;
 	}
 
-	function getTotal() {
- 		// Load the content if it doesn't already exist
- 		if (empty($this->_total)) {
+	/**
+	 * getTotal
+	 *
+	 * @return count
+	 */
+	function getTotal()
+	{
+ 		if (empty($this->_total))
+ 		{
  		    $db =& JFactory::getDBO();
 
  		    $query = ' SELECT count(*) as anzahl '
-			. ' FROM #__giessen_staff'
-			;
-			$db->setQuery($query);
-			$rows = $db->loadObjectList();
+			. ' FROM #__giessen_staff';
+ 		    $db->setQuery($query);
+ 		    $rows = $db->loadObjectList();
+ 		}
+ 		else
+ 		{
  		}
  		return $rows[0]->anzahl;
   	}
 
-  	function getAnz() {
+  	/**
+  	 * getAnz
+  	 *
+  	 * @return count
+  	 */
+  	function getAnz()
+  	{
  		$query = $this->_buildQuery();
  		    $db =& JFactory::getDBO();
-
 
 			$db->setQuery($query);
 			$rows = $db->loadObjectList();
@@ -224,16 +238,31 @@ class staffsModelmembermanager extends JModelList {
  		return count($rows);
   	}
 
-  	function getPagination() {
- 		// Load the content if it doesn't already exist
- 		if (empty($this->_pagination)) {
+  	/**
+  	 * getPagination
+  	 *
+  	 * @return pagination
+  	 */
+  	function getPagination()
+  	{
+ 		if (empty($this->_pagination))
+ 		{
  		    jimport('joomla.html.pagination');
- 		    $this->_pagination = new JPagination($this->getAnz(), $this->getState('limitstart'), $this->getState('limit') );
+ 		    $this->_pagination = new JPagination($this->getAnz(), $this->getState('limitstart'), $this->getState('limit'));
+ 		}
+ 		else
+ 		{
  		}
  		return $this->_pagination;
   	}
 
-  	protected function getListQuery() 	{
+  	/**
+  	 * getListQuery
+  	 *
+  	 * @return query
+  	 */
+  	protected function getListQuery()
+  	{
 		// Create a new query object.
 		$db = $this->getDbo();
 		$query = $db->getQuery(true);
@@ -243,7 +272,7 @@ class staffsModelmembermanager extends JModelList {
 			$this->getState(
 				'list.select',
 				'a.id, a.name, a.alias, a.checked_out, a.checked_out_time, a.catid, a.user_id' .
-				', a.published, a.access, a.created, a.created_by, a.ordering, a.featured, a.language'.
+				', a.published, a.access, a.created, a.created_by, a.ordering, a.featured, a.language' .
 				', a.publish_up, a.publish_down'
 			)
 		);
@@ -269,63 +298,79 @@ class staffsModelmembermanager extends JModelList {
 		$query->select('c.title AS category_title');
 		$query->join('LEFT', '#__categories AS c ON c.id = a.catid');
 
-
 		// Filter by access level.
-		if ($access = $this->getState('filter.access')) {
+		if ($access = $this->getState('filter.access'))
+		{
 			$query->where('a.access = ' . (int) $access);
+		}
+		else
+		{
 		}
 
 		// Filter by published state
 		$published = $this->getState('filter.published');
-		if (is_numeric($published)) {
+		if (is_numeric($published))
+		{
 			$query->where('a.published = ' . (int) $published);
 		}
-		else if ($published === '') {
+		elseif ($published == '')
+		{
 			$query->where('(a.published = 0 OR a.published = 1)');
+		}
+		else
+		{
 		}
 
 		// Filter by a single or group of categories.
 		$categoryId = $this->getState('filter.category_id');
-		if (is_numeric($categoryId)) {
-			$query->where('a.catid = '.(int) $categoryId);
+		if (is_numeric($categoryId))
+		{
+			$query->where('a.catid = ' . (int) $categoryId);
 		}
-		else if (is_array($categoryId)) {
+		elseif (is_array($categoryId))
+		{
 			JArrayHelper::toInteger($categoryId);
 			$categoryId = implode(',', $categoryId);
-			$query->where('a.catid IN ('.$categoryId.')');
+			$query->where('a.catid IN (' . $categoryId . ')');
+		}
+		else
+		{
 		}
 
 		// Filter by search in name.
 		$search = $this->getState('filter.search');
-		if (!empty($search)) {
-			if (stripos($search, 'id:') === 0) {
-				$query->where('a.id = '.(int) substr($search, 3));
+		if (!empty($search))
+		{
+			if (stripos($search, 'id:') == 0)
+			{
+				$query->where('a.id = ' . (int) substr($search, 3));
 			}
-			else if (stripos($search, 'author:') === 0) {
-				$search = $db->Quote('%'.$db->getEscaped(substr($search, 7), true).'%');
-				$query->where('(ua.name LIKE '.$search.' OR ua.username LIKE '.$search.')');
+			elseif (stripos($search, 'author:') == 0) {
+				$search = $db->Quote('%' . $db->getEscaped(substr($search, 7), true) . '%');
+				$query->where('(ua.name LIKE ' . $search . ' OR ua.username LIKE ' . $search . ')');
 			}
-			else {
-				$search = $db->Quote('%'.$db->getEscaped($search, true).'%');
-				$query->where('(a.name LIKE '.$search.' OR a.alias LIKE '.$search.')');
+			else
+			{
+				$search = $db->Quote('%' . $db->getEscaped($search, true) . '%');
+				$query->where('(a.name LIKE ' . $search . ' OR a.alias LIKE ' . $search . ')');
 			}
 		}
 
 		// Filter on the language.
-		if ($language = $this->getState('filter.language')) {
-			$query->where('a.language = '.$db->quote($language));
+		if ($language = $this->getState('filter.language'))
+		{
+			$query->where('a.language = ' . $db->quote($language));
 		}
 
 		// Add the list ordering clause.
 		$orderCol	= $this->state->get('list.ordering');
 		$orderDirn	= $this->state->get('list.direction');
-		if ($orderCol == 'a.ordering' || $orderCol == 'category_title') {
-			$orderCol = 'category_title '.$orderDirn.', a.ordering';
+		if ($orderCol == 'a.ordering' || $orderCol == 'category_title')
+		{
+			$orderCol = 'category_title ' . $orderDirn . ', a.ordering';
 		}
-		$query->order($db->getEscaped($orderCol.' '.$orderDirn));
+		$query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
 
-		//echo nl2br(str_replace('#__','jos_',$query));
 		return $query;
 	}
 }
-?>
