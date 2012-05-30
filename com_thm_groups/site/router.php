@@ -83,7 +83,7 @@ function THM_groupsBuildRoute(&$query)
 function THM_groupsParseRoute($segments)
 {
 	$vars = array();
-	if ($segments[0]! = "")
+	if ($segments[0] != "")
 	{
 		if (isset ($segments[2]))
 		{
