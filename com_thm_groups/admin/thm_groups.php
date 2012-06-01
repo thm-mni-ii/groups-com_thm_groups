@@ -22,7 +22,7 @@
 defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.controller');
 
-require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'confdb.php');
+require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'confdb.php';
 
 $confdb = new ConfDB;
 $confdb->sync();
