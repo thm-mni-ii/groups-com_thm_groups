@@ -419,9 +419,6 @@ class THMGroupsControllermembermanager extends JController
     		{
     		}
   		}
-    	else
-    	{
-    	}
 
   	  	$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
 	}

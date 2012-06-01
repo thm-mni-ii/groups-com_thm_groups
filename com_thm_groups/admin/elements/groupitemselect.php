@@ -24,7 +24,7 @@
 defined('_JEXEC') or die( 'Restricted access' );
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
-require_once JPATH_BASE . DS . 'components' . DS . 'com_thm_groups' . DS . 'classes' . DS . 'SQLAbstractionLayer.php');
+require_once JPATH_BASE . DS . 'components' . DS . 'com_thm_groups' . DS . 'classes' . DS . 'SQLAbstractionLayer.php';
 
 /**
  * JFormFieldAlphabetColor class for component com_thm_groups
