@@ -197,7 +197,7 @@ class THMGroupsModelAddGroup extends JModelForm
 	 */
 	public function updatePic($gid, $picField)
 	{
-		require_once JPATH_ROOT . DS . "components" . DS . "com_thm_groups" . DS . "helper" . DS . "thm_groups_pictransform.php");
+		require_once JPATH_ROOT . DS . "components" . DS . "com_thm_groups" . DS . "helper" . DS . "thm_groups_pictransform.php";
 
 		try
 		{
