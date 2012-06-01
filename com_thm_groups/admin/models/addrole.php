@@ -1,26 +1,37 @@
 <?php
 /**
- * PHP version 5
+ *@category Joomla module
  *
- * @category Joomla Programming Weeks WS2008/2009: FH Giessen-Friedberg
- * @package  com_staff
- * (enhanced from SS2008
- * (@Sascha Henry<sascha.henry@mni.fh-giessen.de>, @Christian Gueth<christian.gueth@mni.fh-giessen.de,Severin Rotsch <severin.rotsch@mni.fh-giessen.de>,@author   Martin Karry <martin.karry@mni.fh-giessen.de>)
- * @author   Daniel Schmidt <daniel.schmidt-3@mni.fh-giessen.de>
- * @author   Christian GÃ¯Â¿Â½th <christian.gueth@mni.fh-giessen.de>
- * @author   Steffen Rupp <steffen.rupp@mni.fh-giessen.de>
- * @author   RÃ¯Â¿Â½ne Bartsch <rene.bartsch@mni.fh-giessen.de>
- * @author   Dennis Priefer <dennis.priefer@mni.fh-giessen.de>
- * @author	 Ali Kader Caliskan <ali.kader.caliskan@mni.fh-giessen.de>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @link     http://www.mni.fh-giessen.de
- **/
+ *@package     THM_Groups
+ *
+ *@subpackage  com_thm_groups
+ *@name        THMGroupsModelAddRole
+ *@description THMGroupsModelAddRole file from com_thm_groups
+ *@author      Dennis Priefer, dennis.priefer@mni.thm.de
+ *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
+ *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
+ *@author      Jacek Sokalla,  jacek.sokalla@mni.thm.de
+ *@author      Peter May,  peter.may@mni.thm.de
+ *
+ *@copyright   2012 TH Mittelhessen
+ *
+ *@license     GNU GPL v.2
+ *@link        www.mni.thm.de
+ *@version     3.0
+ */
 defined('_JEXEC') or die();
+jimport('joomla.application.component.model');
 
-jimport( 'joomla.application.component.model' );
-// Include database class
-
-class THMGroupsModelAddRole extends JModel {
+/**
+ * THMGroupsModelAddRole class for component com_thm_groups
+ *
+ * @package     Joomla.Site
+ * @subpackage  thm_groups
+ * @link        www.mni.thm.de
+ * @since       Class available since Release 2.0
+ */
+class THMGroupsModelAddRole extends JModel
+{
 
 	/**
 	 * Method to store a record
@@ -28,33 +39,46 @@ class THMGroupsModelAddRole extends JModel {
 	 * @access	public
 	 * @return	boolean	True on success
 	 */
-	function store() {
-		$r_name=JRequest::getVar('role_name');
+	public function store()
+	{
+		$r_name = JRequest::getVar('role_name');
 		$id = null;
-				
+
 		$db =& JFactory::getDBO();
 		$err = 0;
 
-		$query="INSERT INTO #__thm_groups_roles ( `name`)"
-        ." VALUES ("
-        ."'".$r_name."')";
-        
+		$query = "INSERT INTO #__thm_groups_roles ( `name`)"
+        . " VALUES ("
+        . "'" . $r_name . "')";
+
         $db->setQuery($query);
-        if($db->query()) {
+        if ($db->query())
+        {
             $id = $db->insertid();
        		JRequest::setVar('cid[]', $id);
-        } else 
-        	$err=1;        	
-        if(!$err)
+        }
+        else
+        {
+        	$err = 1;
+        }
+
+        if (!$err)
+        {
         	return true;
-        else 
+        }
+        else
+        {
         	return false;
+        }
 	}
 
-	function apply(){
-		
+	/**
+	 * Apply
+	 *
+	 * @return	void
+	 */
+	public function apply()
+	{
 		$this->store();
 	}
-
 }
-?>

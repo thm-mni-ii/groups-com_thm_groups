@@ -7,7 +7,7 @@
  * (enhanced from SS2008
  * (@Sascha Henry<sascha.henry@mni.fh-giessen.de>, @Christian Gueth<christian.gueth@mni.fh-giessen.de,Severin Rotsch <severin.rotsch@mni.fh-giessen.de>,@author   Martin Karry <martin.karry@mni.fh-giessen.de>)
  * @author   Sascha Henry <sascha.henry@mni.fh-giessen.de>
- * @author   Christian Güth <christian.gueth@mni.fh-giessen.de>
+ * @author   Christian Gï¿½th <christian.gueth@mni.fh-giessen.de>
  * @author   Severin Rotsch <severin.rotsch@mni.fh-giessen.de>
  * @author   Martin Karry <martin.karry@mni.fh-giessen.de>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php

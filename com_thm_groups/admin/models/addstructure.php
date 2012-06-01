@@ -1,84 +1,118 @@
 <?php
 /**
- * This file contains the data type class Image.
+ *@category Joomla module
  *
- * PHP version 5
+ *@package     THM_Groups
  *
- * @category Joomla Programming Weeks SS2008: FH Giessen-Friedberg
- * @package  com_staff
- * @author   Daniel Schmidt <daniel.schmidt-3@mni.fh-giessen.de>
- * @author   Christian Gueth <christian.gueth@mni.fh-giessen.de>
- * @author   Steffen Rupp <steffen.rupp@mni.fh-giessen.de>
- * @author   Rene Bartsch <rene.bartsch@mni.fh-giessen.de>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @link     http://www.mni.fh-giessen.de
- **/
-class THMGroupsModelAddStructure extends JModel {
+ *@subpackage  com_thm_groups
+ *@name        THMGroupsModelAddStructure
+ *@description THMGroupsModelAddStructure file from com_thm_groups
+ *@author      Dennis Priefer, dennis.priefer@mni.thm.de
+ *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
+ *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
+ *@author      Jacek Sokalla,  jacek.sokalla@mni.thm.de
+ *@author      Peter May,  peter.may@mni.thm.de
+ *
+ *@copyright   2012 TH Mittelhessen
+ *
+ *@license     GNU GPL v.2
+ *@link        www.mni.thm.de
+ *@version     3.0
+ */
 
-	function _buildQuery()
+/**
+ * THMGroupsModelAddStructure class for component com_thm_groups
+ *
+ * @package     Joomla.Site
+ * @subpackage  thm_groups
+ * @link        www.mni.thm.de
+ * @since       Class available since Release 2.0
+ */
+class THMGroupsModelAddStructure extends JModel
+{
+
+	/**
+	 * Builds query
+	 *
+	 * @return	Query
+	 */
+	public function _buildQuery()
 	{
 		$query = "SELECT * "
-    	."FROM #__thm_groups_relationtable";
-		
+    	. "FROM #__thm_groups_relationtable";
+
 		return $query;
 	}
 
-	function getData()
+	/**
+	 * Gets data
+	 *
+	 * @return	result
+	 */
+	public function getData()
 	{
 		$query = $this->_buildQuery();
-		$this->_data = $this->_getList( $query );			
+		$this->_data = $this->_getList($query);
 		return $this->_data;
 	}
-	
-/**
-	 * Method to store a record
+
+	/**
+	 * Stores data
 	 *
-	 * @access	public
 	 * @return	boolean	True on success
 	 */
-	function store() {
+	public function store()
+	{
 
-		$name=JRequest::getVar('name');
-		$relation=JRequest::getVar('relation');
-		$extra = JRequest::getVar($relation.'_extra');
-		
+		$name = JRequest::getVar('name');
+		$relation = JRequest::getVar('relation');
+		$extra = JRequest::getVar($relation . '_extra');
+
 		$db =& JFactory::getDBO();
 		$err = 0;
-		
+
 		$query = "SELECT a.order FROM #__thm_groups_structure as a ORDER BY a.order DESC";
 		$db->setQuery($query);
 		$maxOrder = $db->loadObject();
 		$newOrder = $maxOrder->order + 1;
 
-		$query="INSERT INTO #__thm_groups_structure ( `id`, `field`, `type`, `order`)"
-        ." VALUES (null"
-        .", '".$name."'"
-        .", '".$relation."'"
-        .", ".($newOrder).")";
-        
+		$query = "INSERT INTO #__thm_groups_structure ( `id`, `field`, `type`, `order`)"
+        . " VALUES (null"
+        . ", '" . $name . "'"
+        . ", '" . $relation . "'"
+        . ", " . ($newOrder) . ")";
+
         $db->setQuery($query);
-        if($db->query()) {
+        if ($db->query())
+        {
             $id = $db->insertid();
        		JRequest::setVar('cid[]', $id);
         }
-        else 
-        	$err=1;
-        
-        if (isset($extra)){
-	        $query="INSERT INTO #__thm_groups_".strtolower($relation)."_extra ( `structid`, `value`)"
-	        ." VALUES ($id"
-	        .", '".$extra."')";
-	        
-	        $db->setQuery($query);
-	        if(!$db->query()) 
-	        	$err=1;
+        else
+        {
+        	$err = 1;
         }
-        	
-        if(!$err)
+
+        if (isset($extra))
+        {
+	        $query = "INSERT INTO #__thm_groups_" . strtolower($relation) . "_extra ( `structid`, `value`)"
+	        . " VALUES ($id"
+	        . ", '" . $extra . "')";
+
+	        $db->setQuery($query);
+	        if (!$db->query())
+	        {
+	        	$err = 1;
+	        }
+        }
+
+        if (!$err)
+        {
         	return true;
-        else 
+        }
+        else
+        {
         	return false;
-        
+        }
 	}
 }
-?>

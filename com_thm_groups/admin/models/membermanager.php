@@ -96,12 +96,12 @@ class THMGroupsModelmembermanager extends JModelList {
 				 "left outer join (Select * From #__thm_groups_text order by userid) as t on e.userid=t.userid and t.structid=5 ".
 				 "inner join #__thm_groups_additional_userdata as f on f.userid = e.userid";
 
-		$searchUm = str_replace("Ö", "&Ouml;", $search);
-		$searchUm = str_replace("ö", "&ouml;", $searchUm);
-		$searchUm = str_replace("Ä", "&Auml;", $searchUm);
-		$searchUm = str_replace("ä", "&auml;", $searchUm);
-		$searchUm = str_replace("Ü", "&Uuml;", $searchUm);
-		$searchUm = str_replace("ü", "&uuml;", $searchUm);
+		$searchUm = str_replace("ï¿½", "&Ouml;", $search);
+		$searchUm = str_replace("ï¿½", "&ouml;", $searchUm);
+		$searchUm = str_replace("ï¿½", "&Auml;", $searchUm);
+		$searchUm = str_replace("ï¿½", "&auml;", $searchUm);
+		$searchUm = str_replace("ï¿½", "&Uuml;", $searchUm);
+		$searchUm = str_replace("ï¿½", "&uuml;", $searchUm);
 
 		$searchUm2 = str_replace("Ã¶", "&Ouml;", $search);
 		$searchUm2 = str_replace("Ã¶", "&ouml;", $searchUm2);
