@@ -1,33 +1,34 @@
 <?php
 /**
- * PHP version 5
+ *@category Joomla module
  *
- * @category Joomla Programming Weeks WS2008/2009: FH Giessen-Friedberg
- * @package  com_staff
- * (enhanced from SS2008
- * (@Sascha Henry<sascha.henry@mni.fh-giessen.de>, @Christian Gueth<christian.gueth@mni.fh-giessen.de,Severin Rotsch <severin.rotsch@mni.fh-giessen.de>,@author   Martin Karry <martin.karry@mni.fh-giessen.de>)
- * @author   Sascha Henry <sascha.henry@mni.fh-giessen.de>
- * @author   Christian G�th <christian.gueth@mni.fh-giessen.de>
- * @author   Severin Rotsch <severin.rotsch@mni.fh-giessen.de>
- * @author   Martin Karry <martin.karry@mni.fh-giessen.de>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @link     http://www.mni.fh-giessen.de
- **/
+ *@package     THM_Groups
+ *
+ *@subpackage  com_thm_groups
+ *@name        THMGroupsAdminEntryFile
+ *@description THMGroupsAdminEntryFile file from com_thm_groups
+ *@author      Dennis Priefer, dennis.priefer@mni.thm.de
+ *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
+ *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
+ *@author      Jacek Sokalla,  jacek.sokalla@mni.thm.de
+ *@author      Peter May,  peter.may@mni.thm.de
+ *
+ *@copyright   2012 TH Mittelhessen
+ *
+ *@license     GNU GPL v.2
+ *@link        www.mni.thm.de
+ *@version     3.0
+ */
 defined('_JEXEC') or die('Restricted access');
-
 jimport('joomla.application.component.controller');
 
-require_once(JPATH_COMPONENT_ADMINISTRATOR.DS.'classes'.DS.'confdb.php');
+require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'confdb.php');
 
-$confdb = new ConfDB();
+$confdb = new ConfDB;
 $confdb->sync();
 
-$controller=Jcontroller::getInstance('thmgroups');
+$controller = Jcontroller::getInstance('thmgroups');
 
-$controller->execute( JRequest::getCmd('task'));
+$controller->execute(JRequest::getCmd('task'));
 
 $controller->redirect();
-
-
-
-?>
