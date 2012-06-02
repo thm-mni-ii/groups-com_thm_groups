@@ -1,26 +1,31 @@
 <?php
 /**
- * This file contains the data type class Image.
+ *@category Joomla module
  *
- * PHP version 5
+ *@package     THM_Groups
  *
- * @category Joomla Programming Weeks SS2008: FH Giessen-Friedberg
- * @package  com_thm_groups
- * @author   Sascha Henry <sascha.henry@mni.fh-giessen.de>
- * @author   Christian GÃ¯Â¿Â½th <christian.gueth@mni.fh-giessen.de>
- * @author   Severin Rotsch <severin.rotsch@mni.fh-giessen.de>
- * @author   Martin Karry <martin.karry@mni.fh-giessen.de>
- * @author   Dennis Priefer <dennis.priefer@mni.fh-giessen.de>
- * @author	 Ali Kader Caliskan <ali.kader.caliskan@mni.fh-giessen.de>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @link     http://www.mni.fh-giessen.de
- **/
-	defined('_JEXEC') or die ('Restricted access');
+ *@subpackage  com_thm_groups
+ *@name        THMGroupsVieweditForms
+ *@description THMGroupsVieweditForms file from com_thm_groups
+ *@author      Dennis Priefer, dennis.priefer@mni.thm.de
+ *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
+ *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
+ *@author      Jacek Sokalla,  jacek.sokalla@mni.thm.de
+ *@author      Niklas Simonis, niklas.simonis@mni.thm.de
+ *@author      Peter May,      peter.may@mni.thm.de
+ *
+ *@copyright   2012 TH Mittelhessen
+ *
+ *@license     GNU GPL v.2
+ *@link        www.mni.thm.de
+ *@version     3.0
+ */
+defined('_JEXEC') or die ('Restricted access');
 JHTML::_('behavior.modal', 'a.modal-button');
 JHTML::_('behavior.calendar');
-	// Include database class
-	require_once(JPATH_COMPONENT_ADMINISTRATOR.DS.'classes'.DS.'SQLAbstractionLayer.php');
-	?>
+require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'SQLAbstractionLayer.php';
+?>
+
 <script type="text/javascript">
 	function delTableRow(key, structid){
 		document.getElementsByName('task')[0].value="membermanager.delTableRow";
@@ -33,7 +38,7 @@ JHTML::_('behavior.calendar');
 	<div>
 		<fieldset class="adminform">
 		<legend>
-			<?php echo   JText::_( 'COM_THM_GROUPS_EDIT_FORMS_TEXT_DETAILS' ); ?>
+			<?php echo   JText::_('COM_THM_GROUPS_EDIT_FORMS_TEXT_DETAILS'); ?>
 		</legend>
 
 		<table class="admintable">
@@ -41,19 +46,19 @@ JHTML::_('behavior.calendar');
 				<td/><td/>
 				<td width="110" class="op">
 					<label for="title">
-  						<?php echo JText::_( 'COM_THM_GROUPS_EDIT_FORMS_TEXT_ENABLE_INTERN' ); ?>
+  						<?php echo JText::_('COM_THM_GROUPS_EDIT_FORMS_TEXT_ENABLE_INTERN'); ?>
 					</label>
 				</td>
 				<!-- <td width="110" class="op">
 					<label for="title">
-  						<?php echo JText::_( 'COM_THM_GROUPS_EDIT_FORMS_TEXT_ENABLE_EXTERN' ); ?>
+  						<?php echo JText::_('COM_THM_GROUPS_EDIT_FORMS_TEXT_ENABLE_EXTERN'); ?>
 					</label> 
 				</td>-->
 			</tr>
 			<tr>
 				<td width="110" class="key">
 					<label for="title">
-  						<?php echo JText::_( 'ID' ); ?>:
+  						<?php echo JText::_('ID'); ?>:
 					</label>
 				</td>
 				<td>
@@ -65,26 +70,30 @@ JHTML::_('behavior.calendar');
 			</tr>
 
 			<?php
-				foreach($this->structure as $structureItem) {
+				foreach ($this->structure as $structureItem)
+				{
 			?>
 			<tr>
 				<td width="110" class="key">
 					<label for="title">
-  						<?php echo JText::_( $structureItem->field ); ?>:
+  						<?php echo JText::_($structureItem->field); ?>:
 					</label>
 				</td>
 				<td>
 					<?php
 						$publish = 0;
 						$value = "";
-						foreach ($this->items as $item){
-							if($item->structid == $structureItem->id) {
+						foreach ($this->items as $item)
+						{
+							if ($item->structid == $structureItem->id)
+							{
 								$value = $item->value;
 								$publish = $item->publish;
 							}
 						}
 
-						switch ($structureItem->type) {
+						switch ($structureItem->type)
+						{
 							case "TEXT":
 								$this->getTextForm($structureItem->field, 60, $value, $structureItem->id);
 								break;
@@ -92,8 +101,6 @@ JHTML::_('behavior.calendar');
 								$this->getTextForm($structureItem->field, 30, $value, $structureItem->id);
 								break;
 							case "TEXTFIELD":
-								//$this->getTextArea($structureItem->field, 10, $value, $structureItem->id);
-								//echo $this->form->getInput($structureItem->field);
 								$editor =& JFactory::getEditor();
 								echo $editor->display($structureItem->field, $value, '', '', '', '', false);
 								break;
@@ -117,7 +124,12 @@ JHTML::_('behavior.calendar');
 				</td>
 				<td align="center" width="110">
 					<input type="checkbox" name="publish<?php echo str_replace(" ", "", $structureItem->field); ?>" value="on"
-					<?php if($publish) echo "checked";?>/>
+					<?php 
+						if ($publish)
+						{
+							echo "checked";
+						}
+					?>/>
 				</td>
 				<!-- <td align="center" width="110">
 					ToDo...
@@ -134,17 +146,18 @@ JHTML::_('behavior.calendar');
 			<tr>
 				<td width="110" class="key">
 					<label for="title">
-  						<?php echo JText::_( 'GROUPS_AND_ROLES' ); ?>:
+  						<?php echo JText::_('GROUPS_AND_ROLES'); ?>:
 					</label>
 				</td>
 				<td>
 					<?php
-						$SQLAL = new SQLAbstractionLayer();
+						$SQLAL = new SQLAbstractionLayer;
 						$grouproles = '';
-						foreach($SQLAL->getGroupsAndRoles($this->userid[0]) as $grouprole) {
-							$grouproles .= $grouprole->groupname.'/'.$grouprole->rolename.', ';
+						foreach ($SQLAL->getGroupsAndRoles($this->userid[0]) as $grouprole)
+						{
+							$grouproles .= $grouprole->groupname . '/' . $grouprole->rolename . ', ';
 						}
-						echo '<a href=index.php?option=com_thm_groups&view=membermanager>'.trim($grouproles, ', ').'</a>';
+						echo '<a href=index.php?option=com_thm_groups&view=membermanager>' . trim($grouproles, ', ') . '</a>';
 					?>
 				</td>
 			</tr>
@@ -157,8 +170,5 @@ JHTML::_('behavior.calendar');
 	<input type="hidden" name="userid" value="<?php echo $this->userid[0]; ?>" />
 	<input type="hidden" name="tablekey" value="" />
 	<input type="hidden" name="controller" value="membermanager" />
-
 	</fieldset>
-
 </div>
-

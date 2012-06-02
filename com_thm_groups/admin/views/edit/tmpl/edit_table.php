@@ -1,25 +1,33 @@
 <?php
 /**
- * This file contains the data type class Image.
+ *@category Joomla module
  *
- * PHP version 5
+ *@package     THM_Groups
  *
- * @category Joomla Programming Weeks SS2008: FH Giessen-Friedberg
- * @package  com_thm_groups
- * @author   Sascha Henry <sascha.henry@mni.fh-giessen.de>
- * @author   Christian GÃÂ¯ÃÂ¿ÃÂ½th <christian.gueth@mni.fh-giessen.de>
- * @author   Severin Rotsch <severin.rotsch@mni.fh-giessen.de>
- * @author   Martin Karry <martin.karry@mni.fh-giessen.de>
- * @author   Dennis Priefer <dennis.priefer@mni.fh-giessen.de>
- * @author	 Ali Kader Caliskan <ali.kader.caliskan@mni.fh-giessen.de>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @link     http://www.mni.fh-giessen.de
- **/
+ *@subpackage  com_thm_groups
+ *@name        THMGroupsVieweditEditTable
+ *@description THMGroupsVieweditEditTable file from com_thm_groups
+ *@author      Dennis Priefer, dennis.priefer@mni.thm.de
+ *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
+ *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
+ *@author      Jacek Sokalla,  jacek.sokalla@mni.thm.de
+ *@author      Niklas Simonis, niklas.simonis@mni.thm.de
+ *@author      Peter May,      peter.may@mni.thm.de
+ *
+ *@copyright   2012 TH Mittelhessen
+ *
+ *@license     GNU GPL v.2
+ *@link        www.mni.thm.de
+ *@version     3.0
+ */
 defined('_JEXEC') or die ('Restricted access');
 
-foreach($this->items as $item) {
-	if($item->structid == JRequest::getVar('structid'))
-		$value = $item->value; 
+foreach ($this->items as $item)
+{
+	if ($item->structid == JRequest::getVar('structid'))
+	{
+		$value = $item->value;
+	}
 }
 $arrValue = json_decode($value);
 $structid = JRequest::getVar('structid');
@@ -32,7 +40,8 @@ $key = JRequest::getVar('key');
 		window.parent.document.forms['adminForm'].elements['tablekey'].value = <?php echo $key;?>;
 
 		<?php 
-			foreach($arrValue[JRequest::getVar('key')] as $key=>$row) {
+			foreach ($arrValue[JRequest::getVar('key')] as $key => $row)
+			{
 				$key = str_replace("&Auml;", "Ä", $key);
 				$key = str_replace("&auml;", "ä", $key);
 				$key = str_replace("&Ouml;", "Ö", $key);
@@ -41,11 +50,13 @@ $key = JRequest::getVar('key');
 				$key = str_replace("&uuml;", "ü", $key);
 				$key = str_replace("&szlig;", "ß", $key);
 				$key = str_replace("&euro;", "€", $key);
-				$key = str_replace("_"," ",$key);
+				$key = str_replace("_", " ", $key);
 		?>
-				window.parent.document.forms['adminForm'].elements['TABLE<?php echo $structid.$key;?>'].value = document.forms['IFrameAdminForm'].elements['<?php echo $key;?>'].value;
-				
-		<?php }?>
+				window.parent.document.forms['adminForm'].elements['TABLE<?php echo $structid . $key;?>'].value 
+				= document.forms['IFrameAdminForm'].elements['<?php echo $key;?>'].value;
+		<?php 
+			}
+		?>
 		
 		window.parent.document.forms['adminForm'].submit();
 	}
@@ -54,13 +65,14 @@ $key = JRequest::getVar('key');
 	<div>
 		<fieldset class="adminform">
 		<legend>
-			<?php echo   JText::_( 'EditTableRow' ); ?>
+			<?php echo   JText::_('EditTableRow'); ?>
 		</legend>
 
 		<table class="admintable">
 			<?php 
-			foreach($arrValue[JRequest::getVar('key')] as $key=>$row) {
-				$key = str_replace("_"," ",$key);
+			foreach ($arrValue[JRequest::getVar('key')] as $key => $row)
+			{
+				$key = str_replace("_", " ", $key);
 			?>
 			<tr>
 				<td width="110" class="op">
@@ -70,11 +82,15 @@ $key = JRequest::getVar('key');
 				</td>
 				<td width="110" class="op">
 
-  						<input class='inputbox' type='text' name='<?php echo $key;?>' id='<?php echo $key;?>' size='30' value='<?php echo $row;?>'  />
+  						<input class='inputbox' type='text' name='<?php echo $key;?>' 
+  						id='<?php echo $key;?>' size='30' 
+  						value='<?php echo $row;?>'  />
 
 				</td>
 			</tr>
-			<?php }?>
+			<?php 
+			}
+			?>
 		</table>
 		<br /><br />
 		<input type='button' id='3' onclick="close1234()" value='SAVE' name='editTableRow' task='membermanager.editTableRow' />

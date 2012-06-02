@@ -11,7 +11,8 @@
  *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
  *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
  *@author      Jacek Sokalla,  jacek.sokalla@mni.thm.de
- *@author      Peter May,  peter.may@mni.thm.de
+ *@author      Niklas Simonis, niklas.simonis@mni.thm.de
+ *@author      Peter May,      peter.may@mni.thm.des
  *
  *@copyright   2012 TH Mittelhessen
  *
