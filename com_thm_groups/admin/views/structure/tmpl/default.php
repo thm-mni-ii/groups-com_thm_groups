@@ -1,13 +1,25 @@
 <?php
 /**
- * @version		$Id: default.php 20196 2011-01-09 02:40:25Z ian $
- * @package		Joomla.Administrator
- * @subpackage	com_contact
- * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
+ *@category Joomla module
+ *
+ *@package     THM_Groups
+ *
+ *@subpackage  com_thm_groups
+ *@name        THMGroupsViewStructure
+ *@description THMGroupsViewStructure file from com_thm_groups
+ *@author      Dennis Priefer, dennis.priefer@mni.thm.de
+ *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
+ *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
+ *@author      Jacek Sokalla,  jacek.sokalla@mni.thm.de
+ *@authors      Niklas Simonis, niklas.simonis@mni.thm.de
+ *@author      Peter May,      peter.may@mni.thm.de
+ *
+ *@copyright   2012 TH Mittelhessen
+ *
+ *@license     GNU GPL v.2
+ *@link        www.mni.thm.de
+ *@version     3.0
  */
-
-// no direct access
 defined('_JEXEC') or die;
 
 
@@ -35,9 +47,12 @@ $saveOrder	= $listOrder == 'a.order';
 				</th>
 				<th width="10%">
 					<?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ORDERING', 'a.order', $listDirn, $listOrder); ?>
-					<?php if ($saveOrder): ?>
-						<?php echo JHtml::_('grid.order',  $this->items, 'filesave.png', 'structure.saveorder'); ?>
-					<?php endif;?>
+					<?php 
+					if ($saveOrder)
+					{
+						echo JHtml::_('grid.order',  $this->items, 'filesave.png', 'structure.saveorder');
+					}
+					?>
 				</th>
 				<th width="1%">
 					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
@@ -54,9 +69,10 @@ $saveOrder	= $listOrder == 'a.order';
 		<tbody>
 		<?php
 		$n = count($this->items);
-		foreach ($this->items as $i => $item) :
+		foreach ($this->items as $i => $item)
+		{
 			$ordering	= $listOrder == 'a.order';
-			$link = JRoute::_('index.php?option=com_thm_groups&task=structure.edit&cid[]='.$item->id);
+			$link = JRoute::_('index.php?option=com_thm_groups&task=structure.edit&cid[]=' . $item->id);
 			?>
 			<tr class="row<?php echo $i % 2; ?>">
 				<td class="center">
@@ -64,33 +80,55 @@ $saveOrder	= $listOrder == 'a.order';
 				</td>
 				<td align="center">
 					<?php
-						if($item->id<7)
+						if ($item->id < 7)
+						{
 							echo $item->field;
+						}
 						else
-							echo "<a href='$link'>".$item->field."</a>";
+						{
+							echo "<a href='$link'>" . $item->field . "</a>";
+						}
 					?>
 				</td>
 				<td align="center">
 					<?php echo $item->type; ?>
 				</td>
 				<td class="order">
-						<?php if ($saveOrder) : ?>
-							<?php if ($listDirn == 'asc') : ?>
+						<?php 
+						if ($saveOrder)
+						{
+						?>
+							<?php 
+							if ($listDirn == 'asc')
+							{
+							?>
 								<span><?php echo $this->pagination->orderUpIcon($i, 1, 'structure.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
 								<span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, 1, 'structure.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
-							<?php elseif ($listDirn == 'desc') : ?>
+							<?php 
+							}
+							elseif ($listDirn == 'desc')
+							{
+							?>
 								<span><?php echo $this->pagination->orderUpIcon($i, 1, 'structure.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
 								<span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, 1, 'structure.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
-							<?php endif; ?>
-						<?php endif; ?>
+							<?php 
+							}
+							?>
+						<?php 
+						}
+						?>
 						<?php $disabled = $saveOrder ?  '' : 'disabled="disabled"'; ?>
-						<input type="text" name="order[]" size="5" value="<?php echo $item->order;?>" <?php echo $disabled;?> class="text-area-order" />
+						<input type="text" name="order[]" size="5" 
+						value="<?php echo $item->order;?>" 
+						<?php echo $disabled; ?> class="text-area-order" />
 				</td>
 				<td align="center">
 					<?php echo $item->id; ?>
 				</td>
 			</tr>
-			<?php endforeach; ?>
+		<?php 
+		}
+		?>
 		</tbody>
 	</table>
 
