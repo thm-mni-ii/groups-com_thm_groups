@@ -20,9 +20,9 @@
  *@link        www.mni.thm.de
  *@version     3.0
  */
-defined('_JEXEC') or die('Restricted access');s
-$listOrder	= $this->state->get('list.ordering');
-$listDirn	= $this->state->get('list.direction');
+defined('_JEXEC') or die('Restricted access');
+$listOrder = $this->state->get('list.ordering');
+$listDirn = $this->state->get('list.direction');
 ?>
 <form action="index.php" method="post" name="adminForm">
 <div id="editcell">
