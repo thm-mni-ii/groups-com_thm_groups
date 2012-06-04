@@ -187,7 +187,7 @@ class StaffsModelmembermanager extends JModelList
 	 *
 	 * @return data
 	 */
-	function getData()
+	public function getData()
 	{
 		if (empty($this->_data))
 		{
@@ -206,7 +206,7 @@ class StaffsModelmembermanager extends JModelList
 	 *
 	 * @return count
 	 */
-	function getTotal()
+	public function getTotal()
 	{
  		if (empty($this->_total))
  		{
@@ -228,7 +228,7 @@ class StaffsModelmembermanager extends JModelList
   	 *
   	 * @return count
   	 */
-  	function getAnz()
+  	public function getAnz()
   	{
  		$query = $this->_buildQuery();
  		    $db =& JFactory::getDBO();
@@ -244,7 +244,7 @@ class StaffsModelmembermanager extends JModelList
   	 *
   	 * @return pagination
   	 */
-  	function getPagination()
+  	public function getPagination()
   	{
  		if (empty($this->_pagination))
  		{
