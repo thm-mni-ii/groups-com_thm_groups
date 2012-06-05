@@ -26,7 +26,6 @@ jimport('joomla.application.component.controller');
 require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'confdb.php';
 
 $confdb = new ConfDB;
-$confdb->sync();
 
 $controller = Jcontroller::getInstance('thmgroups');
 
