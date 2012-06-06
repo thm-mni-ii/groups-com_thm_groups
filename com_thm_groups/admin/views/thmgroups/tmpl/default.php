@@ -1,20 +1,25 @@
 <?php
 /**
- * This file contains the data type class Image.
+ *@category Joomla module
  *
- * PHP version 5
+ *@package     THM_Groups
  *
- * @category Joomla Programming Weeks SS2008: FH Giessen-Friedberg
- * @package  com_staff
- * @author   Sascha Henry <sascha.henry@mni.fh-giessen.de>
- * @author   Christian Güth <christian.gueth@mni.fh-giessen.de>
- * @author   Severin Rotsch <severin.rotsch@mni.fh-giessen.de>
- * @author   Martin Karry <martin.karry@mni.fh-giessen.de>
- * @author   Dennis Priefer <dennis.priefer@mni.fh-giessen.de>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @link     http://www.mni.fh-giessen.de
- **/
-// no direct access
+ *@subpackage  com_thm_groups
+ *@name        THMGroupsViewTHMGroups
+ *@description THMGroupsViewTHMGroups file from com_thm_groups
+ *@author      Dennis Priefer, dennis.priefer@mni.thm.de
+ *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
+ *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
+ *@author      Jacek Sokalla,  jacek.sokalla@mni.thm.de
+ *@authors      Niklas Simonis, niklas.simonis@mni.thm.de
+ *@author      Peter May,      peter.may@mni.thm.de
+ *
+ *@copyright   2012 TH Mittelhessen
+ *
+ *@license     GNU GPL v.2
+ *@link        www.mni.thm.de
+ *@version     3.0
+ */
 defined('_JEXEC') or die('Restricted access');
 
 $document   = & JFactory::getDocument();
@@ -28,7 +33,7 @@ $document->addStyleSheet("components/com_thm_groups/css/thmgroups/thmgroups.css"
 
 <div class="descriptiontext">
 	<p>
-		<?php echo JText::_( 'COM_THM_GROUPS_MAIN_INFO' );?>
+		<?php echo JText::_('COM_THM_GROUPS_MAIN_INFO');?>
 	</p>
 
 
@@ -50,7 +55,7 @@ $document->addStyleSheet("components/com_thm_groups/css/thmgroups/thmgroups.css"
     	</div>
     	
 		<div class="menudescription">
-		    	<?php echo JText::_( 'COM_THM_GROUPS_MEMBERMANAGER_INFO' );?>
+		    	<?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_INFO');?>
 		</div>
 	</div>
 	
@@ -63,7 +68,7 @@ $document->addStyleSheet("components/com_thm_groups/css/thmgroups/thmgroups.css"
 	         <div class="description2">Group Manager</div>
 	    </div>
 		<div class="menudescription">
-		    	<?php echo JText::_( 'COM_THM_GROUPS_GROUPMANAGER_INFO' );?>
+		    	<?php echo JText::_('COM_THM_GROUPS_GROUPMANAGER_INFO');?>
 		</div>
 	</div>
 	<div class="menuitem">
@@ -75,7 +80,7 @@ $document->addStyleSheet("components/com_thm_groups/css/thmgroups/thmgroups.css"
 	        <div class="description2">Role Manager</div>
 	    </div>
 	    <div class="menudescription">
-		    	<?php echo JText::_( 'COM_THM_GROUPS_ROLEMANAGER_INFO' );?>
+		    	<?php echo JText::_('COM_THM_GROUPS_ROLEMANAGER_INFO');?>
 		</div>
 	</div>
     <div class="menuitem">    
@@ -88,7 +93,7 @@ $document->addStyleSheet("components/com_thm_groups/css/thmgroups/thmgroups.css"
         
     </div>
     <div class="menudescription">
-		    	<?php echo JText::_( 'COM_THM_GROUPS_STRUCTURE_INFO' );?>
+		    	<?php echo JText::_('COM_THM_GROUPS_STRUCTURE_INFO');?>
 		</div>
 	</div>
     <!-- About

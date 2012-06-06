@@ -1,89 +1,143 @@
 <?php
-require_once(JPATH_COMPONENT.DS.'classes'.DS.'confdb.php');
- jimport('joomla.application.component.controllerform');
-class THMGroupsControllerAddRole extends JControllerForm {
+/**
+ *@category Joomla module
+ *
+ *@package     THM_Groups
+ *
+ *@subpackage  com_thm_groups
+ *@name        THMGroupsControllerAddRole
+ *@description THMGroupsControllerAddRole class from com_thm_groups
+ *@author      Dennis Priefer, dennis.priefer@mni.thm.de
+ *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
+ *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
+ *@author      Jacek Sokalla,  jacek.sokalla@mni.thm.de
+ *@author      Niklas Simonis, niklas.simonis@mni.thm.de
+ *@author      Peter May,      peter.may@mni.thm.de
+ *
+ *@copyright   2012 TH Mittelhessen
+ *
+ *@license     GNU GPL v.2
+ *@link        www.mni.thm.de
+ *@version     3.0
+ */
 
+require_once JPATH_COMPONENT . DS . 'classes' . DS . 'confdb.php';
+jimport('joomla.application.component.controllerform');
+
+/**
+ * THMGroupsControllerAddRole class for component com_thm_groups
+ *
+ * @package     Joomla.Site
+ * @subpackage  thm_groups
+ * @link        www.mni.thm.de
+ * @since       Class available since Release 2.0
+ */
+class THMGroupsControllerAddRole extends JControllerForm
+{
 
 	/**
 	 * Database object
 	 * @var unknown_type
 	 */
-	private $SQLAL = null;
-
+	private $_SQLAL = null;
 
 	/**
  	 * constructor (registers additional tasks to methods)
- 	 * @return void
+ 	 * 
  	 */
-	function __construct() {
+	public function __construct()
+	{
 		parent::__construct();
 		$this->registerTask('apply', 'apply');
 		$this->registerTask('save2new', 'save2new');
 	}
 
 	/**
-  	 * display the edit form
+  	 * Edit
+  	 * 
  	 * @return void
  	 */
-
-	function edit(){
-    	JRequest::setVar( 'view', 'editrole' );
-    	JRequest::setVar( 'layout', 'default' );
-    	JRequest::setVar( 'hidemainmenu', 1);
+	public function edit()
+	{
+    	JRequest::setVar('view', 'editrole');
+    	JRequest::setVar('layout', 'default');
+    	JRequest::setVar('hidemainmenu', 1);
     	parent::display();
 	}
-	
-    function apply(){
-    	
+
+	/**
+	 * Apply
+	 *
+	 * @return void
+	 */
+    public function apply()
+    {
     	$model = $this->getModel('addrole');
 
-    	if ($model->store()) {
-    	    $msg = JText::_( 'Data Saved!' );
-    	} else {
-    	    $msg = JText::_( 'Error Saving' );
+    	if ($model->store())
+    	{
+    	    $msg = JText::_('Data Saved!');
     	}
-		
+    	else
+    	{
+    	    $msg = JText::_('Error Saving');
+    	}
+
     	$id = JRequest::getVar('cid[]');
 
-    	$this->setRedirect( 'index.php?option=com_thm_groups&task=addrole.edit&cid[]='.$id,$msg );
+    	$this->setRedirect('index.php?option=com_thm_groups&task=addrole.edit&cid[]=' . $id, $msg);
     }
-    
+
 	/**
- 	 * save a record (and redirect to view=structure)
+  	 * Save
+  	 * 
  	 * @return void
  	 */
-	function save() {
+	public function save()
+	{
     	$model = $this->getModel('addrole');
 
-    	if ($model->store()) {
-    	    $msg = JText::_( 'Data Saved!' );
-    	} else {
-    	    $msg = JText::_( 'Error Saving' );
+    	if ($model->store())
+    	{
+    	    $msg = JText::_('Data Saved!');
+    	}
+    	else
+    	{
+    	    $msg = JText::_('Error Saving');
     	}
 
-    	$this->setRedirect( 'index.php?option=com_thm_groups&view=rolemanager',$msg );
+    	$this->setRedirect('index.php?option=com_thm_groups&view=rolemanager', $msg);
 	}
-	
-	function save2new() {
-		$model = $this->getModel('addrole');
-
-    	if ($model->store()) {
-    	    $msg = JText::_( 'Data Saved!' );
-    	} else {
-    	    $msg = JText::_( 'Error Saving' );
-    	}
-
-    	$this->setRedirect( 'index.php?option=com_thm_groups&view=addrole',$msg );
-	}
-
 
 	/**
- 	 * cancel editing a record
+	 * Save2
+	 *
+	 * @return void
+	 */
+	public function save2new()
+	{
+		$model = $this->getModel('addrole');
+
+    	if ($model->store())
+    	{
+    	    $msg = JText::_('Data Saved!');
+    	}
+    	else
+    	{
+    	    $msg = JText::_('Error Saving');
+    	}
+
+    	$this->setRedirect('index.php?option=com_thm_groups&view=addrole', $msg);
+	}
+
+	/**
+  	 * Cancel
+  	 * 
  	 * @return void
  	 */
-	function cancel(){
-	    $msg =   JText::_( 'CANCEL' );
-	    $this->setRedirect(   'index.php?option=com_thm_groups&view=rolemanager', $msg );
+	public function cancel()
+	{
+	    $msg = JText::_('CANCEL');
+	    $this->setRedirect('index.php?option=com_thm_groups&view=rolemanager', $msg);
 	}
 }
-?>
