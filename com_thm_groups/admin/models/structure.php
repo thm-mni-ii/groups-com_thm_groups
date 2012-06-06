@@ -188,7 +188,7 @@ class THMGroupsModelStructure extends JModelList
 		$app = JFactory::getApplication();
 
 		// Adjust the context to support modal layouts.
-		if ($layout == JRequest::getVar('layout'))
+		if ($layout = JRequest::getVar('layout'))
 		{
 			$this->context .= '.' . $layout;
 		}
