@@ -19,47 +19,57 @@ jimport( 'joomla.application.component.view');
 jimport('joomla.filesystem.path');
 
 
-class THMGroupsViewProfile extends JView {
-
+class THMGroupsViewProfile extends JView
+{
 	protected $form;
 	
-	function getExtra($structId, $type) {
-		$model =& $this->getModel();
-		$extra =$model->getExtra($structId, $type);
+	function getExtra($structId, $type)
+	{
+		$model = &$this->getModel();
+		$extra = $model->getExtra($structId, $type);
 		return $extra;
 	}
 	
-	function getStructureType($structId) {
-		$model =& $this->getModel();
-		$structure =$model->getStructure();
+	function getStructureType($structId)
+	{
+		$model = &$this->getModel();
+		$structure = $model->getStructure();
 		$structureType = null;
-		foreach ($structure as $structureItem) {
-			if($structureItem->id == $structId)
+		foreach ($structure as $structureItem)
+		{
+			if ($structureItem->id == $structId)
+			{
 				$structureType = $structureItem->type;
+			}
 		}
 		return $structureType;
 	}
 
-	function display($tpl = null) {
-
+	function display($tpl = null)
+	{
 		$document   = & JFactory::getDocument();
 		$document->addStyleSheet("administrator/components/com_thm_groups/css/membermanager/icon.css");
 
 		$cid = JRequest::getVar('gsuid', 0);
 
-		$model =& $this->getModel();
-		$items =& $this->get( 'Data');
-		$structure =& $this->get( 'Structure');
-		$gsgid =JRequest::getVar('gsgid');
+		$model     = &$this->getModel();
+		$items     = &$this->get('Data');
+		$structure = &$this->get('Structure');
+		$gsgid     = JRequest::getVar('gsgid');
 
-		//Daten f�r die Form
+		// Daten für die Form
 		$textField = array();
-		foreach($structure as $structureItem) {
-			foreach ($items as $item){
-				if($item->structid == $structureItem->id)
+		foreach ($structure as $structureItem)
+		{
+			foreach ($items as $item)
+			{
+				if ($item->structid == $structureItem->id)
+				{
 					$value = $item->value;
+				}
 			}
-			if($structureItem->type == "TEXTFIELD") {
+			if ($structureItem->type == "TEXTFIELD")
+			{
 				$textField[$structureItem->field] = $value;
 			}
 		}
@@ -67,31 +77,29 @@ class THMGroupsViewProfile extends JView {
 		// Daten für die Form
 		$this->form = $this->get('Form');
 
-		if (!empty($textField)) {
+		if (!empty($textField))
+		{
 			$this->form->bind($textField);
 		}
-		
-		$itemid = JRequest :: getVar('Itemid', 0);
+
+		$itemid = JRequest::getVar('Itemid', 0);
 
 		/* ZURÜCK BUTTON */
-		$option_old = JRequest :: getVar('option_old');
-		$layout_old = JRequest :: getVar('layout_old');
-		$view_old = JRequest :: getVar('view_old');
+		$option_old = JRequest::getVar('option_old');
+		$layout_old = JRequest::getVar('layout_old');
+		$view_old   = JRequest::getVar('view_old');
 
-		$this->assignRef( 'option_old', $option_old );
-		$this->assignRef( 'layout_old', $layout_old );
-		$this->assignRef( 'view_old', $view_old );
-
+		$this->assignRef('option_old', $option_old);
+		$this->assignRef('layout_old', $layout_old);
+		$this->assignRef('view_old', $view_old);
 		/* ###########   */
 
-		$this->assignRef( 'items', $items );			
-		$this->assignRef( 'itemid',  $itemid);
-		$this->assignRef( 'canEdit',  $model->canEdit());
-		$this->assignRef( 'userid', $cid );
-		$this->assignRef( 'structure', $structure );
-		$this->assignRef( 'gsgid', $gsgid );
-
-
+		$this->assignRef('items', $items);
+		$this->assignRef('itemid', $itemid);
+		$this->assignRef('canEdit', $model->canEdit());
+		$this->assignRef('userid', $cid);
+		$this->assignRef('structure', $structure);
+		$this->assignRef('gsgid', $gsgid);
 
 		parent::display($tpl);
 	}
