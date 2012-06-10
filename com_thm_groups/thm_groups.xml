@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<extension type="component" version="1.7.3" method="upgrade">
+<extension type="component" version="2.5.4" method="upgrade">
 	<name>COM_THM_GROUPS</name>
 	<creationDate>March 2010</creationDate>
 	<author>Dennis Priefer</author>
-	<authorEmail>dennis.priefer@mni.fh-giessen.de</authorEmail>
+	<authorEmail>dennis.priefer@mni.thm.de</authorEmail>
 	<authorUrl>http://www.fh-giessen.de</authorUrl>
 	<copyright>TH Mittelhessen</copyright>
 	<license>GNU/GPL Version 2</license>
-	<version>2.2</version>
-	<description>Erstellt eine variable Liste der Joomla-Benutzer und stellt weitere Datenfelder bereit.</description>
+	<version>3.0</version>
+	<description>THM_GROUPS_DESC</description>
 	<installfile></installfile>
 	<uninstallfile></uninstallfile>
 	<install>
