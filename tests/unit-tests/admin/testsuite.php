@@ -1,11 +1,11 @@
 <?php
 require_once dirname(dirname(dirname(dirname(__FILE__)))).DIRECTORY_SEPARATOR.'framework_include.php';
 
-class AllTests
+class AllComThmGroupsAdminTests
 {
 	public static function suite()
 	{
-		$suite = new PHPUnit_Framework_TestSuite('Component THM Groups site Test');
+		$suite = new PHPUnit_Framework_TestSuite('Component THM Groups admin Test');
 
 		$suite->addTestFile(__DIR__.'/_membermanagerTest.php');
 		$suite->addTestFile(__DIR__.'/THMGroupsModelAddGroupAdminTest.php');

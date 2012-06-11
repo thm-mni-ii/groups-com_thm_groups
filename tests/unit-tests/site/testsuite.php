@@ -2,7 +2,7 @@
 
 require_once dirname(dirname(dirname(dirname(__FILE__)))).DIRECTORY_SEPARATOR.'framework_include.php';
 
-class AllTests
+class AllComThmGroupsSiteTests
 {
 	public static function suite()
 	{
