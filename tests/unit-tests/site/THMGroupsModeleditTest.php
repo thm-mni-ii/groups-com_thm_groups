@@ -4,7 +4,7 @@ require_once JPATH_BASE.'/components/com_thm_groups/models/edit.php';
 
 class THMGroupsModeleditTest extends PHPUnit_Framework_TestCase
 {
-	var $instance;
+	protected $instance;
 
 	// PHPUnit_TestCase funtcion - overwritten
 	function setUp() {
@@ -13,7 +13,10 @@ class THMGroupsModeleditTest extends PHPUnit_Framework_TestCase
 
 	// Kill instance
 	function tearDown() {
-		unset($this->instance);
+		// "benutztes" Objekt entfernen
+		$this->instance = null;
+		// tearDown der Elternklasse aufrufen
+		parent::tearDown();
 	}
 	
 	/*

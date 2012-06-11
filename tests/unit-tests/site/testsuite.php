@@ -1,5 +1,4 @@
 <?php
-
 require_once dirname(dirname(dirname(dirname(__FILE__)))).DIRECTORY_SEPARATOR.'framework_include.php';
 
 class AllComThmGroupsSiteTests
@@ -21,7 +20,7 @@ class AllComThmGroupsSiteTests
 		$suite->addTestFile(__DIR__.'/THMGroupsViewEditTest.php');
 		$suite->addTestFile(__DIR__.'/THMGroupsViewGroupsTest.php');
 		$suite->addTestFile(__DIR__.'/THMGroupsViewListTest.php');
-		$suite->addTestFile(__DIR__.'/PicTransformTest.php');
+		//$suite->addTestFile(__DIR__.'/PicTransformTest.php');
 
 		return $suite;
 	}
