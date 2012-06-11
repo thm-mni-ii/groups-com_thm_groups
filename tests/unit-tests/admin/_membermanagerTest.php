@@ -1,13 +1,13 @@
 <?php
 
-define('JPATH_COMPONENT_ADMINISTRATOR',JPATH_ROOT . '/administrator/components/com_thm_groups');
-define('JPATH_COMPONENT',JPATH_ROOT . '/administrator/components/com_thm_groups');
+if(!defined('JPATH_COMPONENT_ADMINISTRATOR')) define('JPATH_COMPONENT_ADMINISTRATOR',JPATH_ROOT . '/administrator/components/com_thm_groups');
+if(!defined('JPATH_COMPONENT')) define('JPATH_COMPONENT',JPATH_ROOT . '/administrator/components/com_thm_groups');
 
 require_once JPATH_BASE.'/administrator/components/com_thm_groups/models/_membermanager.php';
 
 class _membermanagerTest extends PHPUnit_Framework_TestCase
 {
-	var $instance;
+	protected $instance;
 
 	// PHPUnit_TestCase funtcion - overwritten
 	function setUp() {
@@ -16,7 +16,10 @@ class _membermanagerTest extends PHPUnit_Framework_TestCase
 
 	// Kill instance
 	function tearDown() {
-		//unset($this->instance);
+		// "benutztes" Objekt entfernen
+		$this->instance = null;
+		// tearDown der Elternklasse aufrufen
+		parent::tearDown();
 	}
 	
 	/*

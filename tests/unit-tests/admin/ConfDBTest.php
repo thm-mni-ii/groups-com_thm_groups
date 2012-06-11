@@ -5,7 +5,7 @@ require_once JPATH_BASE.'/administrator/components/com_thm_groups/classes/confdb
 class ConfDBTest extends PHPUnit_Framework_TestCase
 {
 	// contains the object handle of the string class
-	var $instance;
+	protected $instance;
 
 	// called before the test functions will be executed
 	// this function is defined in PHPUnit_TestCase and overwritten
@@ -55,8 +55,12 @@ class ConfDBTest extends PHPUnit_Framework_TestCase
 		$query = "DELETE FROM #__thm_groups_groups_map WHERE uid = 99999";
 		$db->setQuery( $query);
 		$db->query();
-		// delete your instance
-		unset($this->instance);
+		
+		// "benutztes" Objekt entfernen
+		$this->instance = null;
+		// tearDown der Elternklasse aufrufen
+		parent::tearDown();
+		
 	}
 	
 	// test method getValue($name)
