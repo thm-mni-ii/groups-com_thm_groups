@@ -1,17 +1,11 @@
 <?php
 require_once JPATH_BASE.'/administrator/includes/toolbar.php';
 require_once JPATH_BASE.'/administrator/components/com_thm_groups/classes/confdb.php';
-require_once 'PHPUnit.php';
 
-class SQLAbstractionLayerTest extends PHPUnit_TestCase
+class SQLAbstractionLayerTest extends PHPUnit_Framework_TestCase
 {
 	// contains the object handle of the string class
 	var $instance;
-
-	// constructor of the test suite
-	function SQLAbstractionLayerTest($name) {
-		$this->PHPUnit_TestCase($name);
-	}
 
 	// called before the test functions will be executed
 	// this function is defined in PHPUnit_TestCase and overwritten

@@ -1,16 +1,10 @@
 <?php
 require_once JPATH_BASE.'/administrator/components/com_thm_groups/classes/membermanagerdb.php';
-require_once 'PHPUnit.php';
 
-class MemberManagerDBTest extends PHPUnit_TestCase
+class MemberManagerDBTest extends PHPUnit_Framework_TestCase
 {
 	// contains the object handle of the string class
 	var $instance;
-
-	// constructor of the test suite
-	function MemberManagerDBTest($name) {
-		$this->PHPUnit_TestCase($name);
-	}
 
 	// called before the test functions will be executed
 	// this function is defined in PHPUnit_TestCase and overwritten

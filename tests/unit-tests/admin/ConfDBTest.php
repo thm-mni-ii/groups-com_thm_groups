@@ -1,17 +1,11 @@
 <?php
 require_once JPATH_BASE.'/administrator/includes/toolbar.php';
 require_once JPATH_BASE.'/administrator/components/com_thm_groups/classes/confdb.php';
-require_once 'PHPUnit.php';
 
-class ConfDBTest extends PHPUnit_TestCase
+class ConfDBTest extends PHPUnit_Framework_TestCase
 {
 	// contains the object handle of the string class
 	var $instance;
-
-	// constructor of the test suite
-	function ConfDBTest($name) {
-		$this->PHPUnit_TestCase($name);
-	}
 
 	// called before the test functions will be executed
 	// this function is defined in PHPUnit_TestCase and overwritten

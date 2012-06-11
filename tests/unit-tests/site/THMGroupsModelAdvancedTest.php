@@ -3,16 +3,10 @@
 define('JPATH_COMPONENT_ADMINISTRATOR',JPATH_ROOT . '/administrator/components/com_thm_groups');
 
 require_once JPATH_BASE.'/components/com_thm_groups/models/advanced.php';
-require_once 'PHPUnit.php';
 
-class THMGroupsModelAdvancedTest extends PHPUnit_TestCase
+class THMGroupsModelAdvancedTest extends PHPUnit_Framework_TestCase
 {
 	var $instance;
-
-	// constructor of the test suite
-	function THMGroupsModelAdvancedTest($name) {
-		$this->PHPUnit_TestCase($name);
-	}
 
 	// PHPUnit_TestCase funtcion - overwritten
 	function setUp() {

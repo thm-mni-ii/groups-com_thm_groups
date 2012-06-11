@@ -1,16 +1,10 @@
 <?php
 
 require_once JPATH_BASE.'/components/com_thm_groups/models/groups.php';
-require_once 'PHPUnit.php';
 
-class THMGroupsModelGroupsTest extends PHPUnit_TestCase
+class THMGroupsModelGroupsTest extends PHPUnit_Framework_TestCase
 {
 	var $instance;
-
-	// constructor of the test suite
-	function THMGroupsModelGroupsTest($name) {
-		$this->PHPUnit_TestCase($name);
-	}
 
 	// PHPUnit_TestCase funtcion - overwritten
 	function setUp() {
