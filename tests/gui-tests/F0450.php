@@ -4,7 +4,7 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
   protected function setUp()
   {
     $this->setBrowser("*chrome");
-    $this->setBrowserUrl("http://webmedia06.mni.fh-giessen.de/");
+    $this->setBrowserUrl("http://127.0.0.1/joomla");
   }
 
   public function testMyTestCase()
