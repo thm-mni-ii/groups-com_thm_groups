@@ -1,51 +1,80 @@
 <?php
 /**
- * This file contains the data type class Image.
+ *@category    Joomla component
  *
- * PHP version 5
+ *@package     THM_Groups
  *
- * @category Joomla Programming Weeks SS2008: FH Giessen-Friedberg
- * @package  com_staff
- * @author   Sascha Henry <sascha.henry@mni.fh-giessen.de>
- * @author   Christian Güth <christian.gueth@mni.fh-giessen.de>
- * @author   Severin Rotsch <severin.rotsch@mni.fh-giessen.de>
- * @author   Martin Karry <martin.karry@mni.fh-giessen.de>
- * @author   Dennis Priefer <dennis.priefer@mni.fh-giessen.de>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @link     http://www.mni.fh-giessen.de
- **/
-class PicTransform {
-	private $picFile, $type;
+ *@subpackage  com_thm_groups.site
+ *@name		   PicTransform
+ *@description THMGroups helper file for transformation of uploaded pictures
+ *@author	   Dennis Priefer, dennis.priefer@mni.thm.de
+ * 
+ *@copyright   2012 TH Mittelhessen
+ *
+ *@license     GNU GPL v.2
+ *@link		   www.mni.thm.de
+ *@version	   3.0
+ */
+
+/**
+ * Helper class PicTransform for component com_thm_groups
+ *
+ * Class provides methods for picture transformation during uploading
+ *
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.site
+ * @link        www.mni.thm.de
+ * @since       Class available since Release 1.0
+ */
+class PicTransform
+{
+	private $_picFile, $_type;
 
 	/**
 	 * Constructor with the Picturefile to transform
+	 *@since  Method available since Release 1.0
 	 *
-	 * @param $_FILES[] $picFile
+	 * @param   $_FILES[]  $picFile  Array, which contains the uploaded file.
 	 */
-	public function __construct($picFile) {
-		$this->picFile = $picFile;
+	public function __construct($picFile)
+	{
+		$this->_picFile = $picFile;
 
-		if(!is_uploaded_file($this->picFile['tmp_name'])) {
+		if (!is_uploaded_file($this->_picFile['tmp_name']))
+		{
 			throw new Exception("Datei nicht hochgeladen");
 		}
+		else
+		{
+		}
 
-		$imgSize = getimagesize($this->picFile['tmp_name']);
+		$imgSize = getimagesize($this->_picFile['tmp_name']);
 
-		switch($imgSize[2]) {
-			case 1: $this->type = "GIF"; break;
-			case 2: $this->type = "JPG"; break;
-			case 3: $this->type = "PNG"; break;
-			default: throw new Exception("Unpassender Typ"); break;
+		switch ($imgSize[2])
+		{
+			case 1:
+				$this->_type = "GIF";
+				break;
+			case 2:
+				$this->_type = "JPG";
+				break;
+			case 3:
+				$this->_type = "PNG";
+				break;
+			default:
+				throw new Exception("Unpassender Typ");
+				break;
 		}
 	}
 
 	/**
 	 * Gets the path of the uploaded file
 	 *
-	 * @return unknown
+	 * @return path of the pic file
 	 */
-	public function getPath() {
-		return $this->picFile['tmp_name'];
+	public function getPath()
+	{
+		return $this->_picFile['tmp_name'];
 	}
 
 	/**
@@ -53,8 +82,9 @@ class PicTransform {
 	 *
 	 * @return String ("GIF"/"JPG"/"PNG")
 	 */
-	public function getType() {
-		return $this->type;
+	public function getType()
+	{
+		return $this->_type;
 	}
 
 	/**
@@ -62,134 +92,167 @@ class PicTransform {
 	 *
 	 * @return String (".gif"/".jpg"/".png")
 	 */
-	public function getExtension() {
-		switch($this->getType()){
-			case 'GIF': return ".gif"; break;
-			case 'JPG': return ".jpg"; break;
-			case 'PNG': return ".png"; break;
-			default: throw new Exception("Nicht unterstuetztes Format"); break;
+	public function getExtension()
+	{
+		switch ($this->getType())
+		{
+			case 'GIF':
+				return ".gif";
+				break;
+			case 'JPG':
+				return ".jpg";
+				break;
+			case 'PNG':
+				return ".png";
+				break;
+			default:
+				throw new Exception("Nicht unterstuetztes Format");
+				break;
 		}
 	}
 
 	/**
 	 * Saves the file to $dest with $filename in picturtype $type
 	 *
-	 * @param string $dest
-	 * @param string $filename
-	 * @param string $type
+	 * @param   string  $dest      Destination
+	 * @param   string  $filename  File name
+	 * @param   string  $type      Type of the file
+	 * 
 	 * @return full destination
 	 */
-	public function safePlain($dest, $filename, $type="PNG") {
-		switch($this->getType()){
+	public function safePlain($dest, $filename, $type="PNG")
+	{
+		switch ($this->getType())
+		{
 			case 'PNG':
 				$image = imagecreatefrompng($this->getPath());
 				break;
-					
 			case 'GIF':
 				$image = imagecreatefromgif($this->getPath());
 				break;
-					
 			case 'JPG':
 				$image = imagecreatefromjpeg($this->getPath());
 				break;
-					
-			default: throw new Exception("Falscher Dateityp");break;
+			default: throw new Exception("Falscher Dateityp");
+				break;
 		}
 
 		return $this->safeImage($image, $dest, $filename, $type);
 	}
 
-		/**
+    /**
 	 * Saves the file to $dest with $filename in picturtype $type with $maxHeight and $maxWidth
 	 *
-	 * @param string $dest
-	 * @param string $filename
-	 * @param int $maxWidth
-	 * @param int $maxHeight
-	 * @param string $type
+	 * @param   string  $dest       Destination
+	 * @param   string  $filename   Filename
+	 * @param   int     $maxWidth   Maximal width
+	 * @param   int     $maxHeight  Maximal height
+	 * @param   string  $type       Type of the file
+	 * 
 	 * @return full destination
 	 */
-	public function safeSpecial($dest, $filename, $maxWidth, $maxHeight, $type="PNG") {
-		switch($this->getType()) {
+	public function safeSpecial($dest, $filename, $maxWidth, $maxHeight, $type="PNG")
+	{
+		switch ($this->getType())
+		{
 			case 'JPG':
 				$image = imagecreatefromjpeg($this->getPath());
 				break;
-					
 			case 'GIF':
 				$image = imagecreatefromgif($this->getPath());
 				break;
-					
 			case 'PNG':
 				$image = imagecreatefrompng($this->getPath());
 				break;
-					
-			default: throw new Exception("Falscher Typ"); break;
+			default:
+				throw new Exception("Falscher Typ");
+				break;
 		}
 
 		$image = $this->maxWidth($image, $maxWidth);
 		$image = $this->maxHeight($image, $maxHeight);
-		
+
 		return $this->safeImage($image, $dest, $filename, $type);
-	}	
-	
-	private function safeImage($image, $dest, $filename, $type="PNG") {
-		switch($type) {
+	}
+
+	/**
+	 * Saves the file to $dest with $filename in picturtype $type
+	 *
+	 * @param   $_FILES[]  $image     Array with uploaded image
+	 * @param   string     $dest      Destination
+	 * @param   string     $filename  Filename
+	 * @param   string     $type      Type of the file
+	 *
+	 * @return void
+	 */
+	private function safeImage($image, $dest, $filename, $type="PNG")
+	{
+		switch ($type)
+		{
 			case 'GIF':
-				imagegif($image, $dest.$filename.'.gif');
-				return $filename.'.gif';
+				imagegif($image, $dest . $filename . '.gif');
+				return $filename . '.gif';
 				break;
-					
 			case 'JPG':
-				imagejpeg($image, $dest.$filename.'.jpg');
-				return $filename.'.jpg';
+				imagejpeg($image, $dest . $filename . '.jpg');
+				return $filename . '.jpg';
 				break;
-					
 			case 'PNG':
-				imagepng($image, $dest.$filename.'.png');
-				return $filename.'.png';
+				imagepng($image, $dest . $filename . '.png');
+				return $filename . '.png';
 				break;
-					
-			default: throw new Exception("Illegaler Typ");break;
+			default:
+				throw new Exception("Illegaler Typ");
+				break;
 		}
 	}
 
 	/**
-	 * resizes the Picture an keeps Properties. Resized by Width
+	 * Resizes the Picture an keeps Properties. Resized by Width
 	 *
-	 * @param int $image
-	 * @param int $maxWidth
+	 * @param   $_FILES[]  $image     Image
+	 * @param   int        $maxWidth  Maximal width
+	 * 
 	 * @return img
 	 */
-	private function maxWidth($image, $maxWidth) {
+	private function maxWidth($image, $maxWidth)
+	{
 		$width  = imagesx($image);
 		$height = imagesy($image);
 
-		if($width > $maxWidth) {
+		if ($width > $maxWidth)
+		{
 			$newWidth  = $maxWidth;
-			$newHeight = floor($maxWidth * ($height/$width));
-		} else {
+			$newHeight = floor($maxWidth * ($height / $width));
+		}
+		else
+		{
 			$newWidth = $width;
 			$newHeight = $height;
 		}
-		
 		return $this->resizeImg($image, $newWidth, $newHeight);
 	}
 
 	/**
-	 * resizes the Picture an keeps Properties. Resized by Height
+	 * Resizes the Picture an keeps Properties. Resized by height
 	 *
-	 * @param unknown_type $image
-	 * @param unknown_type $maxWidth
+	 * @param   $_FILES[]  $image      Image
+	 * @param   int        $maxHeight  Maximal height
+	 * 
 	 * @return img
 	 */
-	private function maxHeight($image, $maxHeight) {
+	private function maxHeight($image, $maxHeight)
+	{
 		$width  = imagesx($image);
 		$height = imagesy($image);
 
-		if($height > $maxHeight) {
+		if ($height > $maxHeight)
+		{
 			$newHeight = $maxHeight;
-			$newWidth  = floor($maxHeight * ($width/$height));
-		} else {
+			$newWidth  = floor($maxHeight * ($width / $height));
+		}
+		else
+		{
 			$newWidth = $width;
 			$newHeight = $height;
 		}
@@ -200,15 +263,17 @@ class PicTransform {
 	/**
 	 * Resizes a picture to given size
 	 *
-	 * @param img $image
-	 * @param int $newWidth
-	 * @param int $newHeight
+	 * @param   $_FILES[]  $image      Image
+	 * @param   int        $newWidth   New width
+	 * @param   int        $newHeight  New height
+	 * 
 	 * @return img
 	 */
-	private function resizeImg($image, $newWidth, $newHeight) {
+	private function resizeImg($image, $newWidth, $newHeight)
+	{
 		$width = imagesx($image);
 		$height = imagesy($image);
-		
+
 		$newImg = imagecreatetruecolor($newWidth, $newHeight);
 
 		imagecopyresized($newImg, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
@@ -221,14 +286,8 @@ class PicTransform {
 	 *
 	 * @return string
 	 */
-	public function __toString() {
-		return $this->picFile['tmp_name'];
+	public function __toString()
+	{
+		return $this->_picFile['tmp_name'];
 	}
 }
-
-//$defaultFolder = $_SERVER['DOCUMENT_ROOT']."/upload/";
-//$pt = new PicTransform($_FILES['file']);
-//echo $pt->safePlain($defaultFolder, "testPlain", $_POST['typ']);
-//echo "<br/>";
-//echo $pt->safeSpecial($defaultFolder, "testSpechial", $_POST['width'],  $_POST['height'], $_POST['typ']);
-?>
