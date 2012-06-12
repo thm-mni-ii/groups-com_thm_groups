@@ -28,11 +28,25 @@
  */
 class PicTransform
 {
-	private $_picFile, $_type;
+	/**
+	 * PictureFile
+	 *
+	 * @var    $_FILES[]
+	 * @since  1.0
+	 */
+	private $_picFile;
+	
+	/**
+	 * Type
+	 *
+	 * @var    integer
+	 * @since  1.0
+	 */
+	private $_type;
 
 	/**
 	 * Constructor with the Picturefile to transform
-	 *@since  Method available since Release 1.0
+	 *@since  Available since Release 1.0
 	 *
 	 * @param   $_FILES[]  $picFile  Array, which contains the uploaded file.
 	 */
