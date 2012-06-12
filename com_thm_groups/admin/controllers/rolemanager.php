@@ -1,6 +1,6 @@
 <?php
 /**
- *@category Joomla module
+ *@category Joomla component
  *
  *@package     THM_Groups
  *
@@ -21,13 +21,12 @@
  *@version     3.0
  */
 defined('_JEXEC') or die();
-require_once JPATH_COMPONENT . DS . 'classes' . DS . 'confdb.php';
 jimport('joomla.application.component.controllerform');
 
 /**
  * THMGroupsControllerRolemanager class for component com_thm_groups
  *
- * @package     Joomla.Site
+ * @package     Joomla.Admin
  * @subpackage  thm_groups
  * @link        www.mni.thm.de
  * @since       Class available since Release 2.0
@@ -88,13 +87,12 @@ class THMGroupsControllerRolemanager extends JControllerForm
 	 */
 	public function remove()
 	{
-	    $dbcon = new ConfDB;
-	    $db =& JFactory::getDBO();
     	$cid = JRequest::getVar('cid', array(), 'post', 'array');
 
+    	$model = $this->getModel();
     	foreach ($cid as $toDel)
     	{
-    		$dbcon->delRole($toDel);
+    		$model->delRole($toDel);
     	}
 
     	$this->setRedirect('index.php?option=com_thm_groups&view=rolemanager', "Rolle(n) erfolgreich entfernt");

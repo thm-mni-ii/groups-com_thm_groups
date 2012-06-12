@@ -1,6 +1,6 @@
 <?php
 /**
- *@category Joomla module
+ *@category Joomla component
  *
  *@package     THM_Groups
  *
@@ -23,12 +23,11 @@
 defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
 jimport('joomla.filesystem.path');
-require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'SQLAbstractionLayer.php';
 
 /**
  * THMGroupsViewmembermanager class for component com_thm_groups
  *
- * @package     Joomla.Site
+ * @package     Joomla.Admin
  * @subpackage  thm_groups
  * @link        www.mni.thm.de
  * @since       Class available since Release 2.0
@@ -46,7 +45,7 @@ class THMGroupsViewmembermanager extends JView
 	 */
 	public function display($tpl = null)
 	{
-		$SQLAL = new SQLAbstractionLayer;
+		// $SQLAL = new SQLAbstractionLayer;
 		$document   = & JFactory::getDocument();
 		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
 
@@ -70,10 +69,10 @@ class THMGroupsViewmembermanager extends JView
 		$model =& $this->getModel();
 		$items = $this->get('Items');
 		$pagination = $this->get('Pagination');
-		$groupOptions = $model->getGroupSelectOptions();
 
-		$groups = $SQLAL->getGroups();
-		$roles = $SQLAL->getRoles();
+		$groupOptions = $model->getGroupSelectOptions();
+		$groups = $model->getGroups();
+		$roles = $model->getRoles();
 
 		// Search filter
 		$filters = array();
@@ -132,6 +131,7 @@ class THMGroupsViewmembermanager extends JView
 		$this->assignRef('rolesFilters', $_POST['rolesFilters']);
 		$this->assignRef('groupFilters', $_POST['groupFilters']);
 		$this->assignRef('grcheckon', $grcheck);
+		$this->assignRef('model', $model);
 
 		parent::display($tpl);
 	}

@@ -1,6 +1,6 @@
 <?php
 /**
- *@category Joomla module
+ *@category Joomla component
  *
  *@package     THM_Groups
  *
@@ -21,13 +21,12 @@
  *@version     3.0
  */
 defined('_JEXEC') or die();
-require_once JPATH_COMPONENT . DS . 'classes' . DS . 'confdb.php';
 jimport('joomla.application.component.controllerform');
 
 /**
  * THMGroupsControllerStructure class for component com_thm_groups
  *
- * @package     Joomla.Site
+ * @package     Joomla.Admin
  * @subpackage  thm_groups
  * @link        www.mni.thm.de
  * @since       Class available since Release 2.0
@@ -59,9 +58,6 @@ class THMGroupsControllerStructure extends JControllerForm
 	    	{
 	    		$msg = JText::_('COM_THM_GROUPS_EDIT_ERROR');
 				$this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
-	    	}
-	    	else
-	    	{
 	    	}
     	}
 
@@ -120,9 +116,6 @@ class THMGroupsControllerStructure extends JControllerForm
 	    	if (in_array($i, $cid))
 	    	{
 	    		$msg .= JText::_('<br />' . 'COM_THM_GROUPS_CAN_NOT_DELETE_ITEM' . ' ' . $is);
-	    	}
-	    	else
-	    	{
 	    	}
     	}
     	$this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);

@@ -1,17 +1,11 @@
 <?php
-define('JPATH_COMPONENT', '../../../administrator/components/com_thm_groups');
+if(!defined('JPATH_COMPONENT')) define('JPATH_COMPONENT', '../../../administrator/components/com_thm_groups');
 require_once JPATH_BASE.'/administrator/components/com_thm_groups/controllers/addgroup.php';
-require_once 'PHPUnit.php';
 
-class THMGroupsControllerAddGroupTest extends PHPUnit_TestCase
+class THMGroupsControllerAddGroupTest extends PHPUnit_Framework_TestCase
 {
 	// contains the object handle of the string class
-	var $instance;
-
-	// constructor of the test suite
-	function THMGroupsControllerAddGroupTest($name) {
-		$this->PHPUnit_TestCase($name);
-	}
+	protected $instance;
 
 	// called before the test functions will be executed
 	// this function is defined in PHPUnit_TestCase and overwritten
@@ -24,9 +18,10 @@ class THMGroupsControllerAddGroupTest extends PHPUnit_TestCase
 	// this function is defined in PHPUnit_TestCase and overwritten
 	// here
 	function tearDown() {
-		// delete your instance
-		
-		unset($this->instance);
+		// "benutztes" Objekt entfernen
+		$this->instance = null;
+		// tearDown der Elternklasse aufrufen
+		parent::tearDown();
 	}
 	
 	/*	

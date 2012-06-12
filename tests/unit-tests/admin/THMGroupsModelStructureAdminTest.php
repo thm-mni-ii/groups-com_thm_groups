@@ -1,16 +1,10 @@
 <?php
 
 require_once JPATH_BASE.'/administrator/components/com_thm_groups/models/structure.php';
-require_once 'PHPUnit.php';
 
-class THMGroupsModelStructureAdminTest extends PHPUnit_TestCase
+class THMGroupsModelStructureAdminTest extends PHPUnit_Framework_TestCase
 {
-	var $instance;
-
-	// constructor of the test suite
-	function THMGroupsModelStructureAdminTest($name) {
-		$this->PHPUnit_TestCase($name);
-	}
+	protected $instance;
 
 	// PHPUnit_TestCase funtcion - overwritten
 	function setUp() {
@@ -19,7 +13,10 @@ class THMGroupsModelStructureAdminTest extends PHPUnit_TestCase
 
 	// Kill instance
 	function tearDown() {
-		unset($this->instance);
+		// "benutztes" Objekt entfernen
+		$this->instance = null;
+		// tearDown der Elternklasse aufrufen
+		parent::tearDown();
 	}
 	
 	/*

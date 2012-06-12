@@ -1,6 +1,6 @@
 <?php
 /**
- *@category Joomla module
+ *@category Joomla component
  *
  *@package     THM_Groups
  *
@@ -22,12 +22,11 @@
  */
 defined('_JEXEC') or die();
 jimport('joomla.application.component.modellist');
-require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'SQLAbstractionLayer.php';
 
 /**
  * THMGroupsModelStructure class for component com_thm_groups
  *
- * @package     Joomla.Site
+ * @package     Joomla.Admin
  * @subpackage  thm_groups
  * @link        www.mni.thm.de
  * @since       Class available since Release 2.0

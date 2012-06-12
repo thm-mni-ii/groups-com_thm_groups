@@ -1,6 +1,6 @@
 <?php
 /**
- *@category Joomla module
+ *@category Joomla component
  *
  *@package     THM_Groups
  *
@@ -20,15 +20,14 @@
  *@link        www.mni.thm.de
  *@version     3.0
  */
-defined('_JEXEC') or die();
 
+defined('_JEXEC') or die();
 jimport('joomla.application.component.modelform');
-require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'SQLAbstractionLayer.php';
 
 /**
  * THMGroupsModelAddGroup class for component com_thm_groups
  *
- * @package     Joomla.Site
+ * @package     Joomla.Admin
  * @subpackage  thm_groups
  * @link        www.mni.thm.de
  * @since       Class available since Release 2.0
@@ -202,15 +201,15 @@ class THMGroupsModelAddGroup extends JModelForm
 
 		try
 		{
-			$pt = new PicTransform($_FILES[$picField]);
-			$pt->safeSpecial(JPATH_ROOT . DS . "components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS, "g" . $gid, 200, 200, "JPG");
+			$p = new PicTransform($_FILES[$picField]);
+			$p->safeSpecial(JPATH_ROOT . DS . "components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS, "g" . $gid, 200, 200, "JPG");
 			if (JModuleHelper::isEnabled('mod_thm_groups')->id != 0)
 			{
-				$pt->safeSpecial(JPATH_ROOT . DS . "modules" . DS . "mod_thm_groups" . DS . "images" . DS, "g" . $gid, 200, 200, "JPG");
+				$p->safeSpecial(JPATH_ROOT . DS . "modules" . DS . "mod_thm_groups" . DS . "images" . DS, "g" . $gid, 200, 200, "JPG");
 			}
 			if (JModuleHelper::isEnabled('mod_thm_groups_smallview')->id != 0)
 			{
-				$pt->safeSpecial(JPATH_ROOT . DS . "modules" . DS . "mod_thm_groups_smallview" . DS . "images" . DS, "g" . $gid, 200, 200, "JPG");
+				$p->safeSpecial(JPATH_ROOT . DS . "modules" . DS . "mod_thm_groups_smallview" . DS . "images" . DS, "g" . $gid, 200, 200, "JPG");
 			}
 		}
 		catch (Exception $e)

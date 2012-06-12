@@ -1,17 +1,11 @@
 <?php
 
 require_once JPATH_BASE.'/components/com_thm_groups/views/edit/view.html.php';
-require_once 'PHPUnit.php';
 
-class THMGroupsViewEditTest extends PHPUnit_TestCase
+class THMGroupsViewEditTest extends PHPUnit_Framework_TestCase
 {
 	// contains the object handle of the string class
-	var $instance;
-
-	// constructor of the test suite
-	function THMGroupsViewEditTest($name) {
-		$this->PHPUnit_TestCase($name);
-	}
+	protected $instance;
 
 	// called before the test functions will be executed
 	// this function is defined in PHPUnit_TestCase and overwritten
@@ -24,9 +18,10 @@ class THMGroupsViewEditTest extends PHPUnit_TestCase
 	// this function is defined in PHPUnit_TestCase and overwritten
 	// here
 	function tearDown() {
-		// delete your instance
-		
-		unset($this->instance);
+		// "benutztes" Objekt entfernen
+		$this->instance = null;
+		// tearDown der Elternklasse aufrufen
+		parent::tearDown();
 	}
 	
 

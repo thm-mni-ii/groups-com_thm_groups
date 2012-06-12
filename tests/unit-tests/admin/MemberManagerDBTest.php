@@ -1,16 +1,10 @@
 <?php
 require_once JPATH_BASE.'/administrator/components/com_thm_groups/classes/membermanagerdb.php';
-require_once 'PHPUnit.php';
 
-class MemberManagerDBTest extends PHPUnit_TestCase
+class MemberManagerDBTest extends PHPUnit_Framework_TestCase
 {
 	// contains the object handle of the string class
-	var $instance;
-
-	// constructor of the test suite
-	function MemberManagerDBTest($name) {
-		$this->PHPUnit_TestCase($name);
-	}
+	protected $instance;
 
 	// called before the test functions will be executed
 	// this function is defined in PHPUnit_TestCase and overwritten
@@ -33,8 +27,11 @@ class MemberManagerDBTest extends PHPUnit_TestCase
 		$query = "DELETE FROM #__thm_groups_additional_userdata WHERE `userid` = 99999";
 		$db->setQuery( $query);
 		$db->query();
-		// delete your instance
-		unset($this->instance);
+		
+		// "benutztes" Objekt entfernen
+		$this->instance = null;
+		// tearDown der Elternklasse aufrufen
+		parent::tearDown();
 	}
 	
 	// test method userInJoomla()

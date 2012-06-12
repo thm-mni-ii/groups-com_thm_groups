@@ -1,17 +1,12 @@
 <?php
 
 require_once JPATH_BASE.'/components/com_thm_groups/helper/thm_groups_pictransform.php';
-require_once 'PHPUnit.php';
 
-class PicTransformTest extends PHPUnit_TestCase
+class PicTransformTest extends PHPUnit_Framework_TestCase
 {
 	// contains the object handle of the string class
 	var $instance;
 
-	// constructor of the test suite
-	function PicTransformTest($name) {
-		$this->PHPUnit_TestCase($name);
-	}
 
 	// called before the test functions will be executed
 	// this function is defined in PHPUnit_TestCase and overwritten

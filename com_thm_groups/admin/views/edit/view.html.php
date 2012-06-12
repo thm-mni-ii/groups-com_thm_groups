@@ -1,6 +1,6 @@
 <?php
 /**
- *@category Joomla module
+ *@category Joomla component
  *
  *@package     THM_Groups
  *
@@ -27,7 +27,7 @@ jimport('joomla.filesystem.path');
 /**
  * THMGroupsViewedit class for component com_thm_groups
  *
- * @package     Joomla.Site
+ * @package     Joomla.Admin
  * @subpackage  thm_groups
  * @link        www.mni.thm.de
  * @since       Class available since Release 2.0
@@ -304,6 +304,7 @@ class THMGroupsViewedit extends JView
 		$this->assignRef('items', $items);
 		$this->assignRef('userid', $cid);
 		$this->assignRef('structure', $structure);
+		$this->assignRef('model', $model);
 		parent::display($tpl);
 	}
 }

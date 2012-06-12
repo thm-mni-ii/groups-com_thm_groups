@@ -1,6 +1,6 @@
 <?php
 /**
- *@category Joomla module
+ *@category Joomla component
  *
  *@package     THM_Groups
  *
@@ -21,27 +21,18 @@
  *@version     3.0
  */
 defined('_JEXEC') or die();
-
-require_once JPATH_COMPONENT . DS . 'classes' . DS . 'confdb.php';
-require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'SQLAbstractionLayer.php';
 jimport('joomla.application.component.controller');
 
 /**
  * THMGroupsControllermembermanager class for component com_thm_groups
  *
- * @package     Joomla.Site
+ * @package     Joomla.Admin
  * @subpackage  thm_groups
  * @link        www.mni.thm.de
  * @since       Class available since Release 2.0
  */
 class THMGroupsControllermembermanager extends JController
 {
-
-	/**
-	 * Database object
-	 * @var unknown_type
-	 */
-	private $_SQLAL = null;
 
 	/**
  	 * constructor (registers additional tasks to methods)
@@ -60,9 +51,6 @@ class THMGroupsControllermembermanager extends JController
 		$this->registerTask('delPic', '');
 		$this->registerTask('delGrouproleByUser', '');
 		$this->registerTask('delAllGrouprolesByUser', '');
-
-		// Create database object
-		$this->SQLAL = new SQLAbstractionLayer;
 	}
 
 	/**
@@ -234,7 +222,7 @@ class THMGroupsControllermembermanager extends JController
     	$gid = JRequest::getVar('groups');
 
     	// Get role-id
-    	$rids  = JRequest::getVar('roles');
+    	$rids = JRequest::getVar('roles');
 
     	// Get user ids
     	$uids = JRequest::getVar('cid', array(), 'post', 'array');
@@ -242,7 +230,8 @@ class THMGroupsControllermembermanager extends JController
     	foreach ($rids as $rid)
     	{
     		// Add group and role relations and display result
-    		if ($this->SQLAL->setGroupsAndRoles($uids, $gid, $rid))
+    		$model = $this->getModel('edit');
+    		if ($model->setGroupsAndRoles($uids, $gid, $rid))
     		{
     			$msg = JText::_('Benutzer zu Gruppe/Rollen hinzugefuegt!');
     		}
@@ -285,7 +274,8 @@ class THMGroupsControllermembermanager extends JController
 			}
 			else
 			{
-				if ($this->SQLAL->delGroupsAndRoles($uids, $gid, $rid))
+				$model = $this->getModel('edit');
+				if ($model->delGroupsAndRoles($uids, $gid, $rid))
 				{
 					$model = $this->getModel('membermanager');
     				$model->delGroupsToUser($uids, $gid);
@@ -408,17 +398,11 @@ class THMGroupsControllermembermanager extends JController
 
 		        $msg = JText::_('Benutzer geloescht');
     		}
-    		else
-    		{
-    		}
 
   			if ($erg[0]->injoomla == '1')
   			{
 	  			$msg = JText::_('Eventuell konnten einige Benutzer nicht gel&ouml;scht werden, da sie noch im System registriert sind.');
   			}
-    		else
-    		{
-    		}
   		}
 
   	  	$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
@@ -431,12 +415,13 @@ class THMGroupsControllermembermanager extends JController
 	 */
 	public function delAllGrouprolesByUser()
 	{
-		$SQLAL = new SQLAbstractionLayer;
-
     	$gid = JRequest::getVar('g_id');
     	$uid = array();
     	$uid[0] = JRequest::getVar('u_id');
-		$rids = $this->SQLAL->getGroupRolesByUser($uid[0], $gid);
+
+    	$model = $this->getModel('membermanager');
+
+		$rids = $model->getGroupRolesByUser($uid[0], $gid);
 
 		if (1 == $gid)
 		{
@@ -444,12 +429,11 @@ class THMGroupsControllermembermanager extends JController
 		}
 		else
 		{
-			$model = $this->getModel('membermanager');
     		$model->delGroupToUser($uid[0], $gid);
 
 			foreach ($rids as $rid)
 			{
-				if ($this->SQLAL->delGroupsAndRoles($uid, $gid, $rid->rid))
+				if ($model->delGroupsAndRoles($uid, $gid, $rid->rid))
 				{
 	    			$msg = JText::_("XXdelAllGrouprolesByUserXXBenutzer aus Gruppe entfernt! .$uid[0] ", true);
 				}
@@ -475,13 +459,15 @@ class THMGroupsControllermembermanager extends JController
     	$uid[0] = JRequest::getVar('u_id');
     	$rid = JRequest::getVar('r_id');
 
+    	$model = $this->getModel('membermanager');
+
 		if (1 == $gid)
 		{
     		$msg = JText::_('##delGrouproleByUser##Benutzer kann nicht aus Gruppe User entfernt werden!', true);
 		}
 		else
 		{
-			if ($this->SQLAL->delGroupsAndRoles($uid, $gid, $rid))
+			if ($model->delGroupsAndRoles($uid, $gid, $rid))
 			{
     			$msg = JText::_('##delGrouproleByUser##Benutzerrolle aus Gruppe entfernt!', true);
 			}
