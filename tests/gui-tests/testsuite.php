@@ -1,5 +1,5 @@
 <?php
-require_once dirname(dirname(dirname(dirname(__FILE__)))).DIRECTORY_SEPARATOR.'framework_include.php';
+require_once dirname(dirname(dirname(__FILE__))).DIRECTORY_SEPARATOR.'framework_include.php';
 
 class AllComThmGroupsGuiTests
 {
