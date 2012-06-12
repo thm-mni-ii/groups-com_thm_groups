@@ -1,6 +1,6 @@
 <?php
 /**
- *@category Joomla module
+ *@category Joomla component
  *
  *@package     THM_Groups
  *
@@ -23,12 +23,6 @@
 defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.controller');
 
-require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'confdb.php';
-
-$confdb = new ConfDB;
-
 $controller = Jcontroller::getInstance('thmgroups');
-
 $controller->execute(JRequest::getCmd('task'));
-
 $controller->redirect();

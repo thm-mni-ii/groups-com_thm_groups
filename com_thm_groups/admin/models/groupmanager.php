@@ -1,6 +1,6 @@
 <?php
 /**
- *@category Joomla module
+ *@category Joomla component
  *
  *@package     THM_Groups
  *
@@ -26,7 +26,7 @@ jimport('joomla.application.component.modellist');
 /**
  * THMGroupsModelGroupmanager class for component com_thm_groups
  *
- * @package     Joomla.Site
+ * @package     Joomla.Admin
  * @subpackage  thm_groups
  * @link        www.mni.thm.de
  * @since       Class available since Release 2.0
@@ -73,7 +73,7 @@ class THMGroupsModelGroupmanager extends JModelList
 		$orderCol	= $this->state->get('list.ordering');
 		$orderDirn	= $this->state->get('list.direction');
 
-		$db = $this->getDbo();
+		$db =& JFactory::getDBO();
 		$query = $db->getQuery(true);
 
 		// MySQL Variante eines FULL JOIN
@@ -107,7 +107,7 @@ class THMGroupsModelGroupmanager extends JModelList
 	 */
 	public function getfreeGroups()
 	{
-		$db = $this->getDbo();
+		$db =& JFactory::getDBO();
 		$query = "SELECT * FROM #__thm_groups_groups WHERE id NOT IN (SELECT gid FROM #__thm_groups_groups_map)";
 		$db->setQuery($query);
 		$list = $db->loadObjectList();
@@ -121,7 +121,7 @@ class THMGroupsModelGroupmanager extends JModelList
 	 */
 	public function getfullGroupIDs()
 	{
-		$db = $this->getDbo();
+		$db =& JFactory::getDBO();
 		$query = "SELECT id FROM #__thm_groups_groups WHERE id IN (SELECT gid FROM #__thm_groups_groups_map)";
 		$db->setQuery($query);
 		$list = $db->loadObjectList();
@@ -154,7 +154,7 @@ class THMGroupsModelGroupmanager extends JModelList
 		{
 			return;
 		}
-		$db = $this->getDbo();
+		$db =& JFactory::getDBO();
 		$query = "DELETE FROM #__thm_groups_groups WHERE id=" . $gid;
 		$db->setQuery($query);
 		$db->Query();

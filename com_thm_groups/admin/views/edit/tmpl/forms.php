@@ -1,6 +1,6 @@
 <?php
 /**
- *@category Joomla module
+ *@category Joomla component
  *
  *@package     THM_Groups
  *
@@ -23,7 +23,6 @@
 defined('_JEXEC') or die ('Restricted access');
 JHTML::_('behavior.modal', 'a.modal-button');
 JHTML::_('behavior.calendar');
-require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'SQLAbstractionLayer.php';
 ?>
 
 <script type="text/javascript">
@@ -66,7 +65,7 @@ require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'SQLAbstracti
 				</td>
 			</tr>
 			<tr>
-				<td/>------------------------------------<td/>
+				<td/><?php echo "----------------------------------" ?><td/>
 			</tr>
 
 			<?php
@@ -151,9 +150,8 @@ require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'SQLAbstracti
 				</td>
 				<td>
 					<?php
-						$SQLAL = new SQLAbstractionLayer;
 						$grouproles = '';
-						foreach ($SQLAL->getGroupsAndRoles($this->userid[0]) as $grouprole)
+						foreach ($this->model->getGroupsAndRoles($this->userid[0]) as $grouprole)
 						{
 							$grouproles .= $grouprole->groupname . '/' . $grouprole->rolename . ', ';
 						}
@@ -172,3 +170,4 @@ require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'SQLAbstracti
 	<input type="hidden" name="controller" value="membermanager" />
 	</fieldset>
 </div>
+</form>

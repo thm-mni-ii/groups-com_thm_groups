@@ -1,6 +1,6 @@
 <?php
 /**
- *@category Joomla module
+ *@category Joomla component
  *
  *@package     THM_Groups
  *
@@ -21,24 +21,18 @@
  *@version     3.0
  */
 
-require_once JPATH_COMPONENT . DS . 'classes' . DS . 'confdb.php';
 jimport('joomla.application.component.controllerform');
 
 /**
  * THMGroupsControllerAddGroup class for component com_thm_groups
  *
- * @package     Joomla.Site
+ * @package     Joomla.Admin
  * @subpackage  thm_groups
  * @link        www.mni.thm.de
  * @since       Class available since Release 2.0
  */
 class THMGroupsControllerAddGroup extends JControllerForm
 {
-	/**
-	 * Database object
-	 * @var unknown_type
-	 */
-	private $_SQLAL = null;
 
 	/**
  	 * constructor (registers additional tasks to methods)

@@ -1,6 +1,6 @@
 <?php
 /**
- *@category Joomla module
+ *@category Joomla component
  *
  *@package     THM_Groups
  *
@@ -26,7 +26,7 @@ jimport('joomla.application.component.modellist');
 /**
  * THMGroupsModelRolemanager class for component com_thm_groups
  *
- * @package     Joomla.Site
+ * @package     Joomla.Admin
  * @subpackage  thm_groups
  * @link        www.mni.thm.de
  * @since       Class available since Release 2.0
@@ -66,5 +66,31 @@ class THMGroupsModelRolemanager extends JModelList
 		$query .= " ORDER BY $orderCol $orderDirn";
 
 		return $query;
+	}
+
+	/**
+	 * Delete role
+	 *
+	 * @param   String  $rid  RoleID
+	 *
+	 * @return	null
+	 */
+	public function delRole($rid)
+	{
+		$db =& JFactory::getDBO();
+
+		if ($rid == 1 || $rid == 2)
+		{
+			return;
+		}
+		else
+		{
+			$query = "DELETE FROM #__thm_groups_roles WHERE id=" . $rid;
+			$db->setQuery($query);
+			$db->Query();
+			$query = "DELETE FROM #__thm_groups_groups_map WHERE rid=" . $rid;
+			$db->setQuery($query);
+			$db->Query();
+		}
 	}
 }

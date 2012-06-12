@@ -1,6 +1,6 @@
 <?php
 /**
- *@category Joomla module
+ *@category Joomla component
  *
  *@package     THM_Groups
  *
@@ -23,13 +23,10 @@
 defined('_JEXEC') or die();
 jimport('joomla.application.component.modellist');
 
-require_once JPATH_COMPONENT . DS . 'classes' . DS . 'membermanagerdb.php';
-require_once JPATH_COMPONENT . DS . 'classes' . DS . 'SQLAbstractionLayer.php';
-
 /**
  * THMGroupsModelmembermanager class for component com_thm_groups
  *
- * @package     Joomla.Site
+ * @package     Joomla.Admin
  * @subpackage  thm_groups
  * @link        www.mni.thm.de
  * @since       Class available since Release 2.0
@@ -244,10 +241,10 @@ class THMGroupsModelmembermanager extends JModelList
 	 */
 	public function getGroupSelectOptions()
 	{
-		$SQLAL = new SQLAbstractionLayer;
+		// $SQLAL = new SQLAbstractionLayer;
 
-		$groups = $SQLAL->getGroupsHirarchy();
-		$jgroups = $SQLAL->getJoomlaGroups();
+		$groups = $this->getGroupsHirarchy();
+		$jgroups = $this->getJoomlaGroups();
 
 		$injoomla = false;
 		$wasinjoomla = false;
@@ -278,5 +275,187 @@ class THMGroupsModelmembermanager extends JModelList
 			$wasinjoomla = $injoomla;
 		}
 		return $selectOptions;
+	}
+
+	/**
+	 * Gets list of all groups.
+	 *
+	 * @access  public
+	 * @return	bool|array  "false" on error|indexed rows with associative colums.
+	 */
+	public function getGroupsHirarchy()
+	{
+		$db =& JFactory::getDBO();
+
+		// Create SQL query string
+		$query = "SELECT thm.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla ";
+		$query .= "FROM jos_usergroups AS joo ";
+		$query .= "RIGHT JOIN (";
+		$query .= "  SELECT * ";
+		$query .= "  FROM jos_thm_groups_groups ";
+		$query .= "  WHERE injoomla = 0 ";
+		$query .= "  ORDER BY name";
+		$query .= ") AS thm ";
+		$query .= "ON joo.id = thm.id ";
+		$query .= "UNION ";
+		$query .= "SELECT joo.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla ";
+		$query .= "FROM jos_usergroups AS joo ";
+		$query .= "LEFT JOIN (";
+		$query .= "  SELECT * ";
+		$query .= "  FROM jos_thm_groups_groups ";
+		$query .= ") AS thm ";
+		$query .= "ON joo.id = thm.id ";
+		$query .= "ORDER BY lft";
+
+		$db->setQuery($query);
+		$db->query();
+		return $db->loadObjectList();
+	}
+
+	/**
+	 * Gets list of joomla groups.
+	 *
+	 * @access  public
+	 * @return	bool|array  "false" on error|indexed rows with associative colums.
+	 */
+	public function getJoomlaGroups()
+	{
+		$db =& JFactory::getDBO();
+		$query = "SELECT * FROM #__usergroups ORDER BY lft";
+		$db->setQuery($query);
+		$db->query();
+		return $db->loadObjectList();
+	}
+
+	/**
+	 * Gets list of groups.
+	 *
+	 * This function gets a list of groups with id, name and alias.
+	 *
+	 * @access  public
+	 * @return	bool|array  "false" on error|indexed rows with associative colums.
+	 */
+	public function getGroups()
+	{
+		$db =& JFactory::getDBO();
+		$query = 'SELECT * FROM   #__thm_groups_groups Order By name;';
+		$db->setQuery($query);
+		$db->query();
+		return $db->loadObjectList();
+	}
+	/**
+	 * Gets list of roles.
+	 *
+	 * This function gets a list of roles with id and name.
+	 *
+	 * @access  public
+	 * @return	bool|array "false" on error|indexed rows with associative colums.
+	 */
+	public function getRoles()
+	{
+		$db =& JFactory::getDBO();
+		$query = 'SELECT id, name FROM   #__thm_groups_roles Order By name;';
+		$db->setQuery($query);
+		$db->query();
+		return $db->loadObjectList();
+	}
+
+	/**
+	 * Gets list of group and role relations.
+	 *
+	 * This function gets a list of group and role relations with groupname, alias and role.
+	 *
+	 * @param   int  $uid  User-ID.
+	 *
+	 * @access  public
+	 * @return	bool|array       "false" on error|indexed rows with associative colums.
+	 */
+	public function getGroupsAndRoles($uid)
+	{
+		$db =& JFactory::getDBO();
+
+		if ($uid == null)
+		{
+			$uid = $_GET['cid'][0];
+		}
+
+		$query = 'SELECT groups.name AS groupname, groups.id as groupid, roles.name AS rolename, roles.id AS roleid
+		FROM             #__thm_groups_groups     AS groups
+		LEFT JOIN #__thm_groups_groups_map AS maps
+		ON        groups.id = maps.gid
+		LEFT JOIN #__thm_groups_roles      AS roles
+		ON        maps.rid = roles.id
+		WHERE  maps.uid = ' . $uid . ' AND maps.gid > 1;';
+
+		$db->setQuery($query);
+		$db->query();
+		return $db->loadObjectList();
+	}
+
+	/**
+	 * Gets list of group and role relations.
+	 *
+	 * This function gets a list of group and role relations with groupname, alias and role.
+	 *
+	 * @param   int  $uid  User-ID.
+	 * @param   int  $gid  Group-ID.
+	 *
+	 * @access  public
+	 * @return	bool|array       "false" on error|indexed rows with associative colums.
+	 */
+	public function getGroupRolesByUser($uid, $gid)
+	{
+		$db =& JFactory::getDBO();
+
+		// Create SQL query string
+		$query = 'SELECT rid
+		FROM             #__thm_groups_groups_map AS maps
+		WHERE  maps.uid = ' . $uid . ' AND maps.gid =' . $gid . ';';
+
+		$db->setQuery($query);
+		$db->query();
+		return $db->loadObjectList();
+	}
+
+	/**
+	 * Deletes group and role relations.
+	 *
+	 * This function deletes group and role relations.
+	 * It never deletes group '1' or role '1'.
+	 *
+	 * @param   array  $uids  Array of int with user-IDs.
+	 * @param   int    $gid   Group-ID.
+	 * @param   array  $rid   Array of int with role-IDs.
+	 *
+	 * @access  public
+	 * @return	bool          "true" on success, "false" on error.
+	 */
+	public function delGroupsAndRoles($uids, $gid, $rid)
+	{
+		$db =& JFactory::getDBO();
+
+		// Create SQL query string
+		$query = '';
+		foreach ($uids as $uid)
+		{
+			$query .= 'DELETE
+			FROM    #__thm_groups_groups_map
+			WHERE   !(gid = 1)
+			AND     uid = ' . $uid . '
+			AND     gid = ' . $gid . '
+			AND	   rid = ' . $rid . ';';
+		}
+
+		$db->setQuery($query);
+		if ($db->query())
+		{
+			$result = true;
+		}
+		else
+		{
+			$result = false;
+		}
+
+		return $result;
 	}
 }

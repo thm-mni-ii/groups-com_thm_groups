@@ -1,6 +1,6 @@
 <?php
 /**
- *@category Joomla module
+ *@category Joomla component
  *
  *@package     THM_Groups
  *
@@ -21,12 +21,10 @@
  *@version     3.0
  */
 defined('_JEXEC') or die ('Restricted access');
-require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'SQLAbstractionLayer.php';
-$SQLAL = new SQLAbstractionLayer;
 JHTML::_('behavior.tooltip');
 
 /**
- * Method to get display
+ * Count Roles
  *
  * @param   Int     $gid         GroupID
  * @param   String  $grouproles  GroupRoles
@@ -100,10 +98,10 @@ $listDirn	= $this->state->get('list.direction');
 				?>
 			</select>
 		</td>
-		<td text-align="left">
+		<td align="left">
 			<select name="roles[]" size="10" multiple style="display: block" id="roles">
 				<?php
-					foreach ($SQLAL->getRoles() as $role)
+					foreach ($this->roles as $role)
 					{
 						if (1 == $role->id)
 						{
@@ -217,7 +215,7 @@ $listDirn	= $this->state->get('list.direction');
 			<?php
 				$grouproles = '';
 				$groupname = '';
-				$groupRoles = $SQLAL->getGroupsAndRoles($row->userid);
+				$groupRoles = $this->model->getGroupsAndRoles($row->userid);
 				foreach ($groupRoles as $grouprole)
 				{
 					if (!isset($grouprole->rolename))

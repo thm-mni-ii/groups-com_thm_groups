@@ -1,6 +1,6 @@
 <?php
 /**
- *@category Joomla module
+ *@category Joomla component
  *
  *@package     THM_Groups
  *
@@ -22,12 +22,11 @@
  */
 defined('_JEXEC') or die();
 jimport('joomla.application.component.modelform');
-require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'SQLAbstractionLayer.php';
 
 /**
  * THMGroupsModeledit class for component com_thm_groups
  *
- * @package     Joomla.Site
+ * @package     Joomla.Admin
  * @subpackage  thm_groups
  * @link        www.mni.thm.de
  * @since       Class available since Release 2.0
@@ -492,5 +491,196 @@ class THMGroupsModeledit extends JModelForm
         	return false;
         }
         return $form;
+    }
+
+    /**
+     * Gets list of group and role relations.
+     *
+     * This function gets a list of group and role relations with groupname, alias and role.
+     *
+     * @param   int  $uid  User-ID.
+     *
+     * @access  public
+     * @return	bool|array       "false" on error|indexed rows with associative colums.
+     */
+    public function getGroupsAndRoles($uid)
+    {
+    	$db =& JFactory::getDBO();
+
+    	if ($uid == null)
+    	{
+    		$uid = $_GET['cid'][0];
+    	}
+
+    	$query = 'SELECT groups.name AS groupname, groups.id as groupid, roles.name AS rolename, roles.id AS roleid
+    	FROM             #__thm_groups_groups     AS groups
+    	LEFT JOIN #__thm_groups_groups_map AS maps
+    	ON        groups.id = maps.gid
+    	LEFT JOIN #__thm_groups_roles      AS roles
+    	ON        maps.rid = roles.id
+    	WHERE  maps.uid = ' . $uid . ' AND maps.gid > 1;';
+
+    	$db->setQuery($query);
+    	$db->query();
+    	return $db->loadObjectList();
+    }
+
+    /**
+     * Deletes group and role relations.
+     *
+     * This function deletes group and role relations.
+     * It never deletes group '1' or role '1'.
+     *
+     * @param   array  $uids  Array of int with user-IDs.
+     * @param   int    $gid   Group-ID.
+     * @param   array  $rid   Array of int with role-IDs.
+     *
+     * @access  public
+     * @return	bool          "true" on success, "false" on error.
+     */
+    public function delGroupsAndRoles($uids, $gid, $rid)
+    {
+    	// Create SQL query string
+    	$query = '';
+    	foreach ($uids as $uid)
+    	{
+    		$query .= 'DELETE
+    		FROM    #__thm_groups_groups_map
+    		WHERE   !(gid = 1)
+    		AND     uid = ' . $uid . '
+    		AND     gid = ' . $gid . '
+    		AND	   rid = ' . $rid . ';';
+    	}
+
+    	// Execute SQL query and return success or error
+    	return($this->setDbData($query));
+    }
+
+    /**
+     * Sets group and role relations.
+     *
+     * This function sets group and role relations.
+     *
+     * @param   array  $uids  Array of int with user-IDs.
+     * @param   int    $gid   Group-ID.
+     * @param   int    $rid   Role id to the Group.
+     *
+     * @access  public
+     * @return	bool          "true" on success, "false" on error.
+     */
+    public function setGroupsAndRoles($uids, $gid, $rid)
+    {
+    	// Convert to array
+    	foreach ($uids as $uid)
+    	{
+    		$object[] = array('uid' => $uid, 'gid' => $gid, 'rid' => $rid);
+    	}
+
+    	// Execute SQL query and return success or error
+    	return($this->setDBInsertUpdate('#__thm_groups_groups_map', $object, true, true, ''));
+    }
+
+    /**
+     * Executes transaction-safe SQL query.
+     *
+     * This function executes one or multiple SQL-commands supplied in one string.
+     *
+     * @param   string  $query        One or multiple SQL commands.
+     * @param   bool    $transaction  Enable transaction safety (must be 'false' when loading data).
+     *
+     * @access  private
+     * @return	bool                  "true" on success, "false" on error.
+     */
+    private function executeDbData($query, $transaction)
+    {
+    	// Set Query string
+    	$db =& JFactory::getDBO();
+    	$db->setQuery($query);
+
+    	// Execute SQL query and return 'true' on success
+    	if (!$db->queryBatch(true, $transaction))
+    	{
+    		// Display error message because of failed SQL query and return 'false'
+    		JError::raiseError($this->db->_errorNum, '!!! Database query failed ' . $db->_errorMsg . ' !!!', $db->_errorMsg);
+    		return(false);
+    	}
+    	else
+    	{
+    		return(true);
+    	}
+    }
+
+    /**
+     * Inserts or updates data into a SQL table.
+     *
+     * This function inserts or updates data transaction-safe into a SQL table.
+     *
+     * @param   string  $table    Name of table.
+     * @param   array   $object   Array of indexed rows with associative colums.
+     * @param   bool    $insert   Insert data.
+     * @param   bool    $update   Update data.
+     * @param   string  $keyName  Name of key in where clause.
+     *
+     * @access  private
+     * @return	bool              "true" on success, "false" on error.
+     */
+    private function setDBInsertUpdate($table, $object, $insert, $update, $keyName)
+    {
+    	// Create and set SQL query string
+    	$valueList = array_keys($object[0]);
+    	$query = '';
+
+    	foreach ($object as $row)
+    	{
+    		$values = '';
+
+    		foreach ($valueList as $key)
+    		{
+    			$values .= $key . ' = ' . $row[$key] . ',';
+    		}
+    		$values = trim($values, ', ');
+
+    		if ($insert)
+    		{
+    			$query .= 'INSERT INTO ' . $table;
+    		}
+
+    		if ($update && !$insert)
+    		{
+    			$query .= 'UPDATE ' . $table;
+    		}
+
+    		$query .= ' SET ' . $values;
+
+    		if ($update && $insert)
+    		{
+    			$query .= ' ON DUPLICATE KEY UPDATE ' . $values;
+    		}
+
+    		if ($update && !$insert && !empty($keyName))
+    		{
+    			$query .= ' WHERE ' . $keyName . ' = ' . $row[$keyName];
+    		}
+    		$query .= ';';
+    	}
+
+    	// Encapsulate executeDbData() with transaction-safety enabled
+    	return($this->executeDbData($query, true));
+    }
+
+    /**
+     * Sets data into database.
+     *
+     * This function Sets data with one or multiple transaction-safe SQL-commands supplied in one string.
+     *
+     * @param   string  $query  One or multiple SQL commands.
+     *
+     * @access  private
+     * @return	bool            "true" on success, "false" on error.
+     */
+    public function setDbData($query)
+    {
+    	// Encapsulate executeDbData() with transaction-safety enabled
+    	return($this->executeDbData($query, true));
     }
 }

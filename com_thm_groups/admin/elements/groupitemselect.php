@@ -1,6 +1,6 @@
 <?php
 /**
- *@category Joomla module
+ *@category Joomla component
  *
  *@package     THM_Groups
  *
@@ -25,12 +25,11 @@
 defined('_JEXEC') or die( 'Restricted access' );
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
-require_once JPATH_BASE . DS . 'components' . DS . 'com_thm_groups' . DS . 'classes' . DS . 'SQLAbstractionLayer.php';
 
 /**
  * JFormFieldAlphabetColor class for component com_thm_groups
  *
- * @package     Joomla.Site
+ * @package     Joomla.Admin
  * @subpackage  thm_groups
  * @link        www.mni.thm.de
  * @since       Class available since Release 2.0
@@ -49,16 +48,18 @@ class JFormFieldGroupItemSelect extends JFormField
 	public function getInput()
 	{
         $db =& JFactory::getDBO();
-		$SQLAL = new SQLAbstractionLayer;
 
-		$groups = $SQLAL->getGroupsHirarchy();
-		$jgroups = $SQLAL->getJoomlaGroups();
+        $model = $this->getModel('membermanager');
+		$groups = $model->getGroupsHirarchy();
+		$jgroups = $model->getJoomlaGroups();
+
 		$injoomla = false;
 		$wasinjoomla = false;
 		$selectOptions = array();
 		foreach ($groups as $group)
 		{
-      		$query = 'SELECT distinct id, name FROM `#__thm_groups_roles`,`#__thm_groups_groups_map` WHERE id=rid and gid=' . $group->id . ' Order By id';
+      		$query = 'SELECT distinct id, name FROM `#__thm_groups_roles`,`#__thm_groups_groups_map` WHERE id=rid and gid='
+      		. $group->id . ' Order By id';
       		$db->setQuery($query);
   			$listR[$group->id] = $db->loadObjectList();
   			$listR[$group->id]['groupid'] = $group->id;
@@ -66,7 +67,7 @@ class JFormFieldGroupItemSelect extends JFormField
 			$injoomla = $group->injoomla == 1 ? true : false;
 			if ($injoomla != $wasinjoomla)
 			{
-				$selectOptions[] = JHTML::_('select.option', -1, '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -', 'value', 'text', true);
+				$selectOptions[] = JHTML::_('select.option', -1, '- - - - - - - - - - - - - - - - - - - - - - - - - - - - -', 'value', 'text', true);
 			}
 			else
 			{

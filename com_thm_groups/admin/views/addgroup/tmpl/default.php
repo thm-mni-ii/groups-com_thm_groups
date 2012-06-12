@@ -1,6 +1,6 @@
 <?php
 /**
- *@category Joomla module
+ *@category Joomla component
  *
  *@package     THM_Groups
  *
@@ -22,7 +22,6 @@
  */
 defined('_JEXEC') or die ('Restricted access');
 JHTML::_('behavior.modal', 'a.modal-button');
-require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'SQLAbstractionLayer.php';
 ?>
 
 <form action="index.php" method="post" name="adminForm" enctype='multipart/form-data'>
