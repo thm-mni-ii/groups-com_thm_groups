@@ -68,7 +68,7 @@ class THMGroupsModelEditRole extends JModel
 	public function store()
 	{
 		$r_name = JRequest::getVar('role_name');
-		$rid = JRequest::setVar('rid');
+		$rid = JRequest::getVar('rid');
 
 		$db =& JFactory::getDBO();
 		$err = 0;

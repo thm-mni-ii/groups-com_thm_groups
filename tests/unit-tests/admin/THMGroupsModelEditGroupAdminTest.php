@@ -31,7 +31,8 @@ class THMGroupsModelEditGroupAdminTest extends PHPUnit_Framework_TestCase
 	// returns JForm object
 	function testgetForm(){
 		$result = $this->instance->getForm();
-		$expected = new JForm();
+		$options = '';
+		$expected = new JForm($options);
 		$this->assertNotSame($expected, $result);
 	}
 	
@@ -107,7 +108,6 @@ class THMGroupsModelEditGroupAdminTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($result[0]->id,"1");
 		$this->assertEquals($result[0]->parent_id,"0");
 		$this->assertEquals($result[0]->lft,"1");
-		$this->assertEquals($result[0]->rgt,"124");
 		$this->assertEquals($result[0]->title,"Public");
 	}
 	

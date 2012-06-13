@@ -56,7 +56,7 @@ class THMGroupsModelAddRole extends JModel
         if ($db->query())
         {
             $id = $db->insertid();
-       		JRequest::setVar('cid[]', $id);
+       		JRequest::setVar('cid[]', $id, 'get');
         }
         else
         {
