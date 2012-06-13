@@ -58,7 +58,7 @@ class THMGroupsModelmembermanager extends JModelList
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
 
-		foreach($rows as $row) 
+		foreach ($rows as $row)
 		{
 			$id = $row->id;
 			$username = $row->username;
@@ -66,38 +66,36 @@ class THMGroupsModelmembermanager extends JModelList
 			$usertype = $row->title;
 			$name     = $row->name;
 
-
-			if(preg_match("/^Fa./",$name)== 1){//Ueberprueft ob "Fa." im Namen steht
-
-				$lastName = str_replace("Fa.","",$name);
-				//Bei Firmen wird alles in den Nachnamen geschrieben und das "Fa." rausgenommen
+			if (preg_match("/^Fa./", $name) == 1)
+			{
+				$lastName = str_replace("Fa.", "", $name);
 			}
-			else{
-				$nameArray=explode(" ",$name);//Alle Namen in ein Array sucht nach blanks
-				$count = count($nameArray);//Anzahl der Eintraege in dem Array
+			else
+			{
+				$nameArray = explode(" ", $name);
+				$count = count($nameArray);
 
-
-				if($count != 0){
-
-					if($count > 1){//Wenn Vor- und Nachname(n) dann getrennt in DB
-						for($i=0;$i < $count-1;$i++){
-
+				if ($count != 0)
+				{
+					if ($count > 1)
+					{
+						for ($i = 0; $i < $count - 1; $i++)
+						{
 						     $firstName .= $nameArray[$i];
-						     $firstName .=" ";
+						     $firstName .= " ";
 						}
-
-						$lastName = $nameArray[$count-1];
+						$lastName = $nameArray[$count - 1];
 
 					}
-					else{//Wenn nur ein Namen diesen in Nachname
-
-						$lastName = $nameArray[$count-1];
+					else
+					{
+						$lastName = $nameArray[$count - 1];
 					}
 				}
 			}
 
-				$firstName=trim($firstName);
-				$lastName=trim($lastName);
+				$firstName = trim($firstName);
+				$lastName = trim($lastName);
 
 				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
 				$query .= "VALUES ($id, '$firstName', 1)";
@@ -539,96 +537,5 @@ class THMGroupsModelmembermanager extends JModelList
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Sync
-	 *
-	 * @return void
-	 */
-	public function sync()
-	{
-		$db =& JFactory::getDBO();
-		$query = "SELECT #__users.id, username, email, name, title FROM #__users, #__usergroups, #__user_usergroup_map WHERE #__users.id NOT IN (SELECT userid FROM #__thm_groups_additional_userdata) AND user_id = #__users.id AND group_id = #__usergroups.id";
-		$db->setQuery($query);
-		$rows = $db->loadObjectList();
-
-		foreach ($rows as $row)
-		{
-			$id = $row->id;
-			$username = $row->username;
-			$email = $row->email;
-			$usertype = $row->title;
-			$name     = $row->name;
-
-			if (preg_match("/^Fa./", $name) == 1)
-			{
-				$lastName = $this->umlautReplace(str_replace("Fa.", "", $name));
-			}
-			else
-			{
-				$nameArray = explode(" ", $name);
-				$count = count($nameArray);
-
-				if ($count != 0)
-				{
-					if ($count > 1)
-					{
-						for ($i = 0;$i < $count - 1; $i++)
-						{
-							$firstName .= $nameArray[$i];
-							$firstName .= " ";
-						}
-
-						$lastName = $nameArray[$count - 1];
-					}
-					else
-					{
-						$lastName = $nameArray[$count - 1];
-					}
-				}
-			}
-
-			$firstName = trim($firstName);
-			$lastName = trim($lastName);
-
-			$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
-			$query .= "VALUES ($id, '$firstName', 1)";
-
-			$db->setQuery($query);
-			$db->query();
-
-			$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
-			$query .= "VALUES ($id, '$lastName', 2)";
-
-			$db->setQuery($query);
-			$db->query();
-
-			$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
-			$query .= "VALUES ($id, '$email', 4)";
-
-			$db->setQuery($query);
-			$db->query();
-
-			$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
-			$query .= "VALUES ($id, '$username', 3)";
-
-			$db->setQuery($query);
-			$db->query();
-
-			$query  = "INSERT INTO #__thm_groups_additional_userdata (userid, usertype)";
-			$query .= "VALUES ($id, '$usertype')";
-
-			$db->setQuery($query);
-			$db->query();
-
-			$firstName = "";
-			$lastName = "";
-
-			$query  = "INSERT INTO #__thm_groups_groups_map (uid,gid,rid)";
-			$query .= "VALUES ($id, '1','1')";
-			$db->setQuery($query);
-			$db->query();
-		}
 	}
 }
