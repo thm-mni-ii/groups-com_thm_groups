@@ -76,7 +76,7 @@ class THMGroupsModeleditAdminTest extends PHPUnit_Framework_TestCase
 	public function testgetTypes()
 	{
 		$result = $this->instance->getTypes();
-		$this->assertTrue($result[0]->Type == "LINK");
+		$this->assertTrue($result[0]->Type != null);
 	}
 
 	/**
