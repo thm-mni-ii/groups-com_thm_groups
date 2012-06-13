@@ -69,7 +69,7 @@ class THMGroupsModelmembermanager extends JModelList
 
 			if(preg_match("/^Fa./",$name)== 1){//Ueberprueft ob "Fa." im Namen steht
 
-				$lastName = $this->umlautReplace(str_replace("Fa.","",$name));
+				$lastName = str_replace("Fa.","",$name);
 				//Bei Firmen wird alles in den Nachnamen geschrieben und das "Fa." rausgenommen
 			}
 			else{
@@ -82,16 +82,16 @@ class THMGroupsModelmembermanager extends JModelList
 					if($count > 1){//Wenn Vor- und Nachname(n) dann getrennt in DB
 						for($i=0;$i < $count-1;$i++){
 
-						     $firstName .=$this->umlautReplace($nameArray[$i]);
+						     $firstName .= $nameArray[$i];
 						     $firstName .=" ";
 						}
 
-						$lastName = $this->umlautReplace($nameArray[$count-1]);
+						$lastName = $nameArray[$count-1];
 
 					}
 					else{//Wenn nur ein Namen diesen in Nachname
 
-						$lastName = $this->umlautReplace($nameArray[$count-1]);
+						$lastName = $nameArray[$count-1];
 					}
 				}
 			}
