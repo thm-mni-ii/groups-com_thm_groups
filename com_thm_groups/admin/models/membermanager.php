@@ -351,7 +351,7 @@ class THMGroupsModelmembermanager extends JModelList
 					}
 				}
 			}
-			$selectOptions[] = JHTML::_('select.option', $group->id, $hirarchy . $group->name);
+			$selectOptions[] = JHTML::_('select.option', $group->id, $hirarchy . $group->title);
 			$wasinjoomla = $injoomla;
 		}
 		return $selectOptions;
@@ -382,7 +382,7 @@ class THMGroupsModelmembermanager extends JModelList
 		$query .= "FROM #__usergroups AS joo ";
 		$query .= "LEFT JOIN (";
 		$query .= "  SELECT * ";
-		$query .= "  FROM j#__thm_groups_groups ";
+		$query .= "  FROM #__thm_groups_groups ";
 		$query .= ") AS thm ";
 		$query .= "ON joo.id = thm.id ";
 		$query .= "ORDER BY lft";
