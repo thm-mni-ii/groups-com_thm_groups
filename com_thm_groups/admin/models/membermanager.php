@@ -135,6 +135,7 @@ class THMGroupsModelmembermanager extends JModelList
 				$query .= "VALUES ($id, '1','1')";
 				$this->db->setQuery($query);
 				$this->db->query();
+		}
 	}
 
 	/**
