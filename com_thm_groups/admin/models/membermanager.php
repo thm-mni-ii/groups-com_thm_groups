@@ -53,9 +53,10 @@ class THMGroupsModelmembermanager extends JModelList
   	 */
 	public function sync()
 	{
+		$db = $this->getDbo();
 		$query = "SELECT #__users.id, username, email, name, title FROM #__users, #__usergroups, #__user_usergroup_map WHERE #__users.id NOT IN (SELECT userid FROM #__thm_groups_additional_userdata) AND user_id = #__users.id AND group_id = #__usergroups.id";
-		$this->db->setQuery($query);
-		$rows = $this->db->loadObjectList();
+		$db->setQuery($query);
+		$rows = $db->loadObjectList();
 
 		foreach($rows as $row) 
 		{
@@ -101,40 +102,40 @@ class THMGroupsModelmembermanager extends JModelList
 				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
 				$query .= "VALUES ($id, '$firstName', 1)";
 
-				$this->db->setQuery($query);
-				$this->db->query();
+				$db->setQuery($query);
+				$db->query();
 				
 				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
 				$query .= "VALUES ($id, '$lastName', 2)";
 
-				$this->db->setQuery($query);
-				$this->db->query();
+				$db->setQuery($query);
+				$db->query();
 				
 				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
 				$query .= "VALUES ($id, '$email', 4)";
 
-				$this->db->setQuery($query);
-				$this->db->query();
+				$db->setQuery($query);
+				$db->query();
 
 				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
 				$query .= "VALUES ($id, '$username', 3)";
 
-				$this->db->setQuery($query);
-				$this->db->query();
+				$db->setQuery($query);
+				$db->query();
 				
 				$query  = "INSERT INTO #__thm_groups_additional_userdata (userid, usertype)";
 				$query .= "VALUES ($id, '$usertype')";
 
-				$this->db->setQuery($query);
-				$this->db->query();
+				$db->setQuery($query);
+				$db->query();
 				
 				$firstName="";
 				$lastName="";
 
 				$query  = "INSERT INTO #__thm_groups_groups_map (uid,gid,rid)";
 				$query .= "VALUES ($id, '1','1')";
-				$this->db->setQuery($query);
-				$this->db->query();
+				$db->setQuery($query);
+				$db->query();
 		}
 	}
 
