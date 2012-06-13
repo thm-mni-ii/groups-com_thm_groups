@@ -369,20 +369,20 @@ class THMGroupsModelmembermanager extends JModelList
 
 		// Create SQL query string
 		$query = "SELECT thm.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla ";
-		$query .= "FROM #__usergroups AS joo "
+		$query .= "FROM #__usergroups AS joo ";
 		$query .= "RIGHT JOIN (";
 		$query .= "  SELECT * ";
-		$query .= "  FROM jos_thm_groups_groups ";
+		$query .= "  FROM #__thm_groups_groups ";
 		$query .= "  WHERE injoomla = 0 ";
 		$query .= "  ORDER BY name";
 		$query .= ") AS thm ";
 		$query .= "ON joo.id = thm.id ";
 		$query .= "UNION ";
 		$query .= "SELECT joo.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla ";
-		$query .= "FROM jos_usergroups AS joo ";
+		$query .= "FROM #__usergroups AS joo ";
 		$query .= "LEFT JOIN (";
 		$query .= "  SELECT * ";
-		$query .= "  FROM jos_thm_groups_groups ";
+		$query .= "  FROM j#__thm_groups_groups ";
 		$query .= ") AS thm ";
 		$query .= "ON joo.id = thm.id ";
 		$query .= "ORDER BY lft";
