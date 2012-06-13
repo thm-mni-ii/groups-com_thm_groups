@@ -99,10 +99,11 @@ class THMGroupsControllerGroupmanager extends JControllerForm
     	{
     		foreach ($freeGroups as $canDel)
     		{
-    			if ($toDel == $canDel->id)
+    			if ($toDel == $canDel->id && $canDel->injoomla == 0)
     			{
     				$model->delGroup($toDel);
-    				$model->delGroupJoomla($toDel);
+
+    				// Realy? $model->delGroupJoomla($toDel);
     				$deleted++;
     			}
     		}
@@ -121,7 +122,7 @@ class THMGroupsControllerGroupmanager extends JControllerForm
     			}
     			else
     			{
-    				$answer = "Gruppe konnte nicht entfernt werden";
+    				$answer = "Gruppe konnte nicht entfernt werden, Gruppe noch in Joomla vorhanden oder Gruppe besitzt noch Benutzer.";
     			}
     			break;
     		default:
