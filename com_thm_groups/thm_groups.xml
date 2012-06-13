@@ -62,7 +62,6 @@
 			<filename>install.sql</filename>
          	<filename>uninstall.sql</filename>
 
-			<folder>classes</folder>
 			<folder>controllers</folder>
 			<folder>css</folder>
 			<folder>elements</folder>
