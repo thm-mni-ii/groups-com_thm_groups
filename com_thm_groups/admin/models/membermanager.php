@@ -102,13 +102,13 @@ class THMGroupsModelmembermanager extends JModelList
 
 				$db->setQuery($query);
 				$db->query();
-				
+
 				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
 				$query .= "VALUES ($id, '$lastName', 2)";
 
 				$db->setQuery($query);
 				$db->query();
-				
+
 				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
 				$query .= "VALUES ($id, '$email', 4)";
 
@@ -120,15 +120,15 @@ class THMGroupsModelmembermanager extends JModelList
 
 				$db->setQuery($query);
 				$db->query();
-				
+
 				$query  = "INSERT INTO #__thm_groups_additional_userdata (userid, usertype)";
 				$query .= "VALUES ($id, '$usertype')";
 
 				$db->setQuery($query);
 				$db->query();
-				
-				$firstName="";
-				$lastName="";
+
+				$firstName = "";
+				$lastName = "";
 
 				$query  = "INSERT INTO #__thm_groups_groups_map (uid,gid,rid)";
 				$query .= "VALUES ($id, '1','1')";
@@ -369,7 +369,7 @@ class THMGroupsModelmembermanager extends JModelList
 
 		// Create SQL query string
 		$query = "SELECT thm.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla ";
-		$query .= "FROM jos_usergroups AS joo ";
+		$query .= "FROM #__usergroups AS joo "
 		$query .= "RIGHT JOIN (";
 		$query .= "  SELECT * ";
 		$query .= "  FROM jos_thm_groups_groups ";
