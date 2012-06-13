@@ -9,7 +9,7 @@
 	<license>GNU/GPL Version 2</license>
 	<version>3.0</version>
 	<description>THM_GROUPS_DESC</description>
-	<installfile></installfile>
+	<installfile>install.com_thm_groups.php</installfile>
 	<uninstallfile></uninstallfile>
 	<install>
 		<sql>
