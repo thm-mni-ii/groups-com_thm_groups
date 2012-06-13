@@ -1,5 +1,5 @@
 <?php
-class Example extends PHPUnit_Extensions_SeleniumTestCase
+class F0240 extends PHPUnit_Extensions_SeleniumTestCase
 {
   protected function setUp()
   {
