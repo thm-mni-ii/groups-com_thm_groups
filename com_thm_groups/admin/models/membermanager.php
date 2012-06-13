@@ -53,11 +53,7 @@ class THMGroupsModelmembermanager extends JModelList
   	 */
 	public function sync()
 	{
-<<<<<<< HEAD
-		$mm = new MemeberManagerDB;
-		$mm->sync();
-=======
-		$db = $this->getDbo();
+		$db =& JFactory::getDBO();
 		$query = "SELECT #__users.id, username, email, name, title FROM #__users, #__usergroups, #__user_usergroup_map WHERE #__users.id NOT IN (SELECT userid FROM #__thm_groups_additional_userdata) AND user_id = #__users.id AND group_id = #__usergroups.id";
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
@@ -141,7 +137,6 @@ class THMGroupsModelmembermanager extends JModelList
 				$db->setQuery($query);
 				$db->query();
 		}
->>>>>>> branch 'master' of gitorious@scm.thm.de:icampus/com_thm_groups.git
 	}
 
 	/**
