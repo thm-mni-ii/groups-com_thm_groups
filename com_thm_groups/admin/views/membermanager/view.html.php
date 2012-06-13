@@ -67,6 +67,7 @@ class THMGroupsViewmembermanager extends JView
 		$search = $db->getEscaped(trim(JString::strtolower($search)));
 
 		$model =& $this->getModel();
+		$model->sync();
 		$items = $this->get('Items');
 		$pagination = $this->get('Pagination');
 

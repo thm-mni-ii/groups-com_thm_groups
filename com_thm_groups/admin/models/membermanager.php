@@ -53,8 +53,88 @@ class THMGroupsModelmembermanager extends JModelList
   	 */
 	public function sync()
 	{
-		$mm = new MemeberManagerDB;
-		$mm->sync();
+		$query = "SELECT #__users.id, username, email, name, title FROM #__users, #__usergroups, #__user_usergroup_map WHERE #__users.id NOT IN (SELECT userid FROM #__thm_groups_additional_userdata) AND user_id = #__users.id AND group_id = #__usergroups.id";
+		$this->db->setQuery($query);
+		$rows = $this->db->loadObjectList();
+
+		foreach($rows as $row) 
+		{
+			$id = $row->id;
+			$username = $row->username;
+			$email = $row->email;
+			$usertype = $row->title;
+			$name     = $row->name;
+
+
+			if(preg_match("/^Fa./",$name)== 1){//Ueberprueft ob "Fa." im Namen steht
+
+				$lastName = $this->umlautReplace(str_replace("Fa.","",$name));
+				//Bei Firmen wird alles in den Nachnamen geschrieben und das "Fa." rausgenommen
+			}
+			else{
+				$nameArray=explode(" ",$name);//Alle Namen in ein Array sucht nach blanks
+				$count = count($nameArray);//Anzahl der Eintraege in dem Array
+
+
+				if($count != 0){
+
+					if($count > 1){//Wenn Vor- und Nachname(n) dann getrennt in DB
+						for($i=0;$i < $count-1;$i++){
+
+						     $firstName .=$this->umlautReplace($nameArray[$i]);
+						     $firstName .=" ";
+						}
+
+						$lastName = $this->umlautReplace($nameArray[$count-1]);
+
+					}
+					else{//Wenn nur ein Namen diesen in Nachname
+
+						$lastName = $this->umlautReplace($nameArray[$count-1]);
+					}
+				}
+			}
+
+				$firstName=trim($firstName);
+				$lastName=trim($lastName);
+
+				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
+				$query .= "VALUES ($id, '$firstName', 1)";
+
+				$this->db->setQuery($query);
+				$this->db->query();
+				
+				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
+				$query .= "VALUES ($id, '$lastName', 2)";
+
+				$this->db->setQuery($query);
+				$this->db->query();
+				
+				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
+				$query .= "VALUES ($id, '$email', 4)";
+
+				$this->db->setQuery($query);
+				$this->db->query();
+
+				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
+				$query .= "VALUES ($id, '$username', 3)";
+
+				$this->db->setQuery($query);
+				$this->db->query();
+				
+				$query  = "INSERT INTO #__thm_groups_additional_userdata (userid, usertype)";
+				$query .= "VALUES ($id, '$usertype')";
+
+				$this->db->setQuery($query);
+				$this->db->query();
+				
+				$firstName="";
+				$lastName="";
+
+				$query  = "INSERT INTO #__thm_groups_groups_map (uid,gid,rid)";
+				$query .= "VALUES ($id, '1','1')";
+				$this->db->setQuery($query);
+				$this->db->query();
 	}
 
 	/**
