@@ -78,20 +78,20 @@ class THMGroupsModelGroupmanager extends JModelList
 
 		// MySQL Variante eines FULL JOIN
 		$query = "SELECT thm.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla ";
-		$query .= "FROM jos_usergroups AS joo ";
+		$query .= "FROM #__usergroups AS joo ";
 		$query .= "RIGHT JOIN (";
 		$query .= "  SELECT * ";
-		$query .= "  FROM jos_thm_groups_groups ";
+		$query .= "  FROM #__thm_groups_groups ";
 		$query .= "  WHERE injoomla = 0 ";
 		$query .= "  ORDER BY $orderCol $orderDirn";
 		$query .= ") AS thm ";
 		$query .= "ON joo.id = thm.id ";
 		$query .= "UNION ";
 		$query .= "SELECT joo.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla ";
-		$query .= "FROM jos_usergroups AS joo ";
+		$query .= "FROM #__usergroups AS joo ";
 		$query .= "LEFT JOIN (";
 		$query .= "  SELECT * ";
-		$query .= "  FROM jos_thm_groups_groups ";
+		$query .= "  FROM #__thm_groups_groups ";
 		$query .= "  ORDER BY $orderCol $orderDirn";
 		$query .= ") AS thm ";
 		$query .= "ON joo.id = thm.id ";
