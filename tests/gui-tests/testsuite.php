@@ -1,5 +1,6 @@
 <?php
 require_once dirname(dirname(dirname(__FILE__))).DIRECTORY_SEPARATOR.'framework_include.php';
+require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
 
 class AllComThmGroupsGuiTests
 {
