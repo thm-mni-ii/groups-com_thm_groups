@@ -99,9 +99,10 @@ class THMGroupsControllerGroupmanager extends JControllerForm
     	{
     		foreach ($freeGroups as $canDel)
     		{
-    			if ($toDel == $canDel->id && $canDel->injoomla == 0)
+    			if ($toDel == $canDel->id)
     			{
     				$model->delGroup($toDel);
+    				$model->delGroupJoomla($toDel);
     				$deleted++;
     			}
     		}

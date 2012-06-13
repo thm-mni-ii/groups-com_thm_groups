@@ -159,4 +159,40 @@ class THMGroupsModelGroupmanager extends JModelList
 		$db->setQuery($query);
 		$db->Query();
 	}
+
+	/**
+	 * Method to delete group
+	 *
+	 * @param   Int  $gid  GroupID
+	 *
+	 * @return 2-dim Array in form of [gid][uid's]
+	 */
+	public function delGroupJoomla($gid)
+	{
+		if ($gid == 1)
+		{
+			return;
+		}
+		$db =& JFactory::getDBO();
+		$query = "DELETE FROM #__usergroups WHERE id=" . $gid;
+		$db->setQuery($query);
+		$db->Query();
+	}
+
+	/**
+	 * Method to delete group
+	 *
+	 * @param   Int  $gid  GroupID
+	 *
+	 * @return count
+	 */
+	public function getGroupUserCount($gid)
+	{
+		$db =& JFactory::getDBO();
+		$query = "SELECT * FROM  `mni_thm_groups_groups_map` WHERE `gid` = " . $gid;
+		$db->setQuery($query);
+		$db->Query();
+
+		return $db->getNumRows();
+	}
 }

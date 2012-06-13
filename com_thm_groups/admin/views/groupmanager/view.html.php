@@ -59,6 +59,7 @@ class THMGroupsViewgroupmanager extends JView
 		$uri =& JFactory::getURI();
 		$query = $uri->getQuery();
 
+		$model =& $this->getModel();
  		$mainframe = Jfactory::getApplication('Administrator');
 
 		$this->state = $this->get('State');
@@ -71,6 +72,7 @@ class THMGroupsViewgroupmanager extends JView
 
 		$jgroups =& $this->get('JoomlaGroups');
 		$this->assignRef('jgroups', $jgroups);
+		$this->assignRef('model', $model);
 
 		parent::display($tpl);
 	}
