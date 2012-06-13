@@ -53,6 +53,10 @@ class THMGroupsModelmembermanager extends JModelList
   	 */
 	public function sync()
 	{
+<<<<<<< HEAD
+		$mm = new MemeberManagerDB;
+		$mm->sync();
+=======
 		$db = $this->getDbo();
 		$query = "SELECT #__users.id, username, email, name, title FROM #__users, #__usergroups, #__user_usergroup_map WHERE #__users.id NOT IN (SELECT userid FROM #__thm_groups_additional_userdata) AND user_id = #__users.id AND group_id = #__usergroups.id";
 		$db->setQuery($query);
@@ -137,6 +141,7 @@ class THMGroupsModelmembermanager extends JModelList
 				$db->setQuery($query);
 				$db->query();
 		}
+>>>>>>> branch 'master' of gitorious@scm.thm.de:icampus/com_thm_groups.git
 	}
 
 	/**
@@ -206,12 +211,12 @@ class THMGroupsModelmembermanager extends JModelList
 				 "left outer join (Select * From #__thm_groups_text order by userid) as t on e.userid=t.userid and t.structid=5 " .
 				 "inner join #__thm_groups_additional_userdata as f on f.userid = e.userid";
 
-		$searchUm = str_replace("�", "&Ouml;", $search);
-		$searchUm = str_replace("�", "&ouml;", $searchUm);
-		$searchUm = str_replace("�", "&Auml;", $searchUm);
-		$searchUm = str_replace("�", "&auml;", $searchUm);
-		$searchUm = str_replace("�", "&Uuml;", $searchUm);
-		$searchUm = str_replace("�", "&uuml;", $searchUm);
+		$searchUm = str_replace("?", "&Ouml;", $search);
+		$searchUm = str_replace("?", "&ouml;", $searchUm);
+		$searchUm = str_replace("?", "&Auml;", $searchUm);
+		$searchUm = str_replace("?", "&auml;", $searchUm);
+		$searchUm = str_replace("?", "&Uuml;", $searchUm);
+		$searchUm = str_replace("?", "&uuml;", $searchUm);
 
 		$searchUm2 = str_replace("ö", "&Ouml;", $search);
 		$searchUm2 = str_replace("ö", "&ouml;", $searchUm2);
@@ -539,5 +544,96 @@ class THMGroupsModelmembermanager extends JModelList
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Sync
+	 *
+	 * @return void
+	 */
+	public function sync()
+	{
+		$db =& JFactory::getDBO();
+		$query = "SELECT #__users.id, username, email, name, title FROM #__users, #__usergroups, #__user_usergroup_map WHERE #__users.id NOT IN (SELECT userid FROM #__thm_groups_additional_userdata) AND user_id = #__users.id AND group_id = #__usergroups.id";
+		$db->setQuery($query);
+		$rows = $db->loadObjectList();
+
+		foreach ($rows as $row)
+		{
+			$id = $row->id;
+			$username = $row->username;
+			$email = $row->email;
+			$usertype = $row->title;
+			$name     = $row->name;
+
+			if (preg_match("/^Fa./", $name) == 1)
+			{
+				$lastName = $this->umlautReplace(str_replace("Fa.", "", $name));
+			}
+			else
+			{
+				$nameArray = explode(" ", $name);
+				$count = count($nameArray);
+
+				if ($count != 0)
+				{
+					if ($count > 1)
+					{
+						for ($i = 0;$i < $count - 1; $i++)
+						{
+							$firstName .= $nameArray[$i];
+							$firstName .= " ";
+						}
+
+						$lastName = $nameArray[$count - 1];
+					}
+					else
+					{
+						$lastName = $nameArray[$count - 1];
+					}
+				}
+			}
+
+			$firstName = trim($firstName);
+			$lastName = trim($lastName);
+
+			$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
+			$query .= "VALUES ($id, '$firstName', 1)";
+
+			$db->setQuery($query);
+			$db->query();
+
+			$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
+			$query .= "VALUES ($id, '$lastName', 2)";
+
+			$db->setQuery($query);
+			$db->query();
+
+			$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
+			$query .= "VALUES ($id, '$email', 4)";
+
+			$db->setQuery($query);
+			$db->query();
+
+			$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
+			$query .= "VALUES ($id, '$username', 3)";
+
+			$db->setQuery($query);
+			$db->query();
+
+			$query  = "INSERT INTO #__thm_groups_additional_userdata (userid, usertype)";
+			$query .= "VALUES ($id, '$usertype')";
+
+			$db->setQuery($query);
+			$db->query();
+
+			$firstName = "";
+			$lastName = "";
+
+			$query  = "INSERT INTO #__thm_groups_groups_map (uid,gid,rid)";
+			$query .= "VALUES ($id, '1','1')";
+			$db->setQuery($query);
+			$db->query();
+		}
 	}
 }
