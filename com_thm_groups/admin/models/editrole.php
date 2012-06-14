@@ -40,9 +40,9 @@ class THMGroupsModelEditRole extends JModel
 	public function _buildQuery()
 	{
 		$cid = JRequest::getVar('cid', array(0), '', 'array');
-        JArrayHelper::toInteger($cid, array(0));
+		JArrayHelper::toInteger($cid, array(0));
 
-    	$query = "SELECT * FROM #__thm_groups_roles WHERE id=" . $cid[0];
+		$query = "SELECT * FROM #__thm_groups_roles WHERE id=" . $cid[0];
 
 		return $query;
 	}
@@ -74,21 +74,21 @@ class THMGroupsModelEditRole extends JModel
 		$err = 0;
 
 		$query = "UPDATE #__thm_groups_roles SET"
-        . " name='" . $r_name . "'"
-        . " WHERE id=" . $rid;
+			. " name='" . $r_name . "'"
+			. " WHERE id=" . $rid;
 
-        $db->setQuery($query);
-        if (!$db->query())
-        {
-        	$err = 1;
-        }
-        if (!$err)
-        {
-        	return true;
-        }
-        else
-        {
-        	return false;
-        }
+		$db->setQuery($query);
+		if (!$db->query())
+		{
+			$err = 1;
+		}
+		if (!$err)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

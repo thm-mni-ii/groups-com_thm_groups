@@ -91,18 +91,18 @@ window.addEvent( 'domready', function(){ getFieldExtras();});
 				<td>
 					<select name="relation" id="relation" size="1" onchange='getFieldExtras();' >
 			    	<?php
-			    	  foreach ($this->items as $item)
-			    	  {
-			    	  	$optionbox = "<option value=";
-			    	  	$optionbox .= $item->Type;
-			    	  	if ($this->rowItem->type == $item->Type)
-			    	  	{
-			    	  		$optionbox .= " selected='selected'";
-			    	  	}
-			    	  	$optionbox .= ">" . $item->Relation . '</option>';
-			    	  	echo($optionbox);
-			    	  }
-			    	?>
+						foreach ($this->items as $item)
+						{
+							$optionbox = "<option value=";
+							$optionbox .= $item->Type;
+							if ($this->rowItem->type == $item->Type)
+							{
+								$optionbox .= " selected='selected'";
+							}
+							$optionbox .= ">" . $item->Relation . '</option>';
+							echo($optionbox);
+						}
+					?>
 			    	</select>
 				</td>
 			</tr>

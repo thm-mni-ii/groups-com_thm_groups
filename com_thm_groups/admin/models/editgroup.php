@@ -147,31 +147,31 @@ class THMGroupsModelEditGroup extends JModelForm
 		if ($injoomla == 1)
 		{
 			// Gruppe anpassen
-			$query = "UPDATE #__usergroups " .
-	                 "SET parent_id = " . $gr_parent . ", title = '" . $gr_name . "' " .
-	                 "WHERE id = " . $gid;
-	        $db->setQuery($query);
-	        $db->query();
+			$query = "UPDATE #__usergroups "
+				. "SET parent_id = " . $gr_parent . ", title = '" . $gr_name . "' "
+				. "WHERE id = " . $gid;
+			$db->setQuery($query);
+			$db->query();
 
-	        // Gruppe aus Datenbank lesen
-			$query = "SELECT * " .
-					 "FROM `#__usergroups` " .
-					 "WHERE id = " . $gid;
+			// Gruppe aus Datenbank lesen
+			$query = "SELECT * "
+				. "FROM `#__usergroups` "
+				. "WHERE id = " . $gid;
 			$db->setQuery($query);
 			$jgroup = $db->loadObject();
 
 			// Elterngruppe aus Datenbank lesen
-			$query = "SELECT * " .
-					 "FROM `#__usergroups` " .
-					 "WHERE id = " . $gr_parent;
+			$query = "SELECT * "
+				. "FROM `#__usergroups` "
+				. "WHERE id = " . $gr_parent;
 			$db->setQuery($query);
 			$parent = $db->loadObject();
 
 			// Gruppe einsortieren
-			$query = "SELECT * " .
-					 "FROM `#__usergroups` " .
-					 "WHERE parent_id = " . $gr_parent . " " .
-					 "ORDER BY title";
+			$query = "SELECT * "
+				. "FROM `#__usergroups` "
+				. "WHERE parent_id = " . $gr_parent . " "
+				. "ORDER BY title";
 			$db->setQuery($query);
 			$jsortgrps = $db->loadObjectlist();
 
@@ -200,23 +200,23 @@ class THMGroupsModelEditGroup extends JModelForm
 
 			// Platz schaffen
 			// Rechten Index aktualisieren
-			$query = "UPDATE `#__usergroups` " .
-					 "SET rgt = rgt + " . $jgrouprange . " " .
-					 "WHERE rgt >= " . $new_lft;
+			$query = "UPDATE `#__usergroups` "
+				. "SET rgt = rgt + " . $jgrouprange . " "
+				. "WHERE rgt >= " . $new_lft;
 			$db->setQuery($query);
 			$db->query();
 
 			// Linken Index aktualisieren
-			$query = "UPDATE `#__usergroups` " .
-					 "SET lft = lft + " . $jgrouprange . " " .
-					 "WHERE lft >= " . $new_lft;
+			$query = "UPDATE `#__usergroups` "
+				. "SET lft = lft + " . $jgrouprange . " "
+				. "WHERE lft >= " . $new_lft;
 			$db->setQuery($query);
 			$db->query();
 
 			// Gruppe neu aus Datenbank lesen
-			$query = "SELECT * " .
-					 "FROM `#__usergroups` " .
-					 "WHERE id = " . $gid;
+			$query = "SELECT * "
+				. "FROM `#__usergroups` "
+				. "WHERE id = " . $gid;
 			$db->setQuery($query);
 			$jgroup = $db->loadObject();
 
@@ -226,37 +226,37 @@ class THMGroupsModelEditGroup extends JModelForm
 			$jgroupspan = $new_lft - $old_lft;
 
 			// Gruppe verschieben
-			$query = "UPDATE `#__usergroups` " .
-					 "SET rgt = rgt + " . $jgroupspan . " " .
-					 "WHERE rgt >= " . $old_lft . " AND rgt <= " . $old_rgt;
+			$query = "UPDATE `#__usergroups` "
+				. "SET rgt = rgt + " . $jgroupspan . " "
+				. "WHERE rgt >= " . $old_lft . " AND rgt <= " . $old_rgt;
 			$db->setQuery($query);
 			$db->query();
-			$query = "UPDATE `#__usergroups` " .
-					 "SET lft = lft + " . $jgroupspan . " " .
-					 "WHERE lft >= " . $old_lft . " AND lft <= " . $old_rgt;
+			$query = "UPDATE `#__usergroups` "
+				. "SET lft = lft + " . $jgroupspan . " "
+				. "WHERE lft >= " . $old_lft . " AND lft <= " . $old_rgt;
 			$db->setQuery($query);
 			$db->query();
 
-			$query = "UPDATE `#__usergroups` " .
-					 "SET rgt = rgt - " . $jgrouprange . " " .
-					 "WHERE rgt >= " . $old_lft;
+			$query = "UPDATE `#__usergroups` "
+				. "SET rgt = rgt - " . $jgrouprange . " "
+				. "WHERE rgt >= " . $old_lft;
 			$db->setQuery($query);
 			$db->query();
-			$query = "UPDATE `#__usergroups` " .
-					 "SET lft = lft - " . $jgrouprange . " " .
-					 "WHERE lft >= " . $old_lft;
+			$query = "UPDATE `#__usergroups` "
+				. "SET lft = lft - " . $jgrouprange . " "
+				. "WHERE lft >= " . $old_lft;
 			$db->setQuery($query);
 			$db->query();
 		}
 
-        if (!$err)
-        {
-        	return true;
-        }
-        else
-        {
-        	return false;
-        }
+		if (!$err)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	/**
@@ -292,12 +292,12 @@ class THMGroupsModelEditGroup extends JModelForm
 		$db->setQuery($query);
 		if ($db->query())
 		{
-        	return true;
+			return true;
 		}
-        else
-        {
-        	return false;
-        }
+		else
+		{
+			return false;
+		}
 	}
 
 	/**
@@ -316,12 +316,12 @@ class THMGroupsModelEditGroup extends JModelForm
 
 		if ($db->query())
 		{
-        	return true;
+			return true;
 		}
-        else
-        {
-        	return false;
-        }
+		else
+		{
+			return false;
+		}
 	}
 
 	/**
@@ -347,7 +347,7 @@ class THMGroupsModelEditGroup extends JModelForm
 	public function getParentId()
 	{
 		$cid = JRequest::getVar('cid', array(0), '', 'array');
-        JArrayHelper::toInteger($cid, array(0));
+		JArrayHelper::toInteger($cid, array(0));
 		$db =& JFactory::getDBO();
 		$query = "SELECT parent_id FROM #__usergroups WHERE id=" . $cid[0];
 		$db->setQuery($query);

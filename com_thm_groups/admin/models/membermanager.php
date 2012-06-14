@@ -38,15 +38,15 @@ class THMGroupsModelmembermanager extends JModelList
    	 * Items total
      * @var integer
      */
-  	var $_total = null;
+	var $_total = null;
 
-  	/**
+	/**
   	 * Pagination object
   	 * @var object
   	 */
-  	var $_pagination = null;
+	var $_pagination = null;
 
-  	/**
+	/**
   	 * Sync
   	 *
   	 * @return void
@@ -54,7 +54,9 @@ class THMGroupsModelmembermanager extends JModelList
 	public function sync()
 	{
 		$db =& JFactory::getDBO();
-		$query = "SELECT #__users.id, username, email, name, title FROM #__users, #__usergroups, #__user_usergroup_map WHERE #__users.id NOT IN (SELECT userid FROM #__thm_groups_additional_userdata) AND user_id = #__users.id AND group_id = #__usergroups.id";
+		$query = "SELECT #__users.id, username, email, name, title "
+			. "FROM #__users, #__usergroups, #__user_usergroup_map "
+			. "WHERE #__users.id NOT IN (SELECT userid FROM #__thm_groups_additional_userdata) AND user_id = #__users.id AND group_id = #__usergroups.id";
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
 
@@ -81,8 +83,8 @@ class THMGroupsModelmembermanager extends JModelList
 					{
 						for ($i = 0; $i < $count - 1; $i++)
 						{
-						     $firstName .= $nameArray[$i];
-						     $firstName .= " ";
+							$firstName .= $nameArray[$i];
+							$firstName .= " ";
 						}
 						$lastName = $nameArray[$count - 1];
 
@@ -184,8 +186,8 @@ class THMGroupsModelmembermanager extends JModelList
 	 * @access  protected
 	 * @return	query
 	 */
-  	protected function getListQuery()
-  	{
+	protected function getListQuery()
+	{
 		// Create a new query object.
 		$orderCol	= $this->state->get('list.ordering');
 		$orderDirn	= $this->state->get('list.direction');
@@ -195,14 +197,14 @@ class THMGroupsModelmembermanager extends JModelList
 
 		$db = $this->getDbo();
 
-		$query = "SELECT distinct b.userid, b.value as firstName, c.value as lastName, e.value as EMail, f.published as published, " .
-				 "f.injoomla as injoomla, t.value as title " .
-				 "FROM `#__thm_groups_structure` as a " .
-				 "inner join #__thm_groups_text as b on a.id = b.structid and b.structid=1 " .
-				 "inner join (Select * From #__thm_groups_text order by userid) as c on b.userid=c.userid and c.structid=2 " .
-				 "inner join (Select * From #__thm_groups_text order by userid) as e on c.userid=e.userid and e.structid=4 " .
-				 "left outer join (Select * From #__thm_groups_text order by userid) as t on e.userid=t.userid and t.structid=5 " .
-				 "inner join #__thm_groups_additional_userdata as f on f.userid = e.userid";
+		$query = "SELECT distinct b.userid, b.value as firstName, c.value as lastName, e.value as EMail, f.published as published, "
+			. "f.injoomla as injoomla, t.value as title "
+			. "FROM `#__thm_groups_structure` as a "
+			. "inner join #__thm_groups_text as b on a.id = b.structid and b.structid=1 "
+			. "inner join (Select * From #__thm_groups_text order by userid) as c on b.userid=c.userid and c.structid=2 "
+			. "inner join (Select * From #__thm_groups_text order by userid) as e on c.userid=e.userid and e.structid=4 "
+			. "left outer join (Select * From #__thm_groups_text order by userid) as t on e.userid=t.userid and t.structid=5 "
+			. "inner join #__thm_groups_additional_userdata as f on f.userid = e.userid";
 
 		$searchUm = str_replace("?", "&Ouml;", $search);
 		$searchUm = str_replace("?", "&ouml;", $searchUm);
@@ -282,7 +284,9 @@ class THMGroupsModelmembermanager extends JModelList
 
 		foreach ($uids as $uid)
 		{
-			$query = "SELECT COUNT(1) AS num FROM #__user_usergroup_map AS user INNER JOIN #__thm_groups_groups_map AS thm ON user.user_id = thm.uid AND user.group_id = thm.gid WHERE user.user_id = $uid AND user.group_id = $gid";
+			$query = "SELECT COUNT(1) AS num "
+				. "FROM #__user_usergroup_map AS user INNER JOIN #__thm_groups_groups_map AS thm ON user.user_id = thm.uid AND user.group_id = thm.gid "
+				. "WHERE user.user_id = $uid AND user.group_id = $gid";
 
 			$db->setQuery($query);
 			$aRes = $db->loadAssoc();

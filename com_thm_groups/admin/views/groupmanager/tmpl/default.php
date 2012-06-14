@@ -63,7 +63,7 @@ $listDirn = $this->state->get('list.direction');
 	for ($i = 0, $n = count($this->items); $i < $n; $i++)
 	{
 		$row = $this->items[$i];
-        $link = 'index.php?option=com_thm_groups&view=editgroup&task=groupmanager.edit&cid=' . $row->id;
+		$link = 'index.php?option=com_thm_groups&view=editgroup&task=groupmanager.edit&cid=' . $row->id;
 		$checked = JHTML::_('grid.id', $i, $row->id);
 
 		?>

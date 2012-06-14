@@ -51,21 +51,21 @@ class THMGroupsViewedit extends JView
 	{
 		$model =& $this->getModel();
 		$extra = $model->getExtra($structid, 'TEXT');
-		$output = "<input " .
-				"class='inputbox' " .
-				"type='text' name='$name' " .
-				"id='$name' ";
-				if (isset($extra))
-				{
-					$output .= "size='$extra'";
-				}
-				else
-				{
-					$output .= "size='$size'";
-				}
-       			$output .= "value='$value'" .
-			  	" />";
-       	echo $output;
+		$output = "<input "
+			. "class='inputbox' "
+			. "type='text' name='$name' "
+			. "id='$name' ";
+		if (isset($extra))
+		{
+			$output .= "size='$extra'";
+		}
+		else
+		{
+			$output .= "size='$size'";
+		}
+		$output .= "value='$value'"
+			. " />";
+		echo $output;
 	}
 
 	/**
@@ -83,19 +83,20 @@ class THMGroupsViewedit extends JView
 		$model =& $this->getModel();
 		$extra = $model->getExtra($structid, 'TEXTFIELD');
 		$output = "<textarea ";
-			if (isset($extra))
-			{
-				$output .= "rows='$extra' ";
-			}
-			else
-			{
-				$output .= "rows='$rows' ";
-			}
 
-			$output .= "name='$name' >" .
-		 	$value .
-		 "</textarea>";
-		 echo $output;
+		if (isset($extra))
+		{
+			$output .= "rows='$extra' ";
+		}
+		else
+		{
+			$output .= "rows='$rows' ";
+		}
+
+		$output .= "name='$name' >"
+			. $value
+			. "</textarea>";
+		echo $output;
 	}
 
 	/**
@@ -179,21 +180,21 @@ class THMGroupsViewedit extends JView
 			}
 			else
 			{
-				$output .= "<tr>" .
-						   	"<td colspan='" . (count($head) + 1) . "'>Keine Daten eingetragen...</td>" .
-						   "</tr>";
+				$output .= "<tr>"
+					. "<td colspan='" . (count($head) + 1) . "'>Keine Daten eingetragen...</td>"
+					. "</tr>";
 			}
 			$output .= "</table>";
 			foreach ($head as $headItem)
 			{
-				$output .= "<input " .
-				"class='inputbox' " .
-				"type='text' name='TABLE$structid$headItem' " .
-				"id='TABLE$structid$headItem' " .
-				"size='20'" .
-				"onFocus=\"if(this.value=='$headItem eintragen') this.value=''\"" .
-       			"value='$headItem eintragen'" .
-			  	" />";
+				$output .= "<input "
+					. "class='inputbox' "
+					. "type='text' name='TABLE$structid$headItem' "
+					. "id='TABLE$structid$headItem' "
+					. "size='20'"
+					. "onFocus=\"if(this.value=='$headItem eintragen') this.value=''\""
+					. "value='$headItem eintragen'"
+					. " />";
 			}
 			$output .= "<br /><br /><input type='submit' id='addTableRow" . $name . "' " .
 				"onclick='document.forms[\"adminForm\"].elements[\"structid\"].value = $structid," .
@@ -248,13 +249,13 @@ class THMGroupsViewedit extends JView
 			{
 				if ($tExtra == $val)
 				{
- 					$sel = "selected";
+					$sel = "selected";
 				}
 			}
- 			$output .= "<OPTION VALUE='$tExtra' $sel>$tExtra</option>";
+			$output .= "<OPTION VALUE='$tExtra' $sel>$tExtra</option>";
 		}
-			$output .= "</SELECT>";
-       	echo $output;
+		$output .= "</SELECT>";
+		echo $output;
 	}
 
 	/**
@@ -284,15 +285,15 @@ class THMGroupsViewedit extends JView
 		{
 			foreach ($items as $item)
 			{
-		    	if ($item->structid == $structureItem->id)
-		    	{
-		     		$value = $item->value;
-		    	}
-		   	}
+				if ($item->structid == $structureItem->id)
+				{
+					$value = $item->value;
+				}
+			}
 			if ($structureItem->type == "TEXTFIELD")
 			{
-		 		$textField[$structureItem->field] = $value;
-		 	}
+				$textField[$structureItem->field] = $value;
+			}
 		}
 		$this->form = $this->get('Form');
 

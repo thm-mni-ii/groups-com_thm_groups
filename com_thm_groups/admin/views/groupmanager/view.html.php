@@ -50,7 +50,14 @@ class THMGroupsViewgroupmanager extends JView
 		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
 
 		JToolBarHelper::title(JText::_('COM_THM_GROUPS_GROUPMANAGER_TITLE'), 'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png');
-		JToolBarHelper::custom('groupmanager.addGroup', 'moderate.png', JPATH_COMPONENT . DS . 'img' . DS . 'moderate.png', 'COM_THM_GROUPS_GROUPMANAGER_ADD', false, false);
+		JToolBarHelper::custom(
+			'groupmanager.addGroup',
+			'moderate.png',
+			JPATH_COMPONENT . DS . 'img' . DS . 'moderate.png',
+			'COM_THM_GROUPS_GROUPMANAGER_ADD',
+			false,
+			false
+		);
 		JToolBarHelper::editListX('groupmanager.edit', 'COM_THM_GROUPS_GROUPMANAGER_EDIT');
 		JToolBarHelper::deleteList('COM_THM_GROUPS_GROUPMANAGER_REALLY_DELETE', 'groupmanager.remove', 'JTOOLBAR_DELETE');
 		JToolBarHelper::cancel('groupmanager.cancel', 'JTOOLBAR_CANCEL');
@@ -60,7 +67,7 @@ class THMGroupsViewgroupmanager extends JView
 		$query = $uri->getQuery();
 
 		$model =& $this->getModel();
- 		$mainframe = Jfactory::getApplication('Administrator');
+		$mainframe = Jfactory::getApplication('Administrator');
 
 		$this->state = $this->get('State');
 		$items = $this->get('Items');

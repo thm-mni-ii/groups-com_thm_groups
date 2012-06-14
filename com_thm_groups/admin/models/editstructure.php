@@ -40,7 +40,7 @@ class THMGroupsModelEditStructure extends JModel
 	public function _buildQuery()
 	{
 		$query = "SELECT * "
-    	. "FROM #__thm_groups_relationtable";
+			. "FROM #__thm_groups_relationtable";
 
 		return $query;
 	}
@@ -102,37 +102,37 @@ class THMGroupsModelEditStructure extends JModel
 
 		$db =& JFactory::getDBO();
 		$query = "UPDATE #__thm_groups_structure SET"
-        . " field='" . $name . "'"
-        . ", type='" . $relation . "'"
-        . " WHERE id=" . $id[0];
+			. " field='" . $name . "'"
+			. ", type='" . $relation . "'"
+			. " WHERE id=" . $id[0];
 
-        $db->setQuery($query);
-        if (!$db->query())
-        {
-        	$err = 1;
-        }
+		$db->setQuery($query);
+		if (!$db->query())
+		{
+			$err = 1;
+		}
 
-        if (isset($extra))
-        {
-        	$query = "INSERT INTO #__thm_groups_" . strtolower($relation) . "_extra ( `structid`, `value`)"
-	        . " VALUES ($id[0]"
-	        . ", '" . $extra . "')"
-	        . " ON DUPLICATE KEY UPDATE"
-	        . " value='" . $extra . "'";
-	        $db->setQuery($query);
-	        if (!$db->query())
-	        {
-	        	$err = 1;
-	        }
-        }
+		if (isset($extra))
+		{
+			$query = "INSERT INTO #__thm_groups_" . strtolower($relation) . "_extra ( `structid`, `value`)"
+				. " VALUES ($id[0]"
+				. ", '" . $extra . "')"
+				. " ON DUPLICATE KEY UPDATE"
+				. " value='" . $extra . "'";
+			$db->setQuery($query);
+			if (!$db->query())
+			{
+				$err = 1;
+			}
+		}
 
-        if (!$err)
-        {
-        	return true;
-        }
-        else
-        {
-        	return false;
-        }
+		if (!$err)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

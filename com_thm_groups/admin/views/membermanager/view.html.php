@@ -50,8 +50,22 @@ class THMGroupsViewmembermanager extends JView
 		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
 
 		JToolBarHelper::title(JText::_('COM_THM_GROUPS_MEMBERMANAGER_TITLE'), 'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png');
-		JToolBarHelper::custom('membermanager.setGroupsAndRoles', 'moderate.png', JPATH_COMPONENT . DS . 'img' . DS . 'moderate.png', 'COM_THM_GROUPS_MEMBERMANAGER_ADD', true, true);
-		JToolBarHelper::custom('membermanager.delGroupsAndRoles', 'unmoderate.png', JPATH_COMPONENT . DS . 'img' . DS . 'unmoderate.png', 'COM_THM_GROUPS_MEMBERMANAGER_DELETE', true, true);
+		JToolBarHelper::custom(
+			'membermanager.setGroupsAndRoles',
+			'moderate.png',
+			JPATH_COMPONENT . DS . 'img' . DS . 'moderate.png',
+			'COM_THM_GROUPS_MEMBERMANAGER_ADD',
+			true,
+			true
+		);
+		JToolBarHelper::custom(
+			'membermanager.delGroupsAndRoles',
+			'unmoderate.png',
+			JPATH_COMPONENT . DS . 'img' . DS . 'unmoderate.png',
+			'COM_THM_GROUPS_MEMBERMANAGER_DELETE',
+			true,
+			true
+		);
 		JToolBarHelper::deleteList('Wirklich l&ouml;schen?', 'membermanager.delete', 'JTOOLBAR_DELETE');
 		JToolBarHelper::publishList('membermanager.publish', 'COM_THM_GROUPS_MEMBERMANAGER_PUBLISH');
 		JToolBarHelper::unpublishList('membermanager.unpublish', 'COM_THM_GROUPS_MEMBERMANAGER_DISABLE');
@@ -59,7 +73,7 @@ class THMGroupsViewmembermanager extends JView
 		JToolBarHelper::editListX('membermanager.edit', 'COM_THM_GROUPS_MEMBERMANAGER_EDIT');
 		JToolBarHelper::back('JTOOLBAR_BACK');
 
- 		$mainframe = Jfactory::getApplication('Administrator');
+		$mainframe = Jfactory::getApplication('Administrator');
 
 		$db = & JFactory::getDBO();
 		$this->state = $this->get('State');
@@ -101,7 +115,15 @@ class THMGroupsViewmembermanager extends JView
 		{
 			$groupFilters[] = $option;
 		}
-		$lists['groups'] = JHTML::_('select.genericlist', $groupFilters, 'groupFilters', 'size="1" class="inputbox"', 'value', 'text', $_POST['groupFilters']);
+		$lists['groups'] = JHTML::_(
+			'select.genericlist',
+			$groupFilters,
+			'groupFilters',
+			'size="1" class="inputbox"',
+			'value',
+			'text',
+			$_POST['groupFilters']
+		);
 
 		$rolesFilters = array();
 		$rolesFilters[] = JHTML::_('select.option', 0, JText::_('Alle'));
@@ -109,7 +131,15 @@ class THMGroupsViewmembermanager extends JView
 		{
 			$rolesFilters[] = JHTML::_('select.option', $role->id, $role->name);
 		}
-		$lists['roles'] = JHTML::_('select.genericlist', $rolesFilters, 'rolesFilters', 'size="1" class="inputbox"', 'value', 'text', $_POST['rolesFilters']);
+		$lists['roles'] = JHTML::_(
+			'select.genericlist',
+			$rolesFilters,
+			'rolesFilters',
+			'size="1" class="inputbox"',
+			'value',
+			'text',
+			$_POST['rolesFilters']
+		);
 		$checked = "checked='checked'";
 		$grcheck = 1;
 
