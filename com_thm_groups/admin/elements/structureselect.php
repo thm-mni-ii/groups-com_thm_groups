@@ -141,15 +141,31 @@ class JFormFieldStructureSelect extends JFormField
 				$disabled = ' disabled="disabled"';
 			}
 
-			$html[] = '<tr><td>' .
-					'<label for="' . $this->name . $i . '"' . $class . '>' . JText::_($option->text) . '</label>' .
-					'</td><td>' .
-					'<input type="checkbox" id="' . $this->name . $i . '" name="' . $this->name . '[' . $i . ']"' . ' value="' . $value . '" onchange="switchEnablingAdditionalAttr(' . "'" . $this->name . $i . "'" . ')"' . $checked . ' />' .
-					'</td><td>' .
-					'<input type="checkbox" id="' . $this->name . $i . 'ShowName" onchange="switchAttributeName(' . "'" . $this->name . $i . "'" . ')"' . $checkedShowName . $disabled . ' />' .
-					'</td><td>' .
-					'<input type="checkbox" id="' . $this->name . $i . 'WrapAfter" onchange="switchAttributeWrap(' . "'" . $this->name . $i . "'" . ')"' . $checkedWrapAfter . $disabled . ' />' .
-					'</td></tr>';
+			$html[] = '<tr>'
+				. '<td>'
+					. '<label for="' . $this->name . $i . '"' . $class . '>' . JText::_($option->text) . '</label>'
+				. '</td>'
+				. '<td>'
+					. '<input type="checkbox" '
+						. 'id="' . $this->name . $i . '" '
+						. 'name="' . $this->name . '[' . $i . ']"' . ' '
+						. 'value="' . $value . '" '
+						. 'onchange="switchEnablingAdditionalAttr(' . "'" . $this->name . $i . "'" . ')"' . $checked
+					. ' />'
+				. '</td>'
+				. '<td>'
+					. '<input type="checkbox" '
+						. 'id="' . $this->name . $i . 'ShowName" '
+						. 'onchange="switchAttributeName(' . "'" . $this->name . $i . "'" . ')"' . $checkedShowName . $disabled
+					. ' />'
+				. '</td>'
+				. '<td>'
+					. '<input type="checkbox" '
+						. 'id="' . $this->name . $i . 'WrapAfter" '
+						. 'onchange="switchAttributeWrap(' . "'" . $this->name . $i . "'" . ')"' . $checkedWrapAfter . $disabled
+					. ' />'
+				. '</td>'
+				. '</tr>';
 		}
 		$html[] = '</tbody>' .
 				'</table>';

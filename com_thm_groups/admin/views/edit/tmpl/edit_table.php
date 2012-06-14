@@ -99,7 +99,7 @@ $key = JRequest::getVar('key');
 	<input type="hidden" name="task"   value="" />
 	<input type="hidden" name="userid" value="<?php echo $this->userid[0]; ?>" />
 	<input type="hidden" name="tablekey" value="" />
-	<input type="hidden"w name="controller" value="membermanager" />
+	<input type="hidden" name="controller" value="membermanager" />
 	
 	</fieldset>
 	
