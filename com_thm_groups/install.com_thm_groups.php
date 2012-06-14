@@ -21,9 +21,18 @@
  *@version     3.0
  */
 defined('_JEXEC') or die('Restricted access');
-define('_JEXEC', 1);
-define('JPATH_BASE', '../../../');
-define('DS', DIRECTORY_SEPARATOR);
+if (!defined('_JEXEC'))
+{
+	define('_JEXEC', 1);
+}
+if (!defined('JPATH_BASE'))
+{
+	define('JPATH_BASE', '../../../');
+}
+if (!defined('DS'))
+{
+	define('DS', DIRECTORY_SEPARATOR);
+}
 
 require_once JPATH_BASE . DS . 'includes' . DS . 'defines.php';
 require_once JPATH_BASE . DS . 'includes' . DS . 'framework.php';
@@ -46,7 +55,7 @@ function Com_install()
 	<?php
 
 	$db =& JFactory::getDBO();
-	
+
 	$query = 'SELECT * FROM #__usergroups';
 	$db->setQuery($query);
 	$db->query();
