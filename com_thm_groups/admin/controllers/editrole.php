@@ -52,10 +52,10 @@ class THMGroupsControllerEditRole extends JControllerForm
  	 */
 	public function edit()
 	{
-    	JRequest::setVar('view', 'editrole');
-    	JRequest::setVar('layout', 'default');
-    	JRequest::setVar('hidemainmenu', 1);
-    	parent::display();
+		JRequest::setVar('view', 'editrole');
+		JRequest::setVar('layout', 'default');
+		JRequest::setVar('hidemainmenu', 1);
+		parent::display();
 	}
 
 	/**
@@ -63,21 +63,21 @@ class THMGroupsControllerEditRole extends JControllerForm
 	 *
 	 * @return void
 	 */
-    public function apply()
-    {
-    	$model = $this->getModel('editrole');
+	public function apply()
+	{
+		$model = $this->getModel('editrole');
 		$id = JRequest::getVar('rid');
 
 		if ($model->store())
 		{
-    	    $msg = JText::_('Data Saved!');
+			$msg = JText::_('Data Saved!');
 		}
-    	else
-    	{
-    	    $msg = JText::_('Error Saving');
-    	}
-    	$this->setRedirect('index.php?option=com_thm_groups&task=editrole.edit&cid[]=' . $id, $msg);
-    }
+		else
+		{
+			$msg = JText::_('Error Saving');
+		}
+		$this->setRedirect('index.php?option=com_thm_groups&task=editrole.edit&cid[]=' . $id, $msg);
+	}
 
 	/**
   	 * Save
@@ -86,18 +86,18 @@ class THMGroupsControllerEditRole extends JControllerForm
  	 */
 	public function save()
 	{
-    	$model = $this->getModel('editrole');
+		$model = $this->getModel('editrole');
 
-    	if ($model->store())
-    	{
-    	    $msg = JText::_('Data Saved!');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('Error Saving');
-    	}
+		if ($model->store())
+		{
+			$msg = JText::_('Data Saved!');
+		}
+		else
+		{
+			$msg = JText::_('Error Saving');
+		}
 
-    	$this->setRedirect('index.php?option=com_thm_groups&view=rolemanager', $msg);
+		$this->setRedirect('index.php?option=com_thm_groups&view=rolemanager', $msg);
 	}
 
 	/**
@@ -109,16 +109,16 @@ class THMGroupsControllerEditRole extends JControllerForm
 	{
 		$model = $this->getModel('editrole');
 
-    	if ($model->store())
-    	{
-    	    $msg = JText::_('Data Saved!');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('Error Saving');
-    	}
+		if ($model->store())
+		{
+			$msg = JText::_('Data Saved!');
+		}
+		else
+		{
+			$msg = JText::_('Error Saving');
+		}
 
-    	$this->setRedirect('index.php?option=com_thm_groups&view=addrole', $msg);
+		$this->setRedirect('index.php?option=com_thm_groups&view=addrole', $msg);
 	}
 
 	/**
@@ -128,7 +128,7 @@ class THMGroupsControllerEditRole extends JControllerForm
  	 */
 	public function cancel()
 	{
-	    $msg = JText::_('CANCEL');
-	    $this->setRedirect('index.php?option=com_thm_groups&view=rolemanager', $msg);
+		$msg = JText::_('CANCEL');
+		$this->setRedirect('index.php?option=com_thm_groups&view=rolemanager', $msg);
 	}
 }

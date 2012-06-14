@@ -49,28 +49,28 @@ class THMGroupsModelAddRole extends JModel
 		$err = 0;
 
 		$query = "INSERT INTO #__thm_groups_roles ( `name`)"
-        . " VALUES ("
-        . "'" . $r_name . "')";
+			. " VALUES ("
+			. "'" . $r_name . "')";
 
-        $db->setQuery($query);
-        if ($db->query())
-        {
-            $id = $db->insertid();
-       		JRequest::setVar('cid[]', $id, 'get');
-        }
-        else
-        {
-        	$err = 1;
-        }
+		$db->setQuery($query);
+		if ($db->query())
+		{
+			$id = $db->insertid();
+			JRequest::setVar('cid[]', $id, 'get');
+		}
+		else
+		{
+			$err = 1;
+		}
 
-        if (!$err)
-        {
-        	return true;
-        }
-        else
-        {
-        	return false;
-        }
+		if (!$err)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	/**

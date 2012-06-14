@@ -53,7 +53,7 @@ class THMGroupsModeledit extends JModelForm
 	public function getData()
 	{
 		$cid = JRequest::getVar('cid', array(0), '', 'array');
-        JArrayHelper::toInteger($cid, array(0));
+		JArrayHelper::toInteger($cid, array(0));
 		$types = $this->getTypes();
 		$db = & JFactory::getDBO();
 		$puffer = array();
@@ -99,8 +99,8 @@ class THMGroupsModeledit extends JModelForm
 	public function getTypes()
 	{
 		$db = & JFactory::getDBO();
-		$query = "SELECT Type FROM #__thm_groups_relationtable " .
-				 "WHERE Type in (SELECT type FROM #__thm_groups_structure)";
+		$query = "SELECT Type FROM #__thm_groups_relationtable "
+			. "WHERE Type in (SELECT type FROM #__thm_groups_structure)";
 		$db->setQuery($query);
 		return $db->loadObjectList();
 	}
@@ -119,7 +119,7 @@ class THMGroupsModeledit extends JModelForm
 		foreach ($structure as $structureItem)
 		{
 			$puffer = null;
-			 $field = JRequest::getVar($structureItem->field, '', 'post', 'string', JREQUEST_ALLOWHTML);
+			$field = JRequest::getVar($structureItem->field, '', 'post', 'string', JREQUEST_ALLOWHTML);
 
 			$publish = 0;
 			if ($strucctIdemtureItem->type == 'MULTISELECT')
@@ -140,8 +140,8 @@ class THMGroupsModeledit extends JModelForm
 			{
 			}
 
-			$query = "SELECT structid FROM #__thm_groups_" . strtolower($structureItem->type) .
-					 " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
+			$query = "SELECT structid FROM #__thm_groups_" . strtolower($structureItem->type)
+				. " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
 			$db->setQuery($query);
 			$puffer = $db->loadObject();
 
@@ -150,28 +150,28 @@ class THMGroupsModeledit extends JModelForm
 				if (isset($puffer))
 				{
 					$query = "UPDATE #__thm_groups_" . strtolower($structureItem->type) . " SET";
-							if ($structureItem->type != 'PICTURE' && $structureItem->type != 'TABLE')
-							{
-		        				$query .= " value='" . $field . "',";
-							}
+					if ($structureItem->type != 'PICTURE' && $structureItem->type != 'TABLE')
+					{
+						$query .= " value='" . $field . "',";
+					}
 
-	        				$query .= " publish='" . $publish . "'"
-	       					. " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
+					$query .= " publish='" . $publish . "'"
+						. " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
 				}
 				else
 				{
 					$query = "INSERT INTO #__thm_groups_" . strtolower($structureItem->type) . " ( `userid`, `structid`, `value`, `publish`)"
-					        . " VALUES ($userid"
-					        . ", " . $structureItem->id
-					        . ", '" . $field . "'"
-					        . ", " . $publish . ")";
+						. " VALUES ($userid"
+						. ", " . $structureItem->id
+						. ", '" . $field . "'"
+						. ", " . $publish . ")";
 				}
 				echo $query . "<br />";
 				$db->setQuery($query);
-        		if (!$db->query())
-        		{
-	        		$err = 1;
-        		}
+				if (!$db->query())
+				{
+					$err = 1;
+				}
 			}
 			if ($structureItem->type == 'PICTURE' && $_FILES[$structureItem->field]['name'] != "")
 			{
@@ -184,12 +184,12 @@ class THMGroupsModeledit extends JModelForm
 
 		if (!$err)
 		{
-        	return true;
+			return true;
 		}
-        else
-        {
-        	return false;
-        }
+		else
+		{
+			return false;
+		}
 	}
 
 	/**
@@ -208,12 +208,12 @@ class THMGroupsModeledit extends JModelForm
 
 		if ($db->query())
 		{
-        	return true;
+			return true;
 		}
-        else
-        {
-        	return false;
-        }
+		else
+		{
+			return false;
+		}
 	}
 
 	/**
@@ -233,7 +233,13 @@ class THMGroupsModeledit extends JModelForm
 		try
 		{
 			$pt = new PicTransform($_FILES[$picField]);
-			$pt->safeSpecial(JPATH_ROOT . DS . "components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS, $uid . "_" . $structid, 200, 200, "JPG");
+			$pt->safeSpecial(
+				JPATH_ROOT . DS . "components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS,
+				$uid . "_" . $structid,
+				200,
+				200,
+				"JPG"
+			);
 			if (JModuleHelper::isEnabled('mod_thm_groups')->id != 0)
 			{
 				$pt->safeSpecial(JPATH_ROOT . DS . "modules" . DS . "mod_thm_groups" . DS . "images" . DS, $uid . "_" . $structid, 200, 200, "JPG");
@@ -253,12 +259,12 @@ class THMGroupsModeledit extends JModelForm
 
 		if ($db->query())
 		{
-        	return true;
+			return true;
 		}
-        else
-        {
-        	return false;
-        }
+		else
+		{
+			return false;
+		}
 	}
 
 	/**
@@ -278,7 +284,7 @@ class THMGroupsModeledit extends JModelForm
 		$res = $db->loadObject();
 		if (isset($res->value))
 		{
-		   	return $res->value;
+			return $res->value;
 		}
 		else
 		{
@@ -339,20 +345,20 @@ class THMGroupsModeledit extends JModelForm
 		else
 		{
 			$query = "INSERT INTO #__thm_groups_table ( `userid`, `structid`, `value`)"
-		        . " VALUES ($uid"
-		        . ", " . $structid
-		        . ", '" . $jsonValue . "')";
+				. " VALUES ($uid"
+				. ", " . $structid
+				. ", '" . $jsonValue . "')";
 		}
 		$db->setQuery($query);
-        if (!$db->query())
-        {
-	    	$err = 1;
-        }
+		if (!$db->query())
+		{
+			$err = 1;
+		}
 
-	    if (!$err)
-	    {
-		   	return true;
-	    }
+		if (!$err)
+		{
+			return true;
+		}
 		else
 		{
 			return false;
@@ -388,15 +394,15 @@ class THMGroupsModeledit extends JModelForm
 		$jsonValue = json_encode($arrValue);
 		$query = "UPDATE #__thm_groups_table SET value='$jsonValue' WHERE userid = $uid AND structid=$structid";
 		$db->setQuery($query);
-        if (!$db->query())
-        {
-	    	$err = 1;
-        }
+		if (!$db->query())
+		{
+			$err = 1;
+		}
 
-	    if (!$err)
-	    {
-		   	return true;
-	    }
+		if (!$err)
+		{
+			return true;
+		}
 		else
 		{
 			return false;
@@ -451,14 +457,14 @@ class THMGroupsModeledit extends JModelForm
 		$jsonValue = str_replace("\u20ac", "&euro;", $jsonValue);
 		$query = "UPDATE #__thm_groups_table SET value='$jsonValue' WHERE userid = $uid AND structid=$structid";
 		$db->setQuery($query);
-        if (!$db->query())
-        {
-	    	$err = 1;
-        }
-	    if (!$err)
-	    {
-		   	return true;
-	    }
+		if (!$db->query())
+		{
+			$err = 1;
+		}
+		if (!$err)
+		{
+			return true;
+		}
 		else
 		{
 			return false;
@@ -484,16 +490,16 @@ class THMGroupsModeledit extends JModelForm
 	 * @return	boolean	True on success
 	 */
 	public function getForm($data = array(), $loadData = true)
-    {
-        $form = $this->loadForm('com_thm_groups.edit', 'edit', array('load_data' => $loadData));
-        if (empty($form))
-        {
-        	return false;
-        }
-        return $form;
-    }
+	{
+		$form = $this->loadForm('com_thm_groups.edit', 'edit', array('load_data' => $loadData));
+		if (empty($form))
+		{
+			return false;
+		}
+		return $form;
+	}
 
-    /**
+	/**
      * Gets list of group and role relations.
      *
      * This function gets a list of group and role relations with groupname, alias and role.
@@ -503,16 +509,16 @@ class THMGroupsModeledit extends JModelForm
      * @access  public
      * @return	bool|array       "false" on error|indexed rows with associative colums.
      */
-    public function getGroupsAndRoles($uid)
-    {
-    	$db =& JFactory::getDBO();
+	public function getGroupsAndRoles($uid)
+	{
+		$db =& JFactory::getDBO();
 
-    	if ($uid == null)
-    	{
-    		$uid = $_GET['cid'][0];
-    	}
+		if ($uid == null)
+		{
+			$uid = $_GET['cid'][0];
+		}
 
-    	$query = 'SELECT groups.name AS groupname, groups.id as groupid, roles.name AS rolename, roles.id AS roleid
+		$query = 'SELECT groups.name AS groupname, groups.id as groupid, roles.name AS rolename, roles.id AS roleid
     	FROM             #__thm_groups_groups     AS groups
     	LEFT JOIN #__thm_groups_groups_map AS maps
     	ON        groups.id = maps.gid
@@ -520,12 +526,12 @@ class THMGroupsModeledit extends JModelForm
     	ON        maps.rid = roles.id
     	WHERE  maps.uid = ' . $uid . ' AND maps.gid > 1;';
 
-    	$db->setQuery($query);
-    	$db->query();
-    	return $db->loadObjectList();
-    }
+		$db->setQuery($query);
+		$db->query();
+		return $db->loadObjectList();
+	}
 
-    /**
+	/**
      * Deletes group and role relations.
      *
      * This function deletes group and role relations.
@@ -538,25 +544,25 @@ class THMGroupsModeledit extends JModelForm
      * @access  public
      * @return	bool          "true" on success, "false" on error.
      */
-    public function delGroupsAndRoles($uids, $gid, $rid)
-    {
-    	// Create SQL query string
-    	$query = '';
-    	foreach ($uids as $uid)
-    	{
-    		$query .= 'DELETE
+	public function delGroupsAndRoles($uids, $gid, $rid)
+	{
+		// Create SQL query string
+		$query = '';
+		foreach ($uids as $uid)
+		{
+			$query .= 'DELETE
     		FROM    #__thm_groups_groups_map
     		WHERE   !(gid = 1)
     		AND     uid = ' . $uid . '
     		AND     gid = ' . $gid . '
     		AND	   rid = ' . $rid . ';';
-    	}
+		}
 
-    	// Execute SQL query and return success or error
-    	return($this->setDbData($query));
-    }
+		// Execute SQL query and return success or error
+		return($this->setDbData($query));
+	}
 
-    /**
+	/**
      * Sets group and role relations.
      *
      * This function sets group and role relations.
@@ -568,19 +574,19 @@ class THMGroupsModeledit extends JModelForm
      * @access  public
      * @return	bool          "true" on success, "false" on error.
      */
-    public function setGroupsAndRoles($uids, $gid, $rid)
-    {
-    	// Convert to array
-    	foreach ($uids as $uid)
-    	{
-    		$object[] = array('uid' => $uid, 'gid' => $gid, 'rid' => $rid);
-    	}
+	public function setGroupsAndRoles($uids, $gid, $rid)
+	{
+		// Convert to array
+		foreach ($uids as $uid)
+		{
+			$object[] = array('uid' => $uid, 'gid' => $gid, 'rid' => $rid);
+		}
 
-    	// Execute SQL query and return success or error
-    	return($this->setDBInsertUpdate('#__thm_groups_groups_map', $object, true, true, ''));
-    }
+		// Execute SQL query and return success or error
+		return($this->setDBInsertUpdate('#__thm_groups_groups_map', $object, true, true, ''));
+	}
 
-    /**
+	/**
      * Executes transaction-safe SQL query.
      *
      * This function executes one or multiple SQL-commands supplied in one string.
@@ -591,26 +597,26 @@ class THMGroupsModeledit extends JModelForm
      * @access  private
      * @return	bool                  "true" on success, "false" on error.
      */
-    private function executeDbData($query, $transaction)
-    {
-    	// Set Query string
-    	$db =& JFactory::getDBO();
-    	$db->setQuery($query);
+	private function executeDbData($query, $transaction)
+	{
+		// Set Query string
+		$db =& JFactory::getDBO();
+		$db->setQuery($query);
 
-    	// Execute SQL query and return 'true' on success
-    	if (!$db->queryBatch(true, $transaction))
-    	{
-    		// Display error message because of failed SQL query and return 'false'
-    		JError::raiseError($this->db->_errorNum, '!!! Database query failed ' . $db->_errorMsg . ' !!!', $db->_errorMsg);
-    		return(false);
-    	}
-    	else
-    	{
-    		return(true);
-    	}
-    }
+		// Execute SQL query and return 'true' on success
+		if (!$db->queryBatch(true, $transaction))
+		{
+			// Display error message because of failed SQL query and return 'false'
+			JError::raiseError($this->db->_errorNum, '!!! Database query failed ' . $db->_errorMsg . ' !!!', $db->_errorMsg);
+			return(false);
+		}
+		else
+		{
+			return(true);
+		}
+	}
 
-    /**
+	/**
      * Inserts or updates data into a SQL table.
      *
      * This function inserts or updates data transaction-safe into a SQL table.
@@ -624,51 +630,51 @@ class THMGroupsModeledit extends JModelForm
      * @access  private
      * @return	bool              "true" on success, "false" on error.
      */
-    private function setDBInsertUpdate($table, $object, $insert, $update, $keyName)
-    {
-    	// Create and set SQL query string
-    	$valueList = array_keys($object[0]);
-    	$query = '';
+	private function setDBInsertUpdate($table, $object, $insert, $update, $keyName)
+	{
+		// Create and set SQL query string
+		$valueList = array_keys($object[0]);
+		$query = '';
 
-    	foreach ($object as $row)
-    	{
-    		$values = '';
+		foreach ($object as $row)
+		{
+			$values = '';
 
-    		foreach ($valueList as $key)
-    		{
-    			$values .= $key . ' = ' . $row[$key] . ',';
-    		}
-    		$values = trim($values, ', ');
+			foreach ($valueList as $key)
+			{
+				$values .= $key . ' = ' . $row[$key] . ',';
+			}
+			$values = trim($values, ', ');
 
-    		if ($insert)
-    		{
-    			$query .= 'INSERT INTO ' . $table;
-    		}
+			if ($insert)
+			{
+				$query .= 'INSERT INTO ' . $table;
+			}
 
-    		if ($update && !$insert)
-    		{
-    			$query .= 'UPDATE ' . $table;
-    		}
+			if ($update && !$insert)
+			{
+				$query .= 'UPDATE ' . $table;
+			}
 
-    		$query .= ' SET ' . $values;
+			$query .= ' SET ' . $values;
 
-    		if ($update && $insert)
-    		{
-    			$query .= ' ON DUPLICATE KEY UPDATE ' . $values;
-    		}
+			if ($update && $insert)
+			{
+				$query .= ' ON DUPLICATE KEY UPDATE ' . $values;
+			}
 
-    		if ($update && !$insert && !empty($keyName))
-    		{
-    			$query .= ' WHERE ' . $keyName . ' = ' . $row[$keyName];
-    		}
-    		$query .= ';';
-    	}
+			if ($update && !$insert && !empty($keyName))
+			{
+				$query .= ' WHERE ' . $keyName . ' = ' . $row[$keyName];
+			}
+			$query .= ';';
+		}
 
-    	// Encapsulate executeDbData() with transaction-safety enabled
-    	return($this->executeDbData($query, true));
-    }
+		// Encapsulate executeDbData() with transaction-safety enabled
+		return($this->executeDbData($query, true));
+	}
 
-    /**
+	/**
      * Sets data into database.
      *
      * This function Sets data with one or multiple transaction-safe SQL-commands supplied in one string.
@@ -678,9 +684,9 @@ class THMGroupsModeledit extends JModelForm
      * @access  private
      * @return	bool            "true" on success, "false" on error.
      */
-    public function setDbData($query)
-    {
-    	// Encapsulate executeDbData() with transaction-safety enabled
-    	return($this->executeDbData($query, true));
-    }
+	public function setDbData($query)
+	{
+		// Encapsulate executeDbData() with transaction-safety enabled
+		return($this->executeDbData($query, true));
+	}
 }

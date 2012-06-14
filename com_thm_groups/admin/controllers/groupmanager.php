@@ -51,10 +51,10 @@ class THMGroupsControllerGroupmanager extends JControllerForm
  	 */
 	public function edit()
 	{
-    	JRequest::setVar('view', 'editgroup');
-    	JRequest::setVar('layout', 'default');
-    	JRequest::setVar('hidemainmenu', 1);
-    	parent::display();
+		JRequest::setVar('view', 'editgroup');
+		JRequest::setVar('layout', 'default');
+		JRequest::setVar('hidemainmenu', 1);
+		parent::display();
 	}
 
 	/**
@@ -64,8 +64,8 @@ class THMGroupsControllerGroupmanager extends JControllerForm
 	 */
 	public function cancel()
 	{
-	    $msg = JText::_('Operation Cancelled');
-	    $this->setRedirect('index.php?option=com_thm_groups', $msg);
+		$msg = JText::_('Operation Cancelled');
+		$this->setRedirect('index.php?option=com_thm_groups', $msg);
 	}
 
 	/**
@@ -76,9 +76,9 @@ class THMGroupsControllerGroupmanager extends JControllerForm
 	public function addGroup()
 	{
 		JRequest::setVar('view', 'addgroup');
-    	JRequest::setVar('layout', 'default');
-    	JRequest::setVar('hidemainmenu', 1);
-    	parent::display();
+		JRequest::setVar('layout', 'default');
+		JRequest::setVar('hidemainmenu', 1);
+		parent::display();
 	}
 
 	/**
@@ -88,59 +88,59 @@ class THMGroupsControllerGroupmanager extends JControllerForm
 	 */
 	public function remove()
 	{
-	    $db =& JFactory::getDBO();
-    	$cid = JRequest::getVar('cid', array(), 'post', 'array');
+		$db =& JFactory::getDBO();
+		$cid = JRequest::getVar('cid', array(), 'post', 'array');
 
-    	$model = $this->getModel('groupmanager');
-    	$freeGroups = $model->getfreeGroups();
+		$model = $this->getModel('groupmanager');
+		$freeGroups = $model->getfreeGroups();
 
-    	$deleted = 0;
-    	foreach ($cid as $toDel)
-    	{
-    		foreach ($freeGroups as $canDel)
-    		{
-    			if ($toDel == $canDel->id && $canDel->injoomla == 0)
-    			{
-    				$model->delGroup($toDel);
+		$deleted = 0;
+		foreach ($cid as $toDel)
+		{
+			foreach ($freeGroups as $canDel)
+			{
+				if ($toDel == $canDel->id && $canDel->injoomla == 0)
+				{
+					$model->delGroup($toDel);
 
-    				// Realy? $model->delGroupJoomla($toDel);
-    				$deleted++;
-    			}
-    		}
-    	}
+					// Realy? $model->delGroupJoomla($toDel);
+					$deleted++;
+				}
+			}
+		}
 
-    	$delCount = count($cid);
-    	switch ($delCount)
-    	{
-    		case 0:
-    			$answer = "";
-    			break;
-    		case 1:
-    			if ($deleted == 1)
-    			{
-    				$answer = "Gruppe erfolgreich entfernt";
-    			}
-    			else
-    			{
-    				$answer = "Gruppe konnte nicht entfernt werden, Gruppe noch in Joomla vorhanden oder Gruppe besitzt noch Benutzer.";
-    			}
-    			break;
-    		default:
-    			if ($deleted == 0)
-    			{
-    				$answer = "Keine Gruppe konnte entfernt werden";
-    			}
-    			elseif ($deleted == $delCount)
-    			{
-    				$answer = "Alle Gruppen wurden erfolgreich entfernt";
-    			}
-    			else
-    			{
-    				$answer = "Nicht alle Gruppen konnten entfernt werden";
-    			}
-    			break;
-    	}
+		$delCount = count($cid);
+		switch ($delCount)
+		{
+			case 0:
+				$answer = "";
+				break;
+			case 1:
+				if ($deleted == 1)
+				{
+					$answer = "Gruppe erfolgreich entfernt";
+				}
+				else
+				{
+					$answer = "Gruppe konnte nicht entfernt werden, Gruppe noch in Joomla vorhanden oder Gruppe besitzt noch Benutzer.";
+				}
+				break;
+			default:
+				if ($deleted == 0)
+				{
+					$answer = "Keine Gruppe konnte entfernt werden";
+				}
+				elseif ($deleted == $delCount)
+				{
+					$answer = "Alle Gruppen wurden erfolgreich entfernt";
+				}
+				else
+				{
+					$answer = "Nicht alle Gruppen konnten entfernt werden";
+				}
+				break;
+		}
 
-    	$this->setRedirect('index.php?option=com_thm_groups&view=groupmanager', $answer);
+		$this->setRedirect('index.php?option=com_thm_groups&view=groupmanager', $answer);
 	}
 }

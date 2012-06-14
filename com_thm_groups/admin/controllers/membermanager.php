@@ -60,10 +60,10 @@ class THMGroupsControllermembermanager extends JController
  	 */
 	public function edit()
 	{
-    	JRequest::setVar('view', 'edit');
-    	JRequest::setVar('layout', 'forms');
-    	JRequest::setVar('hidemainmenu', 1);
-    	parent::display();
+		JRequest::setVar('view', 'edit');
+		JRequest::setVar('layout', 'forms');
+		JRequest::setVar('hidemainmenu', 1);
+		parent::display();
 	}
 
 	/**
@@ -71,22 +71,22 @@ class THMGroupsControllermembermanager extends JController
 	 *
 	 * @return void
 	 */
-    public function apply()
-    {
-    	$model = $this->getModel('edit');
-    	$id = JRequest::getVar('userid');
+	public function apply()
+	{
+		$model = $this->getModel('edit');
+		$id = JRequest::getVar('userid');
 
-    	if ($model->store())
-    	{
-    	    $msg = JText::_('Data Saved!');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('Error Saving');
-    	}
+		if ($model->store())
+		{
+			$msg = JText::_('Data Saved!');
+		}
+		else
+		{
+			$msg = JText::_('Error Saving');
+		}
 
-    	$this->setRedirect('index.php?option=com_thm_groups&task=membermanager.edit&cid[]=' . $id, $msg);
-    }
+		$this->setRedirect('index.php?option=com_thm_groups&task=membermanager.edit&cid[]=' . $id, $msg);
+	}
 
 	/**
   	 * Save
@@ -95,19 +95,19 @@ class THMGroupsControllermembermanager extends JController
  	 */
 	public function save()
 	{
-    	$model = $this->getModel('edit');
+		$model = $this->getModel('edit');
 
-    	if ($model->store())
-    	{
-    	    $msg = JText::_('Data Saved!');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('Error Saving');
-    	}
+		if ($model->store())
+		{
+			$msg = JText::_('Data Saved!');
+		}
+		else
+		{
+			$msg = JText::_('Error Saving');
+		}
 
-    	$link = 'index.php?option=com_thm_groups&view=membermanager';
-    	$this->setRedirect($link, $msg);
+		$link = 'index.php?option=com_thm_groups&view=membermanager';
+		$this->setRedirect($link, $msg);
 	}
 
 	/**
@@ -117,8 +117,8 @@ class THMGroupsControllermembermanager extends JController
  	 */
 	public function cancel()
 	{
-	    $msg = JText::_('Operation Cancelled');
-	    $this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
+		$msg = JText::_('Operation Cancelled');
+		$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
 	}
 
 	/**
@@ -129,18 +129,18 @@ class THMGroupsControllermembermanager extends JController
 	public function delPic()
 	{
 		$model = $this->getModel('edit');
-    	$id = JRequest::getVar('userid');
+		$id = JRequest::getVar('userid');
 
-    	if ($model->delPic())
-    	{
-    	    $msg = JText::_('Bild entfernt');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('Bild konnte nicht entfernt werden');
-    	}
+		if ($model->delPic())
+		{
+			$msg = JText::_('Bild entfernt');
+		}
+		else
+		{
+			$msg = JText::_('Bild konnte nicht entfernt werden');
+		}
 		$this->apply();
-    	$this->setRedirect('index.php?option=com_thm_groups&task=membermanager.edit&cid[]=' . $id, $msg);
+		$this->setRedirect('index.php?option=com_thm_groups&task=membermanager.edit&cid[]=' . $id, $msg);
 	}
 
 	/**
@@ -151,16 +151,16 @@ class THMGroupsControllermembermanager extends JController
 	public function addTableRow()
 	{
 		$model = $this->getModel('edit');
-    	$id = JRequest::getVar('userid');
+		$id = JRequest::getVar('userid');
 
-    	if ($model->addTableRow())
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_ROW_TO_TABLE');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_ROW_TO_TABLE_ERROR');
-    	}
+		if ($model->addTableRow())
+		{
+			$msg = JText::_('COM_THM_GROUPS_ROW_TO_TABLE');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_GROUPS_ROW_TO_TABLE_ERROR');
+		}
 		$this->apply();
 	}
 
@@ -172,16 +172,16 @@ class THMGroupsControllermembermanager extends JController
 	public function delTableRow()
 	{
 		$model = $this->getModel('edit');
-    	$id = JRequest::getVar('userid');
+		$id = JRequest::getVar('userid');
 
-    	if ($model->delTableRow())
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_DEL_TABLE_ROW');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_DEL_TABLE_ROW_ERROR');
-    	}
+		if ($model->delTableRow())
+		{
+			$msg = JText::_('COM_THM_GROUPS_DEL_TABLE_ROW');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_GROUPS_DEL_TABLE_ROW_ERROR');
+		}
 		$this->apply();
 	}
 
@@ -193,18 +193,18 @@ class THMGroupsControllermembermanager extends JController
 	public function editTableRow()
 	{
 		$model = $this->getModel('edit');
-    	$id = JRequest::getVar('userid');
+		$id = JRequest::getVar('userid');
 
-    	if ($model->editTableRow())
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_EDIT_TABLE_ROW');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_EDIT_TABLE_ROW_ERROR');
-    	}
+		if ($model->editTableRow())
+		{
+			$msg = JText::_('COM_THM_GROUPS_EDIT_TABLE_ROW');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_GROUPS_EDIT_TABLE_ROW_ERROR');
+		}
 
-    	$this->apply();
+		$this->apply();
 	}
 
 	/**
@@ -219,32 +219,32 @@ class THMGroupsControllermembermanager extends JController
 	public function setGroupsAndRoles()
 	{
 		// Get group-id
-    	$gid = JRequest::getVar('groups');
+		$gid = JRequest::getVar('groups');
 
-    	// Get role-id
-    	$rids = JRequest::getVar('roles');
+		// Get role-id
+		$rids = JRequest::getVar('roles');
 
-    	// Get user ids
-    	$uids = JRequest::getVar('cid', array(), 'post', 'array');
+		// Get user ids
+		$uids = JRequest::getVar('cid', array(), 'post', 'array');
 
-    	foreach ($rids as $rid)
-    	{
-    		// Add group and role relations and display result
-    		$model = $this->getModel('edit');
-    		if ($model->setGroupsAndRoles($uids, $gid, $rid))
-    		{
-    			$msg = JText::_('Benutzer zu Gruppe/Rollen hinzugefuegt!');
-    		}
-    		else
-    		{
-    			$msg = JText::_('Benutzer zu Gruppe/Rollen hinzufuegen fehlgeschlagen!');
-    		}
-    	}
+		foreach ($rids as $rid)
+		{
+			// Add group and role relations and display result
+			$model = $this->getModel('edit');
+			if ($model->setGroupsAndRoles($uids, $gid, $rid))
+			{
+				$msg = JText::_('Benutzer zu Gruppe/Rollen hinzugefuegt!');
+			}
+			else
+			{
+				$msg = JText::_('Benutzer zu Gruppe/Rollen hinzufuegen fehlgeschlagen!');
+			}
+		}
 
-    	$model = $this->getModel('membermanager');
-    	$model->addGroupToUser($uids, $gid);
+		$model = $this->getModel('membermanager');
+		$model->addGroupToUser($uids, $gid);
 
-        $this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
+		$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
 	}
 
 	/**
@@ -259,18 +259,18 @@ class THMGroupsControllermembermanager extends JController
 	public function delGroupsAndRoles()
 	{
 		// Get group-id
-    	$gid = JRequest::getVar('groups');
-    	$rids = JRequest::getVar('roles');
+		$gid = JRequest::getVar('groups');
+		$rids = JRequest::getVar('roles');
 
-    	// Get user ids
-    	$uids = JRequest::getVar('cid', array(), 'post', 'array');
+		// Get user ids
+		$uids = JRequest::getVar('cid', array(), 'post', 'array');
 
 		foreach ($rids as $rid)
 		{
 			// Delete group and role relations and display result
 			if (1 == $gid)
 			{
-	    		$msg = JText::_('++delGroupsAndRoles++Benutzer kann nicht aus Gruppe User entfernt werden!', true);
+				$msg = JText::_('++delGroupsAndRoles++Benutzer kann nicht aus Gruppe User entfernt werden!', true);
 			}
 			else
 			{
@@ -278,17 +278,17 @@ class THMGroupsControllermembermanager extends JController
 				if ($model->delGroupsAndRoles($uids, $gid, $rid))
 				{
 					$model = $this->getModel('membermanager');
-    				$model->delGroupsToUser($uids, $gid);
-	    			$msg = JText::_("++delGroupsAndRoles++Benutzer aus Gruppe entfernt! . '$uids[0]'", true);
+					$model->delGroupsToUser($uids, $gid);
+					$msg = JText::_("++delGroupsAndRoles++Benutzer aus Gruppe entfernt! . '$uids[0]'", true);
 				}
-	    		else
-	    		{
-	    			$msg = JText::_('++delGroupsAndRoles++Benutzer aus Gruppe/Rolle entfernen fehlgeschlagen!', true);
-	    		}
+				else
+				{
+					$msg = JText::_('++delGroupsAndRoles++Benutzer aus Gruppe/Rolle entfernen fehlgeschlagen!', true);
+				}
 			}
 		}
 
-        $this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
+		$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
 	}
 
 	/**
@@ -298,20 +298,20 @@ class THMGroupsControllermembermanager extends JController
  	 */
 	public function publish()
 	{
-    	$db =& JFactory::getDBO();
-    	$cid = JRequest::getVar('cid', array(), 'post', 'array');
-    	JArrayHelper::toInteger($cid);
-    	$cids = implode(',', $cid);
+		$db =& JFactory::getDBO();
+		$cid = JRequest::getVar('cid', array(), 'post', 'array');
+		JArrayHelper::toInteger($cid);
+		$cids = implode(',', $cid);
 
-    	$query = 'UPDATE #__thm_groups_additional_userdata'
-           . ' SET published = 1'
-           . ' WHERE userid IN ( ' . $cids . ' )';
+		$query = 'UPDATE #__thm_groups_additional_userdata'
+			. ' SET published = 1'
+			. ' WHERE userid IN ( ' . $cids . ' )';
 
-        $db->setQuery($query);
-        $db->query();
+		$db->setQuery($query);
+		$db->query();
 
-        $msg = JText::_('Benutzer published');
-        $this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
+		$msg = JText::_('Benutzer published');
+		$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
 
 	}
 
@@ -323,19 +323,19 @@ class THMGroupsControllermembermanager extends JController
 	public function unpublish()
 	{
 		$db =& JFactory::getDBO();
-    	$cid = JRequest::getVar('cid', array(), 'post', 'array');
-    	JArrayHelper::toInteger($cid);
-    	$cids = implode(',', $cid);
+		$cid = JRequest::getVar('cid', array(), 'post', 'array');
+		JArrayHelper::toInteger($cid);
+		$cids = implode(',', $cid);
 
-    	$query = 'UPDATE #__thm_groups_additional_userdata'
-           . ' SET published = 0'
-           . ' WHERE userid IN ( ' . $cids . ' )';
+		$query = 'UPDATE #__thm_groups_additional_userdata'
+			. ' SET published = 0'
+			. ' WHERE userid IN ( ' . $cids . ' )';
 
-        $db->setQuery($query);
-        $db->query();
+		$db->setQuery($query);
+		$db->query();
 
-        $msg = JText::_('Benutzer unpublished');
-        $this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
+		$msg = JText::_('Benutzer unpublished');
+		$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
 	}
 
 	/**
@@ -345,67 +345,67 @@ class THMGroupsControllermembermanager extends JController
 	 */
 	public function delete()
 	{
-	    $db =& JFactory::getDBO();
-    	$cid = JRequest::getVar('cid', array(), 'post', 'array');
-    	JArrayHelper::toInteger($cid);
-    	$cids = implode(',', $cid);
+		$db =& JFactory::getDBO();
+		$cid = JRequest::getVar('cid', array(), 'post', 'array');
+		JArrayHelper::toInteger($cid);
+		$cids = implode(',', $cid);
 
-  		foreach ($cid as $id)
-  		{
-    		$query = 'SELECT injoomla FROM #__thm_groups_additional_userdata'
-               		. ' WHERE userid= ' . $id;
+		foreach ($cid as $id)
+		{
+			$query = 'SELECT injoomla FROM #__thm_groups_additional_userdata'
+				. ' WHERE userid= ' . $id;
 
-        	$db->setQuery($query);
-        	$erg = $db->loadObjectList();
+			$db->setQuery($query);
+			$erg = $db->loadObjectList();
 
-    		if ($erg[0]->injoomla == '0')
-    		{
-		    	$query = 'DELETE FROM #__thm_groups_date'
-		               . ' WHERE userid = ' . $id . ';';
-		        $db->setQuery($query);
-		        $db->query();
+			if ($erg[0]->injoomla == '0')
+			{
+				$query = 'DELETE FROM #__thm_groups_date'
+					. ' WHERE userid = ' . $id . ';';
+				$db->setQuery($query);
+				$db->query();
 
-		        $query = 'DELETE FROM #__thm_groups_number'
-		               . ' WHERE userid = ' . $id . ';';
-		        $db->setQuery($query);
-		        $db->query();
+				$query = 'DELETE FROM #__thm_groups_number'
+					. ' WHERE userid = ' . $id . ';';
+				$db->setQuery($query);
+				$db->query();
 
-		        $query = 'DELETE FROM #__thm_groups_picture'
-		               . ' WHERE userid = ' . $id . ';';
-		        $db->setQuery($query);
-		        $db->query();
+				$query = 'DELETE FROM #__thm_groups_picture'
+					. ' WHERE userid = ' . $id . ';';
+				$db->setQuery($query);
+				$db->query();
 
-		        $query = 'DELETE FROM #__thm_groups_table'
-		               . ' WHERE userid = ' . $id . ';';
-		        $db->setQuery($query);
-		        $db->query();
+				$query = 'DELETE FROM #__thm_groups_table'
+					. ' WHERE userid = ' . $id . ';';
+				$db->setQuery($query);
+				$db->query();
 
-		        $query = 'DELETE FROM #__thm_groups_text'
-		               . ' WHERE userid = ' . $id . ';';
-		        $db->setQuery($query);
-		        $db->query();
+				$query = 'DELETE FROM #__thm_groups_text'
+					. ' WHERE userid = ' . $id . ';';
+				$db->setQuery($query);
+				$db->query();
 
-		        $query = 'DELETE FROM #__thm_groups_textfield'
-		               . ' WHERE userid = ' . $id . ';';
-		        $db->setQuery($query);
-		        $db->query();
+				$query = 'DELETE FROM #__thm_groups_textfield'
+					. ' WHERE userid = ' . $id . ';';
+				$db->setQuery($query);
+				$db->query();
 
-		        $query = 'DELETE FROM #__thm_groups_groups_map'
-		               . ' WHERE uid = ' . $id . ';';
+				$query = 'DELETE FROM #__thm_groups_groups_map'
+					. ' WHERE uid = ' . $id . ';';
 
-		        $db->setQuery($query);
-		        $db->query();
+				$db->setQuery($query);
+				$db->query();
 
-		        $msg = JText::_('Benutzer geloescht');
-    		}
+				$msg = JText::_('Benutzer geloescht');
+			}
 
-  			if ($erg[0]->injoomla == '1')
-  			{
-	  			$msg = JText::_('Eventuell konnten einige Benutzer nicht gel&ouml;scht werden, da sie noch im System registriert sind.');
-  			}
-  		}
+			if ($erg[0]->injoomla == '1')
+			{
+				$msg = JText::_('Eventuell konnten einige Benutzer nicht gel&ouml;scht werden, da sie noch im System registriert sind.');
+			}
+		}
 
-  	  	$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
+		$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
 	}
 
 	/**
@@ -415,36 +415,36 @@ class THMGroupsControllermembermanager extends JController
 	 */
 	public function delAllGrouprolesByUser()
 	{
-    	$gid = JRequest::getVar('g_id');
-    	$uid = array();
-    	$uid[0] = JRequest::getVar('u_id');
+		$gid = JRequest::getVar('g_id');
+		$uid = array();
+		$uid[0] = JRequest::getVar('u_id');
 
-    	$model = $this->getModel('membermanager');
+		$model = $this->getModel('membermanager');
 
 		$rids = $model->getGroupRolesByUser($uid[0], $gid);
 
 		if (1 == $gid)
 		{
-    		$msg = JText::_('XXdelAllGrouprolesByUserXXBenutzer kann nicht aus Gruppe User entfernt werden!', true);
+			$msg = JText::_('XXdelAllGrouprolesByUserXXBenutzer kann nicht aus Gruppe User entfernt werden!', true);
 		}
 		else
 		{
-    		$model->delGroupToUser($uid[0], $gid);
+			$model->delGroupToUser($uid[0], $gid);
 
 			foreach ($rids as $rid)
 			{
 				if ($model->delGroupsAndRoles($uid, $gid, $rid->rid))
 				{
-	    			$msg = JText::_("XXdelAllGrouprolesByUserXXBenutzer aus Gruppe entfernt! .$uid[0] ", true);
+					$msg = JText::_("XXdelAllGrouprolesByUserXXBenutzer aus Gruppe entfernt! .$uid[0] ", true);
 				}
-	    		else
-	    		{
-	    			$msg = JText::_('XXdelAllGrouprolesByUserXXBenutzer aus Gruppe/Rolle entfernen fehlgeschlagen!', true);
-	    		}
+				else
+				{
+					$msg = JText::_('XXdelAllGrouprolesByUserXXBenutzer aus Gruppe/Rolle entfernen fehlgeschlagen!', true);
+				}
 			}
 		}
 
-        $this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
+		$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
 	}
 
 	/**
@@ -454,29 +454,29 @@ class THMGroupsControllermembermanager extends JController
 	 */
 	public function delGrouproleByUser()
 	{
-    	$gid = JRequest::getVar('g_id');
-    	$uid = array();
-    	$uid[0] = JRequest::getVar('u_id');
-    	$rid = JRequest::getVar('r_id');
+		$gid = JRequest::getVar('g_id');
+		$uid = array();
+		$uid[0] = JRequest::getVar('u_id');
+		$rid = JRequest::getVar('r_id');
 
-    	$model = $this->getModel('membermanager');
+		$model = $this->getModel('membermanager');
 
 		if (1 == $gid)
 		{
-    		$msg = JText::_('##delGrouproleByUser##Benutzer kann nicht aus Gruppe User entfernt werden!', true);
+			$msg = JText::_('##delGrouproleByUser##Benutzer kann nicht aus Gruppe User entfernt werden!', true);
 		}
 		else
 		{
 			if ($model->delGroupsAndRoles($uid, $gid, $rid))
 			{
-    			$msg = JText::_('##delGrouproleByUser##Benutzerrolle aus Gruppe entfernt!', true);
+				$msg = JText::_('##delGrouproleByUser##Benutzerrolle aus Gruppe entfernt!', true);
 			}
-    		else
-    		{
-    			$msg = JText::_('##delGrouproleByUser##Benutzerrolle aus Gruppe entfernen fehlgeschlagen!', true);
-    		}
+			else
+			{
+				$msg = JText::_('##delGrouproleByUser##Benutzerrolle aus Gruppe entfernen fehlgeschlagen!', true);
+			}
 		}
 
-        $this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
+		$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
 	}
 }

@@ -53,7 +53,7 @@ class JFormFieldStructureSelect extends JFormField
 		// Add script-code to the document head
 		JHTML::script('structureselect.js', $scriptDir, false);
 
-     	// Initialize variables.
+		// Initialize variables.
 		$html = array();
 
 		// Initialize some field attributes.
@@ -63,24 +63,24 @@ class JFormFieldStructureSelect extends JFormField
 		$html[] = '<fieldset id="' . $this->name . '"' . $class . '>';
 
 		// Get selected items
-        $selected = $this->value;
+		$selected = $this->value;
 
-        // Parse selected items
-        $selectedItems = array();
-        if ($selected != "")
-        {
-	        foreach ($selected as $item)
-	        {
+		// Parse selected items
+		$selectedItems = array();
+		if ($selected != "")
+		{
+			foreach ($selected as $item)
+			{
 				$tempItem = array();
 				$tempItem['id'] = substr($item, 0, strlen($item) - 2);
 				$tempItem['showName'] = substr($item, -2, 1);
 				$tempItem['wrapAfter'] = substr($item, -1, 1);
 				$selectedItems[] = $tempItem;
-	        }
-        }
-        else
-        {
-        }
+			}
+		}
+		else
+		{
+		}
 
 		// Get the field options.
 		$options = $this->getOptions($selectedItems);

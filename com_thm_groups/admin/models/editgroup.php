@@ -72,8 +72,8 @@ class THMGroupsModelEditGroup extends JModelForm
 	public function _buildQuery()
 	{
 		$cid = JRequest::getVar('cid', array(0), '', 'array');
-        JArrayHelper::toInteger($cid, array(0));
-    	$query = "SELECT * FROM #__thm_groups_groups WHERE id=" . $cid[0];
+		JArrayHelper::toInteger($cid, array(0));
+		$query = "SELECT * FROM #__thm_groups_groups WHERE id=" . $cid[0];
 		return $query;
 	}
 
@@ -108,10 +108,10 @@ class THMGroupsModelEditGroup extends JModelForm
 		$err = 0;
 
 		$query = "UPDATE #__thm_groups_groups SET"
-		        . " name='" . $gr_name . "'"
-		        . ", info='" . $gr_info . "'"
-		        . ", mode='" . $gr_mode . "'"
-		        . " WHERE id=" . $gid;
+			. " name='" . $gr_name . "'"
+			. ", info='" . $gr_info . "'"
+			. ", mode='" . $gr_mode . "'"
+			. " WHERE id=" . $gid;
 
 		$db->setQuery($query);
 		if (!$db->query())
@@ -136,9 +136,9 @@ class THMGroupsModelEditGroup extends JModelForm
 		{
 		}
 
-		$query = "SELECT injoomla " .
-				 "FROM `#__thm_groups_groups` " .
-				 "WHERE id = " . $gid;
+		$query = "SELECT injoomla "
+			. "FROM `#__thm_groups_groups` "
+			. "WHERE id = " . $gid;
 		$db->setQuery($query);
 		$injoomla = $db->loadObject();
 		$injoomla = $injoomla->injoomla;

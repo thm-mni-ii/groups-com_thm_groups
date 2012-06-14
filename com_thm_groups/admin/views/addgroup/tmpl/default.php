@@ -66,15 +66,15 @@ JHTML::_('behavior.modal', 'a.modal-button');
 											}
 										}
 									}
-	            					echo "<option value=$group->id>";
-	            					while ($gap > 0)
-	            					{
-	            						$gap--;
-	            						echo "- ";
-	            					}
-	            					echo "$group->title </option>";
-	            				}
-            				?>
+									echo "<option value=$group->id>";
+									while ($gap > 0)
+									{
+										$gap--;
+										echo "- ";
+									}
+									echo "$group->title </option>";
+								}
+							?>
 
         				</select>
 					</td>
