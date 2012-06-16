@@ -99,6 +99,7 @@ class THMGroupsModelEditStructure extends JModel
 		$name = JRequest::getVar('name');
 		$relation = JRequest::getVar('relation');
 		$extra = JRequest::getVar($relation . '_extra');
+		$err = false;
 
 		$db =& JFactory::getDBO();
 		$query = "UPDATE #__thm_groups_structure SET"
@@ -109,7 +110,7 @@ class THMGroupsModelEditStructure extends JModel
 		$db->setQuery($query);
 		if (!$db->query())
 		{
-			$err = 1;
+			$err = true;
 		}
 
 		if (isset($extra))
@@ -122,7 +123,7 @@ class THMGroupsModelEditStructure extends JModel
 			$db->setQuery($query);
 			if (!$db->query())
 			{
-				$err = 1;
+				$err = true;
 			}
 		}
 
