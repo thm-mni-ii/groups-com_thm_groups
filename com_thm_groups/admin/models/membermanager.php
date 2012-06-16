@@ -542,4 +542,62 @@ class THMGroupsModelmembermanager extends JModelList
 
 		return $result;
 	}
+	
+	/**
+	 * Publishs an member
+	 *
+	 * @access  public
+	 * @return	bool          "true" on success, "false" on error.
+	 */
+	public function publish()
+	{
+		$db =& JFactory::getDBO();
+		$cid = JRequest::getVar('cid', array(), 'post', 'array');
+		JArrayHelper::toInteger($cid);
+		$cids = implode(',', $cid);
+		
+		$query = 'UPDATE #__thm_groups_additional_userdata'
+		. ' SET published = 1'
+		. ' WHERE userid IN ( ' . $cids . ' )';
+		
+		$db->setQuery($query);
+			
+		if($db->query());
+		{
+		 	return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	/**
+	 * Publishs an member
+	 *
+	 * @access  public
+	 * @return	bool          "true" on success, "false" on error.
+	 */
+	public function unpublish()
+	{
+		$db =& JFactory::getDBO();
+		$cid = JRequest::getVar('cid', array(), 'post', 'array');
+		JArrayHelper::toInteger($cid);
+		$cids = implode(',', $cid);
+		
+		$query = 'UPDATE #__thm_groups_additional_userdata'
+		. ' SET published = 0'
+		. ' WHERE userid IN ( ' . $cids . ' )';
+		
+		$db->setQuery($query);
+		
+		if($db->query());
+		{
+		 	return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

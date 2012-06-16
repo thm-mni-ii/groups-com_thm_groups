@@ -298,19 +298,17 @@ class THMGroupsControllermembermanager extends JController
  	 */
 	public function publish()
 	{
-		$db =& JFactory::getDBO();
-		$cid = JRequest::getVar('cid', array(), 'post', 'array');
-		JArrayHelper::toInteger($cid);
-		$cids = implode(',', $cid);
-
-		$query = 'UPDATE #__thm_groups_additional_userdata'
-			. ' SET published = 1'
-			. ' WHERE userid IN ( ' . $cids . ' )';
-
-		$db->setQuery($query);
-		$db->query();
-
-		$msg = JText::_('Benutzer published');
+		$model = $this->getModel('membermanager');
+		$result = $model->publish();
+		if($result)
+		{
+			$msg = JText::_('User published');
+		}
+		else
+		{
+			$msg = JText::_('User not published');
+		}
+		
 		$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
 
 	}
@@ -322,19 +320,17 @@ class THMGroupsControllermembermanager extends JController
  	 */
 	public function unpublish()
 	{
-		$db =& JFactory::getDBO();
-		$cid = JRequest::getVar('cid', array(), 'post', 'array');
-		JArrayHelper::toInteger($cid);
-		$cids = implode(',', $cid);
-
-		$query = 'UPDATE #__thm_groups_additional_userdata'
-			. ' SET published = 0'
-			. ' WHERE userid IN ( ' . $cids . ' )';
-
-		$db->setQuery($query);
-		$db->query();
-
-		$msg = JText::_('Benutzer unpublished');
+		$model = $this->getModel('membermanager');
+		$result = $model->unpublish();
+		if($result)
+		{
+			$msg = JText::_('User unpublished');
+		}
+		else
+		{
+			$msg = JText::_('User not unpublished');
+		}
+		
 		$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
 	}
 
