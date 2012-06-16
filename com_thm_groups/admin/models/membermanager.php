@@ -542,7 +542,7 @@ class THMGroupsModelmembermanager extends JModelList
 
 		return $result;
 	}
-	
+
 	/**
 	 * Publishs an member
 	 *
@@ -555,23 +555,25 @@ class THMGroupsModelmembermanager extends JModelList
 		$cid = JRequest::getVar('cid', array(), 'post', 'array');
 		JArrayHelper::toInteger($cid);
 		$cids = implode(',', $cid);
-		
+
 		$query = 'UPDATE #__thm_groups_additional_userdata'
 		. ' SET published = 1'
 		. ' WHERE userid IN ( ' . $cids . ' )';
-		
+
 		$db->setQuery($query);
-			
-		if($db->query());
+
+		if ($db->query())
 		{
-		 	return true;
+			$result = true;
 		}
 		else
 		{
-			return false;
+			$result = false;
 		}
+
+		return $result;
 	}
-	
+
 	/**
 	 * Publishs an member
 	 *
@@ -584,20 +586,22 @@ class THMGroupsModelmembermanager extends JModelList
 		$cid = JRequest::getVar('cid', array(), 'post', 'array');
 		JArrayHelper::toInteger($cid);
 		$cids = implode(',', $cid);
-		
+
 		$query = 'UPDATE #__thm_groups_additional_userdata'
 		. ' SET published = 0'
 		. ' WHERE userid IN ( ' . $cids . ' )';
-		
+
 		$db->setQuery($query);
-		
-		if($db->query());
+
+		if ($db->query())
 		{
-		 	return true;
+			$result = true;
 		}
 		else
 		{
-			return false;
+			$result = false;
 		}
+
+		return $result;
 	}
 }
