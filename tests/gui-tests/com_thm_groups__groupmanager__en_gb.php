@@ -25,8 +25,11 @@ class ComThmGroupsGroupmanagerEnGb extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTrue($this->isElementPresent("css=span.icon-32-delete"));
     $this->assertTrue($this->isElementPresent("link=Cancel"));
     $this->assertTrue($this->isElementPresent("css=span.icon-32-cancel"));
+    sleep(1);
     $this->assertTrue($this->isElementPresent("link=Back"));
+    sleep(1);
     $this->assertTrue($this->isElementPresent("css=span.icon-32-back"));
+    sleep(1);
     $this->click("link=Add Entry");
     $this->waitForPageToLoad("30000");
     $this->type("id=gr_name", "Testgroup");
@@ -34,11 +37,23 @@ class ComThmGroupsGroupmanagerEnGb extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("css=span.icon-32-save");
     $this->waitForPageToLoad("30000");
     $this->assertTrue($this->isTextPresent("Data Saved!"));
+    sleep(1);
     $this->assertTrue($this->isElementPresent("link=Testgroup"));
+    sleep(1);
     $this->assertTrue($this->isTextPresent("profile"));
+    sleep(1);
     $this->click("id=cb10");
     $this->click("css=span.icon-32-delete");
     $this->assertTrue((bool)preg_match('/^Are you sure to delete these groups[\s\S]$/',$this->getConfirmation()));
+    for ($second = 0; ; $second++) {
+    	if ($second >= 60) $this->fail("timeout");
+    	try {
+    		if ($this->isTextPresent("Gruppe konnte nicht entfernt werden")) break;
+    	} catch (Exception $e) {
+    	}
+    	echo $second;
+    	sleep(1);
+    }
     $this->assertTrue($this->isTextPresent("Gruppe konnte nicht entfernt werden"));
     $this->assertTrue($this->isElementPresent("link=Testgroup"));
     $this->click("link=Groups");
