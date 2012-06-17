@@ -31,8 +31,6 @@
  */
 class JElementStaffGroupSelect extends JElement
 {
-	var	$_name = 'StaffGroupSelect';
-
 	/**
 	 * fetchElement
 	 *

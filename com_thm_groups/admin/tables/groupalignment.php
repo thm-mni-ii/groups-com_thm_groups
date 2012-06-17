@@ -31,12 +31,6 @@
  */
 class TableGroupalignment extends JTable
 {
-	var $uid = null;
-
-	var $gname = null;
-
-	var $moderate = null;
-
 	/**
      * TableGroupalignment
      *

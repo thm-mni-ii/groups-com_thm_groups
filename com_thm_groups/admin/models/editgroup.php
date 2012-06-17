@@ -273,7 +273,8 @@ class THMGroupsModelEditGroup extends JModelForm
 		try
 		{
 			$pt = new PicTransform($_FILES[$picField]);
-			$pt->safeSpecial(JPATH_ROOT . DS . "components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS, "g" . $gid, 200, 200, "JPG");
+			$compath = "com_thm_groups";
+			$pt->safeSpecial(JPATH_ROOT . DS . "components" . DS . $compath . DS . "img" . DS . "portraits" . DS, "g" . $gid, 200, 200, "JPG");
 			if (JModuleHelper::isEnabled('mod_thm_groups')->id != 0)
 			{
 				$pt->safeSpecial(JPATH_ROOT . DS . "modules" . DS . "mod_thm_groups" . DS . "images" . DS, "g" . $gid, 200, 200, "JPG");

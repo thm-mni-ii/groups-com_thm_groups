@@ -71,7 +71,8 @@ class JFormFieldRoleItemSelect extends JFormField
 			$paramRoles = substr(
 				$params[0]->params,
 				stripos($params[0]->params, "sortedgrouproles") + strlen("':sortedgrouproles:"),
-				stripos(substr($params[0]->params, stripos($params[0]->params, "sortedgrouproles") + strlen("':sortedgrouproles:")), "\",\"menu-anchor_title")
+				$sort = "sortedgrouproles";
+				stripos(substr($params[0]->params, stripos($params[0]->params, $sort) + strlen("':sortedgrouproles:")), "\",\"menu-anchor_title")
 			);
 			$paramRoles = trim($paramRoles);
 		}

@@ -33,19 +33,6 @@ jimport('joomla.application.component.modellist');
  */
 class THMGroupsModelmembermanager extends JModelList
 {
-
-	/**
-   	 * Items total
-     * @var integer
-     */
-	var $_total = null;
-
-	/**
-  	 * Pagination object
-  	 * @var object
-  	 */
-	var $_pagination = null;
-
 	/**
   	 * Sync
   	 *
@@ -56,7 +43,8 @@ class THMGroupsModelmembermanager extends JModelList
 		$db =& JFactory::getDBO();
 		$query = "SELECT #__users.id, username, email, name, title "
 			. "FROM #__users, #__usergroups, #__user_usergroup_map "
-			. "WHERE #__users.id NOT IN (SELECT userid FROM #__thm_groups_additional_userdata) AND user_id = #__users.id AND group_id = #__usergroups.id";
+			. "WHERE #__users.id NOT IN (SELECT userid FROM #__thm_groups_additional_userdata)"
+			. " AND user_id = #__users.id AND group_id = #__usergroups.id";
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
 
@@ -285,7 +273,8 @@ class THMGroupsModelmembermanager extends JModelList
 		foreach ($uids as $uid)
 		{
 			$query = "SELECT COUNT(1) AS num "
-				. "FROM #__user_usergroup_map AS user INNER JOIN #__thm_groups_groups_map AS thm ON user.user_id = thm.uid AND user.group_id = thm.gid "
+				. "FROM #__user_usergroup_map AS user INNER JOIN #__thm_groups_groups_map AS thm "
+				. "ON user.user_id = thm.uid AND user.group_id = thm.gid "
 				. "WHERE user.user_id = $uid AND user.group_id = $gid";
 
 			$db->setQuery($query);
@@ -339,7 +328,7 @@ class THMGroupsModelmembermanager extends JModelList
 			$injoomla = $group->injoomla == 1 ? true : false;
 			if ($injoomla != $wasinjoomla)
 			{
-				$selectOptions[] = JHTML::_('select.option', -1, '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -', 'value', 'text', true);
+				$selectOptions[] = JHTML::_('select.option', -1, '- - - - - - - - - - - - - - - - - - - - - - - - - - - - -', 'value', 'text', true);
 			}
 
 			$tempgroup = $group;

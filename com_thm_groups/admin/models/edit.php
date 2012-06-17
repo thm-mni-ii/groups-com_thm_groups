@@ -246,7 +246,8 @@ class THMGroupsModeledit extends JModelForm
 			}
 			if (JModuleHelper::isEnabled('mod_thm_groups_smallview')->id != 0)
 			{
-				$pt->safeSpecial(JPATH_ROOT . DS . "modules" . DS . "mod_thm_groups_smallview" . DS . "images" . DS, $uid . "_" . $structid, 200, 200, "JPG");
+				$modpath = "mod_thm_groups_smallview";
+				$pt->safeSpecial(JPATH_ROOT . DS . "modules" . DS . $modpath . DS . "images" . DS, $uid . "_" . $structid, 200, 200, "JPG");
 			}
 		}
 		catch (Exception $e)
