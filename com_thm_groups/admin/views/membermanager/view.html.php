@@ -49,7 +49,11 @@ class THMGroupsViewmembermanager extends JView
 		$document   = & JFactory::getDocument();
 		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
 
-		JToolBarHelper::title(JText::_('COM_THM_GROUPS_MEMBERMANAGER_TITLE'), 'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png');
+		JToolBarHelper::title(
+				JText::_('COM_THM_GROUPS_MEMBERMANAGER_TITLE'),
+				'membermanager.png',
+				JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
+		);
 		JToolBarHelper::custom(
 			'membermanager.setGroupsAndRoles',
 			'moderate.png',

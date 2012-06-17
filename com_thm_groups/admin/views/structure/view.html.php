@@ -56,7 +56,10 @@ class THMGroupsViewStructure extends JView
 		$this->pagination	= $this->get('Pagination');
 		$this->state		= $this->get('State');
 
-		JToolBarHelper::title(JText::_('COM_THM_GROUPS_STRUCTURE_TITLE'), 'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png');
+		JToolBarHelper::title(
+				JText::_('COM_THM_GROUPS_STRUCTURE_TITLE'),
+				'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
+		);
 		JToolBarHelper::custom(
 			'structure.add',
 			'moderate.png',

@@ -106,7 +106,11 @@ $saveOrder	= $listOrder == 'a.order';
 									<?php echo $this->pagination->orderUpIcon($i, 1, 'structure.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?>
 								</span>
 								<span>
-									<?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, 1, 'structure.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?>
+									<?php 
+										echo $this->pagination->orderDownIcon(
+												$i, $this->pagination->total, 1, 'structure.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering
+												);
+									?>
 								</span>
 							<?php 
 							}
@@ -117,7 +121,11 @@ $saveOrder	= $listOrder == 'a.order';
 									<?php echo $this->pagination->orderUpIcon($i, 1, 'structure.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?>
 								</span>
 								<span>
-									<?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, 1, 'structure.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?>
+									<?php 
+										echo $this->pagination->orderDownIcon(
+												$i, $this->pagination->total, 1, 'structure.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering
+												);
+									?>
 								</span>
 							<?php 
 							}
