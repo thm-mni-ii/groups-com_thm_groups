@@ -300,7 +300,7 @@ class THMGroupsControllermembermanager extends JController
 	{
 		$model = $this->getModel('membermanager');
 		$result = $model->publish();
-		if($result)
+		if ($result)
 		{
 			$msg = JText::_('User published');
 		}
@@ -308,7 +308,7 @@ class THMGroupsControllermembermanager extends JController
 		{
 			$msg = JText::_('User not published');
 		}
-		
+
 		$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
 
 	}
@@ -322,7 +322,7 @@ class THMGroupsControllermembermanager extends JController
 	{
 		$model = $this->getModel('membermanager');
 		$result = $model->unpublish();
-		if($result)
+		if ($result)
 		{
 			$msg = JText::_('User unpublished');
 		}
@@ -330,7 +330,7 @@ class THMGroupsControllermembermanager extends JController
 		{
 			$msg = JText::_('User not unpublished');
 		}
-		
+
 		$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
 	}
 

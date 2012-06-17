@@ -8,22 +8,13 @@ class AllComThmGroupsGuiTests
 	{
 		$suite = new PHPUnit_Framework_TestSuite('Component THM Groups GUI Test');
 
-		$suite->addTestFile(__DIR__.'/F0010.php');
-		$suite->addTestFile(__DIR__.'/F01X0.php');
-		$suite->addTestFile(__DIR__.'/F0210.php');
-		$suite->addTestFile(__DIR__.'/F0220.php');
-		$suite->addTestFile(__DIR__.'/F0240.php');
-		$suite->addTestFile(__DIR__.'/F03X0.php');
-		$suite->addTestFile(__DIR__.'/F0450.php');
-		$suite->addTestFile(__DIR__.'/F0460.php');
-		$suite->addTestFile(__DIR__.'/F04X0.php');
-		$suite->addTestFile(__DIR__.'/F06X0.php');
-		$suite->addTestFile(__DIR__.'/F07X0.php');
-		$suite->addTestFile(__DIR__.'/F08X0.php');
-		$suite->addTestFile(__DIR__.'/F10X0.php');
-		$suite->addTestFile(__DIR__.'/F11X0.php');
-		$suite->addTestFile(__DIR__.'/F13X0.php');
-		$suite->addTestFile(__DIR__.'/F20X0.php');
+		$suite->addTestFile(__DIR__.'/com_thm_groups__administration_home__en_gb.php');
+		$suite->addTestFile(__DIR__.'/com_thm_groups__groupmanager__en_gb.php');
+		$suite->addTestFile(__DIR__.'/com_thm_groups__home__en_gb.php');
+		$suite->addTestFile(__DIR__.'/com_thm_groups__membermanager_1__en_gb.php');
+		//$suite->addTestFile(__DIR__.'/com_thm_groups__membermanager_2__en_gb.php');
+		$suite->addTestFile(__DIR__.'/com_thm_groups__rolemanager__en_gb.php');
+		//$suite->addTestFile(__DIR__.'/com_thm_groups__structure__en_gb.php');
 
 		return $suite;
 	}
