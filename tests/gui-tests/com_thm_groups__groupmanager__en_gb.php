@@ -13,10 +13,8 @@ class ComThmGroupsGroupmanagerEnGb extends PHPUnit_Extensions_SeleniumTestCase
     $this->type("id=mod-login-username", "admin");
     $this->type("id=mod-login-password", "adminadmin");
     $this->select("id=lang", "value=en-GB");
-    $this->click("link=Log in");
-    $this->waitForPageToLoad("30000");
-    $this->click("link=Groupmanager");
-    $this->waitForPageToLoad("30000");
+    $this->clickAndWait("link=Log in");
+    $this->clickAndWait("link=Groupmanager");
     $this->assertTrue($this->isElementPresent("link=Add Entry"));
     $this->assertTrue($this->isElementPresent("css=span.icon-32-moderate"));
     $this->assertTrue($this->isElementPresent("link=Edit Entry"));
@@ -25,26 +23,18 @@ class ComThmGroupsGroupmanagerEnGb extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTrue($this->isElementPresent("css=span.icon-32-delete"));
     $this->assertTrue($this->isElementPresent("link=Cancel"));
     $this->assertTrue($this->isElementPresent("css=span.icon-32-cancel"));
-    sleep(1);
     $this->assertTrue($this->isElementPresent("link=Back"));
-    sleep(1);
-    $this->assertTrue($this->isElementPresent("css=span.icon-32-back"));
-    sleep(1);
-    $this->click("link=Add Entry");
-    $this->waitForPageToLoad("30000");
+    $this->assertTrue($this->isElementPresent("css=span.icon-32-back"));	sleep(1);
+    $this->clickAndWait("link=Add Entry");
     $this->type("id=gr_name", "Testgroup");
     $this->removeSelection("id=gr_mode", "label=QUICKPAGE");
-    $this->click("css=span.icon-32-save");
-    $this->waitForPageToLoad("30000");
+    $this->clickAndWait("css=span.icon-32-save");
     $this->assertTrue($this->isTextPresent("Data Saved!"));
-    sleep(1);
     $this->assertTrue($this->isElementPresent("link=Testgroup"));
-    sleep(1);
-    $this->assertTrue($this->isTextPresent("profile"));
-    sleep(1);
-    $this->click("id=cb10");
-    $this->click("css=span.icon-32-delete");
-    $this->assertTrue((bool)preg_match('/^Are you sure to delete these groups[\s\S]$/',$this->getConfirmation()));
+    $this->assertTrue($this->isTextPresent("profile"));				sleep(1);
+    $this->click("id=cb8");
+    $this->clickAndWait("css=span.icon-32-delete");
+    $this->assertTrue((bool)preg_match('/^Are you sure to delete these groups[\s\S]$/',$this->getConfirmation()));	sleep(1);
     for ($second = 0; ; $second++) {
     	if ($second >= 60) $this->fail("timeout");
     	try {
@@ -54,19 +44,15 @@ class ComThmGroupsGroupmanagerEnGb extends PHPUnit_Extensions_SeleniumTestCase
     	echo $second;
     	sleep(1);
     }
-    $this->assertTrue($this->isTextPresent("Gruppe konnte nicht entfernt werden"));
+    $this->assertTrue($this->isTextPresent("Gruppe konnte nicht entfernt werden"));	sleep(1);
     $this->assertTrue($this->isElementPresent("link=Testgroup"));
-    $this->click("link=Groups");
-    $this->waitForPageToLoad("30000");
-    $this->click("id=cb10");
-    $this->click("link=Delete");
-    $this->waitForPageToLoad("30000");
+    $this->clickAndWait("link=Groups");
+    $this->click("id=cb8");
+    $this->clickAndWait("link=Delete");
     $this->assertTrue($this->isTextPresent("One User Group successfully deleted"));
-    $this->click("link=Groupmanager");
-    $this->waitForPageToLoad("30000");
+    $this->clickAndWait("link=Groupmanager");
     $this->assertFalse($this->isElementPresent("link=Testgroup"));
-    $this->click("link=Log out");
-    $this->waitForPageToLoad("30000");
+    $this->clickAndWait("link=Log out");
   }
 }
 ?>
