@@ -9,7 +9,7 @@ class ComThmGroupsStructureEnGb extends PHPUnit_Extensions_SeleniumTestCase
 
   public function testMyTestCase()
   {
-    $this->open("/joomla25/administrator/index.php");
+    $this->open("/joomla/administrator/index.php");
     $this->type("id=mod-login-username", "admin");
     $this->type("id=mod-login-password", "adminadmin");
     $this->select("id=lang", "value=en-GB");
