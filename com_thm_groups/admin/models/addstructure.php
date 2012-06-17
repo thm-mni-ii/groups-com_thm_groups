@@ -39,8 +39,11 @@ class THMGroupsModelAddStructure extends JModel
 	 */
 	public function _buildQuery()
 	{
-		$query = "SELECT * "
-			. "FROM #__thm_groups_relationtable";
+		/*
+			$query = "SELECT * FROM #__thm_groups_relationtable";
+		 */
+		$query->select('*');
+		$query->from($db->qn('#__thm_groups_relationtable'));
 
 		return $query;
 	}
@@ -72,16 +75,29 @@ class THMGroupsModelAddStructure extends JModel
 		$db =& JFactory::getDBO();
 		$err = 0;
 
+		/*
 		$query = "SELECT a.order FROM #__thm_groups_structure as a ORDER BY a.order DESC";
+		*/
+		$query->select('order');
+		$query->from($db->qn('#__thm_groups_structure'));
+		$query->order('order DESC');
+
 		$db->setQuery($query);
 		$maxOrder = $db->loadObject();
 		$newOrder = $maxOrder->order + 1;
 
+		/*
 		$query = "INSERT INTO #__thm_groups_structure ( `id`, `field`, `type`, `order`)"
 			. " VALUES (null"
 			. ", '" . $name . "'"
 			. ", '" . $relation . "'"
 			. ", " . ($newOrder) . ")";
+		*/
+		$query->insert($db->qn('#__thm_groups_structure'));
+		$query->set('id = null');
+		$query->set('field = ' . $name);
+		$query->set('type = ' . $relation);
+		$query->set('order = ' . ($newOrder));
 
 		$db->setQuery($query);
 		if ($db->query())
@@ -96,9 +112,14 @@ class THMGroupsModelAddStructure extends JModel
 
 		if (isset($extra))
 		{
-			$query = "INSERT INTO #__thm_groups_" . strtolower($relation) . "_extra ( `structid`, `value`)"
+			/*
+				$query = "INSERT INTO #__thm_groups_" . strtolower($relation) . "_extra ( `structid`, `value`)"
 				. " VALUES ($id"
 				. ", '" . $extra . "')";
+			*/
+			$query->insert($db->qn('#__thm_groups_' . strtolower($relation) . '_extra'));
+			$query->set('structid = ' . $id);
+			$query->set('value = ' . $extra);
 
 			$db->setQuery($query);
 			if (!$db->query())

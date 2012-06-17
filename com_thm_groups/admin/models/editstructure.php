@@ -39,9 +39,12 @@ class THMGroupsModelEditStructure extends JModel
 	 */
 	public function _buildQuery()
 	{
-		$query = "SELECT * "
+		/*
+			$query = "SELECT * "
 			. "FROM #__thm_groups_relationtable";
-
+		*/
+		$query->select('*');
+		$query->from($db->qn('#__thm_groups_relationtable'));
 		return $query;
 	}
 
@@ -66,7 +69,12 @@ class THMGroupsModelEditStructure extends JModel
 	{
 		$db = & JFactory::getDBO();
 		$id = JRequest::getVar('cid');
-		$query = "SELECT * FROM #__thm_groups_structure WHERE id=$id[0]";
+		/*
+			$query = "SELECT * FROM #__thm_groups_structure WHERE id=$id[0]";
+		*/
+		$query->select('*');
+		$query->from($db->qn('#__thm_groups_structure'));
+		$query->where('id = ' . $id[0]);
 		$db->setQuery($query);
 		return $db->loadObject();
 	}
@@ -82,7 +90,12 @@ class THMGroupsModelEditStructure extends JModel
 	{
 		$db = & JFactory::getDBO();
 		$id = JRequest::getVar('sid');
-		$query = "SELECT value FROM #__thm_groups_" . strtolower($relation) . "_extra WHERE structid=$id";
+		/*
+			$query = "SELECT value FROM #__thm_groups_" . strtolower($relation) . "_extra WHERE structid=$id";
+		*/
+		$query->select('value');
+		$query->from($db->qn('#__thm_groups_' . strtolower($relation) . '_extra'));
+		$query->where('structid = ' . $id);
 		$db->setQuery($query);
 		return $db->loadObject();
 	}
@@ -102,11 +115,16 @@ class THMGroupsModelEditStructure extends JModel
 		$err = false;
 
 		$db =& JFactory::getDBO();
-		$query = "UPDATE #__thm_groups_structure SET"
+		/*
+			$query = "UPDATE #__thm_groups_structure SET"
 			. " field='" . $name . "'"
 			. ", type='" . $relation . "'"
 			. " WHERE id=" . $id[0];
-
+		*/
+		$query->update($db->qn('#__thm_groups_structure'));
+		$query->set('field = ' . $name);
+		$query->set('type = ' . $relation);
+		$query->where('id = ' . $id[0]);
 		$db->setQuery($query);
 		if (!$db->query())
 		{
@@ -115,11 +133,16 @@ class THMGroupsModelEditStructure extends JModel
 
 		if (isset($extra))
 		{
-			$query = "INSERT INTO #__thm_groups_" . strtolower($relation) . "_extra ( `structid`, `value`)"
+			/*
+				$query = "INSERT INTO #__thm_groups_" . strtolower($relation) . "_extra ( `structid`, `value`)"
 				. " VALUES ($id[0]"
 				. ", '" . $extra . "')"
 				. " ON DUPLICATE KEY UPDATE"
 				. " value='" . $extra . "'";
+			*/
+			$query->insert($db->qn('#__thm_groups_' . strtolower($relation) . '_extra'));
+			$query->values($id[0], $extra . ' ON DUPLICATE KEY UPDATE value=' . $extra);
+
 			$db->setQuery($query);
 			if (!$db->query())
 			{
