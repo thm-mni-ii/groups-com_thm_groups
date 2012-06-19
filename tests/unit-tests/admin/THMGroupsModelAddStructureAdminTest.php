@@ -98,7 +98,6 @@ class THMGroupsModelAddStructureAdminTest extends PHPUnit_Framework_TestCase
 		JRequest::set($array, 'post');
 
 		$result = $this->instance->store();
-
 		$db =& JFactory::getDBO();
 		$query = "DELETE FROM #__thm_groups_structure WHERE field = 'THMGroupsTestSuite'";
 		$db->setQuery($query);

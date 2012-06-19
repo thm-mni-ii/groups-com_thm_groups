@@ -25,31 +25,31 @@
 }
 
 .descriptiontext {
-    float: left;
-    width: 60%;
+	float: left;
+	width: 60%;
 }
 
 #gimenu1 {
-    border: 0px solid #ABB1C0;
-    margin-bottom: 30px;
-    padding: 5px;
+	border: 0px solid #ABB1C0;
+	margin-bottom: 30px;
+	padding: 5px;
 }
 
 .icon {
-    border: 1px solid #ABB1C0;
-    margin: 3px;
-    margin-right: 10px;
-    width: 106px;
-    padding-bottom: 5px;
-    float: left;
+	border: 1px solid #ABB1C0;
+	margin: 3px;
+	margin-right: 10px;
+	width: 106px;
+	padding-bottom: 5px;
+	float: left;
 }
 
 .menuitem {
-    float: left;
+	float: left;
 }
 
 .menudescription {
-    margin: 10px;
+	margin: 10px;
 }
 
 #gimenu1 div.icon:hover{

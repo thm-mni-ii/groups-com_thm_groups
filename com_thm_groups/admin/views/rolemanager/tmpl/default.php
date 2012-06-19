@@ -44,7 +44,7 @@ $listDirn	= $this->state->get('list.direction');
 	for ($i = 0, $n = count($this->items); $i < $n; $i++)
 	{
 		$row = $this->items[$i];
-        $link = 'index.php?option=com_thm_groups&view=editrole&task=rolemanager.edit&cid=' . $row->id;
+		$link = 'index.php?option=com_thm_groups&view=editrole&task=rolemanager.edit&cid=' . $row->id;
 		$checked = JHTML::_('grid.id',   $i, $row->id);
 		?>
 		<tr class="<?php echo "row$k"; ?>">
@@ -54,7 +54,6 @@ $listDirn	= $this->state->get('list.direction');
 				<?php echo $row->rname; ?>
 				</a>
 			</td>
-		    </td>
 		</tr>
 		<?php
 			$k = 1 - $k;

@@ -41,51 +41,51 @@ class THMGroupsModelStructure extends JModelList
 	public function remove()
 	{
 		$db =& JFactory::getDBO();
-    	$cid = JRequest::getVar('cid', array(), 'post', 'array');
+		$cid = JRequest::getVar('cid', array(), 'post', 'array');
 		$err = 0;
 
-    	foreach ($cid as $toDel)
-    	{
-    		if ($toDel > 4)
-    		{
-    			$query = "SELECT type FROM #__thm_groups_structure WHERE `id` = " . $toDel . "; ";
-    			 echo $query;
-    			$db->setQuery($query);
-			    $type = $db->loadObject();
+		foreach ($cid as $toDel)
+		{
+			if ($toDel > 4)
+			{
+				$query = "SELECT type FROM #__thm_groups_structure WHERE `id` = " . $toDel . "; ";
+				echo $query;
+				$db->setQuery($query);
+				$type = $db->loadObject();
 
-    			$query = "DELETE FROM #__thm_groups_structure WHERE `id` = " . $toDel . "; ";
-    			$db->setQuery($query);
-			        if (!$db->query())
-			        {
-			        	$err = 1;
-			        }
-			    $query = "DELETE FROM "
-			    . "#__thm_groups_" . $type->type . "_extra "
-			    . "WHERE `structid` = " . $toDel . "; ";
-			    $db->setQuery($query);
-			        if (!$db->query())
-			        {
-			        	$err = 1;
-			        }
+				$query = "DELETE FROM #__thm_groups_structure WHERE `id` = " . $toDel . "; ";
+				$db->setQuery($query);
+				if (!$db->query())
+				{
+					$err = 1;
+				}
+				$query = "DELETE FROM "
+					. "#__thm_groups_" . $type->type . "_extra "
+					. "WHERE `structid` = " . $toDel . "; ";
+				$db->setQuery($query);
+				if (!$db->query())
+				{
+					$err = 1;
+				}
 
-			    $query = "DELETE FROM "
-			    . "#__thm_groups_" . $type->type
-			    . " WHERE `structid` = " . $toDel . "; ";
-			    $db->setQuery($query);
-			        if (!$db->query())
-			        {
-			        	$err = 1;
-			        }
-    		}
-    	}
-        if (!$err)
-        {
-        	return true;
-        }
-        else
-        {
-        	return false;
-        }
+				$query = "DELETE FROM "
+					. "#__thm_groups_" . $type->type
+					. " WHERE `structid` = " . $toDel . "; ";
+				$db->setQuery($query);
+				if (!$db->query())
+				{
+					$err = 1;
+				}
+			}
+		}
+		if (!$err)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	/**
@@ -98,49 +98,49 @@ class THMGroupsModelStructure extends JModelList
 	public function reorder($direction = null)
 	{
 		$db =& JFactory::getDBO();
-    	$cid = JRequest::getVar('cid', array(), 'post', 'array');
-    	$order = JRequest::getVar('order', array(), 'post', 'array');
+		$cid = JRequest::getVar('cid', array(), 'post', 'array');
+		$order = JRequest::getVar('order', array(), 'post', 'array');
 		$err = 0;
 
 		if (isset($direction))
 		{
 			$query = "SELECT a.order FROM #__thm_groups_structure as a WHERE `id` = " . $cid[0] . "; ";
-    		$db->setQuery($query);
-    		$itemOrder = $db->loadObject();
+			$db->setQuery($query);
+			$itemOrder = $db->loadObject();
 
-    		if ($direction == -1)
-    		{
-    			$query = "UPDATE #__thm_groups_structure as a SET"
-	       		. " a.order=" . $itemOrder->order
-	       	 	. " WHERE a.order=" . ($itemOrder->order - 1);
-	        	$db->setQuery($query);
-				if (!$db->query())
-				{
-				    $err = 1;
-				}
+			if ($direction == -1)
+			{
 				$query = "UPDATE #__thm_groups_structure as a SET"
-	       		. " a.order=" . ($itemOrder->order - 1)
-	       	 	. " WHERE a.id=" . $cid[0];
-	        	$db->setQuery($query);
+					. " a.order=" . $itemOrder->order
+					. " WHERE a.order=" . ($itemOrder->order - 1);
+				$db->setQuery($query);
 				if (!$db->query())
 				{
 					$err = 1;
 				}
-    		}
-    		elseif ($direction = 1)
-    		{
-    			$query = "UPDATE #__thm_groups_structure as a SET"
-	       		. " a.order=" . $itemOrder->order
-	       	 	. " WHERE a.order=" . ($itemOrder->order + 1);
-	        	$db->setQuery($query);
+				$query = "UPDATE #__thm_groups_structure as a SET"
+					. " a.order=" . ($itemOrder->order - 1)
+					. " WHERE a.id=" . $cid[0];
+				$db->setQuery($query);
 				if (!$db->query())
 				{
-				    $err = 1;
+					$err = 1;
+				}
+			}
+			elseif ($direction = 1)
+			{
+				$query = "UPDATE #__thm_groups_structure as a SET"
+					. " a.order=" . $itemOrder->order
+					. " WHERE a.order=" . ($itemOrder->order + 1);
+				$db->setQuery($query);
+				if (!$db->query())
+				{
+					$err = 1;
 				}
 				$query = "UPDATE #__thm_groups_structure as a SET"
-	       		. " a.order=" . ($itemOrder->order + 1)
-	       	 	. " WHERE a.id=" . $cid[0];
-	        	$db->setQuery($query);
+					. " a.order=" . ($itemOrder->order + 1)
+					. " WHERE a.id=" . $cid[0];
+				$db->setQuery($query);
 				if (!$db->query())
 				{
 					$err = 1;
@@ -153,24 +153,24 @@ class THMGroupsModelStructure extends JModelList
 			foreach ($order as $itemOrder)
 			{
 				$query = "UPDATE #__thm_groups_structure as a SET"
-		       		. " a.order=" . ($itemOrder)
-		       	 	. " WHERE a.id=" . $cid[$i];
-		        	$db->setQuery($query);
-					if (!$db->query())
-					{
-					    $err = 1;
-					}
+					. " a.order=" . ($itemOrder)
+					. " WHERE a.id=" . $cid[$i];
+				$db->setQuery($query);
+				if (!$db->query())
+				{
+					$err = 1;
+				}
 				$i++;
 			}
 		}
-        if (!$err)
-        {
-        	return true;
-        }
-        else
-        {
-        	return false;
-        }
+		if (!$err)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	/**

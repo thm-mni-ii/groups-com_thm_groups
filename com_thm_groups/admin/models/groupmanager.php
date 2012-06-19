@@ -78,20 +78,20 @@ class THMGroupsModelGroupmanager extends JModelList
 
 		// MySQL Variante eines FULL JOIN
 		$query = "SELECT thm.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla ";
-		$query .= "FROM jos_usergroups AS joo ";
+		$query .= "FROM #__usergroups AS joo ";
 		$query .= "RIGHT JOIN (";
 		$query .= "  SELECT * ";
-		$query .= "  FROM jos_thm_groups_groups ";
+		$query .= "  FROM #__thm_groups_groups ";
 		$query .= "  WHERE injoomla = 0 ";
 		$query .= "  ORDER BY $orderCol $orderDirn";
 		$query .= ") AS thm ";
 		$query .= "ON joo.id = thm.id ";
 		$query .= "UNION ";
 		$query .= "SELECT joo.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla ";
-		$query .= "FROM jos_usergroups AS joo ";
+		$query .= "FROM #__usergroups AS joo ";
 		$query .= "LEFT JOIN (";
 		$query .= "  SELECT * ";
-		$query .= "  FROM jos_thm_groups_groups ";
+		$query .= "  FROM #__thm_groups_groups ";
 		$query .= "  ORDER BY $orderCol $orderDirn";
 		$query .= ") AS thm ";
 		$query .= "ON joo.id = thm.id ";
@@ -158,5 +158,41 @@ class THMGroupsModelGroupmanager extends JModelList
 		$query = "DELETE FROM #__thm_groups_groups WHERE id=" . $gid;
 		$db->setQuery($query);
 		$db->Query();
+	}
+
+	/**
+	 * Method to delete group
+	 *
+	 * @param   Int  $gid  GroupID
+	 *
+	 * @return 2-dim Array in form of [gid][uid's]
+	 */
+	public function delGroupJoomla($gid)
+	{
+		if ($gid == 1)
+		{
+			return;
+		}
+		$db =& JFactory::getDBO();
+		$query = "DELETE FROM #__usergroups WHERE id=" . $gid;
+		$db->setQuery($query);
+		$db->Query();
+	}
+
+	/**
+	 * Method to delete group
+	 *
+	 * @param   Int  $gid  GroupID
+	 *
+	 * @return count
+	 */
+	public function getGroupUserCount($gid)
+	{
+		$db =& JFactory::getDBO();
+		$query = "SELECT * FROM  `mni_thm_groups_groups_map` WHERE `gid` = " . $gid;
+		$db->setQuery($query);
+		$db->Query();
+
+		return $db->getNumRows();
 	}
 }

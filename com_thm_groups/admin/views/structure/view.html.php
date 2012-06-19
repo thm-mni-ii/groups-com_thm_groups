@@ -56,8 +56,18 @@ class THMGroupsViewStructure extends JView
 		$this->pagination	= $this->get('Pagination');
 		$this->state		= $this->get('State');
 
-		JToolBarHelper::title(JText::_('COM_THM_GROUPS_STRUCTURE_TITLE'), 'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png');
-		JToolBarHelper::custom('structure.add', 'moderate.png', JPATH_COMPONENT . DS . 'img' . DS . 'moderate.png', 'COM_THM_GROUPS_STRUCTURE_ADD', false, false);
+		JToolBarHelper::title(
+				JText::_('COM_THM_GROUPS_STRUCTURE_TITLE'),
+				'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
+		);
+		JToolBarHelper::custom(
+			'structure.add',
+			'moderate.png',
+			JPATH_COMPONENT . DS . 'img' . DS . 'moderate.png',
+			'COM_THM_GROUPS_STRUCTURE_ADD',
+			false,
+			false
+		);
 		JToolBarHelper::editListX('structure.edit', 'COM_THM_GROUPS_STRUCTURE_EDIT');
 		JToolBarHelper::deleteList('COM_THM_GROUPS_REALLY_DELETE', 'structure.remove', 'JTOOLBAR_DELETE');
 		JToolBarHelper::cancel('structure.cancel', 'JTOOLBAR_CANCEL');

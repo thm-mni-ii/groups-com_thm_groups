@@ -39,10 +39,15 @@ class THMGroupsModelAddStructure extends JModel
 	 */
 	public function _buildQuery()
 	{
-		$query = "SELECT * "
-    	. "FROM #__thm_groups_relationtable";
+		/*
+			$query = "SELECT * FROM #__thm_groups_relationtable";
+		 */
+		$db =& JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from($db->qn('#__thm_groups_relationtable'));
 
-		return $query;
+		return $query->__toString();
 	}
 
 	/**
@@ -68,52 +73,65 @@ class THMGroupsModelAddStructure extends JModel
 		$name = JRequest::getVar('name');
 		$relation = JRequest::getVar('relation');
 		$extra = JRequest::getVar($relation . '_extra');
-
-		$db =& JFactory::getDBO();
 		$err = 0;
 
+		/*
 		$query = "SELECT a.order FROM #__thm_groups_structure as a ORDER BY a.order DESC";
+		*/
+		$db =& JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('a.order');
+		$query->from($db->qn('#__thm_groups_structure') . " AS a");
+		$query->order('a.order DESC');
 		$db->setQuery($query);
 		$maxOrder = $db->loadObject();
 		$newOrder = $maxOrder->order + 1;
 
-		$query = "INSERT INTO #__thm_groups_structure ( `id`, `field`, `type`, `order`)"
-        . " VALUES (null"
-        . ", '" . $name . "'"
-        . ", '" . $relation . "'"
-        . ", " . ($newOrder) . ")";
+		/*$query1 = "INSERT INTO `#__thm_groups_structure` (`id`, `field`, `type`, `order`)"
+			. " VALUES (null"
+			. ", '" . $name . "'"
+			. ", '" . $relation . "'"
+			. ", " . ($newOrder) . ")";
+		*/
+		$query = $db->getQuery(true);
+		$query->insert("`#__thm_groups_structure` (`id`, `field`, `type`, `order`)");
+		$query->values("NULL, '" . $name . "', '" . $relation . "', '" . ($newOrder) . "'");
+		$db->setQuery($query);
+		if ($db->query())
+		{
+			$id = $db->insertid();
+			JRequest::setVar('cid[]', $id, 'get');
+		}
+		else
+		{
+			$err = 1;
+		}
 
-        $db->setQuery($query);
-        if ($db->query())
-        {
-            $id = $db->insertid();
-       		JRequest::setVar('cid[]', $id, 'get');
-        }
-        else
-        {
-        	$err = 1;
-        }
+		if (isset($extra))
+		{
+			/*
+				$query = "INSERT INTO #__thm_groups_" . strtolower($relation) . "_extra ( `structid`, `value`)"
+				. " VALUES ($id"
+				. ", '" . $extra . "')";
+			*/
+			$query = $db->getQuery(true);			
+			$query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`)");
+			$query->values("'" . $id . "', '" . $extra . "'");
 
-        if (isset($extra))
-        {
-	        $query = "INSERT INTO #__thm_groups_" . strtolower($relation) . "_extra ( `structid`, `value`)"
-	        . " VALUES ($id"
-	        . ", '" . $extra . "')";
+			$db->setQuery($query);
+			if (!$db->query())
+			{
+				$err = 1;
+			}
+		}
 
-	        $db->setQuery($query);
-	        if (!$db->query())
-	        {
-	        	$err = 1;
-	        }
-        }
-
-        if (!$err)
-        {
-        	return true;
-        }
-        else
-        {
-        	return false;
-        }
+		if (!$err)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

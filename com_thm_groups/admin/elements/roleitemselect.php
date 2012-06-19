@@ -63,54 +63,67 @@ class JFormFieldRoleItemSelect extends JFormField
 
 		if (isset($id))
 		{
-      		$queryParams = "SELECT params FROM `#__menu` WHERE id=" . $id;
-	        $db =& JFactory::getDBO();
-	        $db->setQuery($queryParams);
-	        $params = $db->loadObjectList();
+			$queryParams = "SELECT params FROM `#__menu` WHERE id=" . $id;
+			$db =& JFactory::getDBO();
+			$db->setQuery($queryParams);
+			$params = $db->loadObjectList();
+			$sort = "sortedgrouproles";
 
-        	$paramRoles = substr($params[0]->params, stripos($params[0]->params, "sortedgrouproles") + strlen("':sortedgrouproles:"), stripos(substr($params[0]->params, stripos($params[0]->params, "sortedgrouproles") + strlen("':sortedgrouproles:")), "\",\"menu-anchor_title"));
-       		$paramRoles = trim($paramRoles);
+			$paramRoles = substr(
+				$params[0]->params,
+				stripos($params[0]->params, "sortedgrouproles") + strlen("':sortedgrouproles:"),
+				stripos(substr($params[0]->params, stripos($params[0]->params, $sort) + strlen("':sortedgrouproles:")), "\",\"menu-anchor_title")
+			);
+			$paramRoles = trim($paramRoles);
 		}
 
-        $arrParamRoles = explode(",", $paramRoles);
-        $queryRoles = "SELECT id, name FROM `#__thm_groups_roles` Order by name";
-        $db =& JFactory::getDBO();
-        $db->setQuery($queryRoles);
-        $listR = $db->loadObjectList();
+		$arrParamRoles = explode(",", $paramRoles);
+		$queryRoles = "SELECT id, name FROM `#__thm_groups_roles` Order by name";
+		$db =& JFactory::getDBO();
+		$db->setQuery($queryRoles);
+		$listR = $db->loadObjectList();
 
-      	$html = '<select name="' . $this->name . '" size="5" id="paramsroleid" class = "selGroup" style="display:block"">';
-        	foreach ($arrParamRoles as $sortedRole)
-        	{
-        		if ($sortedRole == 0)
-        		{
-        			$html .= '<option value=0>Keine Rollen fuer diese Gruppe</option>';
-        			$sortButtons = false;
-        		}
-        		else
-        		{
-		        	foreach ($listR as $roleRow)
-		        	{
-		          		if ($roleRow->id == $sortedRole)
-		          		{
-		            		$html .= '<option value=' . $roleRow->id . ' >' . $roleRow->name . ' </option>';
-		          		}
-		        	}
-        		}
-        	}
+		$html = '<select name="' . $this->name . '" size="5" id="paramsroleid" class = "selGroup" style="display:block"">';
+		foreach ($arrParamRoles as $sortedRole)
+		{
+			if ($sortedRole == 0)
+			{
+				$html .= '<option value=0>Keine Rollen fuer diese Gruppe</option>';
+				$sortButtons = false;
+			}
+			else
+			{
+				foreach ($listR as $roleRow)
+				{
+					if ($roleRow->id == $sortedRole)
+					{
+						$html .= '<option value=' . $roleRow->id . ' >' . $roleRow->name . ' </option>';
+					}
+				}
+			}
+		}
 
-      	$html .= '</select>';
-      	if ($sortButtons)
-      	{
-	      	$html .= '<a onclick="roleup()" id="sortup"><img src="../administrator/components/com_thm_groups/img/uparrow.png" title="Rolle eine Position h&ouml;her" /></a>';
-	      	$html .= '<a onclick="roledown()" id="sortdown"><img src="../administrator/components/com_thm_groups/img/downarrow.png" title="Rolle eine Position niedriger" /></a>';
-      	}
-      	else
-      	{
-      		$html .= '<a onclick="roleup()" id="sortup" style="visibility:hidden"><img src="../administrator/components/com_thm_groups/img/uparrow.png" title="Rolle eine Position h&ouml;her" /></a><br />';
-	      	$html .= '<a onclick="roledown()" id="sortdown" style="visibility:hidden"><img src="../administrator/components/com_thm_groups/img/downarrow.png" title="Rolle eine Position niedriger" /></a>';
-      	}
-      	$html .= '<!--<input type="hidden" name="jform[params][sortedgrouproles]" id="sortedgrouproles" value="' . $paramRoles . '" />-->';
+		$html .= '</select>';
+		if ($sortButtons)
+		{
+			$html .= '<a onclick="roleup()" id="sortup">'
+				. '<img src="../administrator/components/com_thm_groups/img/uparrow.png" title="Rolle eine Position h&ouml;her" />'
+				. '</a>';
+			$html .= '<a onclick="roledown()" id="sortdown">'
+				. '<img src="../administrator/components/com_thm_groups/img/downarrow.png" title="Rolle eine Position niedriger" />'
+				. '</a>';
+		}
+		else
+		{
+			$html .= '<a onclick="roleup()" id="sortup" style="visibility:hidden">'
+				. '<img src="../administrator/components/com_thm_groups/img/uparrow.png" title="Rolle eine Position h&ouml;her" />'
+				. '</a><br />';
+			$html .= '<a onclick="roledown()" id="sortdown" style="visibility:hidden">'
+				. '<img src="../administrator/components/com_thm_groups/img/downarrow.png" title="Rolle eine Position niedriger" />'
+				. '</a>';
+		}
+		$html .= '<!--<input type="hidden" name="jform[params][sortedgrouproles]" id="sortedgrouproles" value="' . $paramRoles . '" />-->';
 
-     	return $html;
+		return $html;
 	}
 }

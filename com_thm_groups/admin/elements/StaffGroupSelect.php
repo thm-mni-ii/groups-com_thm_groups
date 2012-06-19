@@ -31,8 +31,6 @@
  */
 class JElementStaffGroupSelect extends JElement
 {
-	var	$_name = 'StaffGroupSelect';
-
 	/**
 	 * fetchElement
 	 *
@@ -45,26 +43,32 @@ class JElementStaffGroupSelect extends JElement
 	 */
 	public function fetchElement($name, $value, &$node, $control_name)
 	{
-        $queryGroup = "SELECT id,name FROM `#__giessen_staff_groups`";
-        $db =& JFactory::getDBO();
-        $db->setQuery($queryGroup);
-        $listG = $db->loadObjectList();
+		$queryGroup = "SELECT id,name FROM `#__giessen_staff_groups`";
+		$db =& JFactory::getDBO();
+		$db->setQuery($queryGroup);
+		$listG = $db->loadObjectList();
 
-        $html = '<select name="' . $control_name . '[' . $name . ']' . '" size="5" id="' . $control_name . $name . '" class = "selGroup" style="display:block"">';
+		$html = '<select name="'
+			. $control_name
+			. '[' . $name . ']'
+			. '" size="5" id="'
+			. $control_name
+			. $name
+			. '" class = "selGroup" style="display:block"">';
 
-          foreach ($listG as $groupRow)
-          {
-          	 if ($groupRow->id == $value)
-          	 {
-               $html .= '<option value=' . $groupRow->id . ' selected="selected" >' . $groupRow->id . '. -' . $groupRow->name . ' </option>';
-          	 }
-          	 else
-          	 {
-          	   $html .= '<option value=' . $groupRow->id . '>' . $groupRow->id . '. -' . $groupRow->name . '</option>';
-          	 }
-          }
+		foreach ($listG as $groupRow)
+		{
+			if ($groupRow->id == $value)
+			{
+				$html .= '<option value=' . $groupRow->id . ' selected="selected" >' . $groupRow->id . '. -' . $groupRow->name . ' </option>';
+			}
+			else
+			{
+				$html .= '<option value=' . $groupRow->id . '>' . $groupRow->id . '. -' . $groupRow->name . '</option>';
+			}
+		}
 
-      $html .= '</select>';
-      return $html;
+		$html .= '</select>';
+		return $html;
 	}
 }

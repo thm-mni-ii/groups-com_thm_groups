@@ -58,10 +58,10 @@ class THMGroupsControllerAddStructure extends JControllerForm
  	 */
 	public function edit()
 	{
-    	JRequest::setVar('view', 'editstructure');
-    	JRequest::setVar('layout', 'default');
-    	JRequest::setVar('hidemainmenu', 1);
-    	parent::display();
+		JRequest::setVar('view', 'editstructure');
+		JRequest::setVar('layout', 'default');
+		JRequest::setVar('hidemainmenu', 1);
+		parent::display();
 	}
 
 	/**
@@ -69,23 +69,23 @@ class THMGroupsControllerAddStructure extends JControllerForm
 	 *
 	 * @return void
 	 */
-    public function apply()
-    {
-    	$model = $this->getModel('addstructure');
+	public function apply()
+	{
+		$model = $this->getModel('addstructure');
 
-    	if ($model->store())
-    	{
-    	    $msg = JText::_('Data Saved!');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('Error Saving');
-    	}
+		if ($model->store())
+		{
+			$msg = JText::_('Data Saved!');
+		}
+		else
+		{
+			$msg = JText::_('Error Saving');
+		}
 
-    	$id = JRequest::getVar('cid[]');
+		$id = JRequest::getVar('cid[]');
 
-    	$this->setRedirect('index.php?option=com_thm_groups&task=addstructure.edit&cid[]=' . $id, $msg);
-    }
+		$this->setRedirect('index.php?option=com_thm_groups&task=addstructure.edit&cid[]=' . $id, $msg);
+	}
 
 	/**
   	 * Save
@@ -94,18 +94,18 @@ class THMGroupsControllerAddStructure extends JControllerForm
  	 */
 	public function save()
 	{
-    	$model = $this->getModel('addstructure');
+		$model = $this->getModel('addstructure');
 
-    	if ($model->store())
-    	{
-    	    $msg = JText::_('Data Saved!');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('Error Saving');
-    	}
+		if ($model->store())
+		{
+			$msg = JText::_('Data Saved!');
+		}
+		else
+		{
+			$msg = JText::_('Error Saving');
+		}
 
-    	$this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
+		$this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
 	}
 
 	/**
@@ -117,16 +117,16 @@ class THMGroupsControllerAddStructure extends JControllerForm
 	{
 		$model = $this->getModel('addstructure');
 
-    	if ($model->store())
-    	{
-    	    $msg = JText::_('Data Saved!');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('Error Saving');
-    	}
+		if ($model->store())
+		{
+			$msg = JText::_('Data Saved!');
+		}
+		else
+		{
+			$msg = JText::_('Error Saving');
+		}
 
-    	$this->setRedirect('index.php?option=com_thm_groups&view=addstructure', $msg);
+		$this->setRedirect('index.php?option=com_thm_groups&view=addstructure', $msg);
 	}
 
 	/**
@@ -136,8 +136,8 @@ class THMGroupsControllerAddStructure extends JControllerForm
  	 */
 	public function cancel()
 	{
-	    $msg = JText::_('CANCEL');
-	    $this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
+		$msg = JText::_('CANCEL');
+		$this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
 	}
 
 	/**
@@ -160,9 +160,9 @@ class THMGroupsControllerAddStructure extends JControllerForm
 				. "type='text' name='" . $field . "_extra' "
 				. "id='" . $field . "_extra' "
 				. "size='40'"
-       			. "value='' "
-			  	. "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT") . "' "
-			  	. "/>";
+				. "value='' "
+				. "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT") . "' "
+				. "/>";
 				break;
 			case "TEXTFIELD":
 				$output .= "<input "
@@ -170,9 +170,9 @@ class THMGroupsControllerAddStructure extends JControllerForm
 				. "type='text' name='" . $field . "_extra' "
 				. "id='" . $field . "_extra' "
 				. "size='40'"
-       			. "value='' "
-			  	. "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXTFIELD") . "' "
-			  	. "/>";
+				. "value='' "
+				. "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXTFIELD") . "' "
+				. "/>";
 				break;
 			case "TABLE":
 				$output .= "<textarea "
@@ -194,9 +194,9 @@ class THMGroupsControllerAddStructure extends JControllerForm
 				. "type='text' name='" . $field . "_extra' "
 				. "id='" . $field . "_extra' "
 				. "size='40'"
-       			. "value='' "
-			  	. "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE") . "' "
-			  	. "/>";
+				. "value='' "
+				. "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE") . "' "
+				. "/>";
 				break;
 		}
 		echo $output;
@@ -219,38 +219,38 @@ class THMGroupsControllerAddStructure extends JControllerForm
 			case "TEXT":
 			case "TEXT":
 				$output = "<span title='"
-						  . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT")
-						  . "'>"
-						  . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_SIZE")
-						  . ":</span>";
+					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT")
+					. "'>"
+					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_SIZE")
+					. ":</span>";
 				break;
 			case "TEXTFIELD":
 				$output = "<span title='"
-						  . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXTFIELD")
-						  . "'>"
-						  . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_ROWS")
-						  . ":</span>";
+					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXTFIELD")
+					. "'>"
+					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_ROWS")
+					. ":</span>";
 				break;
 			case "TABLE":
 				$output = "<span title='"
-						  . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TABLE")
-						  . "'>"
-						  . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_FIELDS")
-						  . ":</span>";
+					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TABLE")
+					. "'>"
+					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_FIELDS")
+					. ":</span>";
 				break;
 			case "MULTISELECT":
 				$output = "<span title='"
-						  . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_MULTISELECT")
-						  . "'>"
-						  . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_FIELDS")
-						  . ":</span>";
+					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_MULTISELECT")
+					. "'>"
+					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_FIELDS")
+					. ":</span>";
 				break;
 			case "PICTURE":
 				$output = "<span title='"
-						  . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE")
-						  . "'>"
-						  . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT")
-						  . ":</span>";
+					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE")
+					. "'>"
+					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT")
+					. ":</span>";
 				break;
 			default :
 				$output = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_NO_PARAMS") . "...";

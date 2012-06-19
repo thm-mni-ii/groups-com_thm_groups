@@ -48,6 +48,9 @@ $listDirn = $this->state->get('list.direction');
 			<th width="5%" align="center">
 				<?php echo JHTML::_('grid.sort', 'ID', 'picture', $listDirn, $listOrder); ?>
 			</th>
+			<th width="5%" align="center">
+				<?php echo JHTML::_('grid.sort', 'Users in group', 'picture', $listDirn, $listOrder); ?>
+			</th>
 			<th width="5%" nowrap="nowrap">
 				<?php echo JHTML::_('grid.sort', 'in Joomla', 'injoomla', $listDirn, $listOrder); ?>
 			</th>
@@ -60,7 +63,7 @@ $listDirn = $this->state->get('list.direction');
 	for ($i = 0, $n = count($this->items); $i < $n; $i++)
 	{
 		$row = $this->items[$i];
-        $link = 'index.php?option=com_thm_groups&view=editgroup&task=groupmanager.edit&cid=' . $row->id;
+		$link = 'index.php?option=com_thm_groups&view=editgroup&task=groupmanager.edit&cid=' . $row->id;
 		$checked = JHTML::_('grid.id', $i, $row->id);
 
 		?>
@@ -101,9 +104,14 @@ $listDirn = $this->state->get('list.direction');
 				</a>
 			</td>
 			<td> <?php echo $row->info; ?> </td>
-			<td> <?php echo $row->picture?>
-			<td> <?php echo $row->mode?>
-			<td> <?php echo $row->id?>
+			<td> <?php echo $row->picture?> </td>
+			<td> <?php echo $row->mode?> </td>
+			<td align="center"> <?php echo $row->id?> </td>
+			<td align="center"> 
+			<?php 
+				echo $this->model->getGroupUserCount($row->id);
+			?> 
+			</td>
 			<td valign="top" align="center">
 			<?php 
 			if ($row->injoomla == '0')
@@ -115,7 +123,6 @@ $listDirn = $this->state->get('list.direction');
 				echo JHtml::_('jgrid.published', 1, 'groupmanager.', 1);
 			}
 			?></td>
-		    </td>
 		</tr>
 		<?php
 			$k = 1 - $k;

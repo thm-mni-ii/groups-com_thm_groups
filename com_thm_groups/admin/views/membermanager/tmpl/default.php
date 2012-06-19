@@ -159,7 +159,13 @@ $listDirn	= $this->state->get('list.direction');
 			</td>
 			<td width="24%">
 				<button onclick="this.form.submit();"><?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_BUTTON_GO'); ?></button>
-				<button onclick="this.form.getElementById('search').value='';this.form.getElementById('groupFilters').value='0';this.form.getElementById('rolesFilters').value='0';this.form.submit();">
+				<?php
+				$onclickpath = "this.form.getElementById('search').value='';"
+				. "this.form.getElementById('groupFilters').value='0';"
+				. "this.form.getElementById('rolesFilters').value='0';"
+				. "this.form.submit();";
+				?>
+				<button onclick="<?php echo $onclickpath; ?>">
 				<?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_BUTTON_RESET'); ?>
 				</button>
 			</td>
@@ -229,7 +235,12 @@ $listDirn	= $this->state->get('list.direction');
 
 					if ($this->grcheckon)
 					{
-						if (($grouprole->roleid == $this->rolesFilters || $this->rolesFilters == 0) && ($grouprole->groupid == $this->groupFilters || $this->groupFilters == 0))
+						$grole_rid = $grouprole->roleid;
+						$grole_gid = $grouprole->groupid;
+						$r_filt = $this->rolesFilters;
+						$g_filt = $this->groupFilters;
+
+						if (($grole_rid == $r_filt || $r_filt == 0) && ($grole_gid == $g_filt || $g_filt == 0))
 						{
 							if ($groupname == $grouprole->groupname)
 							{

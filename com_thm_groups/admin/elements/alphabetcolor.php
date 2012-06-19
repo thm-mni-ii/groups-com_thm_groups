@@ -71,8 +71,8 @@ function change_<?php echo $this->fieldname?>(){
 </script>
 <?php
 
-        $html = "<input id='" . $this->name . "' name='" . $this->name . "' type='text' size='13' value='"
-        . $this->value . "' style='background-color:" . $this->value . ";' onfocus='change_" . $this->fieldname . "()'/>";
-     	return $html;
+		$html = "<input id='" . $this->name . "' name='" . $this->name . "' type='text' size='13' value='"
+		. $this->value . "' style='background-color:" . $this->value . ";' onfocus='change_" . $this->fieldname . "()'/>";
+		return $html;
 	}
 }

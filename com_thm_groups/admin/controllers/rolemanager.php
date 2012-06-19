@@ -50,10 +50,10 @@ class THMGroupsControllerRolemanager extends JControllerForm
  	 */
 	public function edit()
 	{
-    	JRequest::setVar('view', 'editrole');
-    	JRequest::setVar('layout', 'default');
-    	JRequest::setVar('hidemainmenu', 1);
-    	parent::display();
+		JRequest::setVar('view', 'editrole');
+		JRequest::setVar('layout', 'default');
+		JRequest::setVar('hidemainmenu', 1);
+		parent::display();
 	}
 
 	/**
@@ -63,8 +63,8 @@ class THMGroupsControllerRolemanager extends JControllerForm
 	 */
 	public function cancel()
 	{
-	    $msg = JText::_('Operation Cancelled');
-	    $this->setRedirect('index.php?option=com_thm_groups', $msg);
+		$msg = JText::_('Operation Cancelled');
+		$this->setRedirect('index.php?option=com_thm_groups', $msg);
 	}
 
 	/**
@@ -75,9 +75,9 @@ class THMGroupsControllerRolemanager extends JControllerForm
 	public function addRole()
 	{
 		JRequest::setVar('view', 'addrole');
-    	JRequest::setVar('layout', 'default');
-    	JRequest::setVar('hidemainmenu', 1);
-    	parent::display();
+		JRequest::setVar('layout', 'default');
+		JRequest::setVar('hidemainmenu', 1);
+		parent::display();
 	}
 
 	/**
@@ -87,14 +87,14 @@ class THMGroupsControllerRolemanager extends JControllerForm
 	 */
 	public function remove()
 	{
-    	$cid = JRequest::getVar('cid', array(), 'post', 'array');
+		$cid = JRequest::getVar('cid', array(), 'post', 'array');
 
-    	$model = $this->getModel();
-    	foreach ($cid as $toDel)
-    	{
-    		$model->delRole($toDel);
-    	}
+		$model = $this->getModel();
+		foreach ($cid as $toDel)
+		{
+			$model->delRole($toDel);
+		}
 
-    	$this->setRedirect('index.php?option=com_thm_groups&view=rolemanager', "Rolle(n) erfolgreich entfernt");
+		$this->setRedirect('index.php?option=com_thm_groups&view=rolemanager', "Rolle(n) erfolgreich entfernt");
 	}
 }

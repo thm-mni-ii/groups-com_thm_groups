@@ -31,19 +31,13 @@
  */
 class TableGroupalignment extends JTable
 {
-    var $uid = null;
-
-	var $gname = null;
-
-    var $moderate = null;
-
-    /**
+	/**
      * TableGroupalignment
      *
      * @param   Object  &$db  Database
      */
-    public function TableGroupalignment(&$db)
-    {
-        parent::__construct('#__giessen_staff_groups', 'id', $db);
-    }
+	public function TableGroupalignment(&$db)
+	{
+		parent::__construct('#__giessen_staff_groups', 'id', $db);
+	}
 }

@@ -52,10 +52,10 @@ class THMGroupsControllerAddGroup extends JControllerForm
  	 */
 	public function edit()
 	{
-    	JRequest::setVar('view', 'editgroup');
-    	JRequest::setVar('layout', 'default');
-    	JRequest::setVar('hidemainmenu', 1);
-    	parent::display();
+		JRequest::setVar('view', 'editgroup');
+		JRequest::setVar('layout', 'default');
+		JRequest::setVar('hidemainmenu', 1);
+		parent::display();
 	}
 
 	/**
@@ -63,23 +63,23 @@ class THMGroupsControllerAddGroup extends JControllerForm
 	 *
 	 * @return void
 	 */
-    public function apply()
-    {
-    	$model = $this->getModel('addgroup');
+	public function apply()
+	{
+		$model = $this->getModel('addgroup');
 
-    	if ($model->store())
-    	{
-    	    $msg = JText::_('Data Saved!');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('Error Saving');
-    	}
+		if ($model->store())
+		{
+			$msg = JText::_('Data Saved!');
+		}
+		else
+		{
+			$msg = JText::_('Error Saving');
+		}
 
-    	$id = JRequest::getVar('cid[]');
+		$id = JRequest::getVar('cid[]');
 
-    	$this->setRedirect('index.php?option=com_thm_groups&task=addgroup.edit&cid[]=' . $id, $msg);
-    }
+		$this->setRedirect('index.php?option=com_thm_groups&task=addgroup.edit&cid[]=' . $id, $msg);
+	}
 
 	/**
   	 * Save
@@ -88,18 +88,18 @@ class THMGroupsControllerAddGroup extends JControllerForm
  	 */
 	public function save()
 	{
-    	$model = $this->getModel('addgroup');
+		$model = $this->getModel('addgroup');
 
-    	if ($model->store())
-    	{
-    	    $msg = JText::_('Data Saved!');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('Error Saving');
-    	}
+		if ($model->store())
+		{
+			$msg = JText::_('Data Saved!');
+		}
+		else
+		{
+			$msg = JText::_('Error Saving');
+		}
 
-    	$this->setRedirect('index.php?option=com_thm_groups&view=groupmanager', $msg);
+		$this->setRedirect('index.php?option=com_thm_groups&view=groupmanager', $msg);
 	}
 
 	/**
@@ -111,16 +111,16 @@ class THMGroupsControllerAddGroup extends JControllerForm
 	{
 		$model = $this->getModel('addgroup');
 
-    	if ($model->store())
-    	{
-    	    $msg = JText::_('Data Saved!');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('Error Saving');
-    	}
+		if ($model->store())
+		{
+			$msg = JText::_('Data Saved!');
+		}
+		else
+		{
+			$msg = JText::_('Error Saving');
+		}
 
-    	$this->setRedirect('index.php?option=com_thm_groups&view=addgroup', $msg);
+		$this->setRedirect('index.php?option=com_thm_groups&view=addgroup', $msg);
 	}
 
 	/**
@@ -130,7 +130,7 @@ class THMGroupsControllerAddGroup extends JControllerForm
  	 */
 	public function cancel()
 	{
-	    $msg = JText::_('CANCEL');
-	    $this->setRedirect('index.php?option=com_thm_groups&view=groupmanager', $msg);
+		$msg = JText::_('CANCEL');
+		$this->setRedirect('index.php?option=com_thm_groups&view=groupmanager', $msg);
 	}
 }

@@ -52,10 +52,10 @@ class THMGroupsControllerEditgroup extends JControllerForm
  	 */
 	public function edit()
 	{
-    	JRequest::setVar('view', 'editgroup');
-    	JRequest::setVar('layout', 'default');
-    	JRequest::setVar('hidemainmenu', 1);
-    	parent::display();
+		JRequest::setVar('view', 'editgroup');
+		JRequest::setVar('layout', 'default');
+		JRequest::setVar('hidemainmenu', 1);
+		parent::display();
 	}
 
 	/**
@@ -65,19 +65,19 @@ class THMGroupsControllerEditgroup extends JControllerForm
 	 */
 	public function apply()
 	{
-    	$model = $this->getModel('editgroup');
+		$model = $this->getModel('editgroup');
 		$id = JRequest::getVar('gid');
 
 		if ($model->store())
 		{
-    	    $msg = JText::_('Data Saved!');
+			$msg = JText::_('Data Saved!');
 		}
-    	else
-    	{
-    	    $msg = JText::_('Error Saving');
-    	}
+		else
+		{
+			$msg = JText::_('Error Saving');
+		}
 
-    	$this->setRedirect('index.php?option=com_thm_groups&task=editgroup.edit&cid[]=' . $id, $msg);
+		$this->setRedirect('index.php?option=com_thm_groups&task=editgroup.edit&cid[]=' . $id, $msg);
 	}
 
 	/**
@@ -87,18 +87,18 @@ class THMGroupsControllerEditgroup extends JControllerForm
 	 */
 	public function save()
 	{
-    	$model = $this->getModel('editgroup');
+		$model = $this->getModel('editgroup');
 
-    	if ($model->store())
-    	{
-    	    $msg = JText::_('Data Saved!');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('Error Saving');
-    	}
+		if ($model->store())
+		{
+			$msg = JText::_('Data Saved!');
+		}
+		else
+		{
+			$msg = JText::_('Error Saving');
+		}
 
-    	$this->setRedirect('index.php?option=com_thm_groups&view=groupmanager', $msg);
+		$this->setRedirect('index.php?option=com_thm_groups&view=groupmanager', $msg);
 	}
 
 	/**
@@ -110,16 +110,16 @@ class THMGroupsControllerEditgroup extends JControllerForm
 	{
 		$model = $this->getModel('editgroup');
 
-    	if ($model->store())
-    	{
-    	    $msg = JText::_('Data Saved!');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('Error Saving');
-    	}
+		if ($model->store())
+		{
+			$msg = JText::_('Data Saved!');
+		}
+		else
+		{
+			$msg = JText::_('Error Saving');
+		}
 
-    	$this->setRedirect('index.php?option=com_thm_groups&view=addgroup', $msg);
+		$this->setRedirect('index.php?option=com_thm_groups&view=addgroup', $msg);
 	}
 
 	/**
@@ -129,8 +129,8 @@ class THMGroupsControllerEditgroup extends JControllerForm
 	 */
 	public function cancel()
 	{
-	    $msg = JText::_('CANCEL');
-	    $this->setRedirect('index.php?option=com_thm_groups&view=groupmanager', $msg);
+		$msg = JText::_('CANCEL');
+		$this->setRedirect('index.php?option=com_thm_groups&view=groupmanager', $msg);
 	}
 
 	/**
@@ -141,18 +141,18 @@ class THMGroupsControllerEditgroup extends JControllerForm
 	public function delPic()
 	{
 		$model = $this->getModel('editgroup');
-    	$id = JRequest::getVar('gid');
+		$id = JRequest::getVar('gid');
 
-    	if ($model->delPic())
-    	{
-    	    $msg = JText::_('Bild entfernt');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('Bild konnte nicht entfernt werden');
-    	}
+		if ($model->delPic())
+		{
+			$msg = JText::_('Bild entfernt');
+		}
+		else
+		{
+			$msg = JText::_('Bild konnte nicht entfernt werden');
+		}
 
 		// $this->apply();
-    	$this->setRedirect('index.php?option=com_thm_groups&task=editgroup.edit&cid[]=' . $id, $msg);
+		$this->setRedirect('index.php?option=com_thm_groups&task=editgroup.edit&cid[]=' . $id, $msg);
 	}
 }

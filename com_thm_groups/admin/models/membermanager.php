@@ -33,31 +33,22 @@ jimport('joomla.application.component.modellist');
  */
 class THMGroupsModelmembermanager extends JModelList
 {
-
 	/**
-   	 * Items total
-     * @var integer
-     */
-  	var $_total = null;
-
-  	/**
-  	 * Pagination object
-  	 * @var object
-  	 */
-  	var $_pagination = null;
-
-  	/**
   	 * Sync
   	 *
   	 * @return void
   	 */
 	public function sync()
 	{
-		$query = "SELECT #__users.id, username, email, name, title FROM #__users, #__usergroups, #__user_usergroup_map WHERE #__users.id NOT IN (SELECT userid FROM #__thm_groups_additional_userdata) AND user_id = #__users.id AND group_id = #__usergroups.id";
-		$this->db->setQuery($query);
-		$rows = $this->db->loadObjectList();
+		$db =& JFactory::getDBO();
+		$query = "SELECT #__users.id, username, email, name, title "
+			. "FROM #__users, #__usergroups, #__user_usergroup_map "
+			. "WHERE #__users.id NOT IN (SELECT userid FROM #__thm_groups_additional_userdata)"
+			. " AND user_id = #__users.id AND group_id = #__usergroups.id";
+		$db->setQuery($query);
+		$rows = $db->loadObjectList();
 
-		foreach($rows as $row) 
+		foreach ($rows as $row)
 		{
 			$id = $row->id;
 			$username = $row->username;
@@ -65,76 +56,75 @@ class THMGroupsModelmembermanager extends JModelList
 			$usertype = $row->title;
 			$name     = $row->name;
 
-
-			if(preg_match("/^Fa./",$name)== 1){//Ueberprueft ob "Fa." im Namen steht
-
-				$lastName = $this->umlautReplace(str_replace("Fa.","",$name));
-				//Bei Firmen wird alles in den Nachnamen geschrieben und das "Fa." rausgenommen
+			if (preg_match("/^Fa./", $name) == 1)
+			{
+				$lastName = str_replace("Fa.", "", $name);
 			}
-			else{
-				$nameArray=explode(" ",$name);//Alle Namen in ein Array sucht nach blanks
-				$count = count($nameArray);//Anzahl der Eintraege in dem Array
+			else
+			{
+				$nameArray = explode(" ", $name);
+				$count = count($nameArray);
 
-
-				if($count != 0){
-
-					if($count > 1){//Wenn Vor- und Nachname(n) dann getrennt in DB
-						for($i=0;$i < $count-1;$i++){
-
-						     $firstName .=$this->umlautReplace($nameArray[$i]);
-						     $firstName .=" ";
+				if ($count != 0)
+				{
+					if ($count > 1)
+					{
+						for ($i = 0; $i < $count - 1; $i++)
+						{
+							$firstName .= $nameArray[$i];
+							$firstName .= " ";
 						}
-
-						$lastName = $this->umlautReplace($nameArray[$count-1]);
+						$lastName = $nameArray[$count - 1];
 
 					}
-					else{//Wenn nur ein Namen diesen in Nachname
-
-						$lastName = $this->umlautReplace($nameArray[$count-1]);
+					else
+					{
+						$lastName = $nameArray[$count - 1];
 					}
 				}
 			}
 
-				$firstName=trim($firstName);
-				$lastName=trim($lastName);
+				$firstName = trim($firstName);
+				$lastName = trim($lastName);
 
 				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
 				$query .= "VALUES ($id, '$firstName', 1)";
 
-				$this->db->setQuery($query);
-				$this->db->query();
-				
+				$db->setQuery($query);
+				$db->query();
+
 				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
 				$query .= "VALUES ($id, '$lastName', 2)";
 
-				$this->db->setQuery($query);
-				$this->db->query();
-				
+				$db->setQuery($query);
+				$db->query();
+
 				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
 				$query .= "VALUES ($id, '$email', 4)";
 
-				$this->db->setQuery($query);
-				$this->db->query();
+				$db->setQuery($query);
+				$db->query();
 
 				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
 				$query .= "VALUES ($id, '$username', 3)";
 
-				$this->db->setQuery($query);
-				$this->db->query();
-				
+				$db->setQuery($query);
+				$db->query();
+
 				$query  = "INSERT INTO #__thm_groups_additional_userdata (userid, usertype)";
 				$query .= "VALUES ($id, '$usertype')";
 
-				$this->db->setQuery($query);
-				$this->db->query();
-				
-				$firstName="";
-				$lastName="";
+				$db->setQuery($query);
+				$db->query();
+
+				$firstName = "";
+				$lastName = "";
 
 				$query  = "INSERT INTO #__thm_groups_groups_map (uid,gid,rid)";
 				$query .= "VALUES ($id, '1','1')";
-				$this->db->setQuery($query);
-				$this->db->query();
+				$db->setQuery($query);
+				$db->query();
+		}
 	}
 
 	/**
@@ -184,8 +174,8 @@ class THMGroupsModelmembermanager extends JModelList
 	 * @access  protected
 	 * @return	query
 	 */
-  	protected function getListQuery()
-  	{
+	protected function getListQuery()
+	{
 		// Create a new query object.
 		$orderCol	= $this->state->get('list.ordering');
 		$orderDirn	= $this->state->get('list.direction');
@@ -195,21 +185,21 @@ class THMGroupsModelmembermanager extends JModelList
 
 		$db = $this->getDbo();
 
-		$query = "SELECT distinct b.userid, b.value as firstName, c.value as lastName, e.value as EMail, f.published as published, " .
-				 "f.injoomla as injoomla, t.value as title " .
-				 "FROM `#__thm_groups_structure` as a " .
-				 "inner join #__thm_groups_text as b on a.id = b.structid and b.structid=1 " .
-				 "inner join (Select * From #__thm_groups_text order by userid) as c on b.userid=c.userid and c.structid=2 " .
-				 "inner join (Select * From #__thm_groups_text order by userid) as e on c.userid=e.userid and e.structid=4 " .
-				 "left outer join (Select * From #__thm_groups_text order by userid) as t on e.userid=t.userid and t.structid=5 " .
-				 "inner join #__thm_groups_additional_userdata as f on f.userid = e.userid";
+		$query = "SELECT distinct b.userid, b.value as firstName, c.value as lastName, e.value as EMail, f.published as published, "
+			. "f.injoomla as injoomla, t.value as title "
+			. "FROM `#__thm_groups_structure` as a "
+			. "inner join #__thm_groups_text as b on a.id = b.structid and b.structid=1 "
+			. "inner join (Select * From #__thm_groups_text order by userid) as c on b.userid=c.userid and c.structid=2 "
+			. "inner join (Select * From #__thm_groups_text order by userid) as e on c.userid=e.userid and e.structid=4 "
+			. "left outer join (Select * From #__thm_groups_text order by userid) as t on e.userid=t.userid and t.structid=5 "
+			. "inner join #__thm_groups_additional_userdata as f on f.userid = e.userid";
 
-		$searchUm = str_replace("�", "&Ouml;", $search);
-		$searchUm = str_replace("�", "&ouml;", $searchUm);
-		$searchUm = str_replace("�", "&Auml;", $searchUm);
-		$searchUm = str_replace("�", "&auml;", $searchUm);
-		$searchUm = str_replace("�", "&Uuml;", $searchUm);
-		$searchUm = str_replace("�", "&uuml;", $searchUm);
+		$searchUm = str_replace("?", "&Ouml;", $search);
+		$searchUm = str_replace("?", "&ouml;", $searchUm);
+		$searchUm = str_replace("?", "&Auml;", $searchUm);
+		$searchUm = str_replace("?", "&auml;", $searchUm);
+		$searchUm = str_replace("?", "&Uuml;", $searchUm);
+		$searchUm = str_replace("?", "&uuml;", $searchUm);
 
 		$searchUm2 = str_replace("ö", "&Ouml;", $search);
 		$searchUm2 = str_replace("ö", "&ouml;", $searchUm2);
@@ -282,7 +272,10 @@ class THMGroupsModelmembermanager extends JModelList
 
 		foreach ($uids as $uid)
 		{
-			$query = "SELECT COUNT(1) AS num FROM #__user_usergroup_map AS user INNER JOIN #__thm_groups_groups_map AS thm ON user.user_id = thm.uid AND user.group_id = thm.gid WHERE user.user_id = $uid AND user.group_id = $gid";
+			$query = "SELECT COUNT(1) AS num "
+				. "FROM #__user_usergroup_map AS user INNER JOIN #__thm_groups_groups_map AS thm "
+				. "ON user.user_id = thm.uid AND user.group_id = thm.gid "
+				. "WHERE user.user_id = $uid AND user.group_id = $gid";
 
 			$db->setQuery($query);
 			$aRes = $db->loadAssoc();
@@ -335,7 +328,7 @@ class THMGroupsModelmembermanager extends JModelList
 			$injoomla = $group->injoomla == 1 ? true : false;
 			if ($injoomla != $wasinjoomla)
 			{
-				$selectOptions[] = JHTML::_('select.option', -1, '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -', 'value', 'text', true);
+				$selectOptions[] = JHTML::_('select.option', -1, '- - - - - - - - - - - - - - - - - - - - - - - - - - - - -', 'value', 'text', true);
 			}
 
 			$tempgroup = $group;
@@ -351,7 +344,7 @@ class THMGroupsModelmembermanager extends JModelList
 					}
 				}
 			}
-			$selectOptions[] = JHTML::_('select.option', $group->id, $hirarchy . $group->name);
+			$selectOptions[] = JHTML::_('select.option', $group->id, $hirarchy . $group->title);
 			$wasinjoomla = $injoomla;
 		}
 		return $selectOptions;
@@ -369,20 +362,20 @@ class THMGroupsModelmembermanager extends JModelList
 
 		// Create SQL query string
 		$query = "SELECT thm.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla ";
-		$query .= "FROM jos_usergroups AS joo ";
+		$query .= "FROM #__usergroups AS joo ";
 		$query .= "RIGHT JOIN (";
 		$query .= "  SELECT * ";
-		$query .= "  FROM jos_thm_groups_groups ";
+		$query .= "  FROM #__thm_groups_groups ";
 		$query .= "  WHERE injoomla = 0 ";
 		$query .= "  ORDER BY name";
 		$query .= ") AS thm ";
 		$query .= "ON joo.id = thm.id ";
 		$query .= "UNION ";
 		$query .= "SELECT joo.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla ";
-		$query .= "FROM jos_usergroups AS joo ";
+		$query .= "FROM #__usergroups AS joo ";
 		$query .= "LEFT JOIN (";
 		$query .= "  SELECT * ";
-		$query .= "  FROM jos_thm_groups_groups ";
+		$query .= "  FROM #__thm_groups_groups ";
 		$query .= ") AS thm ";
 		$query .= "ON joo.id = thm.id ";
 		$query .= "ORDER BY lft";
@@ -527,6 +520,68 @@ class THMGroupsModelmembermanager extends JModelList
 		}
 
 		$db->setQuery($query);
+		if ($db->query())
+		{
+			$result = true;
+		}
+		else
+		{
+			$result = false;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Publishs an member
+	 *
+	 * @access  public
+	 * @return	bool          "true" on success, "false" on error.
+	 */
+	public function publish()
+	{
+		$db =& JFactory::getDBO();
+		$cid = JRequest::getVar('cid', array(), 'post', 'array');
+		JArrayHelper::toInteger($cid);
+		$cids = implode(',', $cid);
+
+		$query = 'UPDATE #__thm_groups_additional_userdata'
+		. ' SET published = 1'
+		. ' WHERE userid IN ( ' . $cids . ' )';
+
+		$db->setQuery($query);
+
+		if ($db->query())
+		{
+			$result = true;
+		}
+		else
+		{
+			$result = false;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Publishs an member
+	 *
+	 * @access  public
+	 * @return	bool          "true" on success, "false" on error.
+	 */
+	public function unpublish()
+	{
+		$db =& JFactory::getDBO();
+		$cid = JRequest::getVar('cid', array(), 'post', 'array');
+		JArrayHelper::toInteger($cid);
+		$cids = implode(',', $cid);
+
+		$query = 'UPDATE #__thm_groups_additional_userdata'
+		. ' SET published = 0'
+		. ' WHERE userid IN ( ' . $cids . ' )';
+
+		$db->setQuery($query);
+
 		if ($db->query())
 		{
 			$result = true;

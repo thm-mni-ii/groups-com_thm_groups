@@ -58,13 +58,15 @@ class THMGroupsModelRolemanager extends JModelList
 		$orderCol	= $this->state->get('list.ordering');
 		$orderDirn	= $this->state->get('list.direction');
 
-		$db = $this->getDbo();
-		$query = $db->getQuery(true);
-
+		$db = & JFactory::getDBO();
+		/*
 		$query = "select id,name as rname from #__thm_groups_roles";
-
 		$query .= " ORDER BY $orderCol $orderDirn";
-
+		*/
+		$query = $db->getQuery(true);
+		$query->select('`id`, `name` AS rname');
+		$query->from($db->qn('#__thm_groups_roles'));
+		$query->order("$orderCol $orderDirn");
 		return $query;
 	}
 
@@ -85,10 +87,22 @@ class THMGroupsModelRolemanager extends JModelList
 		}
 		else
 		{
-			$query = "DELETE FROM #__thm_groups_roles WHERE id=" . $rid;
+			/*
+				$query = "DELETE FROM #__thm_groups_roles WHERE id=" . $rid;
+			*/
+			$query = $db->getQuery(true);
+			$query->from($db->qn('#__thm_groups_roles'));
+			$query->delete();
+			$query->where('id = ' . $rid);
 			$db->setQuery($query);
 			$db->Query();
-			$query = "DELETE FROM #__thm_groups_groups_map WHERE rid=" . $rid;
+			/*
+				$query = "DELETE FROM #__thm_groups_groups_map WHERE rid=" . $rid;
+			*/
+			$query = $db->getQuery(true);
+			$query->from($db->qn('#__thm_groups_groups_map'));
+			$query->delete();
+			$query->where('id = ' . $rid);
 			$db->setQuery($query);
 			$db->Query();
 		}

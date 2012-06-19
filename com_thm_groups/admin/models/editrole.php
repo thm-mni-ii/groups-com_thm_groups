@@ -40,11 +40,17 @@ class THMGroupsModelEditRole extends JModel
 	public function _buildQuery()
 	{
 		$cid = JRequest::getVar('cid', array(0), '', 'array');
-        JArrayHelper::toInteger($cid, array(0));
+		JArrayHelper::toInteger($cid, array(0));
 
-    	$query = "SELECT * FROM #__thm_groups_roles WHERE id=" . $cid[0];
-
-		return $query;
+		/*
+		 	$query = "SELECT * FROM #__thm_groups_roles WHERE id=" . $cid[0];
+		 */
+		$db = & JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from($db->qn('#__thm_groups_roles'));
+		$query->where('id = ' . $cid[0]);
+		return $query->__toString();
 	}
 
 	/**
@@ -73,22 +79,28 @@ class THMGroupsModelEditRole extends JModel
 		$db =& JFactory::getDBO();
 		$err = 0;
 
-		$query = "UPDATE #__thm_groups_roles SET"
-        . " name='" . $r_name . "'"
-        . " WHERE id=" . $rid;
+		/*
+			$query1 = "UPDATE #__thm_groups_roles SET"
+			. " name='" . $r_name . "'"
+			. " WHERE id=" . $rid;
+		*/
+		$query = $db->getQuery(true);
+		$query->update($db->qn('#__thm_groups_roles'));
+		$query->set("`name` = '" . $r_name . "'");
+		$query->where("`id` = '" . $rid . "'");
 
-        $db->setQuery($query);
-        if (!$db->query())
-        {
-        	$err = 1;
-        }
-        if (!$err)
-        {
-        	return true;
-        }
-        else
-        {
-        	return false;
-        }
+		$db->setQuery($query);
+		if (!$db->query())
+		{
+			$err = 1;
+		}
+		if (!$err)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
