@@ -127,9 +127,9 @@ class THMGroupsModelEditStructure extends JModel
 		*/
 		$query = $db->getQuery(true);
 		$query->update($db->qn('#__thm_groups_structure'));
-		$query->set('field = ' . $name);
-		$query->set('type = ' . $relation);
-		$query->where('id = ' . $id[0]);
+		$query->set("`field` = '" . $name . "'");
+		$query->set("`type` = '" . $relation . "'");
+		$query->where("`id` = '" . $id[0] . "'");
 		$db->setQuery($query);
 		if (!$db->query())
 		{
@@ -139,20 +139,44 @@ class THMGroupsModelEditStructure extends JModel
 		if (isset($extra))
 		{
 			/*
-				$query = "INSERT INTO #__thm_groups_" . strtolower($relation) . "_extra ( `structid`, `value`)"
-				. " VALUES ($id[0]"
-				. ", '" . $extra . "')"
-				. " ON DUPLICATE KEY UPDATE"
-				. " value='" . $extra . "'";
+			 $query = "INSERT INTO #__thm_groups_" . strtolower($relation) . "_extra ( `structid`, `value`)"
+			. " VALUES ($id[0]"
+					. ", '" . $extra . "')"
+			. " ON DUPLICATE KEY UPDATE"
+			. " value='" . $extra . "'";
 			*/
-			$query = $db->getQuery(true);
-			$query->insert($db->qn('#__thm_groups_' . strtolower($relation) . '_extra'));
-			$query->values($id[0], $extra . ' ON DUPLICATE KEY UPDATE value=' . $extra);
 
+			$query = $db->getQuery(true);
+			$query->select('*');
+			$query->from($db->qn('#__thm_groups_' . strtolower($relation) . '_extra'));
+			$query->where('structid = ' . $id[0]);
 			$db->setQuery($query);
-			if (!$db->query())
+			$db->query();
+			$count = $db->getNumRows();
+
+			if ($count == "0")
 			{
-				$err = true;
+				$query = $db->getQuery(true);
+				$query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`)");
+				$query->values("'" . $id[0] . "', '" . $extra . "'");
+
+				$db->setQuery($query);
+				if (!$db->query())
+				{
+					$err = true;
+				}
+			}
+			else
+			{
+				$query = $db->getQuery(true);
+				$query->update("`#__thm_groups_" . strtolower($relation) . "_extra`");
+				$query->set("`value` = '" . $extra . "'");
+
+				$db->setQuery($query);
+				if (!$db->query())
+				{
+					$err = true;
+				}
 			}
 		}
 
