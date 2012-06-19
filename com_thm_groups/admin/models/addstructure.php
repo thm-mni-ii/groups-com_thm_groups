@@ -42,6 +42,7 @@ class THMGroupsModelAddStructure extends JModel
 		/*
 			$query = "SELECT * FROM #__thm_groups_relationtable";
 		 */
+		$db =& JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from($db->qn('#__thm_groups_relationtable'));
