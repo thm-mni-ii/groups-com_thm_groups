@@ -67,11 +67,11 @@ class JFormFieldRoleItemSelect extends JFormField
 			$db =& JFactory::getDBO();
 			$db->setQuery($queryParams);
 			$params = $db->loadObjectList();
-
+			$sort = "sortedgrouproles";
+			
 			$paramRoles = substr(
 				$params[0]->params,
 				stripos($params[0]->params, "sortedgrouproles") + strlen("':sortedgrouproles:"),
-				$sort = "sortedgrouproles";
 				stripos(substr($params[0]->params, stripos($params[0]->params, $sort) + strlen("':sortedgrouproles:")), "\",\"menu-anchor_title")
 			);
 			$paramRoles = trim($paramRoles);
