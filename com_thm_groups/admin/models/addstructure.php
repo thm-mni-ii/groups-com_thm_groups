@@ -115,7 +115,7 @@ class THMGroupsModelAddStructure extends JModel
 				. ", '" . $extra . "')";
 			*/
 			$query = $db->getQuery(true);			
-			$query->insert("`#__thm_groups_' . strtolower($relation) . '_extra` (`structid`, `value`)");
+			$query->insert("`#__thm_groups_'" . strtolower($relation) . "'_extra` (`structid`, `value`)");
 			$query->values("'" . $id . "', '" . $extra . "'");
 
 			$db->setQuery($query);
