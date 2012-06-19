@@ -178,7 +178,8 @@ class THMGroupsModelProfile extends JModelForm
                 $publish = 1;
             }
 
-            $query = "SELECT structid FROM #__thm_groups_" . strtolower($structureItem->type) . " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
+            $query = "SELECT structid FROM #__thm_groups_" . strtolower($structureItem->type)
+            . " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
             $db->setQuery($query);
             $puffer = $db->loadObject();
 
@@ -195,7 +196,9 @@ class THMGroupsModelProfile extends JModelForm
                 }
                 else
                 {
-                    $query = "INSERT INTO #__thm_groups_" . strtolower($structureItem->type) . " ( `userid`, `structid`, `value`, `publish`)" . " VALUES ($userid" . ", " . $structureItem->id . ", '" . $field . "'" . ", " . $publish . ")";
+                    $query = "INSERT INTO #__thm_groups_" . strtolower($structureItem->type)
+                    . " ( `userid`, `structid`, `value`, `publish`)" . " VALUES ($userid" . ", "
+                    . $structureItem->id . ", '" . $field . "'" . ", " . $publish . ")";
                 }
                 $db->setQuery($query);
                 if (!$db->query())
@@ -261,14 +264,17 @@ class THMGroupsModelProfile extends JModelForm
         try
         {
             $pt = new PicTransform($_FILES[$picField]);
-            $pt->safeSpecial(JPATH_ROOT . DS . "components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS, $uid . "_" . $structid, 200, 200, "JPG");
+            $compath = "com_thm_groups";
+            $picf = "portraits";
+            $pt->safeSpecial(JPATH_ROOT . DS . "components" . DS . $compath . DS . "img" . DS . $picf . DS, $uid . "_" . $structid, 200, 200, "JPG");
             if (JModuleHelper::isEnabled('mod_thm_groups')->id != 0)
             {
                 $pt->safeSpecial(JPATH_ROOT . DS . "modules" . DS . "mod_thm_groups" . DS . "images" . DS, $uid . "_" . $structid, 200, 200, "JPG");
             }
             if (JModuleHelper::isEnabled('mod_thm_groups_smallview')->id != 0)
             {
-                $pt->safeSpecial(JPATH_ROOT . DS . "modules" . DS . "mod_thm_groups_smallview" . DS . "images" . DS, $uid . "_" . $structid, 200, 200, "JPG");
+            	$modpath = "mod_thm_groups_smallview";
+                $pt->safeSpecial(JPATH_ROOT . DS . "modules" . DS . $modpath . DS . "images" . DS, $uid . "_" . $structid, 200, 200, "JPG");
             }
         }
         catch (Exception $e)
