@@ -84,7 +84,7 @@ class THMGroupsModelAddGroup extends JModelForm
 		$query->set("`parent_id` = '" . $gr_parent . "'");
 		$query->set("`title` = '" . $gr_name . "'");
 		$query->set("`lft` = '0'");
-		$query->set("`lft` = '0'");
+		$query->set("`rgt` = '0'");
 
 		$db->setQuery($query);
 		$db->query();
