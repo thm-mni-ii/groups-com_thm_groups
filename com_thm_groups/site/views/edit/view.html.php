@@ -1,187 +1,302 @@
 <?php
 /**
- * This file contains the data type class Image.
+ *@category Joomla component
  *
- * PHP version 5
+ *@package     THM_Groups
  *
- * @category Joomla Programming Weeks SS2008: FH Giessen-Friedberg
- * @package  com_staff
- * @author   Sascha Henry <sascha.henry@mni.fh-giessen.de>
- * @author   Christian G�th <christian.gueth@mni.fh-giessen.de>
- * @author   Severin Rotsch <severin.rotsch@mni.fh-giessen.de>
- * @author   Martin Karry <martin.karry@mni.fh-giessen.de>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @link     http://www.mni.fh-giessen.de
- **/
-defined( '_JEXEC' ) or die( 'Restricted access' );
-
-jimport( 'joomla.application.component.view');
+ *@subpackage  com_thm_groups
+ *@name        THMGroupsViewEdit
+ *@description THMGroupsViewEdit file from com_thm_groups
+ *@author      Dennis Priefer, dennis.priefer@mni.thm.de
+ *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
+ *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
+ *@author      Jacek Sokalla,  jacek.sokalla@mni.thm.de
+ *@author      Niklas Simonis, niklas.simonis@mni.thm.de
+ *@author      Peter May,      peter.may@mni.thm.de
+ *
+ *@copyright   2012 TH Mittelhessen
+ *
+ *@license     GNU GPL v.2
+ *@link        www.mni.thm.de
+ *@version     3.0
+ */
+defined('_JEXEC') or die('Restricted access');
+jimport('joomla.application.component.view');
 jimport('joomla.filesystem.path');
 
-
-class THMGroupsViewEdit extends JView {
-
+/**
+ * THMGroupsViewEdit class for component com_thm_groups
+ *
+ * @package     Joomla.Site
+ * @subpackage  thm_groups
+ * @link        www.mni.thm.de
+ * @since       Class available since Release 2.0
+ */
+class THMGroupsViewEdit extends JView
+{
 	protected $form;
 
-	function getTextForm ($name, $size, $value, $structid) {
+	/**
+	 * Method to get text form
+	 *
+	 * @param   String  $name      Name
+	 * @param   Int     $size      Size
+	 * @param   String  $value	   Value
+	 * @param   Int     $structid  StructID
+	 *
+	 * @return textform
+	 */
+	public function getTextForm ($name, $size, $value, $structid)
+	{
 		$model =& $this->getModel();
-		$extra =$model->getExtra($structid, 'TEXT');
-		$output =  "<input " .
+		$extra = $model->getExtra($structid, 'TEXT');
+		$output = "<input " .
 				"class='inputbox' " .
 				"type='text' name='$name' " .
-				"id='$name' " ;
+				"id='$name' ";
 				if (isset($extra))
+				{
 					$output .= "size='$extra'";
+				}
 				else
+				{
 					$output .= "size='$size'";
+				}
        			$output .= "value='$value'" .
 			  	" />";
        	echo $output;
 	}
 
-	function getTextArea ($name, $rows, $value, $structid) {
+	/**
+	 * Method to get text area
+	 *
+	 * @param   String  $name      Name
+	 * @param   Int     $rows      Rows
+	 * @param   String  $value	   Value
+	 * @param   Int     $structid  StructID
+	 *
+	 * @return textarea
+	 */
+	public function getTextArea ($name, $rows, $value, $structid)
+	{
 		$model =& $this->getModel();
-		$extra =$model->getExtra($structid, 'TEXTFIELD');
-		$output = "<textarea " ;
+		$extra = $model->getExtra($structid, 'TEXTFIELD');
+		$output = "<textarea ";
 			if (isset($extra))
+			{
 				$output .= "rows='$extra' ";
+			}
 			else
-				$output .= "rows='$rows' " ;
-
+			{
+				$output .= "rows='$rows' ";
+			}
 			$output .= "name='$name' >" .
-		 	$value.
+		 	$value .
 		 "</textarea>";
 		 echo $output;
 	}
 
-	function getPictureArea ($name, $structid, $value) {
-		if($value!="")
-			$output = "<img src='".JURI::root(true)."/components/com_thm_groups/img/portraits/$value' />";
+	/**
+	 * Method to get picture area
+	 *
+	 * @param   String  $name      Name
+	 * @param   Int     $structid  StructID
+	 * @param   String  $value	   Value
+	 *
+	 * @return picturearea
+	 */
+	public function getPictureArea ($name, $structid, $value)
+	{
+		if ($value != "")
+		{
+			$output = "<img src='" . JURI::root(true) . "/components/com_thm_groups/img/portraits/$value' />";
+		}
 		else
+		{
 			$output = "<img src='components/com_thm_groups/img/portraits/anonym.jpg' />";
-		$output .= "<br /><input type='file' accept='image' name='$name' />".
-		"<br /><input type='submit' id='gs_editView_buttons' ".
-		"onclick='return confirm(\"Wirklich L&Ouml;SCHEN?\"), ".
-		"document.forms[\"adminForm\"].elements[\"structid\"].value = $structid, ".
-		"document.forms[\"adminForm\"].elements[\"task\"].value = \"edit.delPic\"' ".
-		"value='Bild l&ouml;schen' name='del".$name. "' task='edit.delPic' />";
+		}
+		$output .= "<br /><input type='file' accept='image' name='$name' />" .
+		"<br /><input type='submit' id='gs_editView_buttons' " .
+		"onclick='return confirm(\"Wirklich L&Ouml;SCHEN?\"), " .
+		"document.forms[\"adminForm\"].elements[\"structid\"].value = $structid, " .
+		"document.forms[\"adminForm\"].elements[\"task\"].value = \"edit.delPic\"' " .
+		"value='Bild l&ouml;schen' name='del" . $name . "' task='edit.delPic' />";
 		echo $output;
 	}
 
-	function getTableArea ($name, $value, $structid) {
+	/**
+	 * Method to get table area
+	 *
+	 * @param   String  $name      Name
+	 * @param   String  $value	   Value
+	 * @param   Int     $structid  StructID
+	 *
+	 * @return tablearea
+	 */
+	public function getTableArea ($name, $value, $structid)
+	{
 		$model =& $this->getModel();
 		$cid = JRequest::getVar('cid', array(0), '', 'array');
-		$extra =$model->getExtra($structid, 'TABLE');
+		$extra = $model->getExtra($structid, 'TABLE');
 		$arrValue = json_decode($value);
-		$gsuid =  JRequest::getVar('gsuid');
-		if($extra != "") {
+		$gsuid = JRequest::getVar('gsuid');
+		if ($extra != "")
+		{
 			$head = explode(';', $extra);
 			$output = "<table>" .
 						"<tr>";
-						/*"<th>ID</th>";*/
-			foreach($head as $headItem)
-						$output .= "<th>$headItem </th>";
-			$output .= "<th>".JText::_( 'JACTION_DELETE' )."</th>";
-			$output .= "<th>".JText::_( 'JACTION_EDIT' )."</th>";
+			foreach ($head as $headItem)
+			{
+				$output .= "<th>$headItem </th>";
+			}
+			$output .= "<th>" . JText::_('JACTION_DELETE') . "</th>";
+			$output .= "<th>" . JText::_('JACTION_EDIT') . "</th>";
 			$output .= "</tr>";
-			if($value != "" && $value != "[]") {
+			if ($value != "" && $value != "[]")
+			{
 				$k = 0;
-				foreach($arrValue as $key=>$row) {
-					/*$output .= "<tr>".
-						   		"<td>".($key+1)."</td>";*/
-					if($k)
-						$output.="<tr style='background-color:#F7F7F7;'>";
-					foreach($row as $rowItem) {
-						
-						$output .= "<td>".$rowItem."</td>";
-					
+				foreach ($arrValue as $key => $row)
+				{
+					if ($k)
+					{
+						$output .= "<tr style='background-color:#F7F7F7;'>";
 					}
-					$output .= "<td><a href='javascript:delTableRow($key, $structid );' title='Zeile: ".($key+1)."::Zeile entfernen.' class='hasTip'><img src='".JURI::root(true)."/components/com_thm_groups/img/icon-16-trash.png' /></a> </td>";
-					$output .= "<td><a href='index.php?option=com_thm_groups&view=edit&layout=edit_table&tmpl=component&gsuid=$gsuid&structid=$structid&key=$key' title='Zeile: ".($key+1)."::Zeile bearbeiten.' class='modal-button hasTip' rel=\"{handler: 'iframe', size: {x: 400, y: 300}}\"><img src='".JURI::root(true)."/components/com_thm_groups/img/icon-16-edit.png' /></a> </td>";
+					foreach ($row as $rowItem)
+					{
+						$output .= "<td>" . $rowItem . "</td>";
+					}
+					$output .= "<td><a href='javascript:delTableRow($key, $structid );' title='Zeile: "
+					. ($key + 1) . "::Zeile entfernen.' class='hasTip'><img src='"
+					. JURI::root(true) . "/components/com_thm_groups/img/icon-16-trash.png' /></a> </td>";
+					$output .= "<td><a href='index.php?option=com_thm_groups&view=edit&layout=edit_table&tmpl=component&gsuid="
+					. $gsuid&structid=$structid&key=$key' title='Zeile: "
+					. ($key + 1) . "::Zeile bearbeiten.' class='modal-button hasTip' rel=\"{handler: 'iframe', size: {x: 400, y: 300}}\"><img src='"
+					. JURI::root(true) . "/components/com_thm_groups/img/icon-16-edit.png' /></a> </td>";
 					$output .= "</tr>";
-					$k = 1-$k;
-
+					$k = 1 - $k;
 				}
-			} else {
-				$output .= "<tr>".
-						   	"<td colspan='".(count($head)+1)."'>Keine Daten eingetragen...</td>".
+			}
+			else
+			{
+				$output .= "<tr>" .
+						   	"<td colspan='" . (count($head) + 1) . "'>Keine Daten eingetragen...</td>" .
 						   "</tr>";
 			}
 			$output .= "</table>";
-			foreach($head as $headItem) {
+			foreach ($head as $headItem)
+			{
 				$output .= "<input " .
 				"class='inputbox' " .
 				"type='text' name='TABLE$structid$headItem' " .
 				"id='TABLE$structid$headItem' " .
-				"size='20'".
-				"onFocus=\"if(this.value=='$headItem eintragen') this.value=''\"".
+				"size='20'" .
+				"onFocus=\"if(this.value=='$headItem eintragen') this.value=''\"" .
        			"value='$headItem eintragen'" .
 			  	" />";
 			}
 
-			$option_old = JRequest :: getVar('option_old', '0', 'post');
-		    $layout_old = JRequest :: getVar('layout_old', '0', 'post');
-		    $view_old = JRequest :: getVar('view_old', '0', 'post');
+			$option_old = JRequest::getVar('option_old', '0', 'post');
+		    $layout_old = JRequest::getVar('layout_old', '0', 'post');
+		    $view_old = JRequest::getVar('view_old', '0', 'post');
 
-			$output .= "<br /><br /><input type='submit' id='addTableRow".$name. "' ".
-				"onclick='document.forms[\"adminForm\"].elements[\"structid\"].value =". $structid.",".
-				"document.forms[\"adminForm\"].elements[\"task\"].value = \"edit.addTableRow\", ".
-			    "document.forms[\"adminForm\"].elements[\"option_old\"].value=".$option_old.",".
-				"document.forms[\"adminForm\"].elements[\"layout_old\"].value=".$layout_old.",".
-				"document.forms[\"adminForm\"].elements[\"view_old\"].value=".$view_old."' ".
-				"value='In Tabelle eintragen' name='addTableRow".$name. "' task='edit.addTableRow' />";
+			$output .= "<br /><br /><input type='submit' id='addTableRow" . $name . "' " .
+				"onclick='document.forms[\"adminForm\"].elements[\"structid\"].value =" . $structid . "," .
+				"document.forms[\"adminForm\"].elements[\"task\"].value = \"edit.addTableRow\", " .
+			    "document.forms[\"adminForm\"].elements[\"option_old\"].value=" . $option_old . "," .
+				"document.forms[\"adminForm\"].elements[\"layout_old\"].value=" . $layout_old . "," .
+				"document.forms[\"adminForm\"].elements[\"view_old\"].value=" . $view_old . "' " .
+				"value='In Tabelle eintragen' name='addTableRow" . $name . "' task='edit.addTableRow' />";
 
-		} else {
+		}
+		else
+		{
 			$output = "Keine Parameter angegeben...";
 		}
 
 		echo $output;
 	}
 
-	function getDateForm ($name, $size, $value) {
-		echo JHTML::calendar($value, $name, $name,'%Y-%m-%d');
+	/**
+	 * Method to get date form
+	 *
+	 * @param   String  $name   Name
+	 * @param   Int     $size   Size
+	 * @param   String  $value	Value
+	 *
+	 * @return void
+	 */
+	public function getDateForm ($name, $size, $value)
+	{
+		echo JHTML::calendar($value, $name, $name, '%Y-%m-%d');
 	}
 
-	function getMultiSelectForm ($name, $size, $value, $structid) {
+	/**
+	 * Method to get multi select form
+	 *
+	 * @param   String  $name      Name
+	 * @param   Int     $size      Size
+	 * @param   String  $value	   Value
+	 * @param   Int     $structid  StructID
+	 *
+	 * @return multiselectform
+	 */
+	public function getMultiSelectForm ($name, $size, $value, $structid)
+	{
 		$arrValue = explode(';', $value);
 		$model =& $this->getModel();
-		$extra =$model->getExtra($structid, 'MULTISELECT');
+		$extra = $model->getExtra($structid, 'MULTISELECT');
 		$arrExtra = explode(';', $extra);
-		$output =  "<SELECT MULTIPLE size='".(count($arrExtra))."' name='".$name."[]' id='$name' >";
-		foreach ($arrExtra as $extraValue){
+		$output = "<SELECT MULTIPLE size='" . (count($arrExtra)) . "' name='" . $name . "[]' id='$name' >";
+		foreach ($arrExtra as $extraValue)
+		{
 			$tExtra = trim($extraValue);
 			$sel = "";
-			foreach ($arrValue as $val){
-				if($tExtra == $val)
+			foreach ($arrValue as $val)
+			{
+				if ($tExtra == $val)
+				{
  					$sel = "selected";
+				}
 			}
  			$output .= "<OPTION VALUE='$tExtra' $sel>$tExtra</option>";
 		}
-			$output .= "</SELECT>";
+		$output .= "</SELECT>";
        	echo $output;
 	}
 
-	function display($tpl = null) {
-
+	/**
+	 * Method to get display
+	 *
+	 * @param   Object  $tpl  template
+	 * 
+	 * @return void
+	 */
+	public function display($tpl = null)
+	{
 		$document   = & JFactory::getDocument();
 		$document->addStyleSheet("administrator/components/com_thm_groups/css/membermanager/icon.css");
 
 		$cid = JRequest::getVar('gsuid', 0);
 
 		$model =& $this->getModel();
-		$items =& $this->get( 'Data');
-		$structure =& $this->get( 'Structure');
-		$gsgid =JRequest::getVar('gsgid');
-		$is_mod =& $this->get( 'Moderator');
+		$items =& $this->get('Data');
+		$structure =& $this->get('Structure');
+		$gsgid = JRequest::getVar('gsgid');
+		$is_mod =& $this->get('Moderator');
 
-		//Daten für die Form
+		// Daten für die Form
 		$textField = array();
-		foreach($structure as $structureItem) {
-			foreach ($items as $item){
-				if($item->structid == $structureItem->id)
+		foreach ($structure as $structureItem)
+		{
+			foreach ($items as $item)
+			{
+				if ($item->structid == $structureItem->id)
+				{
 					$value = $item->value;
+				}
 			}
-			if($structureItem->type == "TEXTFIELD") {
+			if ($structureItem->type == "TEXTFIELD")
+			{
 				$textField[$structureItem->field] = $value;
 			}
 		}
@@ -189,32 +304,25 @@ class THMGroupsViewEdit extends JView {
 		// Daten für die Form
 		$this->form = $this->get('Form');
 
-		if (!empty($textField)) {
+		if (!empty($textField))
+		{
 			$this->form->bind($textField);
 		}
 
-
-
 		/* ZURÜCK BUTTON */
-		$option_old = JRequest :: getVar('option_old');
-		$layout_old = JRequest :: getVar('layout_old');
-		$view_old = JRequest :: getVar('view_old');
+		$option_old = JRequest::getVar('option_old');
+		$layout_old = JRequest::getVar('layout_old');
+		$view_old = JRequest::getVar('view_old');
 
-		$this->assignRef( 'option_old', $option_old );
-		$this->assignRef( 'layout_old', $layout_old );
-		$this->assignRef( 'view_old', $view_old );
-
-		/* ###########   */
-
-		$this->assignRef( 'items', $items );
-		$this->assignRef( 'is_mod', $is_mod );
-		$this->assignRef( 'userid', $cid );
-		$this->assignRef( 'structure', $structure );
-		$this->assignRef( 'gsgid', $gsgid );
-
-
+		$this->assignRef('option_old', $option_old);
+		$this->assignRef('layout_old', $layout_old);
+		$this->assignRef('view_old', $view_old);
+		$this->assignRef('items', $items);
+		$this->assignRef('is_mod', $is_mod);
+		$this->assignRef('userid', $cid);
+		$this->assignRef('structure', $structure);
+		$this->assignRef('gsgid', $gsgid);
 
 		parent::display($tpl);
 	}
 }
-?>
