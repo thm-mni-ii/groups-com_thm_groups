@@ -80,14 +80,16 @@ class THMGroupsModelEditRole extends JModel
 		$err = 0;
 
 		/*
-			$query = "UPDATE #__thm_groups_roles SET"
+			$query1 = "UPDATE #__thm_groups_roles SET"
 			. " name='" . $r_name . "'"
 			. " WHERE id=" . $rid;
 		*/
 		$query = $db->getQuery(true);
 		$query->update($db->qn('#__thm_groups_roles'));
-		$query->set('name = ' . $r_name);
-		$query->where('id = ' . $rid);
+		$query->set("`name` = '" . $r_name . "'");
+		$query->where("`id` = '" . $rid . "'");
+
+		var_dump($query->__toString());
 		$db->setQuery($query);
 		if (!$db->query())
 		{

@@ -73,37 +73,29 @@ class THMGroupsModelAddStructure extends JModel
 		$name = JRequest::getVar('name');
 		$relation = JRequest::getVar('relation');
 		$extra = JRequest::getVar($relation . '_extra');
-
-		$db =& JFactory::getDBO();
 		$err = 0;
 
 		/*
 		$query = "SELECT a.order FROM #__thm_groups_structure as a ORDER BY a.order DESC";
 		*/
+		$db =& JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select('order');
-		$query->from($db->qn('#__thm_groups_structure'));
-		$query->order('order DESC');
+		$query->select('a.order');
+		$query->from($db->qn('#__thm_groups_structure') . " AS a");
+		$query->order('a.order DESC');
 		$db->setQuery($query);
 		$maxOrder = $db->loadObject();
 		$newOrder = $maxOrder->order + 1;
-		echo "tesssst";
-		var_dump($newOrder);
-		var_dump($query->__toString());
-		/*
-		$query = "INSERT INTO #__thm_groups_structure ( `id`, `field`, `type`, `order`)"
+
+		/*$query1 = "INSERT INTO `#__thm_groups_structure` (`id`, `field`, `type`, `order`)"
 			. " VALUES (null"
 			. ", '" . $name . "'"
 			. ", '" . $relation . "'"
 			. ", " . ($newOrder) . ")";
 		*/
 		$query = $db->getQuery(true);
-		$query->insert($db->qn('#__thm_groups_structure'));
-		$query->set('id = null');
-		$query->set('field = ' . $name);
-		$query->set('type = ' . $relation);
-		$query->set('order = ' . ($newOrder));
-
+		$query->insert("`#__thm_groups_structure` (`id`, `field`, `type`, `order`)");
+		$query->values("NULL, '" . $name . "', '" . $relation . "', '" . ($newOrder) . "'");
 		$db->setQuery($query);
 		if ($db->query())
 		{
@@ -122,10 +114,9 @@ class THMGroupsModelAddStructure extends JModel
 				. " VALUES ($id"
 				. ", '" . $extra . "')";
 			*/
-			$query = $db->getQuery(true);
-			$query->insert($db->qn('#__thm_groups_' . strtolower($relation) . '_extra'));
-			$query->set('structid = ' . $id);
-			$query->set('value = ' . $extra);
+			$query = $db->getQuery(true);			
+			$query->insert("`#__thm_groups_' . strtolower($relation) . '_extra` (`structid`, `value`)");
+			$query->values("'" . $id . "', '" . $extra . "'");
 
 			$db->setQuery($query);
 			if (!$db->query())
