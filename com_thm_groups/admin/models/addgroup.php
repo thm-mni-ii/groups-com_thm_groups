@@ -97,11 +97,11 @@ class THMGroupsModelAddGroup extends JModelForm
 			. "WHERE parent_id = " . $gr_parent . " AND lft = 0 AND rgt = 0";
 		*/
 		$query = $db->getQuery(true);
-		$query->select('id');
+		$query->select('`id`');
 		$query->from($db->qn('#__usergroups'));
-		$query->where('parent_id = ' . $gr_parent);
-		$query->where("rgt = 0", 'AND');
-		$query->where("lft = 0", 'AND');
+		$query->where("`parent_id` = '" . $gr_parent . "'");
+		$query->where("`rgt` = '0'");
+		$query->where("`lft` = '0'");
 
 		$db->setQuery($query);
 		$gr_id = $db->loadObject();
