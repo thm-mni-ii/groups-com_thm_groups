@@ -53,9 +53,9 @@ class THMGroupsModelAddRole extends JModel
 			. " VALUES ("
 			. "'" . $r_name . "')";
 		*/
+		$query = $db->getQuery(true);
 		$query->insert($db->qn('#__thm_groups_roles'));
 		$query->set('name = ' . $r_name);
-
 		$db->setQuery($query);
 		if ($db->query())
 		{

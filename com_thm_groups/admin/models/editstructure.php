@@ -43,6 +43,7 @@ class THMGroupsModelEditStructure extends JModel
 			$query = "SELECT * "
 			. "FROM #__thm_groups_relationtable";
 		*/
+		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from($db->qn('#__thm_groups_relationtable'));
 		return $query;
@@ -72,6 +73,7 @@ class THMGroupsModelEditStructure extends JModel
 		/*
 			$query = "SELECT * FROM #__thm_groups_structure WHERE id=$id[0]";
 		*/
+		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from($db->qn('#__thm_groups_structure'));
 		$query->where('id = ' . $id[0]);
@@ -93,6 +95,7 @@ class THMGroupsModelEditStructure extends JModel
 		/*
 			$query = "SELECT value FROM #__thm_groups_" . strtolower($relation) . "_extra WHERE structid=$id";
 		*/
+		$query = $db->getQuery(true);
 		$query->select('value');
 		$query->from($db->qn('#__thm_groups_' . strtolower($relation) . '_extra'));
 		$query->where('structid = ' . $id);
@@ -121,6 +124,7 @@ class THMGroupsModelEditStructure extends JModel
 			. ", type='" . $relation . "'"
 			. " WHERE id=" . $id[0];
 		*/
+		$query = $db->getQuery(true);
 		$query->update($db->qn('#__thm_groups_structure'));
 		$query->set('field = ' . $name);
 		$query->set('type = ' . $relation);
@@ -140,6 +144,7 @@ class THMGroupsModelEditStructure extends JModel
 				. " ON DUPLICATE KEY UPDATE"
 				. " value='" . $extra . "'";
 			*/
+			$query = $db->getQuery(true);
 			$query->insert($db->qn('#__thm_groups_' . strtolower($relation) . '_extra'));
 			$query->values($id[0], $extra . ' ON DUPLICATE KEY UPDATE value=' . $extra);
 

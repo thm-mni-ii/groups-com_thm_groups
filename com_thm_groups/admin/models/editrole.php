@@ -45,6 +45,7 @@ class THMGroupsModelEditRole extends JModel
 		/*
 		 	$query = "SELECT * FROM #__thm_groups_roles WHERE id=" . $cid[0];
 		 */
+		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from($db->qn('#__thm_groups_roles'));
 		$query->where('id = ' . $cid[0]);
@@ -82,6 +83,7 @@ class THMGroupsModelEditRole extends JModel
 			. " name='" . $r_name . "'"
 			. " WHERE id=" . $rid;
 		*/
+		$query = $db->getQuery(true);
 		$query->update($db->qn('#__thm_groups_roles'));
 		$query->set('name = ' . $r_name);
 		$query->where('id = ' . $rid);

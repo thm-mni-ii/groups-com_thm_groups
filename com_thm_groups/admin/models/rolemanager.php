@@ -91,6 +91,7 @@ class THMGroupsModelRolemanager extends JModelList
 			/*
 				$query = "DELETE FROM #__thm_groups_roles WHERE id=" . $rid;
 			*/
+			$query = $db->getQuery(true);
 			$query->from($db->qn('#__thm_groups_roles'));
 			$query->delete();
 			$query->where('id = ' . $rid);
@@ -99,6 +100,7 @@ class THMGroupsModelRolemanager extends JModelList
 			/*
 				$query = "DELETE FROM #__thm_groups_groups_map WHERE rid=" . $rid;
 			*/
+			$query = $db->getQuery(true);
 			$query->from($db->qn('#__thm_groups_groups_map'));
 			$query->delete();
 			$query->where('id = ' . $rid);

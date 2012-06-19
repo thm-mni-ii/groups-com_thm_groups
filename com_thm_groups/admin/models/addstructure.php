@@ -42,6 +42,7 @@ class THMGroupsModelAddStructure extends JModel
 		/*
 			$query = "SELECT * FROM #__thm_groups_relationtable";
 		 */
+		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from($db->qn('#__thm_groups_relationtable'));
 
@@ -78,10 +79,10 @@ class THMGroupsModelAddStructure extends JModel
 		/*
 		$query = "SELECT a.order FROM #__thm_groups_structure as a ORDER BY a.order DESC";
 		*/
+		$query = $db->getQuery(true);
 		$query->select('order');
 		$query->from($db->qn('#__thm_groups_structure'));
 		$query->order('order DESC');
-
 		$db->setQuery($query);
 		$maxOrder = $db->loadObject();
 		$newOrder = $maxOrder->order + 1;
@@ -93,6 +94,7 @@ class THMGroupsModelAddStructure extends JModel
 			. ", '" . $relation . "'"
 			. ", " . ($newOrder) . ")";
 		*/
+		$query = $db->getQuery(true);
 		$query->insert($db->qn('#__thm_groups_structure'));
 		$query->set('id = null');
 		$query->set('field = ' . $name);
@@ -117,6 +119,7 @@ class THMGroupsModelAddStructure extends JModel
 				. " VALUES ($id"
 				. ", '" . $extra . "')";
 			*/
+			$query = $db->getQuery(true);
 			$query->insert($db->qn('#__thm_groups_' . strtolower($relation) . '_extra'));
 			$query->set('structid = ' . $id);
 			$query->set('value = ' . $extra);
