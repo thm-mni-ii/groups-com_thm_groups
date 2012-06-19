@@ -101,13 +101,13 @@ class THMGroupsModelGroupmanager extends JModelList
 		$nestedQuery1->select('*');
 		$nestedQuery1->from($db->qn('#__thm_groups_groups'));
 		$nestedQuery1->order("$orderCol $orderDirn");
-		
+
 		$nestedQuery2 = $db->getQuery(true);
 		$nestedQuery2->select('joo.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla');
 		$nestedQuery2->from("#__usergroups AS joo");
 		$nestedQuery2->leftJoin("(" . $nestedQuery1 . ") AS thm ON joo.id = thm.id");
 		$nestedQuery2->order("lft");
-		
+
 		$nestedQuery3 = $db->getQuery(true);
 		$nestedQuery3->select('*');
 		$nestedQuery3->from($db->qn('#__thm_groups_groups'));
@@ -119,7 +119,7 @@ class THMGroupsModelGroupmanager extends JModelList
 		$nestedQuery4->from("#__usergroups AS joo");
 		$nestedQuery4->rightJoin("(" . $nestedQuery3 . ") AS thm ON joo.id = thm.id");
 		$nestedQuery4->union('SELECT * FROM #__usergroups');
-		
+
 		var_dump($nestedQuery4->__toString());
 		exit();
 		return $query;

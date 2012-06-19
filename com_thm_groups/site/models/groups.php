@@ -1,113 +1,71 @@
-
-BETA
- 
-
-Welcome to the new PHP Formatter BETA!
-We've given PHP Formatter a new design as well as a new engine! The new engine features:
-Blazingly fast, on the fly formatting of all scripts!
-PHP 4 and PHP 5 support
-Handy syntax check function
-Ability to create your own coding styles, or to use builtin styles
-Proper handling of doc comments, and alternative control structures
-
-
-
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-
 <?php
-
 /**
- * PHP version 5
+ *@category Joomla component
  *
- * @category Web Programming Weeks 2011 Technische Hochschule Mittelhessen
- * @package  com_thm_groups
- * @author   Jacek Sokalla <jacek.sokalla@mni.fh-giessen.de>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @link     http://www.mni.fh-giessen.de
- **/
+ *@package     THM_Groups
+ *
+ *@subpackage  com_thm_groups
+ *@name        THMGroupsModelGroups
+ *@description THMGroupsModelGroups file from com_thm_groups
+ *@author      Dennis Priefer, dennis.priefer@mni.thm.de
+ *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
+ *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
+ *@author      Jacek Sokalla,  jacek.sokalla@mni.thm.de
+ *@author      Niklas Simonis, niklas.simonis@mni.thm.de
+ *@author      Peter May,      peter.may@mni.thm.de
+ *
+ *@copyright   2012 TH Mittelhessen
+ *
+ *@license     GNU GPL v.2
+ *@link        www.mni.thm.de
+ *@version     3.0
+ */
 defined('_JEXEC') or die();
-
 jimport('joomla.application.component.model');
 jimport('joomla.filesystem.path');
 
-require_once(JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'confdb.php');
+require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'confdb.php';
 
+/**
+ * THMGroupsModelGroups class for component com_thm_groups
+ *
+ * @package     Joomla.Site
+ * @subpackage  thm_groups
+ * @link        www.mni.thm.de
+ * @since       Class available since Release 2.0
+ */
 class THMGroupsModelGroups extends JModel
 {
-    function getGroups()
+	/**
+	 * Method to get groups
+	 *
+	 * @return database object
+	 */
+    public function getGroups()
     {
         $db =& JFactory::getDBO();
         $query = 'SELECT * FROM #__thm_groups_groups ';
         $db->setQuery($query);
         $rows = $db->loadObjectList();
-        
         return $rows;
     }
-    
-    function canEdit()
+
+    /**
+     * Method to check if user can edit
+     *
+     * @return database object
+     */
+    public function canEdit()
     {
         $canEdit = 0;
         $user =& JFactory::getUser();
-        
+
         $db =& JFactory::getDBO();
         $query = "SELECT gid FROM #__thm_groups_groups_map " . "WHERE uid = " . $user->id . " AND rid = 2";
-        
+
         $db->setQuery($query);
         $db = $db->loadObjectlist();
-        
+
         return $db;
     }
-    
 }
-?>
-
-  Formatting took: 113 ms PHP Formatter made by Spark Labs  
-Copyright Gerben van Veenendaal  
