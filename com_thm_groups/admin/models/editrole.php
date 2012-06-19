@@ -89,7 +89,6 @@ class THMGroupsModelEditRole extends JModel
 		$query->set("`name` = '" . $r_name . "'");
 		$query->where("`id` = '" . $rid . "'");
 
-		var_dump($query->__toString());
 		$db->setQuery($query);
 		if (!$db->query())
 		{
