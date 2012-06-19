@@ -47,7 +47,7 @@ class THMGroupsModelEditStructure extends JModel
 		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from($db->qn('#__thm_groups_relationtable'));
-		return $query;
+		return $query->__toString();
 	}
 
 	/**

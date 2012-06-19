@@ -47,7 +47,7 @@ class THMGroupsModelAddStructure extends JModel
 		$query->select('*');
 		$query->from($db->qn('#__thm_groups_relationtable'));
 
-		return $query;
+		return $query->__toString();
 	}
 
 	/**
@@ -87,7 +87,9 @@ class THMGroupsModelAddStructure extends JModel
 		$db->setQuery($query);
 		$maxOrder = $db->loadObject();
 		$newOrder = $maxOrder->order + 1;
-
+		echo "tesssst";
+		var_dump($newOrder);
+		var_dump($query->__toString());
 		/*
 		$query = "INSERT INTO #__thm_groups_structure ( `id`, `field`, `type`, `order`)"
 			. " VALUES (null"

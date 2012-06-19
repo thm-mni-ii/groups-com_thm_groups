@@ -50,7 +50,7 @@ class THMGroupsModelEditRole extends JModel
 		$query->select('*');
 		$query->from($db->qn('#__thm_groups_roles'));
 		$query->where('id = ' . $cid[0]);
-		return $query;
+		return $query->__toString();
 	}
 
 	/**
