@@ -104,4 +104,4 @@ $key = JRequest::getVar('key');
 	</fieldset>
 	
 </div>
-
+</form>
