@@ -4,7 +4,7 @@ class ComThmGroupsHomeEnGb extends PHPUnit_Extensions_SeleniumTestCase
   protected function setUp()
   {
     $this->setBrowser("*chrome");
-    $this->setBrowserUrl("http://localhost/");
+    $this->setBrowserUrl("http://localhost:4444/");
   }
 
   public function testMyTestCase()
