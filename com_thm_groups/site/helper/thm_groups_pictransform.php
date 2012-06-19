@@ -35,7 +35,7 @@ class PicTransform
 	 * @since  1.0
 	 */
 	private $_picFile;
-	
+
 	/**
 	 * Type
 	 *
