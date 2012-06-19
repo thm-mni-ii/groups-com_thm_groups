@@ -54,7 +54,6 @@ $listDirn	= $this->state->get('list.direction');
 				<?php echo $row->rname; ?>
 				</a>
 			</td>
-		    </td>
 		</tr>
 		<?php
 			$k = 1 - $k;
