@@ -58,13 +58,12 @@ class THMGroupsModelRolemanager extends JModelList
 		$orderCol	= $this->state->get('list.ordering');
 		$orderDirn	= $this->state->get('list.direction');
 
-		$db = $this->getDbo();
-		$query = $db->getQuery(true);
-
+		$db = & JFactory::getDBO();
 		/*
 		$query = "select id,name as rname from #__thm_groups_roles";
 		$query .= " ORDER BY $orderCol $orderDirn";
 		*/
+		$query = $db->getQuery(true);
 		$query->select('id, name as rname');
 		$query->from($db->qn('#__thm_groups_roles'));
 		$query->order($orderCol . $orderDirn);

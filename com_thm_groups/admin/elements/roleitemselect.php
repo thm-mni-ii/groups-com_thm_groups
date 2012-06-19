@@ -68,7 +68,7 @@ class JFormFieldRoleItemSelect extends JFormField
 			$db->setQuery($queryParams);
 			$params = $db->loadObjectList();
 			$sort = "sortedgrouproles";
-			
+
 			$paramRoles = substr(
 				$params[0]->params,
 				stripos($params[0]->params, "sortedgrouproles") + strlen("':sortedgrouproles:"),

@@ -45,6 +45,7 @@ class THMGroupsModelEditRole extends JModel
 		/*
 		 	$query = "SELECT * FROM #__thm_groups_roles WHERE id=" . $cid[0];
 		 */
+		$db = & JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from($db->qn('#__thm_groups_roles'));
