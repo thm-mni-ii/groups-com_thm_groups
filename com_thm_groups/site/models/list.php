@@ -576,9 +576,9 @@ class THMGroupsModelList extends JModel
     {
         $retString = '';
         $groupid   = $this->getGroupNumber();
-        if ($this->conf->getTitleState($groupid))
+        if ($this->getTitleState($groupid))
         {
-            $retString .= $this->conf->getTitle($groupid);
+            $retString .= $this->getTitleGroup($groupid);
         }
         return $retString;
     }
@@ -592,10 +592,88 @@ class THMGroupsModelList extends JModel
     {
         $retString = '';
         $groupid   = $this->getGroupNumber();
-        if ($this->conf->getDescriptionState($groupid))
+        if ($this->getDescriptionState($groupid))
         {
-            $retString .= $this->conf->getDescription($groupid);
+            $retString .= $this->getDescription($groupid);
         }
         return $retString;
+    }
+
+    /**
+     * Method to get description state
+     * 
+     * @param   Int  $gid  GroupID
+     *
+     * @return String
+     */
+    public function getDescriptionState($gid)
+    {
+    	$db = & JFactory::getDBO();
+    	$query = "SELECT show_description FROM #__thm_groups_groups WHERE id = $gid ";
+    	$db->setQuery($query);
+    	$list = $db->loadObjectList();
+    	if (isset($list[0]->show_description))
+    	{
+    		return $list[0]->show_description;
+    	}
+    	else
+    	{
+    		return "";
+    	}
+    }
+
+    /**
+     * Method to get description from database
+     *
+     * @param   Int  $gid  GroupID
+     *
+     * @return String
+     */
+    public function getDescription($gid)
+    {
+    	$db = & JFactory::getDBO();
+    	$query = "SELECT description FROM #__thm_groups_groups WHERE id = $gid ";
+    	$db->setQuery($query);
+    	$list = $db->loadObjectList();
+    	if ($list[0]->description == 'NULL')
+    	{
+    		return "";
+    	}
+    	else
+    	{
+    		return $list[0]->description;
+    	}
+    }
+
+    /**
+     * Method to get title state
+     *
+     * @param   Int  $gid  GroupID
+     *
+     * @return String
+     */
+    public function getTitleState($gid)
+    {
+    	$db = & JFactory::getDBO();
+    	$query = "SELECT show_title FROM #__thm_groups_groups WHERE id = $gid ";
+    	$db->setQuery($query);
+    	$list = $db->loadObjectList();
+    	return $list[0]->show_title;
+    }
+
+    /**
+     * Method to get title
+     *
+     * @param   Int  $gid  GroupID
+     *
+     * @return String
+     */
+    public function getTitleGroup($gid)
+    {
+    	$db = & JFactory::getDBO();
+    	$query = "SELECT title FROM #__thm_groups_groups WHERE id = $gid ";
+    	$db->setQuery($query);
+    	$list = $db->loadObjectList();
+    	return $list[0]->title;
     }
 }
