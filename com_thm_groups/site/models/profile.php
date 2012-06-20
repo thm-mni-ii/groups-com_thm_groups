@@ -33,7 +33,7 @@ jimport('joomla.application.component.modelform');
  */
 class THMGroupsModelProfile extends JModelForm
 {
-    private var $_db;
+    private $_db;
 
     /**
      * Constructor
