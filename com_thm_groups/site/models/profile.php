@@ -23,9 +23,6 @@
 defined('_JEXEC') or die();
 jimport('joomla.application.component.modelform');
 
-// Include database class
-require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'SQLAbstractionLayer.php';
-
 /**
  * THMGroupsModelProfile class for component com_thm_groups
  *

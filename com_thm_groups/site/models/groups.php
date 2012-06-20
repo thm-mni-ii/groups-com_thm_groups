@@ -24,8 +24,6 @@ defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
 jimport('joomla.filesystem.path');
 
-require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'confdb.php';
-
 /**
  * THMGroupsModelGroups class for component com_thm_groups
  *

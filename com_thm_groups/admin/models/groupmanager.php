@@ -120,8 +120,6 @@ class THMGroupsModelGroupmanager extends JModelList
 		$nestedQuery4->rightJoin("(" . $nestedQuery3 . ") AS thm ON joo.id = thm.id");
 		$nestedQuery4->union('SELECT * FROM #__usergroups');
 
-		var_dump($nestedQuery4->__toString());
-		exit();
 		return $query;
 	}
 

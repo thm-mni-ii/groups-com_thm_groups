@@ -24,8 +24,6 @@ defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
 jimport('joomla.filesystem.path');
 
-require_once JPATH_COMPONENT_ADMINISTRATOR . DS . 'classes' . DS . 'confdb.php';
-
 /**
  * THMGroupsModelList class for component com_thm_groups
  *
@@ -45,7 +43,6 @@ class THMGroupsModelList extends JModel
     public function __construct()
     {
         parent::__construct();
-        $this->conf = new ConfDB;
     }
 
     /**
