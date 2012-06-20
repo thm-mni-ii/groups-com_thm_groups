@@ -76,7 +76,7 @@ class THMGroupsModelGroupmanager extends JModelList
 		$db =& JFactory::getDBO();
 		$query = $db->getQuery(true);
 
-		// MySQL Variante eines FULL JOIN
+		/*
 		$query = "SELECT thm.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla ";
 		$query .= "FROM #__usergroups AS joo ";
 		$query .= "RIGHT JOIN (";
@@ -96,6 +96,7 @@ class THMGroupsModelGroupmanager extends JModelList
 		$query .= ") AS thm ";
 		$query .= "ON joo.id = thm.id ";
 		$query .= "ORDER BY lft";
+		*/
 
 		$nestedQuery1 = $db->getQuery(true);
 		$nestedQuery1->select('*');
@@ -117,10 +118,9 @@ class THMGroupsModelGroupmanager extends JModelList
 		$nestedQuery4 = $db->getQuery(true);
 		$nestedQuery4->select('thm.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla');
 		$nestedQuery4->from("#__usergroups AS joo");
-		$nestedQuery4->rightJoin("(" . $nestedQuery3 . ") AS thm ON joo.id = thm.id");
-		$nestedQuery4->union('SELECT * FROM #__usergroups');
+		$nestedQuery4->rightJoin("(" . $nestedQuery3 . ") AS thm ON joo.id = thm.id UNION $nestedQuery2");
 
-		return $query;
+		return $nestedQuery4->__toString();
 	}
 
 	/**
