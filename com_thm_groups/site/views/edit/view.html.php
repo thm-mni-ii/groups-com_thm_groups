@@ -20,6 +20,7 @@
  *@link        www.mni.thm.de
  *@version     3.0
  */
+
 defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
 jimport('joomla.filesystem.path');
@@ -34,6 +35,7 @@ jimport('joomla.filesystem.path');
  */
 class THMGroupsViewEdit extends JView
 {
+
 	protected $form;
 
 	/**
@@ -165,15 +167,16 @@ class THMGroupsViewEdit extends JView
 					{
 						$output .= "<td>" . $rowItem . "</td>";
 					}
-					$output .= "<td><a href='javascript:delTableRow($key, $structid );' title='Zeile: "
-					. ($key + 1) . "::Zeile entfernen.' class='hasTip'><img src='"
-					. JURI::root(true) . "/components/com_thm_groups/img/icon-16-trash.png' /></a> </td>";
-					$output .= "<td><a href='index.php?option=com_thm_groups&view=edit&layout=edit_table&tmpl=component&gsuid="
-					. $gsuid&structid=$structid&key=$key' title='Zeile: "
-					. ($key + 1) . "::Zeile bearbeiten.' class='modal-button hasTip' rel=\"{handler: 'iframe', size: {x: 400, y: 300}}\"><img src='"
+					$path = "index.php?option=com_thm_groups&view=edit&layout=edit_table&tmpl=component&gsuid=$gsuid&structid=$structid&key=$key";
+					$output .= "<td><a href='javascript:delTableRow($key, $structid );' title='Zeile: " . ($key + 1)
+					. "::Zeile entfernen.' class='hasTip'><img src='" . JURI::root(true)
+					. "/components/com_thm_groups/img/icon-16-trash.png' /></a></td>";
+					$output .= "<td><a href='" . $path . "' title='Zeile: " . ($key + 1)
+					. "::Zeile bearbeiten.' class='modal-button hasTip' rel=\"{handler: 'iframe', size: {x: 400, y: 300}}\"><img src='"
 					. JURI::root(true) . "/components/com_thm_groups/img/icon-16-edit.png' /></a> </td>";
 					$output .= "</tr>";
 					$k = 1 - $k;
+
 				}
 			}
 			else

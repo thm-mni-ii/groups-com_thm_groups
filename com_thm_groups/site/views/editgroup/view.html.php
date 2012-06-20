@@ -1,33 +1,54 @@
 <?php
 /**
- * This file contains the data type class Image.
+ *@category Joomla component
  *
- * PHP version 5
+ *@package     THM_Groups
  *
- * @category Joomla Programming Weeks SS2008: FH Giessen-Friedberg
- * @package  com_staff
- * @author   Sascha Henry <sascha.henry@mni.fh-giessen.de>
- * @author   Christian G�th <christian.gueth@mni.fh-giessen.de>
- * @author   Severin Rotsch <severin.rotsch@mni.fh-giessen.de>
- * @author   Martin Karry <martin.karry@mni.fh-giessen.de>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @link     http://www.mni.fh-giessen.de
- **/
-defined( '_JEXEC' ) or die( 'Restricted access' );
-
-jimport( 'joomla.application.component.view');
+ *@subpackage  com_thm_groups
+ *@name        THMGroupsViewEditgroup
+ *@description THMGroupsViewEditgroup file from com_thm_groups
+ *@author      Dennis Priefer, dennis.priefer@mni.thm.de
+ *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
+ *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
+ *@author      Jacek Sokalla,  jacek.sokalla@mni.thm.de
+ *@author      Niklas Simonis, niklas.simonis@mni.thm.de
+ *@author      Peter May,      peter.may@mni.thm.de
+ *
+ *@copyright   2012 TH Mittelhessen
+ *
+ *@license     GNU GPL v.2
+ *@link        www.mni.thm.de
+ *@version     3.0
+ */
+defined('_JEXEC') or die('Restricted access');
+jimport('joomla.application.component.view');
 jimport('joomla.filesystem.path');
 
-class THMGroupsViewEditgroup extends JView {
+/**
+ * THMGroupsViewEditgroup class for component com_thm_groups
+ *
+ * @package     Joomla.Site
+ * @subpackage  thm_groups
+ * @link        www.mni.thm.de
+ * @since       Class available since Release 2.0
+ */
+class THMGroupsViewEditgroup extends JView
+{
 
 	protected $form;
 
-
-	function display($tpl = null) {
-
+	/**
+	 * Method to get display
+	 *
+	 * @param   Object  $tpl  template
+	 *
+	 * @return void
+	 */
+	public function display($tpl = null)
+	{
 		$model =& $this->getModel();
-		$item =& $this->get( 'Data');
-		$this->assignRef( 'item', $item );
+		$item =& $this->get('Data');
+		$this->assignRef('item', $item);
 
 		$groups =& $this->get('AllGroups');
 		$this->assignRef('groups', $groups);
@@ -35,27 +56,25 @@ class THMGroupsViewEditgroup extends JView {
 		$parent_id =& $this->get('ParentId');
 		$this->assignRef('item_parent_id', $parent_id);
 
-
 		$this->form = $this->get('Form');
-		$info=array();
+		$info = array();
 		$info['groupinfo'] = $item[0]->info;
 
-		if (!empty($info)) {
+		if (!empty($info))
+		{
 			$this->form->bind($info);
 		}
 
 		/* ZURÜCK BUTTON */
-		$option_old = JRequest :: getVar('option_old');
-		$layout_old = JRequest :: getVar('layout_old');
-		$view_old = JRequest :: getVar('view_old');
+		$option_old = JRequest::getVar('option_old');
+		$layout_old = JRequest::getVar('layout_old');
+		$view_old = JRequest::getVar('view_old');
 
-		$this->assignRef( 'option_old', $option_old );
-		$this->assignRef( 'layout_old', $layout_old );
-		$this->assignRef( 'view_old', $view_old );
+		$this->assignRef('option_old', $option_old);
+		$this->assignRef('layout_old', $layout_old);
+		$this->assignRef('view_old', $view_old);
 		/* ###########   */
-
 
 		parent::display($tpl);
 	}
 }
-?>

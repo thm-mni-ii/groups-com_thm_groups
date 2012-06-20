@@ -1,23 +1,26 @@
 <?php
 /**
- * This file contains the data type class Image.
+ *@category Joomla component
  *
- * PHP version 5
+ *@package     THM_Groups
  *
- * @package  com_staff
- * @author   Dennis Priefer <dennis.priefer@mni.fh-giessen.de>
- * @author	 Ali Kader Caliskan <ali.kader.caliskan@mni.fh-giessen.de>
- * @author   Jacek Sokalla <jacek.sokalla@mni.th-giessen.de>
- * @author   Markus Kaiser <markus.kaiser@mni.th-giessen.de>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @link     http://www.mni.fh-giessen.de
- **/
+ *@subpackage  com_thm_groups
+ *@name        THMGroupsViewProfile
+ *@description THMGroupsViewProfile file from com_thm_groups
+ *@author      Dennis Priefer, dennis.priefer@mni.thm.de
+ *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
+ *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
+ *@author      Jacek Sokalla,  jacek.sokalla@mni.thm.de
+ *@author      Niklas Simonis, niklas.simonis@mni.thm.de
+ *@author      Peter May,      peter.may@mni.thm.de
+ *
+ *@copyright   2012 TH Mittelhessen
+ *
+ *@license     GNU GPL v.2
+ *@link        www.mni.thm.de
+ *@version     3.0
+ */
 defined('_JEXEC') or die('Restricted access');
-
-	// Daten für die EditForm
-	//$option_old = JRequest :: getVar('option_old', 0);
-	//$layout_old = JRequest :: getVar('layout_old', 0);
-	//$view_old = JRequest :: getVar('view_old', 0);
 
 JHTML::_('behavior.modal', 'a.modal-button');
 JHTML::_('behavior.calendar');
@@ -27,9 +30,10 @@ $canEdit = ($user->id == $this->userid || $this->canEdit);
 
 ?>
 <div id="title"><?php 
-	foreach ($this->items as $item) {
-		//Daten fuer den HEAD in Variablen speichern
-		switch($item->structid)
+	foreach ($this->items as $item)
+	{
+		// Daten fuer den HEAD in Variablen speichern
+		switch ($item->structid)
 		{
 			case "1":
 				$firstName = $item->value;
@@ -41,7 +45,8 @@ $canEdit = ($user->id == $this->userid || $this->canEdit);
 				$title = $item->value;
 				break;
 			default:
-				if ($this->getStructureType($item->structid) == "PICTURE" && $picture == null) {
+				if ($this->getStructureType($item->structid) == "PICTURE" && $picture == null)
+				{
 					$picture = $item->value;
 				}
 				break;
@@ -53,59 +58,82 @@ $canEdit = ($user->id == $this->userid || $this->canEdit);
 		<table>
 			<?php
 				echo "<h2 class='contentheading'>" . $title . " " . $firstName . " " . $lastName;
-				//echo "<h1>" . $title . " " . $firstName . " " . $lastName . "</h1>";
-				
-				if ($canEdit) {
+
+				if ($canEdit)
+				{
 					$attribs['title'] = 'bearbeiten';
-		
+
 					// Daten fuer die EditForm
 					$option = JRequest :: getVar('option', 0);
 					$layout = JRequest :: getVar('layout', 0);
 					$view = JRequest :: getVar('view', 0);
-					echo "<span style='float:right;'><a href='" . JRoute :: _('index.php?option=com_thm_groups&view=edit&layout=default&Itemid=' . $this->itemid . '&gsuid=' . $this->userid . '&name=' . trim($lastName) .'&gsgid='.$this->gsgid. '&option_old='.$option. '&view_old='.$view. '&layout_old='.$layout). "'> " . JHTML :: image("components/com_thm_groups/img/icon-32-edit.png", 'bearbeiten', $attribs) . "</a></span>";
-		
+
+					$path = "'index.php?option=com_thm_groups&view=edit&layout=default&Itemid='";
+					$path2 = "'&option_old=' . $option . '&view_old=' . $view . '&layout_old=' . $layout";
+					echo "<span style='float:right;'><a href='"
+					. JRoute::_($path . $this->itemid . '&gsuid=' . $this->userid . '&name=' . trim($lastName) . '&gsgid=' . $this->gsgid . $path2)
+					. "'> "
+					. JHTML::image("components/com_thm_groups/img/icon-32-edit.png", 'bearbeiten', $attribs) . "</a></span>";
 				}
-				
+
 				echo "</h2>";
-				
-				if($picture != null){
-					echo	JHTML :: image("components/com_thm_groups/img/portraits/".$picture, "Portrait", array ());
+
+				if ($picture != null)
+				{
+					echo JHTML :: image("components/com_thm_groups/img/portraits/" . $picture, "Portrait", array ());
 				}
-				foreach($this->structure as $structureItem) {
-					
-					if ($structureItem->id > 3 && $structureItem->id != 5 && $structureItem->type != 'PICTURE') {
-						foreach ($this->items as $item) {
-								if ($item->structid == $structureItem->id && $item->value != "" && $item->publish == 1) {?>
+				foreach ($this->structure as $structureItem)
+				{
+					if ($structureItem->id > 3 && $structureItem->id != 5 && $structureItem->type != 'PICTURE')
+					{
+						foreach ($this->items as $item)
+						{
+								if ($item->structid == $structureItem->id && $item->value != "" && $item->publish == 1)
+								{
+								?>
 					<tr>
 						<td width="110" class="key">
 							<label for="title">
 		  						<b><?php 
-		  							echo JText::_( $structureItem->field . ":"); ?></b>
+		  							echo JText::_($structureItem->field . ":"); ?></b>
 							</label>
 						</td>
 						<td>
 							<?php
-									switch ($structureItem->type) {
+									switch ($structureItem->type)
+									{
 										case 'TABLE':
 											$head = explode(';', $this->getExtra($structureItem->id, $structureItem->type));
 											$arrValue = json_decode($item->value);?>
 											<table>
 												<tr>
-											<?php foreach($head as $headItem)
-													echo "<th>$headItem</th>";?>
+											<?php 
+											foreach ($head as $headItem)
+											{
+													echo "<th>$headItem</th>";
+											}
+											?>
 												</tr>
 											<?php 
-												if($item->value != "" && $item->value != "[]") {
+												if ($item->value != "" && $item->value != "[]")
+												{
 													$k = 0;
-													foreach($arrValue as $row) {
-														if($k)
+													foreach ($arrValue as $row)
+													{
+														if ($k)
+														{
 															echo "<tr style='background-color:#F7F7F7;'>";
+														}
 														else
+														{
 															echo "<tr>";
-														foreach($row as $rowItem)
-															echo "<td>".$rowItem."</td>";
+														}
+														foreach ($row as $rowItem)
+														{
+															echo "<td>" . $rowItem . "</td>";
+														}
 														echo "</tr>";
-														$k = 1-$k;
+														$k = 1 - $k;
 													}
 												}
 											?>
@@ -115,36 +143,45 @@ $canEdit = ($user->id == $this->userid || $this->canEdit);
 										case 'PICTURE':
 											break;
 										case "LINK":
-												if (trim($item->value) != "") {
+												if (trim($item->value) != "")
+												{
 													echo "<a href='$item->value'>$item->value</a>";
-													//echo "<div>". THMGroupsHelper::getLink(trim($data->value), THMGroupsHelper::getImage('modules/mod_thm_groups/icons/icon_www.png', 'WWW', 'mod_gs_icon'), 'link'). "</div>";
 												}
 												break;
 										case 'MULTISELECT':
 											// ToDo
 											break;
 										default:
-											if($item->structid=='4')
+											if ($item->structid == '4')
+											{
 												echo JHTML :: _('email.cloak', $item->value, 1, $item->value, 0);
-													
+											}
 											else
+											{
 												echo JText::_($item->value);
-									} //switch				
-								} //if
-							} // foreach	
+											}
+									}
+								}
+						}
 							 ?>
 						</td>
 					</tr>
 				<?php
-					} //if
-				} //foreach
+					}
+				}
 				?>
 			<tr>
 				<td colspan="2"><hr></td>
 			</tr>
 			<tr>
 				<td>
-					<input type='submit' id="gs_editView_buttons" onclick='return confirm("Wirklich zurück?"), document.forms["adminForm"].elements["task"].value = "profile.backToRefUrl"' value='Zurück' name='backToRefUrl' task='profile.backToRefUrl' />
+					<input
+					type='submit'
+					id="gs_editView_buttons"
+					onclick='return confirm("Wirklich zurück?"), document.forms["adminForm"].elements["task"].value = "profile.backToRefUrl"'
+					value='Zurück'
+					name='backToRefUrl'
+					task='profile.backToRefUrl' />
 				</td>
 			</tr>
 		</table>
@@ -159,7 +196,7 @@ $canEdit = ($user->id == $this->userid || $this->canEdit);
 		<input type="hidden" name="name" value="<?php echo JRequest::getVar('name'); ?>" />
 		<input type="hidden" name="tablekey" value="" />
 		<input type="hidden" name="controller" value="profile" />
-		<input type='hidden' name="option_old" value=" <?php echo JRequest::getVar('option_old',0,'post');  ?> " />
+		<input type='hidden' name="option_old" value=" <?php echo JRequest::getVar('option_old', 0, 'post');  ?> " />
 		<input type='hidden' name="view_old" value="<?php echo  $view_old; ?>"/>
 		<input type='hidden' name="layout_old" value="<?php echo  $layout_old; ?>" />
 	</div>
