@@ -76,6 +76,7 @@ class THMGroupsModelEditGroup extends JModelForm
 		/*
 		 $query = "SELECT * FROM #__thm_groups_groups WHERE id=" . $cid[0];
 		 */
+		$db =& JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from($db->qn('#__thm_groups_groups'));
