@@ -48,29 +48,58 @@ class THMGroupsModelStructure extends JModelList
 		{
 			if ($toDel > 4)
 			{
+				/*
 				$query = "SELECT type FROM #__thm_groups_structure WHERE `id` = " . $toDel . "; ";
+				*/
+				$query = $db->getQuery(true);
+				$query->select('type');
+				$query->from($db->qn('#__thm_groups_structure'));
+				$query->where("`id` = '" . $toDel . "'");
+
 				echo $query;
+
 				$db->setQuery($query);
 				$type = $db->loadObject();
 
+				/*
 				$query = "DELETE FROM #__thm_groups_structure WHERE `id` = " . $toDel . "; ";
+				*/
+				$query = $db->getQuery(true);
+				$query->from('#__thm_groups_structure');
+				$query->delete();
+				$query->where("`id` = '" . $toDel . "'");
+
 				$db->setQuery($query);
 				if (!$db->query())
 				{
 					$err = 1;
 				}
+				/*
 				$query = "DELETE FROM "
 					. "#__thm_groups_" . $type->type . "_extra "
 					. "WHERE `structid` = " . $toDel . "; ";
+				*/
+				$query = $db->getQuery(true);
+				$query->from("#__thm_groups_" . $type->type . "_extra");
+				$query->delete();
+				$query->where("`structid` = '" . $toDel . "'");
+
 				$db->setQuery($query);
 				if (!$db->query())
 				{
 					$err = 1;
 				}
 
+				/*
 				$query = "DELETE FROM "
 					. "#__thm_groups_" . $type->type
 					. " WHERE `structid` = " . $toDel . "; ";
+					*/
+				$query = $db->getQuery(true);
+				$query->from("#__thm_groups_" . $type->type);
+				$query->delete();
+				$query->where("`structid` = '" . $toDel . "'");
+
 				$db->setQuery($query);
 				if (!$db->query())
 				{
@@ -104,23 +133,44 @@ class THMGroupsModelStructure extends JModelList
 
 		if (isset($direction))
 		{
+			/*
 			$query = "SELECT a.order FROM #__thm_groups_structure as a WHERE `id` = " . $cid[0] . "; ";
+			*/
+			$query = $db->getQuery(true);
+			$query->select('a.order');
+			$query->from($db->qn('#__thm_groups_structure AS a'));
+			$query->where("`id` = '" . $cid[0] . "'");
+
 			$db->setQuery($query);
 			$itemOrder = $db->loadObject();
 
 			if ($direction == -1)
 			{
+				/*
 				$query = "UPDATE #__thm_groups_structure as a SET"
 					. " a.order=" . $itemOrder->order
 					. " WHERE a.order=" . ($itemOrder->order - 1);
+				*/
+				$query = $db->getQuery(true);
+				$query->update($db->qn('#__thm_groups_structure AS a'));
+				$query->set("`a.order` = '" . $itemOrder->order . "'");
+				$query->where("`a.order` = '" . ($itemOrder->order - 1) . "'");
+
 				$db->setQuery($query);
 				if (!$db->query())
 				{
 					$err = 1;
 				}
+				/*
 				$query = "UPDATE #__thm_groups_structure as a SET"
 					. " a.order=" . ($itemOrder->order - 1)
 					. " WHERE a.id=" . $cid[0];
+				*/
+				$query = $db->getQuery(true);
+				$query->update($db->qn('#__thm_groups_structure AS a'));
+				$query->set("`a.order` = '" . ($itemOrder->order - 1) . "'");
+				$query->where("`a.id` = '" . $cid[0] . "'");
+
 				$db->setQuery($query);
 				if (!$db->query())
 				{
@@ -129,17 +179,30 @@ class THMGroupsModelStructure extends JModelList
 			}
 			elseif ($direction = 1)
 			{
+				/*
 				$query = "UPDATE #__thm_groups_structure as a SET"
 					. " a.order=" . $itemOrder->order
 					. " WHERE a.order=" . ($itemOrder->order + 1);
+				*/
+				$query = $db->getQuery(true);
+				$query->update($db->qn('#__thm_groups_structure AS a'));
+				$query->set("`a.order` = '" . $itemOrder->order . "'");
+				$query->where("`a.order` = '" . ($itemOrder->order + 1) . "'");
+
 				$db->setQuery($query);
 				if (!$db->query())
 				{
 					$err = 1;
 				}
+				/*
 				$query = "UPDATE #__thm_groups_structure as a SET"
 					. " a.order=" . ($itemOrder->order + 1)
 					. " WHERE a.id=" . $cid[0];
+				*/
+				$query = $db->getQuery(true);
+				$query->update($db->qn('#__thm_groups_structure AS a'));
+				$query->set("`a.order` = '" . ($itemOrder->order + 1) . "'");
+				$query->where("`a.id` = '" . $cid[0] . "'");
 				$db->setQuery($query);
 				if (!$db->query())
 				{
@@ -152,9 +215,16 @@ class THMGroupsModelStructure extends JModelList
 			$i = 0;
 			foreach ($order as $itemOrder)
 			{
+				/*
 				$query = "UPDATE #__thm_groups_structure as a SET"
 					. " a.order=" . ($itemOrder)
 					. " WHERE a.id=" . $cid[$i];
+				*/
+				$query = $db->getQuery(true);
+				$query->update($db->qn('#__thm_groups_structure AS a'));
+				$query->set("`a.order` = '" . ($itemOrder) . "'");
+				$query->where("`a.id` = '" . $cid[$i] . "'");
+
 				$db->setQuery($query);
 				if (!$db->query())
 				{
