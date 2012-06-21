@@ -188,7 +188,7 @@ class THMGroupsModelGroupmanager extends JModelList
 		$query = "SELECT * FROM #__usergroups ORDER BY lft";
 		*/
 		$query = $db->getQuery(true);
-		$query->select('gid');
+		$query->select('*');
 		$query->from($db->qn('#__usergroups'));
 		$query->order("lft");
 
