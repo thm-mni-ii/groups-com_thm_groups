@@ -314,7 +314,6 @@ class THMGroupsModelmembermanager extends JModelList
 	 */
 	public function getGroupSelectOptions()
 	{
-		// $SQLAL = new SQLAbstractionLayer;
 
 		$groups = $this->getGroupsHirarchy();
 		$jgroups = $this->getJoomlaGroups();
