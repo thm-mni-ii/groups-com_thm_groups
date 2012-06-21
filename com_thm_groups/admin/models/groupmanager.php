@@ -131,7 +131,20 @@ class THMGroupsModelGroupmanager extends JModelList
 	public function getfreeGroups()
 	{
 		$db =& JFactory::getDBO();
+		/*
 		$query = "SELECT * FROM #__thm_groups_groups WHERE id NOT IN (SELECT gid FROM #__thm_groups_groups_map)";
+		*/
+
+		$query = $db->getQuery(true);
+		$nestedQuery = $db->getQuery(true);
+
+		$nestedQuery->select('gid');
+		$nestedQuery->from($db->qn('#__thm_groups_groups_map'));
+
+		$query->select('*');
+		$query->from($db->qn('#__thm_groups_groups'));
+		$query->where("`id` NOT IN (" . $nestedQuery . ")");
+
 		$db->setQuery($query);
 		$list = $db->loadObjectList();
 		return $list;
@@ -145,7 +158,19 @@ class THMGroupsModelGroupmanager extends JModelList
 	public function getfullGroupIDs()
 	{
 		$db =& JFactory::getDBO();
+		/*
 		$query = "SELECT id FROM #__thm_groups_groups WHERE id IN (SELECT gid FROM #__thm_groups_groups_map)";
+		*/
+		$query = $db->getQuery(true);
+		$nestedQuery = $db->getQuery(true);
+
+		$nestedQuery->select('gid');
+		$nestedQuery->from($db->qn('#__thm_groups_groups_map'));
+
+		$query->select('id');
+		$query->from($db->qn('#__thm_groups_groups'));
+		$query->where("`id` IN (" . $nestedQuery . ")");
+
 		$db->setQuery($query);
 		$list = $db->loadObjectList();
 		return $list;
@@ -159,7 +184,14 @@ class THMGroupsModelGroupmanager extends JModelList
 	public function getJoomlaGroups()
 	{
 		$db =& JFactory::getDBO();
+		/*
 		$query = "SELECT * FROM #__usergroups ORDER BY lft";
+		*/
+		$query = $db->getQuery(true);
+		$query->select('gid');
+		$query->from($db->qn('#__usergroups'));
+		$query->order("lft");
+
 		$db->setQuery($query);
 		return $db->loadObjectList();
 	}
@@ -178,7 +210,14 @@ class THMGroupsModelGroupmanager extends JModelList
 			return;
 		}
 		$db =& JFactory::getDBO();
+		/*
 		$query = "DELETE FROM #__thm_groups_groups WHERE id=" . $gid;
+		*/
+		$query = $db->getQuery(true);
+		$query->from('#__thm_groups_groups');
+		$query->delete();
+		$query->where("`id` = '" . $gid . "'");
+
 		$db->setQuery($query);
 		$db->Query();
 	}
@@ -197,13 +236,20 @@ class THMGroupsModelGroupmanager extends JModelList
 			return;
 		}
 		$db =& JFactory::getDBO();
+		/*
 		$query = "DELETE FROM #__usergroups WHERE id=" . $gid;
+		*/
+		$query = $db->getQuery(true);
+		$query->from('#__usergroups');
+		$query->delete();
+		$query->where("`id` = '" . $gid . "'");
+
 		$db->setQuery($query);
 		$db->Query();
 	}
 
 	/**
-	 * Method to delete group
+	 * Method to get user count from group
 	 *
 	 * @param   Int  $gid  GroupID
 	 *
@@ -212,7 +258,14 @@ class THMGroupsModelGroupmanager extends JModelList
 	public function getGroupUserCount($gid)
 	{
 		$db =& JFactory::getDBO();
+		/*
 		$query = "SELECT * FROM  `mni_thm_groups_groups_map` WHERE `gid` = " . $gid;
+		*/
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from($db->qn('#__thm_groups_groups_map'));
+		$query->where("`gid` = '" . $gid . "'");
+
 		$db->setQuery($query);
 		$db->Query();
 
