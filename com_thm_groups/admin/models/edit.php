@@ -316,7 +316,7 @@ class THMGroupsModeledit extends JModelForm
 		$query = "UPDATE #__thm_groups_picture SET value='" . $uid . "_" . $structid . ".jpg' WHERE userid = $uid AND structid=$structid";
 		*/
 		$query = $db->getQuery(true);
-		$query->from($db->qn('#__thm_groups_picture'));
+		$query->update($db->qn('#__thm_groups_picture'));
 		$query->set("`value` = '" . $uid . "_" . $structid . ".jpg'");
 		$query->where("`userid` = '" . $uid . "'");
 		$query->where("`structid` = '" . $structid . "'");
