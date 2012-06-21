@@ -41,10 +41,24 @@ class THMGroupsModelmembermanager extends JModelList
 	public function sync()
 	{
 		$db =& JFactory::getDBO();
+		/*
 		$query = "SELECT #__users.id, username, email, name, title "
 			. "FROM #__users, #__usergroups, #__user_usergroup_map "
 			. "WHERE #__users.id NOT IN (SELECT userid FROM #__thm_groups_additional_userdata)"
 			. " AND user_id = #__users.id AND group_id = #__usergroups.id";
+		*/
+		$query = $db->getQuery(true);
+		$nestedQuery = $db->getQuery(true);
+
+		$nestedQuery->select('userid');
+		$nestedQuery->from("#__thm_groups_additional_userdata");
+
+		$query->select('user.id, username, email, name, title');
+		$query->from("#__users AS user, #__usergroups AS group, #__user_usergroup_map AS maps");
+		$query->where("`user.id` NOT IN (" . $$nestedQuery . ")");
+		$query->where("`user_id` = `user.id`");
+		$query->where("`group_id` = `group.id`");
+
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
 
@@ -87,32 +101,66 @@ class THMGroupsModelmembermanager extends JModelList
 				$firstName = trim($firstName);
 				$lastName = trim($lastName);
 
+				/*
 				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
 				$query .= "VALUES ($id, '$firstName', 1)";
+				*/
+				$query = $db->getQuery(true);
+				$query->insert("#__thm_groups_text");
+				$query->set("`userid` = '" . $id . "'");
+				$query->set("`structid` = '1'");
+				$query->set("`value` = '" . $firstName . "'");
 
 				$db->setQuery($query);
 				$db->query();
 
+				/*
 				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
 				$query .= "VALUES ($id, '$lastName', 2)";
+				*/
+				$query = $db->getQuery(true);
+				$query->insert("#__thm_groups_text");
+				$query->set("`userid` = '" . $id . "'");
+				$query->set("`structid` = '2'");
+				$query->set("`value` = '" . $lastName . "'");
 
 				$db->setQuery($query);
 				$db->query();
 
+				/*
 				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
 				$query .= "VALUES ($id, '$email', 4)";
+				*/
+				$query = $db->getQuery(true);
+				$query->insert("#__thm_groups_text");
+				$query->set("`userid` = '" . $id . "'");
+				$query->set("`structid` = '4'");
+				$query->set("`value` = '" . $email . "'");
 
 				$db->setQuery($query);
 				$db->query();
 
+				/*
 				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
 				$query .= "VALUES ($id, '$username', 3)";
+				*/
+				$query = $db->getQuery(true);
+				$query->insert("#__thm_groups_text");
+				$query->set("`userid` = '" . $id . "'");
+				$query->set("`structid` = '3'");
+				$query->set("`value` = '" . $username . "'");
 
 				$db->setQuery($query);
 				$db->query();
 
+				/*
 				$query  = "INSERT INTO #__thm_groups_additional_userdata (userid, usertype)";
 				$query .= "VALUES ($id, '$usertype')";
+				*/
+				$query = $db->getQuery(true);
+				$query->insert("#__thm_groups_additional_userdata");
+				$query->set("`userid` = '" . $id . "'");
+				$query->set("`usertype` = '" . $usertype . "'");
 
 				$db->setQuery($query);
 				$db->query();
@@ -120,8 +168,16 @@ class THMGroupsModelmembermanager extends JModelList
 				$firstName = "";
 				$lastName = "";
 
+				/*
 				$query  = "INSERT INTO #__thm_groups_groups_map (uid,gid,rid)";
 				$query .= "VALUES ($id, '1','1')";
+				*/
+				$query = $db->getQuery(true);
+				$query->insert("#__thm_groups_groups_map");
+				$query->set("`uid` = '" . $id . "'");
+				$query->set("`gid` = '1'");
+				$query->set("`rid` = '1'");
+
 				$db->setQuery($query);
 				$db->query();
 		}
@@ -249,8 +305,14 @@ class THMGroupsModelmembermanager extends JModelList
 		$db =& JFactory::getDBO();
 		foreach ($uids as $uid)
 		{
+			/*
 			$query = "INSERT INTO #__user_usergroup_map (user_id,group_id)";
 			$query .= "VALUES( $uid , $gid )";
+			*/
+			$query = $db->getQuery(true);
+			$query->insert("#__user_usergroup_map");
+			$query->set("`user_id` = '" . $uid . "'");
+			$query->set("`group_id` = '" . $gid . "'");
 
 			$db->setQuery($query);
 			$db->query();
@@ -272,16 +334,32 @@ class THMGroupsModelmembermanager extends JModelList
 
 		foreach ($uids as $uid)
 		{
+			/*
 			$query = "SELECT COUNT(1) AS num "
 				. "FROM #__user_usergroup_map AS user INNER JOIN #__thm_groups_groups_map AS thm "
 				. "ON user.user_id = thm.uid AND user.group_id = thm.gid "
 				. "WHERE user.user_id = $uid AND user.group_id = $gid";
+				*/
+			$query = $db->getQuery(true);
+			$query->select('COUNT(1) AS num');
+			$query->from("#__user_usergroup_map AS user");
+			$query->innerJoin("#__thm_groups_groups_map AS thm ON user.user_id = thm.uid AND user.group_id = thm.gid");
+			$query->where("`user.user_id` = '" . $uid . "'");
+			$query->where("`user.group_id` = '" . $gid . "'");
 
 			$db->setQuery($query);
 			$aRes = $db->loadAssoc();
 			if ($aRes['num'] == 0)
 			{
+				/*
 				$query = "DELETE FROM #__user_usergroup_map WHERE user_id = $uid AND group_id = $gid";
+				*/
+				$query = $db->getQuery(true);
+				$query->from('#__user_usergroup_map');
+				$query->delete();
+				$query->where("`user_id` = '" . $uid . "'");
+				$query->where("`group_id` = '" . $gid . "'");
+
 				$db->setQuery($query);
 				$db->query();
 			}
@@ -301,7 +379,14 @@ class THMGroupsModelmembermanager extends JModelList
 		// Get database descriptor
 		$db =& JFactory::getDBO();
 
+		/*
 		$query = "DELETE FROM #__user_usergroup_map WHERE user_id = $uid AND group_id = $gid";
+		*/
+		$query = $db->getQuery(true);
+		$query->from('#__user_usergroup_map');
+		$query->delete();
+		$query->where("`user_id` = '" . $uid . "'");
+		$query->where("`group_id` = '" . $gid . "'");
 
 		$db->setQuery($query);
 		$db->query();
@@ -360,6 +445,8 @@ class THMGroupsModelmembermanager extends JModelList
 		$db =& JFactory::getDBO();
 
 		// Create SQL query string
+
+		/*
 		$query = "SELECT thm.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla ";
 		$query .= "FROM #__usergroups AS joo ";
 		$query .= "RIGHT JOIN (";
@@ -378,6 +465,28 @@ class THMGroupsModelmembermanager extends JModelList
 		$query .= ") AS thm ";
 		$query .= "ON joo.id = thm.id ";
 		$query .= "ORDER BY lft";
+		*/
+
+		$nestedQuery = $db->getQuery(true);
+		$nestedQuery->select('*');
+		$nestedQuery->from("__thm_groups_groups");
+		$nestedQuery->where("injoomla = 0");
+		$nestedQuery->order("name");
+
+		$nestedQuery1 = $db->getQuery(true);
+		$nestedQuery1->select('*');
+		$nestedQuery1->from("__thm_groups_groups");
+
+		$nestedQuery2 = $db->getQuery(true);
+		$nestedQuery2->select('joo.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla');
+		$nestedQuery2->from("#__usergroups AS joo");
+		$nestedQuery2->leftJoin("$nestedQuery1 AS thm ON joo.id = thm.id");
+		$nestedQuery2->order("lft");
+
+		$query = $db->getQuery(true);
+		$query->select('thm.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla');
+		$query->from("#__usergroups AS joo");
+		$query->rightJoin("$nestedQuery AS thm ON ON joo.id = thm.id UNION $nestedQuery2");
 
 		$db->setQuery($query);
 		$db->query();
@@ -393,7 +502,14 @@ class THMGroupsModelmembermanager extends JModelList
 	public function getJoomlaGroups()
 	{
 		$db =& JFactory::getDBO();
+		/*
 		$query = "SELECT * FROM #__usergroups ORDER BY lft";
+		*/
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from("#__usergroups");
+		$query->order('lft');
+
 		$db->setQuery($query);
 		$db->query();
 		return $db->loadObjectList();
@@ -410,7 +526,14 @@ class THMGroupsModelmembermanager extends JModelList
 	public function getGroups()
 	{
 		$db =& JFactory::getDBO();
+		/*
 		$query = 'SELECT * FROM   #__thm_groups_groups Order By name;';
+		*/
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from("#__thm_groups_groups");
+		$query->order('name');
+
 		$db->setQuery($query);
 		$db->query();
 		return $db->loadObjectList();
@@ -426,7 +549,14 @@ class THMGroupsModelmembermanager extends JModelList
 	public function getRoles()
 	{
 		$db =& JFactory::getDBO();
+		/*
 		$query = 'SELECT id, name FROM   #__thm_groups_roles Order By name;';
+		*/
+		$query = $db->getQuery(true);
+		$query->select('id, name');
+		$query->from("#__thm_groups_roles");
+		$query->order('name');
+
 		$db->setQuery($query);
 		$db->query();
 		return $db->loadObjectList();
@@ -451,6 +581,7 @@ class THMGroupsModelmembermanager extends JModelList
 			$uid = $_GET['cid'][0];
 		}
 
+		/*
 		$query = 'SELECT groups.name AS groupname, groups.id as groupid, roles.name AS rolename, roles.id AS roleid
 		FROM             #__thm_groups_groups     AS groups
 		LEFT JOIN #__thm_groups_groups_map AS maps
@@ -458,6 +589,14 @@ class THMGroupsModelmembermanager extends JModelList
 		LEFT JOIN #__thm_groups_roles      AS roles
 		ON        maps.rid = roles.id
 		WHERE  maps.uid = ' . $uid . ' AND maps.gid > 1;';
+		*/
+		$query = $db->getQuery(true);
+		$query->select('groups.name AS groupname, groups.id as groupid, roles.name AS rolename, roles.id AS roleid');
+		$query->from("#__thm_groups_groups AS groups");
+		$query->leftJoin("#__thm_groups_groups_map AS maps ON groups.id = maps.gid");
+		$query->leftJoin("#__thm_groups_roles AS roles ON maps.rid = roles.id");
+		$query->where("`maps.uid` = '" . $uid . "'");
+		$query->where("`maps.gid` >= 1");
 
 		$db->setQuery($query);
 		$db->query();
@@ -479,10 +618,15 @@ class THMGroupsModelmembermanager extends JModelList
 	{
 		$db =& JFactory::getDBO();
 
-		// Create SQL query string
+		/*
 		$query = 'SELECT rid
 		FROM             #__thm_groups_groups_map AS maps
 		WHERE  maps.uid = ' . $uid . ' AND maps.gid =' . $gid . ';';
+		*/
+		$query->select('rid');
+		$query->from("#__thm_groups_groups_map AS maps");
+		$query->where("`maps.uid` = '" . $uid . "'");
+		$query->where("`maps.gid` = '" . $gid . "'");
 
 		$db->setQuery($query);
 		$db->query();
@@ -506,26 +650,34 @@ class THMGroupsModelmembermanager extends JModelList
 	{
 		$db =& JFactory::getDBO();
 
-		// Create SQL query string
-		$query = '';
 		foreach ($uids as $uid)
 		{
+			/*
 			$query .= 'DELETE
 			FROM    #__thm_groups_groups_map
 			WHERE   !(gid = 1)
 			AND     uid = ' . $uid . '
 			AND     gid = ' . $gid . '
 			AND	   rid = ' . $rid . ';';
-		}
+			*/
+			$query = $db->getQuery(true);
+			$query->from('#__thm_groups_groups_map');
+			$query->delete();
+			$query->where("!(gid = 1)");
+			$query->where("`uid` = '" . $uid . "'");
+			$query->where("`gid` = '" . $gid . "'");
+			$query->where("`rid` = '" . $rid . "'");
+			$db->setQuery($query);
 
-		$db->setQuery($query);
-		if ($db->query())
-		{
-			$result = true;
-		}
-		else
-		{
-			$result = false;
+			if (!$db->query())
+			{
+				$result = false;
+				break;
+			}
+			else
+			{
+				$result = true;
+			}
 		}
 
 		return $result;
@@ -544,9 +696,15 @@ class THMGroupsModelmembermanager extends JModelList
 		JArrayHelper::toInteger($cid);
 		$cids = implode(',', $cid);
 
+		/*
 		$query = 'UPDATE #__thm_groups_additional_userdata'
 		. ' SET published = 1'
 		. ' WHERE userid IN ( ' . $cids . ' )';
+		*/
+		$query = $db->getQuery(true);
+		$query->update($db->qn('#__thm_groups_additional_userdata'));
+		$query->set("`published` = '1'");
+		$query->where("`userid` IN  ( '" . $cids . "' )");
 
 		$db->setQuery($query);
 
@@ -575,9 +733,15 @@ class THMGroupsModelmembermanager extends JModelList
 		JArrayHelper::toInteger($cid);
 		$cids = implode(',', $cid);
 
+		/*
 		$query = 'UPDATE #__thm_groups_additional_userdata'
 		. ' SET published = 0'
 		. ' WHERE userid IN ( ' . $cids . ' )';
+		*/
+		$query = $db->getQuery(true);
+		$query->update($db->qn('#__thm_groups_additional_userdata'));
+		$query->set("`published` = '0'");
+		$query->where("`userid` IN  ( '" . $cids . "' )");
 
 		$db->setQuery($query);
 
