@@ -446,6 +446,7 @@ class THMGroupsModelmembermanager extends JModelList
 
 		// Create SQL query string
 
+		/*
 		$queryold = "SELECT thm.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla ";
 		$queryold .= "FROM #__usergroups AS joo ";
 		$queryold .= "RIGHT JOIN (";
@@ -464,31 +465,28 @@ class THMGroupsModelmembermanager extends JModelList
 		$queryold .= ") AS thm ";
 		$queryold .= "ON joo.id = thm.id ";
 		$queryold .= "ORDER BY lft";
+		*/
 
 		$nestedQuery = $db->getQuery(true);
 		$nestedQuery->select('*');
-		$nestedQuery->from("__thm_groups_groups");
+		$nestedQuery->from("#__thm_groups_groups");
 		$nestedQuery->where("injoomla = 0");
 		$nestedQuery->order("name");
 
 		$nestedQuery1 = $db->getQuery(true);
 		$nestedQuery1->select('*');
-		$nestedQuery1->from("__thm_groups_groups");
+		$nestedQuery1->from("#__thm_groups_groups");
 
 		$nestedQuery2 = $db->getQuery(true);
 		$nestedQuery2->select('joo.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla');
 		$nestedQuery2->from("#__usergroups AS joo");
-		$nestedQuery2->leftJoin("( $nestedQuery1 ) AS thm ON joo.id = thm.id");
+		$nestedQuery2->leftJoin("($nestedQuery1) AS thm ON joo.id = thm.id");
 		$nestedQuery2->order("lft");
 
 		$query = $db->getQuery(true);
 		$query->select('thm.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla');
 		$query->from("#__usergroups AS joo");
-		$query->rightJoin("$nestedQuery AS thm ON ON joo.id = thm.id UNION $nestedQuery2");
-
-		var_dump($queryold);
-		var_dump($query->__toString());
-		exit();
+		$query->rightJoin("($nestedQuery) AS thm ON joo.id = thm.id UNION $nestedQuery2");
 
 		$db->setQuery($query);
 		$db->query();
