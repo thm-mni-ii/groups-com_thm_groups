@@ -42,7 +42,13 @@ class THMGroupsModelGroups extends JModel
     public function getGroups()
     {
         $db =& JFactory::getDBO();
+        /*
         $query = 'SELECT * FROM #__thm_groups_groups ';
+        */
+        $query = $this->_db->getQuery(true);
+        $query->select('*');
+        $query->from($db->qn('#__thm_groups_groups'));
+
         $db->setQuery($query);
         $rows = $db->loadObjectList();
         return $rows;
@@ -59,7 +65,14 @@ class THMGroupsModelGroups extends JModel
         $user =& JFactory::getUser();
 
         $db =& JFactory::getDBO();
+        /*
         $query = "SELECT gid FROM #__thm_groups_groups_map " . "WHERE uid = " . $user->id . " AND rid = 2";
+        */
+        $query = $this->_db->getQuery(true);
+        $query->select('gid');
+        $query->from($db->qn('#__thm_groups_groups_map'));
+        $query->where('uid = ' . $user->id);
+        $query->where('rid = 2');
 
         $db->setQuery($query);
         $db = $db->loadObjectlist();
