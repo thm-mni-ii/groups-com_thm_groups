@@ -69,7 +69,7 @@ class THMGroupsModelList extends JModel
     /**
      * Method to get group number
      *
-     * @return groupid6
+     * @return groupid
      */
     private function getGroupNumber()
     {

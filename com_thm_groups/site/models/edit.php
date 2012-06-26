@@ -132,9 +132,9 @@ class THMGroupsModeledit extends JModelForm
         $query = "SELECT Type FROM #__thm_groups_relationtable " . "WHERE Type in (SELECT type FROM #__thm_groups_structure)";
         */
         $nestedQuery = $db->getQuery(true);
-        $query       = $db->getQuery(true);
+        $query = $db->getQuery(true);
 
-        $nestedQuery->select('a.type');
+        $nestedQuery->select('type');
         $nestedQuery->from($db->qn('#__thm_groups_structure'));
 
         $query->select('Type');
@@ -510,7 +510,6 @@ class THMGroupsModeledit extends JModelForm
         $query->set("`value` = '" . $jsonValue . "'");
         $query->where('userid = ' . $uid);
         $query->where('structid = ' . $structid);
-
         $db->setQuery($query);
 
         if (!$db->query())
@@ -686,7 +685,6 @@ class THMGroupsModeledit extends JModelForm
      */
     public function getLink()
     {
-        // To do :auslagern in model
         $itemid               = $itemid = JRequest::getVar('Itemid', 0);
         $id                   = JRequest::getVar('id', 0);
         $userInfo['lastName'] = JRequest::getVar('lastName', 0);
