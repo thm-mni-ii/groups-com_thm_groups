@@ -82,9 +82,9 @@ class THMGroupsModeledit extends JModelForm
         	/*
             $query = "SELECT structid, value, publish FROM #__thm_groups_" . strtolower($type->Type) . " as a where a.userid = " . $cid;
 			*/
-        	$query = $this->_db->getQuery(true);
+        	$query = $db->getQuery(true);
         	$query->select('structid, value, publish');
-        	$query->from($db->qn('#__thm_groups_' . strtolower($type->Type . 'AS a')));
+        	$query->from($db->qn('#__thm_groups_' . strtolower($type->Type) . 'AS a'));
         	$query->where('a.userid = ' . $cid);
 
             $db->setQuery($query);
@@ -112,7 +112,7 @@ class THMGroupsModeledit extends JModelForm
         /*
         $query = "SELECT * FROM #__thm_groups_structure as a ORDER BY a.order";
         */
-        $query = $this->_db->getQuery(true);
+        $query = $db->getQuery(true);
         $query->select('structid, value, publish');
         $query->from($db->qn('#__thm_groups_structure AS a'));
         $query->order('a.order');
@@ -131,8 +131,8 @@ class THMGroupsModeledit extends JModelForm
         /*
         $query = "SELECT Type FROM #__thm_groups_relationtable " . "WHERE Type in (SELECT type FROM #__thm_groups_structure)";
         */
-        $nestedQuery = $this->_db->getQuery(true);
-        $query       = $this->_db->getQuery(true);
+        $nestedQuery = $db->getQuery(true);
+        $query       = $db->getQuery(true);
 
         $nestedQuery->select('a.type');
         $nestedQuery->from($db->qn('#__thm_groups_structure'));
@@ -179,7 +179,7 @@ class THMGroupsModeledit extends JModelForm
             $query = "SELECT structid FROM #__thm_groups_" . strtolower($structureItem->type)
             . " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
             */
-            $query = $this->_db->getQuery(true);
+            $query = $db->getQuery(true);
             $query->select('structid');
             $query->from($db->qn('#__thm_groups_' . strtolower($structureItem->type)));
             $query->where('userid = ' . $userid);
@@ -350,7 +350,7 @@ class THMGroupsModeledit extends JModelForm
         /*
         $query = "SELECT value FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
         */
-        $query = $this->_db->getQuery(true);
+        $query = $db->getQuery(true);
         $query->select('value');
         $query->from($db->qn('#__thm_groups_' . strtolower($type) . '_extra'));
         $query->where('structid = ' . $structid);
@@ -384,7 +384,7 @@ class THMGroupsModeledit extends JModelForm
         /*
         $query = "SELECT value FROM #__thm_groups_table WHERE structid=$structid AND userid=$uid";
         */
-        $query = $this->_db->getQuery(true);
+        $query = $db->getQuery(true);
         $query->select('value');
         $query->from($db->qn('#__thm_groups_table'));
         $query->where('structid = ' . $structid);
@@ -401,7 +401,7 @@ class THMGroupsModeledit extends JModelForm
         /*
         $query = "SELECT value FROM #__thm_groups_table_extra WHERE structid=" . $structid;
         */
-        $query = $this->_db->getQuery(true);
+        $query = $db->getQuery(true);
         $query->select('value');
         $query->from($db->qn('#__thm_groups_table_extra'));
         $query->where('structid = ' . $structid);
@@ -434,7 +434,7 @@ class THMGroupsModeledit extends JModelForm
         	/*
             $query = "UPDATE #__thm_groups_table SET value='$jsonValue' WHERE userid = $uid AND structid=$structid";
             */
-        	$query = $this->_db->getQuery(true);
+        	$query = $db->getQuery(true);
         	$query->update($db->qn('#__thm_groups_table'));
         	$query->set("`value` = '" . $jsonValue . "'");
         	$query->where('userid = ' . $uid);
@@ -486,7 +486,7 @@ class THMGroupsModeledit extends JModelForm
         /*
         $query = "SELECT value FROM #__thm_groups_table WHERE structid=$structid AND userid=$uid";
         */
-        $query = $this->_db->getQuery(true);
+        $query = $db->getQuery(true);
         $query->select('value');
         $query->from($db->qn('#__thm_groups_table'));
         $query->where('structid = ' . $structid);
@@ -505,7 +505,7 @@ class THMGroupsModeledit extends JModelForm
         /*
         $query     = "UPDATE #__thm_groups_table SET value='$jsonValue' WHERE userid = $uid AND structid=$structid";
         */
-        $query = $this->_db->getQuery(true);
+        $query = $db->getQuery(true);
         $query->update($db->qn('#__thm_groups_table'));
         $query->set("`value` = '" . $jsonValue . "'");
         $query->where('userid = ' . $uid);
@@ -547,7 +547,7 @@ class THMGroupsModeledit extends JModelForm
         /*
         $query = "SELECT value FROM #__thm_groups_table WHERE structid=$structid AND userid=$uid";
         */
-        $query = $this->_db->getQuery(true);
+        $query = $db->getQuery(true);
         $query->select('value');
         $query->from($db->qn('#__thm_groups_table'));
         $query->where('structid = ' . $structid);
@@ -564,7 +564,7 @@ class THMGroupsModeledit extends JModelForm
         /*
         $query = "SELECT value FROM #__thm_groups_table_extra WHERE structid=" . $structid;
         */
-        $query = $this->_db->getQuery(true);
+        $query = $db->getQuery(true);
         $query->select('value');
         $query->from($db->qn('#__thm_groups_table_extra'));
         $query->where('structid = ' . $structid);
@@ -597,7 +597,7 @@ class THMGroupsModeledit extends JModelForm
         /*
         $query          = "UPDATE #__thm_groups_table SET value='$jsonValue' WHERE userid = $uid AND structid=$structid";
         */
-        $query = $this->_db->getQuery(true);
+        $query = $db->getQuery(true);
         $query->update($db->qn('#__thm_groups_table'));
         $query->set("`value` = '" . $jsonValue . "'");
         $query->where('userid = ' . $uid);
@@ -649,7 +649,7 @@ class THMGroupsModeledit extends JModelForm
         	/*
             $query = "SELECT rid FROM `#__thm_groups_groups_map` where uid=$id AND gid=$gid";
             */
-        	$query = $this->_db->getQuery(true);
+        	$query = $db->getQuery(true);
         	$query->select('rid');
         	$query->from($db->qn('#__thm_groups_groups_map'));
         	$query->where('uid = ' . $id);
@@ -695,7 +695,7 @@ class THMGroupsModeledit extends JModelForm
         /*
         $query = "SELECT link FROM `#__menu` where id= $itemid";
         */
-        $query = $this->_db->getQuery(true);
+        $query = $db->getQuery(true);
         $query->select('link');
         $query->from($db->qn('#__menu'));
         $query->where('id = ' . $itemid);

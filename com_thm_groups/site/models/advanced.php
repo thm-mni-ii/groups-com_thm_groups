@@ -1,4 +1,4 @@
-<?php
+f<?php
 /**
  *@category    Joomla component
  *
@@ -142,7 +142,7 @@ class THMGroupsModelAdvanced extends JModel
 	 */
 	public function getUnsortedRoles($gid)
 	{
-		$query = $this->_db->getQuery(true);
+		$query = $db->getQuery(true);
 		$query->select('distinct rid');
 		$query->from($db->qn('#__thm_groups_groups_map'));
 		$query->where("gid=$gid");
@@ -170,7 +170,7 @@ class THMGroupsModelAdvanced extends JModel
 		$canEdit = 0;
 		$groupid = $this->getGroupNumber();
 		$user    = & JFactory::getUser();
-		$query   = $this->_db->getQuery(true);
+		$query   = $db->getQuery(true);
 
 		$query->select('rid');
 		$query->from($db->qn('#__thm_groups_groups_map'));
@@ -196,8 +196,8 @@ class THMGroupsModelAdvanced extends JModel
 	 */
 	public function getTypes()
 	{
-		$nestedQuery = $this->_db->getQuery(true);
-		$query       = $this->_db->getQuery(true);
+		$nestedQuery = $db->getQuery(true);
+		$query       = $db->getQuery(true);
 
 		$nestedQuery->select('a.type');
 		$nestedQuery->from($db->qn('#__thm_groups_structure') . ' as a');
@@ -256,7 +256,7 @@ class THMGroupsModelAdvanced extends JModel
 
 		foreach ($arrSortedRoles as $sortRole)
 		{
-			$query = $this->_db->getQuery(true);
+			$query = $db->getQuery(true);
 
 			$query->select('distinct gm.uid, t.value');
 			$query->from($db->qn('#__thm_groups_groups_map') . ' as gm');
@@ -343,7 +343,7 @@ class THMGroupsModelAdvanced extends JModel
 	 */
 	public function getStructure()
 	{
-		$query = $this->_db->getQuery(true);
+		$query = $db->getQuery(true);
 
 		$query->select('*');
 		$query->from($db->qn('#__thm_groups_structure') . ' as a');
@@ -363,7 +363,7 @@ class THMGroupsModelAdvanced extends JModel
 	 */
 	public function getExtra($structid, $type)
 	{
-		$query = $this->_db->getQuery(true);
+		$query = $db->getQuery(true);
 
 		$query->select('value');
 		$query->from($db->qn('#__thm_groups_' . strtolower($type) . '_extra'));

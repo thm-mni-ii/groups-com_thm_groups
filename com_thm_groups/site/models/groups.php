@@ -45,7 +45,7 @@ class THMGroupsModelGroups extends JModel
         /*
         $query = 'SELECT * FROM #__thm_groups_groups ';
         */
-        $query = $this->_db->getQuery(true);
+        $query = $db->getQuery(true);
         $query->select('*');
         $query->from($db->qn('#__thm_groups_groups'));
 
@@ -68,7 +68,7 @@ class THMGroupsModelGroups extends JModel
         /*
         $query = "SELECT gid FROM #__thm_groups_groups_map " . "WHERE uid = " . $user->id . " AND rid = 2";
         */
-        $query = $this->_db->getQuery(true);
+        $query = $db->getQuery(true);
         $query->select('gid');
         $query->from($db->qn('#__thm_groups_groups_map'));
         $query->where('uid = ' . $user->id);
