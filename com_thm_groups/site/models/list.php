@@ -262,9 +262,7 @@ class THMGroupsModelList extends JModel
 		*/
     	$query = $db->getQuery(true);
     	$query->select('DISTINCT t.value as lastName');
-    	$query->from($db->qn('#__thm_groups_text AS t'));
-    	$query->from($db->qn('#__thm_groups_additional_userdata AS ud'));
-    	$query->from($db->qn('#__thm_groups_groups_map AS gm'));
+    	$query->from($db->qn('#__thm_groups_text AS t, #__thm_groups_additional_userdata AS ud, #__thm_groups_groups_map AS gm'));
     	$query->where('t.structid = 2');
     	$query->where('t.userid = ud.userid');
     	$query->where('ud.published = 1');
