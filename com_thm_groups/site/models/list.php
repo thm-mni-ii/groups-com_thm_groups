@@ -130,7 +130,13 @@ class THMGroupsModelList extends JModel
     public function getDescriptionState($gid)
     {
     	$db = & JFactory::getDBO();
+    	/*
     	$query = "SELECT show_description FROM #__thm_groups_groups WHERE id = $gid ";
+    	*/
+    	$query = $db->getQuery(true);
+    	$query->select('show_description');
+    	$query->from($db->qn('#__thm_groups_groups'));
+    	$query->where('id = ' . $gid);
     	$db->setQuery($query);
     	$list = $db->loadObjectList();
     	if (isset($list[0]->show_description))
@@ -153,7 +159,13 @@ class THMGroupsModelList extends JModel
     public function getDescription($gid)
     {
     	$db = & JFactory::getDBO();
+    	/*
     	$query = "SELECT description FROM #__thm_groups_groups WHERE id = $gid ";
+    	*/
+    	$query = $db->getQuery(true);
+    	$query->select('description');
+    	$query->from($db->qn('#__thm_groups_groups'));
+    	$query->where('id = ' . $gid);
     	$db->setQuery($query);
     	$list = $db->loadObjectList();
     	if ($list[0]->description == 'NULL')
@@ -176,7 +188,13 @@ class THMGroupsModelList extends JModel
     public function getTitleState($gid)
     {
     	$db = & JFactory::getDBO();
+    	/*
     	$query = "SELECT show_title FROM #__thm_groups_groups WHERE id = $gid ";
+    	*/
+    	$query = $db->getQuery(true);
+    	$query->select('show_title');
+    	$query->from($db->qn('#__thm_groups_groups'));
+    	$query->where('id = ' . $gid);
     	$db->setQuery($query);
     	$list = $db->loadObjectList();
     	return $list[0]->show_title;
@@ -192,7 +210,13 @@ class THMGroupsModelList extends JModel
     public function getTitleGroup($gid)
     {
     	$db = & JFactory::getDBO();
+    	/*
     	$query = "SELECT title FROM #__thm_groups_groups WHERE id = $gid ";
+    	*/
+    	$query = $db->getQuery(true);
+    	$query->select('title');
+    	$query->from($db->qn('#__thm_groups_groups'));
+    	$query->where('id = ' . $gid);
     	$db->setQuery($query);
     	$list = $db->loadObjectList();
     	return $list[0]->title;
@@ -208,7 +232,13 @@ class THMGroupsModelList extends JModel
     public function getUserCountToGid($gid)
     {
     	$db = & JFactory::getDBO();
+    	/*
     	$query = "SELECT count(*) AS anzahl FROM #__thm_groups_groups_map WHERE gid=$gid";
+    	*/
+    	$query = $db->getQuery(true);
+    	$query->select('COUNT(*) AS anzahl');
+    	$query->from($db->qn('#__thm_groups_groups_map'));
+    	$query->where('gid = ' . $gid);
     	$db->setQuery($query);
     	return $db->loadObjectList();
     }
@@ -223,11 +253,24 @@ class THMGroupsModelList extends JModel
     public function getDiffLettersToFirstletter($gid)
     {
     	$db = & JFactory::getDBO();
+    	/*
     	$query = "SELECT distinct t.value as lastName "
 		. "FROM `#__thm_groups_text` as t , "
 		. "`#__thm_groups_additional_userdata` as ud, "
 		. "`#__thm_groups_groups_map` as gm "
 		. "where t.structid = 2 and t.userid = ud.userid and ud.published = 1 and t.userid = gm.uid and gm.gid=$gid and gm.rid != 2";
+		*/
+    	$query = $db->getQuery(true);
+    	$query->select('DISTINCT t.value as lastName');
+    	$query->from($db->qn('#__thm_groups_text AS t'));
+    	$query->from($db->qn('#__thm_groups_additional_userdata AS ud'));
+    	$query->from($db->qn('#__thm_groups_groups_map AS gm'));
+    	$query->where('t.structid = 2');
+    	$query->where('t.userid = ud.userid');
+    	$query->where('ud.published = 1');
+    	$query->where('t.userid = gm.uid');
+    	$query->where('gm.gid =' . $gid);
+    	$query->where('gm.rid != 2');
     	$db->setQuery($query);
     	return $db->loadObjectList();
     }
