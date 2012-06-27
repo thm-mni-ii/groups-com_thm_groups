@@ -590,13 +590,14 @@ class THMGroupsModelmembermanager extends JModelList
 		ON        maps.rid = roles.id
 		WHERE  maps.uid = ' . $uid . ' AND maps.gid > 1;';
 		*/
+
 		$query = $db->getQuery(true);
 		$query->select('groups.name AS groupname, groups.id as groupid, roles.name AS rolename, roles.id AS roleid');
 		$query->from("#__thm_groups_groups AS groups");
 		$query->leftJoin("#__thm_groups_groups_map AS maps ON groups.id = maps.gid");
 		$query->leftJoin("#__thm_groups_roles AS roles ON maps.rid = roles.id");
-		$query->where("`maps.uid` = '" . $uid . "'");
-		$query->where("`maps.gid` >= 1");
+		$query->where("maps.uid = " . $uid);
+		$query->where("maps.gid > 1");
 
 		$db->setQuery($query);
 		$db->query();
