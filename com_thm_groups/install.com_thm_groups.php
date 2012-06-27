@@ -61,6 +61,7 @@ function Com_install()
 	$db->query();
 	$rows = $db->loadObjectlist();
 
+	// Sync Groups to database
 	foreach ($rows as $row)
 	{
 		$query = $db->getQuery(true);
@@ -68,6 +69,24 @@ function Com_install()
 		$query->values("$row->id , '" . $row->title . "' , ' ' , ' ' , ' ' , 1");
 
 		$db->setQuery($query);
-		$db->query();
 	}
+	if ($db->query())
+	{
+		echo "
+			<p align=\"left\">
+				<strong>&nbsp;Groups added to database!</strong>
+			</p>";
+	}
+	else
+	{
+		echo "
+			<p align=\"left\">
+			<strong>&nbsp;No groups added to database!</strong>
+			</p>";
+	}
+	?>
+		<p align="center">
+			<strong>&nbsp;Installation successful!</strong>
+		</p>
+		<?php
 }
