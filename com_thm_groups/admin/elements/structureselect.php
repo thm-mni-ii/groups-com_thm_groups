@@ -48,7 +48,8 @@ class JFormFieldStructureSelect extends JFormField
 	public function getInput()
 	{
 		$scriptDir = str_replace(JPATH_SITE . DS, '', "administrator/components/com_thm_groups/elements/");
-		$sortButtons = true;
+
+		// $sortButtons = true;
 
 		// Add script-code to the document head
 		JHTML::script('structureselect.js', $scriptDir, false);

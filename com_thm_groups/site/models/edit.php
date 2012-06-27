@@ -88,7 +88,10 @@ class THMGroupsModeledit extends JModelForm
         	$query->where('a.userid = ' . $cid);
 
             $db->setQuery($query);
-            array_push($puffer, $db->loadObjectList());
+            if(!is_null($db->loadObjectList()))
+            {
+            	array_push($puffer, $db->loadObjectList());
+            }
         }
 
         foreach ($puffer as $type)

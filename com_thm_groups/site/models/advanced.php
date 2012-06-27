@@ -47,7 +47,7 @@ class THMGroupsModelAdvanced extends JModel
 	public function __construct()
 	{
 		parent::__construct();
-		$this->_db = & JFactory::getDBO();
+		$this->db = & JFactory::getDBO();
 	}
 
 	/**
@@ -142,13 +142,13 @@ class THMGroupsModelAdvanced extends JModel
 	 */
 	public function getUnsortedRoles($gid)
 	{
-		$query = $this->_db->getQuery(true);
+		$query = $this->db->getQuery(true);
 		$query->select('distinct rid');
 		$query->from('#__thm_groups_groups_map');
 		$query->where("gid=$gid");
 
-		$this->_db->setQuery($query);
-		$unsortedRoles = $this->_db->loadObjectList();
+		$this->db->setQuery($query);
+		$unsortedRoles = $this->db->loadObjectList();
 		$arrUnsortedRoles = array ();
 		if (isset ($unsortedRoles))
 		{
@@ -170,15 +170,15 @@ class THMGroupsModelAdvanced extends JModel
 		$canEdit = 0;
 		$groupid = $this->getGroupNumber();
 		$user    = & JFactory::getUser();
-		$query   = $this->_db->getQuery(true);
+		$query   = $this->db->getQuery(true);
 
 		$query->select('rid');
-		$query->from($db->qn('#__thm_groups_groups_map'));
+		$query->from('#__thm_groups_groups_map');
 		$query->where('uid = ' . $user->id);
 		$query->where("gid = $groupid", 'AND');
 
-		$this->_db->setQuery($query);
-		$userRoles = $this->_db->loadObjectList();
+		$this->db->setQuery($query);
+		$userRoles = $this->db->loadObjectList();
 		foreach ($userRoles as $userRole)
 		{
 			if ($userRole->rid == 2)
@@ -196,19 +196,19 @@ class THMGroupsModelAdvanced extends JModel
 	 */
 	public function getTypes()
 	{
-		$nestedQuery = $this->_db->getQuery(true);
-		$query       = $this->_db->getQuery(true);
+		$nestedQuery = $this->db->getQuery(true);
+		$query       = $this->db->getQuery(true);
 
 		$nestedQuery->select('a.type');
-		$nestedQuery->from($db->qn('#__thm_groups_structure') . ' as a');
+		$nestedQuery->from('#__thm_groups_structure' . ' as a');
 		$nestedQuery->order('a.order');
 
 		$query->select('Type');
-		$query->from($db->qn('#__thm_groups_relationtable'));
+		$query->from('#__thm_groups_relationtable');
 		$query->where('Type in (' . $nestedQuery . ')');
 
-		$this->_db->setQuery($query);
-		return $this->_db->loadObjectList();
+		$this->db->setQuery($query);
+		return $this->db->loadObjectList();
 	}
 
 	/**
@@ -229,6 +229,7 @@ class THMGroupsModelAdvanced extends JModel
 		$showStructure     = array();
 		$paramStructSelect = $params->get('struct');
 		$data             = array();
+		$sortedMember		= array();
 
 		if ($sortedRoles == "")
 		{
@@ -241,14 +242,14 @@ class THMGroupsModelAdvanced extends JModel
 
 		if (isset ($paramStructSelect))
 		{
-	        foreach ($paramStructSelect as $item)
-	        {
+			foreach ($paramStructSelect as $item)
+			{
 				$tempItem              = array();
 				$tempItem['id']        = substr($item, 0, strlen($item) - 2);
 				$tempItem['showName']  = substr($item, -2, 1) == "1" ? true : false;
 				$tempItem['wrapAfter'] = substr($item, -1, 1) == "1" ? true : false;
 				$showStructure[]       = $tempItem;
-	        }
+			}
 		}
 		else
 		{
@@ -256,11 +257,11 @@ class THMGroupsModelAdvanced extends JModel
 
 		foreach ($arrSortedRoles as $sortRole)
 		{
-			$query = $this->_db->getQuery(true);
+			$query = $this->db->getQuery(true);
 
 			$query->select('distinct gm.uid, t.value');
-			$query->from($db->qn('#__thm_groups_groups_map') . ' as gm');
-			$query->from($db->qn('#__thm_groups_text') . ' as t');
+			$query->from('#__thm_groups_groups_map' . ' as gm');
+			$query->from('#__thm_groups_text' . ' as t');
 			$query->where("gm.gid = $groupid");
 			$query->where('gm.rid != 2', 'AND');
 			$query->where('gm.uid = t.userid', 'AND');
@@ -268,8 +269,8 @@ class THMGroupsModelAdvanced extends JModel
 			$query->where("gm.rid = $sortRole", 'AND');
 			$query->order('t.value');
 
-			$this->_db->setQuery($query);
-			$groupMember = $this->_db->loadObjectList();
+			$this->db->setQuery($query);
+			$groupMember = $this->db->loadObjectList();
 
 			foreach ($groupMember as $member)
 			{
@@ -277,16 +278,16 @@ class THMGroupsModelAdvanced extends JModel
 				{
 					$query->clear();
 					$query->select('structid, value, publish');
-					$query->from($db->qn('#__thm_groups_' . strtolower($type->Type)) . '  as a');
-					$query->from($db->qn('#__thm_groups_groups_map') . ' as gm');
+					$query->from('#__thm_groups_' . strtolower($type->Type) . '  as a');
+					$query->from('#__thm_groups_groups_map' . ' as gm');
 					$query->where('a.userid = ' . $member->uid);
 					$query->where('a.userid = gm.uid', 'AND');
 					$query->where("gm.rid = $sortRole", 'AND');
 					$query->where("gm.gid = $groupid", 'AND');
 
-					$this->_db->setQuery($query);
+					$this->db->setQuery($query);
 
-					$puffer                 = $this->_db->loadObjectList();
+					$puffer                 = $this->db->loadObjectList();
 					$result[$member->uid][] = $puffer;
 				}
 
@@ -343,14 +344,14 @@ class THMGroupsModelAdvanced extends JModel
 	 */
 	public function getStructure()
 	{
-		$query = $this->_db->getQuery(true);
+		$query = $this->db->getQuery(true);
 
 		$query->select('*');
 		$query->from('#__thm_groups_structure AS a');
 		$query->order('a.order');
 
-		$this->_db->setQuery($query);
-		return $this->_db->loadObjectList();
+		$this->db->setQuery($query);
+		return $this->db->loadObjectList();
 	}
 
 	/**
@@ -363,14 +364,14 @@ class THMGroupsModelAdvanced extends JModel
 	 */
 	public function getExtra($structid, $type)
 	{
-		$query = $this->_db->getQuery(true);
+		$query = $this->db->getQuery(true);
 
 		$query->select('value');
 		$query->from('#__thm_groups_' . strtolower($type) . '_extra');
 		$query->where("structid = $structid");
 
-		$this->_db->setQuery($query);
-		$res = $this->_db->loadObject();
+		$this->db->setQuery($query);
+		$res = $this->db->loadObject();
 		if (isset($res))
 		{
 		   	return $res->value;
