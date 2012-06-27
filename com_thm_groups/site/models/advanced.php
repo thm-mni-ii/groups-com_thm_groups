@@ -37,7 +37,7 @@ class THMGroupsModelAdvanced extends JModel
 	 *
 	 * @since  1.0
 	 */
-	private $_db;
+	protected $_db;
 
 	/**
 	 * Constructor
@@ -142,9 +142,9 @@ class THMGroupsModelAdvanced extends JModel
 	 */
 	public function getUnsortedRoles($gid)
 	{
-		$query = $db->getQuery(true);
+		$query = $this->_db->getQuery(true);
 		$query->select('distinct rid');
-		$query->from($db->qn('#__thm_groups_groups_map'));
+		$query->from('#__thm_groups_groups_map');
 		$query->where("gid=$gid");
 
 		$this->_db->setQuery($query);
@@ -170,7 +170,7 @@ class THMGroupsModelAdvanced extends JModel
 		$canEdit = 0;
 		$groupid = $this->getGroupNumber();
 		$user    = & JFactory::getUser();
-		$query   = $db->getQuery(true);
+		$query   = $this->_db->getQuery(true);
 
 		$query->select('rid');
 		$query->from($db->qn('#__thm_groups_groups_map'));
@@ -196,8 +196,8 @@ class THMGroupsModelAdvanced extends JModel
 	 */
 	public function getTypes()
 	{
-		$nestedQuery = $db->getQuery(true);
-		$query       = $db->getQuery(true);
+		$nestedQuery = $this->_db->getQuery(true);
+		$query       = $this->_db->getQuery(true);
 
 		$nestedQuery->select('a.type');
 		$nestedQuery->from($db->qn('#__thm_groups_structure') . ' as a');
@@ -256,7 +256,7 @@ class THMGroupsModelAdvanced extends JModel
 
 		foreach ($arrSortedRoles as $sortRole)
 		{
-			$query = $db->getQuery(true);
+			$query = $this->_db->getQuery(true);
 
 			$query->select('distinct gm.uid, t.value');
 			$query->from($db->qn('#__thm_groups_groups_map') . ' as gm');
@@ -343,10 +343,10 @@ class THMGroupsModelAdvanced extends JModel
 	 */
 	public function getStructure()
 	{
-		$query = $db->getQuery(true);
+		$query = $this->_db->getQuery(true);
 
 		$query->select('*');
-		$query->from($db->qn('#__thm_groups_structure') . ' as a');
+		$query->from('#__thm_groups_structure AS a');
 		$query->order('a.order');
 
 		$this->_db->setQuery($query);
@@ -363,10 +363,10 @@ class THMGroupsModelAdvanced extends JModel
 	 */
 	public function getExtra($structid, $type)
 	{
-		$query = $db->getQuery(true);
+		$query = $this->_db->getQuery(true);
 
 		$query->select('value');
-		$query->from($db->qn('#__thm_groups_' . strtolower($type) . '_extra'));
+		$query->from('#__thm_groups_' . strtolower($type) . '_extra');
 		$query->where("structid = $structid");
 
 		$this->_db->setQuery($query);

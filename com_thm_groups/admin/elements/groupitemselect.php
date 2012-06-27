@@ -25,6 +25,7 @@
 defined('_JEXEC') or die( 'Restricted access' );
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
+require_once JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_thm_groups' . DS . 'models' . DS . 'membermanager.php';
 
 /**
  * JFormFieldAlphabetColor class for component com_thm_groups
@@ -49,9 +50,10 @@ class JFormFieldGroupItemSelect extends JFormField
 	{
 		$db =& JFactory::getDBO();
 
-		$model = $this->getModel('membermanager');
-		$groups = $model->getGroupsHirarchy();
-		$jgroups = $model->getJoomlaGroups();
+		$SQL = new THMGroupsModelmembermanager;
+
+		$groups = $SQL->getGroupsHirarchy();
+		$jgroups = $SQL->getJoomlaGroups();
 
 		$injoomla = false;
 		$wasinjoomla = false;
