@@ -30,6 +30,10 @@ $canEdit = ($user->id == $this->userid || $this->canEdit);
 
 ?>
 <div id="title"><?php 
+	$title = '';
+	$firstName = '';
+	$lastName = '';
+	$picture = null;
 	foreach ($this->items as $item)
 	{
 		// Daten fuer den HEAD in Variablen speichern
