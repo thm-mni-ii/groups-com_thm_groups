@@ -81,7 +81,7 @@ class THMGroupsModelProfile extends JModelForm
         */
         $query = $this->db->getQuery(true);
         $query->select('rid');
-        $query->from($db->qn('#__thm_groups_groups_map'));
+        $query->from($this->db->qn('#__thm_groups_groups_map'));
         $query->where('uid = ' . $user->id);
         $query->where('gid = ' . $groupid);
 
