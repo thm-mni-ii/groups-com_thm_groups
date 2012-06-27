@@ -53,11 +53,11 @@ class THMGroupsModelmembermanager extends JModelList
 		$nestedQuery->select('userid');
 		$nestedQuery->from("#__thm_groups_additional_userdata");
 
-		$query->select('user.id, username, email, name, title');
-		$query->from("#__users AS user, #__usergroups AS group, #__user_usergroup_map AS maps");
-		$query->where("`user.id` NOT IN (" . $$nestedQuery . ")");
-		$query->where("`user_id` = `user.id`");
-		$query->where("`group_id` = `group.id`");
+		$query->select('#__users.id, username, email, name, title');
+		$query->from("#__users, #__usergroups, #__user_usergroup_map");
+		$query->where("#__users.id NOT IN (" . $nestedQuery . ")");
+		$query->where("user_id = #__users.id");
+		$query->where("group_id = #__usergroups.id");
 
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
