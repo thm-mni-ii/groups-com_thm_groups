@@ -65,9 +65,9 @@ class THMGroupsModeledit extends JModelForm
 			$query = "SELECT structid, value, publish FROM #__thm_groups_" . strtolower($type->Type) . " as a where a.userid = " . $cid[0];
 			*/
 			$query = $db->getQuery(true);
-			$query->select('`structid`, `value`, `publish`');
-			$query->from("#__thm_groups_" . strtolower($type->Type) . " AS a");
-			$query->where("`a.userid` = '" . $cid[0] . "'");
+			$query->select('structid, value, publish');
+			$query->from("#__thm_groups_" . strtolower($type->Type));
+			$query->where("a.userid = " . $cid[0]);
 
 			$db->setQuery($query);
 			array_push($puffer, $db->loadObjectList());
@@ -118,12 +118,12 @@ class THMGroupsModeledit extends JModelForm
 		$query = $db->getQuery(true);
 		$nestedQuery = $db->getQuery(true);
 
-		$nestedQuery->select('`type`');
+		$nestedQuery->select('type');
 		$nestedQuery->from($db->qn('#__thm_groups_structure'));
 
-		$query->select('`Type`');
+		$query->select('Type');
 		$query->from($db->qn('#__thm_groups_relationtable'));
-		$query->where("`Type` in (" . $nestedQuery . ")");
+		$query->where("Type in (" . $nestedQuery . ")");
 
 		$db->setQuery($query);
 		return $db->loadObjectList();
@@ -163,7 +163,7 @@ class THMGroupsModeledit extends JModelForm
 				. " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
 			*/
 			$query = $db->getQuery(true);
-			$query->select('`structid`');
+			$query->select('structid');
 			$query->from("#__thm_groups_" . strtolower($structureItem->type));
 			$query->where("userid = " . $userid);
 			$query->where("structid = " . $structureItem->id);
@@ -183,7 +183,7 @@ class THMGroupsModeledit extends JModelForm
 						*/
 						$query = $db->getQuery(true);
 						$query->update("#__thm_groups_" . strtolower($structureItem->type));
-						$query->set("`value` = '" . $field . "'");
+						$query->set("value = '" . $field . "'");
 					}
 					else
 					{
@@ -194,9 +194,9 @@ class THMGroupsModeledit extends JModelForm
 						*/
 						$query = $db->getQuery(true);
 						$query->update("#__thm_groups_" . strtolower($structureItem->type) . "");
-						$query->set("`value` = '" . $field . "'");
-						$query->where("`userid` = '" . $userid . "'");
-						$query->where("`structid` = '" . $structureItem->id . "'");
+						$query->set("value = '" . $field . "'");
+						$query->where("userid = '" . $userid . "'");
+						$query->where("structid = '" . $structureItem->id . "'");
 					}
 				}
 				else
