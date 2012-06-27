@@ -143,7 +143,7 @@ class THMGroupsModeledit extends JModelForm
 		foreach ($structure as $structureItem)
 		{
 			$puffer = null;
-			$field = JRequest::getVar($structureItem->field, '', 'post', 'string', JREQUEST_ALLOWHTML);
+			 $field = JRequest::getVar($structureItem->field, '', 'post', 'string', JREQUEST_ALLOWHTML);
 
 			$publish = 0;
 			if ($strucctIdemtureItem->type == 'MULTISELECT')
@@ -159,8 +159,8 @@ class THMGroupsModeledit extends JModelForm
 			}
 
 			/*
-			$query = "SELECT structid FROM #__thm_groups_" . strtolower($structureItem->type)
-				. " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
+			$query = "SELECT structid FROM #__thm_groups_" . strtolower($structureItem->type) .
+					 " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
 			*/
 			$query = $db->getQuery(true);
 			$query->select('structid');
@@ -173,54 +173,51 @@ class THMGroupsModeledit extends JModelForm
 
 			if (isset($structureItem->field))
 			{
+				$query = $db->getQuery(true);
+
 				if (isset($puffer))
 				{
-					if ($structureItem->type != 'PICTURE' && $structureItem->type != 'TABLE')
-					{
-						/*
-						$query = "UPDATE #__thm_groups_" . strtolower($structureItem->type) . " SET";
-						$query .= " value='" . $field . "',";
-						*/
-						$query = $db->getQuery(true);
-						$query->update("#__thm_groups_" . strtolower($structureItem->type));
-						$query->set("value = '" . $field . "'");
-					}
-					else
-					{
-						/*
-						$query = "UPDATE #__thm_groups_" . strtolower($structureItem->type) . " SET";
-						$query .= " publish='" . $publish . "'"
-						. " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
-						*/
-						$query = $db->getQuery(true);
-						$query->update("#__thm_groups_" . strtolower($structureItem->type) . "");
-						$query->set("value = '" . $field . "'");
-						$query->where("userid = '" . $userid . "'");
-						$query->where("structid = '" . $structureItem->id . "'");
-					}
+					/*
+					$query = "UPDATE #__thm_groups_" . strtolower($structureItem->type) . " SET";
+					*/
+					$query->update("#__thm_groups_" . strtolower($structureItem->type));
+
+							if ($structureItem->type != 'PICTURE' && $structureItem->type != 'TABLE')
+							{
+								/*
+		        				$query .= " value='" . $field . "',";
+		        				*/
+								$query->set("value = '" . $field . "'");
+							}
+							/*
+	        				$query .= " publish='" . $publish . "'"
+	       					. " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
+	       					*/
+							$query->set("value = '" . $field . "'");
+							$query->where("userid = '" . $userid . "'");
+							$query->where("structid = '" . $structureItem->id . "'");
 				}
 				else
 				{
 					/*
 					$query = "INSERT INTO #__thm_groups_" . strtolower($structureItem->type) . " ( `userid`, `structid`, `value`, `publish`)"
-						. " VALUES ($userid"
-						. ", " . $structureItem->id
-						. ", '" . $field . "'"
-						. ", " . $publish . ")";
+					        . " VALUES ($userid"
+					        . ", " . $structureItem->id
+					        . ", '" . $field . "'"
+					        . ", " . $publish . ")";
 					*/
-					$query = $db->getQuery(true);
 					$query->insert("#__thm_groups_" . strtolower($structureItem->type) . "");
 					$query->set("`userid` = '" . $userid . "'");
 					$query->set("`structid` = '" . $structureItem->id . "'");
 					$query->set("`value` = '" . $field . "'");
 					$query->set("`publish` = '" . $publish . "'");
 				}
-				echo $query . "<br />";
+				echo $query->__toString() . "<br />";
 				$db->setQuery($query);
-				if (!$db->query())
-				{
-					$err = 1;
-				}
+        		if (!$db->query())
+        		{
+	        		$err = 1;
+        		}
 			}
 			if ($structureItem->type == 'PICTURE' && $_FILES[$structureItem->field]['name'] != "")
 			{
@@ -233,12 +230,12 @@ class THMGroupsModeledit extends JModelForm
 
 		if (!$err)
 		{
-			return true;
+        	return true;
 		}
-		else
-		{
-			return false;
-		}
+        else
+        {
+        	return false;
+        }
 	}
 
 	/**
