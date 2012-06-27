@@ -71,7 +71,7 @@ class THMGroupsModelList extends JModel
      *
      * @return groupid
      */
-    private function getGroupNumber()
+    public function getGroupNumber()
     {
         $params = $this->getViewParams();
         return $params->get('selGroup');
@@ -82,7 +82,7 @@ class THMGroupsModelList extends JModel
      *
      * @return showmode
      */
-    private function getShowMode()
+    public function getShowMode()
     {
         $params = $this->getViewParams();
         return $params->get('showAll');

@@ -40,6 +40,7 @@ class THMGroupsViewList extends JView
 	 */
 	public function getgListAll()
 	{
+		$model =& $this->getModel();
 		$params = $model->getViewParams();
 		$showAll = $model->getShowMode();
 		$groupid = $model->getGroupNumber();
@@ -304,6 +305,7 @@ class THMGroupsViewList extends JView
 	 */
 	public function getgListAlphabet()
 	{
+		$model =& $this->getModel();
 		$params = $model->getViewParams();
 		$showAll = $model->getShowMode();
 		$groupid = $model->getGroupNumber();
