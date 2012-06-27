@@ -164,9 +164,9 @@ class THMGroupsModeledit extends JModelForm
 			*/
 			$query = $db->getQuery(true);
 			$query->select('`structid`');
-			$query->from("#__thm_groups_" . strtolower($structureItem->type) . " AS a");
-			$query->where("`userid` = '" . $userid . "'");
-			$query->where("`structid` = '" . $structureItem->id . "'");
+			$query->from("#__thm_groups_" . strtolower($structureItem->type));
+			$query->where("userid = " . $userid);
+			$query->where("structid = " . $structureItem->id);
 
 			$db->setQuery($query);
 			$puffer = $db->loadObject();
@@ -182,7 +182,7 @@ class THMGroupsModeledit extends JModelForm
 						$query .= " value='" . $field . "',";
 						*/
 						$query = $db->getQuery(true);
-						$query->update("#__thm_groups_" . strtolower($structureItem->type) . "");
+						$query->update("#__thm_groups_" . strtolower($structureItem->type));
 						$query->set("`value` = '" . $field . "'");
 					}
 					else
@@ -663,11 +663,11 @@ class THMGroupsModeledit extends JModelForm
 
 		$query = $db->getQuery(true);
 		$query->select('groups.name AS groupname, groups.id as groupid, roles.name AS rolename, roles.id AS roleid');
-		$query->from($db->qn('#__thm_groups_groups AS groups'));
-		$query->leftJoin('#__thm_groups_groups_map AS maps ON groups.id = maps.id');
-		$query->leftJoin('#__thm_groups_roles AS roles ON maps.rid = roles.id');
-		$query->where("`maps.uid` = '" . $uid . "'");
-		$query->where("`maps.gid` > 1");
+		$query->from("#__thm_groups_groups AS groups");
+		$query->leftJoin("#__thm_groups_groups_map AS maps ON groups.id = maps.gid");
+		$query->leftJoin("#__thm_groups_roles AS roles ON maps.rid = roles.id");
+		$query->where("maps.uid = " . $uid);
+		$query->where("maps.gid > 1");
 
 		$db->setQuery($query);
 		$db->query();
@@ -701,6 +701,7 @@ class THMGroupsModeledit extends JModelForm
     		AND     gid = ' . $gid . '
     		AND	   rid = ' . $rid . ';';
     		*/
+			$db =& JFactory::getDBO();
 			$query = $db->getQuery(true);
 			$query->from('#__thm_groups_groups_map');
 			$query->delete();

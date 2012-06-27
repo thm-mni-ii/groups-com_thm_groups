@@ -624,6 +624,7 @@ class THMGroupsModelmembermanager extends JModelList
 		FROM             #__thm_groups_groups_map AS maps
 		WHERE  maps.uid = ' . $uid . ' AND maps.gid =' . $gid . ';';
 		*/
+		$query = $db->getQuery(true);
 		$query->select('rid');
 		$query->from("#__thm_groups_groups_map AS maps");
 		$query->where("`maps.uid` = '" . $uid . "'");
