@@ -66,11 +66,11 @@ class THMGroupsModeledit extends JModelForm
 			*/
 			$query = $db->getQuery(true);
 			$query->select('structid, value, publish');
-			$query->from("#__thm_groups_" . strtolower($type->Type));
+			$query->from("#__thm_groups_" . strtolower($type->Type) . " AS a");
 			$query->where("a.userid = " . $cid[0]);
-
 			$db->setQuery($query);
-			array_push($puffer, $db->loadObjectList());
+			$pushon = $db->loadObjectList();
+			array_push($puffer, $pushon);
 		}
 
 		foreach ($puffer as $type)
@@ -119,10 +119,10 @@ class THMGroupsModeledit extends JModelForm
 		$nestedQuery = $db->getQuery(true);
 
 		$nestedQuery->select('type');
-		$nestedQuery->from($db->qn('#__thm_groups_structure'));
+		$nestedQuery->from('#__thm_groups_structure');
 
 		$query->select('Type');
-		$query->from($db->qn('#__thm_groups_relationtable'));
+		$query->from('#__thm_groups_relationtable');
 		$query->where("Type in (" . $nestedQuery . ")");
 
 		$db->setQuery($query);
@@ -346,7 +346,7 @@ class THMGroupsModeledit extends JModelForm
 		$query = "SELECT value FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
 		*/
 		$query = $db->getQuery(true);
-		$query->select('`value`');
+		$query->select('value');
 		$query->from("#__thm_groups_" . strtolower($type) . "_extra");
 		$query->where("`structid` = '" . $structid . "'");
 		$db->setQuery($query);
