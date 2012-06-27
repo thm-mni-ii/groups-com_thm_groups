@@ -655,20 +655,21 @@ class THMGroupsModelmembermanager extends JModelList
 		foreach ($uids as $uid)
 		{
 			/*
-			$query .= 'DELETE
+			$query2 = 'DELETE
 			FROM    #__thm_groups_groups_map
 			WHERE   !(gid = 1)
 			AND     uid = ' . $uid . '
 			AND     gid = ' . $gid . '
 			AND	   rid = ' . $rid . ';';
 			*/
+
 			$query = $db->getQuery(true);
 			$query->from('#__thm_groups_groups_map');
 			$query->delete();
 			$query->where("!(gid = 1)");
-			$query->where("`uid` = '" . $uid . "'");
-			$query->where("`gid` = '" . $gid . "'");
-			$query->where("`rid` = '" . $rid . "'");
+			$query->where("uid = " . $uid);
+			$query->where("gid = " . $gid);
+			$query->where("rid = " . $rid);
 			$db->setQuery($query);
 
 			if (!$db->query())
