@@ -97,9 +97,8 @@ class THMGroupsModeledit extends JModelForm
 		*/
 		$query = $db->getQuery(true);
 		$query->select('*');
-		$query->from($db->qn('#__thm_groups_structure AS a'));
+		$query->from('#__thm_groups_structure AS a');
 		$query->order('a.order');
-
 		$db->setQuery($query);
 		return $db->loadObjectList();
 	}
@@ -124,7 +123,7 @@ class THMGroupsModeledit extends JModelForm
 
 		$query->select('`Type`');
 		$query->from($db->qn('#__thm_groups_relationtable'));
-		$query->where("`a.Type` in (" . $nestedQuery . ")");
+		$query->where("`Type` in (" . $nestedQuery . ")");
 
 		$db->setQuery($query);
 		return $db->loadObjectList();
@@ -257,10 +256,10 @@ class THMGroupsModeledit extends JModelForm
 		$query = "UPDATE #__thm_groups_picture SET value='anonym.jpg' WHERE userid = $uid AND structid=$structid";
 		*/
 		$query = $db->getQuery(true);
-		$query->from($db->qn('#__thm_groups_picture'));
-		$query->set("`value` = 'anonym.jpg'");
-		$query->where("`userid` = '" . $uid . "'");
-		$query->where("`structid` = '" . $structid . "'");
+		$query->update('#__thm_groups_picture');
+		$query->set("value = 'anonym.jpg'");
+		$query->where("userid = '" . $uid . "'");
+		$query->where("structid = '" . $structid . "'");
 		$db->setQuery($query);
 
 		if ($db->query())
