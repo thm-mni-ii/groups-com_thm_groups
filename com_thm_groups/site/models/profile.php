@@ -511,7 +511,6 @@ class THMGroupsModelProfile extends JModelForm
         $query->where('structid = ' . $structid);
         $query->where('userid = ' . $uid);
         $db->setQuery($query);
-        $db->setQuery($query);
         $res    = $db->loadObject();
         $oValue = json_decode($res->value);
         foreach ($oValue as $row)
