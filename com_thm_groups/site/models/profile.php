@@ -33,7 +33,7 @@ jimport('joomla.application.component.modelform');
  */
 class THMGroupsModelProfile extends JModelForm
 {
-    protected $_db;
+    protected $db;
 
     /**
      * Constructor
@@ -142,16 +142,15 @@ class THMGroupsModelProfile extends JModelForm
      */
     public function getStructure()
     {
-        $db =& JFactory::getDBO();
-        /*
-        $query = "SELECT * FROM #__thm_groups_structure as a ORDER BY a.order";
-        */
-        $query = $db->getQuery(true);
-        $query->select('rid');
-        $query->from($db->qn('#__thm_groups_structure AS a'));
-        $query->order('a.order');
-        $db->setQuery($query);
-        return $db->loadObjectList();
+    	$db =& JFactory::getDBO();
+    	$query = $db->getQuery(true);
+
+    	$query->select('*');
+    	$query->from('#__thm_groups_structure AS a');
+    	$query->order('a.order');
+
+    	$db->setQuery($query);
+    	return $db->loadObjectList();
     }
 
     /**

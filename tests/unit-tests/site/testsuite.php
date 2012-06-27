@@ -1,6 +1,10 @@
 <?php
 require_once dirname(dirname(dirname(dirname(__FILE__)))) . DIRECTORY_SEPARATOR . 'framework_include.php';
 
+if (!defined('JPATH_COMPONENT')) {
+	define('JPATH_COMPONENT', dirname(__FILE__));
+}
+
 class AllComThmGroupsSiteTests
 {
 	public static function suite()
@@ -15,7 +19,7 @@ class AllComThmGroupsSiteTests
 		$suite->addTestFile(__DIR__.'/THMGroupsModelProfileTest.php');
 		//$suite->addTestFile(__DIR__.'/THMGroupsControllerProfileTest.php');
 		//$suite->addTestFile(__DIR__.'/THMGroupsViewProfileTest.php');
-		$suite->addTestFile(__DIR__.'/THMGroupsViewAdvancedTest.php');
+		//$suite->addTestFile(__DIR__.'/THMGroupsViewAdvancedTest.php');
 		//$suite->addTestFile(__DIR__.'/THMGroupsViewEditGroupTest.php');
 		//$suite->addTestFile(__DIR__.'/THMGroupsViewEditTest.php');
 		//$suite->addTestFile(__DIR__.'/THMGroupsViewGroupsTest.php');

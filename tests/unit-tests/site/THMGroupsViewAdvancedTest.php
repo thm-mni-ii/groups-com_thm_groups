@@ -11,9 +11,7 @@ class THMGroupsViewAdvancedTest extends PHPUnit_Framework_TestCase
 	// this function is defined in PHPUnit_TestCase and overwritten
 	// here
 	function setUp() {
-		//--- set test user
-		
-		$this->instance = new THMGroupsViewAdvanced();
+		$this->instance = new THMGroupsViewAdvanced;
 	}
 
 	// called after the test functions are executed
@@ -39,14 +37,6 @@ class THMGroupsViewAdvancedTest extends PHPUnit_Framework_TestCase
 		$expected = "<table class='table'><tr><th>testkey1</th><th>testkey2</th></tr><tr><td>testvalue1</td><td>testvalue2</td></tr></table>";
 		$this->assertEquals($expected, $result);
 	}	
-	/*
-	// test the display($tpl = null)
-	function testDisplay() {
-		
-		//$result = $this->instance->display($tpl = null);
-		//var_dump($result);
-		$this->assertTrue(true);
-	}*/
 }
 
 ?>

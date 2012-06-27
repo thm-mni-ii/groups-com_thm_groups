@@ -86,10 +86,12 @@ class THMGroupsModelEditGroupTest extends PHPUnit_Framework_TestCase
 	// getParentID use $array['gsgid'] = '2';
 	// should return GSGID = 1 form Public Group
 	function testgetParentIdPublic(){
-		
+		// GSGID get ID from Group Registered
+		$array['gsgid'] = '2';
+		JRequest::set($array, 'post');
+
 		$result = $this->instance->getParentId();
 		$expected = "1"; // ID from Group Public
-		
 		$this->assertEquals($expected, $result);
 	}
 	
@@ -103,7 +105,6 @@ class THMGroupsModelEditGroupTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($result[0]->id,"1");
 		$this->assertEquals($result[0]->parent_id,"0");
 		$this->assertEquals($result[0]->lft,"1");
-		$this->assertEquals($result[0]->rgt,"124");
 		$this->assertEquals($result[0]->title,"Public");
 	}
 	

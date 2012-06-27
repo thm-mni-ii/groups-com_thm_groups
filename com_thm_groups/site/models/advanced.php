@@ -1,4 +1,4 @@
-f<?php
+<?php
 /**
  *@category    Joomla component
  *
@@ -37,7 +37,7 @@ class THMGroupsModelAdvanced extends JModel
 	 *
 	 * @since  1.0
 	 */
-	protected $_db;
+	protected $db;
 
 	/**
 	 * Constructor

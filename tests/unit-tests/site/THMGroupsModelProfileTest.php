@@ -25,79 +25,6 @@ class THMGroupsModelProfileTest extends PHPUnit_Framework_TestCase
 	 * store
 	 */
 	
-	// tests addTableRow
-	// function inserts two values and should return true
-	function testaddTableRow(){
-		$array['userid'] = '99999';
-		$array['structid'] = '88888';
-		JRequest::set($array, 'post');
-	
-		$result = $this->instance->addTableRow();
-		$expected = true;
-	
-		$this->assertTrue($result == $expected);
-	}
-	
-	// tests delTableRow
-	// insert an value in database
-	// funcion updates value and should return true
-	function testdelTableRow(){
-		$array['userid'] = '99999';
-		$array['structid'] = '88888';
-		$array['tablekey'] = '';
-		JRequest::set($array, 'post');
-	
-		$db =& JFactory::getDBO();
-		$query = "INSERT INTO #__thm_groups_table (`userid`, `structid`, `value`, `publish`, `group`)";
-		$query .= " VALUES ('99999','88888',' ','0','0')";
-		$db->setQuery( $query );
-		$db->query();
-	
-		$result = $this->instance->delTableRow();
-		$expected = true;
-	
-		$query = "DELETE FROM #__thm_groups_table WHERE structid = '88888'";
-		$db->setQuery( $query);
-		$db->query();
-	
-		$this->assertTrue($result == $expected);
-	}
-	
-	
-	// test editTableRow
-	// insert two values in database
-	// function change one entry and should return true
-	function testeditTableRow(){
-		$array['userid'] = '99999';
-		$array['structid'] = '88888';
-		$array['tablekey'] = '';
-		JRequest::set($array, 'post');
-	
-		$db =& JFactory::getDBO();
-		$query = "INSERT INTO #__thm_groups_table (`userid`, `structid`, `value`, `publish`, `group`)";
-		$query .= " VALUES ('99999','88888',' ','0','0')";
-		$db->setQuery( $query );
-		$db->query();
-	
-		$query = "INSERT INTO #__thm_groups_table_extra (`structid`, `value`)";
-		$query .= " VALUES ('88888','Spalte1;Spalte2')";
-		$db->setQuery( $query );
-		$db->query();
-	
-		$result = $this->instance->editTableRow();
-		$expected = true;
-	
-		$query = "DELETE FROM #__thm_groups_table WHERE structid = '88888'";
-		$db->setQuery( $query);
-		$db->query();
-	
-		$query = "DELETE FROM #__thm_groups_table_extra WHERE structid = '88888'";
-		$db->setQuery( $query);
-		$db->query();
-	
-		$this->assertTrue($result == $expected);
-	}
-	
 	// tests getExtra
 	// insert value in database
 	// returns value vom inserted query (THMGroupsTest.jpg)
@@ -168,38 +95,12 @@ class THMGroupsModelProfileTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($expected, $result);
 	}
 	
-	// tests getData
-	// insert value in database
-	// function returns data
-	// result->structid should equals inserted structid
-	function testgetData(){
-		$array['gsuid'] = '99999';
-		JRequest::set($array, 'post');
-		
-		$db =& JFactory::getDBO();
-		$query = "INSERT INTO #__thm_groups_picture (`userid`, `structid`, `value`, `publish`, `group`)";
-		$query .= " VALUES ('99999','88888',' ','0','0')";
-		$db->setQuery( $query );
-		$db->query();
-		
-		$result = $this->instance->getData();
-		
-		$sql = "DELETE FROM #__thm_groups_picture WHERE userid = '99999' AND structid = '88888'";
-		$db->setQuery( $sql);
-		$db->query();
-		
-		$expected = "88888";
-		
-		$this->assertEquals($expected, $result[0]->structid);
-	}
-	
 	// tests getStructure()
 	// returns an objectlist
 	// first object is "Titel", type -> Texts
 	function testgetStructure() {
 		$result = $this->instance->getStructure();
 		$expected = "TEXT";
-	
 		$this->assertEquals($expected, $result[0]->type);
 	}
 	
@@ -208,19 +109,7 @@ class THMGroupsModelProfileTest extends PHPUnit_Framework_TestCase
 	// first object type should be "LINK"
 	function testgetTypes(){
 		$result = $this->instance->getTypes();
-
-		$this->assertTrue($result[0]->Type == "LINK");
-	}
-	
-	// tests getForm
-	// function returns an object with form information
-	// object is proteced
-	function testgetForm(){
-		$data = null;
-		$loadData = true;
-		
-		$result = $this->instance->getForm();
-		$this->assertTrue($result != null);	
+		$this->assertTrue($result[0]->Type != null);
 	}
 }
 
