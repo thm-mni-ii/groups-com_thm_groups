@@ -282,7 +282,7 @@ class THMGroupsControllermembermanager extends JController
 				{
 					$model = $this->getModel('membermanager');
 					$model->delGroupsToUser($uids, $gid);
-					$msg = JText::_("COM_THM_GROUPS_MEMBERMANAGER_DELETE_USER_TRUE" . $uids[0], true);
+					$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_DELETE_USER_TRUE', true);
 				}
 				else
 				{
@@ -483,7 +483,7 @@ class THMGroupsControllermembermanager extends JController
 			{
 				if ($model->delGroupsAndRoles($uid, $gid, $rid->rid))
 				{
-					$msg = JText::_("COM_THM_GROUPS_MEMBERMANAGER_DELETE_USER_TRUE" . $uid[0], true);
+					$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_DELETE_USER_TRUE', true);
 				}
 				else
 				{
