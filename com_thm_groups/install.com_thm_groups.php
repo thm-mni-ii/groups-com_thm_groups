@@ -67,22 +67,15 @@ function Com_install()
 		$query = $db->getQuery(true);
 		$query->insert("#__thm_groups_groups (id, name, info, picture, mode, injoomla)");
 		$query->values("$row->id , '" . $row->title . "' , ' ' , ' ' , ' ' , 1");
-
 		$db->setQuery($query);
-	}
-	if ($db->query())
-	{
-		echo "
+
+		if ($db->query())
+		{
+			echo "
 			<p align=\"left\">
-				<strong>&nbsp;Groups added to database!</strong>
+			<strong>&nbsp;" . $row->title . " Group added to database!</strong>
 			</p>";
-	}
-	else
-	{
-		echo "
-			<p align=\"left\">
-			<strong>&nbsp;No groups added to database!</strong>
-			</p>";
+		}
 	}
 	?>
 		<p align="center">
