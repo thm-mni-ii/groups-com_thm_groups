@@ -47,7 +47,7 @@ class ComThmGroupsStructureEnGb extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTrue($this->isTextPresent("Data Saved!"));
     $this->click("id=cb6");
     $this->click("link=Delete");
-    $this->assertEquals("COM_THM_GROUPS_REALLY_DELETE", $this->getConfirmation());	sleep(1);
+    $this->assertEquals("Role deleted", $this->getConfirmation());	sleep(1);
     $this->assertFalse($this->isElementPresent("link=Testfield_test"));				sleep(1);
     $this->clickAndWait("link=Log out");
   }
