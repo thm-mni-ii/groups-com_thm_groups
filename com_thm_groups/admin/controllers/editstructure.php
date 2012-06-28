@@ -33,13 +33,6 @@ jimport('joomla.application.component.controllerform');
  */
 class THMGroupsControllerEditStructure extends JControllerForm
 {
-
-/**
-	 * Database object
-	 * @var unknown_type
-	 */
-	private $_SQLAL = null;
-
 	/**
  	 * constructor (registers additional tasks to methods)
  	 *

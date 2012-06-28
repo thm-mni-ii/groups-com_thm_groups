@@ -84,27 +84,27 @@ class THMGroupsControllerEdit extends JController
 		$layout_old  = JRequest::getVar('layout_old', /*0*/'LLLL');
 		$view_old 	 = JRequest::getVar('view_old', /*0*/'VVVV');
 
-    	$model = $this->getModel('edit');
-    	$itemid = JRequest::getVar('item_id', 0);
-    	$link = JRoute::_("index.php?option=com_thm_groups"
-    						. "&view=edit"
-    						. "&layout=default"
-    						. "&Itemid=" . $itemid
-    						. "&gsuid=" . $this->uid
-    						. "&name=" . $this->uname
-    						. "&gsgid=" . $gsgid
-    						. "&layout_old=" . $layout_old
-    						. "&view_old=" . $view_old
-    					);
-    	if ($model->store())
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-    	}
-    	$this->setRedirect($link, $msg);
+		$model = $this->getModel('edit');
+		$itemid = JRequest::getVar('item_id', 0);
+		$link = JRoute::_("index.php?option=com_thm_groups"
+			. "&view=edit"
+			. "&layout=default"
+			. "&Itemid=" . $itemid
+			. "&gsuid=" . $this->uid
+			. "&name=" . $this->uname
+			. "&gsgid=" . $gsgid
+			. "&layout_old=" . $layout_old
+			. "&view_old=" . $view_old
+		);
+		if ($model->store())
+		{
+			$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+		}
+		$this->setRedirect($link, $msg);
 	}
 
 	/**
@@ -117,14 +117,14 @@ class THMGroupsControllerEdit extends JController
 	{
 		$model = $this->getModel('edit');
 
-    	if ($model->delPic())
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_PICTURE_REMOVED');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_REMOVE_PICTURE_ERROR');
-    	}
+		if ($model->delPic())
+		{
+			$msg = JText::_('COM_THM_GROUPS_PICTURE_REMOVED');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_GROUPS_REMOVE_PICTURE_ERROR');
+		}
 		$this->save();
 	}
 
@@ -137,14 +137,14 @@ class THMGroupsControllerEdit extends JController
 	public function addTableRow()
 	{
 		$model = $this->getModel('edit');
-    	if ($model->addTableRow())
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_ROW_TO_TABLE');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_ROW_TO_TABLE_ERROR');
-    	}
+		if ($model->addTableRow())
+		{
+			$msg = JText::_('COM_THM_GROUPS_ROW_TO_TABLE');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_GROUPS_ROW_TO_TABLE_ERROR');
+		}
 		$this->save();
 	}
 
@@ -158,14 +158,14 @@ class THMGroupsControllerEdit extends JController
 	{
 		$model = $this->getModel('edit');
 
-    	if ($model->delTableRow())
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_DEL_TABLE_ROW');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_DEL_TABLE_ROW_ERROR');
-    	}
+		if ($model->delTableRow())
+		{
+			$msg = JText::_('COM_THM_GROUPS_DEL_TABLE_ROW');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_GROUPS_DEL_TABLE_ROW_ERROR');
+		}
 		$this->save();
 	}
 
@@ -179,15 +179,15 @@ class THMGroupsControllerEdit extends JController
 	{
 		$model = $this->getModel('edit');
 
-    	if ($model->editTableRow())
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_EDIT_TABLE_ROW');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_EDIT_TABLE_ROW_ERROR');
-    	}
-    	$this->save();
+		if ($model->editTableRow())
+		{
+			$msg = JText::_('COM_THM_GROUPS_EDIT_TABLE_ROW');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_GROUPS_EDIT_TABLE_ROW_ERROR');
+		}
+		$this->save();
 	}
 
 	/**
@@ -207,15 +207,15 @@ class THMGroupsControllerEdit extends JController
 		$itemid_old  = JRequest::getVar('item_id', 0);
 
 		$msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
-    	$link = JRoute::_('index.php'
-		    				. '?option=' . $option_old
-		    				. '&view=' . $view_old
-		    				. '&layout=' . $layout_old
-		    				. '&Itemid=' . $itemid_old
-		    				. '&gsuid=' . $this->uid
-		    				. '&name=' . $this->uname
-		    				. '&gsgid=' . $gsgid
-    					);
-  		$this->setRedirect($link, $msg);
+		$link = JRoute::_('index.php'
+			. '?option=' . $option_old
+			. '&view=' . $view_old
+			. '&layout=' . $layout_old
+			. '&Itemid=' . $itemid_old
+			. '&gsuid=' . $this->uid
+			. '&name=' . $this->uname
+			. '&gsgid=' . $gsgid
+		);
+		$this->setRedirect($link, $msg);
 	}
 }

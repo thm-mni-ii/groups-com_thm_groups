@@ -154,7 +154,7 @@ class PicTransform
 		return $this->safeImage($image, $dest, $filename, $type);
 	}
 
-    /**
+	/**
 	 * Saves the file to $dest with $filename in picturtype $type with $maxHeight and $maxWidth
 	 *
 	 * @param   string  $dest       Destination

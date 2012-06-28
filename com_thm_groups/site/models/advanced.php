@@ -374,7 +374,7 @@ class THMGroupsModelAdvanced extends JModel
 		$res = $this->db->loadObject();
 		if (isset($res))
 		{
-		   	return $res->value;
+			return $res->value;
 		}
 		else
 		{

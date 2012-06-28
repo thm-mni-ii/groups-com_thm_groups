@@ -11,7 +11,7 @@
  *
  *@copyright   2012 TH Mittelhessen
  *
- *@license	   GNU GPL v.2
+ *@license     GNU GPL v.2
  *@link		   www.mni.thm.de
  *@version	   3.0
  */
@@ -23,7 +23,7 @@ jimport('joomla.application.component.controller');
  *
  * Profile controller for the site section of the component
  *
- * @package 	THM_Groups
+ * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @link        www.mni.thm.de
  * @since       Class available since Release 2.1
@@ -65,12 +65,12 @@ class THMGroupsControllerProfile extends JController
 		$view_old   = JRequest::getVar('view_old', 0);
 		$itemid_old = JRequest::getVar('item_id', 0);
 
-    	$link = JRoute::_('index.php'
-    						. '?option=' . $option_old
-    						. '&view=' . $view_old
-    						. '&layout=' . $layout_old
-    						. '&Itemid=' . $itemid_old
-    					);
-  		$this->setRedirect($link);
+		$link = JRoute::_('index.php'
+			. '?option=' . $option_old
+			. '&view=' . $view_old
+			. '&layout=' . $layout_old
+			. '&Itemid=' . $itemid_old
+		);
+		$this->setRedirect($link);
 	}
 }

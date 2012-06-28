@@ -18,7 +18,7 @@
  *
  *@copyright   2012 TH Mittelhessen
  *
- *@license	   GNU GPL v.2
+ *@license     GNU GPL v.2
  *@link		   www.mni.thm.de
  *@version	   3.0
  */
