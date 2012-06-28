@@ -270,7 +270,7 @@ class THMGroupsControllermembermanager extends JController
 			// Delete group and role relations and display result
 			if (1 == $gid)
 			{
-				$msg = JText::_('++delGroupsAndRoles++Benutzer kann nicht aus Gruppe User entfernt werden!', true);
+				$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_DELETE_USER_FALSE', true);
 			}
 			else
 			{
@@ -279,11 +279,11 @@ class THMGroupsControllermembermanager extends JController
 				{
 					$model = $this->getModel('membermanager');
 					$model->delGroupsToUser($uids, $gid);
-					$msg = JText::_("++delGroupsAndRoles++Benutzer aus Gruppe entfernt! . '$uids[0]'", true);
+					$msg = JText::_("COM_THM_GROUPS_MEMBERMANAGER_DELETE_USER_TRUE . '$uids[0]'", true);
 				}
 				else
 				{
-					$msg = JText::_('++delGroupsAndRoles++Benutzer aus Gruppe/Rolle entfernen fehlgeschlagen!', true);
+					$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_DELETE_BY_USER_FALSE', true);
 				}
 			}
 		}
@@ -392,12 +392,12 @@ class THMGroupsControllermembermanager extends JController
 				$db->setQuery($query);
 				$db->query();
 
-				$msg = JText::_('Benutzer geloescht');
+				$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_USER_DELETE_TRUE');
 			}
 
 			if ($erg[0]->injoomla == '1')
 			{
-				$msg = JText::_('Eventuell konnten einige Benutzer nicht gel&ouml;scht werden, da sie noch im System registriert sind.');
+				$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_USER_DELETE_FALSE');
 			}
 		}
 
@@ -421,7 +421,7 @@ class THMGroupsControllermembermanager extends JController
 
 		if (1 == $gid)
 		{
-			$msg = JText::_('XXdelAllGrouprolesByUserXXBenutzer kann nicht aus Gruppe User entfernt werden!', true);
+			$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_DELETE_USER_FALSE', true);
 		}
 		else
 		{
@@ -431,11 +431,11 @@ class THMGroupsControllermembermanager extends JController
 			{
 				if ($model->delGroupsAndRoles($uid, $gid, $rid->rid))
 				{
-					$msg = JText::_("XXdelAllGrouprolesByUserXXBenutzer aus Gruppe entfernt! .$uid[0] ", true);
+					$msg = JText::_("COM_THM_GROUPS_MEMBERMANAGER_DELETE_USER_TRUE . '$uids[0]'", true);
 				}
 				else
 				{
-					$msg = JText::_('XXdelAllGrouprolesByUserXXBenutzer aus Gruppe/Rolle entfernen fehlgeschlagen!', true);
+					$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_DELETE_BY_USER_FALSE', true);
 				}
 			}
 		}
@@ -459,17 +459,17 @@ class THMGroupsControllermembermanager extends JController
 
 		if (1 == $gid)
 		{
-			$msg = JText::_('##delGrouproleByUser##Benutzer kann nicht aus Gruppe User entfernt werden!', true);
+			$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_DELETE_BY_USER_FALSE', true);
 		}
 		else
 		{
 			if ($model->delGroupsAndRoles($uid, $gid, $rid))
 			{
-				$msg = JText::_('##delGrouproleByUser##Benutzerrolle aus Gruppe entfernt!', true);
+				$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_DELETE_BY_USER_TRUE', true);
 			}
 			else
 			{
-				$msg = JText::_('##delGrouproleByUser##Benutzerrolle aus Gruppe entfernen fehlgeschlagen!', true);
+				$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_DELETE_BY_USER_FALSE', true);
 			}
 		}
 
