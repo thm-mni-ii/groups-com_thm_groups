@@ -501,7 +501,8 @@ class THMGroupsModelProfile extends JModelForm
         $uid      = JRequest::getVar('userid');
         $structid = JRequest::getVar('structid');
         $key      = JRequest::getVar('tablekey');
-        $arrRow   = array();
+
+		// $arrRow   = array();
         $arrValue = array();
         $err      = 0;
 

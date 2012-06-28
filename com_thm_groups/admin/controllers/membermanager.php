@@ -151,7 +151,8 @@ class THMGroupsControllermembermanager extends JController
 	public function addTableRow()
 	{
 		$model = $this->getModel('edit');
-		$id = JRequest::getVar('userid');
+
+		// $id = JRequest::getVar('userid');
 
 		if ($model->addTableRow())
 		{
@@ -172,7 +173,8 @@ class THMGroupsControllermembermanager extends JController
 	public function delTableRow()
 	{
 		$model = $this->getModel('edit');
-		$id = JRequest::getVar('userid');
+
+		// $id = JRequest::getVar('userid');
 
 		if ($model->delTableRow())
 		{
@@ -193,7 +195,8 @@ class THMGroupsControllermembermanager extends JController
 	public function editTableRow()
 	{
 		$model = $this->getModel('edit');
-		$id = JRequest::getVar('userid');
+
+		// $id = JRequest::getVar('userid');
 
 		if ($model->editTableRow())
 		{
@@ -344,7 +347,8 @@ class THMGroupsControllermembermanager extends JController
 		$db =& JFactory::getDBO();
 		$cid = JRequest::getVar('cid', array(), 'post', 'array');
 		JArrayHelper::toInteger($cid);
-		$cids = implode(',', $cid);
+
+		// $cids = implode(',', $cid);
 
 		foreach ($cid as $id)
 		{
@@ -355,7 +359,7 @@ class THMGroupsControllermembermanager extends JController
 			$query = $db->getQuery(true);
 			$query->select('injoomla');
 			$query->from("#__thm_groups_additional_userdata");
-			$query->where("userid = " . $uid);
+			$query->where("userid = " . $id);
 
 			$db->setQuery($query);
 			$erg = $db->loadObjectList();
@@ -479,7 +483,7 @@ class THMGroupsControllermembermanager extends JController
 			{
 				if ($model->delGroupsAndRoles($uid, $gid, $rid->rid))
 				{
-					$msg = JText::_("COM_THM_GROUPS_MEMBERMANAGER_DELETE_USER_TRUE" . $uids[0], true);
+					$msg = JText::_("COM_THM_GROUPS_MEMBERMANAGER_DELETE_USER_TRUE" . $uid[0], true);
 				}
 				else
 				{

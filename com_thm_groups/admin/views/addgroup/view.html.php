@@ -46,7 +46,7 @@ class THMGroupsViewAddGroup extends JView
 		$document   = & JFactory::getDocument();
 		$document->addStyleSheet("components/com_staff/css/membermanager/icon.css");
 
-		$model =& $this->getModel('addgroup');
+		// $model =& $this->getModel('addgroup');
 		$groups =& $this->get('AllGroups');
 		$this->assignRef('groups', $groups);
 

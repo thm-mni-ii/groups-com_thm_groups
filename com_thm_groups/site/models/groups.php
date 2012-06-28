@@ -61,7 +61,7 @@ class THMGroupsModelGroups extends JModel
      */
     public function canEdit()
     {
-        $canEdit = 0;
+		// $canEdit = 0;
         $user =& JFactory::getUser();
 
         $db =& JFactory::getDBO();

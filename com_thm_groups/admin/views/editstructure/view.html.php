@@ -52,7 +52,7 @@ class THMGroupsVieweditStructure extends JView
 		JToolBarHelper::cancel('editstructure.cancel', 'JTOOLBAR_CANCEL');
 		JToolBarHelper::back('JTOOLBAR_BACK');
 
-		$model =& $this->getModel();
+		// $model =& $this->getModel();
 		$rowItem =& $this->get('Item');
 		$items =& $this->get('Data');
 		$this->assignRef('items', $items);

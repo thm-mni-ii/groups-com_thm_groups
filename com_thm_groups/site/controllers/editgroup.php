@@ -52,9 +52,10 @@ class THMGroupsControllerEditGroup extends JController
 		$model = $this->getModel('editgroup');
 
 		$itemid     = JRequest::getVar('Itemid');
-		$option     = JRequest::getVar('option');
-		$view       = JRequest::getVar('view');
-		$layout     = JRequest::getVar('layout');
+
+		/* $option     = JRequest::getVar('option');
+		* $view       = JRequest::getVar('view');
+		$layout     = JRequest::getVar('layout'); */
 		$gsgid      = JRequest::getVar('gsgid');
 		$layout_old = JRequest::getVar('layout_old', /*0*/'LLLL');
 		$view_old   = JRequest::getVar('view_old', /*0*/'VVVV');
@@ -67,14 +68,14 @@ class THMGroupsControllerEditGroup extends JController
 							. "&view_old=" . $view_old
 						);
 
-    	if ($model->store())
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-    	}
+		if ($model->store())
+		{
+			$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+		}
 		$this->setRedirect($link, $msg);
 	}
 
@@ -87,17 +88,17 @@ class THMGroupsControllerEditGroup extends JController
 	public function delPic()
 	{
 		$model = $this->getModel('editgroup');
-    	$id = JRequest::getVar('gid');
+		$id = JRequest::getVar('gid');
 
-    	if ($model->delPic())
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_PICTURE_REMOVED');
-    	}
-    	else
-    	{
-    	    $msg = JText::_('COM_THM_GROUPS_REMOVE_PICTURE_ERROR');
-    	}
-    	$this->setRedirect('index.php?option=com_thm_groups&task=editgroup.edit&cid[]=' . $id, $msg);
+		if ($model->delPic())
+		{
+			$msg = JText::_('COM_THM_GROUPS_PICTURE_REMOVED');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_GROUPS_REMOVE_PICTURE_ERROR');
+		}
+		$this->setRedirect('index.php?option=com_thm_groups&task=editgroup.edit&cid[]=' . $id, $msg);
 	}
 
 	/**

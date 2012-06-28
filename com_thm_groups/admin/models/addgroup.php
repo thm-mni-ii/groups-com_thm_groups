@@ -67,7 +67,7 @@ class THMGroupsModelAddGroup extends JModelForm
 		$gr_info = JRequest::getVar('groupinfo', '', 'post', 'string', JREQUEST_ALLOWHTML);
 		$gr_mode = JRequest::getVar('gr_mode');
 		$gr_parent = JRequest::getVar('gr_parent');
-		$gr_mode = $field = implode(';', $gr_mode);
+		$gr_mode = implode(';', $gr_mode);
 		$id = null;
 
 		$db =& JFactory::getDBO();
@@ -423,7 +423,8 @@ class THMGroupsModelAddGroup extends JModelForm
 		$uid = JRequest::getVar('userid');
 		$structid = JRequest::getVar('structid');
 		$key = JRequest::getVar('tablekey');
-		$arrRow = array();
+
+		// $arrRow = array();
 		$arrValue = array();
 		$err = 0;
 

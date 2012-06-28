@@ -46,7 +46,7 @@ class THMGroupsViewEditgroup extends JView
 	 */
 	public function display($tpl = null)
 	{
-		$model =& $this->getModel();
+		// $model =& $this->getModel();
 		$item =& $this->get('Data');
 		$this->assignRef('item', $item);
 

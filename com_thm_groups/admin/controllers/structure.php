@@ -115,7 +115,7 @@ class THMGroupsControllerStructure extends JControllerForm
 		{
 			if (in_array($i, $cid))
 			{
-				$msg .= JText::_('<br />' . 'COM_THM_GROUPS_CAN_NOT_DELETE_ITEM' . ' ' . $is);
+				$msg .= JText::_('<br />' . 'COM_THM_GROUPS_CAN_NOT_DELETE_ITEM' . ' ' . $i);
 			}
 		}
 		$this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);

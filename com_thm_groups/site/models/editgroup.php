@@ -108,7 +108,7 @@ class THMGroupsModelEditGroup extends JModelForm
 
         $gr_mode   = JRequest::getVar('gr_mode');
         $gr_parent = JRequest::getVar('gr_parent');
-        $gr_mode   = $field = implode(';', $gr_mode);
+        $gr_mode   = implode(';', $gr_mode);
         $gid       = JRequest::setVar('gsgid');
 
         $db =& JFactory::getDBO();
@@ -145,7 +145,7 @@ class THMGroupsModelEditGroup extends JModelForm
         $query = $db->getQuery(true);
         $query->select('injoomla');
         $query->from($db->qn('#__thm_groups_groups'));
-        $query->where('id = ' . $gsgid);
+        $query->where('id = ' . $gid);
         $db->setQuery($query);
         $injoomla = $db->loadObject();
         $injoomla = $injoomla->injoomla;

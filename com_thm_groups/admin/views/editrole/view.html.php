@@ -52,7 +52,7 @@ class THMGroupsVieweditrole extends JView
 		JToolBarHelper::cancel('editrole.cancel', 'JTOOLBAR_CANCEL');
 		JToolBarHelper::back('JTOOLBAR_BACK');
 
-		$model =& $this->getModel();
+		// $model =& $this->getModel();
 		$item =& $this->get('Data');
 		$this->assignRef('item', $item);
 

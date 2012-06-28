@@ -54,7 +54,7 @@ class THMGroupsVieweditgroup extends JView
 		JToolBarHelper::cancel('editgroup.cancel', 'JTOOLBAR_CANCEL');
 		JToolBarHelper::back('JTOOLBAR_BACK');
 
-		$model =& $this->getModel();
+		// $model =& $this->getModel();
 		$item =& $this->get('Data');
 		$this->assignRef('item', $item);
 

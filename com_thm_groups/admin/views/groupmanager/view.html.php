@@ -68,10 +68,12 @@ class THMGroupsViewgroupmanager extends JView
 		JToolBarHelper::back('JTOOLBAR_BACK');
 
 		$uri =& JFactory::getURI();
-		$query = $uri->getQuery();
+
+		// $query = $uri->getQuery();
 
 		$model =& $this->getModel();
-		$mainframe = Jfactory::getApplication('Administrator');
+
+		// $mainframe = Jfactory::getApplication('Administrator');
 
 		$this->state = $this->get('State');
 		$items = $this->get('Items');

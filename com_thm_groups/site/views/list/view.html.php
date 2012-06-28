@@ -42,7 +42,8 @@ class THMGroupsViewList extends JView
 	{
 		$model =& $this->getModel();
 		$params = $model->getViewParams();
-		$showAll = $model->getShowMode();
+
+		// $showAll = $model->getShowMode();
 		$groupid = $model->getGroupNumber();
 		$margin = $params->get('lineSpacing');
 		$zmargin = $params->get('zSpacing') - 12;
@@ -307,10 +308,12 @@ class THMGroupsViewList extends JView
 	{
 		$model =& $this->getModel();
 		$params = $model->getViewParams();
-		$showAll = $model->getShowMode();
+
+		// $showAll = $model->getShowMode();
 		$groupid = $model->getGroupNumber();
 		$retString = "";
-		$margin = $params->get('lineSpacing');
+
+		// $margin = $params->get('lineSpacing');
 		$zmargin = $params->get('zSpacing') - 12;
 		$shownLetter = JRequest::getVar('letter', 'A');
 

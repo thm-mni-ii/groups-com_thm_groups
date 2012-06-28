@@ -221,7 +221,7 @@ class THMGroupsViewedit extends JView
 	 */
 	public function getDateForm ($name, $size, $value)
 	{
-		echo JHTML::calendar($value, $name6, $name, '%Y-%m-%d');
+		echo JHTML::calendar($value, $name, $name, '%Y-%m-%d');
 	}
 
 	/**

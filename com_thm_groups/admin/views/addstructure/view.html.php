@@ -52,7 +52,7 @@ class THMGroupsViewAddStructure extends JView
 		JToolBarHelper::cancel('addstructure.cancel', 'JTOOLBAR_CANCEL');
 		JToolBarHelper::back('JTOOLBAR_BACK');
 
-		$model =& $this->getModel();
+		// $model =& $this->getModel();
 		$items =& $this->get('Data');
 		$this->assignRef('items', $items);
 

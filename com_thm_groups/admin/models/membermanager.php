@@ -239,7 +239,7 @@ class THMGroupsModelmembermanager extends JModelList
 		$groupFilter = $this->state->get('groupFilters');
 		$rolesFilter = $this->state->get('rolesFilters');
 
-		$db = $this->getDbo();
+		// $db = $this->getDbo();
 
 		$query = "SELECT distinct b.userid, b.value as firstName, c.value as lastName, e.value as EMail, f.published as published, "
 			. "f.injoomla as injoomla, t.value as title "

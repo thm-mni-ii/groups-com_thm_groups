@@ -88,7 +88,7 @@ class THMGroupsControllerGroupmanager extends JControllerForm
 	 */
 	public function remove()
 	{
-		$db =& JFactory::getDBO();
+		// $db =& JFactory::getDBO();
 		$cid = JRequest::getVar('cid', array(), 'post', 'array');
 
 		$model = $this->getModel('groupmanager');

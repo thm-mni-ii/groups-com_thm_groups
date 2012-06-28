@@ -68,9 +68,10 @@ class THMGroupsViewRolemanager extends JView
 		JToolBarHelper::back('JTOOLBAR_BACK');
 
 		$uri =& JFactory::getURI();
-		$query = $uri->getQuery();
 
-		$mainframe = Jfactory::getApplication('Administrator');
+		// $query = $uri->getQuery();
+
+		// $mainframe = Jfactory::getApplication('Administrator');
 
 		$this->state = $this->get('State');
 

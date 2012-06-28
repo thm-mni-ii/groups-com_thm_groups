@@ -109,7 +109,7 @@ class THMGroupsModelEditGroup extends JModelForm
 		$gr_info = JRequest::getVar('groupinfo', '', 'post', 'string', JREQUEST_ALLOWHTML);
 		$gr_mode = JRequest::getVar('gr_mode');
 		$gr_parent = JRequest::getVar('gr_parent');
-		$gr_mode = $field = implode(';', $gr_mode);
+		$gr_mode = implode(';', $gr_mode);
 		$gid = JRequest::setVar('gid');
 
 		$db =& JFactory::getDBO();

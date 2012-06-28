@@ -74,9 +74,9 @@ class THMGroupsModelGroupmanager extends JModelList
 		$orderDirn	= $this->state->get('list.direction');
 
 		$db =& JFactory::getDBO();
-		$query = $db->getQuery(true);
 
 		/*
+		$query = $db->getQuery(true);
 		$query = "SELECT thm.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla ";
 		$query .= "FROM #__usergroups AS joo ";
 		$query .= "RIGHT JOIN (";

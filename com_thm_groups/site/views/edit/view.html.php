@@ -138,7 +138,8 @@ class THMGroupsViewEdit extends JView
 	public function getTableArea ($name, $value, $structid)
 	{
 		$model =& $this->getModel();
-		$cid = JRequest::getVar('cid', array(0), '', 'array');
+
+		// $cid = JRequest::getVar('cid', array(0), '', 'array');
 		$extra = $model->getExtra($structid, 'TABLE');
 		$arrValue = json_decode($value);
 		$gsuid = JRequest::getVar('gsuid');
@@ -281,7 +282,7 @@ class THMGroupsViewEdit extends JView
 
 		$cid = JRequest::getVar('gsuid', 0);
 
-		$model =& $this->getModel();
+		// $model =& $this->getModel();
 		$items =& $this->get('Data');
 		$structure =& $this->get('Structure');
 		$gsgid = JRequest::getVar('gsgid');

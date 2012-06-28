@@ -42,7 +42,8 @@ class THMGroupsViewAdvanced extends JView
 	public function display($tpl = null)
 	{
 		$mainframe = Jfactory::getApplication();
-		$layout = $this->getLayout();
+
+		// $layout = $this->getLayout();
 		$model =& $this->getmodel('advanced');
 
 		// Mainframe Parameter
@@ -52,12 +53,12 @@ class THMGroupsViewAdvanced extends JView
 		$showpagetitle = $params->get('show_page_heading');
 		if ($showpagetitle)
 		{
-	    	$title = $pagetitle;
+			$title = $pagetitle;
 		}
-	    else
-	    {
-	    	$title = "";
-	    }
+		else
+		{
+			$title = "";
+		}
 		$this->assignRef('title', $title);
 		$itemid = JRequest::getVar('Itemid', 0, 'post');
 

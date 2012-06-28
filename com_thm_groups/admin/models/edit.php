@@ -143,10 +143,10 @@ class THMGroupsModeledit extends JModelForm
 		foreach ($structure as $structureItem)
 		{
 			$puffer = null;
-			 $field = JRequest::getVar($structureItem->field, '', 'post', 'string', JREQUEST_ALLOWHTML);
+			$field = JRequest::getVar($structureItem->field, '', 'post', 'string', JREQUEST_ALLOWHTML);
 
 			$publish = 0;
-			if ($strucctIdemtureItem->type == 'MULTISELECT')
+			if ($structureItem->type == 'MULTISELECT')
 			{
 				$field = implode(';', $field);
 			}
@@ -214,10 +214,10 @@ class THMGroupsModeledit extends JModelForm
 				}
 				echo $query->__toString() . "<br />";
 				$db->setQuery($query);
-        		if (!$db->query())
-        		{
-	        		$err = 1;
-        		}
+				if (!$db->query())
+				{
+					$err = 1;
+				}
 			}
 			if ($structureItem->type == 'PICTURE' && $_FILES[$structureItem->field]['name'] != "")
 			{
@@ -230,12 +230,12 @@ class THMGroupsModeledit extends JModelForm
 
 		if (!$err)
 		{
-        	return true;
+			return true;
 		}
-        else
-        {
-        	return false;
-        }
+		else
+		{
+			return false;
+		}
 	}
 
 	/**
@@ -470,7 +470,8 @@ class THMGroupsModeledit extends JModelForm
 		$uid = JRequest::getVar('userid');
 		$structid = JRequest::getVar('structid');
 		$key = JRequest::getVar('tablekey');
-		$arrRow = array();
+
+		// $arrRow = array();
 		$arrValue = array();
 		$err = 0;
 

@@ -155,7 +155,7 @@ class THMGroupsControllerEditStructure extends JControllerForm
 			$value->value = "";
 		}
 
-		$id = JRequest::getVar('sid');
+		// $id = JRequest::getVar('sid');
 		$output = "";
 
 		// $output =  "COM_THM_GROUPS_STRUCTURE_EXTRA_PARAMS: <br />";
