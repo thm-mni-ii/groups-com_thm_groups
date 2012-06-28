@@ -279,7 +279,7 @@ class THMGroupsControllermembermanager extends JController
 				{
 					$model = $this->getModel('membermanager');
 					$model->delGroupsToUser($uids, $gid);
-					$msg = JText::_("COM_THM_GROUPS_MEMBERMANAGER_DELETE_USER_TRUE . '$uids[0]'", true);
+					$msg = JText::_("COM_THM_GROUPS_MEMBERMANAGER_DELETE_USER_TRUE" . $uids[0], true);
 				}
 				else
 				{
@@ -348,46 +348,94 @@ class THMGroupsControllermembermanager extends JController
 
 		foreach ($cid as $id)
 		{
+			/*
 			$query = 'SELECT injoomla FROM #__thm_groups_additional_userdata'
 				. ' WHERE userid= ' . $id;
+			*/
+			$query = $db->getQuery(true);
+			$query->select('injoomla');
+			$query->from("#__thm_groups_additional_userdata");
+			$query->where("userid = " . $uid);
 
 			$db->setQuery($query);
 			$erg = $db->loadObjectList();
 
 			if ($erg[0]->injoomla == '0')
 			{
+				/*
 				$query = 'DELETE FROM #__thm_groups_date'
 					. ' WHERE userid = ' . $id . ';';
+					*/
+				$query = $db->getQuery(true);
+				$query->from("#__thm_groups_date");
+				$query->delete();
+				$query->where("userid = " . $id);
 				$db->setQuery($query);
 				$db->query();
 
+				/*
 				$query = 'DELETE FROM #__thm_groups_number'
 					. ' WHERE userid = ' . $id . ';';
+					*/
+				$query = $db->getQuery(true);
+				$query->from("#__thm_groups_number");
+				$query->delete();
+				$query->where("userid = " . $id);
 				$db->setQuery($query);
 				$db->query();
 
+				/*
 				$query = 'DELETE FROM #__thm_groups_picture'
 					. ' WHERE userid = ' . $id . ';';
+				*/
+				$query = $db->getQuery(true);
+				$query->from("#__thm_groups_picture");
+				$query->delete();
+				$query->where("userid = " . $id);
 				$db->setQuery($query);
 				$db->query();
 
+				/*
 				$query = 'DELETE FROM #__thm_groups_table'
 					. ' WHERE userid = ' . $id . ';';
+				*/
+				$query = $db->getQuery(true);
+				$query->from("#__thm_groups_table");
+				$query->delete();
+				$query->where("userid = " . $id);
 				$db->setQuery($query);
 				$db->query();
 
+				/*
 				$query = 'DELETE FROM #__thm_groups_text'
 					. ' WHERE userid = ' . $id . ';';
+				*/
+				$query = $db->getQuery(true);
+				$query->from("#__thm_groups_text");
+				$query->delete();
+				$query->where("userid = " . $id);
 				$db->setQuery($query);
 				$db->query();
 
+				/*
 				$query = 'DELETE FROM #__thm_groups_textfield'
 					. ' WHERE userid = ' . $id . ';';
+					*/
+				$query = $db->getQuery(true);
+				$query->from("#__thm_groups_textfield");
+				$query->delete();
+				$query->where("userid = " . $id);
 				$db->setQuery($query);
 				$db->query();
 
+				/*
 				$query = 'DELETE FROM #__thm_groups_groups_map'
 					. ' WHERE uid = ' . $id . ';';
+					*/
+				$query = $db->getQuery(true);
+				$query->from("#__thm_groups_groups_map");
+				$query->delete();
+				$query->where("userid = " . $id);
 
 				$db->setQuery($query);
 				$db->query();
@@ -431,7 +479,7 @@ class THMGroupsControllermembermanager extends JController
 			{
 				if ($model->delGroupsAndRoles($uid, $gid, $rid->rid))
 				{
-					$msg = JText::_("COM_THM_GROUPS_MEMBERMANAGER_DELETE_USER_TRUE . '$uids[0]'", true);
+					$msg = JText::_("COM_THM_GROUPS_MEMBERMANAGER_DELETE_USER_TRUE" . $uids[0], true);
 				}
 				else
 				{
