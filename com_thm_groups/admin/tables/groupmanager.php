@@ -39,7 +39,7 @@ class TableGroupmanager extends JTable
 	 *
 	 * @param   Object  &$db  Database
 	 */
-	public function TableGroupmanager(&$db)
+	public function __construct(&$db)
 	{
 		parent::__construct('#__thm_groups_groups', 'id', $db);
 	}

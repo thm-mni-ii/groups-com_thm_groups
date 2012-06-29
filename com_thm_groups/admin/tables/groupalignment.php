@@ -36,7 +36,7 @@ class TableGroupalignment extends JTable
      *
      * @param   Object  &$db  Database
      */
-	public function TableGroupalignment(&$db)
+	public function __construct(&$db)
 	{
 		parent::__construct('#__giessen_staff_groups', 'id', $db);
 	}
