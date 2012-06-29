@@ -26,6 +26,7 @@ require_once dirname(dirname(dirname(dirname(__FILE__)))) . DIRECTORY_SEPARATOR 
  * @subpackage  thm_groups
  * @link        www.mni.thm.de
  * @since       Class available since Release 3.0
+ * @codeCoverageIgnore
  */
 class AllComThmGroupsAdminTests
 {
