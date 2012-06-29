@@ -194,7 +194,8 @@ class JFormFieldStructureSelect extends JFormField
 		// Initialize variables.
 		$options = array();
 
-		foreach ($list as $i => $structure)
+		// OLD: foreach ($list as $i => $structure)
+		foreach ($list as $structure)
 		{
 			// Create a new option object based on the <option /> element.
 			$tmp = JHtml::_('select.option', $structure->id, $structure->field);
