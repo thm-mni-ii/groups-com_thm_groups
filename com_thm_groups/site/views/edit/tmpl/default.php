@@ -29,7 +29,7 @@ if ($user->id != $this->userid && !$this->is_mod)
 	$itemid = JRequest :: getVar('Itemid', 0);
 	$view = JRequest :: getVar('view', 'list');
 	$msg = JText::_('Nicht erlaubter Zugriff!');
- 	$link = JRoute :: _('index.php?option=com_thm_groups&Itemid=' . $itemid);
+	$link = JRoute :: _('index.php?option=com_thm_groups&Itemid=' . $itemid);
 	$mainframe->Redirect($link, $msg);
 }
 else

@@ -43,7 +43,7 @@ class THMGroupsViewEdit extends JView
 	 *
 	 * @param   String  $name      Name
 	 * @param   Int     $size      Size
-	 * @param   String  $value	   Value
+	 * @param   String  $value     Value
 	 * @param   Int     $structid  StructID
 	 *
 	 * @return textform
@@ -53,20 +53,20 @@ class THMGroupsViewEdit extends JView
 		$model =& $this->getModel();
 		$extra = $model->getExtra($structid, 'TEXT');
 		$output = "<input " .
-				"class='inputbox' " .
-				"type='text' name='$name' " .
-				"id='$name' ";
-				if (isset($extra))
-				{
-					$output .= "size='$extra'";
-				}
-				else
-				{
-					$output .= "size='$size'";
-				}
-       			$output .= "value='$value'" .
-			  	" />";
-       	echo $output;
+			"class='inputbox' " .
+			"type='text' name='$name' " .
+			"id='$name' ";
+			if (isset($extra))
+			{
+				$output .= "size='$extra'";
+			}
+			else
+			{
+				$output .= "size='$size'";
+			}
+			$output .= "value='$value'" .
+			" />";
+		echo $output;
 	}
 
 	/**
@@ -74,7 +74,7 @@ class THMGroupsViewEdit extends JView
 	 *
 	 * @param   String  $name      Name
 	 * @param   Int     $rows      Rows
-	 * @param   String  $value	   Value
+	 * @param   String  $value	    Value
 	 * @param   Int     $structid  StructID
 	 *
 	 * @return textarea
@@ -93,9 +93,9 @@ class THMGroupsViewEdit extends JView
 				$output .= "rows='$rows' ";
 			}
 			$output .= "name='$name' >" .
-		 	$value .
-		 "</textarea>";
-		 echo $output;
+			$value .
+			"</textarea>";
+		echo $output;
 	}
 
 	/**
@@ -103,7 +103,7 @@ class THMGroupsViewEdit extends JView
 	 *
 	 * @param   String  $name      Name
 	 * @param   Int     $structid  StructID
-	 * @param   String  $value	   Value
+	 * @param   String  $value	    Value
 	 *
 	 * @return picturearea
 	 */
@@ -130,7 +130,7 @@ class THMGroupsViewEdit extends JView
 	 * Method to get table area
 	 *
 	 * @param   String  $name      Name
-	 * @param   String  $value	   Value
+	 * @param   String  $value	    Value
 	 * @param   Int     $structid  StructID
 	 *
 	 * @return tablearea
@@ -183,30 +183,30 @@ class THMGroupsViewEdit extends JView
 			else
 			{
 				$output .= "<tr>" .
-						   	"<td colspan='" . (count($head) + 1) . "'>Keine Daten eingetragen...</td>" .
-						   "</tr>";
+					"<td colspan='" . (count($head) + 1) . "'>Keine Daten eingetragen...</td>" .
+					"</tr>";
 			}
 			$output .= "</table>";
 			foreach ($head as $headItem)
 			{
 				$output .= "<input " .
-				"class='inputbox' " .
-				"type='text' name='TABLE$structid$headItem' " .
-				"id='TABLE$structid$headItem' " .
-				"size='20'" .
-				"onFocus=\"if(this.value=='$headItem eintragen') this.value=''\"" .
-       			"value='$headItem eintragen'" .
-			  	" />";
+					"class='inputbox' " .
+					"type='text' name='TABLE$structid$headItem' " .
+					"id='TABLE$structid$headItem' " .
+					"size='20'" .
+					"onFocus=\"if(this.value=='$headItem eintragen') this.value=''\"" .
+					"value='$headItem eintragen'" .
+					" />";
 			}
 
 			$option_old = JRequest::getVar('option_old', '0', 'post');
-		    $layout_old = JRequest::getVar('layout_old', '0', 'post');
-		    $view_old = JRequest::getVar('view_old', '0', 'post');
+			$layout_old = JRequest::getVar('layout_old', '0', 'post');
+			$view_old = JRequest::getVar('view_old', '0', 'post');
 
 			$output .= "<br /><br /><input type='submit' id='addTableRow" . $name . "' " .
 				"onclick='document.forms[\"adminForm\"].elements[\"structid\"].value =" . $structid . "," .
 				"document.forms[\"adminForm\"].elements[\"task\"].value = \"edit.addTableRow\", " .
-			    "document.forms[\"adminForm\"].elements[\"option_old\"].value=" . $option_old . "," .
+				"document.forms[\"adminForm\"].elements[\"option_old\"].value=" . $option_old . "," .
 				"document.forms[\"adminForm\"].elements[\"layout_old\"].value=" . $layout_old . "," .
 				"document.forms[\"adminForm\"].elements[\"view_old\"].value=" . $view_old . "' " .
 				"value='In Tabelle eintragen' name='addTableRow" . $name . "' task='edit.addTableRow' />";
@@ -225,7 +225,7 @@ class THMGroupsViewEdit extends JView
 	 *
 	 * @param   String  $name   Name
 	 * @param   Int     $size   Size
-	 * @param   String  $value	Value
+	 * @param   String  $value  Value
 	 *
 	 * @return void
 	 */
@@ -239,7 +239,7 @@ class THMGroupsViewEdit extends JView
 	 *
 	 * @param   String  $name      Name
 	 * @param   Int     $size      Size
-	 * @param   String  $value	   Value
+	 * @param   String  $value	    Value
 	 * @param   Int     $structid  StructID
 	 *
 	 * @return multiselectform
@@ -259,13 +259,13 @@ class THMGroupsViewEdit extends JView
 			{
 				if ($tExtra == $val)
 				{
- 					$sel = "selected";
+					$sel = "selected";
 				}
 			}
- 			$output .= "<OPTION VALUE='$tExtra' $sel>$tExtra</option>";
+			$output .= "<OPTION VALUE='$tExtra' $sel>$tExtra</option>";
 		}
 		$output .= "</SELECT>";
-       	echo $output;
+		echo $output;
 	}
 
 	/**

@@ -42,12 +42,12 @@ class THMGroupsViewGroups extends JView
 	 */
 	public function display($tpl = null)
 	{
-        $model =& $this->getModel();
-        $groups = $model->getGroups();
-        $itemid = JRequest::getVar('Itemid', 0);
-        $this->assignRef('groups', $groups);
-        $this->assignRef('itemid',  $itemid);
+		$model =& $this->getModel();
+		$groups = $model->getGroups();
+		$itemid = JRequest::getVar('Itemid', 0);
+		$this->assignRef('groups', $groups);
+		$this->assignRef('itemid',  $itemid);
 		$this->assignRef('canEdit',  $model->canEdit());
-        parent::display($tpl);
+		parent::display($tpl);
 	}
 }

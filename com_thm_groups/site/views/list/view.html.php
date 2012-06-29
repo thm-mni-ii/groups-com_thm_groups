@@ -487,7 +487,7 @@ class THMGroupsViewList extends JView
 		$showpagetitle = $params->get('show_page_heading');
 		if ($showpagetitle)
 		{
-        	$this->assignRef('title', $pagetitle);
+			$this->assignRef('title', $pagetitle);
 		}
 		$this->assignRef('desc', $model->getDesc());
 		if ($showall == 1)

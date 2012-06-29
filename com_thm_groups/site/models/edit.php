@@ -2,7 +2,7 @@
 /**
  *@category Joomla component
  *
- *@package	 THM_Groups
+ *@package     THM_Groups
  *
  *@subpackage  com_thm_groups
  *@name		THMGroupsModeledit
@@ -16,7 +16,7 @@
  *
  *@copyright   2012 TH Mittelhessen
  *
- *@license	 GNU GPL v.2
+ *@license     GNU GPL v.2
  *@link		www.mni.thm.de
  *@version	 3.0
  */
@@ -26,10 +26,10 @@ jimport('joomla.application.component.modelform');
 /**
  * THMGroupsModeledit class for component com_thm_groups
  *
- * @package	 Joomla.Site
+ * @package     Joomla.Site
  * @subpackage  thm_groups
- * @link		www.mni.thm.de
- * @since	   Class available since Release 2.0
+ * @link        www.mni.thm.de
+ * @since       Class available since Release 2.0
  */
 class THMGroupsModeledit extends JModelForm
 {
@@ -47,7 +47,7 @@ class THMGroupsModeledit extends JModelForm
 	/**
 	 * Method to get the record form.
 	 *
-	 * @param   array	$data	  Data for the form.
+	 * @param   array    $data	     Data for the form.
 	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 * 
 	 * @return mixed A JForm object on success, false on failure
@@ -287,8 +287,8 @@ class THMGroupsModeledit extends JModelForm
 	/**
 	 * Method to update a picture
 	 *
-	 * @param   Int	 $uid	   UserID
-	 * @param   Int	 $structid  StructID
+	 * @param   Int     $uid       UserID
+	 * @param   Int     $structid  StructID
 	 * @param   Object  $picField  Picturefield
 	 *
 	 * @access	public
@@ -341,8 +341,8 @@ class THMGroupsModeledit extends JModelForm
 	/**
 	 * Method to get extra data
 	 *
-	 * @param   Int	 $structid  StructID
-	 * @param   String  $type	  Picturefield
+	 * @param   Int     $structid  StructID
+	 * @param   String  $type      Picturefield
 	 *
 	 * @access	public
 	 * @return	null / value

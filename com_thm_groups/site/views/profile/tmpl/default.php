@@ -99,7 +99,7 @@ $canEdit = ($user->id == $this->userid || $this->canEdit);
 						<td width="110" class="key">
 							<label for="title">
 		  						<b><?php 
-		  							echo JText::_($structureItem->field . ":"); ?></b>
+									echo JText::_($structureItem->field . ":"); ?></b>
 							</label>
 						</td>
 						<td>
@@ -167,7 +167,7 @@ $canEdit = ($user->id == $this->userid || $this->canEdit);
 									}
 								}
 						}
-							 ?>
+							?>
 						</td>
 					</tr>
 				<?php

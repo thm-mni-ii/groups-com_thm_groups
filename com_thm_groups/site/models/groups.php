@@ -39,44 +39,44 @@ class THMGroupsModelGroups extends JModel
 	 *
 	 * @return database object
 	 */
-    public function getGroups()
-    {
-        $db =& JFactory::getDBO();
-        /*
-        $query = 'SELECT * FROM #__thm_groups_groups ';
-        */
-        $query = $db->getQuery(true);
-        $query->select('*');
-        $query->from($db->qn('#__thm_groups_groups'));
+	public function getGroups()
+	{
+		$db =& JFactory::getDBO();
+		/*
+		$query = 'SELECT * FROM #__thm_groups_groups ';
+		*/
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from($db->qn('#__thm_groups_groups'));
 
-        $db->setQuery($query);
-        $rows = $db->loadObjectList();
-        return $rows;
-    }
+		$db->setQuery($query);
+		$rows = $db->loadObjectList();
+		return $rows;
+	}
 
-    /**
-     * Method to check if user can edit
-     *
-     * @return database object
-     */
-    public function canEdit()
-    {
+	/**
+	 * Method to check if user can edit
+	 *
+	 * @return database object
+	 */
+	public function canEdit()
+	{
 		// $canEdit = 0;
-        $user =& JFactory::getUser();
+		$user =& JFactory::getUser();
 
-        $db =& JFactory::getDBO();
-        /*
-        $query = "SELECT gid FROM #__thm_groups_groups_map " . "WHERE uid = " . $user->id . " AND rid = 2";
-        */
-        $query = $db->getQuery(true);
-        $query->select('gid');
-        $query->from($db->qn('#__thm_groups_groups_map'));
-        $query->where('uid = ' . $user->id);
-        $query->where('rid = 2');
+		$db =& JFactory::getDBO();
+		/*
+		$query = "SELECT gid FROM #__thm_groups_groups_map " . "WHERE uid = " . $user->id . " AND rid = 2";
+		*/
+		$query = $db->getQuery(true);
+		$query->select('gid');
+		$query->from($db->qn('#__thm_groups_groups_map'));
+		$query->where('uid = ' . $user->id);
+		$query->where('rid = 2');
 
-        $db->setQuery($query);
-        $db = $db->loadObjectlist();
+		$db->setQuery($query);
+		$db = $db->loadObjectlist();
 
-        return $db;
-    }
+		return $db;
+	}
 }

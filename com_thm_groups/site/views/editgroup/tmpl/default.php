@@ -101,16 +101,16 @@ $userid = $user->id;
 									}
 									if ($group->id != $this->item[0]->id)
 									{
-		            					echo "<option value=$group->id " . ($this->item_parent_id == $group->id ? "selected='selected'" : "") . ">";
-		            					while ($gap > 0)
-		            					{
-		            						$gap--;
-		            						echo "- ";
-		            					}
-		            					echo "$group->title </option>";
+										echo "<option value=$group->id " . ($this->item_parent_id == $group->id ? "selected='selected'" : "") . ">";
+										while ($gap > 0)
+										{
+											$gap--;
+											echo "- ";
+										}
+										echo "$group->title </option>";
 									}
-	            				}
-            				?>
+								}
+							?>
         				</select>
 					</td>
 				</tr>
