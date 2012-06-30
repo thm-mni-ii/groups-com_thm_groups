@@ -64,23 +64,23 @@
 
 .description1 {
 	margin-left: 10px;
-    text-align: center;
-    font-size: 1.3em;
-    font-style: normal;
-    font-weight: bold;
-    color: black;
+	text-align: center;
+	font-size: 1.3em;
+	font-style: normal;
+	font-weight: bold;
+	color: black;
 }
 
 .description2 {
-    margin-top: 1em;
-    padding-left: 5px;
-    padding-top: .1em;
-    padding-bottom: .2em;
-    text-align: center;
-    font-size: .8em;
-    font-style: normal;
-    font-weight: bold;
-    color: black;
+	margin-top: 1em;
+	padding-left: 5px;
+	padding-top: .1em;
+	padding-bottom: .2em;
+	text-align: center;
+	font-size: .8em;
+	font-style: normal;
+	font-weight: bold;
+	color: black;
 }
 
 img {border: none;}
