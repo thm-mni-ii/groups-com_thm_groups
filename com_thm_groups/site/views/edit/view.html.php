@@ -74,7 +74,7 @@ class THMGroupsViewEdit extends JView
 	 *
 	 * @param   String  $name      Name
 	 * @param   Int     $rows      Rows
-	 * @param   String  $value	    Value
+	 * @param   String  $value	   Value
 	 * @param   Int     $structid  StructID
 	 *
 	 * @return textarea
@@ -103,7 +103,7 @@ class THMGroupsViewEdit extends JView
 	 *
 	 * @param   String  $name      Name
 	 * @param   Int     $structid  StructID
-	 * @param   String  $value	    Value
+	 * @param   String  $value	   Value
 	 *
 	 * @return picturearea
 	 */
@@ -130,7 +130,7 @@ class THMGroupsViewEdit extends JView
 	 * Method to get table area
 	 *
 	 * @param   String  $name      Name
-	 * @param   String  $value	    Value
+	 * @param   String  $value	   Value
 	 * @param   Int     $structid  StructID
 	 *
 	 * @return tablearea
@@ -239,7 +239,7 @@ class THMGroupsViewEdit extends JView
 	 *
 	 * @param   String  $name      Name
 	 * @param   Int     $size      Size
-	 * @param   String  $value	    Value
+	 * @param   String  $value	   Value
 	 * @param   Int     $structid  StructID
 	 *
 	 * @return multiselectform
