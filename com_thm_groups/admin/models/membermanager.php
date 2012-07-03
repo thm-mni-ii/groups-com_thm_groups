@@ -61,6 +61,7 @@ class THMGroupsModelmembermanager extends JModelList
 
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
+		$oldId = null;
 
 		foreach ($rows as $row)
 		{
@@ -98,9 +99,11 @@ class THMGroupsModelmembermanager extends JModelList
 				}
 			}
 
-				$firstName = trim($firstName);
-				$lastName = trim($lastName);
-
+			$firstName = trim($firstName);
+			$lastName = trim($lastName);
+			if ($id != $oldId)
+			{
+				echo $id . " : " . $oldId;
 				/*
 				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
 				$query .= "VALUES ($id, '$firstName', 1)";
@@ -164,22 +167,23 @@ class THMGroupsModelmembermanager extends JModelList
 
 				$db->setQuery($query);
 				$db->query();
+			}
+			$firstName = "";
+			$lastName = "";
+			$oldId = $id;
 
-				$firstName = "";
-				$lastName = "";
+			/*
+			$query  = "INSERT INTO #__thm_groups_groups_map (uid,gid,rid)";
+			$query .= "VALUES ($id, '1','1')";
+			*/
+			$query = $db->getQuery(true);
+			$query->insert("#__thm_groups_groups_map");
+			$query->set("`uid` = '" . $id . "'");
+			$query->set("`gid` = '1'");
+			$query->set("`rid` = '1'");
 
-				/*
-				$query  = "INSERT INTO #__thm_groups_groups_map (uid,gid,rid)";
-				$query .= "VALUES ($id, '1','1')";
-				*/
-				$query = $db->getQuery(true);
-				$query->insert("#__thm_groups_groups_map");
-				$query->set("`uid` = '" . $id . "'");
-				$query->set("`gid` = '1'");
-				$query->set("`rid` = '1'");
-
-				$db->setQuery($query);
-				$db->query();
+			$db->setQuery($query);
+			$db->query();
 		}
 	}
 
