@@ -84,7 +84,7 @@ class THMGroupsModeledit extends JModelForm
 			*/
 			$query = $db->getQuery(true);
 			$query->select('structid, value, publish');
-			$query->from($db->qn('#__thm_groups_' . strtolower($type->Type) . 'AS a'));
+			$query->from($db->qn('#__thm_groups_' . strtolower($type->Type)) . ' AS a');
 			$query->where('a.userid = ' . $cid);
 
 			$db->setQuery($query);
@@ -116,8 +116,8 @@ class THMGroupsModeledit extends JModelForm
 		$query = "SELECT * FROM #__thm_groups_structure as a ORDER BY a.order";
 		*/
 		$query = $db->getQuery(true);
-		$query->select('structid, value, publish');
-		$query->from($db->qn('#__thm_groups_structure AS a'));
+		$query->select('*');
+		$query->from($db->qn('#__thm_groups_structure') . " AS a");
 		$query->order('a.order');
 		$db->setQuery($query);
 		return $db->loadObjectList();
@@ -163,7 +163,7 @@ class THMGroupsModeledit extends JModelForm
 		foreach ($structure as $structureItem)
 		{
 			$puffer = null;
-			$field  = JRequest::getVar($structureItem->field, '', 'post', 'string', JREQUEST_ALLOWHTML);
+			$field  = JRequest::getVar($structureItem->field, '', 'post', JREQUEST_ALLOWHTML);
 
 			$publish = 0;
 			if ($structureItem->type == 'MULTISELECT')

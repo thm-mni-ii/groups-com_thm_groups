@@ -378,8 +378,7 @@ $listDirn	= $this->state->get('list.direction');
 		?>
 		<tr>
 			<td colspan="10"><blink><big><b>
-			<font color="#FF0000">Kein User verf&uuml;gbar. Um in der Liste aufgef&uuml;hrt zu werden,
-			muss man mindestens einmal im System eingeloggt gewesen sein.</font>
+			<font color="#FF0000"><?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_NO_USER_EXIST'); ?></font>
 			</b></big></blink></td>
 		</tr>
 		<?php

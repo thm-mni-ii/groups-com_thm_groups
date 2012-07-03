@@ -127,7 +127,7 @@ class THMGroupsModelEditGroup extends JModelForm
 		$query->set("`name` = '" . $gr_name . "'");
 		$query->set("`info` = '" . $gr_info . "'");
 		$query->set("`mode` = '" . $gr_mode . "'");
-		$query->where("`id` = '" . $gid . "'");
+		$query->where("`id` = " . $gid);
 
 		$db->setQuery($query);
 		if (!$db->query())
@@ -160,7 +160,7 @@ class THMGroupsModelEditGroup extends JModelForm
 		$query = $db->getQuery(true);
 		$query->select('injoomla');
 		$query->from($db->qn('#__thm_groups_groups'));
-		$query->where("`id` = '" . $gid . "'");
+		$query->where("`id` = " . $gid);
 
 		$db->setQuery($query);
 		$injoomla = $db->loadObject();
@@ -180,7 +180,7 @@ class THMGroupsModelEditGroup extends JModelForm
 			$query->update($db->qn('#__usergroups'));
 			$query->set("`parent_id` = '" . $gr_parent . "'");
 			$query->set("`title` = '" . $gr_name . "'");
-			$query->where("`id` = '" . $gid . "'");
+			$query->where("`id` = " . $gid);
 
 			$db->setQuery($query);
 			$db->query();
@@ -195,7 +195,7 @@ class THMGroupsModelEditGroup extends JModelForm
 			$query = $db->getQuery(true);
 			$query->select('*');
 			$query->from($db->qn('#__usergroups'));
-			$query->where("`id` = '" . $gid . "'");
+			$query->where("`id` = " . $gid);
 
 			$db->setQuery($query);
 			$jgroup = $db->loadObject();
@@ -210,7 +210,7 @@ class THMGroupsModelEditGroup extends JModelForm
 			$query = $db->getQuery(true);
 			$query->select('*');
 			$query->from($db->qn('#__usergroups'));
-			$query->where("`id` = '" . $gr_parent . "'");
+			$query->where("`id` = " . $gr_parent);
 
 			$db->setQuery($query);
 			$parent = $db->loadObject();
@@ -226,7 +226,7 @@ class THMGroupsModelEditGroup extends JModelForm
 			$query = $db->getQuery(true);
 			$query->select('*');
 			$query->from($db->qn('#__usergroups'));
-			$query->where("`parent_id` = '" . $gr_parent . "'");
+			$query->where("`parent_id` = " . $gr_parent);
 			$query->order('`title`');
 
 			$db->setQuery($query);
@@ -265,8 +265,8 @@ class THMGroupsModelEditGroup extends JModelForm
 			*/
 			$query = $db->getQuery(true);
 			$query->update("#__usergroups");
-			$query->set("`rgt` = 'rgt + " . $jgrouprange . "'");
-			$query->where("`rgt` >= '" . $new_lft . "'");
+			$query->set("`rgt` = rgt + " . $jgrouprange);
+			$query->where("`rgt` >= " . $new_lft);
 
 			$db->setQuery($query);
 			$db->query();
@@ -280,8 +280,8 @@ class THMGroupsModelEditGroup extends JModelForm
 			*/
 			$query = $db->getQuery(true);
 			$query->update("#__usergroups");
-			$query->set("`lft` = 'lft + " . $jgrouprange . "'");
-			$query->where("`lft` >= '" . $new_lft . "'");
+			$query->set("`lft` = lft + " . $jgrouprange);
+			$query->where("`lft` >= " . $new_lft);
 
 			$db->setQuery($query);
 			$db->query();
@@ -296,7 +296,7 @@ class THMGroupsModelEditGroup extends JModelForm
 			$query = $db->getQuery(true);
 			$query->select('*');
 			$query->from($db->qn('#__usergroups'));
-			$query->where("`id` = '" . $gid . "'");
+			$query->where("`id` = " . $gid);
 
 			$db->setQuery($query);
 			$jgroup = $db->loadObject();
@@ -315,9 +315,9 @@ class THMGroupsModelEditGroup extends JModelForm
 			*/
 			$query = $db->getQuery(true);
 			$query->update("#__usergroups");
-			$query->set("`rgt` = 'rgt + " . $jgroupspan . "'");
-			$query->where("`rgt` >= '" . $old_lft . "'");
-			$query->where("`rgt` <= '" . $old_rgt . "'");
+			$query->set("`rgt` = rgt + " . $jgroupspan);
+			$query->where("`rgt` >= " . $old_lft);
+			$query->where("`rgt` <= " . $old_rgt);
 
 			$db->setQuery($query);
 			$db->query();
@@ -328,9 +328,9 @@ class THMGroupsModelEditGroup extends JModelForm
 			*/
 			$query = $db->getQuery(true);
 			$query->update("#__usergroups");
-			$query->set("`lft` = 'lft + " . $jgroupspan . "'");
-			$query->where("`lft` >= '" . $old_lft . "'");
-			$query->where("`lft` <= '" . $old_rgt . "'");
+			$query->set("`lft` = lft + " . $jgroupspan);
+			$query->where("`lft` >= " . $old_lft);
+			$query->where("`lft` <= " . $old_rgt);
 
 			$db->setQuery($query);
 			$db->query();
@@ -342,8 +342,8 @@ class THMGroupsModelEditGroup extends JModelForm
 				*/
 			$query = $db->getQuery(true);
 			$query->update("#__usergroups");
-			$query->set("`rgt` = 'rgt - " . $jgrouprange . "'");
-			$query->where("`rgt` >= '" . $old_lft . "'");
+			$query->set("`rgt` = rgt - " . $jgrouprange);
+			$query->where("`rgt` >= " . $old_lft);
 
 			$db->setQuery($query);
 			$db->query();
@@ -355,8 +355,8 @@ class THMGroupsModelEditGroup extends JModelForm
 			*/
 			$query = $db->getQuery(true);
 			$query->update("#__usergroups");
-			$query->set("`lft` = 'lft - " . $jgrouprange . "'");
-			$query->where("`lft` >= '" . $old_lft . "'");
+			$query->set("`lft` = lft - " . $jgrouprange);
+			$query->where("`lft` >= " . $old_lft);
 
 			$db->setQuery($query);
 			$db->query();

@@ -70,10 +70,10 @@ $canEdit = ($user->id == $this->userid || $this->canEdit);
 					// Daten fuer die EditForm
 					$option = JRequest :: getVar('option', 0);
 					$layout = JRequest :: getVar('layout', 0);
-					$view = JRequest :: getVar('view', 0);
+					$view   = JRequest :: getVar('view', 0);
 
-					$path = "'index.php?option=com_thm_groups&view=edit&layout=default&Itemid='";
-					$path2 = "'&option_old=' . $option . '&view_old=' . $view . '&layout_old=' . $layout";
+					$path = "index.php?option=com_thm_groups&view=edit&layout=default&Itemid=";
+					$path2 = "&option_old=$option&view_old=$view&layout_old=$layout";
 					echo "<span style='float:right;'><a href='"
 					. JRoute::_($path . $this->itemid . '&gsuid=' . $this->userid . '&name=' . trim($lastName) . '&gsgid=' . $this->gsgid . $path2)
 					. "'> "
@@ -153,7 +153,11 @@ $canEdit = ($user->id == $this->userid || $this->canEdit);
 												}
 												break;
 										case 'MULTISELECT':
-											// ToDo
+												if (trim($item->value) != "")
+												{
+													echo $item->value;
+												}
+												break;
 											break;
 										default:
 											if ($item->structid == '4')

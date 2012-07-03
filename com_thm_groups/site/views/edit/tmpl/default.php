@@ -187,7 +187,7 @@ else
 					<input type='submit'
 					id="gs_editView_buttons"
 					onclick='document.forms["adminForm"].elements["task"].value = "edit.backToRefUrl"'
-					value='Zur�ck'
+					value='Zurück'
 					name='backToRefUrl'
 					task='edit.backToRefUrl' />
 				</td>

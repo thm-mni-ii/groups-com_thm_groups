@@ -81,10 +81,10 @@ class THMGroupsModelAddGroup extends JModelForm
 		 */
 		$query = $db->getQuery(true);
 		$query->insert($db->qn('#__usergroups'));
-		$query->set("`parent_id` = '" . $gr_parent . "'");
+		$query->set("`parent_id` = " . $gr_parent);
 		$query->set("`title` = '" . $gr_name . "'");
-		$query->set("`lft` = '0'");
-		$query->set("`rgt` = '0'");
+		$query->set("`lft` = 0");
+		$query->set("`rgt` = 0");
 
 		$db->setQuery($query);
 		$db->query();
@@ -97,11 +97,11 @@ class THMGroupsModelAddGroup extends JModelForm
 			. "WHERE parent_id = " . $gr_parent . " AND lft = 0 AND rgt = 0";
 		*/
 		$query = $db->getQuery(true);
-		$query->select('`id`');
+		$query->select('id');
 		$query->from($db->qn('#__usergroups'));
-		$query->where("`parent_id` = '" . $gr_parent . "'");
-		$query->where("`rgt` = '0'");
-		$query->where("`lft` = '0'");
+		$query->where("`parent_id` = " . $gr_parent);
+		$query->where("`rgt` = 0");
+		$query->where("`lft` = 0");
 
 		$db->setQuery($query);
 		$gr_id = $db->loadObject();
@@ -117,8 +117,7 @@ class THMGroupsModelAddGroup extends JModelForm
 		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from($db->qn('#__usergroups'));
-		$query->where("`id` = '" . $gr_parent . "'");
-		$query->where("`lft` = '0'");
+		$query->where("`id` = " . $gr_parent);
 
 		$db->setQuery($query);
 		$parent = $db->loadObject();
@@ -134,7 +133,7 @@ class THMGroupsModelAddGroup extends JModelForm
 		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from($db->qn('#__usergroups'));
-		$query->where("`parent_id` = '" . $gr_parent . "'");
+		$query->where("`parent_id` = " . $gr_parent);
 		$query->order('`title`');
 
 		$db->setQuery($query);
@@ -172,7 +171,7 @@ class THMGroupsModelAddGroup extends JModelForm
 		$query = $db->getQuery(true);
 		$query->update($db->qn('#__usergroups'));
 		$query->set('`rgt` = rgt + 2');
-		$query->where("`rgt` = '" . $lft . "'");
+		$query->where("`rgt` >= " . $lft);
 		$db->setQuery($query);
 		$db->query();
 
@@ -186,7 +185,7 @@ class THMGroupsModelAddGroup extends JModelForm
 		$query = $db->getQuery(true);
 		$query->update($db->qn('#__usergroups'));
 		$query->set('`lft` = lft + 2');
-		$query->where("`lft` = '" . $lft . "'");
+		$query->where("`lft` >= " . $lft);
 		$db->setQuery($query);
 		$db->query();
 
@@ -201,7 +200,7 @@ class THMGroupsModelAddGroup extends JModelForm
 		$query->update($db->qn('#__usergroups'));
 		$query->set('`lft` = ' . $lft);
 		$query->set('`rgt` = ' . $lft . ' + 1');
-		$query->where("`id` = '" . $gr_id . "'");
+		$query->where("`id` = " . $gr_id);
 		$db->setQuery($query);
 		$db->query();
 

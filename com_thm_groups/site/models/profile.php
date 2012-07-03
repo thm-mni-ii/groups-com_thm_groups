@@ -117,7 +117,7 @@ class THMGroupsModelProfile extends JModelForm
 			*/
 			$query = $db->getQuery(true);
 			$query->select('structid, value, publish');
-			$query->from($db->qn('__thm_groups_' . strtolower($type->Type) . ' AS a'));
+			$query->from($db->qn('#__thm_groups_'. strtolower($type->Type)) . ' AS a');
 			$query->where('a.userid = ' . $cid);
 
 			$db->setQuery($query);
