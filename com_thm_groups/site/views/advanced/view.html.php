@@ -60,7 +60,7 @@ class THMGroupsViewAdvanced extends JView
 			$title = "";
 		}
 		$this->assignRef('title', $title);
-		$itemid = JRequest::getVar('Itemid', 0, 'post');
+		$itemid = JRequest::getVar('Itemid', 0, 'get');
 
 		$this->assignRef('gsgid', $model->getGroupNumber());
 		$this->assignRef('itemid', $itemid);

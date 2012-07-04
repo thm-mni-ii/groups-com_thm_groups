@@ -60,10 +60,10 @@
 					if ($canEdit)
 					{
 						$attribs['title'] = 'bearbeiten';
-						$path = "'index.php?option=com_thm_groups&view=editgroup&layout=default&Itemid='";
+						$path = "'index.php?option=com_thm_groups&view=editgroup&layout=default&Itemid=";
 						$gid = $group->id;
 						$iid = $this->itemid;
-						echo "<a href='"
+						echo "<a href="
 						. JRoute :: _($path . $iid . '&gsgid=' . $gid . '&option_old=' . $option . '&view_old=' . $view . '&layout_old=' . $layout)
 						. "'> "
 						. JHTML :: image("components/com_thm_groups/img/edit.png", 'bearbeiten', $attribs) . "</a>";

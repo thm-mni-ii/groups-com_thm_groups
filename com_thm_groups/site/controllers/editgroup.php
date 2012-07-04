@@ -88,7 +88,23 @@ class THMGroupsControllerEditGroup extends JController
 	public function delPic()
 	{
 		$model = $this->getModel('editgroup');
-		$id = JRequest::getVar('gid');
+
+		$itemid     = JRequest::getVar('Itemid');
+
+		/* $option     = JRequest::getVar('option');
+		* $view       = JRequest::getVar('view');
+		$layout     = JRequest::getVar('layout'); */
+		$gsgid      = JRequest::getVar('gsgid');
+		$layout_old = JRequest::getVar('layout_old', /*0*/'LLLL');
+		$view_old   = JRequest::getVar('view_old', /*0*/'VVVV');
+
+		$link = JRoute::_("index.php?option=com_thm_groups"
+							. "&view=editgroup"
+							. "&layout=default&Itemid=" . $itemid
+							. "&gsgid=" . $gsgid
+							. "&layout_old=" . $layout_old
+							. "&view_old=" . $view_old
+						);
 
 		if ($model->delPic())
 		{
@@ -98,7 +114,7 @@ class THMGroupsControllerEditGroup extends JController
 		{
 			$msg = JText::_('COM_THM_GROUPS_REMOVE_PICTURE_ERROR');
 		}
-		$this->setRedirect('index.php?option=com_thm_groups&task=editgroup.edit&cid[]=' . $id, $msg);
+		$this->setRedirect($link, $msg);
 	}
 
 	/**

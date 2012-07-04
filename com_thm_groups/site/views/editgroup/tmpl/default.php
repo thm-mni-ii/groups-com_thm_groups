@@ -137,13 +137,9 @@ $userid = $user->id;
 						<br />
 						<input type='file' accept='image' name='gr_picture' id='gr_picture' />
 						<br />
-						<input 
-						type='submit'
-						id='3'
-						onclick='return confirm(\"Wirklich L&Ouml;SCHEN?\")'
-						value='Bild l&ouml;schen'
-						name='delPic'
-						task='editgroup.delPic' />
+						<input type='submit' id="gs_editView_buttons"
+						onclick='return confirm("Wirklich löschen?"), document.forms["adminForm"].elements["task"].value = "editgroup.delPic"'
+						value='<?php echo JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_DELETE'); ?>' name='delPic' task='editgroup.delPic' />
 					</td>
 				</tr>
 				<tr>

@@ -234,7 +234,7 @@ class THMGroupsModelEditGroup extends JModelForm
             */
 			$query = $db->getQuery(true);
 			$query->update($db->qn('#__usergroups'));
-			$query->set("`rgt` = rgt + " . $jgrouprange);
+			$query->set("rgt = rgt + " . $jgrouprange);
 			$query->where('rgt >= ' . $new_lft);
 			$db->setQuery($query);
 			$db->query();
@@ -246,7 +246,7 @@ class THMGroupsModelEditGroup extends JModelForm
             */
 			$query = $db->getQuery(true);
 			$query->update($db->qn('#__usergroups'));
-			$query->set("`lft` = lft + " . $jgrouprange);
+			$query->set("lft = lft + " . $jgrouprange);
 			$query->where('lft >= ' . $new_lft);
 			$db->setQuery($query);
 			$db->query();
@@ -275,7 +275,7 @@ class THMGroupsModelEditGroup extends JModelForm
 			*/
 			$query = $db->getQuery(true);
 			$query->update($db->qn('#__usergroups'));
-			$query->set("`rgt` = rgt + " . $jgroupspan);
+			$query->set("rgt = rgt + " . $jgroupspan);
 			$query->where('rgt >= ' . $old_lft);
 			$query->where('rgt <= ' . $old_rgt);
 			$db->setQuery($query);
@@ -285,7 +285,7 @@ class THMGroupsModelEditGroup extends JModelForm
 			*/
 			$query = $db->getQuery(true);
 			$query->update($db->qn('#__usergroups'));
-			$query->set("`lft` = lft + " . $jgroupspan);
+			$query->set("lft = lft + " . $jgroupspan);
 			$query->where('lft >= ' . $old_lft);
 			$query->where('lft <= ' . $old_rgt);
 			$db->setQuery($query);
@@ -298,7 +298,7 @@ class THMGroupsModelEditGroup extends JModelForm
 			*/
 			$query = $db->getQuery(true);
 			$query->update($db->qn('#__usergroups'));
-			$query->set("`rgt` = rgt - " . $jgrouprange);
+			$query->set("rgt = rgt - " . $jgrouprange);
 			$query->where('rgt >= ' . $old_lft);
 			$db->setQuery($query);
 			$db->query();
@@ -307,7 +307,7 @@ class THMGroupsModelEditGroup extends JModelForm
 			*/
 			$query = $db->getQuery(true);
 			$query->update($db->qn('#__usergroups'));
-			$query->set("`lft` = lft - " . $jgrouprange);
+			$query->set("lft = lft - " . $jgrouprange);
 			$query->where('lft >= ' . $old_lft);
 			$db->setQuery($query);
 			$db->query();
@@ -359,7 +359,7 @@ class THMGroupsModelEditGroup extends JModelForm
 		*/
 		$query = $db->getQuery(true);
 		$query->update($db->qn('#__thm_groups_groups'));
-		$query->set("`picture` = g" . $gid . ".jpg");
+		$query->set("`picture` = 'g" . $gid . ".jpg'");
 		$query->where('id = ' . $gid);
 		$db->setQuery($query);
 		if ($db->query())
@@ -381,7 +381,7 @@ class THMGroupsModelEditGroup extends JModelForm
 	public function delPic()
 	{
 		$db =& JFactory::getDBO();
-		$gid = JRequest::getVar('gid');
+		$gid = JRequest::getVar('gsgid');
 
 		/*
 		$query = "UPDATE #__thm_groups_groups SET picture='anonym.jpg' WHERE id = $gid ";

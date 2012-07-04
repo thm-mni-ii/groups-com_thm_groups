@@ -88,10 +88,10 @@
 		{
 			echo "<div class='gs_advlist_longinfo'" . ($wrapTitle ? "" : $displayInline) . ">" . trim($title) . "</div> ";
 		}
-		$path = "'index.php?option=com_thm_groups&view=advanced&layout=list&Itemid='";
+		$path = "'index.php?option=com_thm_groups&view=advanced&layout=list&Itemid=";
 		echo "<a href="
 				. JRoute::_($path . $this->itemid . '&gsuid=' . $id . '&name=' . trim($lastName) . '&gsgid=' . $this->gsgid)
-				. ">"
+				. "'>"
 				. "<div class='gs_advlist_longinfo'" . ($wrapTitle && $wrapFirstName ? "" : $displayInline) . ">" . trim($firstName) . "</div> "
 				. "<div class='gs_advlist_longinfo'" . ($canEdit || !$wrapFirstName ? $displayInline : "") . ">" . trim($lastName) . "</div>"
 			. "</a>";
