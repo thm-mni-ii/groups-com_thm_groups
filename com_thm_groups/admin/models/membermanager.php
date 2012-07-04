@@ -432,7 +432,7 @@ class THMGroupsModelmembermanager extends JModelList
 					}
 				}
 			}
-			$selectOptions[] = JHTML::_('select.option', $group->id, $hirarchy . $group->title);
+			$selectOptions[] = JHTML::_('select.option', $group->id, $hirarchy . $group->name);
 			$wasinjoomla = $injoomla;
 		}
 		return $selectOptions;

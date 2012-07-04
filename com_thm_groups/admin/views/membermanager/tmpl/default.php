@@ -74,8 +74,8 @@ $listDirn	= $this->state->get('list.direction');
 <table class="adminlist">
 	<thead>
 		<tr>
-			<th style="width: 20%; text-align: left; color: #0B55C4"><?php JText::_('GROUPS'); ?></th>
-			<th style="width: 20%; text-align: left; color: #0B55C4"><?php JText::_('ROLES'); ?></th>
+			<th style="width: 20%; text-align: left; color: #0B55C4"><?php echo JText::_('GROUPS'); ?></th>
+			<th style="width: 20%; text-align: left; color: #0B55C4"><?php echo JText::_('ROLES'); ?></th>
 			<th style="width: 60%"></th>
 		</tr>
 	</thead>
