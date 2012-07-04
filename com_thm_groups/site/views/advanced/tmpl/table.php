@@ -77,7 +77,7 @@
 						$wrapTitle = $memberhead['structwrap'];
 						break;
 					default:
-						if ($memberhead['type'] == "PICTURE" && $picture == null)
+						if ($memberhead['type'] == "PICTURE" && $picture == null && $memberhead['publish'])
 						{
 							$picture = $memberhead['value'];
 						}
@@ -132,7 +132,7 @@
 			echo "<div>";
 			foreach ($member as $memberitem)
 			{
-				if (trim($memberitem['value']) != "")
+				if (trim($memberitem['value']) != "" && $memberitem['publish'])
 				{
 					if ($wrap == true && $memberitem['structwrap'] == true)
 					{

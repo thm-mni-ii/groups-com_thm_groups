@@ -63,7 +63,7 @@
 					$wrapTitle = $memberhead['structwrap'];
 					break;
 				default:
-					if ($memberhead['type'] == "PICTURE" && $picture == null)
+					if ($memberhead['type'] == "PICTURE" && $picture == null && $memberhead['publish'])
 					{
 						$picture = $memberhead['value'];
 					}
@@ -105,12 +105,12 @@
 			$option = JRequest :: getVar('option', 0);
 			$layout = JRequest :: getVar('layout', 0);
 			$view = JRequest :: getVar('view', 0);
-			$path = "'index.php?option=com_thm_groups&view=edit&layout=default&Itemid='";
-			$gspart = "'&gsgid=' . $this->gsgid . '&option_old='";
-			$trim = "'&name='" . trim($lastName);
-			echo "<a href='"
+			$path = "'index.php?option=com_thm_groups&view=edit&layout=default&Itemid=";
+			$gspart = '&gsgid=' . $this->gsgid . '&option_old=';
+			$trim = "&name=" . trim($lastName);
+			echo "<a href="
 			. JRoute :: _($path . $this->itemid . '&gsuid=' . $id . $trim . $gspart . $option . '&view_old=' . $view . '&layout_old=' . $layout)
-			. "'> "
+			. "'>"
 			. JHTML :: image("components/com_thm_groups/img/edit.png", 'bearbeiten', $attribs) . "</a>";
 		}
 		echo "</div>";
@@ -121,7 +121,7 @@
 		echo "<div>";
 		foreach ($member as $memberitem)
 		{
-			if ($memberitem['value'] != "")
+			if ($memberitem['value'] != "" && $memberitem['publish'])
 			{
 				if ($wrap == true && $memberitem['structwrap'] == true)
 				{

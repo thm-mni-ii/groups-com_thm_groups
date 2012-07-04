@@ -319,6 +319,7 @@ class THMGroupsModelAdvanced extends JModel
 								$puffer['structname'] = $selection['showName'];
 								$puffer['structwrap'] = $selection['wrapAfter'];
 								$puffer['type']       = $structureItem->type;
+								$puffer['publish']	  = $struct->publish;
 								if ($struct->value == "" && $structureItem->type == "PICTURE")
 								{
 									$puffer['value'] = $this->getExtra($struct->structid, $structureItem->type);
