@@ -45,7 +45,7 @@ class ComThmGroupsRolemanagerEnGb extends PHPUnit_Extensions_SeleniumTestCase
     sleep(1);
     $this->click("id=cb2");
     $this->click("link=Delete");
-    $this->assertEquals("COM_THM_GROUPS_REALLY_DELETE", $this->getConfirmation());
+    $this->assertEquals("Role deleted", $this->getConfirmation());
     sleep(1);
     $this->assertTrue($this->isTextPresent("Rolle(n) erfolgreich entfernt"));
     $this->assertFalse($this->isElementPresent("link=Testrole"));
