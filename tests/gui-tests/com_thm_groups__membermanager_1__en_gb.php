@@ -1,20 +1,10 @@
 <?php
-class ComThmGroupsMembermanager1EnGb extends PHPUnit_Extensions_SeleniumTestCase
+class ComThmGroupsMembermanager1EnGb extends JoomlaSeleniumTest
 {
-  protected function setUp()
-  {
-    $this->setBrowser("*chrome");
-    $this->setBrowserUrl("http://localhost/");
-  }
-
   public function testMyTestCase()
   {
-    $this->open("/joomla/administrator/index.php");
-    $this->type("id=mod-login-username", "admin");
-    $this->type("id=mod-login-password", "adminadmin");
-    $this->select("id=lang", "value=en-GB");
-    $this->click("link=Log in");
-    $this->waitForPageToLoad("30000");
+    $this->performBackendLogin();
+    
     $this->click("link=Membermanager");
     $this->waitForPageToLoad("30000");
     $this->assertTrue($this->isElementPresent("id=toolbar-moderate"));
@@ -56,8 +46,8 @@ class ComThmGroupsMembermanager1EnGb extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTrue($this->isElementPresent("link=Group(s)/Role(s)"));
     $this->assertTrue($this->isElementPresent("link=Published"));
     $this->assertTrue($this->isElementPresent("link=In Joomla!"));
-    $this->click("link=Log out");
-    $this->waitForPageToLoad("30000");
+    
+    $this->performBackendLogout();
   }
 }
 ?>

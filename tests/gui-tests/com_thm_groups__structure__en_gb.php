@@ -1,19 +1,10 @@
 <?php
-class ComThmGroupsStructureEnGb extends PHPUnit_Extensions_SeleniumTestCase
+class ComThmGroupsStructureEnGb extends JoomlaSeleniumTest
 {
-  protected function setUp()
-  {
-    $this->setBrowser("*chrome");
-    $this->setBrowserUrl("http://localhost/");
-  }
-
   public function testMyTestCase()
   {
-    $this->open("/joomla/administrator/index.php");
-    $this->type("id=mod-login-username", "admin");
-    $this->type("id=mod-login-password", "adminadmin");
-    $this->select("id=lang", "value=en-GB");
-    $this->clickAndWait("link=Log in");
+  	$this->performBackendLogin();
+  	
     $this->clickAndWait("link=Structure");
     $this->assertTrue($this->isElementPresent("link=Add Entry"));
     $this->assertTrue($this->isElementPresent("css=span.icon-32-moderate"));
@@ -49,7 +40,8 @@ class ComThmGroupsStructureEnGb extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("link=Delete");
     $this->assertEquals("Role deleted", $this->getConfirmation());	sleep(1);
     $this->assertFalse($this->isElementPresent("link=Testfield_test"));				sleep(1);
-    $this->clickAndWait("link=Log out");
+    
+    $this->performBackendLogout();
   }
 }
 ?>

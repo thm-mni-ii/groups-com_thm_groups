@@ -1,20 +1,10 @@
 <?php
-class ComThmGroupsMembermanager2EnGb extends PHPUnit_Extensions_SeleniumTestCase
+class ComThmGroupsMembermanager2EnGb extends JoomlaSeleniumTest
 {
-  protected function setUp()
-  {
-    $this->setBrowser("*chrome");
-    $this->setBrowserUrl("http://localhost/");
-  }
-
   public function testMyTestCase()
   {
-    $this->open("/joomla/administrator/index.php");
-    $this->type("id=mod-login-username", "admin");
-    $this->type("id=mod-login-password", "adminadmin");
-    $this->select("id=lang", "value=en-GB");
-    $this->click("link=Log in");
-    $this->waitForPageToLoad("30000");
+  	$this->performBackendLogin();
+  	
     $this->click("link=Membermanager");
     $this->waitForPageToLoad("30000");
     $this->click("link=Add New User");
@@ -76,8 +66,8 @@ class ComThmGroupsMembermanager2EnGb extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("link=Delete");
     $this->assertTrue((bool)preg_match('/^Wirklich löschen[\s\S]$/',$this->getConfirmation()));
     $this->assertNotEquals("Test", $this->getTable("xpath=(//div[@id='editcell']/table)[2].2.4"));
-    $this->click("link=Log out");
-    $this->waitForPageToLoad("30000");
+
+    $this->performBackendLogout();
   }
 }
 ?>
