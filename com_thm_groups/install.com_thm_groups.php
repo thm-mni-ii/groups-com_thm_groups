@@ -1,12 +1,12 @@
 <?php
 /**
- *@category Joomla module
+ *@category Joomla component
  *
  *@package     THM_Groups
  *
- *@subpackage  plg_thm_groups_sync
- *@name        PlgSyncTHM_Groups
- *@description PlgSyncTHM_Groups file from plg_thm_groups_sync
+ *@subpackage  com_thm_groups
+ *@name        THMGroupsEntryFile
+ *@description THMGroupsEntryFile file from com_thm_groups
  *@author      Dennis Priefer, dennis.priefer@mni.thm.de
  *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
  *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
