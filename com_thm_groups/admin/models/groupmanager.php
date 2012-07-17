@@ -37,10 +37,13 @@ class THMGroupsModelGroupmanager extends JModelList
 	/**
 	 * Method to populate
 	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 * 
 	 * @access  protected
 	 * @return	populatestate
 	 */
-	protected function populateState()
+	protected function populateState($ordering = null, $direction = null)
 	{
 		$app = JFactory::getApplication('administrator');
 
