@@ -48,19 +48,19 @@ class THMGroupsModelGroupmanager extends JModelList
 		$app = JFactory::getApplication('administrator');
 
 		// List state information.
-		$order = $app->getUserStateFromRequest($this->context . ' . filter_order', 'filter_order', '');
-		$dir = $app->getUserStateFromRequest($this->context . ' . filter_order_Dir', 'filter_order_Dir', '');
+		$ordering = $app->getUserStateFromRequest($this->context . ' . filter_order', 'filter_order', '');
+		$direction = $app->getUserStateFromRequest($this->context . ' . filter_order_Dir', 'filter_order_Dir', '');
 
-		$this->setState('list.ordering', $order);
-		$this->setState('list.direction', $dir);
+		$this->setState('list.ordering', $ordering);
+		$this->setState('list.direction', $direction);
 
-		if ($order == '')
+		if ($ordering == '')
 		{
 			parent::populateState("name", "ASC");
 		}
 		else
 		{
-			parent::populateState($order, $dir);
+			parent::populateState($ordering, $direction);
 		}
 	}
 
