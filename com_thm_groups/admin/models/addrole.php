@@ -45,7 +45,7 @@ class THMGroupsModelAddRole extends JModel
 		$r_name = JRequest::getVar('role_name');
 		$id = null;
 
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$err = 0;
 
 		/*

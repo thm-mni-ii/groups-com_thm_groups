@@ -76,7 +76,9 @@
 			<language tag="en-GB">language/en-GB/en-GB.com_thm_groups.sys.ini</language>
 		</languages>
 	</administration>
+<!--
 	<dependencies>
 		<dependency type="plugin" minversion="1.0.0">plg_thm_groups_sync</dependency>
 	</dependencies>
+-->
 </extension>

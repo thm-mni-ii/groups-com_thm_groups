@@ -70,7 +70,7 @@ class THMGroupsModelAddGroup extends JModelForm
 		$gr_mode = implode(';', $gr_mode);
 		$id = null;
 
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$err = 0;
 
 		// Gruppe einfügen
@@ -280,7 +280,7 @@ class THMGroupsModelAddGroup extends JModelForm
 			return false;
 		}
 
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 			$query = "UPDATE #__thm_groups_groups SET picture='g" . $gid . ".jpg' WHERE id = $gid ";
 		 */
@@ -310,7 +310,7 @@ class THMGroupsModelAddGroup extends JModelForm
 	 */
 	public function getExtra($structid, $type)
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		 	$query = "SELECT value FROM #__thm_groups_" . $type . "_extra WHERE structid=" . $structid;
 		*/
@@ -330,7 +330,7 @@ class THMGroupsModelAddGroup extends JModelForm
 	 */
 	public function addTableRow()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$uid = JRequest::getVar('userid');
 		$structid = JRequest::getVar('structid');
 		$arrRow = array();
@@ -418,7 +418,7 @@ class THMGroupsModelAddGroup extends JModelForm
 	 */
 	public function delTableRow()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$uid = JRequest::getVar('userid');
 		$structid = JRequest::getVar('structid');
 		$key = JRequest::getVar('tablekey');
@@ -475,7 +475,7 @@ class THMGroupsModelAddGroup extends JModelForm
 	 */
 	public function editTableRow()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$uid = JRequest::getVar('userid');
 		$structid = JRequest::getVar('structid');
 		$key = JRequest::getVar('tablekey');
@@ -546,7 +546,7 @@ class THMGroupsModelAddGroup extends JModelForm
 	 */
 	public function getAllGroups()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 			$query = "SELECT * FROM #__usergroups ORDER BY lft";
 		*/

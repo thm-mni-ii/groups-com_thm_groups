@@ -42,7 +42,7 @@ class THMGroupsModelAddStructure extends JModel
 		/*
 			$query = "SELECT * FROM #__thm_groups_relationtable";
 		 */
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from($db->qn('#__thm_groups_relationtable'));
@@ -78,7 +78,7 @@ class THMGroupsModelAddStructure extends JModel
 		/*
 		$query = "SELECT a.order FROM #__thm_groups_structure as a ORDER BY a.order DESC";
 		*/
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('a.order');
 		$query->from($db->qn('#__thm_groups_structure') . " AS a");

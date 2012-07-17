@@ -44,7 +44,7 @@ class JElementStaffGroupSelect extends JElement
 	public function fetchElement($name, $value, &$node, $control_name)
 	{
 		$queryGroup = "SELECT id,name FROM `#__giessen_staff_groups`";
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$db->setQuery($queryGroup);
 		$listG = $db->loadObjectList();
 

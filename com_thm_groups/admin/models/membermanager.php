@@ -40,7 +40,7 @@ class THMGroupsModelmembermanager extends JModelList
   	 */
 	public function sync()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "SELECT #__users.id, username, email, name, title "
 			. "FROM #__users, #__usergroups, #__user_usergroup_map "
@@ -306,7 +306,7 @@ class THMGroupsModelmembermanager extends JModelList
 	public function addGroupToUser($uids, $gid)
 	{
 		// Get database descriptor
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		foreach ($uids as $uid)
 		{
 			/*
@@ -334,7 +334,7 @@ class THMGroupsModelmembermanager extends JModelList
 	public function delGroupsToUser($uids, $gid)
 	{
 		// Get database descriptor
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		foreach ($uids as $uid)
 		{
@@ -381,7 +381,7 @@ class THMGroupsModelmembermanager extends JModelList
 	public function delGroupToUser($uid, $gid)
 	{
 		// Get database descriptor
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		/*
 		$query = "DELETE FROM #__user_usergroup_map WHERE user_id = $uid AND group_id = $gid";
@@ -446,7 +446,7 @@ class THMGroupsModelmembermanager extends JModelList
 	 */
 	public function getGroupsHirarchy()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Create SQL query string
 
@@ -505,7 +505,7 @@ class THMGroupsModelmembermanager extends JModelList
 	 */
 	public function getJoomlaGroups()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "SELECT * FROM #__usergroups ORDER BY lft";
 		*/
@@ -529,7 +529,7 @@ class THMGroupsModelmembermanager extends JModelList
 	 */
 	public function getGroups()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = 'SELECT * FROM   #__thm_groups_groups Order By name;';
 		*/
@@ -552,7 +552,7 @@ class THMGroupsModelmembermanager extends JModelList
 	 */
 	public function getRoles()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = 'SELECT id, name FROM   #__thm_groups_roles Order By name;';
 		*/
@@ -578,7 +578,7 @@ class THMGroupsModelmembermanager extends JModelList
 	 */
 	public function getGroupsAndRoles($uid)
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ($uid == null)
 		{

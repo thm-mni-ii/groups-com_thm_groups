@@ -48,7 +48,7 @@ class JFormFieldGroupItemSelect extends JFormField
 
 	public function getInput()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$SQL = new THMGroupsModelmembermanager;
 

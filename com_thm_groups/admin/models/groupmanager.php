@@ -76,7 +76,7 @@ class THMGroupsModelGroupmanager extends JModelList
 		$orderCol	= $this->state->get('list.ordering');
 		$orderDirn	= $this->state->get('list.direction');
 
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		/*
 		$query = $db->getQuery(true);
@@ -133,7 +133,7 @@ class THMGroupsModelGroupmanager extends JModelList
 	 */
 	public function getfreeGroups()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "SELECT * FROM #__thm_groups_groups WHERE id NOT IN (SELECT gid FROM #__thm_groups_groups_map)";
 		*/
@@ -160,7 +160,7 @@ class THMGroupsModelGroupmanager extends JModelList
 	 */
 	public function getfullGroupIDs()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "SELECT id FROM #__thm_groups_groups WHERE id IN (SELECT gid FROM #__thm_groups_groups_map)";
 		*/
@@ -186,7 +186,7 @@ class THMGroupsModelGroupmanager extends JModelList
 	 */
 	public function getJoomlaGroups()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "SELECT * FROM #__usergroups ORDER BY lft";
 		*/
@@ -212,7 +212,7 @@ class THMGroupsModelGroupmanager extends JModelList
 		{
 			return;
 		}
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "DELETE FROM #__thm_groups_groups WHERE id=" . $gid;
 		*/
@@ -238,7 +238,7 @@ class THMGroupsModelGroupmanager extends JModelList
 		{
 			return;
 		}
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "DELETE FROM #__usergroups WHERE id=" . $gid;
 		*/
@@ -260,7 +260,7 @@ class THMGroupsModelGroupmanager extends JModelList
 	 */
 	public function getGroupUserCount($gid)
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "SELECT * FROM  `mni_thm_groups_groups_map` WHERE `gid` = " . $gid;
 		*/

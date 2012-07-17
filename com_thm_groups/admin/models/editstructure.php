@@ -43,7 +43,7 @@ class THMGroupsModelEditStructure extends JModel
 			$query = "SELECT * "
 			. "FROM #__thm_groups_relationtable";
 		*/
-		$db = & JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from($db->qn('#__thm_groups_relationtable'));
@@ -69,7 +69,7 @@ class THMGroupsModelEditStructure extends JModel
 	 */
 	public function getItem()
 	{
-		$db = & JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$id = JRequest::getVar('cid');
 		/*
 			$query = "SELECT * FROM #__thm_groups_structure WHERE id=$id[0]";
@@ -91,7 +91,7 @@ class THMGroupsModelEditStructure extends JModel
 	 */
 	public function getExtra($relation)
 	{
-		$db = & JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$id = JRequest::getVar('sid');
 		/*
 			$query = "SELECT value FROM #__thm_groups_" . strtolower($relation) . "_extra WHERE structid=$id";
@@ -118,7 +118,7 @@ class THMGroupsModelEditStructure extends JModel
 		$extra = JRequest::getVar($relation . '_extra');
 		$err = false;
 
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 			$query = "UPDATE #__thm_groups_structure SET"
 			. " field='" . $name . "'"

@@ -55,7 +55,7 @@ class THMGroupsModeledit extends JModelForm
 		$cid = JRequest::getVar('cid', array(0), '', 'array');
 		JArrayHelper::toInteger($cid, array(0));
 		$types = $this->getTypes();
-		$db = & JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$puffer = array();
 		$result = array();
 
@@ -91,7 +91,7 @@ class THMGroupsModeledit extends JModelForm
 	 */
 	public function getStructure()
 	{
-		$db = & JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "SELECT * FROM #__thm_groups_structure as a ORDER BY a.order";
 		*/
@@ -110,7 +110,7 @@ class THMGroupsModeledit extends JModelForm
 	 */
 	public function getTypes()
 	{
-		$db = & JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "SELECT Type FROM #__thm_groups_relationtable "
 			. "WHERE Type in (SELECT type FROM #__thm_groups_structure)";
@@ -136,7 +136,7 @@ class THMGroupsModeledit extends JModelForm
 	 */
 	public function store()
 	{
-		$db = & JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$structure = $this->getStructure();
 		$userid = JRequest::getVar('userid');
 		$err = 0;
@@ -247,7 +247,7 @@ class THMGroupsModeledit extends JModelForm
 	 */
 	public function delPic()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$uid = JRequest::getVar('userid');
 		$structid = JRequest::getVar('structid');
 		/*
@@ -308,7 +308,7 @@ class THMGroupsModeledit extends JModelForm
 		{
 			return false;
 		}
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "UPDATE #__thm_groups_picture SET value='" . $uid . "_" . $structid . ".jpg' WHERE userid = $uid AND structid=$structid";
 		*/
@@ -339,7 +339,7 @@ class THMGroupsModeledit extends JModelForm
 	 */
 	public function getExtra($structid, $type)
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "SELECT value FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
 		*/
@@ -367,7 +367,7 @@ class THMGroupsModeledit extends JModelForm
 	 */
 	public function addTableRow()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$uid = JRequest::getVar('userid');
 		$structid = JRequest::getVar('structid');
 		$arrRow = array();
@@ -467,7 +467,7 @@ class THMGroupsModeledit extends JModelForm
 	 */
 	public function delTableRow()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$uid = JRequest::getVar('userid');
 		$structid = JRequest::getVar('structid');
 		$key = JRequest::getVar('tablekey');
@@ -528,7 +528,7 @@ class THMGroupsModeledit extends JModelForm
 	 */
 	public function editTableRow()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$uid = JRequest::getVar('userid');
 		$structid = JRequest::getVar('structid');
 		$key = JRequest::getVar('tablekey');
@@ -643,7 +643,7 @@ class THMGroupsModeledit extends JModelForm
      */
 	public function getGroupsAndRoles($uid)
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ($uid == null)
 		{
@@ -700,7 +700,7 @@ class THMGroupsModeledit extends JModelForm
     		AND     gid = ' . $gid . '
     		AND	   rid = ' . $rid . ';';
     		*/
-			$db =& JFactory::getDBO();
+			$db = JFactory::getDBO();
 			$query = $db->getQuery(true);
 			$query->from('#__thm_groups_groups_map');
 			$query->delete();
@@ -752,7 +752,7 @@ class THMGroupsModeledit extends JModelForm
 	private function executeDbData($query, $transaction)
 	{
 		// Set Query string
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$db->setQuery($query);
 
 		// Execute SQL query and return 'true' on success

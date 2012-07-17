@@ -344,7 +344,7 @@ class THMGroupsControllermembermanager extends JController
 	 */
 	public function delete()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$cid = JRequest::getVar('cid', array(), 'post', 'array');
 		JArrayHelper::toInteger($cid);
 

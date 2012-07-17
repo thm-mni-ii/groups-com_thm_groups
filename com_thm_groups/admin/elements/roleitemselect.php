@@ -64,7 +64,7 @@ class JFormFieldRoleItemSelect extends JFormField
 		if (isset($id))
 		{
 			$queryParams = "SELECT params FROM `#__menu` WHERE id=" . $id;
-			$db =& JFactory::getDBO();
+			$db = JFactory::getDBO();
 			$db->setQuery($queryParams);
 			$params = $db->loadObjectList();
 			$sort = "sortedgrouproles";
@@ -79,7 +79,7 @@ class JFormFieldRoleItemSelect extends JFormField
 
 		$arrParamRoles = explode(",", $paramRoles);
 		$queryRoles = "SELECT id, name FROM `#__thm_groups_roles` Order by name";
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$db->setQuery($queryRoles);
 		$listR = $db->loadObjectList();
 
