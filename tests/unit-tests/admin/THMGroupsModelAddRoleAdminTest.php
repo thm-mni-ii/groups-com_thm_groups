@@ -69,7 +69,7 @@ class THMGroupsModelAddRoleAdminTest extends PHPUnit_Framework_TestCase
 		$result = $this->instance->store();
 		$expected = true;
 
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = "DELETE FROM #__thm_groups_roles WHERE name = 'THMGroupsTestSuite'";
 		$db->setQuery($query);
 		if ($db->query())

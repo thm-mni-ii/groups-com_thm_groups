@@ -40,7 +40,7 @@ class THMGroupsModelGroupmanagerAdminTest extends PHPUnit_Framework_TestCase
 	// function deletes inserted value
 	function testdelGroup(){
 		
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = "INSERT INTO #__thm_groups_groups (id, name, info, picture, mode, injoomla)";
 		$query .= "VALUES ('99999','THMGroupsTest','TestSuite','','','1')";
 		$db->setQuery( $query );

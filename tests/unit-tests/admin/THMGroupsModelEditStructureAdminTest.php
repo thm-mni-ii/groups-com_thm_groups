@@ -54,7 +54,7 @@ class THMGroupsModelEditStructureAdminTest extends PHPUnit_Framework_TestCase
 		$array['sid'] = '999999';
 		JRequest::set($array, 'post');
 		
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = "INSERT INTO #__thm_groups_text_extra (structid, value)";
 		$query .= "VALUES ('999999','88888')";
 		$db->setQuery( $query );

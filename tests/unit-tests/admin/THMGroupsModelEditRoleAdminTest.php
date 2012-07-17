@@ -41,7 +41,7 @@ class THMGroupsModelEditRoleAdminTest extends PHPUnit_Framework_TestCase
 		$array['rid'] = '999999';
 		JRequest::set($array, 'post');
 		
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = "INSERT INTO #__thm_groups_roles (`id`, `name`)";
 		$query .= "VALUES ('999999' ,  'THMGroupsSuite')";
 		$db->setQuery( $query );

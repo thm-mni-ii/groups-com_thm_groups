@@ -79,7 +79,7 @@ class THMGroupsModelAdvancedTest extends PHPUnit_Framework_TestCase
 	// returns an objectlist with Groupids
 	// first objectid should be 0 (last value)and second 1.
 	function testgetUnsortedRoles() {
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$sql = "INSERT INTO #__thm_groups_groups_map (uid, gid, rid)";
 		$sql .= "VALUES ('999999' ,'999999' ,'0')";
 		$db->setQuery( $sql);
@@ -121,7 +121,7 @@ class THMGroupsModelAdvancedTest extends PHPUnit_Framework_TestCase
 		$structid = "999999";
 		$type = "picture";
 		
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$sql = "INSERT INTO #__thm_groups_picture_extra (structid, value)";
 		$sql .= "VALUES ('999999' ,'THMGroupsTest.jpg')";
 		$db->setQuery( $sql);

@@ -33,7 +33,7 @@ class THMGroupsModeleditTest extends PHPUnit_Framework_TestCase
 		$array['structid'] = '88888';
 		JRequest::set($array, 'post');
 		
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = "INSERT INTO #__thm_groups_picture (userid, structid, value, publish, group)";
 		$query .= "VALUES ('99999','88888',' ','0','0')";
 		$db->setQuery( $query );
@@ -55,7 +55,7 @@ class THMGroupsModeleditTest extends PHPUnit_Framework_TestCase
 	// but picFile is null, function return false
 	function testupdatePic(){
 		
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = "INSERT INTO #__thm_groups_picture (userid, structid, value, publish, group";
 		$query .= "VALUES ('99999','88888',' ','0','0')";
 		$db->setQuery( $query );
@@ -79,7 +79,7 @@ class THMGroupsModeleditTest extends PHPUnit_Framework_TestCase
 		$structid = "999999";
 		$type = "picture";
 	
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$sql = "INSERT INTO #__thm_groups_picture_extra (structid, value)";
 		$sql .= "VALUES ('999999' ,'THMGroupsTest.jpg')";
 		$db->setQuery( $sql);

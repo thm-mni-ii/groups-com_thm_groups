@@ -51,7 +51,7 @@ class THMGroupsModelEditGroupAdminTest extends PHPUnit_Framework_TestCase
 	// delete database entry
 	function testupdatePic(){
 	
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = "INSERT INTO #__thm_groups_groups (id, name, info, picture, mode, injoomla)";
 		$query .= "VALUES ('99999','THMGroupsTest','TestSuite','','','1')";
 		$db->setQuery( $query );
@@ -73,7 +73,7 @@ class THMGroupsModelEditGroupAdminTest extends PHPUnit_Framework_TestCase
 	// function updates entry with GID = 1
 	function testdelPic(){
 		$gid = "1";
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 	
 		$result = $this->instance->delPic();
 		$expected = true;

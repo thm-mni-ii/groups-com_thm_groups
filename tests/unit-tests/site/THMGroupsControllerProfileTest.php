@@ -28,7 +28,7 @@ class THMGroupsControllerProfileTest extends PHPUnit_Framework_TestCase
 	// here
 	function tearDown() {
 		// delete your instance
-		$db = & JFactory :: getDBO();
+		$db = JFactory :: getDBO();
 		$query = "DELETE FROM `#__users` WHERE `id` = 99999";
 		$db->setQuery($query);
 		$db->query();

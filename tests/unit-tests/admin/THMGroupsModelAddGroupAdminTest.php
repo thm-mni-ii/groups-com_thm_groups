@@ -62,7 +62,7 @@ class THMGroupsModelAddGroupAdminTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testupdatePic()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = "INSERT INTO  #__thm_groups_groups(`id` ,`name` ,`info` ,`picture` ,`mode` ,`injoomla`)
 					VALUES ('99999',  'THMGroupsSuite',  'Test',  'test.jpg', NULL ,  '1')";
 		$db->setQuery($query);
@@ -105,7 +105,7 @@ class THMGroupsModelAddGroupAdminTest extends PHPUnit_Framework_TestCase
 		$structid = "999999";
 		$type = "picture";
 
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$sql = "INSERT INTO #__thm_groups_picture_extra (structid, value)";
 		$sql .= "VALUES ('999999' ,'THMGroupsTest.jpg')";
 		$db->setQuery($sql);
