@@ -39,6 +39,7 @@ class ComThmGroupsStructureEnGb extends JoomlaSeleniumTest
     $this->click("id=cb6");
     $this->click("link=Delete");
     $this->assertEquals("Role deleted", $this->getConfirmation());	sleep(1);
+    $this->waitForPageToLoad("30000");
     $this->assertFalse($this->isElementPresent("link=Testfield_test"));				sleep(1);
     
     $this->performBackendLogout();

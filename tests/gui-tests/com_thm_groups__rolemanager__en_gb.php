@@ -29,6 +29,7 @@ class ComThmGroupsRolemanagerEnGb extends JoomlaSeleniumTest
     $this->click("id=cb2");
     $this->click("link=Delete");
     $this->assertEquals("Role deleted", $this->getConfirmation());				sleep(1);
+    $this->waitForPageToLoad("30000");
     $this->assertTrue($this->isTextPresent("Rolle(n) erfolgreich entfernt"));
     $this->assertFalse($this->isElementPresent("link=Testrole"));
     
