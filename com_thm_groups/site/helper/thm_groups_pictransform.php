@@ -1,32 +1,28 @@
 <?php
 /**
- *@category    Joomla component
- *
- *@package     THM_Groups
- *
- *@subpackage  com_thm_groups.site
- *@name		   PicTransform
- *@description THMGroups helper file for transformation of uploaded pictures
- *@author	   Dennis Priefer, dennis.priefer@mni.thm.de
- * 
- *@copyright   2012 TH Mittelhessen
- *
- *@license     GNU GPL v.2
- *@link		   www.mni.thm.de
- *@version	   3.0
+ * @version	    v3.0.1
+ * @category    Joomla component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.site
+ * @name        THMPicTransform
+ * @description THMGroups helper file for transformation of uploaded pictures
+ * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
+ * @copyright   2012 TH Mittelhessen
+ * @license     GNU GPL v.2
+ * @link        www.mni.thm.de
  */
 
 /**
- * Helper class PicTransform for component com_thm_groups
+ * Helper class THMPicTransform for component com_thm_groups
  *
  * Class provides methods for picture transformation during uploading
  *
- * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @link        www.mni.thm.de
- * @since       Class available since Release 1.0
+ * @category  Joomla.Component.Site
+ * @package   com_thm_groups.site
+ * @link      www.mni.thm.de
+ * @since     Class available since Release 1.0
  */
-class PicTransform
+class THMPicTransform
 {
 	/**
 	 * PictureFile

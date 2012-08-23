@@ -1,24 +1,20 @@
 <?php
 /**
- *@category Joomla component
- *
- *@package     THM_Groups
- *
- *@subpackage  com_thm_groups
- *@name        THMGroupsViewAdvanced
- *@description THMGroupsViewAdvanced file from com_thm_groups
- *@author      Dennis Priefer, dennis.priefer@mni.thm.de
- *@author      Markus Kaiser,  markus.kaiser@mni.thm.de
- *@author      Daniel Bellof,  daniel.bellof@mni.thm.de
- *@author      Jacek Sokalla,  jacek.sokalla@mni.thm.de
- *@author      Niklas Simonis, niklas.simonis@mni.thm.de
- *@author      Peter May,      peter.may@mni.thm.de
- *
- *@copyright   2012 TH Mittelhessen
- *
- *@license     GNU GPL v.2
- *@link        www.mni.thm.de
- *@version     3.0
+ * @version     v3.0.1
+ * @category    Joomla component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.site
+ * @name        THMGroupsViewAdvanced
+ * @description THMGroupsViewAdvanced file from com_thm_groups
+ * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
+ * @author      Markus Kaiser,  <markus.kaiser@mni.thm.de>
+ * @author      Daniel Bellof,  <daniel.bellof@mni.thm.de>
+ * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
+ * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
+ * @author      Peter May,      <peter.may@mni.thm.de>
+ * @copyright   2012 TH Mittelhessen
+ * @license     GNU GPL v.2
+ * @link        www.mni.thm.de
  */
 ?>
 <div id="title"><?php echo "<h2 class='contentheading'>" . $this->title . "</h2>" ?></div>
@@ -84,14 +80,13 @@
 						break;
 				}
 			}
-
 			echo	"<div class='gs_advlistPicture'>";
 			if ($picture != null)
 			{
 				echo JHTML :: image("components/com_thm_groups/img/portraits/" . $picture, "Portrait", array ('class' => 'mod_gs_portraitB'));
 			}
 			echo 	"</div>";
-
+			
 			// Darstellen des Links (Titel, Vorname, Name)
 			echo "<div id='gs_advlistTopic'>";
 			$displayInline = " style='display: inline'";
@@ -102,10 +97,16 @@
 			}
 			$path = "'index.php?option=com_thm_groups&view=advanced&layout=table&Itemid=";
 			echo "<a href=" . JRoute::_($path . $this->itemid . '&gsuid=' . $id . '&name=' . trim($lastName) . '&gsgid=' . $this->gsgid)
-					. "'>"
-					. "<div class='gs_advlist_longinfo'" . ($wrapTitle && $wrapFirstName ? "" : $displayInline) . ">" . trim($firstName) . "</div> "
-					. "<div class='gs_advlist_longinfo'" . ($canEdit || !$wrapFirstName ? $displayInline : "") . ">" . trim($lastName) . "</div>"
-				. "</a>";
+					. "'>";
+			if (trim($firstName) != "")
+			{
+				echo "<div class='gs_advlist_longinfo'" . ($wrapTitle && $wrapFirstName ? "" : $displayInline) . ">" . trim($firstName) . "</div> ";
+			}
+			if (trim($lastName) != "")
+			{
+				echo "<div class='gs_advlist_longinfo'" . ($canEdit || !$wrapFirstName ? $displayInline : "") . ">" . trim($lastName) . "</div>";
+			}
+			echo "</a>";
 
 			// Jeder Benutzer kann sich selbst editieren
 			if ($canEdit)
