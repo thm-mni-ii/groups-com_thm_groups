@@ -5,16 +5,21 @@
  *@package     THM_Groups
  *
  *@subpackage  com_thm_groups.site
+ *
+ *@author	   Dennis Priefer <dennis.priefer@mni.thm.de>
+ *
  *@name		   THMGroupsModelAdvanced
+ *
  *@description Advanced model of com_thm_groups
- *@author	   Dennis Priefer, dennis.priefer@mni.thm.de
  *
  *@copyright   2012 TH Mittelhessen
  *
  *@license     GNU GPL v.2
+ *
  *@link		   www.mni.thm.de
- *@version	   3.0
+ *@version	   3.0.1
  */
+
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
@@ -254,21 +259,22 @@ class THMGroupsModelAdvanced extends JModel
 		else
 		{
 		}
-
+		$query = $this->db->getQuery(true);
 		foreach ($arrSortedRoles as $sortRole)
 		{
-			$query = $this->db->getQuery(true);
-
+			$query->clear();
 			$query->select('distinct gm.uid, t.value');
 			$query->from('#__thm_groups_groups_map' . ' as gm');
 			$query->from('#__thm_groups_text' . ' as t');
+			$query->from('#__thm_groups_additional_userdata' . ' as au');
 			$query->where("gm.gid = $groupid");
 			$query->where('gm.rid != 2', 'AND');
 			$query->where('gm.uid = t.userid', 'AND');
 			$query->where('t.structid = 2', 'AND');
 			$query->where("gm.rid = $sortRole", 'AND');
+			$query->where("gm.uid = au.userid", 'AND');
+			$query->where("au.published = 1", 'AND');
 			$query->order('t.value');
-
 			$this->db->setQuery($query);
 			$groupMember = $this->db->loadObjectList();
 
