@@ -103,7 +103,6 @@ class THMGroupsModelmembermanager extends JModelList
 			$lastName = trim($lastName);
 			if ($id != $oldId)
 			{
-				echo $id . " : " . $oldId;
 				/*
 				$query  = "INSERT INTO #__thm_groups_text (userid, value, structid)";
 				$query .= "VALUES ($id, '$firstName', 1)";
