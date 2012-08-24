@@ -170,20 +170,21 @@ $listDirn	= $this->state->get('list.direction');
 			<th width="1"><?php echo JText::_('ID'); ?></th>
 			<th width="1"><input type="checkbox" name="toggle" value=""
 				onclick="checkAll(<?php echo count($this->items); ?>);" /></th>
-
 			<th width="7%" nowrap="nowrap"><?php echo JHTML::_('grid.sort', 'TITEL', 'title', $listDirn, $listOrder); ?>
-			</th>
-			<th width="15%" align="center"><?php echo JHTML::_('grid.sort', 'NACHNAME', 'lastName', $listDirn, $listOrder); ?>
 			</th>
 			<th width="15%" align="center"><?php echo JHTML::_('grid.sort', 'VORNAME', 'firstName', $listDirn, $listOrder); ?>
 			</th>
-			<th width="59%" align="center"><?php echo JHTML::_('grid.sort', 'GROUPS_AND_ROLES', 'g.gid', $listDirn, $listOrder); ?>
+			<th width="15%" align="center"><?php echo JHTML::_('grid.sort', 'NACHNAME', 'lastName', $listDirn, $listOrder); ?>
+			</th>
+			<th width="15%" align="center"><?php echo JHTML::_('grid.sort', 'EMAIL', 'eMail', $listDirn, $listOrder); ?>
 			</th>
 			<th width="1%" nowrap="nowrap">
 			<?php echo JHTML::_('grid.sort', 'COM_THM_GROUPS_MEMBERMANAGER_HEADING_PUBLISHED', 'published', $listDirn, $listOrder); ?>
 			</th>
 			<th width="1%" nowrap="nowrap">
 			<?php echo JHTML::_('grid.sort', 'COM_THM_GROUPS_MEMBERMANAGER_HEADING_PUBLISHED_JOOMLA', 'injoomla', $listDirn, $listOrder); ?>
+			</th>
+			<th width="59%" align="center"><?php echo JHTML::_('grid.sort', 'GROUPS_AND_ROLES', 'g.gid', $listDirn, $listOrder); ?>
 			</th>
 
 		</tr>
@@ -208,7 +209,20 @@ $listDirn	= $this->state->get('list.direction');
 		<a href="<?php echo $link; ?>">
 		<?php echo $row->lastName; ?></a>
 		</td>
+		<td valign="top"><?php echo $row->EMail; ?></td>
 		<td valign="top"><?php echo $row->firstName; ?></td>
+		<td valign="top" align="center"><?php echo $published; ?></td>
+		<td valign="top" align="center">
+		<?php 
+		if ($row->injoomla == '0')
+		{
+			echo JHtml::_('jgrid.published', 0, 'membermanager.', 1);
+		}
+		if ($row->injoomla == '1')
+		{
+			echo JHtml::_('jgrid.published', 1, 'membermanager.', 1);
+		}
+		?></td>
 		<td valign="top">
 			<?php
 				$grouproles = '';
@@ -345,18 +359,6 @@ $listDirn	= $this->state->get('list.direction');
 				echo trim($grouproles, ', ');
 			?>
 		</td>
-		<td valign="top" align="center"><?php echo $published; ?></td>
-		<td valign="top" align="center">
-		<?php 
-		if ($row->injoomla == '0')
-		{
-			echo JHtml::_('jgrid.published', 0, 'membermanager.', 1);
-		}
-		if ($row->injoomla == '1')
-		{
-			echo JHtml::_('jgrid.published', 1, 'membermanager.', 1);
-		}
-		?></td>
 	</tr>
 	<?php
 	$k = 1 - $k;
