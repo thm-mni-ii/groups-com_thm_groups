@@ -61,7 +61,7 @@ class THMGroupsViewArticles extends JView
 
 		// Load stylesheet
 		$document = JFactory::getDocument();
-		$document->addStyleSheet(JURI::base(true) . '/media/com_thm_quickpages/css/default.css');
+		$document->addStyleSheet(JURI::base(true) . '/components/com_thm_groups/css/quickpage.css');
 
 		parent::display($tpl);
 	}
