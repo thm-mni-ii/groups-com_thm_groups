@@ -22,7 +22,7 @@ jimport('joomla.application.component.view');
  * The Quickpage view
  *
  * @category  Joomla.Component.Site
- * @package   thm_quickpages
+ * @package   thm_groups
  * @since     v0.1.0
  */
 class THMGroupsViewQuickpage extends JView

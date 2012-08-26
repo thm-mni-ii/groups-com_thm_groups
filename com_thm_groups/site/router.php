@@ -74,6 +74,8 @@ function THM_groupsBuildRoute(&$query)
  */
 function THM_groupsParseRoute($segments)
 {
+
+
 	$vars = array();
 	if ($segments[0] != "")
 	{
@@ -82,7 +84,10 @@ function THM_groupsParseRoute($segments)
 			$arrVar1 = explode(':', $segments[2]);
 		}
 		$vars['view']   = $segments[0];
-		$vars['layout'] = $segments[1];
+		if (isset ($segments[2]))
+		{
+			$vars['layout'] = $segments[1];
+		}
 		if (isset ($arrVar1[0]))
 		{
 			$arrVar2 = explode('-', $arrVar1[1]);
