@@ -60,6 +60,11 @@ class THMGroupsController extends JController
 			'index.php?option=com_thm_groups&view=structure',
 			$vName == 'structure'
 		);
+		JSubMenuHelper::addEntry(
+			JText::_('COM_THM_GROUPS_QUICKPAGE'),
+			'index.php?option=com_thm_groups&view=quickpage',
+			$vName == 'quickpage'
+		);
 
 		parent::display();
 	}

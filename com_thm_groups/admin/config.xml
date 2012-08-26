@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <fieldset
+        name="COM_THM_QUICKPAGES_CONFIG_ROOT_CATEGORIES"
+        label="COM_THM_QUICKPAGES_CONFIG_ROOT_CATEGORIES_LABEL"
+        description="COM_THM_QUICKPAGES_CONFIG_ROOT_CATEGORIES_DESC"
+    >
+        <field
+            name="content_category"
+            type="category"
+            label="COM_THM_QUICKPAGES_CONFIG_ROOT_CATEGORY_CONTENT_SETTING_LABEL"
+            description="COM_THM_QUICKPAGES_CONFIG_ROOT_CATEGORY_CONTENT_SETTING_DESC"
+            extension="com_content"
+        />
+        <field
+            name="repository_category"
+            type="category"
+            label="COM_THM_QUICKPAGES_CONFIG_ROOT_CATEGORY_REPOSITORY_SETTING_LABEL"
+            description="COM_THM_QUICKPAGES_CONFIG_ROOT_CATEGORY_REPOSITORY_SETTING_DESC"
+            extension="com_thm_repository"
+        />
+    </fieldset>
+	<fieldset name="permissions"
+		description="JCONFIG_PERMISSIONS_DESC"
+		label="JCONFIG_PERMISSIONS_LABEL"
+	>
+
+		<field name="rules" type="rules"
+			component="com_thm_groups"
+			filter="rules"
+			validate="rules"
+			label="JCONFIG_PERMISSIONS_LABEL"
+			section="component" />
+	</fieldset></config>

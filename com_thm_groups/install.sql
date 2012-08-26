@@ -379,9 +379,15 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_text_extra` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
+-- --------------------------------------------------------
 
+--
+-- Tabellenstruktur für Tabelle `#__thm_quickpages_map`
+--
 
-
-
-
-
+CREATE TABLE IF NOT EXISTS `#__thm_quickpages_map` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_kind` char(1) NOT NULL,
+  `catid` int(11) NOT NULL,
+   PRIMARY KEY  (`id`, `id_kind`, `catid`)
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;

@@ -41,17 +41,17 @@ $document->addStyleSheet("components/com_thm_groups/css/thmgroups/thmgroups.css"
     <div class="menuitem">
     	<div class="icon" onclick="location.href='index.php?option=com_thm_groups&view=membermanager';">
         	<div class="picture2">
-           		<img src="components/com_thm_groups/img/icon-48-staff.png" alt="Entries Manager"/>        	
+           		<img src="components/com_thm_groups/img/icon-48-staff.png" alt="Entries Manager"/>
         	</div>
        		<div class="description2">Member Manager</div>
     	</div>
-    	
+
 		<div class="menudescription">
 		    	<?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_INFO');?>
 		</div>
 	</div>
-	
-	
+
+
 	<div class="menuitem">
 	    <div class="icon" onclick="location.href='index.php?option=com_thm_groups&view=groupmanager';">
 	         <div class="picture2">
@@ -68,24 +68,37 @@ $document->addStyleSheet("components/com_thm_groups/css/thmgroups/thmgroups.css"
 	         <div class="picture2">
 	           <img src="components/com_thm_groups/img/icon-48-staff.png" alt="Role Manager"/>
 	         </div>
-	
+
 	        <div class="description2">Role Manager</div>
 	    </div>
 	    <div class="menudescription">
 		    	<?php echo JText::_('COM_THM_GROUPS_ROLEMANAGER_INFO');?>
 		</div>
 	</div>
-    <div class="menuitem">    
+    <div class="menuitem">
         <div class="icon" onclick="location.href='index.php?option=com_thm_groups&view=structure';">
          <div class="picture2">
            <img src="components/com_thm_groups/img/icon-48-staff.png" alt="Structure"/>
          </div>
 
         <div class="description2">Structure</div>
-        
+
     </div>
     <div class="menudescription">
 		    	<?php echo JText::_('COM_THM_GROUPS_STRUCTURE_INFO');?>
+		</div>
+	</div>
+    <div class="menuitem">
+        <div class="icon" onclick="location.href='index.php?option=com_thm_groups&view=quickpage';">
+         <div class="picture2">
+           <img src="components/com_thm_groups/img/icon-48-staff.png" alt="Quickpage"/>
+         </div>
+
+        <div class="description2">Quickpage</div>
+
+    </div>
+    <div class="menudescription">
+		    	<?php echo JText::_('COM_THM_GROUPS_QUICKPAGE_INFO');?>
 		</div>
 	</div>
     <!-- About
