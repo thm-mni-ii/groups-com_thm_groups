@@ -677,7 +677,6 @@ class THMGroupsModelmembermanager extends JModelList
 				$result = true;
 			}
 		}
-
 		return $result;
 	}
 
@@ -692,13 +691,8 @@ class THMGroupsModelmembermanager extends JModelList
 		$db =& JFactory::getDBO();
 		$cid = JRequest::getVar('cid', array(), 'post', 'array');
 		JArrayHelper::toInteger($cid);
-		$cids = implode(',', $cid);
+		$cids = implode('\',\'', $cid);
 
-		/*
-		$query = 'UPDATE #__thm_groups_additional_userdata'
-		. ' SET published = 1'
-		. ' WHERE userid IN ( ' . $cids . ' )';
-		*/
 		$query = $db->getQuery(true);
 		$query->update($db->qn('#__thm_groups_additional_userdata'));
 		$query->set("`published` = '1'");
@@ -728,19 +722,12 @@ class THMGroupsModelmembermanager extends JModelList
 	{
 		$db =& JFactory::getDBO();
 		$cid = JRequest::getVar('cid', array(), 'post', 'array');
-		JArrayHelper::toInteger($cid);
-		$cids = implode(',', $cid);
-
-		/*
-		$query = 'UPDATE #__thm_groups_additional_userdata'
-		. ' SET published = 0'
-		. ' WHERE userid IN ( ' . $cids . ' )';
-		*/
+		$cids = implode('\',\'', $cid);
+		
 		$query = $db->getQuery(true);
 		$query->update($db->qn('#__thm_groups_additional_userdata'));
 		$query->set("`published` = '0'");
 		$query->where("`userid` IN  ( '" . $cids . "' )");
-
 		$db->setQuery($query);
 
 		if ($db->query())

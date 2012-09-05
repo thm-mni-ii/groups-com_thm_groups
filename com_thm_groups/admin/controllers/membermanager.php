@@ -259,7 +259,6 @@ class THMGroupsControllermembermanager extends JController
 
 		// Get user ids
 		$uids = JRequest::getVar('cid', array(), 'post', 'array');
-
 		foreach ($rids as $rid)
 		{
 			// Delete group and role relations and display result
@@ -269,10 +268,9 @@ class THMGroupsControllermembermanager extends JController
 			}
 			else
 			{
-				$model = $this->getModel('edit');
+				$model = $this->getModel('membermanager');
 				if ($model->delGroupsAndRoles($uids, $gid, $rid))
 				{
-					$model = $this->getModel('membermanager');
 					$model->delGroupsToUser($uids, $gid);
 					$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_DELETE_USER_TRUE', true);
 				}
