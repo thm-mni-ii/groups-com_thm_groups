@@ -14,7 +14,7 @@
  * @author      Peter May,      <peter.may@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link		www.mni.thm.de
+ * @link        www.mni.thm.de
  */
 defined('_JEXEC') or die();
 jimport('joomla.application.component.modelform');
@@ -259,12 +259,10 @@ class THMGroupsModeledit extends JModelForm
 		$db =& JFactory::getDBO();
 		$uid	  = JRequest::getVar('userid');
 		$structid = JRequest::getVar('structid');
-		/*
-		$query	= "UPDATE #__thm_groups_picture SET value='anonym.jpg' WHERE userid = $uid AND structid=$structid";
-		*/
+		$extra = $this->getExtra($structid, "PICTURE");
 		$query = $db->getQuery(true);
 		$query->update($db->qn('#__thm_groups_picture'));
-		$query->set("`value` = 'anonym.jpg'");
+		$query->set("`value` = '$extra'");
 		$query->where('userid = ' . $uid);
 		$query->where('structid = ' . $structid);
 

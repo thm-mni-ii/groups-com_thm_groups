@@ -242,12 +242,10 @@ class THMGroupsModeledit extends JModelForm
 		$db = JFactory::getDBO();
 		$uid = JRequest::getVar('userid');
 		$structid = JRequest::getVar('structid');
-		/*
-		$query = "UPDATE #__thm_groups_picture SET value='anonym.jpg' WHERE userid = $uid AND structid=$structid";
-		*/
+		$extra = $this->getExtra($structid, 'PICTURE');
 		$query = $db->getQuery(true);
 		$query->update('#__thm_groups_picture');
-		$query->set("value = 'anonym.jpg'");
+		$query->set("value = '$extra'");
 		$query->where("userid = '" . $uid . "'");
 		$query->where("structid = '" . $structid . "'");
 		$db->setQuery($query);

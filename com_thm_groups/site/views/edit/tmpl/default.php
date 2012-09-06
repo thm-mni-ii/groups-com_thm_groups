@@ -176,19 +176,22 @@ else
 				<td colspan="3"><hr></td>
 			</tr>
 			<tr>
-				<td>
-					<input type="submit" id="gs_editView_buttons" name="save" value="Speichern" />
-				</td>
-				<td>
+				<td colspan="3">
+					<input type="submit" id="gs_editView_buttons" name="save" value="<?php echo JText::_("SAVE");?>" />
 					<input type='submit'
 					id="gs_editView_buttons"
-					onclick='document.forms["adminForm"].elements["task"].value = "edit.backToRefUrl"'
-					value='Zurück'
+					onclick='document.forms["adminForm"].elements["task"].value = "edit.apply"'
+					value='<?php echo JText::_("APPLY");?>'
+					name='apply'
+					task='edit.apply' />
+					<input type='submit'
+					id="gs_editView_buttons"
+					onclick='document.forms["adminForm"].elements["task"].value = "edit.BackToRefUrl"'
+					value='<?php echo JText::_("BACK");?>'
 					name='backToRefUrl'
-					task='edit.backToRefUrl' />
+					task='edit.backToRefUrl' />					
 				</td>
 			</tr>
-
 		</table>
 		<input type='hidden' name="structid"  value='' />
 		<input type="hidden" name="option" value="com_thm_groups" />

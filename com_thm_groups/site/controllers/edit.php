@@ -51,6 +51,7 @@ class THMGroupsControllerEdit extends JController
 		parent::__construct();
 		$this->registerTask('delPic', '');
 		$this->registerTask('backToRefUrl', '');
+		$this->registerTask('apply', '');
 		$this->registerTask('addTableRow', '');
 	}
 
@@ -74,23 +75,24 @@ class THMGroupsControllerEdit extends JController
 	 */
 	public function save()
 	{
-		$this->uid 	 = JRequest::getVar('userid', 0);
+		$this->uid   = JRequest::getVar('userid', 0);
 		$this->uname = JRequest::getVar('name', 0);
 		$gsgid 		 = JRequest::getVar('gsgid', 1);
-		$layout_old  = JRequest::getVar('layout_old', /*0*/'LLLL');
-		$view_old 	 = JRequest::getVar('view_old', /*0*/'VVVV');
-
+		$option_old  = JRequest::getVar('option_old', 0);
+		$layout_old  = JRequest::getVar('layout_old', 0);
+		$view_old    = JRequest::getVar('view_old', 0);
+		$itemid_old  = JRequest::getVar('item_id', 0);
+		
 		$model = $this->getModel('edit');
-		$itemid = JRequest::getVar('item_id', 0);
-		$link = JRoute::_("index.php?option=com_thm_groups"
-			. "&view=edit"
-			. "&layout=default"
-			. "&Itemid=" . $itemid
-			. "&gsuid=" . $this->uid
-			. "&name=" . $this->uname
-			. "&gsgid=" . $gsgid
-			. "&layout_old=" . $layout_old
-			. "&view_old=" . $view_old
+		$msg = JText::_('COM_THM_GROUPS_PROFILE_SAVED');
+		$link = JRoute::_('index.php'
+				. '?option=' . $option_old
+				. '&view=' . $view_old
+				. '&layout=' . $layout_old
+				. '&Itemid=' . $itemid_old
+				. '&gsuid=' . $this->uid
+				. '&name=' . $this->uname
+				. '&gsgid=' . $gsgid
 		);
 		if ($model->store())
 		{
@@ -121,7 +123,7 @@ class THMGroupsControllerEdit extends JController
 		{
 			$msg = JText::_('COM_THM_GROUPS_REMOVE_PICTURE_ERROR');
 		}
-		$this->save();
+		$this->apply();
 	}
 
 	/**
@@ -141,7 +143,7 @@ class THMGroupsControllerEdit extends JController
 		{
 			$msg = JText::_('COM_THM_GROUPS_ROW_TO_TABLE_ERROR');
 		}
-		$this->save();
+		$this->apply();
 	}
 
 	/**
@@ -162,7 +164,7 @@ class THMGroupsControllerEdit extends JController
 		{
 			$msg = JText::_('COM_THM_GROUPS_DEL_TABLE_ROW_ERROR');
 		}
-		$this->save();
+		$this->apply();
 	}
 
 	/**
@@ -183,7 +185,7 @@ class THMGroupsControllerEdit extends JController
 		{
 			$msg = JText::_('COM_THM_GROUPS_EDIT_TABLE_ROW_ERROR');
 		}
-		$this->save();
+		$this->apply();
 	}
 
 	/**
@@ -212,6 +214,43 @@ class THMGroupsControllerEdit extends JController
 			. '&name=' . $this->uname
 			. '&gsgid=' . $gsgid
 		);
+		$this->setRedirect($link, $msg);
+	}
+	
+	/**
+	 *  Method, which sets the redirect for the 'back' button.
+	 *@since  Method available since Release 2.1
+	 *
+	 *@return   void
+	 */
+	public function apply()
+	{
+		$this->uid 	 = JRequest::getVar('userid', 0);
+		$this->uname = JRequest::getVar('name', 0);
+		$gsgid 		 = JRequest::getVar('gsgid', 1);
+		$layout_old  = JRequest::getVar('layout_old', /*0*/'LLLL');
+		$view_old 	 = JRequest::getVar('view_old', /*0*/'VVVV');
+
+		$model = $this->getModel('edit');
+		$itemid = JRequest::getVar('item_id', 0);
+		$link = JRoute::_("index.php?option=com_thm_groups"
+			. "&view=edit"
+			. "&layout=default"
+			. "&Itemid=" . $itemid
+			. "&gsuid=" . $this->uid
+			. "&name=" . $this->uname
+			. "&gsgid=" . $gsgid
+			. "&layout_old=" . $layout_old
+			. "&view_old=" . $view_old
+		);
+		if ($model->store())
+		{
+			$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+		}
 		$this->setRedirect($link, $msg);
 	}
 }
