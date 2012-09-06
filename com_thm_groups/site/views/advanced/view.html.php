@@ -81,7 +81,8 @@ class THMGroupsViewAdvanced extends JView
 		$table = "<table class='table'><tr>";
 		foreach ($jsonTable[0] as $key => $value)
 		{
-			$table = $table . "<th>" . $key . "</th>";
+			$headItem = str_replace("_", " ", $key);
+			$table = $table . "<th>" . $headItem . "</th>";
 		}
 		$table = $table . "</tr>";
 		foreach ($jsonTable as $item)
