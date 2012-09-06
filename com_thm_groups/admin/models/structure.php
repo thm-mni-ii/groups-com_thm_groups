@@ -130,8 +130,8 @@ class THMGroupsModelStructure extends JModelList
 			*/
 			$query = $db->getQuery(true);
 			$query->select('a.order');
-			$query->from($db->qn('#__thm_groups_structure AS a'));
-			$query->where("`id` = '" . $cid[0] . "'");
+			$query->from($db->qn('#__thm_groups_structure') . " AS a");
+			$query->where("id = " . $cid[0]);
 
 			$db->setQuery($query);
 			$itemOrder = $db->loadObject();
@@ -144,9 +144,9 @@ class THMGroupsModelStructure extends JModelList
 					. " WHERE a.order=" . ($itemOrder->order - 1);
 				*/
 				$query = $db->getQuery(true);
-				$query->update($db->qn('#__thm_groups_structure AS a'));
-				$query->set("`a.order` = '" . $itemOrder->order . "'");
-				$query->where("`a.order` = '" . ($itemOrder->order - 1) . "'");
+				$query->update($db->qn('#__thm_groups_structure') . " AS a");
+				$query->set("a.order = " . $itemOrder->order);
+				$query->where("a.order = " . ($itemOrder->order - 1));
 
 				$db->setQuery($query);
 				if (!$db->query())
@@ -159,9 +159,9 @@ class THMGroupsModelStructure extends JModelList
 					. " WHERE a.id=" . $cid[0];
 				*/
 				$query = $db->getQuery(true);
-				$query->update($db->qn('#__thm_groups_structure AS a'));
-				$query->set("`a.order` = '" . ($itemOrder->order - 1) . "'");
-				$query->where("`a.id` = '" . $cid[0] . "'");
+				$query->update($db->qn('#__thm_groups_structure') . " AS a");
+				$query->set("a.order = " . ($itemOrder->order - 1));
+				$query->where("a.id = " . $cid[0]);
 
 				$db->setQuery($query);
 				if (!$db->query())
@@ -177,9 +177,9 @@ class THMGroupsModelStructure extends JModelList
 					. " WHERE a.order=" . ($itemOrder->order + 1);
 				*/
 				$query = $db->getQuery(true);
-				$query->update($db->qn('#__thm_groups_structure AS a'));
-				$query->set("`a.order` = '" . $itemOrder->order . "'");
-				$query->where("`a.order` = '" . ($itemOrder->order + 1) . "'");
+				$query->update($db->qn('#__thm_groups_structure') . " AS a");
+				$query->set("a.order = " . $itemOrder->order);
+				$query->where("a.order = " . ($itemOrder->order + 1));
 
 				$db->setQuery($query);
 				if (!$db->query())
@@ -192,9 +192,9 @@ class THMGroupsModelStructure extends JModelList
 					. " WHERE a.id=" . $cid[0];
 				*/
 				$query = $db->getQuery(true);
-				$query->update($db->qn('#__thm_groups_structure AS a'));
-				$query->set("`a.order` = '" . ($itemOrder->order + 1) . "'");
-				$query->where("`a.id` = '" . $cid[0] . "'");
+				$query->update($db->qn('#__thm_groups_structure') . " AS a");
+				$query->set("a.order = " . ($itemOrder->order + 1));
+				$query->where("a.id = " . $cid[0]);
 				$db->setQuery($query);
 				if (!$db->query())
 				{
@@ -213,9 +213,9 @@ class THMGroupsModelStructure extends JModelList
 					. " WHERE a.id=" . $cid[$i];
 				*/
 				$query = $db->getQuery(true);
-				$query->update($db->qn('#__thm_groups_structure AS a'));
-				$query->set("`a.order` = '" . ($itemOrder) . "'");
-				$query->where("`a.id` = '" . $cid[$i] . "'");
+				$query->update($db->qn('#__thm_groups_structure') . " AS a");
+				$query->set("a.order = " . ($itemOrder));
+				$query->where("a.id = " . $cid[$i]);
 
 				$db->setQuery($query);
 				if (!$db->query())
