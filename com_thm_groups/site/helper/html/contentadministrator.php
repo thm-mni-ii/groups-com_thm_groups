@@ -32,7 +32,7 @@ abstract class JHtmlContentAdministrator
 	 *
 	 * @return String
 	 */
-	static function featured($i,$value = 0, $canChange = true)
+	static public function featured($i,$value = 0, $canChange = true)
 	{
 		// Array of image, task, title, action
 		$states	= array(
