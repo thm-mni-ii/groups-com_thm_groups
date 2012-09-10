@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<access component="com_thm_groups">
+        <section name="component">
+                <action name="core.admin" title="JACTION_ADMIN" description="JACTION_ADMIN_COMPONENT_DESC" />
+                <action name="frontend.access" title="COM_THM_QUICKPAGES_ACTION_FRONTEND_ACCESS" description="COM_THM_QUICKPAGES_ACTION_FRONTEND_ACCESS_DESC" />
+        </section>
+</access>

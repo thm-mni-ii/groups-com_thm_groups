@@ -15,8 +15,93 @@
 defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.controller');
 
-$controller = Jcontroller::getInstance('thmgroups');
+$view = JRequest::getCmd('view');
 
-$controller->execute(JRequest::getCmd('task'));
+if ($view == "articles")
+{
+	jimport('thm_quickpages.lib_thm_quickpages');
 
-$controller->redirect();
+	// Get user object
+	$currUser = JFactory::getUser();
+
+
+	// Check if the user has Quickpage enabled
+	$userHasEnabledQuickpage = THMLibThmQuickpages::isQuickpageEnabledForUser($currUser->id);
+
+	// Check if one group from user has Quickpage enabled
+	$groupsHaveEnabledQuickpage = false;
+	$userGroups = THMLibThmQuickpages::getGroupsOfUser($currUser->id);
+	foreach ($userGroups as $groupID)
+	{
+		if (THMLibThmQuickpages::isQuickpageEnabledForGroup($groupID))
+		{
+			$groupsHaveEnabledQuickpage = true;
+		}
+	}
+
+	// Access check.
+	if (!$userHasEnabledQuickpage && !$groupsHaveEnabledQuickpage)
+	{
+		return JError::raiseWarning(404, JText::_('COM_THM_QUICKPAGES_NOT_ENABLED'));
+	}
+
+
+	if ($userHasEnabledQuickpage)
+	{
+		$profileData = THMLibThmQuickpages::getPageProfileDataByUserSession();
+
+		// Check if user's quickpage category exist and if not, create it
+		if (!THMLibThmQuickpages::existsQuickpageForProfile($profileData))
+		{
+			THMLibThmQuickpages::createQuickpageForProfile($profileData);
+		}
+
+		// Check if user's repository category exist and if not, create it
+		if (!THMLibThmQuickpages::existsRepositoryForProfile($profileData))
+		{
+			THMLibThmQuickpages::createRepositoryForProfile($profileData);
+		}
+	}
+
+
+	// Check if the user's groups have Quickpages enabled
+	foreach ($userGroups as $groupID)
+	{
+
+		if (THMLibThmQuickpages::isQuickpageEnabledForGroup($groupID))
+		{
+			$profileData = THMLibThmQuickpages::getPageProfileDataByGroup($groupID);
+
+			// Check if group's quickpage category exist and if not, create it
+			if (!THMLibThmQuickpages::existsQuickpageForProfile($profileData))
+			{
+				THMLibThmQuickpages::createQuickpageForProfile($profileData);
+			}
+
+			// Check if user's repository category exist and if not, create it
+			if (!THMLibThmQuickpages::existsRepositoryForProfile($profileData))
+			{
+				THMLibThmQuickpages::createRepositoryForProfile($profileData);
+			}
+		}
+	}
+
+
+	// Show quickpage control or redirect
+	if ($userHasEnabledQuickpage OR $groupsHaveEnabledQuickpage)
+	{
+		$controller = JController::getInstance('thmgroups');
+
+		$controller->execute(JRequest::getCmd('task'));
+
+		$controller->redirect();
+	}
+}
+else
+{
+	$controller = Jcontroller::getInstance('thmgroups');
+
+	$controller->execute(JRequest::getCmd('task'));
+
+	$controller->redirect();
+}

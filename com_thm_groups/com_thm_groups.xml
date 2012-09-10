@@ -38,6 +38,8 @@
 	<languages>
 		<language tag="en-GB" client="site">language/en-GB/en-GB.com_thm_groups.ini</language>
 		<language tag="en-GB" client="site">language/en-GB/en-GB.com_thm_groups.sys.ini</language>
+		<language tag="de-DE" client="site">language/de-DE/de-DE.com_thm_groups.ini</language>
+		<language tag="de-DE" client="site">language/de-DE/de-DE.com_thm_groups.sys.ini</language>
 	</languages>
 
 	<administration>
@@ -52,7 +54,9 @@
 			<menu link="option=com_thm_groups&amp;view=rolemanager" view="rolemanager" img="components/com_thm_groups/img/icon-16-staff.png"
 				alt="THM-Groups/Role Manager">COM_THM_GROUPS_ROLEMANAGER</menu>
 			<menu link="option=com_thm_groups&amp;view=structure" view="structure" img="components/com_thm_groups/img/icon-16-staff.png"
-				alt="THM-Groups/Role Manager">COM_THM_GROUPS_STRUCTURE</menu>
+				alt="THM-Groups/Structure">COM_THM_GROUPS_STRUCTURE</menu>
+			<menu link="option=com_thm_groups&amp;view=quickpage" view="quickpage" img="components/com_thm_groups/img/icon-16-staff.png"
+				alt="THM-Groups/Quickpage">COM_THM_GROUPS_QUICKPAGE</menu>
 		</submenu>
 
 		<files folder="admin">
@@ -61,6 +65,8 @@
 			<filename>controller.php</filename>
 			<filename>install.sql</filename>
          	<filename>uninstall.sql</filename>
+         	<filename>access.xml</filename>
+         	<filename>config.xml</filename>
 
 			<folder>controllers</folder>
 			<folder>css</folder>
@@ -74,6 +80,8 @@
 		<languages>
 			<language tag="en-GB">language/en-GB/en-GB.com_thm_groups.ini</language>
 			<language tag="en-GB">language/en-GB/en-GB.com_thm_groups.sys.ini</language>
+			<language tag="de-DE">language/de-DE/de-DE.com_thm_groups.ini</language>
+			<language tag="de-DE">language/de-DE/de-DE.com_thm_groups.sys.ini</language>
 		</languages>
 	</administration>
 <!--
