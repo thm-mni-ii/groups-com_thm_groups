@@ -50,7 +50,7 @@ function Com_install()
 	</h1>
 	<?php
 
-	$db =& JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$query = 'SELECT * FROM #__usergroups';
 	$db->setQuery($query);
