@@ -84,10 +84,10 @@
 		{
 			echo "<div class='gs_advlist_longinfo'" . ($wrapTitle ? "" : $displayInline) . ">" . trim($title) . "</div> ";
 		}
-		$path = "'index.php?option=com_thm_groups&view=advanced&layout=list&Itemid=";
+		$path = "index.php?option=com_thm_groups&view=advanced&layout=list&Itemid=";
 		echo "<a href="
 				. JRoute::_($path . $this->itemid . '&gsuid=' . $id . '&name=' . trim($lastName) . '&gsgid=' . $this->gsgid)
-				. "'>";
+				. ">";
 		if (trim($firstName) != "")
 		{
 			echo "<div class='gs_advlist_longinfo'" . ($wrapTitle && $wrapFirstName ? "" : $displayInline) . ">" . trim($firstName) . "</div> ";
@@ -107,12 +107,12 @@
 			$option = JRequest :: getVar('option', 0);
 			$layout = JRequest :: getVar('layout', 0);
 			$view = JRequest :: getVar('view', 0);
-			$path = "'index.php?option=com_thm_groups&view=edit&layout=default&Itemid=";
+			$path = "index.php?option=com_thm_groups&view=edit&layout=default&Itemid=";
 			$gspart = '&gsgid=' . $this->gsgid . '&option_old=';
 			$trim = "&name=" . trim($lastName);
 			echo "<a href="
 			. JRoute :: _($path . $this->itemid . '&gsuid=' . $id . $trim . $gspart . $option . '&view_old=' . $view . '&layout_old=' . $layout)
-			. "'>"
+			. ">"
 			. JHTML :: image("components/com_thm_groups/img/edit.png", 'bearbeiten', $attribs) . "</a>";
 		}
 		echo "</div>";
