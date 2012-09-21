@@ -185,7 +185,6 @@ class THMGroupsModeledit extends JModelForm
         			$query .= " publish='" . $publish . "'"
        				. " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
        				*/
-					$query->set("value = '" . $field . "'");
 					$query->set("publish = " . $publish);
 					$query->where("userid = '" . $userid . "'");
 					$query->where("structid = '" . $structureItem->id . "'");
