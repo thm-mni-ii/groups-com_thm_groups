@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `#__thm_groups_text_extra`,
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_additional_userdata`
+-- Tabellenstruktur für Tabelle `#__thm_groups_additional_userdata`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_additional_userdata` (
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_additional_userdata` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_conf`
+-- Tabellenstruktur für Tabelle `#__thm_groups_conf`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_conf` (
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_conf` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Daten f�r Tabelle `#__thm_groups_conf`
+-- Daten für Tabelle `#__thm_groups_conf`
 --
 
 INSERT INTO `#__thm_groups_conf` (`name`, `value`) VALUES
@@ -59,7 +59,7 @@ INSERT INTO `#__thm_groups_conf` (`name`, `value`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_date`
+-- Tabellenstruktur für Tabelle `#__thm_groups_date`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_date` (
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_date` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_groups`
+-- Tabellenstruktur für Tabelle `#__thm_groups_groups`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_groups` (
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_groups` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=32 ;
 
 --
--- Daten f�r Tabelle `#__thm_groups_groups`
+-- Daten für Tabelle `#__thm_groups_groups`
 --
 
 -- INSERT INTO `#__thm_groups_groups` (`id`, `name`, `info`, `picture`, `mode`) VALUES
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_groups` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_groups_map`
+-- Tabellenstruktur für Tabelle `#__thm_groups_groups_map`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_groups_map` (
@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_groups_map` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_link`
+-- Tabellenstruktur für Tabelle `#__thm_groups_link`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_link` (
@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_link` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_multiselect`
+-- Tabellenstruktur für Tabelle `#__thm_groups_multiselect`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_multiselect` (
@@ -142,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_multiselect` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_multiselect_extra`
+-- Tabellenstruktur für Tabelle `#__thm_groups_multiselect_extra`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_multiselect_extra` (
@@ -162,7 +162,7 @@ INSERT INTO `#__thm_groups_multiselect_extra` (`structid`, `value`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_number`
+-- Tabellenstruktur für Tabelle `#__thm_groups_number`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_number` (
@@ -177,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_number` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_picture`
+-- Tabellenstruktur für Tabelle `#__thm_groups_picture`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_picture` (
@@ -192,7 +192,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_picture` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_picture_extra`
+-- Tabellenstruktur für Tabelle `#__thm_groups_picture_extra`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_picture_extra` (
@@ -204,7 +204,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_picture_extra` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_publishrelation`
+-- Tabellenstruktur für Tabelle `#__thm_groups_publishrelation`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_publishrelation` (
@@ -214,7 +214,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_publishrelation` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Daten f�r Tabelle `#__thm_groups_publishrelation`
+-- Daten für Tabelle `#__thm_groups_publishrelation`
 --
 
 INSERT INTO `#__thm_groups_publishrelation` (`value`, `identifier`) VALUES
@@ -225,7 +225,7 @@ INSERT INTO `#__thm_groups_publishrelation` (`value`, `identifier`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_relationtable`
+-- Tabellenstruktur für Tabelle `#__thm_groups_relationtable`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_relationtable` (
@@ -235,7 +235,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_relationtable` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Daten f�r Tabelle `#__thm_groups_relationtable`
+-- Daten für Tabelle `#__thm_groups_relationtable`
 --
 
 INSERT INTO `#__thm_groups_relationtable` (`Type`, `Relation`) VALUES
@@ -251,7 +251,7 @@ INSERT INTO `#__thm_groups_relationtable` (`Type`, `Relation`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_roles`
+-- Tabellenstruktur für Tabelle `#__thm_groups_roles`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_roles` (
@@ -261,7 +261,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_roles` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
--- Daten f�r Tabelle `#__thm_groups_roles`
+-- Daten für Tabelle `#__thm_groups_roles`
 --
 
 INSERT INTO `#__thm_groups_roles` (`id`, `name`) VALUES
@@ -271,7 +271,7 @@ INSERT INTO `#__thm_groups_roles` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_structure`
+-- Tabellenstruktur für Tabelle `#__thm_groups_structure`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_structure` (
@@ -283,7 +283,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_structure` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=91 ;
 
 --
--- Daten f�r Tabelle `#__thm_groups_structure`
+-- Daten für Tabelle `#__thm_groups_structure`
 --
 
 INSERT INTO `#__thm_groups_structure` (`id`, `field`, `type`, `order`) VALUES
@@ -298,7 +298,7 @@ INSERT INTO `#__thm_groups_structure` (`id`, `field`, `type`, `order`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_table`
+-- Tabellenstruktur für Tabelle `#__thm_groups_table`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_table` (
@@ -313,7 +313,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_table` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_table_extra`
+-- Tabellenstruktur für Tabelle `#__thm_groups_table_extra`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_table_extra` (
@@ -326,7 +326,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_table_extra` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_text`
+-- Tabellenstruktur für Tabelle `#__thm_groups_text`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_text` (
@@ -340,7 +340,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_text` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_textfield`
+-- Tabellenstruktur für Tabelle `#__thm_groups_textfield`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_textfield` (
@@ -355,7 +355,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_textfield` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_textfield_extra`
+-- Tabellenstruktur für Tabelle `#__thm_groups_textfield_extra`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_textfield_extra` (
@@ -369,7 +369,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_textfield_extra` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur f�r Tabelle `#__thm_groups_text_extra`
+-- Tabellenstruktur für Tabelle `#__thm_groups_text_extra`
 --
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_text_extra` (
@@ -379,9 +379,15 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_text_extra` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
+-- --------------------------------------------------------
 
+--
+-- Tabellenstruktur für Tabelle `#__thm_quickpages_map`
+--
 
-
-
-
-
+CREATE TABLE IF NOT EXISTS `#__thm_quickpages_map` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_kind` char(1) NOT NULL,
+  `catid` int(11) NOT NULL,
+   PRIMARY KEY  (`id`, `id_kind`, `catid`)
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
