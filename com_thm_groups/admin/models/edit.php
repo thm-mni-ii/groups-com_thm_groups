@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.2.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -135,8 +135,8 @@ class THMGroupsModeledit extends JModelForm
 		foreach ($structure as $structureItem)
 		{
 			$puffer = null;
+			$structureItem->field = str_replace(' ', '_', $structureItem->field);
 			$field = JRequest::getVar($structureItem->field, '', 'post', JREQUEST_ALLOWHTML);
-
 			$publish = 0;
 			if ($structureItem->type == 'MULTISELECT')
 			{
@@ -219,7 +219,6 @@ class THMGroupsModeledit extends JModelForm
 				}
 			}
 		}
-
 		if (!$err)
 		{
 			return true;
