@@ -207,10 +207,10 @@ $listDirn	= $this->state->get('list.direction');
 		<td valign="top"><?php echo $row->title; ?></td>
 		<td valign="top">
 		<a href="<?php echo $link; ?>">
-		<?php echo $row->lastName; ?></a>
+		<?php echo $row->firstName; ?></a>
 		</td>
+		<td valign="top"><?php echo $row->lastName; ?></td>
 		<td valign="top"><?php echo $row->EMail; ?></td>
-		<td valign="top"><?php echo $row->firstName; ?></td>
 		<td valign="top" align="center"><?php echo $published; ?></td>
 		<td valign="top" align="center">
 		<?php 
