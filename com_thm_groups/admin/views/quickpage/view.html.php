@@ -38,9 +38,17 @@ class THMGroupsViewQuickpage extends JView
 	 */
 	function display($tpl = null)
 	{
-            JToolBarHelper::preferences('com_thm_groups');
-            $this->setDocument();
-            parent::display($tpl);
+		$document   = & JFactory::getDocument();
+		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
+
+		JToolBarHelper::title(
+				JText::_('COM_THM_GROUPS_QUICKPAGE_TITLE'),
+				'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
+		);
+
+        JToolBarHelper::preferences('com_thm_groups');
+        $this->setDocument();
+        parent::display($tpl);
 	}
 
 	/**
