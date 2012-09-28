@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1 
+ * @version     v3.1.0 
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -94,7 +94,7 @@ function close1234() {
 			?>
 		</table>
 		<br /><br />
-		<input type='button' id='3' onclick="close1234()" value='SAVE' name='editTableRow' task='edit.editTableRow' />
+		<input type='button' id='3' onclick="close1234()" value='<?php echo JText::_('SAVE'); ?>' name='editTableRow' task='edit.editTableRow' />
 		<input type='hidden' name='structid' value='<?php echo JRequest::getVar('structid');?>' />
 		<input type="hidden" name="option" value="com_thm_groups" />
 		<input type="hidden" name="task"   value="" />

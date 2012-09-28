@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.1.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -115,12 +115,12 @@ class THMGroupsViewEdit extends JView
 		{
 			$output = "<img src='" . JURI::root(true) . "/components/com_thm_groups/img/portraits/$extra' />";
 		}
-		$output .= "<br /><input type='file' accept='image' name='$name' />" .
+		$output .= "<br /><input type='file' value='bla' accept='image' name='$name' />" .
 		"<br /><input type='submit' id='gs_editView_buttons' " .
-		"onclick='return confirm(\"Wirklich L&Ouml;SCHEN?\"), " .
+		"onclick='return confirm(\"" . JText::_("COM_THM_GROUPS_REALLY_DELETE") . "\"), " .
 		"document.forms[\"adminForm\"].elements[\"structid\"].value = $structid, " .
 		"document.forms[\"adminForm\"].elements[\"task\"].value = \"edit.delPic\"' " .
-		"value='Bild l&ouml;schen' name='del" . $name . "' task='edit.delPic' />";
+		"value='" . JText::_("COM_THM_GROUPS_PICTURE_DELETE") . "' name='del" . $name . "' task='edit.delPic' />";
 		echo $output;
 	}
 
@@ -167,11 +167,12 @@ class THMGroupsViewEdit extends JView
 						$output .= "<td>" . $rowItem . "</td>";
 					}
 					$path = "index.php?option=com_thm_groups&view=edit&layout=edit_table&tmpl=component&gsuid=$gsuid&structid=$structid&key=$key";
-					$output .= "<td><a href='javascript:delTableRow($key, $structid );' title='Zeile: " . ($key + 1)
-					. "::Zeile entfernen.' class='hasTip'><img src='" . JURI::root(true)
+					$output .= "<td><a href='javascript:delTableRow($key, $structid );' title='" . JText::_('COM_THM_GROUPS_ROW_LABEL') . ": " 
+					. ($key + 1)
+					. "::" . JText::_('COM_THM_GROUPS_REMOVE_ROW') . ".' class='hasTip'><img src='" . JURI::root(true)
 					. "/components/com_thm_groups/img/icon-16-trash.png' /></a></td>";
-					$output .= "<td><a href='" . $path . "' title='Zeile: " . ($key + 1)
-					. "::Zeile bearbeiten.' class='modal-button hasTip' rel=\"{handler: 'iframe', size: {x: 400, y: 300}}\"><img src='"
+					$output .= "<td><a href='" . $path . "' title='" . JText::_('COM_THM_GROUPS_ROW_LABEL') . ": " . ($key + 1)
+					. "::" . JText::_('COM_THM_GROUPS_EDIT_ROW') . ".' class='modal-button hasTip' rel=\"{handler: 'iframe', size: {x: 400, y: 300}}\"><img src='"
 					. JURI::root(true) . "/components/com_thm_groups/img/icon-16-edit.png' /></a> </td>";
 					$output .= "</tr>";
 					$k = 1 - $k;
@@ -181,7 +182,7 @@ class THMGroupsViewEdit extends JView
 			else
 			{
 				$output .= "<tr>" .
-					"<td colspan='" . (count($head) + 1) . "'>Keine Daten eingetragen...</td>" .
+					"<td colspan='" . (count($head) + 1) . "'>" . JText::_('COM_THM_GROUPS_NO_DATA') . "</td>" .
 					"</tr>";
 			}
 			$output .= "</table>";
@@ -191,9 +192,12 @@ class THMGroupsViewEdit extends JView
 					"class='inputbox' " .
 					"type='text' name='TABLE$structid$headItem' " .
 					"id='TABLE$structid$headItem' " .
-					"size='20'" .
-					"onFocus=\"if(this.value=='$headItem eintragen') this.value=''\"" .
-					"value='$headItem eintragen'" .
+					"size='20'";
+				
+				$format = JText::_('COM_THM_GROUPS_ADD_ITEM');
+				$addStr = sprintf($format, $headItem);
+				$output .= "onFocus=\"if(this.value=='$addStr') this.value=''\"" .
+					"value='$addStr'" .
 					" />";
 			}
 
@@ -207,12 +211,12 @@ class THMGroupsViewEdit extends JView
 				"document.forms[\"adminForm\"].elements[\"option_old\"].value=" . $option_old . "," .
 				"document.forms[\"adminForm\"].elements[\"layout_old\"].value=" . $layout_old . "," .
 				"document.forms[\"adminForm\"].elements[\"view_old\"].value=" . $view_old . "' " .
-				"value='In Tabelle eintragen' name='addTableRow" . $name . "' task='edit.addTableRow' />";
+				"value='" . JText::_('COM_THM_GROUPS_ADD_TO_TABLE_TEXT') . "' name='addTableRow" . $name . "' task='edit.addTableRow' />";
 
 		}
 		else
 		{
-			$output = "Keine Parameter angegeben...";
+			$output = JText::_('COM_THM_GROUPS_NO_PARAMS_TEXT');
 		}
 
 		echo $output;

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.1.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -64,7 +64,7 @@ else
 			{
 				$layout_old = JRequest :: getVar('layout_old', 0, 'post');
 			}
-			echo   JText::_('Details view:');
+			echo   JText::_('COM_THM_GROUPS_DETAILS_VIEW_LABEL');
 			?>
 		</legend>
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.1.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -43,8 +43,8 @@ $userid = $user->id;
 				{
 					$layout_old = JRequest :: getVar('layout_old', 0, 'post');
 				}
+				echo   JText::_('COM_THM_GROUPS_DETAILS_VIEW_LABEL');
 				?>
-				Details View
 			</legend>
 			<table class="admintable">
 				<tr>
@@ -72,7 +72,7 @@ $userid = $user->id;
 				<tr>
 					<td width="110" class="key">
 						<label for="title">
-	  						Eltern:
+	  						<?php echo JText::_('COM_THM_GROUPS_PARENT'); ?>
 						</label>
 					</td>
 					<td>
@@ -125,7 +125,7 @@ $userid = $user->id;
 				<tr>
 					<td width="110" class="key">
 						<label for="title">
-	  						Bild:
+	  						<?php echo JText::_('COM_THM_GROUPS_PICTURE'); ?>
 						</label>
 					</td>
 					<td>
@@ -134,14 +134,16 @@ $userid = $user->id;
 						<input type='file' accept='image' name='gr_picture' id='gr_picture' />
 						<br />
 						<input type='submit' id="gs_editView_buttons"
-						onclick='return confirm("Wirklich löschen?"), document.forms["adminForm"].elements["task"].value = "editgroup.delPic"'
-						value='<?php echo JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_DELETE'); ?>' name='delPic' task='editgroup.delPic' />
+						onclick='return confirm("<?php 
+							echo JText::_('COM_THM_GROUPS_REALLY_DELETE'); 
+							?>>"), document.forms["adminForm"].elements["task"].value = "editgroup.delPic"'
+						value='<?php echo JText::_('COM_THM_GROUPS_PICTURE_DELETE'); ?>' name='delPic' task='editgroup.delPic' />
 					</td>
 				</tr>
 				<tr>
 					<td width="110" class="key">
 						<label for="title">
-	  						MODE:
+	  						<?php echo JText::_('COM_THM_GROUPS_MODE'); ?>
 						</label>
 					</td>
 					<td>
@@ -157,7 +159,14 @@ $userid = $user->id;
 									}
 								}
 							?>
-							<OPTION VALUE='profile' <?php echo $sel;?>>PROFILE</option>
+							<OPTION VALUE='profile' <?php 
+								echo $sel;
+							?>
+							>
+							<?php 
+								echo JText::_('COM_THM_GROUPS_PROFILE');
+							?>
+							</option>
 							<?php
 							$sel = "";
 								foreach ($arrMode as $mode)
@@ -168,7 +177,14 @@ $userid = $user->id;
 									}
 								}
 							?>
-							<OPTION VALUE='quickpage' <?php echo $sel;?> >QUICKPAGE</option>
+							<OPTION VALUE='quickpage' <?php 
+								echo $sel;
+							?>
+							>
+							<?php
+								echo JText::_('COM_THM_GROUPS_QUICKPAGE');
+							?>
+							</option>
 							<?php
 							$sel = "";
 								foreach ($arrMode as $mode)
@@ -179,19 +195,26 @@ $userid = $user->id;
 									}
 								}
 							?>
-							<OPTION VALUE='acl' <?php echo $sel;?>>ACL</option>
+							<OPTION VALUE='acl' <?php
+								echo $sel;
+							?>
+							>
+							<?php 
+								echo JText::_('COM_THM_GROUPS_ACL');
+							?>
+							</option>
 						</SELECT>
 					</td>
 				</tr>
 				<tr>
 					<td>
-  						<input type="submit" name="save" value="Speichern" id="gs_editView_buttons"/>
+  						<input type="submit" name="save" value="<?php echo JText::_('SAVE'); ?>" id="gs_editView_buttons"/>
 					</td>
 					<td>
 						<input
 						type='submit' id="gs_editView_buttons"
-						onclick='return confirm("Wirklich zurück?"), document.forms["adminForm"].elements["task"].value = "editgroup.backToRefUrl"'
-						value='Zurück' name='backToRefUrl' task='editgroup.backToRefUrl' />
+						onclick='document.forms["adminForm"].elements["task"].value = "editgroup.backToRefUrl"'
+						value=<?php echo JText::_('BACK'); ?> name='backToRefUrl' task='editgroup.backToRefUrl' />
 					</td>
 				</tr>
 			</table>
