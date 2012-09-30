@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.1.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -40,7 +40,7 @@ JHTML::_('behavior.modal', 'a.modal-button');
 				<tr>
 					<td width="110" class="key">
 						<label for="title">
-	  						<?php echo JText::_('PARENT'); ?>:
+	  						<?php echo JText::_('COM_THM_GROUPS_PARENT'); ?>:
 						</label>
 					</td>
 					<td>
@@ -89,7 +89,7 @@ JHTML::_('behavior.modal', 'a.modal-button');
 				<tr>
 					<td width="110" class="key">
 						<label for="title">
-	  						<?php echo JText::_('PICTURE'); ?>:
+	  						<?php echo JText::_('COM_THM_GROUPS_PICTURE'); ?>:
 						</label>
 					</td>
 					<td>
@@ -100,14 +100,65 @@ JHTML::_('behavior.modal', 'a.modal-button');
 				<tr>
 					<td width="110" class="key">
 						<label for="title">
-	  						<?php echo JText::_('MODE'); ?>:
+	  						<?php echo JText::_('COM_THM_GROUPS_MODE'); ?>:
 						</label>
 					</td>
 					<td>
 						<SELECT MULTIPLE size='3' name='gr_mode[]' id='gr_mode' >
-							<OPTION VALUE='profile' selected >PROFILE</option>
-							<OPTION VALUE='quickpage' selected >QUICKPAGE</option>
-							<OPTION VALUE='acl' >ACL</option>
+							<?php
+							$sel = "";
+								foreach ($arrMode as $mode)
+								{
+									if ($mode == 'profile')
+									{
+										$sel = "selected";
+									}
+								}
+							?>
+							<OPTION VALUE='profile' <?php 
+								echo $sel;
+							?>
+							>
+							<?php 
+								echo JText::_('COM_THM_GROUPS_PROFILE');
+							?>
+							</option>
+							<?php
+							$sel = "";
+								foreach ($arrMode as $mode)
+								{
+									if ($mode == 'quickpage')
+									{
+										$sel = "selected";
+									}
+								}
+							?>
+							<OPTION VALUE='quickpage' <?php 
+								echo $sel;
+							?>
+							>
+							<?php
+								echo JText::_('COM_THM_GROUPS_QUICKPAGE');
+							?>
+							</option>
+							<?php
+							$sel = "";
+								foreach ($arrMode as $mode)
+								{
+									if ($mode == 'acl')
+									{
+										$sel = "selected";
+									}
+								}
+							?>
+							<OPTION VALUE='acl' <?php
+								echo $sel;
+							?>
+							>
+							<?php 
+								echo JText::_('COM_THM_GROUPS_ACL');
+							?>
+							</option>
 						</SELECT>
 					</td>
 				</tr>

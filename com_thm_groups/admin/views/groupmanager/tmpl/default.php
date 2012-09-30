@@ -45,10 +45,10 @@ $listDirn = $this->state->get('list.direction');
 				<?php echo JHTML::_('grid.sort', 'ID', 'picture', $listDirn, $listOrder); ?>
 			</th>
 			<th width="5%" align="center">
-				<?php echo JHTML::_('grid.sort', 'Users in group', 'picture', $listDirn, $listOrder); ?>
+				<?php echo JHTML::_('grid.sort', 'COM_THM_GROUPS_USERS_COUNT', 'picture', $listDirn, $listOrder); ?>
 			</th>
 			<th width="5%" nowrap="nowrap">
-				<?php echo JHTML::_('grid.sort', 'in Joomla', 'injoomla', $listDirn, $listOrder); ?>
+				<?php echo JHTML::_('grid.sort', 'COM_THM_GROUPS_IN_JOOMLA', 'injoomla', $listDirn, $listOrder); ?>
 			</th>
 
 		</tr>

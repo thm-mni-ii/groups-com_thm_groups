@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.1.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -60,7 +60,7 @@ class THMGroupsControllerGroupmanager extends JControllerForm
 	 */
 	public function cancel()
 	{
-		$msg = JText::_('Operation Cancelled');
+		$msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
 		$this->setRedirect('index.php?option=com_thm_groups', $msg);
 	}
 
@@ -114,25 +114,25 @@ class THMGroupsControllerGroupmanager extends JControllerForm
 			case 1:
 				if ($deleted == 1)
 				{
-					$answer = "Gruppe erfolgreich entfernt";
+					$answer = "COM_THM_GROUPS_GROUPMANAGER_GROUP_SUCCESSFULLY_DELETED";
 				}
 				else
 				{
-					$answer = "Gruppe konnte nicht entfernt werden, Gruppe noch in Joomla vorhanden oder Gruppe besitzt noch Benutzer.";
+					$answer = "COM_THM_GROUPS_GROUPMANAGER_GROUP_DELETE_FALSE";
 				}
 				break;
 			default:
 				if ($deleted == 0)
 				{
-					$answer = "Keine Gruppe konnte entfernt werden";
+					$answer = "COM_THM_GROUPS_GROUPMANAGER_GROUPS_DELETE_FALSE";
 				}
 				elseif ($deleted == $delCount)
 				{
-					$answer = "Alle Gruppen wurden erfolgreich entfernt";
+					$answer = "COM_THM_GROUPS_GROUPMANAGER_ALL_GROUPS_DELETE_TRUE";
 				}
 				else
 				{
-					$answer = "Nicht alle Gruppen konnten entfernt werden";
+					$answer = "COM_THM_GROUPS_GROUPMANAGER_SOME_GROUPS_DELETE_TRUE";
 				}
 				break;
 		}

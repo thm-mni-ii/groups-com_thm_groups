@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.1.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -70,11 +70,11 @@ class THMGroupsControllermembermanager extends JController
 
 		if ($model->store())
 		{
-			$msg = JText::_('Data Saved!');
+			$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
 		}
 		else
 		{
-			$msg = JText::_('Error Saving');
+			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
 		}
 
 		$this->setRedirect('index.php?option=com_thm_groups&task=membermanager.edit&cid[]=' . $id, $msg);
@@ -91,11 +91,11 @@ class THMGroupsControllermembermanager extends JController
 
 		if ($model->store())
 		{
-			$msg = JText::_('Data Saved!');
+			$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
 		}
 		else
 		{
-			$msg = JText::_('Error Saving');
+			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
 		}
 
 		$link = 'index.php?option=com_thm_groups&view=membermanager';
@@ -109,7 +109,7 @@ class THMGroupsControllermembermanager extends JController
  	 */
 	public function cancel()
 	{
-		$msg = JText::_('Operation Cancelled');
+		$msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
 		$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
 	}
 
@@ -125,11 +125,11 @@ class THMGroupsControllermembermanager extends JController
 
 		if ($model->delPic())
 		{
-			$msg = JText::_('Bild entfernt');
+			$msg = JText::_('COM_THM_GROUPS_PICTURE_REMOVED');
 		}
 		else
 		{
-			$msg = JText::_('Bild konnte nicht entfernt werden');
+			$msg = JText::_('COM_THM_GROUPS_REMOVE_PICTURE_ERROR');
 		}
 		$this->apply();
 		$this->setRedirect('index.php?option=com_thm_groups&task=membermanager.edit&cid[]=' . $id, $msg);
@@ -228,11 +228,11 @@ class THMGroupsControllermembermanager extends JController
 			$model = $this->getModel('edit');
 			if ($model->setGroupsAndRoles($uids, $gid, $rid))
 			{
-				$msg = JText::_('Benutzer zu Gruppe/Rollen hinzugefuegt!');
+				$msg = JText::_('COM_THM_GROUPS_USER_SUCCESSFULLY_ADDED_TO_GROUP');
 			}
 			else
 			{
-				$msg = JText::_('Benutzer zu Gruppe/Rollen hinzufuegen fehlgeschlagen!');
+				$msg = JText::_('COM_THM_GROUPS_USER_ADDED_TO_GROUP_ERROR');
 			}
 		}
 
@@ -295,11 +295,11 @@ class THMGroupsControllermembermanager extends JController
 		$result = $model->publish();
 		if ($result)
 		{
-			$msg = JText::_('User published');
+			$msg = JText::_('COM_THM_GROUPS_PUBLISHED');
 		}
 		else
 		{
-			$msg = JText::_('User not published');
+			$msg = JText::_('COM_THM_GROUPS_PUBLISH_ERROR');
 		}
 
 		$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
@@ -317,11 +317,11 @@ class THMGroupsControllermembermanager extends JController
 		$result = $model->unpublish();
 		if ($result)
 		{
-			$msg = JText::_('User unpublished');
+			$msg = JText::_('COM_THM_GROUPS_UNPUBLISHED');
 		}
 		else
 		{
-			$msg = JText::_('User not unpublished');
+			$msg = JText::_('COM_THM_GROUPS_UNPUBLISH_ERROR');
 		}
 
 		$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);

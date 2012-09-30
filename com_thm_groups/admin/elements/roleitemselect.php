@@ -80,7 +80,7 @@ class JFormFieldRoleItemSelect extends JFormField
 		{
 			if ($sortedRole == 0)
 			{
-				$html .= '<option value=0>Keine Rollen fuer diese Gruppe</option>';
+				$html .= '<option value=0>' . JText::_('COM_THM_GROUPS_NO_ROLES_FOR_THIS_GROUP') . '</option>';
 				$sortButtons = false;
 			}
 			else
@@ -98,21 +98,25 @@ class JFormFieldRoleItemSelect extends JFormField
 		$html .= '</select>';
 		if ($sortButtons)
 		{
-			$html .= '<a onclick="roleup()" id="sortup">'
-				. '<img src="../administrator/components/com_thm_groups/img/uparrow.png" title="Rolle eine Position h&ouml;her" />'
-				. '</a>';
-			$html .= '<a onclick="roledown()" id="sortdown">'
-				. '<img src="../administrator/components/com_thm_groups/img/downarrow.png" title="Rolle eine Position niedriger" />'
-				. '</a>';
+			$html .= '<a onclick="roleup()" id="sortup">';
+			$html .= '<img src="../administrator/components/com_thm_groups/img/uparrow.png" title="';
+			$html .= JText::_('COM_THM_GROUPS_ROLE_UP') . '" />';
+			$html .= '</a><br />';
+			$html .= '<a onclick="roledown()" id="sortdown">';
+			$html .= '<img src="../administrator/components/com_thm_groups/img/downarrow.png" title="';
+			$html .= JText::_('COM_THM_GROUPS_ROLE_DOWN') . '" />';
+			$html .= '</a>';
 		}
 		else
 		{
-			$html .= '<a onclick="roleup()" id="sortup" style="visibility:hidden">'
-				. '<img src="../administrator/components/com_thm_groups/img/uparrow.png" title="Rolle eine Position h&ouml;her" />'
-				. '</a><br />';
-			$html .= '<a onclick="roledown()" id="sortdown" style="visibility:hidden">'
-				. '<img src="../administrator/components/com_thm_groups/img/downarrow.png" title="Rolle eine Position niedriger" />'
-				. '</a>';
+			$html .= '<a onclick="roleup()" id="sortup" style="visibility:hidden">';
+			$html .= '<img src="../administrator/components/com_thm_groups/img/uparrow.png" title="';
+			$html .= JText::_('COM_THM_GROUPS_ROLE_UP') . '" />';
+			$html .= '</a><br />';
+			$html .= '<a onclick="roledown()" id="sortdown" style="visibility:hidden">';
+			$html .= '<img src="../administrator/components/com_thm_groups/img/downarrow.png" title="';
+			$html .= JText::_('COM_THM_GROUPS_ROLE_DOWN') . '" />';
+			$html .= '</a>';
 		}
 		$html .= '<!--<input type="hidden" name="jform[params][sortedgrouproles]" id="sortedgrouproles" value="' . $paramRoles . '" />-->';
 

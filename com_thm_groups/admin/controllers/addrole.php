@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.1.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -60,11 +60,11 @@ class THMGroupsControllerAddRole extends JControllerForm
 
 		if ($model->store())
 		{
-			$msg = JText::_('Data Saved!');
+			$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
 		}
 		else
 		{
-			$msg = JText::_('Error Saving');
+			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
 		}
 
 		$id = JRequest::getVar('cid[]');
@@ -83,11 +83,11 @@ class THMGroupsControllerAddRole extends JControllerForm
 
 		if ($model->store())
 		{
-			$msg = JText::_('Data Saved!');
+			$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
 		}
 		else
 		{
-			$msg = JText::_('Error Saving');
+			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
 		}
 
 		$this->setRedirect('index.php?option=com_thm_groups&view=rolemanager', $msg);
@@ -104,11 +104,11 @@ class THMGroupsControllerAddRole extends JControllerForm
 
 		if ($model->store())
 		{
-			$msg = JText::_('Data Saved!');
+			$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
 		}
 		else
 		{
-			$msg = JText::_('Error Saving');
+			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
 		}
 
 		$this->setRedirect('index.php?option=com_thm_groups&view=addrole', $msg);
@@ -121,7 +121,7 @@ class THMGroupsControllerAddRole extends JControllerForm
  	 */
 	public function cancel()
 	{
-		$msg = JText::_('CANCEL');
+		$msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
 		$this->setRedirect('index.php?option=com_thm_groups&view=rolemanager', $msg);
 	}
 }

@@ -53,7 +53,7 @@ defined('_JEXEC') or die ('Restricted access');
 					<tr>
 					<td width="110" class="key">
 						<label for="title">
-	  						<?php echo JText::_('PARENT'); ?>:
+	  						<?php echo JText::_('COM_THM_GROUPS_PARENT'); ?>:
 						</label>
 					</td>
 					<td>
@@ -108,7 +108,7 @@ defined('_JEXEC') or die ('Restricted access');
 				<tr>
 					<td width="110" class="key">
 						<label for="title">
-	  						<?php echo JText::_('PICTURE'); ?>:
+	  						<?php echo JText::_('COM_THM_GROUPS_PICTURE'); ?>:
 						</label>
 					</td>
 					<td>
@@ -123,7 +123,7 @@ defined('_JEXEC') or die ('Restricted access');
 				<tr>
 					<td width="110" class="key">
 						<label for="title">
-	  						<?php echo JText::_('MODE'); ?>:
+	  						<?php echo JText::_('COM_THM_GROUPS_MODE'); ?>:
 						</label>
 					</td>
 					<td>
@@ -139,7 +139,14 @@ defined('_JEXEC') or die ('Restricted access');
 									}
 								}
 							?>
-							<OPTION VALUE='profile' <?php echo $sel;?>>PROFILE</option>
+							<OPTION VALUE='profile' <?php 
+								echo $sel;
+							?>
+							>
+							<?php 
+								echo JText::_('COM_THM_GROUPS_PROFILE');
+							?>
+							</option>
 							<?php
 							$sel = "";
 								foreach ($arrMode as $mode)
@@ -150,7 +157,14 @@ defined('_JEXEC') or die ('Restricted access');
 									}
 								}
 							?>
-							<OPTION VALUE='quickpage' <?php echo $sel;?> >QUICKPAGE</option>
+							<OPTION VALUE='quickpage' <?php 
+								echo $sel;
+							?>
+							>
+							<?php
+								echo JText::_('COM_THM_GROUPS_QUICKPAGE');
+							?>
+							</option>
 							<?php
 							$sel = "";
 								foreach ($arrMode as $mode)
@@ -161,7 +175,14 @@ defined('_JEXEC') or die ('Restricted access');
 									}
 								}
 							?>
-							<OPTION VALUE='acl' <?php echo $sel;?>>ACL</option>
+							<OPTION VALUE='acl' <?php
+								echo $sel;
+							?>
+							>
+							<?php 
+								echo JText::_('COM_THM_GROUPS_ACL');
+							?>
+							</option>
 						</SELECT>
 					</td>
 				</tr>

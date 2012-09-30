@@ -117,7 +117,7 @@ $listDirn	= $this->state->get('list.direction');
 		<tr>
 			<td width="17%">
 				<?php
-				echo "<span title='Filter nach Vorname, Name oder Benutzerkennung'>" . JText::_('SEARCH') . "</span>";
+				echo "<span title='" . JText::_('COM_THM_GROUPS_FILTE_TOOLTIP') . ">" . JText::_('SEARCH') . "</span>";
 				?>
 				<input 
 					type="text" 
@@ -252,22 +252,25 @@ $listDirn	= $this->state->get('list.direction');
 							{
 								$grouproles .= ', ' . $grouprole->rolename .
 								"<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid . ", " .
-								$grouprole->roleid . ");' title='Gruppe: " . $grouprole->groupname . " - Rolle: " . $grouprole->rolename .
-								"::Rolle entfernen.' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+								$grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname . " - " . JText::_('ROLE') 
+								. ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
+								. ".' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
 							}
 							else
 							{
 								if ($groupname == '')
 								{
 									$grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " . $grouprole->groupid .
-									");' title='Gruppe: " . $grouprole->groupname . "::Alle Gruppenrollen entfernen.' class='hasTip'>
-									<img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+									");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname . "::" 
+									. JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') 
+									. ".' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
 									$grouproles .= '<span><b>' . $grouprole->groupname . ': </b>' . $grouprole->rolename;
 									if ($countRoles > 1)
 									{
 										$grouproles .= "<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid .
-										", " . $grouprole->roleid . ");' title='Gruppe: " . $grouprole->groupname . " - Rolle: " .
-										$grouprole->rolename . "::Rolle entfernen' class='hasTip'>
+										", " . $grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname 
+										. " - " . JText::_('ROLE') . ": " .
+										$grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') . "' class='hasTip'>
 										<img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
 									}
 									else
@@ -280,17 +283,17 @@ $listDirn	= $this->state->get('list.direction');
 								{
 									$grouproles .= ' <br />';
 									$grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " .
-									$grouprole->groupid . ");' title='Gruppe: " . $grouprole->groupname .
-									"::Alle Gruppenrollen entfernen.' class='hasTip'>
+									$grouprole->groupid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname .
+									"::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') . ".' class='hasTip'>
 									<img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
 									$grouproles .= '<span><b>' . $grouprole->groupname . ': </b>' . $grouprole->rolename;
 
 									if ($countRoles > 1)
 									{
 										$grouproles .= "<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid . ", " .
-										$grouprole->roleid . ");' title='Gruppe: " . $grouprole->groupname . " - Rolle: " . $grouprole->rolename .
-										"::Rolle entfernen' class='hasTip'>
-										<img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
+										$grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname . " - " 
+										. JText::_('ROLE') . ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
+										. "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
 									}
 									else
 									{
@@ -306,25 +309,26 @@ $listDirn	= $this->state->get('list.direction');
 						if ($groupname == $grouprole->groupname)
 						{
 							$grouproles .= ', ' . $grouprole->rolename . "<a href='javascript:delGrouprole(" .
-							$row->userid . ", " . $grouprole->groupid . ", " . $grouprole->roleid . ");' title='Gruppe: " .
-							$grouprole->groupname . " - Rolle: " . $grouprole->rolename .
-							"::Rolle entfernen . ' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+							$row->userid . ", " . $grouprole->groupid . ", " . $grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " .
+							$grouprole->groupname . " - " . JText::_('ROLE') . ": " . $grouprole->rolename ."::" 
+							. JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
+							."' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
 						}
 						else
 						{
 							if ($groupname == '')
 							{
 								$grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " .
-								$grouprole->groupid . ");' title='Gruppe: " . $grouprole->groupname .
-								"::Alle Gruppenrollen entfernen.' class='hasTip'>
+								$grouprole->groupid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname .
+								"::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') . ".' class='hasTip'>
 								<img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
 								$grouproles .= '<span><b>' . $grouprole->groupname . ': </b>' . $grouprole->rolename;
 								if ($countRoles > 1)
 								{
-									$grouproles .= "<a href='javascript:delGrouprole(" . $row->userid . ", " .
-									$grouprole->groupid . ", " . $grouprole->roleid . ");' title='Gruppe: " . $grouprole->groupname .
-									" - Rolle: " . $grouprole->rolename .
-									"::Rolle entfernen.' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
+									$grouproles .= "<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid . ", " 
+									. $grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname . " - " 
+									. JText::_('ROLE') . ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
+									. "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
 								}
 								else
 								{
@@ -336,16 +340,16 @@ $listDirn	= $this->state->get('list.direction');
 							{
 								$grouproles .= ' <br />';
 								$grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " . $grouprole->groupid .
-								");' title='Gruppe: " . $grouprole->groupname .
-								"::Alle Gruppenrollen entfernen.' class='hasTip'>
+								");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname .
+								"::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') . ".' class='hasTip'>
 								<img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
 								$grouproles .= '<span><b>' . $grouprole->groupname . ': </b>' . $grouprole->rolename;
 								if ($countRoles > 1)
 								{
 									$grouproles .= "<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid . ", " .
-									$grouprole->roleid . ");' title='Gruppe: " . $grouprole->groupname . " - Rolle: " . $grouprole->rolename .
-									"::Rolle entfernen.' class='hasTip'>
-									<img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+									$grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname . " - " . JText::_('ROLE') 
+									. ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
+									. "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
 								}
 								else
 								{

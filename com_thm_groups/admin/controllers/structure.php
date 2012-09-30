@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.1.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -79,7 +79,7 @@ class THMGroupsControllerStructure extends JControllerForm
 	 */
 	public function cancel()
 	{
-		$msg = JText::_('Operation Cancelled');
+		$msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
 		$this->setRedirect('index.php?option=com_thm_groups', $msg);
 	}
 
