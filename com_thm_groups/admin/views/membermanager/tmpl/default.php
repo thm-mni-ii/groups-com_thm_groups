@@ -117,7 +117,7 @@ $listDirn	= $this->state->get('list.direction');
 		<tr>
 			<td width="17%">
 				<?php
-				echo "<span title='" . JText::_('COM_THM_GROUPS_FILTE_TOOLTIP') . ">" . JText::_('SEARCH') . "</span>";
+				echo "<span title='" . JText::_('COM_THM_GROUPS_FILTE_TOOLTIP') . "'>" . JText::_('SEARCH') . "</span>";
 				?>
 				<input 
 					type="text" 
