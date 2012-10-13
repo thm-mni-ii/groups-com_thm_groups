@@ -1,4 +1,22 @@
 <?php
+/**
+ *@category Joomla component
+ *
+ *@package     THM_Groups
+ *
+ *@subpackage  com_thm_groups
+ *@name        Testsuite
+ *@description gui testsuite for com_thm_groups
+ *@author      Dennis Priefer, dennis.priefer@mni.thm.de
+ *@author      Mariusz Homeniuk, mariusz.homeniuk@mni.thm.de
+ *
+ *@copyright   2012 TH Mittelhessen
+ *
+ *@license     GNU GPL v.2
+ *@link        www.mni.thm.de
+ *@version     3.0
+ */
+
 require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
 require_once dirname(dirname(dirname(__FILE__))).DIRECTORY_SEPARATOR.'framework_include.php';
 require_once dirname(dirname(dirname(__FILE__))).DIRECTORY_SEPARATOR.'JoomlaSeleniumTest.php';
