@@ -15,17 +15,20 @@ class ComThmGroupsGroupmanagerEnGb extends JoomlaSeleniumTest
     	$this->assertTrue($this->isElementPresent("link=Cancel"));
     	$this->assertTrue($this->isElementPresent("css=span.icon-32-cancel"));
     	$this->assertTrue($this->isElementPresent("link=Back"));
-    	$this->assertTrue($this->isElementPresent("css=span.icon-32-back"));											sleep(1);
+    	$this->assertTrue($this->isElementPresent("css=span.icon-32-back"));
+    	sleep(1);
     	$this->clickAndWait("link=Add Entry");
     	$this->type("id=gr_name", "Testgroup");
     	$this->removeSelection("id=gr_mode", "label=QUICKPAGE");
     	$this->clickAndWait("css=span.icon-32-save");
     	$this->assertTrue($this->isTextPresent("Data Saved!"));
     	$this->assertTrue($this->isElementPresent("link=Testgroup"));
-    	$this->assertTrue($this->isTextPresent("profile"));																sleep(1);
+    	$this->assertTrue($this->isTextPresent("profile"));
+    	sleep(1);
     	$this->click("id=cb8");
     	$this->clickAndWait("css=span.icon-32-delete");
-    	$this->assertTrue((bool)preg_match('/^Are you sure to delete these groups[\s\S]$/',$this->getConfirmation()));	sleep(1);
+    	$this->assertTrue((bool)preg_match('/^Are you sure to delete these groups[\s\S]$/',$this->getConfirmation()));
+    	sleep(1);
     	for ($second = 0; ; $second++) {
     		if ($second >= 60) $this->fail("timeout");
     		try {
@@ -35,7 +38,8 @@ class ComThmGroupsGroupmanagerEnGb extends JoomlaSeleniumTest
     		echo $second;
     		sleep(1);
     	}
-    	$this->assertTrue($this->isTextPresent("Gruppe konnte nicht entfernt werden"));									sleep(1);
+    	$this->assertTrue($this->isTextPresent("Gruppe konnte nicht entfernt werden"));
+    	sleep(1);
     	$this->assertTrue($this->isElementPresent("link=Testgroup"));
     	$this->clickAndWait("link=Groups");
     	$this->click("id=cb8");
