@@ -29,8 +29,8 @@ class AllComThmGroupsGuiTests
 
 		$suite->addTestFile(__DIR__.'/com_thm_groups__administration_home__en_gb.php');
 		//$suite->addTestFile(__DIR__.'/com_thm_groups__groupmanager__en_gb.php');
-		$suite->addTestFile(__DIR__.'/com_thm_groups__home__en_gb.php');
-		$suite->addTestFile(__DIR__.'/com_thm_groups__membermanager_1__en_gb.php');
+		//$suite->addTestFile(__DIR__.'/com_thm_groups__home__en_gb.php');
+		//$suite->addTestFile(__DIR__.'/com_thm_groups__membermanager_1__en_gb.php');
 		//$suite->addTestFile(__DIR__.'/com_thm_groups__membermanager_2__en_gb.php');
 		//$suite->addTestFile(__DIR__.'/com_thm_groups__rolemanager__en_gb.php');
 		//$suite->addTestFile(__DIR__.'/com_thm_groups__structure__en_gb.php');
