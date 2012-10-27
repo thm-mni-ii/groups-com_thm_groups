@@ -30,7 +30,7 @@ class THMGroupsController extends JController
 	 *
 	 * @return void
 	 */
-	public function display()
+	public function display($cachable = false, $urlparams = false)
 	{
 		$vName = JRequest::getWord('view', 'thmgroups');
 
@@ -66,6 +66,6 @@ class THMGroupsController extends JController
 			$vName == 'quickpage'
 		);
 
-		parent::display();
+		parent::display($cachable, $urlparams);
 	}
 }
