@@ -36,7 +36,7 @@ class THMGroupsViewQuickpage extends JView
 	 *
 	 * @return void
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
 		$document   = & JFactory::getDocument();
 		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");

@@ -70,7 +70,7 @@ class THMGroupsViewEdit extends JView
 	 *
 	 * @param   String  $name      Name
 	 * @param   Int     $rows      Rows
-	 * @param   String  $value	   Value
+	 * @param   String  $value     Value
 	 * @param   Int     $structid  StructID
 	 *
 	 * @return textarea
@@ -99,7 +99,7 @@ class THMGroupsViewEdit extends JView
 	 *
 	 * @param   String  $name      Name
 	 * @param   Int     $structid  StructID
-	 * @param   String  $value	   Value
+	 * @param   String  $value     Value
 	 *
 	 * @return picturearea
 	 */
@@ -128,7 +128,7 @@ class THMGroupsViewEdit extends JView
 	 * Method to get table area
 	 *
 	 * @param   String  $name      Name
-	 * @param   String  $value	   Value
+	 * @param   String  $value     Value
 	 * @param   Int     $structid  StructID
 	 *
 	 * @return tablearea
@@ -172,7 +172,8 @@ class THMGroupsViewEdit extends JView
 					. "::" . JText::_('COM_THM_GROUPS_REMOVE_ROW') . ".' class='hasTip'><img src='" . JURI::root(true)
 					. "/components/com_thm_groups/img/icon-16-trash.png' /></a></td>";
 					$output .= "<td><a href='" . $path . "' title='" . JText::_('COM_THM_GROUPS_ROW_LABEL') . ": " . ($key + 1)
-					. "::" . JText::_('COM_THM_GROUPS_EDIT_ROW') . ".' class='modal-button hasTip' rel=\"{handler: 'iframe', size: {x: 400, y: 300}}\"><img src='"
+					. "::" . JText::_('COM_THM_GROUPS_EDIT_ROW') 
+					. ".' class='modal-button hasTip' rel=\"{handler: 'iframe', size: {x: 400, y: 300}}\"><img src='"
 					. JURI::root(true) . "/components/com_thm_groups/img/icon-16-edit.png' /></a> </td>";
 					$output .= "</tr>";
 					$k = 1 - $k;
@@ -241,7 +242,7 @@ class THMGroupsViewEdit extends JView
 	 *
 	 * @param   String  $name      Name
 	 * @param   Int     $size      Size
-	 * @param   String  $value	   Value
+	 * @param   String  $value     Value
 	 * @param   Int     $structid  StructID
 	 *
 	 * @return multiselectform

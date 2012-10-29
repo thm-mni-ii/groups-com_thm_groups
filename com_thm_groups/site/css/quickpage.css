@@ -118,6 +118,9 @@ table.qp_mainlist {
 	border-spacing: 1px;
 	background-color: #f3f3f3;
 	color: #666;
+	display: inline-block;
+	padding: 0;
+	margin: 0 auto;
 }
 
 table.qp_mainlist td,
@@ -195,11 +198,5 @@ table.qp_mainlist td.order span {
 	text-align: center;
 	background-repeat: no-repeat;
 	height: 13px;
-}
-
-table.qp_mainlist {
-	display: inline-block;
-	padding: 0;
-	margin: 0 auto;
 }
 

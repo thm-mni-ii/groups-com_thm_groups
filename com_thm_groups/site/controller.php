@@ -1,6 +1,6 @@
 <?php
 /**
- * @version	    v3.0.1
+ * @version	    v3.1.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -28,10 +28,13 @@ jimport('joomla.application.component.controller');
 class THMGroupsController extends JController
 {
 	/**
-	 *  Inherited method, which calls the method display() of parent JController.
-	 *@since  Method available since Release 1.0
+	 * Inherited method, which calls the method display() of parent JController.
+	 * 
+	 * @param   boolean  $cachable   cachable
+	 * @param   boolean  $urlparams  url param
 	 *
-	 *@return void
+	 * @since   Method available since Release 1.0
+	 * @return  void
 	 */
 	public function display($cachable = false, $urlparams = false)
 	{

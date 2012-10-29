@@ -28,9 +28,9 @@ class ContentHelper
 	/**
 	 * Configure the Linkbar.
 	 *
-	 * @param	string	$vName	The name of the active view.
+	 * @param   string  $vName  The name of the active view.
 	 *
-	 * @return	void
+	 * @return  void
 	 */
 	public static function addSubmenu($vName)
 	{
@@ -53,10 +53,10 @@ class ContentHelper
 	/**
 	 * Gets a list of the actions that can be performed.
 	 *
-	 * @param	int  $categoryId  The category ID.
-	 * @param	int  $articleId   The article ID.
+	 * @param   int  $categoryId  The category ID.
+	 * @param   int  $articleId   The article ID.
 	 *
-	 * @return	JObject
+	 * @return  JObject
 	 */
 	public static function getActions($categoryId = 0, $articleId = 0)
 	{

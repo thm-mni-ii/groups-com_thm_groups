@@ -27,6 +27,9 @@ class THMGroupsController extends JController
 {
 	/**
 	 * Method to display admincenter
+	 * 
+	 * @param   boolean  $cachable   cachable
+	 * @param   boolean  $urlparams  url param
 	 *
 	 * @return void
 	 */
