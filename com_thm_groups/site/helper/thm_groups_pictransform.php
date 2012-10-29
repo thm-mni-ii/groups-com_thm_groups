@@ -71,8 +71,7 @@ class THMPicTransform
 			case 3:
 				$this->_type = "PNG";
 				break;
-			default:
-				throw new Exception("Unpassender Typ");
+			default: throw new Exception("Unpassender Typ");
 				break;
 		}
 	}
@@ -106,17 +105,13 @@ class THMPicTransform
 	{
 		switch ($this->getType())
 		{
-			case 'GIF':
-				return ".gif";
+			case 'GIF': return ".gif";
 				break;
-			case 'JPG':
-				return ".jpg";
+			case 'JPG': return ".jpg";
 				break;
-			case 'PNG':
-				return ".png";
+			case 'PNG': return ".png";
 				break;
-			default:
-				throw new Exception("Nicht unterstuetztes Format");
+			default: throw new Exception("Nicht unterstuetztes Format");
 				break;
 		}
 	}
@@ -174,8 +169,7 @@ class THMPicTransform
 			case 'PNG':
 				$image = imagecreatefrompng($this->getPath());
 				break;
-			default:
-				throw new Exception("Falscher Typ");
+			default: throw new Exception("Falscher Typ");
 				break;
 		}
 
@@ -201,18 +195,17 @@ class THMPicTransform
 		{
 			case 'GIF':
 				imagegif($image, $dest . $filename . '.gif');
-				return $filename . '.gif';
+			return $filename . '.gif';
 				break;
 			case 'JPG':
 				imagejpeg($image, $dest . $filename . '.jpg');
-				return $filename . '.jpg';
+			return $filename . '.jpg';
 				break;
 			case 'PNG':
 				imagepng($image, $dest . $filename . '.png');
-				return $filename . '.png';
+			return $filename . '.png';
 				break;
-			default:
-				throw new Exception("Illegaler Typ");
+			default: throw new Exception("Illegaler Typ");
 				break;
 		}
 	}
