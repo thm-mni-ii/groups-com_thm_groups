@@ -310,9 +310,9 @@ $listDirn	= $this->state->get('list.direction');
 						{
 							$grouproles .= ', ' . $grouprole->rolename . "<a href='javascript:delGrouprole(" .
 							$row->userid . ", " . $grouprole->groupid . ", " . $grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " .
-							$grouprole->groupname . " - " . JText::_('ROLE') . ": " . $grouprole->rolename ."::" 
+							$grouprole->groupname . " - " . JText::_('ROLE') . ": " . $grouprole->rolename . "::" 
 							. JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
-							."' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+							. "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
 						}
 						else
 						{
