@@ -33,8 +33,8 @@ class THMGroupsController extends JController
 	 *
 	 *@return void
 	 */
-	public function display()
+	public function display($cachable = false, $urlparams = false)
 	{
-		parent::display();
+		parent::display($cachable, $urlparams);
 	}
 }

@@ -17,10 +17,6 @@
  *@version     3.0
  */
 
-if (!defined('JPATH_COMPONENT'))
-{
-	define('JPATH_COMPONENT', JPATH_ROOT . '/administrator/components/com_thm_groups');
-}
 require_once JPATH_BASE . '/administrator/components/com_thm_groups/models/addstructure.php';
 
 /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.0.2
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -8,10 +8,14 @@
  * @description THMGroupsModelAddStructure file from com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
+ * @author      Mariusz Homeniuk, <mariusz.homeniuk@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
+
+defined('_JEXEC') or die();
+jimport('joomla.application.component.model');
 
 /**
  * THMGroupsModelAddStructure class for component com_thm_groups
