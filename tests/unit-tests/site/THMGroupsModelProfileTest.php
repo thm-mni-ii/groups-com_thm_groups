@@ -54,6 +54,10 @@ class THMGroupsModelProfileTest extends PHPUnit_Framework_TestCase
 	// but picFile is null, function return false
 	function testupdatePic(){
 	
+		$this->markTestIncomplete(
+				'This test is obsolete. The method updatePic is no longer available.'
+		);
+		
 		$db = JFactory::getDBO();
 		$query = "INSERT INTO #__thm_groups_picture (userid, structid, value, publish, group";
 		$query .= "VALUES ('99999','88888',' ','0','0')";
