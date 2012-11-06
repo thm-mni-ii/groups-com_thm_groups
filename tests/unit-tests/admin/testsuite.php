@@ -39,6 +39,8 @@ class AllComThmGroupsAdminTests
 	{
 		$suite = new PHPUnit_Framework_TestSuite('Component THM Groups admin Test');
 
+		if(!defined('JPATH_COMPONENT')) define('JPATH_COMPONENT', JPATH_BASE . '/administrator/components/com_thm_groups');
+
 		$suite->addTestFile(__DIR__ . '/THMGroupsModelAddGroupAdminTest.php');
 		$suite->addTestFile(__DIR__ . '/THMGroupsModelAddRoleAdminTest.php');
 		$suite->addTestFile(__DIR__ . '/THMGroupsModelAddStructureAdminTest.php');
