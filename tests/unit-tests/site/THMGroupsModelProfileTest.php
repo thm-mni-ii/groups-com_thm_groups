@@ -79,6 +79,11 @@ class THMGroupsModelProfileTest extends PHPUnit_Framework_TestCase
 	// insert an value in database
 	// function updates the value and returns true
 	function testdelPic(){
+		
+		$this->markTestIncomplete(
+				'This test is obsolete. The method delPic is no longer available.'
+		);
+		
 		$array['userid'] = '99999';
 		$array['structid'] = '88888';
 		JRequest::set($array, 'post');
