@@ -44,7 +44,7 @@ class THMGroupsModelAdvanced extends JModel
 	public function __construct()
 	{
 		parent::__construct();
-		$this->db = & JFactory::getDBO();
+		$this->db = JFactory::getDBO();
 	}
 
 	/**

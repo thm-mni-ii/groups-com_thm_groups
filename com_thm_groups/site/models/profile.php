@@ -39,7 +39,7 @@ class THMGroupsModelProfile extends JModelForm
 	{
 		parent::__construct();
 		$this->getForm();
-		$this->db =& JFactory::getDBO();
+		$this->db = JFactory::getDBO();
 	}
 	
 	/**
@@ -102,7 +102,7 @@ class THMGroupsModelProfile extends JModelForm
 	{
 		$cid = JRequest::getVar('gsuid', '');
 		$types = $this->getTypes();
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$puffer = array();
 		$result = array();
 
@@ -140,7 +140,7 @@ class THMGroupsModelProfile extends JModelForm
 	 */
 	public function getStructure()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 
 		$query->select('*');
@@ -158,7 +158,7 @@ class THMGroupsModelProfile extends JModelForm
 	 */
 	public function getTypes()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "SELECT Type FROM #__thm_groups_relationtable " . "WHERE Type in (SELECT type FROM #__thm_groups_structure)";
 		*/
@@ -187,7 +187,7 @@ class THMGroupsModelProfile extends JModelForm
 	 */
 	public function getExtra($structid, $type)
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "SELECT value FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
 		*/
@@ -230,7 +230,7 @@ class THMGroupsModelProfile extends JModelForm
 		$user =& JFactory::getUser();
 		$id  = $user->id;
 		$gid = $this->getGroupNumber();
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "SELECT rid FROM `#__thm_groups_groups_map` where uid=$id AND gid=$gid";
 		*/
