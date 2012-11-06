@@ -17,8 +17,8 @@ class AllComThmGroupsSiteTests
 		$suite->addTestFile(__DIR__.'/THMGroupsModelGroupsTest.php');
 		$suite->addTestFile(__DIR__.'/THMGroupsModelListTest.php');
 		$suite->addTestFile(__DIR__.'/THMGroupsModelProfileTest.php');
-		$suite->addTestFile(__DIR__.'/THMGroupsQuickpageHelpersHtmlContentadministratorTest.php');
-		$suite->addTestFile(__DIR__.'/THMGroupsQuickpageModelsArticlesTest.php');
+		//$suite->addTestFile(__DIR__.'/THMGroupsQuickpageHelpersHtmlContentadministratorTest.php');
+		//$suite->addTestFile(__DIR__.'/THMGroupsQuickpageModelsArticlesTest.php');
 		//$suite->addTestFile(__DIR__.'/THMGroupsControllerProfileTest.php');
 		//$suite->addTestFile(__DIR__.'/THMGroupsViewProfileTest.php');
 		//$suite->addTestFile(__DIR__.'/THMGroupsViewAdvancedTest.php');
