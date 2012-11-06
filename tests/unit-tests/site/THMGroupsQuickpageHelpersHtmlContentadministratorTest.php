@@ -46,7 +46,7 @@ class HelpersHrmlContentadministratorTest extends PHPUnit_Framework_TestCase
 		$_SERVER['HTTP_HOST'] = 'localhost';
 		$_SERVER['SCRIPT_NAME'] = '/joomla/index.php';
 
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Extension entry for com_thm_quickpages
 		$comThmQuickpages = JComponentHelper::getComponent('com_thm_quickpages');
@@ -182,7 +182,7 @@ class HelpersHrmlContentadministratorTest extends PHPUnit_Framework_TestCase
 	 *
 	 * @return  int  ID of the category entry
 	 */
-	private function createCategory($alias)
+	private static function createCategory($alias)
 	{
 		$properties['path'] = $alias;
 		if ($alias == 'repository')
