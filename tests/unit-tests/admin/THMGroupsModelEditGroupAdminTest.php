@@ -104,7 +104,6 @@ class THMGroupsModelEditGroupAdminTest extends PHPUnit_Framework_TestCase
 	// first object should be Public Group
 	function testgetAllGroups(){
 		$result = $this->instance->getAllGroups();
-	
 		$this->assertEquals($result[0]->id,"1");
 		$this->assertEquals($result[0]->parent_id,"0");
 		$this->assertEquals($result[0]->lft,"1");
