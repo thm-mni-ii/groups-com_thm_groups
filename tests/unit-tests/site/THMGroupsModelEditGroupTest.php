@@ -36,9 +36,9 @@ class THMGroupsModelEditGroupTest extends PHPUnit_Framework_TestCase
 		
 		$this->assertEquals($result[0]->id,"2");
 		$this->assertEquals($result[0]->name,"Registered");
-		$this->assertEquals($result[0]->info,"");
-		$this->assertEquals($result[0]->picture,"");
-		$this->assertEquals($result[0]->mode,"");
+		$this->assertEquals($result[0]->info,' ');
+		$this->assertEquals($result[0]->picture,' ');
+		$this->assertEquals($result[0]->mode,' ');
 		$this->assertEquals($result[0]->injoomla,"1");
 	}
 	

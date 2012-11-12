@@ -37,7 +37,7 @@ class THMGroupsModelGroups extends JModel
 	 */
 	public function getGroups()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = 'SELECT * FROM #__thm_groups_groups ';
 		*/
@@ -60,7 +60,7 @@ class THMGroupsModelGroups extends JModel
 		// $canEdit = 0;
 		$user =& JFactory::getUser();
 
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "SELECT gid FROM #__thm_groups_groups_map " . "WHERE uid = " . $user->id . " AND rid = 2";
 		*/

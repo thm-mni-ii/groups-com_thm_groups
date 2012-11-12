@@ -71,7 +71,7 @@ class THMGroupsModelEditGroup extends JModelForm
 		/*
         $query = "SELECT * FROM #__thm_groups_groups WHERE id=" . $gsgid;
         */
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from($db->qn('#__thm_groups_groups'));
@@ -349,7 +349,7 @@ class THMGroupsModelEditGroup extends JModelForm
 		{
 			return false;
 		}
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "UPDATE #__thm_groups_groups SET picture='g" . $gid . ".jpg' WHERE id = $gid ";
 		*/
@@ -376,7 +376,7 @@ class THMGroupsModelEditGroup extends JModelForm
 	 */
 	public function delPic()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$gid = JRequest::getVar('gsgid');
 
 		/*
@@ -406,7 +406,7 @@ class THMGroupsModelEditGroup extends JModelForm
 	 */
 	public function getAllGroups()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "SELECT * FROM #__usergroups ORDER BY lft";
 		*/
@@ -427,7 +427,7 @@ class THMGroupsModelEditGroup extends JModelForm
 	public function getParentId()
 	{
 		$gid = JRequest::getVar('gsgid');
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "SELECT parent_id FROM #__usergroups WHERE id=" . $gid;
 		*/

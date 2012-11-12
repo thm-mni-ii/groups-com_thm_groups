@@ -69,7 +69,7 @@ class THMGroupsModeledit extends JModelForm
 	{
 		$cid   = JRequest::getVar('gsuid', '');
 		$types = $this->getTypes();
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$puffer = array();
 		$result = array();
 
@@ -107,7 +107,7 @@ class THMGroupsModeledit extends JModelForm
 	 */
 	public function getStructure()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "SELECT * FROM #__thm_groups_structure as a ORDER BY a.order";
 		*/
@@ -126,7 +126,7 @@ class THMGroupsModeledit extends JModelForm
 	 */
 	public function getTypes()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "SELECT Type FROM #__thm_groups_relationtable " . "WHERE Type in (SELECT type FROM #__thm_groups_structure)";
 		*/
@@ -152,7 +152,7 @@ class THMGroupsModeledit extends JModelForm
 	 */
 	public function store()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$structure = $this->getStructure();
 		$userid	= JRequest::getVar('userid');
 		$err	   = 0;
@@ -256,7 +256,7 @@ class THMGroupsModeledit extends JModelForm
 	 */
 	public function delPic()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$uid	  = JRequest::getVar('userid');
 		$structid = JRequest::getVar('structid');
 		$extra = $this->getExtra($structid, "PICTURE");
@@ -311,7 +311,7 @@ class THMGroupsModeledit extends JModelForm
 		{
 			return false;
 		}
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "UPDATE #__thm_groups_picture SET value='" . $uid . "_" . $structid . ".jpg' WHERE userid = $uid AND structid=$structid";
 		*/
@@ -343,7 +343,7 @@ class THMGroupsModeledit extends JModelForm
 	 */
 	public function getExtra($structid, $type)
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "SELECT value FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
 		*/
@@ -371,7 +371,7 @@ class THMGroupsModeledit extends JModelForm
 	 */
 	public function addTableRow()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$uid	  = JRequest::getVar('userid');
 		$structid = JRequest::getVar('structid');
 		$arrRow   = array();
@@ -472,7 +472,7 @@ class THMGroupsModeledit extends JModelForm
 	 */
 	public function delTableRow()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$uid	  = JRequest::getVar('userid');
 		$structid = JRequest::getVar('structid');
 		$key	  = JRequest::getVar('tablekey');
@@ -533,7 +533,7 @@ class THMGroupsModeledit extends JModelForm
 	 */
 	public function editTableRow()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$uid	  = JRequest::getVar('userid');
 		$structid = JRequest::getVar('structid');
 		$key	  = JRequest::getVar('tablekey');

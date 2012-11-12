@@ -182,7 +182,7 @@ class ModelsArticleTest extends PHPUnit_Framework_TestCase
 	 *
 	 * @return  int  ID of the category entry
 	 */
-	private function createCategory($alias)
+	private static function createCategory($alias)
 	{
 		$properties['path'] = $alias;
 		if ($alias == 'repository')
