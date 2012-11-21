@@ -159,7 +159,7 @@ class THMGroupsModeledit extends JModelForm
 		foreach ($structure as $structureItem)
 		{
 			$puffer = null;
-			$field  = JRequest::getVar($structureItem->field, '', 'post', JREQUEST_ALLOWHTML);
+			$field  = JRequest::getVar($structureItem->field, '', 'post', 'string', JREQUEST_ALLOWHTML);
 
 			$publish = 0;
 			if ($structureItem->type == 'MULTISELECT')
