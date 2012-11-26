@@ -136,7 +136,7 @@ class THMGroupsModeledit extends JModelForm
 		{
 			$puffer = null;
 			$structureItem->field = str_replace(' ', '_', $structureItem->field);
-			$field = JRequest::getVar($structureItem->field, '', 'post', JREQUEST_ALLOWHTML);
+			$field = JRequest::getVar($structureItem->field, '', 'post', 'string', JREQUEST_ALLOWHTML);
 			$publish = 0;
 			if ($structureItem->type == 'MULTISELECT')
 			{

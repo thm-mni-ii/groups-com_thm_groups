@@ -311,7 +311,7 @@ class THMGroupsViewList extends JView
 
 		// $margin = $params->get('lineSpacing');
 		$zmargin = $params->get('zSpacing') - 12;
-		$shownLetter = JRequest::getVar('letter', 'A');
+		$shownLetter = JRequest::getVar('letter');
 
 		$allLastNames = $model->getDiffLettersToFirstletter($groupid);
 
@@ -379,6 +379,12 @@ class THMGroupsViewList extends JView
 			{
 				$alleAnfangsbuchstaben[] = strtoupper(substr($searchUm, 0, 1));
 			}
+		}
+		// When first call of the view, search first character with members in it
+		sort($alleAnfangsbuchstaben);
+		if (!isset($shownLetter))
+		{
+			$shownLetter = $alleAnfangsbuchstaben[0];
 		}
 
 		$retString .= "<div class='alphabet'>";

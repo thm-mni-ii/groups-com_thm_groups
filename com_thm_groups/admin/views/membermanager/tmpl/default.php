@@ -41,7 +41,6 @@ function countGroupRoles($gid, $grouproles)
 
 $listOrder	= $this->state->get('list.ordering');
 $listDirn	= $this->state->get('list.direction');
-
 ?>
 
 <script type="text/javascript">
@@ -78,13 +77,13 @@ $listDirn	= $this->state->get('list.direction');
 					foreach ($this->groupOptions as $groupOption)
 					{
 						$disabled = $groupOption->disable ? ' disabled="disabled"' : '';
-						if (1 == $group->id)
+						if (1 == $groupOption->value)
 						{
 							echo '<option value="' . $groupOption->value . '"' . $disabled . ' selected>' . $groupOption->text . '</option>';
 						}
 						else
 						{
-							echo '<option value="' . $groupOption->value . '"' . $disabled . $selected . '>' . $groupOption->text . '</option>';
+							echo '<option value="' . $groupOption->value . '"' . $disabled . '>' . $groupOption->text . '</option>';
 						}
 					}
 				?>

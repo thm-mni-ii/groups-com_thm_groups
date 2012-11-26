@@ -169,7 +169,7 @@ class THMGroupsModelStructure extends JModelList
 					$err = 1;
 				}
 			}
-			elseif ($direction = 1)
+			elseif ($direction == 1)
 			{
 				/*
 				$query = "UPDATE #__thm_groups_structure as a SET"
