@@ -29,6 +29,15 @@
 				label="COM_THM_GROUPS_STRUCTURE_LABEL" 
 				description="COM_THM_GROUPS_STRUCTURE_DESC" 
 			/>
+			<field 
+				type="radio" 
+				name="advancedview" 
+				label="COM_THM_GROUPS_SELECT_ADVANCED_VIEW_LABEL" 
+				description="COM_THM_GROUPS_SELECT_ADVANCED_VIEW_DESC"
+				default="1">
+					<option value="1">COM_THM_GROUPS_SELECT_ADVANCED_VIEW_OPTION_1</option>
+					<option value="0">COM_THM_GROUPS_SELECT_ADVANCED_VIEW_OPTION_2</option>
+			</field>
 		</fieldset>
 		<fieldset name="advanced">
 			<field 

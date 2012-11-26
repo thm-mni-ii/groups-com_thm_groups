@@ -218,6 +218,9 @@ class THMGroupsModelAdvanced extends JModel
 		// Contains the number of the group, e.g. 10
 		$groupid           = $this->getGroupNumber();
 		$params            = $this->getViewParams();
+		
+		$view 			   = $params->get('advancedview');
+		
 		$sortedRoles       = $params->get('sortedgrouproles');
 		$types             = $this->getTypes();
 		$puffer            = array();
@@ -333,6 +336,7 @@ class THMGroupsModelAdvanced extends JModel
 				}
 			}
 		}
+		//print_r($data);
 		return $data;
 	}
 
@@ -414,5 +418,19 @@ class THMGroupsModelAdvanced extends JModel
 		$_data['right'] = $memberright;
 
 		return $_data;
+	}
+	
+	/**
+	 * Get the Param for the view
+	 * 
+	 * @return  number   The number of the view
+	 */
+	public function getAdvancedView(){
+		$params = $this->getViewParams();
+		$view = $params->get('advancedview');
+		if(!isset($view)){
+			$view = 0;
+		}
+		return $view;
 	}
 }
