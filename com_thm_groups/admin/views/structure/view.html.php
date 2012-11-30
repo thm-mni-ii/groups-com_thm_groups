@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.2.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -61,7 +61,7 @@ class THMGroupsViewStructure extends JView
 			false
 		);
 		JToolBarHelper::editListX('structure.edit', 'COM_THM_GROUPS_STRUCTURE_EDIT');
-		JToolBarHelper::deleteList('COM_THM_GROUPS_REALLY_DELETE', 'structure.remove', 'JTOOLBAR_DELETE');
+		JToolBarHelper::deleteList('COM_THM_GROUPS_STRUCTURE_REALLY_DELETE', 'structure.remove', 'JTOOLBAR_DELETE');
 		JToolBarHelper::cancel('structure.cancel', 'JTOOLBAR_CANCEL');
 		JToolBarHelper::back('JTOOLBAR_BACK');
 		parent::display($tpl);
