@@ -8,6 +8,7 @@
  * @description THMGroupsModeledit file from com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
+ * @author		Alexander Boll, <alexander.boll@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -523,7 +524,6 @@ class THMGroupsModeledit extends JModelForm
 		$arrRow = array();
 		$arrValue = array();
 		$err = 0;
-
 		/*
 		$query = "SELECT value FROM #__thm_groups_table WHERE structid=$structid AND userid=$uid";
 		*/
@@ -540,6 +540,7 @@ class THMGroupsModeledit extends JModelForm
 		{
 			$arrValue[] = $row;
 		}
+		
 		/*
 		$query = "SELECT value FROM #__thm_groups_table_extra WHERE structid=" . $structid;
 		*/
@@ -554,10 +555,10 @@ class THMGroupsModeledit extends JModelForm
 		foreach ($head as $headItem)
 		{
 			$headItem = str_replace(" ", "_", $headItem);
-			$value = JRequest::getVar("TABLE . $structid . $headItem", '', 'POST', 'STRING', JREQUEST_ALLOWRAW);
+			$value = JRequest::getVar("TABLE$structid$headItem", '', 'POST', 'STRING', JREQUEST_ALLOWRAW);
 			$arrRow[$headItem] = $value;
 		}
-
+		
 		$arrValue[$key] = $arrRow;
 		$jsonValue = json_encode($arrValue);
 		$jsonValue = str_replace("\u00c4", "&Auml;", $jsonValue);
