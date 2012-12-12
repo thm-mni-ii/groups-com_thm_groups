@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.2.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -19,6 +19,7 @@
 defined('_JEXEC') or die('Restricted access');
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
+$user = JFactory::getUser();
 ?>
 <form action="index.php" method="post" name="adminForm">
 <div id="editcell">
@@ -85,9 +86,9 @@ $listDirn = $this->state->get('list.direction');
 						$gap--;
 						echo "<span style='color: #D7D7D7; font-weight: bold; margin-right: 5px;'>|&mdash;</span>";
 					}
-				?>
-				<a href="<?php echo " $link"; ?>">
-					<?php
+					if ($user->authorise('core.edit', 'com_users') && $user->authorise('core.manage', 'com_users'))
+					{
+						echo "<a href='$link'>"; 
 						if ($row->name == null)
 						{
 							echo $row->title;
@@ -96,8 +97,20 @@ $listDirn = $this->state->get('list.direction');
 						{
 							echo $row->name;
 						}
+						echo "</a>";
+					}
+					else
+					{
+						if ($row->name == null)
+						{
+							echo $row->title;
+						}
+						else
+						{
+							echo $row->name;
+						}
+					}
 					?>
-				</a>
 			</td>
 			<td> <?php echo $row->info; ?> </td>
 			<td> <?php echo $row->picture?> </td>

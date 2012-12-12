@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.2.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -44,22 +44,34 @@ class THMGroupsViewgroupmanager extends JView
 	{
 		$document   = & JFactory::getDocument();
 		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
-
+		$user = JFactory::getUser();
 		JToolBarHelper::title(
 				JText::_('COM_THM_GROUPS_GROUPMANAGER_TITLE'),
 				'membermanager.png',
 				JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
 			);
-		JToolBarHelper::custom(
-			'groupmanager.addGroup',
-			'moderate.png',
-			JPATH_COMPONENT . DS . 'img' . DS . 'moderate.png',
-			'COM_THM_GROUPS_GROUPMANAGER_ADD',
-			false,
-			false
-		);
-		JToolBarHelper::editListX('groupmanager.edit', 'COM_THM_GROUPS_GROUPMANAGER_EDIT');
-		JToolBarHelper::deleteList('COM_THM_GROUPS_GROUPMANAGER_REALLY_DELETE', 'groupmanager.remove', 'JTOOLBAR_DELETE');
+		
+		
+		if ($user->authorise('core.admin'))
+		{
+			JToolBarHelper::custom(
+					'groupmanager.addGroup',
+					'moderate.png',
+					JPATH_COMPONENT . DS . 'img' . DS . 'moderate.png',
+					'COM_THM_GROUPS_GROUPMANAGER_ADD',
+					false,
+					false
+			);
+		}
+		if ($user->authorise('core.edit', 'com_users') && $user->authorise('core.manage', 'com_users'))
+		{
+			
+			JToolBarHelper::editListX('groupmanager.edit', 'COM_THM_GROUPS_GROUPMANAGER_EDIT');
+		}
+		if ($user->authorise('core.admin'))
+		{
+			JToolBarHelper::deleteList('COM_THM_GROUPS_GROUPMANAGER_REALLY_DELETE', 'groupmanager.remove', 'JTOOLBAR_DELETE');
+		}
 		JToolBarHelper::cancel('groupmanager.cancel', 'JTOOLBAR_CANCEL');
 		JToolBarHelper::back('JTOOLBAR_BACK');
 

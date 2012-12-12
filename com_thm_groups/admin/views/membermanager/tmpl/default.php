@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.2.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -41,6 +41,7 @@ function countGroupRoles($gid, $grouproles)
 
 $listOrder	= $this->state->get('list.ordering');
 $listDirn	= $this->state->get('list.direction');
+$user = JFactory::getUser();
 ?>
 
 <script type="text/javascript">
@@ -185,7 +186,6 @@ $listDirn	= $this->state->get('list.direction');
 			</th>
 			<th width="59%" align="center"><?php echo JHTML::_('grid.sort', 'GROUPS_AND_ROLES', 'g.gid', $listDirn, $listOrder); ?>
 			</th>
-
 		</tr>
 	</thead>
 	<?php
@@ -194,9 +194,14 @@ $listDirn	= $this->state->get('list.direction');
 	{
 		$row = &$this->items[$i];
 		$checked  = JHTML::_('grid.id',   $i, $row->userid);
-
-		$published  = JHtml::_('jgrid.published', $row->published, $i, 'membermanager.', 1);
-
+		
+		if ($user->authorise('core.edit.state', 'com_users') && $user->authorise('core.manage', 'com_users'))
+			$published = JHtml::_('jgrid.published', $row->published, $i, 'membermanager.', 1);
+		else
+			if ($row->published)
+				$published = JText::_("JYES");
+			else
+				$published = JText::_("JNO");
 		$link = JRoute::_('index.php?option=com_thm_groups&task=membermanager.edit&cid[]=' . $row->userid);
 		?>
 	<tr class="<?php echo "row$k"; ?>">
@@ -205,8 +210,18 @@ $listDirn	= $this->state->get('list.direction');
 
 		<td valign="top"><?php echo $row->title; ?></td>
 		<td valign="top">
-		<a href="<?php echo $link; ?>">
-		<?php echo $row->firstName; ?></a>
+		<?php 
+		if (($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $row->userid == $user->get('id')))) && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($row->userid, 'core.admin')))
+		{
+			echo "<a href='$link'>";
+			echo $row->firstName;
+			echo "</a>";
+		}
+		else
+		{
+			echo $row->firstName;
+		}
+		?>
 		</td>
 		<td valign="top"><?php echo $row->lastName; ?></td>
 		<td valign="top"><?php echo $row->EMail; ?></td>
@@ -249,28 +264,45 @@ $listDirn	= $this->state->get('list.direction');
 						{
 							if ($groupname == $grouprole->groupname)
 							{
-								$grouproles .= ', ' . $grouprole->rolename .
-								"<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid . ", " .
-								$grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname . " - " . JText::_('ROLE') 
-								. ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
-								. ".' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+								$grouproles .= ', ' . $grouprole->rolename;
+								if (($user->authorise('core.edit', 'com_users') || ($user->get('id') == $row->userid)) && $user->authorise('core.manage', 'com_users'))
+								{
+									if ($user->authorise('core.edit.own', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($row->userid, 'core.admin')))
+									{
+										$grouproles .= "<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid . ", " .
+										$grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname . " - " . JText::_('ROLE') 
+										. ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
+										. ".' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+									}
+								}
 							}
 							else
 							{
 								if ($groupname == '')
 								{
-									$grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " . $grouprole->groupid .
-									");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname . "::" 
-									. JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') 
-									. ".' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+									if (($user->authorise('core.edit', 'com_users') || ($user->get('id') == $row->userid)) && $user->authorise('core.manage', 'com_users'))
+									{
+										if ($user->authorise('core.edit.own', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($row->userid, 'core.admin')))
+										{
+											$grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " . $grouprole->groupid .
+											");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname . "::" 
+											. JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') 
+											. ".' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+										}
+									}
 									$grouproles .= '<span><b>' . $grouprole->groupname . ': </b>' . $grouprole->rolename;
 									if ($countRoles > 1)
 									{
-										$grouproles .= "<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid .
-										", " . $grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname 
-										. " - " . JText::_('ROLE') . ": " .
-										$grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') . "' class='hasTip'>
-										<img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+										if (($user->authorise('core.edit', 'com_users') || ($user->get('id') == $row->userid)) && $user->authorise('core.manage', 'com_users')) {
+											if ($user->authorise('core.edit.own', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($row->userid, 'core.admin')))
+											{
+												$grouproles .= "<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid .
+												", " . $grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname 
+												. " - " . JText::_('ROLE') . ": " .
+												$grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') . "' class='hasTip'>
+												<img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+											}
+										}
 									}
 									else
 									{
@@ -281,18 +313,28 @@ $listDirn	= $this->state->get('list.direction');
 								else
 								{
 									$grouproles .= ' <br />';
-									$grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " .
-									$grouprole->groupid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname .
-									"::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') . ".' class='hasTip'>
-									<img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
+									if (($user->authorise('core.edit', 'com_users') || ($user->get('id') == $row->userid)) && $user->authorise('core.manage', 'com_users')) {
+										if ($user->authorise('core.edit.own', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($row->userid, 'core.admin')))
+										{
+											$grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " .
+											$grouprole->groupid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname .
+											"::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') . ".' class='hasTip'>
+											<img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
+										}
+									}
 									$grouproles .= '<span><b>' . $grouprole->groupname . ': </b>' . $grouprole->rolename;
 
 									if ($countRoles > 1)
 									{
-										$grouproles .= "<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid . ", " .
-										$grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname . " - " 
-										. JText::_('ROLE') . ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
-										. "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
+										if (($user->authorise('core.edit', 'com_users') || ($user->get('id') == $row->userid)) && $user->authorise('core.manage', 'com_users')) {
+											if ($user->authorise('core.edit.own', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($row->userid, 'core.admin')))
+											{
+												$grouproles .= "<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid . ", " .
+												$grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname . " - " 
+												. JText::_('ROLE') . ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
+												. "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
+											}
+										}
 									}
 									else
 									{
@@ -307,27 +349,43 @@ $listDirn	= $this->state->get('list.direction');
 					{
 						if ($groupname == $grouprole->groupname)
 						{
-							$grouproles .= ', ' . $grouprole->rolename . "<a href='javascript:delGrouprole(" .
-							$row->userid . ", " . $grouprole->groupid . ", " . $grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " .
-							$grouprole->groupname . " - " . JText::_('ROLE') . ": " . $grouprole->rolename . "::" 
-							. JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
-							. "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+							$grouproles .= ', ';
+							if (($user->authorise('core.edit', 'com_users') || ($user->get('id') == $row->userid)) && $user->authorise('core.manage', 'com_users')) {
+								if ($user->authorise('core.edit.own', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($row->userid, 'core.admin')))
+								{
+									$grouproles .= $grouprole->rolename . "<a href='javascript:delGrouprole(" .
+									$row->userid . ", " . $grouprole->groupid . ", " . $grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " .
+									$grouprole->groupname . " - " . JText::_('ROLE') . ": " . $grouprole->rolename . "::" 
+									. JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
+									. "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+								}
+							}
 						}
 						else
 						{
 							if ($groupname == '')
 							{
-								$grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " .
-								$grouprole->groupid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname .
-								"::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') . ".' class='hasTip'>
-								<img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
+								if (($user->authorise('core.edit', 'com_users') || ($user->get('id') == $row->userid)) && $user->authorise('core.manage', 'com_users')) {
+									if ($user->authorise('core.edit.own', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($row->userid, 'core.admin')))
+									{
+										$grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " .
+										$grouprole->groupid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname .
+										"::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') . ".' class='hasTip'>
+										<img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
+									}
+								}
 								$grouproles .= '<span><b>' . $grouprole->groupname . ': </b>' . $grouprole->rolename;
 								if ($countRoles > 1)
 								{
-									$grouproles .= "<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid . ", " 
-									. $grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname . " - " 
-									. JText::_('ROLE') . ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
-									. "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
+									if (($user->authorise('core.edit', 'com_users') || ($user->get('id') == $row->userid)) && $user->authorise('core.manage', 'com_users')) {
+										if ($user->authorise('core.edit.own', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($row->userid, 'core.admin')))
+										{
+											$grouproles .= "<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid . ", " 
+											. $grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname . " - " 
+											. JText::_('ROLE') . ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
+											. "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
+										}
+									}
 								}
 								else
 								{
@@ -338,17 +396,27 @@ $listDirn	= $this->state->get('list.direction');
 							else
 							{
 								$grouproles .= ' <br />';
-								$grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " . $grouprole->groupid .
-								");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname .
-								"::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') . ".' class='hasTip'>
-								<img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+								if (($user->authorise('core.edit', 'com_users') || ($user->get('id') == $row->userid)) && $user->authorise('core.manage', 'com_users')) {
+									if ($user->authorise('core.edit.own', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($row->userid, 'core.admin')))
+									{
+										$grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " . $grouprole->groupid .
+										");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname .
+										"::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') . ".' class='hasTip'>
+										<img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+									}
+								}
 								$grouproles .= '<span><b>' . $grouprole->groupname . ': </b>' . $grouprole->rolename;
 								if ($countRoles > 1)
 								{
-									$grouproles .= "<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid . ", " .
-									$grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname . " - " . JText::_('ROLE') 
-									. ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
-									. "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+									if (($user->authorise('core.edit', 'com_users') || ($user->get('id') == $row->userid)) && $user->authorise('core.manage', 'com_users')) {
+										if ($user->authorise('core.edit.own', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($row->userid, 'core.admin')))
+										{
+											$grouproles .= "<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid . ", " .
+											$grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname . " - " . JText::_('ROLE') 
+											. ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
+											. "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+										}
+									}
 								}
 								else
 								{

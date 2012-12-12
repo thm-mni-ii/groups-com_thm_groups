@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.2.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -39,6 +39,14 @@ class THMGroupsViewAddGroup extends JView
 	 */
 	public function display($tpl = null)
 	{
+		$app = JFactory::getApplication();
+		$user = JFactory::getUser();
+		if (!($user->authorise('core.admin')))
+		{
+			$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_NO_RIGHTS_TO_ADD_GROUP');
+			$app->redirect('index.php?option=com_thm_groups&view=groupmanager', $msg);
+		}
+		
 		$document   = & JFactory::getDocument();
 		$document->addStyleSheet("components/com_staff/css/membermanager/icon.css");
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.2.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -25,6 +25,12 @@ jimport('joomla.application.component.modellist');
  */
 class THMGroupsModelmembermanager extends JModelList
 {
+	/**
+	 * @var    JObject  A cache for the available actions.
+	 * @since  1.6
+	 */
+	protected static $actions;
+	
 	/**
   	 * Sync
   	 *
@@ -396,8 +402,9 @@ class THMGroupsModelmembermanager extends JModelList
 	{
 
 		$groups = $this->getGroupsHirarchy();
-		$jgroups = $this->getJoomlaGroups();
-
+		//$jgroups = $this->getJoomlaGroups(); Alte Methode, kann gelöscht werden...
+		$jgroups = $this->getUsergroups(true);
+		
 		$injoomla = false;
 		$wasinjoomla = false;
 		$selectOptions = array();
@@ -423,7 +430,14 @@ class THMGroupsModelmembermanager extends JModelList
 					}
 				}
 			}
-			$selectOptions[] = JHTML::_('select.option', $group->id, $hirarchy . $group->name);
+			foreach ($jgroups as $jgroup)
+			{
+				if ($group->id == $jgroup->id)
+				{
+					$selectOptions[] = JHTML::_('select.option', $group->id, $hirarchy . $group->name);
+				}
+			}
+			
 			$wasinjoomla = $injoomla;
 		}
 		return $selectOptions;
@@ -504,10 +518,86 @@ class THMGroupsModelmembermanager extends JModelList
 		$query->select('*');
 		$query->from("#__usergroups");
 		$query->order('lft');
-
 		$db->setQuery($query);
 		$db->query();
 		return $db->loadObjectList();
+	}
+	
+	/**
+	 * Returns a UL list of user groups with check boxes
+	 *
+	 * @param   boolean  $checkSuperAdmin  If false only super admins can add to super admin groups
+	 *
+	 * @return  bool|array  "false" on error|indexed rows with associative colums.
+	 *
+	 * @since   11.1
+	 */
+	public function getUsergroups($checkSuperAdmin = false)
+	{
+		static $count;
+	
+		$count++;
+	
+		$isSuperAdmin = JFactory::getUser()->authorise('core.admin');
+	
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('a.*, COUNT(DISTINCT b.id) AS level');
+		$query->from($db->quoteName('#__usergroups') . ' AS a');
+		$query->join('LEFT', $db->quoteName('#__usergroups') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt');
+		$query->group('a.id, a.title, a.lft, a.rgt, a.parent_id');
+		$query->order('a.lft ASC');
+		$db->setQuery($query);
+		$groups = $db->loadObjectList();
+	
+		// Check for a database error.
+		if ($db->getErrorNum())
+		{
+			JError::raiseNotice(500, $db->getErrorMsg());
+			return null;
+		}
+	
+		$res = array();
+	
+		for ($i = 0, $n = count($groups); $i < $n; $i++)
+		{
+			$item = &$groups[$i];
+		
+			// If checkSuperAdmin is true, only add item if the user is superadmin or the group is not super admin
+			if ((!$checkSuperAdmin) || $isSuperAdmin || (!JAccess::checkGroup($item->id, 'core.admin')))
+			{
+				$res[] = $item;
+			}
+		}	
+		return $res;
+	}
+	
+	/**
+	 * Gets a list of the actions that can be performed.
+	 *
+	 * @return  JObject
+	 *
+	 * @since   1.6
+	 * @todo    Refactor to work with notes
+	 */
+	public function getActions()
+	{
+		if (empty(self::$actions))
+		{
+			$user = JFactory::getUser();
+			self::$actions = new JObject;
+	
+			$actions = array(
+					'core.admin', 'core.manage', 'core.create', 'core.edit', 'core.edit.state', 'core.delete'
+			);
+	
+			foreach ($actions as $action)
+			{
+				self::$actions->set($action, $user->authorise($action, 'com_users'));
+			}
+		}
+	
+		return self::$actions;
 	}
 
 	/**
@@ -690,6 +780,7 @@ class THMGroupsModelmembermanager extends JModelList
 	{
 		$db =& JFactory::getDBO();
 		$cid = JRequest::getVar('cid', array(), 'post', 'array');
+		
 		JArrayHelper::toInteger($cid);
 		$cids = implode('\',\'', $cid);
 
