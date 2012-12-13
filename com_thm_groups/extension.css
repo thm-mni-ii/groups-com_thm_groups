@@ -12,6 +12,21 @@
 	margin-left: 5px;
 }
 
+.mod_gs_site div:not(:last-child){
+	float:left;
+	height: 18px;
+	vertical-align: top;
+}
+
+.mod_gs_site div.has_wrap + div.no_wrap {
+	clear:left;
+}
+
+.mod_gs_site div.has_wrap + div.has_wrap {
+	float:none;
+	clear:left;
+}
+
 .mod_gs_object {
 	margin: 1em 0 0 0;
 	clear: both;
