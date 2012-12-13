@@ -2,7 +2,7 @@
 <metadata>
 	<layout title="THM-Groups - List View">
 		<message>
-			<![CDATA[COM_THM_GROUPS_LIST_DESC]]>
+			<![CDATA[COM_THM_GROUPS_LIST_VIEW_DESC]]>
 		</message>
 	</layout>
 	<fields name="params">
