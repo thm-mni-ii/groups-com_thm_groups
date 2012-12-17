@@ -1,6 +1,6 @@
 <?php
 /**
- * @version	    v3.0.1
+ * @version	    v3.2.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -159,7 +159,7 @@ class THMGroupsModeledit extends JModelForm
 		foreach ($structure as $structureItem)
 		{
 			$puffer = null;
-			$field  = JRequest::getVar($structureItem->field, '', 'post', 'string', JREQUEST_ALLOWHTML);
+			$field  = JRequest::getVar($structureItem->field, '', 'post', '', JREQUEST_ALLOWHTML);
 
 			$publish = 0;
 			if ($structureItem->type == 'MULTISELECT')
@@ -201,7 +201,7 @@ class THMGroupsModeledit extends JModelForm
 						/*
 						$query .= " value='" . $field . "',";
 						*/
-						$query->set("`value` = '" . $field . "'");
+						$query->set("`value` = \"" . $field . "\"");
 					}
 					/*
 					 $query .= " publish='" . $publish . "'" . " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
@@ -221,7 +221,7 @@ class THMGroupsModeledit extends JModelForm
 					$query->insert($db->qn('#__thm_groups_' . strtolower($structureItem->type)));
 					$query->set("`userid` = '" . $userid . "'");
 					$query->set("`structid` = '" . $structureItem->id . "'");
-					$query->set("`value` = '" . $field . "'");
+					$query->set("`value` = \"" . $field->toString() . "\"");
 					$query->set("`publish` = '" . $publish . "'");
 				}
 				$db->setQuery($query);

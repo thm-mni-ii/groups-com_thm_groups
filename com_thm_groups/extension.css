@@ -14,7 +14,6 @@
 
 .mod_gs_site div:not(:last-child){
 	float:left;
-	height: 18px;
 	vertical-align: top;
 }
 

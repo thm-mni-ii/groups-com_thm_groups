@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.2.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -178,12 +178,12 @@ class JFormFieldStructureSelect extends JFormField
 	 */
 	protected function getOptions($selected)
 	{
+		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 			
 		$query->select('a.id, a.field');
 		$query->from("#__thm_groups_structure as a");
 		$query->order("a.order");
-		$db = JFactory::getDBO();
 		$db->setQuery($query);
 		$list = $db->loadObjectList();
 

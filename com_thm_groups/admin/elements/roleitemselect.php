@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.2.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -37,6 +37,7 @@ class JFormFieldRoleItemSelect extends JFormField
 	 */
 	public function getInput()
 	{
+		$db = JFactory::getDBO();
 		$scriptDir = str_replace(JPATH_SITE . DS, '', "administrator/components/com_thm_groups/elements/");
 		$sortButtons = true;
 
@@ -55,11 +56,11 @@ class JFormFieldRoleItemSelect extends JFormField
 
 		if (isset($id))
 		{
-			$query = $db->getQuery(true);
+			$queryParams = $db->getQuery(true);
 				
-			$query->select('params');
-			$query->from("#__menu");
-			$query->where("id=" . $id);
+			$queryParams->select('params');
+			$queryParams->from("#__menu");
+			$queryParams->where("id=" . $id);
 				
 			$db = JFactory::getDBO();
 			$db->setQuery($queryParams);
@@ -75,15 +76,13 @@ class JFormFieldRoleItemSelect extends JFormField
 		}
 
 		$arrParamRoles = explode(",", $paramRoles);
-		$query = $db->getQuery(true);
+		$queryRoles = $db->getQuery(true);
 		
-		$query->select('id, name');
-		$query->from("#__thm_groups_roles");
-		$query->order("name");
-		$db = JFactory::getDBO();
+		$queryRoles->select('id, name');
+		$queryRoles->from("#__thm_groups_roles");
+		$queryRoles->order("name");
 		$db->setQuery($queryRoles);
 		$listR = $db->loadObjectList();
-
 		$html = '<select name="' . $this->name . '" size="5" id="paramsroleid" class = "selGroup" style="display:block"">';
 		foreach ($arrParamRoles as $sortedRole)
 		{

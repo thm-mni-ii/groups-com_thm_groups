@@ -137,7 +137,7 @@ class THMGroupsModeledit extends JModelForm
 		{
 			$puffer = null;
 			$structureItem->field = str_replace(' ', '_', $structureItem->field);
-			$field = JRequest::getVar($structureItem->field, '', 'post', 'string', JREQUEST_ALLOWHTML);
+			$field = JRequest::getVar($structureItem->field, '', 'post', '', JREQUEST_ALLOWHTML);
 			$publish = 0;
 			if ($structureItem->type == 'MULTISELECT')
 			{
@@ -180,7 +180,7 @@ class THMGroupsModeledit extends JModelForm
 						/*
 	        			$query .= " value='" . $field . "',";
 	        			*/
-						$query->set("value = '" . $field . "'");
+						$query->set("value = \"" . $field . "\"");
 					}
 					/*
         			$query .= " publish='" . $publish . "'"
@@ -202,7 +202,7 @@ class THMGroupsModeledit extends JModelForm
 					$query->insert("#__thm_groups_" . strtolower($structureItem->type));
 					$query->set("`userid` = " . $userid);
 					$query->set("`structid` = " . $structureItem->id);
-					$query->set("`value` = '" . $field . "'");
+					$query->set("`value` = \"" . $field . "\"");
 					$query->set("`publish` = " . $publish);
 				}
 				echo $query->__toString() . "<br />";

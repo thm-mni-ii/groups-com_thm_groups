@@ -252,7 +252,7 @@ class THMGroupsModelmembermanager extends JModelList
 		$groupFilter = $this->state->get('groupFilters');
 		$rolesFilter = $this->state->get('rolesFilters');
 
-		// $db = $this->getDbo();
+		$db = $this->getDbo();
 
 		/*$query = "SELECT distinct b.userid, b.value as firstName, c.value as lastName, e.value as EMail, f.published as published, "
 			. "f.injoomla as injoomla, t.value as title "
@@ -281,7 +281,7 @@ class THMGroupsModelmembermanager extends JModelList
 		$query->innerJoin("#__thm_groups_text as b on a.id = b.structid and b.structid=1");
 		$query->innerJoin("(" . $nestedQuery . ") as c on b.userid=c.userid and c.structid=2");
 		$query->innerJoin("(" . $nestedQuery . ") as e on c.userid=e.userid and e.structid=4");
-		$query->join("left outer", "(" . $nestedQuery . ")");
+		$query->join("left outer", "(" . $nestedQuery . ") as t on e.userid=t.userid and t.structid=5");
 		$query->innerJoin(
 				"#__thm_groups_additional_userdata as f on f.userid = e.userid" .
 				' AND (LOWER(c.value) LIKE \'%' . $search . '%\' ' .
@@ -306,7 +306,6 @@ class THMGroupsModelmembermanager extends JModelList
 		}
 		$query->innerJoin("#__thm_groups_groups_map as g on g.uid = f.userid" . $queryExtra);
 		$query->order("$orderCol $orderDirn");
-
 		return $query;
 	}
 

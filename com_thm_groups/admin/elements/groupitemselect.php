@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.2.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -60,8 +60,8 @@ class JFormFieldGroupItemSelect extends JFormField
 			
 			$query->select('distinct id, name');
 			$query->from("#__thm_groups_roles, #__thm_groups_groups_map");
-			$query->where("id=rid" . $group->id);
-			$query->where("gid=");
+			$query->where("id=rid");
+			$query->where("gid=". $group->id);
 			$query->order("id");
 			
 			$db->setQuery($query);
@@ -108,10 +108,8 @@ class JFormFieldGroupItemSelect extends JFormField
 		$query->select('id, name');
 		$query->from("#__thm_groups_roles");
 		$query->order("name");
-
 		$db->setQuery($query);
 		$listRoles = $db->loadObjectList();
-
 		$rolePuffer = "";
 		foreach ($listRoles as $role)
 		{
@@ -130,6 +128,7 @@ class JFormFieldGroupItemSelect extends JFormField
 				}
 			}
 		}
+
 		$html .= '<input type="hidden" id="roles" value="' . $rolePuffer . '" />';
 
 		// Gruppenzugehörige Rollen als Strings in hidden-Felder schreiben, um die zu einer Gruppe zugehörigen Rollen anzuzeigen
@@ -159,7 +158,6 @@ class JFormFieldGroupItemSelect extends JFormField
 					}
 				}
 			}
-
 			$html .= '<input type="hidden" name="grouproles[' . $roleGroups['groupid'] . ']" id="grouproles[' . $roleGroups['groupid']
 				. ']" value="' . $rolePuffer . '" />';
 		}
