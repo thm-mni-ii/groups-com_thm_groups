@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.0
+ * @version     v3.0.1
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -305,7 +305,6 @@ class THMGroupsModelList extends JModel
 		$query->select("f.published as published");
 		$query->select("f.injoomla as injoomla");
 		$query->select("t.value as title");
-		$query->from($db->qn('#__thm_groups_groups_map'));
 		$query->from($db->qn('#__thm_groups_structure') . ' AS a');
 		$query->innerJoin("#__thm_groups_text as b on a.id = b.structid and b.structid=1");
 		$query->innerJoin("#__thm_groups_text as c on b.userid=c.userid and c.structid=2");
@@ -313,6 +312,7 @@ class THMGroupsModelList extends JModel
 		$query->innerJoin("#__thm_groups_text as e on d.userid=e.userid and e.structid=4");
 		$query->join("left outer", "#__thm_groups_text as t on e.userid=t.userid and t.structid=5");
 		$query->innerJoin("#__thm_groups_additional_userdata as f on f.userid = e.userid");
+		$query->from($db->qn('#__thm_groups_groups_map'));
 		$query->where("published = 1");
 		$query->where("c.value like '$char%'");
 		$query->where("e.userid = uid");
@@ -356,7 +356,6 @@ class THMGroupsModelList extends JModel
 		$query->select("f.published as published");
 		$query->select("f.injoomla as injoomla");
 		$query->select("t.value as title");
-		$query->from($db->qn('#__thm_groups_groups_map'));
 		$query->from($db->qn('#__thm_groups_structure') . ' AS a');
 		$query->innerJoin("#__thm_groups_text as b on a.id = b.structid and b.structid=1");
 		$query->innerJoin("#__thm_groups_text as c on b.userid=c.userid and c.structid=2");
@@ -364,11 +363,14 @@ class THMGroupsModelList extends JModel
 		$query->innerJoin("#__thm_groups_text as e on d.userid=e.userid and e.structid=4");
 		$query->join("left outer", "#__thm_groups_text as t on e.userid=t.userid and t.structid=5");
 		$query->innerJoin("#__thm_groups_additional_userdata as f on f.userid = e.userid");
+		$query->from($db->qn('#__thm_groups_groups_map'));
 		$query->where("published = 1");
 		$query->where("c.value like '$shownLetter%'");
 		$query->where("e.userid = uid");
 		$query->where("gid = $gid");
 		$query->order("lastName");
+		$db->setQuery($query);
+		return $db->loadObjectList();
 		$db->setQuery($query);
 		return $db->loadAssocList();
 	}
