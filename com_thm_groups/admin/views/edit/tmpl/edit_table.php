@@ -57,7 +57,7 @@ $key = JRequest::getVar('key');
 	<div>
 		<fieldset class="adminform">
 		<legend>
-			<?php echo   JText::_('EditTableRow'); ?>
+			<?php echo   JText::_('COM_THM_GROUPS_EDITTABLEROW'); ?>
 		</legend>
 
 		<table class="admintable">

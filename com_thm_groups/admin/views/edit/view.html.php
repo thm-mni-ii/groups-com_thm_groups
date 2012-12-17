@@ -269,11 +269,13 @@ class THMGroupsViewedit extends JView
 	{
 		$app = JFactory::getApplication();
 		$user = JFactory::getUser();
+		
 		// Get user ids
 		$uids = JRequest::getVar('cid', array(), 'get', 'array');
 		foreach ($uids as $uid)
 		{
-			if (!(($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $uid == $user->get('id')))) && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($uid, 'core.admin'))))
+			if (!(($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $uid == $user->get('id')))) 
+			 && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($uid, 'core.admin'))))
 			{	
 				$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_NO_RIGHTS_TO_EDIT_USER');
 				$app->redirect('index.php?option=com_thm_groups&view=membermanager', $msg);

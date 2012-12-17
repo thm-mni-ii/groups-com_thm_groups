@@ -55,7 +55,7 @@ class THMGroupsControllerRolemanager extends JControllerForm
 	 */
 	public function cancel()
 	{
-		$msg = JText::_('Operation Cancelled');
+		$msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
 		$this->setRedirect('index.php?option=com_thm_groups', $msg);
 	}
 

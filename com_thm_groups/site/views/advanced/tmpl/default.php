@@ -17,7 +17,8 @@
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
-if($this->view == 0){
+if ($this->view == 0)
+{
 ?>
 <div id="title"><?php echo "<h2 class='contentheading'>" . $this->title . "</h2>" ?></div>
 <div id="gslistview">
@@ -186,6 +187,9 @@ if($this->view == 0){
 					echo " ";
 				}
 			}
+			else
+			{
+			}
 		}
 		echo "</div>";
 
@@ -197,7 +201,9 @@ if($this->view == 0){
 ?>
 </div>
 <?php 
-} else {
+}
+else
+{
 ?>
 
 <div id="title"><?php echo "<h2 class='contentheading'>" . $this->title . "</h2>" ?></div>

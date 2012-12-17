@@ -282,7 +282,7 @@ class THMGroupsModelList extends JModel
 	public function getUserByCharAndGroupID($gid, $char)
 	{
 		$db = & JFactory::getDBO();
-		$query = "SELECT distinct b.userid as id, " . "b.value as firstName, "
+		/*$query = "SELECT distinct b.userid as id, " . "b.value as firstName, "
 			. "c.value as lastName, " . "d.value as EMail, " . "e.value as userName, "
 			. "f.usertype as usertype, " . "f.published as published, " . "f.injoomla as injoomla, "
 			. "t.value as title " . "FROM `#__thm_groups_structure` as a "
@@ -294,7 +294,30 @@ class THMGroupsModelList extends JModel
 			. "inner join #__thm_groups_additional_userdata as f on f.userid = e.userid, "
 			. "`#__thm_groups_groups_map` "
 			. "WHERE published = 1 and c.value like '$char%' and e.userid = uid and gid = $gid "
-			. "ORDER BY lastName";
+			. "ORDER BY lastName";*/
+		$query = $db->getQuery(true);
+		$query->select("distinct b.userid as id");
+		$query->select("b.value as firstName");
+		$query->select("c.value as lastName");
+		$query->select("d.value as EMail");
+		$query->select("e.value as userName");
+		$query->select("f.usertype as usertype");
+		$query->select("f.published as published");
+		$query->select("f.injoomla as injoomla");
+		$query->select("t.value as title");
+		$query->from($db->qn('#__thm_groups_structure') . ' AS a');
+		$query->innerJoin("#__thm_groups_text as b on a.id = b.structid and b.structid=1");
+		$query->innerJoin("#__thm_groups_text as c on b.userid=c.userid and c.structid=2");
+		$query->innerJoin("#__thm_groups_text as d on c.userid=d.userid and d.structid=3");
+		$query->innerJoin("#__thm_groups_text as e on d.userid=e.userid and e.structid=4");
+		$query->join("left outer", "#__thm_groups_text as t on e.userid=t.userid and t.structid=5");
+		$query->innerJoin("#__thm_groups_additional_userdata as f on f.userid = e.userid");
+		$query->from($db->qn('#__thm_groups_groups_map'))
+		$query->where("published = 1");
+		$query->where("c.value like '$char%'");
+		$query->where("e.userid = uid");
+		$query->where("gid = $gid");
+		$query->order("lastName");
 		$db->setQuery($query);
 		return $db->loadObjectList();
 	}
@@ -310,7 +333,7 @@ class THMGroupsModelList extends JModel
 	public function getGroupMemberByLetter($gid, $shownLetter)
 	{
 		$db = & JFactory::getDBO();
-		$query = "SELECT distinct b.userid as id, " . "b.value as firstName, "
+		/*$query = "SELECT distinct b.userid as id, " . "b.value as firstName, "
 			. "c.value as lastName, " . "d.value as EMail, " . "e.value as userName, "
 			. "f.usertype as usertype, " . "f.published as published, " . "f.injoomla as injoomla, "
 			. "t.value as title " . "FROM `#__thm_groups_structure` as a "
@@ -322,7 +345,32 @@ class THMGroupsModelList extends JModel
 			. "inner join #__thm_groups_additional_userdata as f on f.userid = e.userid, "
 			. "`#__thm_groups_groups_map` "
 			. "WHERE published = 1 and c.value like '$shownLetter%' and e.userid = uid and gid = $gid "
-			. "ORDER BY lastName";
+			. "ORDER BY lastName";*/
+		$query = $db->getQuery(true);
+		$query->select("distinct b.userid as id");
+		$query->select("b.value as firstName");
+		$query->select("c.value as lastName");
+		$query->select("d.value as EMail");
+		$query->select("e.value as userName");
+		$query->select("f.usertype as usertype");
+		$query->select("f.published as published");
+		$query->select("f.injoomla as injoomla");
+		$query->select("t.value as title");
+		$query->from($db->qn('#__thm_groups_structure') . ' AS a');
+		$query->innerJoin("#__thm_groups_text as b on a.id = b.structid and b.structid=1");
+		$query->innerJoin("#__thm_groups_text as c on b.userid=c.userid and c.structid=2");
+		$query->innerJoin("#__thm_groups_text as d on c.userid=d.userid and d.structid=3");
+		$query->innerJoin("#__thm_groups_text as e on d.userid=e.userid and e.structid=4");
+		$query->join("left outer", "#__thm_groups_text as t on e.userid=t.userid and t.structid=5");
+		$query->innerJoin("#__thm_groups_additional_userdata as f on f.userid = e.userid");
+		$query->from($db->qn('#__thm_groups_groups_map'))
+		$query->where("published = 1");
+		$query->where("c.value like '$shownLetter%'");
+		$query->where("e.userid = uid");
+		$query->where("gid = $gid");
+		$query->order("lastName");
+		$db->setQuery($query);
+		return $db->loadObjectList();
 		$db->setQuery($query);
 		return $db->loadAssocList();
 	}

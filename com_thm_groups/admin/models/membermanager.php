@@ -237,12 +237,24 @@ class THMGroupsModelmembermanager extends JModelList
 		$orderCol	= $this->state->get('list.ordering');
 		$orderDirn	= $this->state->get('list.direction');
 		$search 	= $this->state->get('search');
+		$searchUm = str_replace("?", "&Ouml;", $search);
+		$searchUm = str_replace("?", "&ouml;", $searchUm);
+		$searchUm = str_replace("?", "&Auml;", $searchUm);
+		$searchUm = str_replace("?", "&auml;", $searchUm);
+		$searchUm = str_replace("?", "&Uuml;", $searchUm);
+		$searchUm = str_replace("?", "&uuml;", $searchUm);
+		$searchUm2 = str_replace("ö", "&Ouml;", $search);
+		$searchUm2 = str_replace("ö", "&ouml;", $searchUm2);
+		$searchUm2 = str_replace("ä", "&Auml;", $searchUm2);
+		$searchUm2 = str_replace("ä", "&auml;", $searchUm2);
+		$searchUm2 = str_replace("ü", "&Uuml;", $searchUm2);
+		$searchUm2 = str_replace("ü", "&uuml;", $searchUm2);
 		$groupFilter = $this->state->get('groupFilters');
 		$rolesFilter = $this->state->get('rolesFilters');
 
 		// $db = $this->getDbo();
 
-		$query = "SELECT distinct b.userid, b.value as firstName, c.value as lastName, e.value as EMail, f.published as published, "
+		/*$query = "SELECT distinct b.userid, b.value as firstName, c.value as lastName, e.value as EMail, f.published as published, "
 			. "f.injoomla as injoomla, t.value as title "
 			. "FROM `#__thm_groups_structure` as a "
 			. "inner join #__thm_groups_text as b on a.id = b.structid and b.structid=1 "
@@ -250,44 +262,50 @@ class THMGroupsModelmembermanager extends JModelList
 			. "inner join (Select * From #__thm_groups_text order by userid) as e on c.userid=e.userid and e.structid=4 "
 			. "left outer join (Select * From #__thm_groups_text order by userid) as t on e.userid=t.userid and t.structid=5 "
 			. "inner join #__thm_groups_additional_userdata as f on f.userid = e.userid";
-
-		$searchUm = str_replace("?", "&Ouml;", $search);
-		$searchUm = str_replace("?", "&ouml;", $searchUm);
-		$searchUm = str_replace("?", "&Auml;", $searchUm);
-		$searchUm = str_replace("?", "&auml;", $searchUm);
-		$searchUm = str_replace("?", "&Uuml;", $searchUm);
-		$searchUm = str_replace("?", "&uuml;", $searchUm);
-
-		$searchUm2 = str_replace("ö", "&Ouml;", $search);
-		$searchUm2 = str_replace("ö", "&ouml;", $searchUm2);
-		$searchUm2 = str_replace("ä", "&Auml;", $searchUm2);
-		$searchUm2 = str_replace("ä", "&auml;", $searchUm2);
-		$searchUm2 = str_replace("ü", "&Uuml;", $searchUm2);
-		$searchUm2 = str_replace("ü", "&uuml;", $searchUm2);
-
-		$query .= ' AND (LOWER(c.value) LIKE \'%' . $search . '%\' ';
-		$query .= ' OR LOWER(b.value) LIKE \'%' . $search . '%\' ';
-		$query .= ' OR LOWER(e.value) LIKE \'%' . $search . '%\' ';
-		$query .= ' OR LOWER(c.value) LIKE \'%' . $searchUm . '%\' ';
-		$query .= ' OR LOWER(b.value) LIKE \'%' . $searchUm . '%\' ';
-		$query .= ' OR LOWER(e.value) LIKE \'%' . $searchUm . '%\' ';
-		$query .= ' OR LOWER(c.value) LIKE \'%' . $searchUm2 . '%\' ';
-		$query .= ' OR LOWER(b.value) LIKE \'%' . $searchUm2 . '%\' ';
-		$query .= ' OR LOWER(e.value) LIKE \'%' . $searchUm2 . '%\') ';
-
-		$query .= "inner join #__thm_groups_groups_map as g on g.uid = f.userid";
-
+		*/
+		$query = $db->getQuery(true);
+		$nestedQuery = $db->getQuery(true);
+		
+		$nestedQuery->select('*');
+		$nestedQuery->from("#__thm_groups_text");
+		$nestedQuery->order("userid");
+		
+		$query->select("distinct b.userid");
+		$query->select("b.value as firstName");
+		$query->select("c.value as lastName");
+		$query->select("e.value as EMail");
+		$query->select("f.published as published");
+		$query->select("f.injoomla as injoomla");
+		$query->select("t.value as title");
+		$query->from("#__thm_groups_structure as a");
+		$query->innerJoin("#__thm_groups_text as b on a.id = b.structid and b.structid=1");
+		$query->innerJoin("(" . $nestedQuery . ") as c on b.userid=c.userid and c.structid=2");
+		$query->innerJoin("(" . $nestedQuery . ") as e on c.userid=e.userid and e.structid=4");
+		$query->join("left outer", "(" . $nestedQuery . ")");
+		$query->innerJoin(
+				"#__thm_groups_additional_userdata as f on f.userid = e.userid" .
+				' AND (LOWER(c.value) LIKE \'%' . $search . '%\' ' .
+				' OR LOWER(b.value) LIKE \'%' . $search . '%\' ' .
+				' OR LOWER(e.value) LIKE \'%' . $search . '%\' ' .
+				' OR LOWER(c.value) LIKE \'%' . $searchUm . '%\' ' .
+				' OR LOWER(b.value) LIKE \'%' . $searchUm . '%\' ' .
+				' OR LOWER(e.value) LIKE \'%' . $searchUm . '%\' ' .
+				' OR LOWER(c.value) LIKE \'%' . $searchUm2 . '%\' ' .
+				' OR LOWER(b.value) LIKE \'%' . $searchUm2 . '%\' ' .
+				' OR LOWER(e.value) LIKE \'%' . $searchUm2 . '%\') '
+		);
+		$queryExtra = "";
 		if ($groupFilter > 0)
 		{
-			$query .= ' AND g.gid = ' . $groupFilter . ' ';
+			$queryExtra .= ' AND g.gid = ' . $groupFilter . ' ';
 		}
-
+		
 		if ($rolesFilter > 0)
 		{
-			$query .= ' AND g.rid = ' . $rolesFilter . ' ';
+			$queryExtra .= ' AND g.rid = ' . $rolesFilter . ' ';
 		}
-
-		$query .= " ORDER BY $orderCol $orderDirn";
+		$query->innerJoin("#__thm_groups_groups_map as g on g.uid = f.userid" . $queryExtra);
+		$query->order("$orderCol $orderDirn");
 
 		return $query;
 	}
@@ -402,7 +420,8 @@ class THMGroupsModelmembermanager extends JModelList
 	{
 
 		$groups = $this->getGroupsHirarchy();
-		//$jgroups = $this->getJoomlaGroups(); Alte Methode, kann gelöscht werden...
+		
+		// $jgroups = $this->getJoomlaGroups(); Alte Methode, kann gelöscht werden...
 		$jgroups = $this->getUsergroups(true);
 		
 		$injoomla = false;

@@ -178,7 +178,11 @@ class JFormFieldStructureSelect extends JFormField
 	 */
 	protected function getOptions($selected)
 	{
-		$query = "SELECT a.id, a.field FROM `#__thm_groups_structure` as a Order by a.order";
+		$query = $db->getQuery(true);
+			
+		$query->select('a.id, a.field');
+		$query->from("#__thm_groups_structure as a");
+		$query->order("a.order");
 		$db = JFactory::getDBO();
 		$db->setQuery($query);
 		$list = $db->loadObjectList();

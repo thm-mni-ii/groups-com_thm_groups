@@ -55,9 +55,15 @@ class JFormFieldGroupItemSelect extends JFormField
 		$wasinjoomla = false;
 		$selectOptions = array();
 		foreach ($groups as $group)
-		{
-			$query = 'SELECT distinct id, name FROM `#__thm_groups_roles`,`#__thm_groups_groups_map` WHERE id=rid and gid='
-			. $group->id . ' Order By id';
+		{			
+			$query = $db->getQuery(true);
+			
+			$query->select('distinct id, name');
+			$query->from("#__thm_groups_roles, #__thm_groups_groups_map");
+			$query->where("id=rid" . $group->id);
+			$query->where("gid=");
+			$query->order("id");
+			
 			$db->setQuery($query);
 			$listR[$group->id] = $db->loadObjectList();
 			$listR[$group->id]['groupid'] = $group->id;
@@ -96,7 +102,13 @@ class JFormFieldGroupItemSelect extends JFormField
 		$html = JHTML::_('select.genericlist', $selectOptions, $this->name, $path, 'value', 'text', $this->value);
 
 		// Alle Rollen in Hidden-Felder schreiben, um Selectbox immer wieder zu füllen
-		$query = 'SELECT id, name FROM `#__thm_groups_roles` Order By name';
+
+		$query = $db->getQuery(true);
+
+		$query->select('id, name');
+		$query->from("#__thm_groups_roles");
+		$query->order("name");
+
 		$db->setQuery($query);
 		$listRoles = $db->loadObjectList();
 

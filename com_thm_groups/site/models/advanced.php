@@ -337,7 +337,7 @@ class THMGroupsModelAdvanced extends JModel
 				}
 			}
 		}
-		//print_r($data);
+
 		return $data;
 	}
 
@@ -426,10 +426,12 @@ class THMGroupsModelAdvanced extends JModel
 	 * 
 	 * @return  number   The number of the view
 	 */
-	public function getAdvancedView(){
+	public function getAdvancedView()
+	{
 		$params = $this->getViewParams();
 		$view = $params->get('advancedview');
-		if(!isset($view)){
+		if (!isset($view))
+		{
 			$view = 0;
 		}
 		return $view;

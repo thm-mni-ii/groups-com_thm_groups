@@ -53,12 +53,14 @@ class THMGroupsControllermembermanager extends JController
 	public function edit()
 	{
 		$user = JFactory::getUser();
+		
 		// Get user ids
 		$uids = JRequest::getVar('cid', array(), 'post', 'array');
 		
 		foreach ($uids as $uid)
 		{
-			if (!(($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $uid == $user->get('id')))) && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($uid, 'core.admin'))))
+			if (!(($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $uid == $user->get('id')))) 
+			 && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($uid, 'core.admin'))))
 			{
 				$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_NO_RIGHTS_TO_EDIT_USER', true);
 				$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
@@ -232,12 +234,14 @@ class THMGroupsControllermembermanager extends JController
 		// Get role-id
 		$rids = JRequest::getVar('roles');
 		$user = JFactory::getUser();
+		
 		// Get user ids
 		$uids = JRequest::getVar('cid', array(), 'post', 'array');
 
 		foreach ($uids as $uid)
 		{
-			if (!(($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $uid == $user->get('id')))) && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($uid, 'core.admin'))))
+			if (!(($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $uid == $user->get('id')))) 
+			 && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($uid, 'core.admin'))))
 			{
 				$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_NO_RIGHTS_FOR_ADD_GROUP_AND_ROLES', true);
 				$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
@@ -284,7 +288,8 @@ class THMGroupsControllermembermanager extends JController
 		$uids = JRequest::getVar('cid', array(), 'post', 'array');
 		foreach ($uids as $uid)
 		{
-			if (!(($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $uid == $user->get('id')))) && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($uid, 'core.admin'))))
+			if (!(($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $uid == $user->get('id')))) 
+			 && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($uid, 'core.admin'))))
 			{
 				$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_NO_RIGHTS_FOR_DELETE_GROUP_AND_ROLES', true);
 				$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
@@ -328,7 +333,8 @@ class THMGroupsControllermembermanager extends JController
 		$uids = JRequest::getVar('cid', array(), 'post', 'array');
 		foreach ($uids as $uid)
 		{
-			if (!(($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $uid == $user->get('id')))) && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($uid, 'core.admin'))))
+			if (!(($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $uid == $user->get('id')))) 
+			 && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($uid, 'core.admin'))))
 			{
 				$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_NO_RIGHTS_TO_CHANGE_STATE', true);
 				$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
@@ -364,7 +370,8 @@ class THMGroupsControllermembermanager extends JController
 		$uids = JRequest::getVar('cid', array(), 'post', 'array');
 		foreach ($uids as $uid)
 		{
-			if (!(($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $uid == $user->get('id')))) && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($uid, 'core.admin'))))
+			if (!(($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $uid == $user->get('id')))) 
+			 && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($uid, 'core.admin'))))
 			{
 				$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_NO_RIGHTS_TO_CHANGE_STATE', true);
 				$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
@@ -399,7 +406,8 @@ class THMGroupsControllermembermanager extends JController
 		$uids = JRequest::getVar('cid', array(), 'post', 'array');
 		foreach ($uids as $uid)
 		{
-			if (!(($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $uid == $user->get('id')))) && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($uid, 'core.admin'))))
+			if (!(($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $uid == $user->get('id')))) 
+			 && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($uid, 'core.admin'))))
 			{
 				$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_NO_RIGHTS_TO_DELETE', true);
 				$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
@@ -532,7 +540,8 @@ class THMGroupsControllermembermanager extends JController
 		
 		$user = JFactory::getUser();
 		
-		if (!(($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $uid[0] == $user->get('id')))) && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($uid[0], 'core.admin'))))
+		if (!(($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $uid[0] == $user->get('id')))) 
+		 && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($uid[0], 'core.admin'))))
 		{
 			$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_NO_RIGHTS_TO_DEL_GROUPROLES', true);
 			$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);
@@ -579,7 +588,8 @@ class THMGroupsControllermembermanager extends JController
 		$rid = JRequest::getVar('r_id');
 		$user = JFactory::getUser();
 		
-		if (!(($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $uid[0] == $user->get('id')))) && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($uid[0], 'core.admin'))))
+		if (!(($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $uid[0] == $user->get('id')))) 
+		 && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($uid[0], 'core.admin'))))
 		{
 			$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_NO_RIGHTS_TO_DEL_GROUPROLE', true);
 			$this->setRedirect('index.php?option=com_thm_groups&view=membermanager', $msg);

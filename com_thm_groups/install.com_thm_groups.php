@@ -51,8 +51,9 @@ function Com_install()
 	<?php
 
 	$db = JFactory::getDBO();
-
-	$query = 'SELECT * FROM #__usergroups';
+	$query = $db->getQuery(true);
+	$query->select('*');
+	$query->from($db->qn('#__usergroups'));
 	$db->setQuery($query);
 	$db->query();
 	$rows = $db->loadObjectlist();
