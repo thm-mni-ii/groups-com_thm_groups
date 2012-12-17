@@ -363,7 +363,7 @@ class THMGroupsModelList extends JModel
 		$query->innerJoin("#__thm_groups_text as e on d.userid=e.userid and e.structid=4");
 		$query->join("left outer", "#__thm_groups_text as t on e.userid=t.userid and t.structid=5");
 		$query->innerJoin("#__thm_groups_additional_userdata as f on f.userid = e.userid");
-		$query->from($db->qn('#__thm_groups_groups_map'))
+		$query->from($db->qn('#__thm_groups_groups_map'));
 		$query->where("published = 1");
 		$query->where("c.value like '$shownLetter%'");
 		$query->where("e.userid = uid");
