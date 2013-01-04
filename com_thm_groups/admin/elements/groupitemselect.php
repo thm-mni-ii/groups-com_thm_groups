@@ -61,7 +61,7 @@ class JFormFieldGroupItemSelect extends JFormField
 			$query->select('distinct id, name');
 			$query->from("#__thm_groups_roles, #__thm_groups_groups_map");
 			$query->where("id=rid");
-			$query->where("gid=". $group->id);
+			$query->where("gid=" . $group->id);
 			$query->order("id");
 			
 			$db->setQuery($query);
