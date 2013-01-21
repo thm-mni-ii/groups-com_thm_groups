@@ -1,15 +1,13 @@
 <?php
-
-
 /**
  * @version     v1.2.0
  * @category    Joomla library
  * @package	    THM_Groups
  * @subpackage  com_thm_quickpages.admin
- * @author	    Daniel Kirsten, <daniel.kirsten@mni.thm.de>
+ * @author      Daniel Kirsten, <daniel.kirsten@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link		www.mni.thm.de
+ * @link        www.mni.thm.de
  */
 
 // No direct access to this file
