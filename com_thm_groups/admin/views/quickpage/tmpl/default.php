@@ -2,7 +2,7 @@
 /**
  * @version     v1.2.0
  * @category    Joomla library
- * @package	    THM_Groups
+ * @package     THM_Groups
  * @subpackage  com_thm_quickpages.admin
  * @author      Daniel Kirsten, <daniel.kirsten@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
