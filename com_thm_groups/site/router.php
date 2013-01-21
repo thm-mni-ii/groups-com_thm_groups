@@ -1,12 +1,12 @@
 <?php
 /**
- * @version	    v3.0.1
+ * @version     v3.0.1
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @name		THMGroups component site router
  * @description Template file of module mod_thm_groups_groups
- * @author	    Dennis Priefer, <dennis.priefer@mni.thm.de>
+ * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de

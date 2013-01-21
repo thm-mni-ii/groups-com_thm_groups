@@ -1,12 +1,12 @@
 <?php
 /**
- * @version	    v3.1.0
+ * @version     v3.1.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @name        THMGroupsControllerEdit
  * @description THMGroups component site edit controller
- * @author	    Dennis Priefer, <dennis.priefer@mni.thm.de>
+ * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de

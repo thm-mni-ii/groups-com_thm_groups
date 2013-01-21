@@ -1,10 +1,10 @@
 <?php
 /**
- * @version	    v3.0.1
+ * @version     v3.0.1
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
- * @author	    Dennis Priefer, <dennis.priefer@mni.thm.de>
+ * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @name        THMGroupsModelAdvanced
  * @description Advanced model of com_thm_groups
