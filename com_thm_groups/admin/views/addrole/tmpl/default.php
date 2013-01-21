@@ -26,7 +26,7 @@ JHTML::_('behavior.modal', 'a.modal-button');
 				<tr>
 					<td width="110" class="key">
 						<label for="title">
-	  						<?php echo JText::_('NAME'); ?>:
+	  						<?php echo JText::_('COM_THM_GROUPS_NAME'); ?>:
 						</label>
 					</td>
 					<td>

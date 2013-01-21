@@ -66,8 +66,8 @@ $user = JFactory::getUser();
 <table class="adminlist">
 	<thead>
 		<tr>
-			<th style="width: 20%; text-align: left; color: #0B55C4"><?php echo JText::_('GROUPS'); ?></th>
-			<th style="width: 20%; text-align: left; color: #0B55C4"><?php echo JText::_('ROLES'); ?></th>
+			<th style="width: 20%; text-align: left; color: #0B55C4"><?php echo JText::_('COM_THM_GROUPS_GROUPS'); ?></th>
+			<th style="width: 20%; text-align: left; color: #0B55C4"><?php echo JText::_('COM_THM_GROUPS_ROLES'); ?></th>
 			<th style="width: 60%"></th>
 		</tr>
 	</thead>
@@ -117,7 +117,7 @@ $user = JFactory::getUser();
 		<tr>
 			<td width="17%">
 				<?php
-				echo "<span title='" . JText::_('COM_THM_GROUPS_FILTE_TOOLTIP') . "'>" . JText::_('SEARCH') . "</span>";
+				echo "<span title='" . JText::_('COM_THM_GROUPS_FILTE_TOOLTIP') . "'>" . JText::_('COM_THM_GROUPS_SEARCH') . "</span>";
 				?>
 				<input 
 					type="text" 
@@ -129,13 +129,13 @@ $user = JFactory::getUser();
 			</td>
 			<td width="20%">
 				<?php
-				echo JText::_('GROUP');
+				echo JText::_('COM_THM_GROUPS_GROUP');
 				echo "&nbsp;" . $this->lists['groups'];
 				?>
 			</td>
 			<td width="20%">
 				<?php
-				echo JText::_('ROLE');
+				echo JText::_('COM_THM_GROUPS_ROLE');
 				echo "&nbsp;" . $this->lists['roles'];
 				?>
 			</td>
@@ -167,7 +167,7 @@ $user = JFactory::getUser();
 <table class="adminlist">
 	<thead>
 		<tr>
-			<th width="1"><?php echo JText::_('ID'); ?></th>
+			<th width="1"><?php echo JText::_('COM_THM_GROUPS_ID'); ?></th>
 			<th width="1"><input type="checkbox" name="toggle" value=""
 				onclick="checkAll(<?php echo count($this->items); ?>);" /></th>
 			<th width="7%" nowrap="nowrap"><?php echo JHTML::_('grid.sort', 'TITEL', 'title', $listDirn, $listOrder); ?>
@@ -281,8 +281,8 @@ $user = JFactory::getUser();
 									 && JAccess::check($row->userid, 'core.admin')))
 									{
 										$grouproles .= "<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid . ", " .
-										$grouprole->roleid . ");' title='" . JText::_('GROUP') . ": "
-										. $grouprole->groupname . " - " . JText::_('ROLE')
+										$grouprole->roleid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": "
+										. $grouprole->groupname . " - " . JText::_('COM_THM_GROUPS_ROLE')
 										. ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
 										. ".' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
 									}
@@ -299,7 +299,7 @@ $user = JFactory::getUser();
 										 && JAccess::check($row->userid, 'core.admin')))
 										{
 											$grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " . $grouprole->groupid .
-											");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname . "::" 
+											");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": " . $grouprole->groupname . "::" 
 											. JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') 
 											. ".' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
 										}
@@ -310,11 +310,14 @@ $user = JFactory::getUser();
 										if (($user->authorise('core.edit', 'com_users') || ($user->get('id') == $row->userid)) 
 										 && $user->authorise('core.manage', 'com_users'))
 										{
-											if ($user->authorise('core.edit.own', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($row->userid, 'core.admin')))
+											if ($user->authorise('core.edit.own', 'com_users')
+											 && !((!$user->authorise('core.admin')) 
+											 && JAccess::check($row->userid, 'core.admin')))
 											{
 												$grouproles .= "<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid .
-												", " . $grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname 
-												. " - " . JText::_('ROLE') . ": " .
+												", " . $grouprole->roleid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": " .
+												$grouprole->groupname 
+												. " - " . JText::_('COM_THM_GROUPS_ROLE') . ": " .
 												$grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') . "' class='hasTip'>
 												<img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
 											}
@@ -336,7 +339,7 @@ $user = JFactory::getUser();
 										 && JAccess::check($row->userid, 'core.admin')))
 										{
 											$grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " .
-											$grouprole->groupid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname .
+											$grouprole->groupid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": " . $grouprole->groupname .
 											"::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') . ".' class='hasTip'>
 											<img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
 										}
@@ -352,8 +355,9 @@ $user = JFactory::getUser();
 											 && JAccess::check($row->userid, 'core.admin')))
 											{
 												$grouproles .= "<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid . ", "
-												. $grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname . " - " 
-												. JText::_('ROLE') . ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
+												. $grouprole->roleid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": " 
+												. $grouprole->groupname . " - " . JText::_('COM_THM_GROUPS_ROLE') . ": " . $grouprole->rolename . "::"
+												. JText::_('COM_THM_GROUPS_REMOVE_ROLE')
 												. "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
 											}
 										}
@@ -379,9 +383,9 @@ $user = JFactory::getUser();
 								 && JAccess::check($row->userid, 'core.admin')))
 								{
 									$grouproles .= $grouprole->rolename . "<a href='javascript:delGrouprole(" .
-									$row->userid . ", " . $grouprole->groupid . ", " . $grouprole->roleid . ");' title='" . JText::_('GROUP') . ": "
-									. $grouprole->groupname . " - " . JText::_('ROLE') . ": " . $grouprole->rolename . "::" 
-									. JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
+									$row->userid . ", " . $grouprole->groupid . ", " . $grouprole->roleid . ");' title='"
+									. JText::_('COM_THM_GROUPS_GROUP') . ": " . $grouprole->groupname . " - " . JText::_('COM_THM_GROUPS_ROLE') . ": "
+									. $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
 									. "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
 								}
 							}
@@ -397,7 +401,7 @@ $user = JFactory::getUser();
 									 && JAccess::check($row->userid, 'core.admin')))
 									{
 										$grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " .
-										$grouprole->groupid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname .
+										$grouprole->groupid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": " . $grouprole->groupname .
 										"::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') . ".' class='hasTip'>
 										<img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
 									}
@@ -412,8 +416,9 @@ $user = JFactory::getUser();
 										 && JAccess::check($row->userid, 'core.admin')))
 										{
 											$grouproles .= "<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid . ", " 
-											. $grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname . " - " 
-											. JText::_('ROLE') . ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
+											. $grouprole->roleid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": " . $grouprole->groupname 
+											. " - " . JText::_('COM_THM_GROUPS_ROLE') . ": " . $grouprole->rolename . "::"
+											. JText::_('COM_THM_GROUPS_REMOVE_ROLE')
 											. "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
 										}
 									}
@@ -434,7 +439,7 @@ $user = JFactory::getUser();
 									 && JAccess::check($row->userid, 'core.admin')))
 									{
 										$grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " . $grouprole->groupid .
-										");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname .
+										");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": " . $grouprole->groupname .
 										"::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') . ".' class='hasTip'>
 										<img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
 									}
@@ -449,8 +454,8 @@ $user = JFactory::getUser();
 										 && JAccess::check($row->userid, 'core.admin')))
 										{
 											$grouproles .= "<a href='javascript:delGrouprole(" . $row->userid . ", " . $grouprole->groupid . ", " .
-											$grouprole->roleid . ");' title='" . JText::_('GROUP') . ": " . $grouprole->groupname . " - "
-											. JText::_('ROLE') 
+											$grouprole->roleid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": " . $grouprole->groupname
+											. " - " . JText::_('COM_THM_GROUPS_ROLE') 
 											. ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') 
 											. "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
 										}

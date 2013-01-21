@@ -24,7 +24,7 @@ if ($user->id != $this->userid && !$this->is_mod)
 	$mainframe = Jfactory::getApplication();
 	$itemid = JRequest :: getVar('Itemid', 0);
 	$view = JRequest :: getVar('view', 'list');
-	$msg = JText::_('Nicht erlaubter Zugriff!');
+	$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_NO_RIGHTS_TO_EDIT_USER');
 	$link = JRoute :: _('index.php?option=com_thm_groups&Itemid=' . $itemid);
 	$mainframe->Redirect($link, $msg);
 }
@@ -86,7 +86,7 @@ else
 			<tr>
 				<td width="110" class="key">
 					<label for="title">
-  						<?php echo JText::_('ID'); ?>:
+  						<?php echo JText::_('COM_THM_GROUPS_ID'); ?>:
 					</label>
 				</td>
 				<td>
@@ -177,17 +177,17 @@ else
 			</tr>
 			<tr>
 				<td colspan="3">
-					<input type="submit" id="gs_editView_buttons" name="save" value="<?php echo JText::_("SAVE");?>" />
+					<input type="submit" id="gs_editView_buttons" name="save" value="<?php echo JText::_("COM_THM_GROUPS_SAVE");?>" />
 					<input type='submit'
 					id="gs_editView_buttons"
 					onclick='document.forms["adminForm"].elements["task"].value = "edit.apply"'
-					value='<?php echo JText::_("APPLY");?>'
+					value='<?php echo JText::_("COM_THM_GROUPS_APPLY");?>'
 					name='apply'
 					task='edit.apply' />
 					<input type='submit'
 					id="gs_editView_buttons"
 					onclick='document.forms["adminForm"].elements["task"].value = "edit.BackToRefUrl"'
-					value='<?php echo JText::_("BACK");?>'
+					value='<?php echo JText::_("COM_THM_GROUPS_BACK");?>'
 					name='backToRefUrl'
 					task='edit.backToRefUrl' />					
 				</td>

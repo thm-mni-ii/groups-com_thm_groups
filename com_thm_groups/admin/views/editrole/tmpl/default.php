@@ -25,7 +25,7 @@ defined('_JEXEC') or die ('Restricted access');
 				<tr>
 					<td width="110" class="key">
 						<label for="title">
-		  					<?php echo JText::_('ID'); ?>:
+		  					<?php echo JText::_('COM_THM_GROUPS_ID'); ?>:
 						</label>
 					</td>
 					<td>
@@ -37,7 +37,7 @@ defined('_JEXEC') or die ('Restricted access');
 				<tr>
 					<td width="110" class="key">
 						<label for="title">
-	  						<?php echo JText::_('NAME'); ?>:
+	  						<?php echo JText::_('COM_THM_GROUPS_NAME'); ?>:
 						</label>
 					</td>
 					<td>

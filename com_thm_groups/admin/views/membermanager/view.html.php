@@ -46,7 +46,9 @@ class THMGroupsViewmembermanager extends JView
 				'membermanager.png',
 				JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
 		);
-		if (($user->authorise('core.edit', 'com_users') || $user->authorise('core.edit.own', 'com_users')) && $user->authorise('core.manage', 'com_users'))
+		if (($user->authorise('core.edit', 'com_users')
+		 || $user->authorise('core.edit.own', 'com_users'))
+		 && $user->authorise('core.manage', 'com_users'))
 		{
 			JToolBarHelper::custom(
 					'membermanager.setGroupsAndRoles',
@@ -75,7 +77,9 @@ class THMGroupsViewmembermanager extends JView
 			JToolBarHelper::unpublishList('membermanager.unpublish', 'COM_THM_GROUPS_MEMBERMANAGER_DISABLE');
 		}
 		JToolBarHelper::cancel('membermanager.cancel', 'JTOOLBAR_CANCEL');
-		if (($user->authorise('core.edit', 'com_users') || $user->authorise('core.edit.own', 'com_users')) && $user->authorise('core.manage', 'com_users'))
+		if (($user->authorise('core.edit', 'com_users')
+		 || $user->authorise('core.edit.own', 'com_users'))
+		 && $user->authorise('core.manage', 'com_users'))
 		{
 			JToolBarHelper::editListX('membermanager.edit', 'COM_THM_GROUPS_MEMBERMANAGER_EDIT');
 		}
@@ -99,9 +103,9 @@ class THMGroupsViewmembermanager extends JView
 
 		// Search filter
 		$filters = array();
-		$filters[] = JHTML::_('select.option', '1', JText::_('Nachname'));
-		$filters[] = JHTML::_('select.option', '2', JText::_('Vorname'));
-		$filters[] = JHTML::_('select.option', '3', JText::_('Benutzername'));
+		$filters[] = JHTML::_('select.option', '1', JText::_('COM_THM_GROUPS_NACHNAME'));
+		$filters[] = JHTML::_('select.option', '2', JText::_('COM_THM_GROUPS_VORNAME'));
+		$filters[] = JHTML::_('select.option', '3', JText::_('COM_THM_GROUPS_USERNAME'));
 
 		if (isset($lists['filter']))
 		{
@@ -117,7 +121,7 @@ class THMGroupsViewmembermanager extends JView
 		}
 
 		$groupFilters = array();
-		$groupFilters[] = JHTML::_('select.option', 0, JText::_('Alle'));
+		$groupFilters[] = JHTML::_('select.option', 0, JText::_('COM_THM_GROUPS_ALL'));
 
 		foreach ($groupOptions as $option)
 		{
@@ -134,7 +138,7 @@ class THMGroupsViewmembermanager extends JView
 		);
 
 		$rolesFilters = array();
-		$rolesFilters[] = JHTML::_('select.option', 0, JText::_('Alle'));
+		$rolesFilters[] = JHTML::_('select.option', 0, JText::_('COM_THM_GROUPS_ALL'));
 		foreach ($roles as $role)
 		{
 			$rolesFilters[] = JHTML::_('select.option', $role->id, $role->name);

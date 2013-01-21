@@ -82,13 +82,13 @@ class JFormFieldStructureSelect extends JFormField
 		$html[] = '<table>' .
 				'<thead>' .
 				'<tr><th>' .
-				JText::_('ATTRIBUTE') .
+				JText::_('COM_THM_GROUPS_ATTRIBUTE') .
 				'</th><th>' .
-				JText::_('SHOW') .
+				JText::_('COM_THM_GROUPS_SHOW') .
 				'</th><th>' .
-				JText::_('NAME') .
+				JText::_('COM_THM_GROUPS_NAME') .
 				'</th><th>' .
-				JText::_('WRAP') .
+				JText::_('COM_THM_GROUPS_WRAP') .
 				'</th></tr>' .
 				'</thead>' .
 				'<tbody>';

@@ -55,7 +55,7 @@ window.addEvent( 'domready', function(){ getFieldExtras();});
 			<tr>
 				<td width="310" class="key">
 					<label for="title">
-	  					<?php echo JText::_('ID'); ?>:
+	  					<?php echo JText::_('COM_THM_GROUPS_ID'); ?>:
 					</label>
 				</td>
 				<td>

@@ -49,7 +49,7 @@ JHTML::_('behavior.calendar');
 			<tr>
 				<td width="110" class="key">
 					<label for="title">
-  						<?php echo JText::_('ID'); ?>:
+  						<?php echo JText::_('COM_THM_GROUPS_ID'); ?>:
 					</label>
 				</td>
 				<td>
@@ -137,7 +137,7 @@ JHTML::_('behavior.calendar');
 			<tr>
 				<td width="110" class="key">
 					<label for="title">
-  						<?php echo JText::_('GROUPS_AND_ROLES'); ?>:
+  						<?php echo JText::_('COM_THM_GROUPS_GROUPS_AND_ROLES'); ?>:
 					</label>
 				</td>
 				<td>

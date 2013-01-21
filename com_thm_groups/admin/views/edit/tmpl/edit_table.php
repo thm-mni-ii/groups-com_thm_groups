@@ -85,7 +85,7 @@ $key = JRequest::getVar('key');
 			?>
 		</table>
 		<br /><br />
-		<input type='button' id='3' onclick="close1234()" value='<?php echo JText::_('SAVE'); ?>' 
+		<input type='button' id='3' onclick="close1234()" value='<?php echo JText::_('COM_THM_GROUPS_SAVE'); ?>'
 		name='editTableRow' task='membermanager.editTableRow' />
 	<input type='hidden' name='structid' value='<?php echo JRequest::getVar('structid');?>' />
 	<input type="hidden" name="option" value="com_thm_groups" />

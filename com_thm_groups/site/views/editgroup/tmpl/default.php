@@ -208,13 +208,13 @@ $userid = $user->id;
 				</tr>
 				<tr>
 					<td>
-  						<input type="submit" name="save" value="<?php echo JText::_('SAVE'); ?>" id="gs_editView_buttons"/>
+  						<input type="submit" name="save" value="<?php echo JText::_('COM_THM_GROUPS_SAVE'); ?>" id="gs_editView_buttons"/>
 					</td>
 					<td>
 						<input
 						type='submit' id="gs_editView_buttons"
 						onclick='document.forms["adminForm"].elements["task"].value = "editgroup.backToRefUrl"'
-						value=<?php echo JText::_('BACK'); ?> name='backToRefUrl' task='editgroup.backToRefUrl' />
+						value=<?php echo JText::_('COM_THM_GROUPS_BACK'); ?> name='backToRefUrl' task='editgroup.backToRefUrl' />
 					</td>
 				</tr>
 			</table>

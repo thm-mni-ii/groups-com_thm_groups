@@ -239,7 +239,7 @@ class THMGroupsViewedit extends JView
 		$model =& $this->getModel();
 		$extra = $model->getExtra($structid, 'MULTISELECT');
 		$arrExtra = explode(';', $extra);
-		$output = "<SELECT MULTIPLE size='" . (count($arrExtra)) . "' name='" . $name . "[]' id='$name' >";
+		$output = "<select MULTIPLE size='" . (count($arrExtra)) . "' name='" . $name . "[]' id='$name' >";
 		foreach ($arrExtra as $extraValue)
 		{
 			$tExtra = trim($extraValue);
