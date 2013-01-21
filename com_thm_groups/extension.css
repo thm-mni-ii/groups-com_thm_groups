@@ -13,17 +13,17 @@
 }
 
 .mod_gs_site div:not(:last-child){
-	float:left;
+	float: left;
 	vertical-align: top;
 }
 
 .mod_gs_site div.has_wrap + div.no_wrap {
-	clear:left;
+	clear: left;
 }
 
 .mod_gs_site div.has_wrap + div.has_wrap {
-	float:none;
-	clear:left;
+	float: none;
+	clear: left;
 }
 
 .mod_gs_object {
