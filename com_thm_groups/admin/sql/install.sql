@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_additional_userdata` (
   `published` tinyint(4) DEFAULT '0',
   `injoomla` tinyint(4) DEFAULT '1',
   PRIMARY KEY (`userid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=48 ;
+) ENGINE = INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT=48 ;
 
 -- --------------------------------------------------------
 
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_conf` (
   `name` varchar(32) NOT NULL DEFAULT '',
   `value` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `#__thm_groups_conf`
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_date` (
   `value` date DEFAULT NULL,
   `publish` int(11) NOT NULL DEFAULT '1',
   `group` int(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 
 -- --------------------------------------------------------
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_groups` (
   `mode` text,
   `injoomla` TINYINT( 4 ) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=32 ;
+) ENGINE = INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT=32 ;
 
 --
 -- Daten für Tabelle `#__thm_groups_groups`
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_groups_map` (
   `gid` int(11) NOT NULL,
   `rid` int(11) NOT NULL,
   PRIMARY KEY (`uid`,`gid`,`rid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_link` (
   `value` text,
   `publish` int(11) NOT NULL DEFAULT '1',
   `group` int(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 
 -- --------------------------------------------------------
@@ -137,7 +137,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_multiselect` (
   `value` varchar(128) DEFAULT NULL,
   `publish` int(11) NOT NULL DEFAULT '1',
   `group` int(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -149,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_multiselect_extra` (
   `structid` int(11) NOT NULL,
   `value` text NOT NULL,
   PRIMARY KEY (`structid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 
 --
@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_number` (
   `value` varchar(128) DEFAULT NULL,
   `publish` int(11) NOT NULL DEFAULT '1',
   `group` int(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 
 -- --------------------------------------------------------
@@ -186,7 +186,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_picture` (
   `value` varchar(64) DEFAULT NULL,
   `publish` int(11) NOT NULL DEFAULT '1',
   `group` int(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 
 -- --------------------------------------------------------
@@ -199,7 +199,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_picture_extra` (
   `structid` int(11) NOT NULL,
   `value` text NOT NULL,
   PRIMARY KEY (`structid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -211,7 +211,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_publishrelation` (
   `value` int(11) NOT NULL,
   `identifier` varchar(64) NOT NULL,
   PRIMARY KEY (`value`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `#__thm_groups_publishrelation`
@@ -232,7 +232,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_relationtable` (
   `Type` varchar(11) NOT NULL,
   `Relation` varchar(11) NOT NULL,
   PRIMARY KEY (`Type`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `#__thm_groups_relationtable`
@@ -258,7 +258,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE = INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- Daten für Tabelle `#__thm_groups_roles`
@@ -280,7 +280,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_structure` (
   `type` varchar(11) NOT NULL,
   `order` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=91 ;
+) ENGINE = INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT=91 ;
 
 --
 -- Daten für Tabelle `#__thm_groups_structure`
@@ -307,7 +307,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_table` (
   `value` text,
   `publish` int(11) NOT NULL DEFAULT '1',
   `group` int(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 
 -- --------------------------------------------------------
@@ -320,7 +320,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_table_extra` (
   `structid` int(11) NOT NULL,
   `value` text NOT NULL,
   PRIMARY KEY (`structid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 
 -- --------------------------------------------------------
@@ -332,10 +332,10 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_table_extra` (
 CREATE TABLE IF NOT EXISTS `#__thm_groups_text` (
   `userid` int(11) NOT NULL,
   `structid` int(11) NOT NULL,
-  `value` varchar(64) DEFAULT NULL,
+  `value` varchar(255) DEFAULT NULL,
   `publish` int(11) NOT NULL DEFAULT '1',
   `group` int(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -349,7 +349,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_textfield` (
   `value` text,
   `publish` int(11) NOT NULL DEFAULT '1',
   `group` int(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 
 -- --------------------------------------------------------
@@ -362,7 +362,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_textfield_extra` (
   `structid` int(11) NOT NULL,
   `value` varchar(11) NOT NULL,
   PRIMARY KEY (`structid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 
 
@@ -376,7 +376,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_text_extra` (
   `structid` int(11) NOT NULL,
   `value` varchar(11) NOT NULL,
   PRIMARY KEY (`structid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 
 -- --------------------------------------------------------
@@ -390,4 +390,4 @@ CREATE TABLE IF NOT EXISTS `#__thm_quickpages_map` (
   `id_kind` char(1) NOT NULL,
   `catid` int(11) NOT NULL,
    PRIMARY KEY  (`id`, `id_kind`, `catid`)
-) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE = INNODB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;

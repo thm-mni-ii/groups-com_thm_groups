@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.2.2
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -47,7 +47,10 @@ $canEdit = ($user->id == $this->userid || $this->canEdit);
 			default:
 				if ($this->getStructureType($item->structid) == "PICTURE" && $picture == null)
 				{
-					$picture = $item->value;
+					if ($item->publish)
+					{
+						$picture = $item->value;
+					}
 				}
 				break;
 		}

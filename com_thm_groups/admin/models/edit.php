@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.0
+ * @version     v3.2.2
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -180,7 +180,7 @@ class THMGroupsModeledit extends JModelForm
 						/*
 	        			$query .= " value='" . $field . "',";
 	        			*/
-						$query->set("value = \"" . $field . "\"");
+						$query->set("value = \"" . htmlspecialchars($field) . "\"");
 					}
 					/*
         			$query .= " publish='" . $publish . "'"
@@ -202,7 +202,7 @@ class THMGroupsModeledit extends JModelForm
 					$query->insert("#__thm_groups_" . strtolower($structureItem->type));
 					$query->set("`userid` = " . $userid);
 					$query->set("`structid` = " . $structureItem->id);
-					$query->set("`value` = \"" . $field . "\"");
+					$query->set("`value` = \"" . htmlspecialchars($field) . "\"");
 					$query->set("`publish` = " . $publish);
 				}
 				echo $query->__toString() . "<br />";
