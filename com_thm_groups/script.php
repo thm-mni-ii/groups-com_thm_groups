@@ -81,7 +81,7 @@ class Com_THM_GroupsInstallerScript
 				</p>";
 			}
 		}
-		$this->release = $parent->get( "manifest" )->version;
+		$this->release = $parent->get("manifest")->version;
 		
 		?>
 		<p align="center">
@@ -105,7 +105,7 @@ class Com_THM_GroupsInstallerScript
 		</h1>
 		<?php
 
-		$this->release = $parent->get( "manifest" )->version;
+		$this->release = $parent->get("manifest")->version;
 		?>
 		<p align="center">
 			<strong>&nbsp;Installation of version <?php echo $this->release; ?> successful!</strong>
