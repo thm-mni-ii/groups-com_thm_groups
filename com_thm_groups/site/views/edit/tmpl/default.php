@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.1.0
+ * @version     v3.2.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -156,7 +156,14 @@ else
 					name="publish<?php echo str_replace(" ", "", $structureItem->field);?>"
 					value="on" 
 					<?php 
-					if ($publish)
+					if (is_string($publish))
+					{
+						if ($publish)
+						{
+							echo "checked";
+						}
+					}
+					else
 					{
 						echo "checked";
 					}

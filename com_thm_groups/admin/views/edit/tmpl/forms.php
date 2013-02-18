@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.2.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -116,10 +116,17 @@ JHTML::_('behavior.calendar');
 				<td align="center" width="110">
 					<input type="checkbox" name="publish<?php echo str_replace(" ", "", $structureItem->field); ?>" value="on"
 					<?php 
+					if (is_string($publish))
+					{
 						if ($publish)
 						{
 							echo "checked";
 						}
+					}
+					else
+					{
+						echo "checked";
+					}
 					?>/>
 				</td>
 				<!-- <td align="center" width="110">

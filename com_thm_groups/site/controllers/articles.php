@@ -1,11 +1,12 @@
 <?php
 
 /**
- * @version     v0.1.0
+ * @version     v3.2.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @author      Daniel Kirsten, <daniel.kirsten@mni.thm.de>
+ * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -45,7 +46,113 @@ class THMGroupsControllerArticles extends JControllerAdmin
 		/* $this->registerTask('unfeatured',	'featured'); */
 		/* $this->registerTask('untrash',	'trash'); */
 	}
-
+	
+	/**
+	 * Method to publish a list of items
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	public function publish()
+	{
+		// Check for request forgeries
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+	
+		// Get items to publish from the request.
+		$cid = JRequest::getVar('cid', array(), '', 'array');
+		$data = array('publish' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
+		$task = $this->getTask();
+		$value = JArrayHelper::getValue($data, $task, 0, 'int');
+	
+		if (empty($cid))
+		{
+			JError::raiseWarning(500, JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'));
+		}
+		else
+		{
+			// Get the model.
+			$model = $this->getModel();
+	
+			// Make sure the item ids are integers
+			JArrayHelper::toInteger($cid);
+	
+			// Publish the items.
+			if (!$model->publish($cid, $value))
+			{
+				JError::raiseWarning(500, $model->getError());
+			}
+			else
+			{
+				if ($value == 1)
+				{
+					$ntext = 'COM_THM_GROUPS_N_ITEMS_PUBLISHED';
+				}
+				elseif ($value == 0)
+				{
+					$ntext = 'COM_THM_GROUPS_N_ITEMS_UNPUBLISHED';
+				}
+				elseif ($value == 2)
+				{
+					$ntext = 'COM_THM_GROUPS_N_ITEMS_ARCHIVED';
+				}
+				else
+				{
+					$ntext = 'COM_THM_GROUPS_N_ITEMS_TRASHED';
+				}
+				$this->setMessage(JText::plural($ntext, count($cid)));
+			}
+		}
+		$extension = JRequest::getCmd('extension');
+		$extensionURL = ($extension) ? '&extension=' . JRequest::getCmd('extension') : '';
+		$this->setRedirect(JRoute::_('index.php?option=' . 'com_thm_groups' . '&view=' . $this->view_list . $extensionURL, false));
+	}
+	
+	/**
+	 * Removes an item.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	public function delete()
+	{
+		var_dump("bla");
+		exit;
+		
+		// Check for request forgeries
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+	
+		// Get items to remove from the request.
+		$cid = JRequest::getVar('cid', array(), '', 'array');
+	
+		if (!is_array($cid) || count($cid) < 1)
+		{
+			JError::raiseWarning(500, JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'));
+		}
+		else
+		{
+			// Get the model.
+			$model = $this->getModel();
+	
+			// Make sure the item ids are integers
+			jimport('joomla.utilities.arrayhelper');
+			JArrayHelper::toInteger($cid);
+	
+			// Remove the items.
+			if ($model->delete($cid))
+			{
+				$this->setMessage(JText::plural('COM_THM_GROUPS_N_ITEMS_DELETED', count($cid)));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
+			}
+		}
+	
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+	}
+	
 	/**
 	 * Proxy for getModel.
 	 *

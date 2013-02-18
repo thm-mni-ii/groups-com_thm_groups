@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.2.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -161,7 +161,8 @@ if ($this->view == 0)
 						switch ($memberitem['type'])
 						{
 							case "LINK":
-								echo "<a href='" . $memberitem['value'] . "'>" . $memberitem['value'] . "</a>";
+								echo "<a href='" . htmlspecialchars_decode($memberitem['value']) . "'>" 
+								. htmlspecialchars_decode($memberitem['value']) . "</a>";
 								break;
 							case "PICTURE":
 								// TODO
@@ -170,7 +171,7 @@ if ($this->view == 0)
 								echo $this->make_table($memberitem['value']);
 								break;
 							default:
-								echo nl2br($memberitem['value']);
+								echo nl2br(htmlspecialchars_decode($memberitem['value']));
 								break;
 						}
 						break;
@@ -357,7 +358,8 @@ else
 							switch ($memberitem['type'])
 							{
 								case "LINK":
-									echo "<a href='" . $memberitem['value'] . "'>" . $memberitem['value'] . "</a>";
+									echo "<a href='" . htmlspecialchars_decode($memberitem['value']) . "'>" 
+									. htmlspecialchars_decode($memberitem['value']) . "</a>";
 									break;
 								case "PICTURE":
 									// TODO
@@ -366,7 +368,7 @@ else
 									echo $this->make_table($memberitem['value']);
 									break;
 								default:
-									echo nl2br($memberitem['value']);
+									echo nl2br(htmlspecialchars_decode($memberitem['value']));
 									break;
 							}
 							break;

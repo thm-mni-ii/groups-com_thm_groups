@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.2
+ * @version     v3.2.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -24,6 +24,8 @@ JHTML::_('behavior.calendar');
 $user = & JFactory::getUser();
 $canEdit = ($user->id == $this->userid || $this->canEdit);
 
+$view_old = 0;
+$layout_old = 0;
 ?>
 <div id="title"><?php 
 	$title = '';
@@ -113,7 +115,7 @@ $canEdit = ($user->id == $this->userid || $this->canEdit);
 											<?php 
 											foreach ($head as $headItem)
 											{
-													echo "<th>$headItem</th>";
+													echo "<th>" . htmlspecialchars_decode($headItem) . "</th>";
 											}
 											?>
 												</tr>
@@ -133,7 +135,7 @@ $canEdit = ($user->id == $this->userid || $this->canEdit);
 														}
 														foreach ($row as $rowItem)
 														{
-															echo "<td>" . $rowItem . "</td>";
+															echo "<td>" . htmlspecialchars_decode($rowItem) . "</td>";
 														}
 														echo "</tr>";
 														$k = 1 - $k;
@@ -148,13 +150,14 @@ $canEdit = ($user->id == $this->userid || $this->canEdit);
 										case "LINK":
 												if (trim($item->value) != "")
 												{
-													echo "<a href='$item->value'>$item->value</a>";
+													echo "<a href='" . htmlspecialchars_decode($item->value) . "'>" 
+ 														. htmlspecialchars_decode($item->value) . "</a>";
 												}
 												break;
 										case 'MULTISELECT':
 												if (trim($item->value) != "")
 												{
-													echo $item->value;
+													echo htmlspecialchars_decode($item->value);
 												}
 												break;
 											break;
@@ -165,7 +168,7 @@ $canEdit = ($user->id == $this->userid || $this->canEdit);
 											}
 											else
 											{
-												echo JText::_($item->value);
+												echo JText::_(htmlspecialchars_decode($item->value));
 											}
 									}
 								}
@@ -177,20 +180,6 @@ $canEdit = ($user->id == $this->userid || $this->canEdit);
 					}
 				}
 				?>
-			<tr>
-				<td colspan="2"><hr></td>
-			</tr>
-			<tr>
-				<td>
-					<input
-					type='submit'
-					id="gs_editView_buttons"
-					onclick='return confirm("Wirklich zurück?"), document.forms["adminForm"].elements["task"].value = "profile.backToRefUrl"'
-					value='Zurück'
-					name='backToRefUrl'
-					task='profile.backToRefUrl' />
-				</td>
-			</tr>
 		</table>
 		<input type='hidden' name="structid"  value='' />
 		<input type="hidden" name="option" value="com_thm_groups" />

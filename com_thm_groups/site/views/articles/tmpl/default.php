@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version     v0.1.0
+ * @version     v3.2.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -307,8 +307,9 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
 										'untrash'
 										),
 							);
-
-							echo JHtml::_('jgrid.state', $states, ($item->state < 0 ? -3 : 3), $i, 'articles.', $canDelete);
+							$button = JHtml::_('jgrid.state', $states, ($item->state < 0 ? -3 : 3), $i, 'articles.', $canDelete);
+							$button = str_replace("onclick=\"", "onclick=\"confirm('" . JText::_('COM_THM_GROUPS_REALLY_DELETE') . "');", $button);
+							echo $button;
 						}
 					?>
 				</td>
