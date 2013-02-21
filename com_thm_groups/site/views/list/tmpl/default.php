@@ -96,10 +96,10 @@
 		$margin = $params->get('lineSpacing');
 		$zmargin = $params->get('zSpacing') - 12;
 		$paramLinkTarget = $params->get('linkTarget');
-		$retString = "";
 		$rows = $model->getUserCountToGid($groupid);
 
-		$numColumns = 4;
+		//$numColumns = 4;
+		$numColumns = $params->get('columnCount');
 
 		$allLastNames = $model->getDiffLettersToFirstletter($groupid);
 
@@ -148,17 +148,11 @@
 			}
 		}
 
-		$maxColumnSize = ceil($rows[0]->anzahl / $numColumns) + ceil(count($alleAnfangsbuchstaben) / $numColumns) + 1;
-		$placedChar = 0;
-
-		// Setzen der Startwerte (1. Spalte, 1. Zeile)
-		$rowCount = 0;
-		$columnCount = 0;
+		$maxColumnSize = ceil(($rows[0]->anzahl) / $numColumns);
+		$numberOfPersons = $rows[0]->anzahl;
 
 		$divStyle = "style='width: " . floor(100 / $numColumns) . "%; float: left;'";
 
-		// Tabelle starten und fÃƒÂ¼r jeden Buchstaben ein "div" erzeugen
-		$retString .= "<div id='row_" . $rowCount . "_column_" . $columnCount . "_max_" . $maxColumnSize . "' $divStyle>";
 
 		// Welche Detailansicht bei Klick auf Person? Modul oder Profilview?
 		$linkTarget = "";
@@ -174,176 +168,105 @@
 				$linkTarget = 'index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid;
 		}
 
+		$actualRowPlaced = 0;
+		$stop=0;
+		$remeberNextTime = 0;
+		$allCount=0;
+
+			
 		// Durchgehen aller Buchstaben des Alphabets
-		foreach ($abc as $char)
+		for ($i = 0; $i < count($abc); $i++) 
 		{
-			// Alle Benutzer suchen dessen Nachname mit dem aktuellen Buchstaben beginnt
+			$char = $abc[$i];
 			$rows = $model->getUserByCharAndGroupID($groupid, $char);
+			
+			// Wenn keine Einträge für diesen Buchstaben, dann weiter it nächsten
 			if (count($rows) <= 0)
 			{
 				continue;
 			}
-
-			$placedChar++;
-
-			if ((count($rows) + $placedChar) <= $maxColumnSize)
+			
+			// Wenn noch keine Zeile geschrieben wurde, neu Spalte öffnen
+			if ($actualRowPlaced == 0)
 			{
-				$retString .= "<ul class='alphabet'>";
-				$retString .= "<a class='list' " . $margin . "px;\">" . $char;
-				$retString .= "</a>";
-				$retString .= "<div class='listitem'>";
-				foreach ($rows as $row)
-				{
-					$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href="
-							. JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid)
-							. ">" . trim($row->lastName) . "</a></div><br/>";
-					$rowCount++;
-					$placedChar++;
-				}
-				$retString .= "</div>";
-				$retString .= "</ul>";
+	?>
+			<div id="row_column_max_<?php echo $maxColumnSize; ?>" <?php echo $divStyle; ?>>
+<?php 
 			}
-			elseif ((count($rows) + $placedChar) > $maxColumnSize)
+			else 
 			{
-				if ($placedChar >= $maxColumnSize - 1)
-				{
-					$placedChar = 1;
-					$retString .= "</div><div id='row_" . $rowCount . "_column_" . $columnCount . "_max_" . $maxColumnSize . "' $divStyle>";
-					$retString .= "<ul class='alphabet'>";
-					$retString .= "<a class='list' margin-bottom:" . $margin . "px;\">" . $char;
-					$retString .= "</a>";
-					$retString .= "<div class='listitem'>";
-
-					foreach ($rows as $row)
-					{
-						$retString .= "<div style='margin-bottom:"
-								. $zmargin . "px;'>" . $row->title . " " . "<a href="
-										. JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid)
-										. ">" . trim($row->lastName) . "</a></div><br/>";
-						$placedChar++;
-					}
-					$retString .= "</div>";
-					$retString .= "</ul>";
-				}
-				elseif (count($rows) + $placedChar == $maxColumnSize - 2 && count($rows) == 3)
-				{
-					$placedChar = 1;
-					$retString .= "</div><div id='row_" . $rowCount . "_column_" . $columnCount . "_max_" . $maxColumnSize . "' $divStyle>";
-					$retString .= "<ul class='alphabet'>";
-					$retString .= "<a class='list' margin-bottom:" . $margin . "px;\">" . $char;
-					$retString .= "</a>";
-					$retString .= "<div class='listitem'>";
-					foreach ($rows as $row)
-					{
-						$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href="
-								. JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid)
-								. ">" . trim($row->lastName) . "</a></div><br/>";
-						$placedChar++;
-					}
-					$retString .= "</div>";
-					$retString .= "</ul>";
-				}
-				elseif ($placedChar <= $maxColumnSize - 2 && $placedChar + count($rows) == $maxColumnSize + 1 && count($rows) > 3)
-				{
-					$retString .= "<ul class='alphabet'>";
-					$retString .= "<a class='list' margin-bottom:" . $margin . "px;\">" . $char;
-					$retString .= "</a>";
-					foreach ($rows as $row)
-					{
-						$retString .= "<div class='listitem'>";
-						if ($placedChar == $maxColumnSize - 1)
-						{
-							$retString .= "</div></a></ul>";
-							$retString .= "</div><div id='row_" . $rowCount . "_column_" . $columnCount . "_max_" . $maxColumnSize . "' $divStyle>";
-							$retString .= "<ul class='alphabet'>";
-							$retString .= "<a class='list' margin-bottom:" . $margin . "px;\">" . $char;
-							$retString .= "</a>";
-							$retString .= "<div class='listitem'>";
-							$placedChar = 1;
-						}
-
-						$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href="
-								. JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid) . ">"
-										. trim($row->lastName) . "</a></div><br/>";
-						$placedChar++;
-					}
-					$retString .= "</div>";
-					$retString .= "</ul>";
-				}
-				elseif ($placedChar <= $maxColumnSize - 2 && $placedChar + count($rows) == $maxColumnSize + 1 && count($rows) <= 3)
-				{
-					$retString .= "</a></ul>";
-					$retString .= "</div><div id='row_" . $rowCount . "_column_" . $columnCount . "_max_" . $maxColumnSize . "' $divStyle>";
-					$retString .= "<ul class='alphabet'>";
-					$retString .= "<a class='list' margin-bottom:" . $margin . "px;\">" . $char;
-					$placedChar = 1;
-
-					foreach ($rows as $row)
-					{
-						if ($placedChar == $maxColumnSize - 1)
-						{
-							$retString .= "</a></div></ul>";
-							$retString .= "</div><div id='row_" . $rowCount . "_column_" . $columnCount . "_max_" . $maxColumnSize . "' $divStyle>";
-							$retString .= "<ul class='alphabet'>";
-
-							$retString .= "<a class='list' margin-bottom:" . $margin . "px;\">" . $char;
-							$retString .= "</a>";
-							$retString .= "<div class='listitem'>";
-
-							$placedChar = 0;
-						}
-
-						$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href="
-								. JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid) . ">"
-										. trim($row->lastName) . "</a></div><br/>";
-						$placedChar++;
-					}
-					$retString .= "</div>";
-					$retString .= "</ul>";
-				}
-				elseif ((count($rows) + $placedChar) >= $maxColumnSize + 2)
-				{
-					$retString .= "<ul class='alphabet'>";
-					$retString .= "<a class='list' margin-bottom:" . $margin . "px;\">" . $char;
-					$retString .= "</a>";
-					foreach ($rows as $row)
-					{
-						$retString .= "<div class='listitem'>";
-						if ($placedChar >= $maxColumnSize)
-						{
-							$retString .= "</div></ul>";
-							$retString .= "</div><div id='row_" . $rowCount . "_column_" . $columnCount . "_max_" . $maxColumnSize . "' $divStyle>";
-							$retString .= "<ul class='alphabet'>";
-							$retString .= "<a class='list' margin-bottom:" . $margin . "px;\">" . $char;
-							$retString .= "</a>";
-							$retString .= "<div class='listitem'>";
-							$placedChar = 1;
-						}
-						$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $row->title . " " . "<a href="
-								. JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid) . ">"
-										. trim($row->lastName) . "</a></div><br/>";
-						$placedChar++;
-					}
-					$retString .= "</div>";
-					$retString .= "</a>";
-					$retString .= "</ul>";
-				}
-				else
-				{
-					try
-					{
-						throw new Exception("Not all names with character \"$char\" indicated!");
-					}
-					catch (Exception $e)
-					{
-						echo $e;
-						echo $e->getFile() . " on line: " . $e->getLine() . "<br/>";
-					}
-				}
+			}
+			
+?>
+				<ul class="alphabet">
+					<a class="list"><?php echo $char; ?></a>
+					<div class="listitem">
+<?php 						
+							// Wurde beim letzten Durchlauf  ein Buchstabenpaket komplett geschrieben 
+							if ($remeberNextTime == 0)
+							{
+								// Passt das aktuelle Buchstabenpaket noch in die aktuelle Spalte ($maxColumnSize +2)
+								if ($actualRowPlaced + count($rows) - $maxColumnSize > 2)
+								{
+									$i--;
+									$stop = $maxColumnSize - $actualRowPlaced;
+								}
+								else 
+								{
+								}
+							}
+							
+							// Alle Personen zu einem Buchstaben ausgeben
+							foreach ($rows as $row)
+							{
+								// Wenn vom aktuellen Buchstabenpaket schon Einträge in der vorherigen Spalte gemacht wurden, werden diese übersprungen
+								if($remeberNextTime == 0){
+?>
+								<div style="margin-bottom:-11px;">
+<?php
+									echo $row->title . " " . "<a href="	. JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid) . ">" . trim($row->lastName) . '</a>';
+									$actualRowPlaced++;
+									$allCount++;
+									
+									// Ist Stop vorher gestzt, werden in die aktuelle Reihe noch noch die Einträge eines Buchstabenpaket geschrieben um $maxColumnSize zu erreichen
+									if($stop > 0 && $actualRowPlaced==$maxColumnSize)
+									{
+										$remeberNextTime = $stop;
+										$stop = 0;
+										//$actualRowPlaced = $maxColumnSize;
+										break;
+									}
+?>
+								</div><br>
+<?php 
+								} 
+								else 
+								{
+									$remeberNextTime--;
+								}
+							}
+?>
+					</div>
+				</ul>
+	<?php 
+			// Schließen einer Reihe, wenn $maxColumnSize erreichtwurde, $remeberNextTime gesetzt ist, oder alle Einträge ausgegebn wurden
+			if ($actualRowPlaced >= $maxColumnSize || $remeberNextTime > 0 || $allCount == $numberOfPersons) 
+			{
+	?>
+			</div>
+		
+	<?php 
+				$actualRowPlaced = 0;
+			}
+			else
+			{
 			}
 		}
-		$retString .= "</div>";
-		return $retString;
+		
+	?>
+	
+<?php 
+		
 	}
 
 	/**
@@ -542,7 +465,7 @@
 	$this->assignRef('desc', $model->getDesc());
 	if ($showall == 1)
 	{
-		echo getgListAll($model);
+		getgListAll($model);
 	}
 	else
 	{
