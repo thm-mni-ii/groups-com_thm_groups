@@ -98,9 +98,17 @@
 		$zmargin = $params->get('zSpacing') - 12;
 		$paramLinkTarget = $params->get('linkTarget');
 		$rows = $model->getUserCountToGid($groupid);
-
-		//$numColumns = 4;
+		
 		$numColumns = $params->get('columnCount');
+
+		if (isset($numColumns))
+		{
+			
+		} 
+		else
+		{
+			$numColumns = 4;
+		}
 
 		$allLastNames = $model->getDiffLettersToFirstletter($groupid);
 
@@ -170,9 +178,9 @@
 		}
 
 		$actualRowPlaced = 0;
-		$stop=0;
+		$stop = 0;
 		$remeberNextTime = 0;
-		$allCount=0;
+		$allCount = 0;
 
 			
 		// Durchgehen aller Buchstaben des Alphabets
@@ -180,6 +188,8 @@
 		{
 			$char = $abc[$i];
 			$rows = $model->getUserByCharAndGroupID($groupid, $char);
+			$actualLetterPlaced = 0;
+			$oneEntryMore = 0;
 			
 			// Wenn keine Einträge für diesen Buchstaben, dann weiter it nächsten
 			if (count($rows) <= 0)
@@ -191,7 +201,7 @@
 			if ($actualRowPlaced == 0)
 			{
 	?>
-			<div id="row_column_max_<?php echo $maxColumnSize; ?>" <?php echo $divStyle; ?>>
+			<div id="row_column_max_<?php echo $maxColumnSize . '"' . $divStyle; ?>>
 <?php 
 			}
 			else 
@@ -206,11 +216,25 @@
 							// Wurde beim letzten Durchlauf  ein Buchstabenpaket komplett geschrieben 
 							if ($remeberNextTime == 0)
 							{
+								if ($actualRowPlaced + count($rows) - $maxColumnSize > 2 && $actualLetterPlaced == 1)
+								{
+									$oneEntryMore = 1;
+								}
+								else
+								{
+								}
 								// Passt das aktuelle Buchstabenpaket noch in die aktuelle Spalte ($maxColumnSize +2)
 								if ($actualRowPlaced + count($rows) - $maxColumnSize > 2)
 								{
 									$i--;
 									$stop = $maxColumnSize - $actualRowPlaced;
+									if ($stop == 1)
+									{
+										$stop = 2;
+									}
+									else 
+									{
+									}
 								}
 								else 
 								{
@@ -220,22 +244,28 @@
 							// Alle Personen zu einem Buchstaben ausgeben
 							foreach ($rows as $row)
 							{
-								// Wenn vom aktuellen Buchstabenpaket schon Einträge in der vorherigen Spalte gemacht wurden, werden diese übersprungen
-								if($remeberNextTime == 0){
+								// Wenn aktuelles Buchstabenpaket schon Einträge in der vorherigen Spalte hat, werden diese übersprungen
+								if ($remeberNextTime == 0)
+								{
 ?>
 								<div style="margin-bottom:-11px;">
 <?php
-									echo $row->title . " " . "<a href="	. JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid) . ">" . trim($row->lastName) . '</a>';
+									echo $row->title . " " . "<a href=";
+									echo JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid);
+									echo ">" . trim($row->lastName) . '</a>';
 									$actualRowPlaced++;
 									$allCount++;
+									$actualLetterPlaced++;
 									
-									// Ist Stop vorher gestzt, werden in die aktuelle Reihe noch noch die Einträge eines Buchstabenpaket geschrieben um $maxColumnSize zu erreichen
-									if($stop > 0 && $actualRowPlaced==$maxColumnSize)
+									// Ist Stop > 0, werden in die aktuelle Reihe die Einträge eines Buchstabenpaket geschrieben bis $maxColumnSize
+									if ($stop > 0 && $actualRowPlaced >= $maxColumnSize && $actualLetterPlaced > 1)
 									{
 										$remeberNextTime = $stop;
 										$stop = 0;
-										//$actualRowPlaced = $maxColumnSize;
 										break;
+									}
+									else 
+									{	
 									}
 ?>
 								</div><br>
