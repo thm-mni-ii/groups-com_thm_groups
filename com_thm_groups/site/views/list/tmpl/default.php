@@ -115,7 +115,7 @@
 		$itemid = JRequest::getVar('Itemid', 0);
 		$abc = array(
 				'A',
-				'&Auml;',
+				'Ä',
 				'B',
 				'C',
 				'D',
@@ -130,14 +130,14 @@
 				'M',
 				'N',
 				'O',
-				'&Ouml;',
+				'Ö',
 				'P',
 				'Q',
 				'R',
 				'S',
 				'T',
 				'U',
-				'&Uuml;',
+				'Ü',
 				'V',
 				'W',
 				'X',
@@ -295,7 +295,6 @@
 		}
 		
 	?>
-	
 <?php 
 		
 	}
@@ -426,6 +425,24 @@
 		$groupMember = $model->getGroupMemberByLetter($groupid, $shownLetter);
 
 		$memberWithU = array();
+		
+		$numColumns = $params->get('columnCount');
+		
+		if (isset($numColumns))
+		{
+		
+		}
+		else
+		{
+			$numColumns = 4;
+		}
+		$maxColumnSize = ceil(count($groupMember) / $numColumns);
+		$actualRowPlaced = 0;
+		$stop = 0;
+		$remeberNextTime = 0;
+		$allCount = 0;
+		$divStyle = "style='width: " . floor(100 / $numColumns) . "%; float: left;'";
+		
 		foreach ($groupMember as $member)
 		{
 			$searchUm = str_replace("Ãƒâ€“", "&Ouml;", $member['lastName']);
@@ -441,7 +458,14 @@
 			$searchUm = str_replace("ÃƒÆ’Ã‚Â¤", "&Auml;", $searchUm);
 			$searchUm = str_replace("ÃƒÆ’Ã‚Â¼", "&uuml;", $searchUm);
 			$searchUm = str_replace("ÃƒÆ’Ã‚Â¼", "&Uuml;", $searchUm);
-
+			
+			if ($actualRowPlaced == 0)
+			{
+				$retString .= '<div ' . $divStyle . '>';
+			}
+			else 
+			{
+			}
 			if (substr($searchUm, 0, 6) == "&Auml;" || substr($searchUm, 0, 6) == "&Ouml;" || substr($searchUm, 0, 6) == "&Uuml;")
 			{
 				$memberWithU[] = $member;
@@ -459,6 +483,16 @@
 								)
 								. ">" . trim($member['firstName']) . " " . trim($member['lastName'])
 								. "</a></div><br/>";
+				$actualRowPlaced++;
+			}
+			
+			if ($actualRowPlaced == $maxColumnSize)
+			{
+				$retString .= "</div>";
+				$actualRowPlaced = 0;
+			}
+			else
+			{
 			}
 		}
 		foreach ($memberWithU as $member)
