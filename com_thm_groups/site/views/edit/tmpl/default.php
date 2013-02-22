@@ -11,6 +11,7 @@
  * @author      Daniel Bellof,  <daniel.bellof@mni.thm.de>
  * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
+ * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -184,7 +185,12 @@ else
 			</tr>
 			<tr>
 				<td colspan="3">
-					<input type="submit" id="gs_editView_buttons" name="save" value="<?php echo JText::_("COM_THM_GROUPS_SAVE");?>" />
+					<input type="submit" 
+					id="gs_editView_buttons" 
+					name="save" 
+					value="<?php echo JText::_("COM_THM_GROUPS_SAVE");?>" 
+					onclick='document.forms["adminForm"].elements["task"].value = "edit.save"'
+					task='edit.save'/>
 					<input type='submit'
 					id="gs_editView_buttons"
 					onclick='document.forms["adminForm"].elements["task"].value = "edit.apply"'
