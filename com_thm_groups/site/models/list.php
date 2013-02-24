@@ -388,14 +388,13 @@ class THMGroupsModelList extends JModel
 			. "`#__thm_groups_groups_map` "
 			. "WHERE published = 1 and c.value like '$shownLetter%' and e.userid = uid and gid = $gid "
 			. "ORDER BY lastName";*/
-		$letterCase = "";
+		$letterCase = "c.value like '$shownLetter%'";
 		if ($shownLetter == 'A')
 		{
 			$letterCase = "( c.value like 'A%' or c.value like 'Ä%')";
 		}
 		else
 		{
-			$letterCase = "c.value like '$shownLetter%'";
 		}
 		if ($shownLetter == 'O')
 		{
@@ -403,7 +402,6 @@ class THMGroupsModelList extends JModel
 		}
 		else
 		{
-			$letterCase = "c.value like '$shownLetter%'";
 		}
 		if ($shownLetter == 'U')
 		{
@@ -411,7 +409,6 @@ class THMGroupsModelList extends JModel
 		}
 		else
 		{
-			$letterCase = "c.value like '$shownLetter%'";
 		}
 		$query = $db->getQuery(true);
 		$query->select("distinct b.userid as id");
