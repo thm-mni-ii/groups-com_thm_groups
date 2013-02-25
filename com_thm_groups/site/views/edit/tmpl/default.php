@@ -41,6 +41,47 @@ else
 			document.getElementsByName('structid')[0].value=structid;
 			document.adminForm.submit();
 		}
+		function editFormValidation(){
+			var message = '';
+			var emailRegExp = /.+@.+\..+/g;
+			var title = document.getElementById("Titel").value;//$("input#titel").val();
+			var vorname = document.getElementById("Vorname").value;
+			var nachname = document.getElementById("Nachname").value;
+			var email = document.getElementById("EMail").value;
+			if(title == '')
+			{
+				message += 'Bitte geben Sie einen Titel an!\n';
+			}
+			if(vorname == '')
+			{
+				message += 'Bitte geben Sie ihren Vornamen an!\n';
+			}
+			if(nachname == '')
+			{
+				message += 'Bitte geben Sie ihren Nachnamen an!\n';
+			}
+			if(email == '')
+			{
+				message += 'Bitte geben Sie ihre Email Adresse an!\n';
+			}
+			else
+			{
+				var result = emailRegExp.exec(email);
+				if(! result)
+				{
+					message += 'Ihre Email Adresse ist nicht valide. Bitte überprüfen Sie ihre Email Adresse!';
+				}
+			}
+			if(message == '')
+			{
+				return true;
+			}
+			else
+			{
+				alert(message);
+				return false;
+			}
+		}
 	</script>
 	<form action="index.php" method="POST" name="adminForm" enctype='multipart/form-data'>
 
@@ -189,11 +230,11 @@ else
 					id="gs_editView_buttons" 
 					name="save" 
 					value="<?php echo JText::_("COM_THM_GROUPS_SAVE");?>" 
-					onclick='document.forms["adminForm"].elements["task"].value = "edit.save"'
+					onclick='document.forms["adminForm"].elements["task"].value = "edit.save";return editFormValidation();'
 					task='edit.save'/>
 					<input type='submit'
 					id="gs_editView_buttons"
-					onclick='document.forms["adminForm"].elements["task"].value = "edit.apply"'
+					onclick='document.forms["adminForm"].elements["task"].value = "edit.apply";return editFormValidation();'
 					value='<?php echo JText::_("COM_THM_GROUPS_APPLY");?>'
 					name='apply'
 					task='edit.apply' />

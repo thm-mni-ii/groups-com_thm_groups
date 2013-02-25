@@ -24,6 +24,52 @@ JHTML::_('behavior.calendar');
 		document.getElementsByName('structid')[0].value=structid;
 		document.adminForm.submit();
 	}
+	function editFormValidation(){
+		var message = '';
+		var emailRegExp = /.+@.+\..+/g;
+		var title = document.getElementById("Titel").value;
+		var vorname = document.getElementById("Vorname").value;
+		var nachname = document.getElementById("Nachname").value;
+		var email = document.getElementById("EMail").value;
+		if(title == '')
+		{
+			message += 'Bitte geben Sie einen Titel an!\n';
+		}
+		if(vorname == '')
+		{
+			message += 'Bitte geben Sie ihren Vornamen an!\n';
+		}
+		if(nachname == '')
+		{
+			message += 'Bitte geben Sie ihren Nachnamen an!\n';
+		}
+		if(email == '')
+		{
+			message += 'Bitte geben Sie ihre Email Adresse an!\n';
+		}
+		else
+		{
+			var result = emailRegExp.exec(email);
+			if(! result)
+			{
+				message += 'Ihre Email Adresse ist nicht valide. Bitte überprüfen Sie ihre Email Adresse!';
+			}
+		}
+		if(message == '')
+		{
+			return true;
+		}
+		else
+		{
+			alert(message);
+			return false;
+		}
+	}
+	var applyButton = document.getElementById("toolbar-apply").childNodes;
+	//applyButton[1].addEventListener("onmouseover", editFormValidation, false);
+	applyButton[1].onmouseover = function () { editFormValidation(); } 
+	var saveButton = document.getElementById("toolbar-save").childNodes;
+	saveButton[1].onmouseover = function () { editFormValidation(); }
 </script>
 	<form action="index.php" method="post" name="adminForm" enctype='multipart/form-data'>
 	<div>
