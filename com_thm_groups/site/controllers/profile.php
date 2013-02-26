@@ -7,6 +7,7 @@
  * @name        THMGroupsControllerProfile
  * @description THMGroups component site profile controller
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
+ * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -58,14 +59,12 @@ class THMGroupsControllerProfile extends JController
 	{
 		$option_old = JRequest::getVar('option_old', 0);
 		$layout_old = JRequest::getVar('layout_old', 0);
-		$view_old   = JRequest::getVar('view_old', 0);
-		$itemid_old = JRequest::getVar('item_id', 0);
+		$view_old = JRequest::getVar('view_old', 0);
 
 		$link = JRoute::_('index.php'
 			. '?option=' . $option_old
 			. '&view=' . $view_old
-			. '&layout=' . $layout_old
-			. '&Itemid=' . $itemid_old
+			. '&layout_old=' . $layout_old
 		);
 		$this->setRedirect($link);
 	}

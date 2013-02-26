@@ -12,6 +12,7 @@
  * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
+ * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -115,16 +116,6 @@ class THMGroupsViewProfile extends JView
 		}
 
 		$itemid = JRequest::getVar('Itemid', 0);
-
-		/* ZURÜCK BUTTON */
-		$option_old = JRequest::getVar('option_old');
-		$layout_old = JRequest::getVar('layout_old');
-		$view_old   = JRequest::getVar('view_old');
-
-		$this->assignRef('option_old', $option_old);
-		$this->assignRef('layout_old', $layout_old);
-		$this->assignRef('view_old', $view_old);
-		/* ###########   */
 
 		$this->assignRef('items', $items);
 		$this->assignRef('itemid', $itemid);
