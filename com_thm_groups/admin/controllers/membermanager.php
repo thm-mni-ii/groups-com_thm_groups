@@ -89,7 +89,14 @@ class THMGroupsControllermembermanager extends JController
 		}
 		else
 		{
-			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+			if ($model->getErrorMessage() != '')
+			{
+				$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR') . '<br>' . $model->getErrorMessage();
+			}
+			else
+			{
+				$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+			}
 		}
 
 		$this->setRedirect('index.php?option=com_thm_groups&task=membermanager.edit&cid[]=' . $id, $msg);
@@ -110,7 +117,7 @@ class THMGroupsControllermembermanager extends JController
 		}
 		else
 		{
-			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR') . '<br>' . $model->getErrorMessage();
 		}
 
 		$link = 'index.php?option=com_thm_groups&view=membermanager';

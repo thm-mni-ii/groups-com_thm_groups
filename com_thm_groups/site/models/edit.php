@@ -185,7 +185,7 @@ class THMGroupsModeledit extends JModelForm
 
 			$db->setQuery($query);
 			$puffer = $db->loadObject();
-
+			
 			if (isset($structureItem->field))
 			{
 				if (isset($puffer))

@@ -50,26 +50,26 @@ else
 			var email = document.getElementById("EMail").value;
 			if(title == '')
 			{
-				message += 'Bitte geben Sie einen Titel an!\n';
+				message += '<?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_TITLE'); ?>\n';
 			}
 			if(vorname == '')
 			{
-				message += 'Bitte geben Sie ihren Vornamen an!\n';
+				message += '<?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_FIRSTNAME'); ?>\n';
 			}
 			if(nachname == '')
 			{
-				message += 'Bitte geben Sie ihren Nachnamen an!\n';
+				message += '<?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_LASTNAME'); ?>\n';
 			}
 			if(email == '')
 			{
-				message += 'Bitte geben Sie ihre Email Adresse an!\n';
+				message += '<?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_EMAIL'); ?>\n';
 			}
 			else
 			{
 				var result = emailRegExp.exec(email);
 				if(! result)
 				{
-					message += 'Ihre Email Adresse ist nicht valide. Bitte überprüfen Sie ihre Email Adresse!';
+					message += '<?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_INVALID_EMAIL'); ?>';
 				}
 			}
 			if(message == '')
