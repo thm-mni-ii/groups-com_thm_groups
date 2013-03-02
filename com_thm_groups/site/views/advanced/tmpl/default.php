@@ -40,6 +40,7 @@ if ($this->view == 0)
 		$firstName = "";
 		$lastName = "";
 		$picture = null;
+		$picpath = null;
 		$wrapTitle = false;
 		$wrapFirstName = false;
 		$canEdit = ($user->id == $id || $this->canEdit);
@@ -63,6 +64,7 @@ if ($this->view == 0)
 					if ($memberhead['type'] == "PICTURE" && $picture == null && $memberhead['publish'])
 					{
 						$picture = $memberhead['value'];
+						$picpath = $memberhead['picpath'];
 					}
 					break;
 			}
@@ -74,7 +76,7 @@ if ($this->view == 0)
 		echo	"<div class='gs_advlistPicture'>";
 		if ($picture != null)
 		{
-			echo JHTML :: image("components/com_thm_groups/img/portraits/" . $picture, "Portrait", array ('class' => 'mod_gs_portraitB'));
+			echo JHTML :: image($picpath . '/' . $picture, "Portrait", array ('class' => 'mod_gs_portraitB'));
 		}
 		echo 	"</div>";
 
@@ -215,6 +217,7 @@ else
 	$user = & JFactory::getUser();
 	$model = $this->getmodel('advanced');
 	$struct = array();
+	$picpath = null;
 	foreach ($this->structure as $structItem)
 	{
 		$struct[$structItem->id] = $structItem->field;
@@ -266,6 +269,7 @@ else
 						if ($memberhead['type'] == "PICTURE" && $picture == null && $memberhead['publish'])
 						{
 							$picture = $memberhead['value'];
+							$picpath = $memberhead['picpath'];
 						}
 						break;
 				}
@@ -273,7 +277,7 @@ else
 			echo	"<div class='gs_advlistPicture'>";
 			if ($picture != null)
 			{
-				echo JHTML :: image("components/com_thm_groups/img/portraits/" . $picture, "Portrait", array ('class' => 'mod_gs_portraitB'));
+				echo JHTML :: image($picpath . '/' . $picture . $picture, "Portrait", array ('class' => 'mod_gs_portraitB'));
 			}
 			echo 	"</div>";
 			

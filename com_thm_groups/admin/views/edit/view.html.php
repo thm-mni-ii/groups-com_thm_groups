@@ -103,14 +103,15 @@ class THMGroupsViewedit extends JView
 	public function getPictureArea ($name, $structid, $value)
 	{
 		$model =& $this->getModel();
-		$extra = $model->getExtra($structid, 'PICTURE');
+		$extra = $model->getExtra($structid, 'PICTURE'); 
+		$path = $model->getPicPath($structid);
 		if ($value != "")
 		{
-			$output = "<img src='../components/com_thm_groups/img/portraits/$value' />";
+			$output = '<img src=../' . $path . '/' . $value . ' />';
 		}
 		else
 		{
-			$output = "<img src='../components/com_thm_groups/img/portraits/$extra' />";
+			$output = '<img src=../' . $path . '/' . $extra . ' />';
 		}
 		$output .= "<input type='file' accept='image' name='$name' />" .
 		"<br /><br /><br /><br /><input type='submit' id='3' " .

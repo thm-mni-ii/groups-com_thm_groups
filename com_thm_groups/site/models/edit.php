@@ -295,8 +295,8 @@ class THMGroupsModeledit extends JModelForm
 		{
 			$pt = new THMPicTransform($_FILES[$picField]);
 			$compath = "com_thm_groups";
-			$pot = "portraits";
-			$pt->safeSpecial(JPATH_ROOT . DS . "components" . DS . $compath . DS . "img" . DS . $pot . DS, $uid . "_" . $structid, 200, 200, "JPG");
+			$pt->safeSpecial(JPATH_ROOT . DS . $this->getPicPath($structid) . DS,//"components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS,
+				$uid . "_" . $structid, 200, 200, "JPG");
 			if (JModuleHelper::isEnabled('mod_thm_groups')->id != 0)
 			{
 				$pt->safeSpecial(JPATH_ROOT . DS . "modules" . DS . "mod_thm_groups" . DS . "images" . DS, $uid . "_" . $structid, 200, 200, "JPG");
@@ -348,7 +348,7 @@ class THMGroupsModeledit extends JModelForm
 		$query = "SELECT value FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
 		*/
 		$query = $db->getQuery(true);
-		$query->select('value');
+		$query->select('*');
 		$query->from($db->qn('#__thm_groups_' . strtolower($type) . '_extra'));
 		$query->where('structid = ' . $structid);
 		$db->setQuery($query);
@@ -356,6 +356,37 @@ class THMGroupsModeledit extends JModelForm
 		if (isset($res))
 		{
 			return $res->value;
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	/**
+	 * Method to get extra data
+	 *
+	 * @param   Int     $structid  StructID
+	 * @param   String  $type      Picturefield
+	 *
+	 * @access	public
+	 * @return	null / value
+	 */
+	public function getPicPath($structid)
+	{
+		$db = JFactory::getDBO();
+		/*
+			$query = "SELECT value FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
+		*/
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from($db->qn('#__thm_groups_picture_extra'));
+		$query->where('structid = ' . $structid);
+		$db->setQuery($query);
+		$res = $db->loadObject();
+		if (isset($res->path))
+		{
+			return $res->path;
 		}
 		else
 		{

@@ -32,6 +32,7 @@ $layout_old = 0;
 	$firstName = '';
 	$lastName = '';
 	$picture = null;
+	$picpath = null;
 	foreach ($this->items as $item)
 	{
 		// Daten fuer den HEAD in Variablen speichern
@@ -51,6 +52,7 @@ $layout_old = 0;
 				{
 					if ($item->publish)
 					{
+						$picpath = THMGroupsModelProfile::getPicPath($item->structid);
 						$picture = $item->value;
 					}
 				}
@@ -85,7 +87,7 @@ $layout_old = 0;
 
 				if ($picture != null)
 				{
-					echo JHTML :: image("components/com_thm_groups/img/portraits/" . $picture, "Portrait", array ());
+					echo JHTML :: image($picpath . '/' . $picture, "Portrait", array ());
 				}
 				foreach ($this->structure as $structureItem)
 				{

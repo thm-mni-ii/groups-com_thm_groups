@@ -69,6 +69,8 @@ class THMGroupsModelAddStructure extends JModel
 		$name = JRequest::getVar('name');
 		$relation = JRequest::getVar('relation');
 		$extra = JRequest::getVar($relation . '_extra');
+		$picpath = JRequest::getVar($relation . '_extra_path');
+		
 		$err = 0;
 
 		/*
@@ -111,15 +113,23 @@ class THMGroupsModelAddStructure extends JModel
 				. ", '" . $extra . "')";
 			*/
 			$query = $db->getQuery(true);
-			$query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`)");
-			$query->values("'" . $id . "', '" . $extra . "'");
-
+			
+			// besondere behandlung fuer picture, da andere parameter
+			if (isset($picpath)){
+				$query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`, `path`)");
+				$query->values("'" . $id . "', '" . $extra . "', '" . $picpath . "'");
+			}else{
+				$query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`)");
+				$query->values("'" . $id . "', '" . $extra . "'");
+			}
+			
 			$db->setQuery($query);
 			if (!$db->query())
 			{
 				$err = 1;
-			}
+			}	
 		}
+		
 
 		if (!$err)
 		{

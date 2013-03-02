@@ -182,6 +182,16 @@ class THMGroupsControllerAddStructure extends JControllerForm
 				. "value='' "
 				. "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE") . "' "
 				. "/>";
+				$output .= "<br><br>";
+				$output .= "<input "
+						. "class='inputbox' "
+						. "type='text' name='" . $field . "_extra_path' "
+						. "id='" . $field . "_extra_path' "
+						. "size='40'"
+						. "value='' "
+						. "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE_PATH") . "' "
+						. "/>";
+				//TODO: HIER MUSS ICH MACHEN
 				break;
 		}
 		echo $output;
@@ -236,6 +246,13 @@ class THMGroupsControllerAddStructure extends JControllerForm
 					. "'>"
 					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT")
 					. ":</span>";
+					$output .= "<br><br>";
+					$output .= "<span title='"
+					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE_PATH")
+					. "'>"
+					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_PATH")
+					. ":</span>";
+					//TODO: HIER MUSS ICH MACHEN
 				break;
 			default :
 				$output = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_NO_PARAMS") . "...";

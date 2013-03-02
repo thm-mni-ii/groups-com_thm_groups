@@ -89,7 +89,7 @@ class THMGroupsModelEditStructure extends JModel
 			$query = "SELECT value FROM #__thm_groups_" . strtolower($relation) . "_extra WHERE structid=$id";
 		*/
 		$query = $db->getQuery(true);
-		$query->select('value');
+		$query->select('*');
 		$query->from($db->qn('#__thm_groups_' . strtolower($relation) . '_extra'));
 		$query->where('structid = ' . $id);
 		$db->setQuery($query);
@@ -108,6 +108,7 @@ class THMGroupsModelEditStructure extends JModel
 		$name = JRequest::getVar('name');
 		$relation = JRequest::getVar('relation');
 		$extra = JRequest::getVar($relation . '_extra');
+		$picpath = JRequest::getVar($relation . '_extra_path');
 		$err = false;
 
 		$db = JFactory::getDBO();
@@ -149,8 +150,13 @@ class THMGroupsModelEditStructure extends JModel
 			if ($count == "0")
 			{
 				$query = $db->getQuery(true);
-				$query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`)");
-				$query->values("'" . $id[0] . "', '" . $extra . "'");
+				if(isset($picpath)){
+					$query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`, `path`)");
+					$query->values("'" . $id[0] . "', '" . $extra . "', '" . $picpath . "'");
+				}else{
+					$query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`)");
+					$query->values("'" . $id[0] . "', '" . $extra . "'");
+				}
 
 				$db->setQuery($query);
 				if (!$db->query())
@@ -163,7 +169,8 @@ class THMGroupsModelEditStructure extends JModel
 				$query = $db->getQuery(true);
 				$query->update("`#__thm_groups_" . strtolower($relation) . "_extra`");
 				$query->set("`value` = '" . $extra . "'");
-
+				if(isset($picpath)) $query->set("`path` = '" . $picpath . "'");
+				$query->where('structid = ' . $id[0]);
 				$db->setQuery($query);
 				if (!$db->query())
 				{

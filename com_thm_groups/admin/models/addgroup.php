@@ -311,7 +311,7 @@ class THMGroupsModelAddGroup extends JModelForm
 		 	$query = "SELECT value FROM #__thm_groups_" . $type . "_extra WHERE structid=" . $structid;
 		*/
 		$query = $db->getQuery(true);
-		$query->select('value');
+		$query->select('*');
 		$query->from($db->qn('#__thm_groups_' . $type . '_extra'));
 		$query->where("`structid` = '" . $structid . "'");
 		$db->setQuery($query);

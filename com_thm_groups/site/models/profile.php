@@ -112,7 +112,7 @@ class THMGroupsModelProfile extends JModelForm
 			$query = "SELECT structid, value, publish FROM #__thm_groups_" . strtolower($type->Type) . " as a where a.userid = " . $cid;
 			*/
 			$query = $db->getQuery(true);
-			$query->select('structid, value, publish');
+			$query->select('*');
 			$query->from($db->qn('#__thm_groups_' . strtolower($type->Type)) . ' AS a');
 			$query->where('a.userid = ' . $cid);
 
@@ -192,7 +192,7 @@ class THMGroupsModelProfile extends JModelForm
 		$query = "SELECT value FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
 		*/
 		$query = $db->getQuery(true);
-		$query->select('value');
+		$query->select('*');
 		$query->from($db->qn('#__thm_groups_' . strtolower($type) . '_extra'));
 		$query->where('structid = ' . $structid);
 		$db->setQuery($query);
@@ -200,6 +200,37 @@ class THMGroupsModelProfile extends JModelForm
 		if (isset($res))
 		{
 			return $res->value;
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	/**
+	 * Method to get extra data
+	 *
+	 * @param   Int     $structid  StructID
+	 * @param   String  $type      Picturefield
+	 *
+	 * @access	public
+	 * @return	null / value
+	 */
+	public function getPicPath($structid)
+	{
+		$db = JFactory::getDBO();
+		/*
+			$query = "SELECT value FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
+		*/
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from($db->qn('#__thm_groups_picture_extra'));
+		$query->where('structid = ' . $structid);
+		$db->setQuery($query);
+		$res = $db->loadObject();
+		if (isset($res))
+		{
+			return $res->path;
 		}
 		else
 		{

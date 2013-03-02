@@ -335,6 +335,9 @@ class THMGroupsModelEditGroup extends JModelForm
 		{
 			$pt = new THMPicTransform($_FILES[$picField]);
 			$compath = "com_thm_groups";
+// 			$pt->safeSpecial(
+// 					JPATH_ROOT . DS . $this->getPicPath($structid) . DS,//"components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS,
+// 					"g" . $gid, 200, 200, "JPG");
 			$pt->safeSpecial(JPATH_ROOT . DS . "components" . DS . $compath . DS . "img" . DS . "portraits" . DS, "g" . $gid, 200, 200, "JPG");
 			if (JModuleHelper::isEnabled('mod_thm_groups')->id != 0)
 			{
@@ -365,6 +368,37 @@ class THMGroupsModelEditGroup extends JModelForm
 		else
 		{
 			return false;
+		}
+	}
+	
+	/**
+	 * Get extra path from db (for picture)
+	 *
+	 * @param   Int     $structid  StructID
+	 * @param   String  $type      Type
+	 *
+	 * @access	public
+	 * @return	String value
+	 */
+	public function getPicPath($structid)
+	{
+		$db = JFactory::getDBO();
+		/*
+		 $query = "SELECT path FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
+		*/
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from("#__thm_groups_picture_extra");
+		$query->where("`structid` = '" . $structid . "'");
+		$db->setQuery($query);
+		$res = $db->loadObject();
+		if (isset($res->path))
+		{
+			return $res->path;
+		}
+		else
+		{
+			return "";
 		}
 	}
 

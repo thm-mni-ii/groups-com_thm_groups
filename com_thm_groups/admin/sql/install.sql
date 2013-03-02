@@ -198,6 +198,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_picture` (
 CREATE TABLE IF NOT EXISTS `#__thm_groups_picture_extra` (
   `structid` int(11) NOT NULL,
   `value` text NOT NULL,
+  `path` text NOT NULL,
   PRIMARY KEY (`structid`)
 ) ENGINE = INNODB DEFAULT CHARSET=utf8;
 

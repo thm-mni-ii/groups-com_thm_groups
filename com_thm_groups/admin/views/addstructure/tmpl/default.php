@@ -88,12 +88,12 @@ window.addEvent( 'domready', function(){ getFieldExtras();});
 			</tr>
 			<tr>
 				<td>
-					<span id="ajax-container">
-	             	</span>
+					<div id="ajax-container"> 
+	             	</div>
 				</td>
 				<td>
-					<span id="ajax-container2">
-	             	</span>
+					<div id="ajax-container2">
+	             	</div>
 				</td>
 			</tr>
 		</table>
