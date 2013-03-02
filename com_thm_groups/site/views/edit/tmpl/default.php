@@ -11,6 +11,7 @@
  * @author      Daniel Bellof,  <daniel.bellof@mni.thm.de>
  * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
+ * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -39,6 +40,47 @@ else
 			document.getElementsByName('tablekey')[0].value=key;
 			document.getElementsByName('structid')[0].value=structid;
 			document.adminForm.submit();
+		}
+		function editFormValidation(){
+			var message = '';
+			var emailRegExp = /.+@.+\..+/g;
+			var title = document.getElementById("Titel").value;//$("input#titel").val();
+			var vorname = document.getElementById("Vorname").value;
+			var nachname = document.getElementById("Nachname").value;
+			var email = document.getElementById("EMail").value;
+			if(title == '')
+			{
+				message += '<?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_TITLE'); ?>\n';
+			}
+			if(vorname == '')
+			{
+				message += '<?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_FIRSTNAME'); ?>\n';
+			}
+			if(nachname == '')
+			{
+				message += '<?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_LASTNAME'); ?>\n';
+			}
+			if(email == '')
+			{
+				message += '<?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_EMAIL'); ?>\n';
+			}
+			else
+			{
+				var result = emailRegExp.exec(email);
+				if(! result)
+				{
+					message += '<?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_INVALID_EMAIL'); ?>';
+				}
+			}
+			if(message == '')
+			{
+				return true;
+			}
+			else
+			{
+				alert(message);
+				return false;
+			}
 		}
 	</script>
 	<form action="index.php" method="POST" name="adminForm" enctype='multipart/form-data'>
@@ -184,10 +226,15 @@ else
 			</tr>
 			<tr>
 				<td colspan="3">
-					<input type="submit" id="gs_editView_buttons" name="save" value="<?php echo JText::_("COM_THM_GROUPS_SAVE");?>" />
+					<input type="submit" 
+					id="gs_editView_buttons" 
+					name="save" 
+					value="<?php echo JText::_("COM_THM_GROUPS_SAVE");?>" 
+					onclick='document.forms["adminForm"].elements["task"].value = "edit.save";return editFormValidation();'
+					task='edit.save'/>
 					<input type='submit'
 					id="gs_editView_buttons"
-					onclick='document.forms["adminForm"].elements["task"].value = "edit.apply"'
+					onclick='document.forms["adminForm"].elements["task"].value = "edit.apply";return editFormValidation();'
 					value='<?php echo JText::_("COM_THM_GROUPS_APPLY");?>'
 					name='apply'
 					task='edit.apply' />

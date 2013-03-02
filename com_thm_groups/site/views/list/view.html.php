@@ -11,6 +11,7 @@
  * @author      Daniel Bellof,  <daniel.bellof@mni.thm.de>
  * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
+ * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -48,6 +49,7 @@ class THMGroupsViewList extends JView
 		$pagetitle = $params->get('page_title');
 		$showall = $params->get('showAll');
 		$showpagetitle = $params->get('show_page_heading');
+		$columncount = $params->get('columnCount');
 		$this->assignRef('model', $model);
 		if ($showpagetitle)
 		{

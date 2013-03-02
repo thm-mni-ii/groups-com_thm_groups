@@ -7,6 +7,7 @@
  * @name        THMGroupsControllerEdit
  * @description THMGroups component site edit controller
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
+ * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -52,7 +53,9 @@ class THMGroupsControllerEdit extends JController
 		$this->registerTask('delPic', '');
 		$this->registerTask('backToRefUrl', '');
 		$this->registerTask('apply', '');
-		$this->registerTask('addTableRow', '');
+		$this->registerTask('addTableRow', '');		
+		$this->registerTask('save', '');
+		
 	}
 
 	/**

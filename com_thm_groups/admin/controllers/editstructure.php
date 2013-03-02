@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.1.0
+ * @version     v3.1.1
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -8,6 +8,7 @@
  * @description THMGroupsControllerEditStructure class from com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
+ * @author      Tobias Schmitt, <tobias.schmitt@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -137,7 +138,24 @@ class THMGroupsControllerEditStructure extends JControllerForm
 
 		if (!isset($value))
 		{
-			$value->value = "";
+			$value = new stdClass;
+			switch ($field)
+			{
+			case "TEXT":
+				$value->value = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TEXT");
+				break;
+			case "TEXTFIELD":
+				$value->value = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TEXTFIELD");
+				break;
+			case "MULTISELECT":
+				$value->value = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_MULTISELECT");
+				break;
+			case "PICTURE":
+				$value->value = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_PICTURE");
+				break;
+			default:
+				$value->value = "";
+			}
 		}
 
 		// $id = JRequest::getVar('sid');

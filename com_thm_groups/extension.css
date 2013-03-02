@@ -13,7 +13,7 @@
 }
 
 .mod_gs_site div:not(:last-child){
-	float: left;
+	float: none;
 	vertical-align: top;
 }
 

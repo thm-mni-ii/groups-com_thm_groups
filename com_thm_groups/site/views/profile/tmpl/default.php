@@ -12,6 +12,7 @@
  * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
+ * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -183,6 +184,12 @@ $layout_old = 0;
 				}
 				?>
 		</table>
+		<input 	type='submit'
+				id="gs_profileView_buttons"
+				onclick='document.forms["adminForm"].elements["task"].value = "profile.BackToRefUrl"'
+				value='<?php echo JText::_("COM_THM_GROUPS_BACK");?>'
+				name='backToRefUrl'
+				task='profile.backToRefUrl' />	
 		<input type='hidden' name="structid"  value='' />
 		<input type="hidden" name="option" value="com_thm_groups" />
 		<input type="hidden" name="view" value="profile" />

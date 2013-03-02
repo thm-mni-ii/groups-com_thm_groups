@@ -160,7 +160,6 @@ class THMGroupsModeledit extends JModelForm
 		{
 			$puffer = null;
 			$field  = JRequest::getVar($structureItem->field, '', 'post', '', JREQUEST_ALLOWHTML);
-
 			$publish = 0;
 			if ($structureItem->type == 'MULTISELECT')
 			{
@@ -186,7 +185,7 @@ class THMGroupsModeledit extends JModelForm
 
 			$db->setQuery($query);
 			$puffer = $db->loadObject();
-
+			
 			if (isset($structureItem->field))
 			{
 				if (isset($puffer))
@@ -221,7 +220,7 @@ class THMGroupsModeledit extends JModelForm
 					$query->insert($db->qn('#__thm_groups_' . strtolower($structureItem->type)));
 					$query->set("`userid` = '" . $userid . "'");
 					$query->set("`structid` = '" . $structureItem->id . "'");
-					$query->set("`value` = \"" . htmlspecialchars($field->toString()) . "\"");
+					$query->set("`value` = \"" . htmlspecialchars($field) . "\"");
 					$query->set("`publish` = '" . $publish . "'");
 				}
 				$db->setQuery($query);

@@ -23,13 +23,14 @@ jimport('joomla.application.component.modelform');
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
- */
+*/
 class THMGroupsModeledit extends JModelForm
 {
+	private $_msg = '';
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 */
 	public function __construct()
 	{
@@ -55,7 +56,7 @@ class THMGroupsModeledit extends JModelForm
 		foreach ($types as $type)
 		{
 			/*
-			$query = "SELECT structid, value, publish FROM #__thm_groups_" . strtolower($type->Type) . " as a where a.userid = " . $cid[0];
+			 $query = "SELECT structid, value, publish FROM #__thm_groups_" . strtolower($type->Type) . " as a where a.userid = " . $cid[0];
 			*/
 			$query = $db->getQuery(true);
 			$query->select('structid, value, publish');
@@ -86,7 +87,7 @@ class THMGroupsModeledit extends JModelForm
 	{
 		$db = JFactory::getDBO();
 		/*
-		$query = "SELECT * FROM #__thm_groups_structure as a ORDER BY a.order";
+		 $query = "SELECT * FROM #__thm_groups_structure as a ORDER BY a.order";
 		*/
 		$query = $db->getQuery(true);
 		$query->select('*');
@@ -105,8 +106,8 @@ class THMGroupsModeledit extends JModelForm
 	{
 		$db = JFactory::getDBO();
 		/*
-		$query = "SELECT Type FROM #__thm_groups_relationtable "
-			. "WHERE Type in (SELECT type FROM #__thm_groups_structure)";
+		 $query = "SELECT Type FROM #__thm_groups_relationtable "
+		. "WHERE Type in (SELECT type FROM #__thm_groups_structure)";
 		*/
 		$query = $db->getQuery(true);
 		$nestedQuery = $db->getQuery(true);
@@ -133,90 +134,149 @@ class THMGroupsModeledit extends JModelForm
 		$structure = $this->getStructure();
 		$userid = JRequest::getVar('userid');
 		$err = 0;
+		$message = "";
+		
 		foreach ($structure as $structureItem)
 		{
-			$puffer = null;
-			$structureItem->field = str_replace(' ', '_', $structureItem->field);
-			$field = JRequest::getVar($structureItem->field, '', 'post', '', JREQUEST_ALLOWHTML);
-			$publish = 0;
-			if ($structureItem->type == 'MULTISELECT')
+			$data = JRequest::getVar($structureItem->field, '', 'post', '', JREQUEST_ALLOWHTML);
+			switch ($structureItem->field)
 			{
-				$field = implode(';', $field);
+				case 'Titel': 	
+					if ($data == '')
+					{
+						$message .= JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_TITLE') . "<br>";
+					}
+					else
+					{
+					}
+				break;
+				case 'Vorname': 
+					if ($data == '')
+					{
+						$message .= JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_FIRSTNAME') . "<br>";
+					}
+					else
+					{
+					}
+				break;
+				case 'Nachname':
+					if ($data == '')
+					{
+						$message .= JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_LASTNAME') . "<br>";
+					}
+					else
+					{
+					}
+				break;
+				case 'EMail':
+					if ($data == '')
+					{
+						$message .= JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_EMAIL') . "<br>";
+					}
+					else
+					{
+						if (preg_match('/^\S+@\S+$/i', $data))
+						{
+						}
+						else
+						{
+							$message .= JText::_('COM_THM_GROUPS_MEMBERMANAGER_INVALID_EMAIL') . "<br>";
+						}
+					}
+					break;
 			}
-
-			$publishPuffer = JRequest::getVar('publish' . str_replace(" ", "", $structureItem->field));
-
-			if (isset($publishPuffer))
+		}
+		if ($message != '')
+		{
+			$this->_msg = $message;
+			$err = 1;
+		}
+		else 
+		{
+			foreach ($structure as $structureItem)
 			{
-				$publish = 1;
-			}
-
-			/*
-			$query = "SELECT structid FROM #__thm_groups_" . strtolower($structureItem->type) .
-					 " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
-			*/
-			$query = $db->getQuery(true);
-			$query->select('structid');
-			$query->from("#__thm_groups_" . strtolower($structureItem->type));
-			$query->where("userid = " . $userid);
-			$query->where("structid = " . $structureItem->id);
-
-			$db->setQuery($query);
-			$puffer = $db->loadObject();
-
-			if (isset($structureItem->field))
-			{
-				$query = $db->getQuery(true);
-
-				if (isset($puffer))
+				$puffer = null;
+				$structureItem->field = str_replace(' ', '_', $structureItem->field);
+				$field = JRequest::getVar($structureItem->field, '', 'post', '', JREQUEST_ALLOWHTML);
+				$publish = 0;
+				if ($structureItem->type == 'MULTISELECT')
 				{
-					/*
-					$query = "UPDATE #__thm_groups_" . strtolower($structureItem->type) . " SET";
-					*/
-					$query->update("#__thm_groups_" . strtolower($structureItem->type));
-
-					if ($structureItem->type != 'PICTURE' && $structureItem->type != 'TABLE')
+					$field = implode(';', $field);
+				}
+				$publishPuffer = JRequest::getVar('publish' . str_replace(" ", "", $structureItem->field));
+	
+				if (isset($publishPuffer))
+				{
+					$publish = 1;
+				}
+	
+				/*
+				 $query = "SELECT structid FROM #__thm_groups_" . strtolower($structureItem->type) .
+				" WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
+				*/
+				$query = $db->getQuery(true);
+				$query->select('structid');
+				$query->from("#__thm_groups_" . strtolower($structureItem->type));
+				$query->where("userid = " . $userid);
+				$query->where("structid = " . $structureItem->id);
+	
+				$db->setQuery($query);
+				$puffer = $db->loadObject();
+	
+				if (isset($structureItem->field))
+				{
+					$query = $db->getQuery(true);
+	
+					if (isset($puffer))
 					{
 						/*
-	        			$query .= " value='" . $field . "',";
-	        			*/
-						$query->set("value = \"" . htmlspecialchars($field) . "\"");
+						 $query = "UPDATE #__thm_groups_" . strtolower($structureItem->type) . " SET";
+						*/
+						$query->update("#__thm_groups_" . strtolower($structureItem->type));
+	
+						if ($structureItem->type != 'PICTURE' && $structureItem->type != 'TABLE')
+						{
+							/*
+							 $query .= " value='" . $field . "',";
+							*/
+							$query->set("value = \"" . htmlspecialchars($field) . "\"");
+						}
+						/*
+						 $query .= " publish='" . $publish . "'"
+						. " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
+						*/
+						$query->set("publish = " . $publish);
+						$query->where("userid = '" . $userid . "'");
+						$query->where("structid = '" . $structureItem->id . "'");
 					}
-					/*
-        			$query .= " publish='" . $publish . "'"
-       				. " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
-       				*/
-					$query->set("publish = " . $publish);
-					$query->where("userid = '" . $userid . "'");
-					$query->where("structid = '" . $structureItem->id . "'");
+					else
+					{
+						/*
+						 $query = "INSERT INTO #__thm_groups_" . strtolower($structureItem->type) . " ( `userid`, `structid`, `value`, `publish`)"
+						. " VALUES ($userid"
+								. ", " . $structureItem->id
+								. ", '" . $field . "'"
+								. ", " . $publish . ")";
+						*/
+						$query->insert("#__thm_groups_" . strtolower($structureItem->type));
+						$query->set("`userid` = " . $userid);
+						$query->set("`structid` = " . $structureItem->id);
+						$query->set("`value` = \"" . htmlspecialchars($field) . "\"");
+						$query->set("`publish` = " . $publish);
+					}
+					echo $query->__toString() . "<br />";
+					$db->setQuery($query);
+					if (!$db->query())
+					{
+						$err = 1;
+					}
 				}
-				else
+				if ($structureItem->type == 'PICTURE' && $_FILES[$structureItem->field]['name'] != "")
 				{
-					/*
-					$query = "INSERT INTO #__thm_groups_" . strtolower($structureItem->type) . " ( `userid`, `structid`, `value`, `publish`)"
-					        . " VALUES ($userid"
-					        . ", " . $structureItem->id
-					        . ", '" . $field . "'"
-					        . ", " . $publish . ")";
-					*/
-					$query->insert("#__thm_groups_" . strtolower($structureItem->type));
-					$query->set("`userid` = " . $userid);
-					$query->set("`structid` = " . $structureItem->id);
-					$query->set("`value` = \"" . htmlspecialchars($field) . "\"");
-					$query->set("`publish` = " . $publish);
-				}
-				echo $query->__toString() . "<br />";
-				$db->setQuery($query);
-				if (!$db->query())
-				{
-					$err = 1;
-				}
-			}
-			if ($structureItem->type == 'PICTURE' && $_FILES[$structureItem->field]['name'] != "")
-			{
-				if (!$this->updatePic($userid, $structureItem->id, $structureItem->field))
-				{
-					$err = 1;
+					if (!$this->updatePic($userid, $structureItem->id, $structureItem->field))
+					{
+						$err = 1;
+					}
 				}
 			}
 		}
@@ -277,6 +337,7 @@ class THMGroupsModeledit extends JModelForm
 		{
 			$pt = new THMPicTransform($_FILES[$picField]);
 			$pt->safeSpecial(
+
 				JPATH_ROOT . DS . $this->getPicPath($structid) . DS,//"components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS,
 				$uid . "_" . $structid,
 				200,
@@ -299,7 +360,7 @@ class THMGroupsModeledit extends JModelForm
 		}
 		$db = JFactory::getDBO();
 		/*
-		$query = "UPDATE #__thm_groups_picture SET value='" . $uid . "_" . $structid . ".jpg' WHERE userid = $uid AND structid=$structid";
+		 $query = "UPDATE #__thm_groups_picture SET value='" . $uid . "_" . $structid . ".jpg' WHERE userid = $uid AND structid=$structid";
 		*/
 		$query = $db->getQuery(true);
 		$query->update($db->qn('#__thm_groups_picture'));
@@ -330,7 +391,7 @@ class THMGroupsModeledit extends JModelForm
 	{
 		$db = JFactory::getDBO();
 		/*
-		$query = "SELECT value FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
+		 $query = "SELECT value FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
 		*/
 		$query = $db->getQuery(true);
 		$query->select('*');
@@ -395,7 +456,7 @@ class THMGroupsModeledit extends JModelForm
 		$err = 0;
 
 		/*
-		$query = "SELECT value FROM #__thm_groups_table WHERE structid=$structid AND userid=$uid";
+		 $query = "SELECT value FROM #__thm_groups_table WHERE structid=$structid AND userid=$uid";
 		*/
 		$query = $db->getQuery(true);
 		$query->select('`value`');
@@ -411,7 +472,7 @@ class THMGroupsModeledit extends JModelForm
 		}
 
 		/*
-		$query = "SELECT value FROM #__thm_groups_table_extra WHERE structid=" . $structid;
+		 $query = "SELECT value FROM #__thm_groups_table_extra WHERE structid=" . $structid;
 		*/
 		$query = $db->getQuery(true);
 		$query->select('`value`');
@@ -441,7 +502,7 @@ class THMGroupsModeledit extends JModelForm
 		if (isset($res))
 		{
 			/*
-			$query = "UPDATE #__thm_groups_table SET value='$jsonValue' WHERE userid = $uid AND structid=$structid";
+			 $query = "UPDATE #__thm_groups_table SET value='$jsonValue' WHERE userid = $uid AND structid=$structid";
 			*/
 			$query = $db->getQuery(true);
 			$query->update("#__thm_groups_table");
@@ -452,11 +513,11 @@ class THMGroupsModeledit extends JModelForm
 		else
 		{
 			/*
-			$query = "INSERT INTO #__thm_groups_table ( `userid`, `structid`, `value`)"
-				. " VALUES ($uid"
-				. ", " . $structid
-				. ", '" . $jsonValue . "')";
-				*/
+			 $query = "INSERT INTO #__thm_groups_table ( `userid`, `structid`, `value`)"
+			. " VALUES ($uid"
+					. ", " . $structid
+					. ", '" . $jsonValue . "')";
+			*/
 			$query = $db->getQuery(true);
 			$query->insert("#__thm_groups_table");
 			$query->set("`userid` = '" . $uid . "'");
@@ -497,7 +558,7 @@ class THMGroupsModeledit extends JModelForm
 		$err = 0;
 
 		/*
-		$query = "SELECT value FROM #__thm_groups_table WHERE structid=$structid AND userid=$uid";
+		 $query = "SELECT value FROM #__thm_groups_table WHERE structid=$structid AND userid=$uid";
 		*/
 		$query = $db->getQuery(true);
 		$query->select('`value`');
@@ -516,7 +577,7 @@ class THMGroupsModeledit extends JModelForm
 
 		$jsonValue = json_encode($arrValue);
 		/*
-		$query = "UPDATE #__thm_groups_table SET value='$jsonValue' WHERE userid = $uid AND structid=$structid";
+		 $query = "UPDATE #__thm_groups_table SET value='$jsonValue' WHERE userid = $uid AND structid=$structid";
 		*/
 		$query = $db->getQuery(true);
 		$query->update("#__thm_groups_table");
@@ -556,7 +617,7 @@ class THMGroupsModeledit extends JModelForm
 		$arrValue = array();
 		$err = 0;
 		/*
-		$query = "SELECT value FROM #__thm_groups_table WHERE structid=$structid AND userid=$uid";
+		 $query = "SELECT value FROM #__thm_groups_table WHERE structid=$structid AND userid=$uid";
 		*/
 		$query = $db->getQuery(true);
 		$query->select('`value`');
@@ -571,9 +632,9 @@ class THMGroupsModeledit extends JModelForm
 		{
 			$arrValue[] = $row;
 		}
-		
+
 		/*
-		$query = "SELECT value FROM #__thm_groups_table_extra WHERE structid=" . $structid;
+		 $query = "SELECT value FROM #__thm_groups_table_extra WHERE structid=" . $structid;
 		*/
 		$query = $db->getQuery(true);
 		$query->select('`value`');
@@ -589,7 +650,7 @@ class THMGroupsModeledit extends JModelForm
 			$value = JRequest::getVar("TABLE$structid$headItem", '', 'POST', 'STRING', JREQUEST_ALLOWRAW);
 			$arrRow[$headItem] = $value;
 		}
-		
+
 		$arrValue[$key] = $arrRow;
 		$jsonValue = json_encode($arrValue);
 		$jsonValue = str_replace("\u00c4", "&Auml;", $jsonValue);
@@ -601,7 +662,7 @@ class THMGroupsModeledit extends JModelForm
 		$jsonValue = str_replace("\u00df", "&szlig;", $jsonValue);
 		$jsonValue = str_replace("\u20ac", "&euro;", $jsonValue);
 		/*
-		$query = "UPDATE #__thm_groups_table SET value='$jsonValue' WHERE userid = $uid AND structid=$structid";
+		 $query = "UPDATE #__thm_groups_table SET value='$jsonValue' WHERE userid = $uid AND structid=$structid";
 		*/
 		$query = $db->getQuery(true);
 		$query->update("#__thm_groups_table");
@@ -635,7 +696,7 @@ class THMGroupsModeledit extends JModelForm
 
 	/**
 	 * Method to get form
-	 * 
+	 *
 	 * @param   Array  $data      Data
 	 * @param   Bool   $loadData  true
 	 *
@@ -652,15 +713,15 @@ class THMGroupsModeledit extends JModelForm
 	}
 
 	/**
-     * Gets list of group and role relations.
-     *
-     * This function gets a list of group and role relations with groupname, alias and role.
-     *
-     * @param   int  $uid  User-ID.
-     *
-     * @access  public
-     * @return	bool|array       "false" on error|indexed rows with associative colums.
-     */
+	 * Gets list of group and role relations.
+	 *
+	 * This function gets a list of group and role relations with groupname, alias and role.
+	 *
+	 * @param   int  $uid  User-ID.
+	 *
+	 * @access  public
+	 * @return	bool|array       "false" on error|indexed rows with associative colums.
+	 */
 	public function getGroupsAndRoles($uid)
 	{
 		$db = JFactory::getDBO();
@@ -671,14 +732,14 @@ class THMGroupsModeledit extends JModelForm
 		}
 
 		/*
-		$query = 'SELECT groups.name AS groupname, groups.id as groupid, roles.name AS rolename, roles.id AS roleid
-    	FROM             #__thm_groups_groups     AS groups
-    	LEFT JOIN #__thm_groups_groups_map AS maps
-    	ON        groups.id = maps.gid
-    	LEFT JOIN #__thm_groups_roles      AS roles
-    	ON        maps.rid = roles.id
-    	WHERE  maps.uid = ' . $uid . ' AND maps.gid > 1;';
-    	*/
+		 $query = 'SELECT groups.name AS groupname, groups.id as groupid, roles.name AS rolename, roles.id AS roleid
+		FROM             #__thm_groups_groups     AS groups
+		LEFT JOIN #__thm_groups_groups_map AS maps
+		ON        groups.id = maps.gid
+		LEFT JOIN #__thm_groups_roles      AS roles
+		ON        maps.rid = roles.id
+		WHERE  maps.uid = ' . $uid . ' AND maps.gid > 1;';
+		*/
 
 		$query = $db->getQuery(true);
 		$query->select('groups.name AS groupname, groups.id as groupid, roles.name AS rolename, roles.id AS roleid');
@@ -694,18 +755,18 @@ class THMGroupsModeledit extends JModelForm
 	}
 
 	/**
-     * Deletes group and role relations.
-     *
-     * This function deletes group and role relations.
-     * It never deletes group '1' or role '1'.
-     *
-     * @param   array  $uids  Array of int with user-IDs.
-     * @param   int    $gid   Group-ID.
-     * @param   array  $rid   Array of int with role-IDs.
-     *
-     * @access  public
-     * @return	bool          "true" on success, "false" on error.
-     */
+	 * Deletes group and role relations.
+	 *
+	 * This function deletes group and role relations.
+	 * It never deletes group '1' or role '1'.
+	 *
+	 * @param   array  $uids  Array of int with user-IDs.
+	 * @param   int    $gid   Group-ID.
+	 * @param   array  $rid   Array of int with role-IDs.
+	 *
+	 * @access  public
+	 * @return	bool          "true" on success, "false" on error.
+	 */
 	public function delGroupsAndRoles($uids, $gid, $rid)
 	{
 		// Create SQL query string
@@ -713,13 +774,13 @@ class THMGroupsModeledit extends JModelForm
 		foreach ($uids as $uid)
 		{
 			/*
-			$query .= 'DELETE
-    		FROM    #__thm_groups_groups_map
-    		WHERE   !(gid = 1)
-    		AND     uid = ' . $uid . '
-    		AND     gid = ' . $gid . '
-    		AND	   rid = ' . $rid . ';';
-    		*/
+			 $query .= 'DELETE
+			FROM    #__thm_groups_groups_map
+			WHERE   !(gid = 1)
+			AND     uid = ' . $uid . '
+			AND     gid = ' . $gid . '
+			AND	   rid = ' . $rid . ';';
+			*/
 			$db = JFactory::getDBO();
 			$query = $db->getQuery(true);
 			$query->from('#__thm_groups_groups_map');
@@ -735,17 +796,17 @@ class THMGroupsModeledit extends JModelForm
 	}
 
 	/**
-     * Sets group and role relations.
-     *
-     * This function sets group and role relations.
-     *
-     * @param   array  $uids  Array of int with user-IDs.
-     * @param   int    $gid   Group-ID.
-     * @param   int    $rid   Role id to the Group.
-     *
-     * @access  public
-     * @return	bool          "true" on success, "false" on error.
-     */
+	 * Sets group and role relations.
+	 *
+	 * This function sets group and role relations.
+	 *
+	 * @param   array  $uids  Array of int with user-IDs.
+	 * @param   int    $gid   Group-ID.
+	 * @param   int    $rid   Role id to the Group.
+	 *
+	 * @access  public
+	 * @return	bool          "true" on success, "false" on error.
+	 */
 	public function setGroupsAndRoles($uids, $gid, $rid)
 	{
 		// Convert to array
@@ -759,16 +820,16 @@ class THMGroupsModeledit extends JModelForm
 	}
 
 	/**
-     * Executes transaction-safe SQL query.
-     *
-     * This function executes one or multiple SQL-commands supplied in one string.
-     *
-     * @param   string  $query        One or multiple SQL commands.
-     * @param   bool    $transaction  Enable transaction safety (must be 'false' when loading data).
-     *
-     * @access  private
-     * @return	bool                  "true" on success, "false" on error.
-     */
+	 * Executes transaction-safe SQL query.
+	 *
+	 * This function executes one or multiple SQL-commands supplied in one string.
+	 *
+	 * @param   string  $query        One or multiple SQL commands.
+	 * @param   bool    $transaction  Enable transaction safety (must be 'false' when loading data).
+	 *
+	 * @access  private
+	 * @return	bool                  "true" on success, "false" on error.
+	 */
 	private function executeDbData($query, $transaction)
 	{
 		// Set Query string
@@ -789,19 +850,19 @@ class THMGroupsModeledit extends JModelForm
 	}
 
 	/**
-     * Inserts or updates data into a SQL table.
-     *
-     * This function inserts or updates data transaction-safe into a SQL table.
-     *
-     * @param   string  $table    Name of table.
-     * @param   array   $object   Array of indexed rows with associative colums.
-     * @param   bool    $insert   Insert data.
-     * @param   bool    $update   Update data.
-     * @param   string  $keyName  Name of key in where clause.
-     *
-     * @access  private
-     * @return	bool              "true" on success, "false" on error.
-     */
+	 * Inserts or updates data into a SQL table.
+	 *
+	 * This function inserts or updates data transaction-safe into a SQL table.
+	 *
+	 * @param   string  $table    Name of table.
+	 * @param   array   $object   Array of indexed rows with associative colums.
+	 * @param   bool    $insert   Insert data.
+	 * @param   bool    $update   Update data.
+	 * @param   string  $keyName  Name of key in where clause.
+	 *
+	 * @access  private
+	 * @return	bool              "true" on success, "false" on error.
+	 */
 	private function setDBInsertUpdate($table, $object, $insert, $update, $keyName)
 	{
 		// Create and set SQL query string
@@ -847,18 +908,31 @@ class THMGroupsModeledit extends JModelForm
 	}
 
 	/**
-     * Sets data into database.
-     *
-     * This function Sets data with one or multiple transaction-safe SQL-commands supplied in one string.
-     *
-     * @param   string  $query  One or multiple SQL commands.
-     *
-     * @access  private
-     * @return	bool            "true" on success, "false" on error.
-     */
+	 * Sets data into database.
+	 *
+	 * This function Sets data with one or multiple transaction-safe SQL-commands supplied in one string.
+	 *
+	 * @param   string  $query  One or multiple SQL commands.
+	 *
+	 * @access  private
+	 * @return	bool            "true" on success, "false" on error.
+	 */
 	public function setDbData($query)
 	{
 		// Encapsulate executeDbData() with transaction-safety enabled
 		return($this->executeDbData($query, true));
+	}
+	
+	/**
+	 * Returns Error Message.
+	 *
+	 * This function returns a error message.
+	 *
+	 * @access  private
+	 * @return	String          The message errors.
+	 */
+	public function getErrorMessage()
+	{
+		return $this->_msg;
 	}
 }

@@ -11,6 +11,7 @@
  * @author      Daniel Bellof,  <daniel.bellof@mni.thm.de>
  * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
+ * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -228,13 +229,29 @@ class THMGroupsModelList extends JModel
 	public function getUserCountToGid($gid)
 	{
 		$db = & JFactory::getDBO();
-		/*
-    	$query = "SELECT count(*) AS anzahl FROM #__thm_groups_groups_map WHERE gid=$gid";
-    	*/
+		/*$query = "SELECT count(distinct b.userid) as anzahl, " 
+		    . "FROM `#__thm_groups_structure` as a "
+			. "inner join #__thm_groups_text as b on a.id = b.structid and b.structid=1 "
+			. "inner join #__thm_groups_text as c on b.userid=c.userid and c.structid=2 "
+			. "inner join #__thm_groups_text as d on c.userid=d.userid and d.structid=3 "
+			. "inner join #__thm_groups_text as e on d.userid=e.userid and e.structid=4 "
+			. "left outer join #__thm_groups_text as t on e.userid=t.userid and t.structid=5 "
+			. "inner join #__thm_groups_additional_userdata as f on f.userid = e.userid, "
+			. "`#__thm_groups_groups_map` "
+			. "WHERE published = 1 and e.userid = uid and gid = $gid "*/	
 		$query = $db->getQuery(true);
-		$query->select('COUNT(*) AS anzahl');
+		$query->select("COUNT(distinct b.userid) AS anzahl");
 		$query->from($db->qn('#__thm_groups_groups_map'));
-		$query->where('gid = ' . $gid);
+		$query->from($db->qn('#__thm_groups_structure') . ' AS a');
+		$query->innerJoin("#__thm_groups_text as b on a.id = b.structid and b.structid=1");
+		$query->innerJoin("#__thm_groups_text as c on b.userid=c.userid and c.structid=2");
+		$query->innerJoin("#__thm_groups_text as d on c.userid=d.userid and d.structid=3");
+		$query->innerJoin("#__thm_groups_text as e on d.userid=e.userid and e.structid=4");
+		$query->join("left outer", "#__thm_groups_text as t on e.userid=t.userid and t.structid=5");
+		$query->innerJoin("#__thm_groups_additional_userdata as f on f.userid = e.userid");
+		$query->where("published = 1");
+		$query->where("e.userid = uid");
+		$query->where("gid = $gid");
 		$db->setQuery($query);
 		return $db->loadObjectList();
 	}
@@ -295,6 +312,31 @@ class THMGroupsModelList extends JModel
 			. "`#__thm_groups_groups_map` "
 			. "WHERE published = 1 and c.value like '$char%' and e.userid = uid and gid = $gid "
 			. "ORDER BY lastName";*/
+		$letterCase = "";
+		if ($char == 'A')
+		{
+			$letterCase = "( c.value like 'A%' or c.value like 'Ä%')";
+		}
+		else
+		{
+			$letterCase = "c.value like '$char%'";
+		}
+		if ($char == 'O')
+		{
+			$letterCase = "( c.value like 'O%' or c.value like 'Ö%')";
+		}
+		else
+		{
+			$letterCase = "c.value like '$char%'";
+		}
+		if ($char == 'U')
+		{
+			$letterCase = "( c.value like 'U%' or c.value like 'Ü%')";
+		}
+		else
+		{
+			$letterCase = "c.value like '$char%'";
+		}
 		$query = $db->getQuery(true);
 		$query->select("distinct b.userid as id");
 		$query->select("b.value as firstName");
@@ -314,7 +356,7 @@ class THMGroupsModelList extends JModel
 		$query->join("left outer", "#__thm_groups_text as t on e.userid=t.userid and t.structid=5");
 		$query->innerJoin("#__thm_groups_additional_userdata as f on f.userid = e.userid");
 		$query->where("published = 1");
-		$query->where("c.value like '$char%'");
+		$query->where($letterCase);
 		$query->where("e.userid = uid");
 		$query->where("gid = $gid");
 		$query->order("lastName");
@@ -346,6 +388,28 @@ class THMGroupsModelList extends JModel
 			. "`#__thm_groups_groups_map` "
 			. "WHERE published = 1 and c.value like '$shownLetter%' and e.userid = uid and gid = $gid "
 			. "ORDER BY lastName";*/
+		$letterCase = "c.value like '$shownLetter%'";
+		if ($shownLetter == 'A')
+		{
+			$letterCase = "( c.value like 'A%' or c.value like 'Ä%')";
+		}
+		else
+		{
+		}
+		if ($shownLetter == 'O')
+		{
+			$letterCase = "( c.value like 'O%' or c.value like 'Ö%')";
+		}
+		else
+		{
+		}
+		if ($shownLetter == 'U')
+		{
+			$letterCase = "( c.value like 'U%' or c.value like 'Ü%')";
+		}
+		else
+		{
+		}
 		$query = $db->getQuery(true);
 		$query->select("distinct b.userid as id");
 		$query->select("b.value as firstName");
@@ -365,7 +429,7 @@ class THMGroupsModelList extends JModel
 		$query->join("left outer", "#__thm_groups_text as t on e.userid=t.userid and t.structid=5");
 		$query->innerJoin("#__thm_groups_additional_userdata as f on f.userid = e.userid");
 		$query->where("published = 1");
-		$query->where("c.value like '$shownLetter%'");
+		$query->where($letterCase);
 		$query->where("e.userid = uid");
 		$query->where("gid = $gid");
 		$query->order("lastName");
