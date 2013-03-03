@@ -32,6 +32,13 @@
 				<option value="module">COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_TARGET_LABEL_MODULE</option>
 				<option value="profile">COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_TARGET_LABEL_PROFILE</option>
 			</field>
+			<field
+				name="columnCount"
+				type="input"
+				label="COM_THM_GROUPS_LIST_VIEW_PARAM_COLUMNCOUNT_LABEL"
+				default="1"
+				description="COM_THM_GROUPS_LIST_VIEW_PARAM_COLUMNCOUNT_DESCRIPTION">
+			</field>
 		</fieldset>
 		<fieldset name="advanced">
 			<field 
