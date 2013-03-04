@@ -19,6 +19,13 @@
             description="COM_THM_QUICKPAGES_CONFIG_ROOT_CATEGORY_REPOSITORY_SETTING_DESC"
             extension="com_thm_repository"
         />
+        <field
+            name="modthmgroupscontent_category"
+            type="category"
+            label="COM_THM_GROUPS_CONTENT_CONFIG_ROOT_CATEGORY_REPOSITORY_SETTING_LABEL"
+            description="COM_THM_GROUPS_CONTENT_CONFIG_ROOT_CATEGORY_REPOSITORY_SETTING_DESC"
+            extension="com_content"
+        />
     </fieldset>
 	<fieldset name="permissions"
 		description="JCONFIG_PERMISSIONS_DESC"
