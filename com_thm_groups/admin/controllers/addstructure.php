@@ -193,7 +193,7 @@ class THMGroupsControllerAddStructure extends JControllerForm
 						. "type='text' name='" . $field . "_extra_path' "
 						. "id='" . $field . "_extra_path' "
 						. "size='40'"
-						. "value='' "
+						. "value='components/com_thm_groups/img/portraits' "
 						. "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE_PATH") . "' "
 						. "/>";
 				//TODO: HIER MUSS ICH MACHEN
