@@ -197,8 +197,8 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_picture` (
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_picture_extra` (
   `structid` int(11) NOT NULL,
-  `value` text NOT NULL,
-  `path` text NOT NULL,
+  `value` text NOT NULL DEFAULT 'anonym.jpg',
+  `path` text NOT NULL DEFAULT 'components/com_thm_groups/img/portraits',
   PRIMARY KEY (`structid`)
 ) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
