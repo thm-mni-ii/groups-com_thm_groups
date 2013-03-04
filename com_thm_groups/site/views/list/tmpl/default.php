@@ -445,7 +445,6 @@
 		
 		foreach ($groupMember as $member)
 		{
-			var_dump($member['lastName']);
 			$searchUm = str_replace("Ãƒâ€“", "&Ouml;", $member['lastName']);
 			$searchUm = str_replace("ÃƒÂ¶", "&ouml;", $searchUm);
 			$searchUm = str_replace("Ãƒâ€ž", "&Auml;", $searchUm);
