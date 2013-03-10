@@ -115,7 +115,6 @@
 		$itemid = JRequest::getVar('Itemid', 0);
 		$abc = array(
 				'A',
-				'Ä',
 				'B',
 				'C',
 				'D',
@@ -130,14 +129,12 @@
 				'M',
 				'N',
 				'O',
-				'Ö',
 				'P',
 				'Q',
 				'R',
 				'S',
 				'T',
 				'U',
-				'Ü',
 				'V',
 				'W',
 				'X',
