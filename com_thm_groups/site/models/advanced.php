@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.2.4
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -330,6 +330,7 @@ class THMGroupsModelAdvanced extends JModel
 								else
 								{
 									$puffer['value'] = $struct->value;
+									$puffer['picpath'] = $this->getPicPath($struct->structid);
 								}
 								array_push($data[$key], $puffer);
 							}
