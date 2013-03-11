@@ -210,8 +210,7 @@ class THMGroupsModelProfile extends JModelForm
 	/**
 	 * Method to get extra data
 	 *
-	 * @param   Int     $structid  StructID
-	 * @param   String  $type      Picturefield
+	 * @param   Int  $structid  StructID
 	 *
 	 * @access	public
 	 * @return	null / value

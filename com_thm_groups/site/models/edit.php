@@ -294,7 +294,8 @@ class THMGroupsModeledit extends JModelForm
 		{
 			$pt = new THMPicTransform($_FILES[$picField]);
 			$compath = "com_thm_groups";
-			$pt->safeSpecial(JPATH_ROOT . DS . $this->getPicPath($structid) . DS,//"components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS,
+			$pt->safeSpecial(
+				JPATH_ROOT . DS . $this->getPicPath($structid) . DS, // "components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS,
 				$uid . "_" . $structid, 200, 200, "JPG");
 			if (JModuleHelper::isEnabled('mod_thm_groups')->id != 0)
 			{
@@ -365,8 +366,7 @@ class THMGroupsModeledit extends JModelForm
 	/**
 	 * Method to get extra data
 	 *
-	 * @param   Int     $structid  StructID
-	 * @param   String  $type      Picturefield
+	 * @param   Int  $structid  StructID
 	 *
 	 * @access	public
 	 * @return	null / value

@@ -338,7 +338,7 @@ class THMGroupsModeledit extends JModelForm
 			$pt = new THMPicTransform($_FILES[$picField]);
 			$pt->safeSpecial(
 
-				JPATH_ROOT . DS . $this->getPicPath($structid) . DS,//"components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS,
+				JPATH_ROOT . DS . $this->getPicPath($structid) . DS, // "components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS,
 				$uid . "_" . $structid,
 				200,
 				200,
@@ -412,8 +412,7 @@ class THMGroupsModeledit extends JModelForm
 	/**
 	 * Get extra path from db (for picture)
 	 *
-	 * @param   Int     $structid  StructID
-	 * @param   String  $type      Type
+	 * @param   Int  $structid  StructID
 	 *
 	 * @access	public
 	 * @return	String value

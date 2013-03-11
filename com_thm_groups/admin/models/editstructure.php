@@ -128,6 +128,9 @@ class THMGroupsModelEditStructure extends JModel
 		{
 			$err = true;
 		}
+		else
+		{
+		}
 
 		if (isset($extra))
 		{
@@ -150,10 +153,13 @@ class THMGroupsModelEditStructure extends JModel
 			if ($count == "0")
 			{
 				$query = $db->getQuery(true);
-				if(isset($picpath)){
+				if (isset($picpath))
+				{
 					$query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`, `path`)");
 					$query->values("'" . $id[0] . "', '" . $extra . "', '" . $picpath . "'");
-				}else{
+				}
+				else
+				{
 					$query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`)");
 					$query->values("'" . $id[0] . "', '" . $extra . "'");
 				}
@@ -169,7 +175,10 @@ class THMGroupsModelEditStructure extends JModel
 				$query = $db->getQuery(true);
 				$query->update("`#__thm_groups_" . strtolower($relation) . "_extra`");
 				$query->set("`value` = '" . $extra . "'");
-				if(isset($picpath)) $query->set("`path` = '" . $picpath . "'");
+				if (isset($picpath)) 
+				{
+					$query->set("`path` = '" . $picpath . "'");
+				}
 				$query->where('structid = ' . $id[0]);
 				$db->setQuery($query);
 				if (!$db->query())

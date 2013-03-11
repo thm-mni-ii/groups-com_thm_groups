@@ -272,7 +272,7 @@ class THMGroupsControllerEditStructure extends JControllerForm
 					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT")
 					. ":</span>";
 					$output .= "<br><br>";
-					$output .=  "<span title='"
+					$output .= "<span title='"
 					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE_PATH")
 					. "'>"
 					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_PATH")

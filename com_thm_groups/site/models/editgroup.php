@@ -335,9 +335,11 @@ class THMGroupsModelEditGroup extends JModelForm
 		{
 			$pt = new THMPicTransform($_FILES[$picField]);
 			$compath = "com_thm_groups";
-// 			$pt->safeSpecial(
-// 					JPATH_ROOT . DS . $this->getPicPath($structid) . DS,//"components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS,
-// 					"g" . $gid, 200, 200, "JPG");
+			
+/* 			$pt->safeSpecial(
+ 					JPATH_ROOT . DS . $this->getPicPath($structid) . DS,//"components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS,
+ 					"g" . $gid, 200, 200, "JPG"); */
+
 			$pt->safeSpecial(JPATH_ROOT . DS . "components" . DS . $compath . DS . "img" . DS . "portraits" . DS, "g" . $gid, 200, 200, "JPG");
 			if (JModuleHelper::isEnabled('mod_thm_groups')->id != 0)
 			{
@@ -374,8 +376,7 @@ class THMGroupsModelEditGroup extends JModelForm
 	/**
 	 * Get extra path from db (for picture)
 	 *
-	 * @param   Int     $structid  StructID
-	 * @param   String  $type      Type
+	 * @param   Int  $structid  StructID
 	 *
 	 * @access	public
 	 * @return	String value

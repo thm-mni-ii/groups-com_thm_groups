@@ -114,11 +114,14 @@ class THMGroupsModelAddStructure extends JModel
 			*/
 			$query = $db->getQuery(true);
 			
-			// besondere behandlung fuer picture, da andere parameter
-			if (isset($picpath)){
+			// Besondere behandlung fuer picture, da andere parameter
+			if (isset($picpath))
+			{
 				$query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`, `path`)");
 				$query->values("'" . $id . "', '" . $extra . "', '" . $picpath . "'");
-			}else{
+			}
+			else
+			{
 				$query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`)");
 				$query->values("'" . $id . "', '" . $extra . "'");
 			}
