@@ -85,10 +85,27 @@ $layout_old = 0;
 				}
 
 				echo "</h2>";
-
 				if ($picture != null)
-				{
+				{ 
 					echo JHTML :: image($picpath . '/' . $picture, "Portrait", array ());
+				}
+				else 
+				{
+					$picStrcutId = "";
+					$allStructs = THMGroupsModelProfile::getStructure();
+					foreach ($allStructs as $struct) 
+					{
+						if ($struct->type == "PICTURE")
+						{
+							$picStrcutId = $struct->id;
+						}
+						else 
+						{
+						}
+					}
+					$path = JURI::base() . THMGroupsModelProfile::getPicPath($picStrcutId);
+					$picture = THMGroupsModelProfile::getDefaultPic($picStrcutId);
+					echo JHTML :: image($path . '/' . $picture, "Portrait", array ());
 				}
 				foreach ($this->structure as $structureItem)
 				{

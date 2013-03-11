@@ -26,7 +26,7 @@ jimport('joomla.application.component.modelform');
  * @package   thm_groups
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
- */
+*/
 class THMGroupsModelProfile extends JModelForm
 {
 	protected $db;
@@ -41,7 +41,7 @@ class THMGroupsModelProfile extends JModelForm
 		$this->getForm();
 		$this->db = JFactory::getDBO();
 	}
-	
+
 	/**
 	 * Method to get the record form.
 	 *
@@ -53,12 +53,12 @@ class THMGroupsModelProfile extends JModelForm
 	public function getForm($data = array(), $loadData = true)
 	{
 		$form = $this->loadForm('com_thm_groups.edit', 'edit', array('load_data' => $loadData));
-	
+
 		if (empty($form))
 		{
 			return false;
 		}
-	
+
 		return $form;
 	}
 
@@ -73,7 +73,7 @@ class THMGroupsModelProfile extends JModelForm
 		$groupid = $this->getGroupNumber();
 		$user =& JFactory::getUser();
 		/*
-		$query = "SELECT rid FROM #__thm_groups_groups_map " . "WHERE uid = $user->id AND gid = $groupid";
+		 $query = "SELECT rid FROM #__thm_groups_groups_map " . "WHERE uid = $user->id AND gid = $groupid";
 		*/
 		$query = $this->db->getQuery(true);
 		$query->select('rid');
@@ -109,7 +109,7 @@ class THMGroupsModelProfile extends JModelForm
 		foreach ($types as $type)
 		{
 			/*
-			$query = "SELECT structid, value, publish FROM #__thm_groups_" . strtolower($type->Type) . " as a where a.userid = " . $cid;
+			 $query = "SELECT structid, value, publish FROM #__thm_groups_" . strtolower($type->Type) . " as a where a.userid = " . $cid;
 			*/
 			$query = $db->getQuery(true);
 			$query->select('*');
@@ -160,7 +160,7 @@ class THMGroupsModelProfile extends JModelForm
 	{
 		$db = JFactory::getDBO();
 		/*
-		$query = "SELECT Type FROM #__thm_groups_relationtable " . "WHERE Type in (SELECT type FROM #__thm_groups_structure)";
+		 $query = "SELECT Type FROM #__thm_groups_relationtable " . "WHERE Type in (SELECT type FROM #__thm_groups_structure)";
 		*/
 		$nestedQuery = $db->getQuery(true);
 		$query = $db->getQuery(true);
@@ -189,7 +189,7 @@ class THMGroupsModelProfile extends JModelForm
 	{
 		$db = JFactory::getDBO();
 		/*
-		$query = "SELECT value FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
+		 $query = "SELECT value FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
 		*/
 		$query = $db->getQuery(true);
 		$query->select('*');
@@ -206,7 +206,7 @@ class THMGroupsModelProfile extends JModelForm
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Method to get extra data
 	 *
@@ -227,7 +227,7 @@ class THMGroupsModelProfile extends JModelForm
 		$query->where('structid = ' . $structid);
 		$db->setQuery($query);
 		$res = $db->loadObject();
-		if (isset($res))
+		if (isset($res->path))
 		{
 			return $res->path;
 		}
@@ -262,7 +262,7 @@ class THMGroupsModelProfile extends JModelForm
 		$gid = $this->getGroupNumber();
 		$db = JFactory::getDBO();
 		/*
-		$query = "SELECT rid FROM `#__thm_groups_groups_map` where uid=$id AND gid=$gid";
+		 $query = "SELECT rid FROM `#__thm_groups_groups_map` where uid=$id AND gid=$gid";
 		*/
 		$query = $db->getQuery(true);
 		$query->select('rid');
@@ -297,7 +297,7 @@ class THMGroupsModelProfile extends JModelForm
 		$letter			   = strtoupper(substr($userInfo['lastName'], 0, 1));
 		$db =& JFactory::getDBO();
 		/*
-		$query = "SELECT link FROM `#__menu` where id= $itemid";
+		 $query = "SELECT link FROM `#__menu` where id= $itemid";
 		*/
 		$query = $db->getQuery(true);
 		$query->select('link');
@@ -307,5 +307,35 @@ class THMGroupsModelProfile extends JModelForm
 		$item = $db->loadObject();
 		$link = substr($item->link . "&Itemid=" . $itemid, 0, strlen($item->link . "&Itemid=" . $itemid));
 		return $link . "&/$id-" . $userInfo['lastName'] . "&letter=$letter";
+	}
+
+	/**
+	 * Get default pic for structure element from db (for picture)
+	 *
+	 * @param   Int  $structid  StructID
+	 *
+	 * @access public
+	 * @return String value
+	 */
+	public function getDefaultPic($structid)
+	{
+		$db = JFactory::getDBO();
+		/*
+		 $query = "SELECT path FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
+		*/
+		$query = $db->getQuery(true);
+		$query->select('value');
+		$query->from("#__thm_groups_picture_extra");
+		$query->where("`structid` = '" . $structid . "'");
+		$db->setQuery($query);
+		$res = $db->loadObject();
+		if (isset($res->value))
+		{
+			return $res->value;
+		}
+		else
+		{
+			return "";
+		}
 	}
 }
