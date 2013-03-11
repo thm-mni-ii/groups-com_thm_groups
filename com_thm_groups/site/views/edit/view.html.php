@@ -107,14 +107,14 @@ class THMGroupsViewEdit extends JView
 	{
 		$model =& $this->getModel();
 		$extra = $model->getExtra($structid, 'PICTURE');
-		$path = $model->getPicPath($structid);
+		$path = JURI::base() . $model->getPicPath($structid);
 		if ($value != "")
 		{
-			$output = '<img src=../' . $path . '/' . $value . ' />';
+			$output = '<img src=' . $path . '/' . $value . ' />';
 		}
 		else
 		{
-			$output = '<img src=../' . $path . '/' . $extra . ' />';
+			$output = '<img src=' . $path . '/' . $extra . ' />';
 		}
 		$output .= "<br /><input type='file' value='bla' accept='image' name='$name' />" .
 		"<br /><input type='submit' id='gs_editView_buttons' " .
