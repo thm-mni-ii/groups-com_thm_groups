@@ -1,127 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<layout title="THM-Groups - List View">
-		<message>
-			<![CDATA[COM_THM_GROUPS_LIST_VIEW_DESC]]>
-		</message>
-	</layout>
-	<fields name="params">
-		<fieldset name="basic">
-			<field 
-				addfieldpath="/administrator/components/com_thm_groups/elements/" 
-				name="selGroup" 
-				type="groupitemselect" 
-				label="COM_THM_GROUPS_SELECT_GROUP_LABEL" 
-				description="COM_THM_GROUPS_SELECT_GROUP_DESC" 
-			/>	
-			<field 
-				name="showAll" 
-				type="radio" 
-				label="COM_THM_GROUPS_LIST_VIEW_PARAM_SHOW_ALL_LABEL" 
-				default="1" 
-				description="COM_THM_GROUPS_LIST_VIEW_PARAM_SHOW_ALL_DESCRIPTION">
-				<option value="0">JNO</option>
-				<option value="1">JYES</option>
-			</field>
-			<field 
-				name="linkTarget" 
-				type="radio" 
-				label="COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_TARGET_LABEL" 
-				default="1" 
-				description="COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_TARGET_DESCRIPTION">
-				<option value="module">COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_TARGET_LABEL_MODULE</option>
-				<option value="profile">COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_TARGET_LABEL_PROFILE</option>
-			</field>
-			<field
-				name="columnCount"
-				type="input"
-				label="COM_THM_GROUPS_LIST_VIEW_PARAM_COLUMNCOUNT_LABEL"
-				default="1"
-				description="COM_THM_GROUPS_LIST_VIEW_PARAM_COLUMNCOUNT_DESCRIPTION">
-			</field>
-		</fieldset>
-		<fieldset name="advanced">
-			<field 
-				name="spacer1" 
-				type="spacer" 
-				label="&lt;span style=&quot;width:474px;display:block;font-weight:bold&quot;&gt;Standard color for Alphabet Chars &lt;/span&gt;" 
-			/>
-			<field 
-				addfieldpath="/administrator/components/com_thm_groups/elements/" 
-				name="alphabet_exists_color" 
-				id="alphabet_exists_color" 
-				type="alphabetColor" 
-				label="Background color" 
-				description="Select the background color for the existing chars in the alphabet (TODO: Language File)" 
-			/>	
-			<field 
-				addfieldpath="/administrator/components/com_thm_groups/elements/" 
-				name="alphabet_exists_font_color" 
-				id="alphabet_exists_font_color" 
-				type="alphabetColor" 
-				label="Font Color" 
-				description="Select the background color for the existing chars in the alphabet (TODO: Language File)" 
-			/>	
-			<field 
-				name="spacer2" 
-				type="spacer" 
-				label="&lt;span style=&quot;width:474px;display:block;font-weight:bold&quot;&gt;Inactive color for Alphabet Chars &lt;/span&gt;"
-			/>
-			<field 
-				addfieldpath="/administrator/components/com_thm_groups/elements/" 
-				name="alphabet_inactive_color" 
-				type="alphabetColor" 
-				label="Background color" 
-				description="Select the background color for the existing chars in the alphabet (TODO: Language File)" 
-			/>	
-			<field 
-				addfieldpath="/administrator/components/com_thm_groups/elements/" 
-				name="alphabet_inactive_font_color" 
-				type="alphabetColor" 
-				label="Font Color" 
-				description="Select the background color for the existing chars in the alphabet (TODO: Language File)" 
-			/>	
-			<field 
-				name="spacer3" 
-				type="spacer" 
-				label="&lt;span style=&quot;width:474px;display:block;font-weight:bold&quot;&gt;Active color for Alphabet Chars &lt;/span&gt;" 
-			/>
-			<field 
-				addfieldpath="/administrator/components/com_thm_groups/elements/" 
-				name="alphabet_active_color" 
-				type="alphabetColor" 
-				label="Background color" 
-				description="Select the background color for the existing chars in the alphabet (TODO: Language File)" 
-			/>	
-			<field 
-				addfieldpath="/administrator/components/com_thm_groups/elements/" 
-				name="alphabet_active_font_color" 
-				type="alphabetColor" 
-				label="Font Color" 
-				description="Select the background color for the existing chars in the alphabet (TODO: Language File)" 
-			/>	
-			<field 
-				name="spacer4" 
-				type="spacer" 
-				label="&lt;span style=&quot;width:474px;display:block;font-weight:bold&quot;&gt;Spacing of Elements &lt;/span&gt;" 
-			/>			
-			<field 
-				name="lineSpacing" 
-				type="text" 
-				label="COM_THM_GROUPS_LINE_SPACING_LABEL" 
-				default="1" 
-				description="COM_THM_GROUPS_LINE_SPACING_DESC"  
-			/>
-			<field 
-				name="zSpacing" 
-				type="text" 
-				label="COM_THM_GROUPS_Z_SPACING_LABEL" 
-				default="1" 
-				description="COM_THM_GROUPS_Z_SPACING_DESC" 
-			/>
-		</fieldset>
-	</fields>
+    <layout title="THM-Groups - List View">
+        <message>
+            <![CDATA[COM_THM_GROUPS_LIST_VIEW_DESC]]>
+        </message>
+    </layout>
+    <fields name="params">
+        <fieldset name="basic">
+            <field 
+                addfieldpath="/administrator/components/com_thm_groups/elements/" 
+                name="selGroup" 
+                type="groupitemselect" 
+                label="COM_THM_GROUPS_SELECT_GROUP_LABEL" 
+                description="COM_THM_GROUPS_SELECT_GROUP_DESC" 
+            />  
+            <field 
+                name="showAll" 
+                type="radio" 
+                label="COM_THM_GROUPS_LIST_VIEW_PARAM_SHOW_ALL_LABEL" 
+                default="1" 
+                description="COM_THM_GROUPS_LIST_VIEW_PARAM_SHOW_ALL_DESCRIPTION">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field 
+                name="linkTarget" 
+                type="radio" 
+                label="COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_TARGET_LABEL" 
+                default="profile" 
+                description="COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_TARGET_DESCRIPTION">
+                <option value="module">COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_TARGET_LABEL_MODULE</option>
+                <option value="profile">COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_TARGET_LABEL_PROFILE</option>
+            </field>
+            <field
+                name="columnCount"
+                type="input"
+                label="COM_THM_GROUPS_LIST_VIEW_PARAM_COLUMNCOUNT_LABEL"
+                default="1"
+                description="COM_THM_GROUPS_LIST_VIEW_PARAM_COLUMNCOUNT_DESCRIPTION">
+            </field>
+        </fieldset>
+        <fieldset name="advanced">
+            <field 
+                name="spacer1" 
+                type="spacer" 
+                label="&lt;span style=&quot;width:474px;display:block;font-weight:bold&quot;&gt;Standard color for Alphabet Chars &lt;/span&gt;" 
+            />
+            <field 
+                addfieldpath="/administrator/components/com_thm_groups/elements/" 
+                name="alphabet_exists_color" 
+                id="alphabet_exists_color" 
+                type="alphabetColor" 
+                label="Background color" 
+                description="Select the background color for the existing chars in the alphabet (TODO: Language File)" 
+            />  
+            <field 
+                addfieldpath="/administrator/components/com_thm_groups/elements/" 
+                name="alphabet_exists_font_color" 
+                id="alphabet_exists_font_color" 
+                type="alphabetColor" 
+                label="Font Color" 
+                description="Select the background color for the existing chars in the alphabet (TODO: Language File)" 
+            />  
+            <field 
+                name="spacer2" 
+                type="spacer" 
+                label="&lt;span style=&quot;width:474px;display:block;font-weight:bold&quot;&gt;Inactive color for Alphabet Chars &lt;/span&gt;"
+            />
+            <field 
+                addfieldpath="/administrator/components/com_thm_groups/elements/" 
+                name="alphabet_inactive_color" 
+                type="alphabetColor" 
+                label="Background color" 
+                description="Select the background color for the existing chars in the alphabet (TODO: Language File)" 
+            />  
+            <field 
+                addfieldpath="/administrator/components/com_thm_groups/elements/" 
+                name="alphabet_inactive_font_color" 
+                type="alphabetColor" 
+                label="Font Color" 
+                description="Select the background color for the existing chars in the alphabet (TODO: Language File)" 
+            />  
+            <field 
+                name="spacer3" 
+                type="spacer" 
+                label="&lt;span style=&quot;width:474px;display:block;font-weight:bold&quot;&gt;Active color for Alphabet Chars &lt;/span&gt;" 
+            />
+            <field 
+                addfieldpath="/administrator/components/com_thm_groups/elements/" 
+                name="alphabet_active_color" 
+                type="alphabetColor" 
+                label="Background color" 
+                description="Select the background color for the existing chars in the alphabet (TODO: Language File)" 
+            />  
+            <field 
+                addfieldpath="/administrator/components/com_thm_groups/elements/" 
+                name="alphabet_active_font_color" 
+                type="alphabetColor" 
+                label="Font Color" 
+                description="Select the background color for the existing chars in the alphabet (TODO: Language File)" 
+            />  
+            <field 
+                name="spacer4" 
+                type="spacer" 
+                label="&lt;span style=&quot;width:474px;display:block;font-weight:bold&quot;&gt;Spacing of Elements &lt;/span&gt;" 
+            />          
+            <field 
+                name="lineSpacing" 
+                type="text" 
+                label="COM_THM_GROUPS_LINE_SPACING_LABEL" 
+                default="1" 
+                description="COM_THM_GROUPS_LINE_SPACING_DESC"  
+            />
+            <field 
+                name="zSpacing" 
+                type="text" 
+                label="COM_THM_GROUPS_Z_SPACING_LABEL" 
+                default="1" 
+                description="COM_THM_GROUPS_Z_SPACING_DESC" 
+            />
+        </fieldset>
+    </fields>
 </metadata>
-	
-	
-						
+    
+    
+                        
