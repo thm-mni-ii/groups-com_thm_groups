@@ -193,6 +193,8 @@ class THMGroupsModeledit extends JModelForm
 		}
 		else 
 		{
+			$firstName = null;
+			$lastName = null;
 			foreach ($structure as $structureItem)
 			{
 				$puffer = null;
@@ -209,7 +211,19 @@ class THMGroupsModeledit extends JModelForm
 				{
 					$publish = 1;
 				}
-	
+				
+				/* Check if struct = firstname / lastname and save */
+				if( strtolower($structureItem->type)=='text' && $structureItem->id == '2' )
+				{
+					$lastName = htmlspecialchars($field);
+					var_dump($lastName);
+				}
+				if(	strtolower($structureItem->type)=='text' && $structureItem->id == '1' )
+				{
+					$firstName = htmlspecialchars($field);
+					var_dump($firstName);
+				}
+				
 				/*
 				 $query = "SELECT structid FROM #__thm_groups_" . strtolower($structureItem->type) .
 				" WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
@@ -271,6 +285,7 @@ class THMGroupsModeledit extends JModelForm
 						$err = 1;
 					}
 				}
+				
 				if ($structureItem->type == 'PICTURE' && $_FILES[$structureItem->field]['name'] != "")
 				{
 					if (!$this->updatePic($userid, $structureItem->id, $structureItem->field))
@@ -278,6 +293,22 @@ class THMGroupsModeledit extends JModelForm
 						$err = 1;
 					}
 				}
+			}
+		}
+		/* 
+		 * If firstName and lastName set (MUST be, but safe is safe ;-) ) update it into __users database.
+		 */
+		if (isset($firstName) && isset($lastName))
+		{
+			$query = $db->getQuery(true);
+			$query->update("#__users");
+			$query->set('name = "' . $firstName . ' ' . $lastName . '"');
+			$query->where("id = '" . $userid . "'");
+			echo $query->__toString() . "<br />";
+			$db->setQuery($query);
+			if (!$db->query())
+			{
+				$err = 1;
 			}
 		}
 		if (!$err)
@@ -337,12 +368,11 @@ class THMGroupsModeledit extends JModelForm
 		{
 			$pt = new THMPicTransform($_FILES[$picField]);
 			$pt->safeSpecial(
-
-				JPATH_ROOT . DS . $this->getPicPath($structid) . DS, // "components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS,
-				$uid . "_" . $structid,
-				200,
-				200,
-				"JPG"
+					JPATH_ROOT . DS . "components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS,
+					$uid . "_" . $structid,
+					200,
+					200,
+					"JPG"
 			);
 			if (JModuleHelper::isEnabled('mod_thm_groups')->id != 0)
 			{
@@ -394,7 +424,7 @@ class THMGroupsModeledit extends JModelForm
 		 $query = "SELECT value FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
 		*/
 		$query = $db->getQuery(true);
-		$query->select('*');
+		$query->select('value');
 		$query->from("#__thm_groups_" . strtolower($type) . "_extra");
 		$query->where("`structid` = '" . $structid . "'");
 		$db->setQuery($query);
@@ -402,36 +432,6 @@ class THMGroupsModeledit extends JModelForm
 		if (isset($res->value))
 		{
 			return $res->value;
-		}
-		else
-		{
-			return "";
-		}
-	}
-	
-	/**
-	 * Get extra path from db (for picture)
-	 *
-	 * @param   Int  $structid  StructID
-	 *
-	 * @access	public
-	 * @return	String value
-	 */
-	public function getPicPath($structid)
-	{
-		$db = JFactory::getDBO();
-		/*
-			$query = "SELECT path FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
-		*/
-		$query = $db->getQuery(true);
-		$query->select('*');
-		$query->from("#__thm_groups_picture_extra");
-		$query->where("`structid` = '" . $structid . "'");
-		$db->setQuery($query);
-		$res = $db->loadObject();
-		if (isset($res->path))
-		{
-			return $res->path;
 		}
 		else
 		{
