@@ -39,6 +39,13 @@
                 default="1"
                 description="COM_THM_GROUPS_LIST_VIEW_PARAM_COLUMNCOUNT_DESCRIPTION">
             </field>
+            <field
+            	addfieldpath="/administrator/components/com_thm_groups/elements/" 
+            	name="orderingAttributes"
+            	type="orderattributes"
+            	label="COM_THM_GROUPS_ORDERING_ATTIBUTES_LABEL"
+            	description="COM_THM_GROUPS_ORDERING_ATTIBUTES_DESC">
+            </field>
         </fieldset>
         <fieldset name="advanced">
             <field 

@@ -100,6 +100,14 @@
 		$rows = $model->getUserCountToGid($groupid);
 		
 		$numColumns = $params->get('columnCount');
+		$orderAttr = $params->get('orderingAttributes');
+		if ($orderAttr)
+		{
+			$arrOrderAtt = explode(",", $orderAttr);
+		}
+		else
+		{
+		}
 
 		if (isset($numColumns))
 		{
@@ -246,10 +254,33 @@
 								{
 ?>
 								<div style="margin-bottom:-11px;">
-<?php
-									echo $row->title . " " . "<a href=";
-									echo JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid);
-									echo ">" . trim($row->lastName) . '</a>';
+<?php								
+									if ($orderAttr)
+									{
+										foreach ($arrOrderAtt as $val)
+										{
+											switch ($val)
+											{
+												case '1': 
+														echo $row->title . ' ';
+														break;
+												case '2':
+														echo "<a href=" . JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->firstName) . '&gsgid=' . $groupid);
+														echo ">" . trim($row->firstName) . '</a> ';
+														break;
+												case '3':
+														echo "<a href=" . JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid);
+														echo ">" . trim($row->lastName) . '</a> ';
+														break;
+											}
+										}
+									}
+									else
+									{
+										echo $row->title . " " . "<a href=";
+										echo JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid);
+										echo ">" . trim($row->lastName) . '</a>';
+									}
 									$actualRowPlaced++;
 									$allCount++;
 									$actualLetterPlaced++;
@@ -316,6 +347,14 @@
 		$shownLetter = JRequest::getVar('letter');
 
 		$allLastNames = $model->getDiffLettersToFirstletter($groupid);
+		$orderAttr = $params->get('orderingAttributes');
+		if ($orderAttr)
+		{
+			$arrOrderAtt = explode(",", $orderAttr);
+		}
+		else
+		{
+		}
 
 		$itemid = JRequest::getVar('Itemid', 0);
 		$abc = array(
@@ -471,8 +510,41 @@
 			{
 				$path = "'index.php?option=com_thm_groups&view=list&layout=default&Itemid='";
 				$trmimname = trim($member['lastName']);
-
-				$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $member['title'] . " "
+				if ($orderAttr)
+				{
+					$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>";
+					foreach ($arrOrderAtt as $val)
+					{
+						switch ($val)
+						{
+							case '1':
+								$retString .= $member['title'] . ' ';
+								break;
+							case '2':
+								$retString .= "<a href="
+									. JRoute::_(
+										$path . $itemid . '&letter=' . $shownLetter . '&gsuid=' . $member['id'] . '&name=' . $trmimname . '&gsgid=' 
+										. $groupid
+									)
+									. ">" . trim($member['firstName'])
+									. "</a> ";
+								break;
+							case '3':
+								$retString .= "<a href="
+									. JRoute::_(
+										$path . $itemid . '&letter=' . $shownLetter . '&gsuid=' . $member['id'] . '&name=' . $trmimname . '&gsgid=' 
+										. $groupid
+									)
+									. ">" . trim($member['lastName'])
+									. "</a> ";
+								break;
+						}
+					}
+					$retString .= '</div><br/>';
+				}
+				else
+				{
+					$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $member['title'] . " "
 						. "<a href="
 								. JRoute::_(
 									$path . $itemid . '&letter=' . $shownLetter . '&gsuid=' . $member['id'] . '&name=' . $trmimname . '&gsgid=' 
@@ -480,6 +552,7 @@
 								)
 								. ">" . trim($member['firstName']) . " " . trim($member['lastName'])
 								. "</a></div><br/>";
+				}
 				$actualRowPlaced++;
 			}
 			
@@ -497,13 +570,49 @@
 			$path = "'index.php?option=com_thm_groups&view=list&layout=default&Itemid='";
 			$trmimname = trim($member['lastName']);
 
-			$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $member['title'] . " "
+			if ($orderAttr)
+			{
+				$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>";
+				foreach ($arrOrderAtt as $val)
+				{
+					switch ($val)
+					{
+						case '1':
+							$retString .= $member['title'] . ' ';
+							break;
+						case '2':
+							$retString .= "<a href="
+								. JRoute::_(
+									$path . $itemid . '&letter=' . $shownLetter . '&gsuid=' . $member['id'] . '&name=' . $trmimname . '&gsgid=' 
+									. $groupid
+								)
+								. ">" . trim($member['firstName'])
+								. "</a> ";
+							break;
+						case '3':
+							$retString .= "<a href="
+								. JRoute::_(
+									$path . $itemid . '&letter=' . $shownLetter . '&gsuid=' . $member['id'] . '&name=' . $trmimname . '&gsgid=' 
+									. $groupid
+								)
+								. ">" . trim($member['lastName'])
+								. "</a> ";
+							break;
+					}
+				}
+				$retString .= '</div><br/>';
+			}
+			else
+			{
+				$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $member['title'] . " "
 					. "<a href="
 							. JRoute::_(
-								$path . $itemid . '&letter=' . $shownLetter . '&gsuid=' . $member['id'] . '&name=' . $trmimname . '&gsgid=' . $groupid
-								)
+								$path . $itemid . '&letter=' . $shownLetter . '&gsuid=' . $member['id'] . '&name=' . $trmimname . '&gsgid=' 
+								. $groupid
+							)
 							. ">" . trim($member['firstName']) . " " . trim($member['lastName'])
 							. "</a></div><br/>";
+			}
 		}
 		$retString .= "</ul>";
 		return $retString;
