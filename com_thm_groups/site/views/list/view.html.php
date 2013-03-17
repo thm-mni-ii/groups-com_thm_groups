@@ -43,6 +43,7 @@ class THMGroupsViewList extends JView
 		$document =& JFactory::getDocument();
 		$document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/frontend.php');
 		$userid = JRequest::getVar('gsuid', 0);
+		
 		// Mainframe Parameter
 		$params = $mainframe->getParams();
 		$pagetitle = $params->get('page_title');

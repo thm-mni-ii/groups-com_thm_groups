@@ -111,6 +111,7 @@ class THMGroupsViewProfile extends JView
 			}
 		}
 		$pathway->addItem($name, '');
+		
 		// Daten für die Form
 		$textField = array();
 		foreach ($structure as $structureItem)
