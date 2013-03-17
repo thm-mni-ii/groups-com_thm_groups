@@ -310,7 +310,7 @@
 														{
 														}
     													echo trim($row->lastName);
-    													if ($run==0 || ($run == 1 && $showTitle == 1))
+    													if ($run == 0 || ($run == 1 && $showTitle == 1))
     													{
     														echo ',';
     													}
@@ -569,7 +569,7 @@
 				$trmimname = trim($member['lastName']);
 				if ($orderAttr)
 				{
-					$run=0;
+					$run = 0;
 					$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>";
 					foreach ($arrOrderAtt as $val)
 					{
@@ -628,7 +628,7 @@
 								{
 								}
 								$retString .= trim($member['lastName']);
-								if ($run==0 || ($run == 1 && $showTitle == 1))
+								if ($run == 0 || ($run == 1 && $showTitle == 1))
 								{
 									$retString .= ',';
 								}
@@ -679,7 +679,7 @@
 
 			if ($orderAttr)
 			{
-				$run=0;
+				$run = 0;
 				$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>";
 				foreach ($arrOrderAtt as $val)
 				{
@@ -738,7 +738,7 @@
 							{
 							}
 							$retString .= trim($member['lastName']);
-							if ($run==0 || ($run == 1 && $showTitle == 1))
+							if ($run == 0 || ($run == 1 && $showTitle == 1))
 							{
 								$retString .= ',';
 							}

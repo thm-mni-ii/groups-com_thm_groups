@@ -159,6 +159,8 @@ else
 			<?php
 				foreach ($this->structure as $structureItem)
 				{
+					if ($structureItem->field != 'Username')
+					{
 			?>
 			<tr>
 				<td width="110" class="key">
@@ -234,6 +236,10 @@ else
 				</td>-->
 			</tr>
 			<?php
+					}
+					else 
+					{
+					}
 				}
 			?>
 

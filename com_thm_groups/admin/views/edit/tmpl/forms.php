@@ -63,6 +63,8 @@ JHTML::_('behavior.calendar');
 			<?php
 				foreach ($this->structure as $structureItem)
 				{
+					if ($structureItem->field != 'Username') 
+					{
 			?>
 			<tr>
 				<td width="110" class="key">
@@ -134,6 +136,10 @@ JHTML::_('behavior.calendar');
 				</td>-->
 			</tr>
 			<?php
+					}
+					else
+					{
+					}
 				}
 			?>
 

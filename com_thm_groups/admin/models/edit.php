@@ -204,12 +204,12 @@ class THMGroupsModeledit extends JModelForm
 				}
 				
 				/* Check if struct = firstname / lastname and save */
-				if( strtolower($structureItem->type)=='text' && $structureItem->id == '2' )
+				if ( strtolower($structureItem->type) == 'text' && $structureItem->id == '2' )
 				{
 					$lastName = htmlspecialchars($field);
 					var_dump($lastName);
 				}
-				if(	strtolower($structureItem->type)=='text' && $structureItem->id == '1' )
+				if (	strtolower($structureItem->type) == 'text' && $structureItem->id == '1' )
 				{
 					$firstName = htmlspecialchars($field);
 					var_dump($firstName);
