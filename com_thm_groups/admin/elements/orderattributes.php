@@ -44,6 +44,8 @@ class JFormFieldOrderAttributes extends JFormField
 		$id = JRequest::getVar('cid');
 		$orderAtt = null;
 		$orderSelect = '';
+		
+		// Get ID of the menu
 		if (isset($id))
 		{
 			$id = $id[0];
@@ -53,6 +55,7 @@ class JFormFieldOrderAttributes extends JFormField
 			$id = JRequest::getVar('id');
 		}
 		
+		// Get params of menu for the ordering of the attributes
 		if (isset($id))
 		{
 			$queryParams = $db->getQuery(true);
@@ -69,22 +72,16 @@ class JFormFieldOrderAttributes extends JFormField
 			$orderAtt = substr(
 					$params[0]->params,
 					stripos($params[0]->params, "orderingAttributes") + strlen("':orderingAttributes:"),
-					stripos(substr($params[0]->params, stripos($params[0]->params, $sort) + strlen("':orderingAttributes:")), "\",\"alphabet_exists_color")
+					stripos(substr($params[0]->params, stripos($params[0]->params, $sort) + strlen("':orderingAttributes:")), "\",\"showtitle")
 			);
 			$orderAtt = trim($orderAtt);
 		}
-		
+		// Generate the Selectbox
 		$arrOrderAtt = explode(",", $orderAtt);
 		$queryRoles = $db->getQuery(true);
-		/*
-		$publishSelect = '<fieldset id="one" class="checkboxes">';
-		$publishSelect .= '<table><tr><th>Attribute</th><th>Publish</th><th>Comma</th></tr>';
-		$publishSelect .= '<tr><td>Vorname</td><td><input type="checkbox" name="publishVorname" value="1"/></td>'
-							. '<td><input type="checkbox" name="setComma" value="0"/></td></tr>';
-		$publishSelect .= '</table>';
-		$publishSelect .= '</fieldset>';
-		*/
-		$orderSelect .= '<select size="5" id="paramsroleid" class="selGroup" name="jform[params][orderingAttributes]" style="display:block">';
+		$orderSelect .= '<select size="5" id="paramsattr" class="selGroup" name="jform[params][orderingAttributes]" style="display:block">';
+		
+		// If the order Attributes param is used
 		if ($orderAtt)
 		{
 			foreach ( $arrOrderAtt as $value)
@@ -92,11 +89,11 @@ class JFormFieldOrderAttributes extends JFormField
 				$orderSelect .= '<option value="' . $value . '">';
 				switch ($value)
 				{
-					case 1: $orderSelect .= JText::_(COM_THM_GROUPS_TITEL);
+					case 1: $orderSelect .= JText::_('COM_THM_GROUPS_TITEL');
 						break;
-					case 2: $orderSelect .= JText::_(COM_THM_GROUPS_VORNAME);
+					case 2: $orderSelect .= JText::_('COM_THM_GROUPS_VORNAME');
 						break;
-					case 3: $orderSelect .= JText::_(COM_THM_GROUPS_NACHNAME);
+					case 3: $orderSelect .= JText::_('COM_THM_GROUPS_NACHNAME');
 						break;
 				}
 				$orderSelect .= '</option>';
@@ -104,20 +101,22 @@ class JFormFieldOrderAttributes extends JFormField
 		}
 		else
 		{
-			$orderSelect .= '<option value="1">' . JText::_(COM_THM_GROUPS_TITEL) . '</option>';
-			$orderSelect .= '<option value="2">' . JText::_(COM_THM_GROUPS_VORNAME) . '</option>';
-			$orderSelect .= '<option value="3">' . JText::_(COM_THM_GROUPS_NACHNAME) . '</option>';
+			// Initialize the selectbox if no params are saved
+			
+			$orderSelect .= '<option value="1">' . JText::_('COM_THM_GROUPS_TITEL') . '</option>';
+			$orderSelect .= '<option value="2">' . JText::_('COM_THM_GROUPS_VORNAME') . '</option>';
+			$orderSelect .= '<option value="3">' . JText::_('COM_THM_GROUPS_NACHNAME') . '</option>';
 		}
 		$orderSelect .= '</select>';
-		$orderSelect .= '<a onclick="roleup()" id="sortup">';
+		$orderSelect .= '<a onclick="attrup()" id="sortup">';
 		$orderSelect .= '<img src="../administrator/components/com_thm_groups/img/uparrow.png" title="';
 		$orderSelect .= JText::_('COM_THM_GROUPS_ROLE_UP') . '" />';
 		$orderSelect .= '</a><br />';
-		$orderSelect .= '<a onclick="roledown()" id="sortdown">';
+		$orderSelect .= '<a onclick="attrdown()" id="sortdown">';
 		$orderSelect .= '<img src="../administrator/components/com_thm_groups/img/downarrow.png" title="';
 		$orderSelect .= JText::_('COM_THM_GROUPS_ROLE_DOWN') . '" />';
 		$orderSelect .= '</a>';
 		$orderSelect .= '<input type="hidden" name="jform[params][orderingAttributes]" id="jform_params_orderingAttributes" value="' . $orderAtt . '" />';
-		return $publishSelect . $orderSelect;
+		return $orderSelect;
 	}
 }
