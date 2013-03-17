@@ -12,6 +12,7 @@
  * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
+ * @author      Tobias Schmitt, <tobias.schmitt@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -42,11 +43,84 @@ class THMGroupsModelGroups extends JModel
 		$query = 'SELECT * FROM #__thm_groups_groups ';
 		*/
 		$query = $db->getQuery(true);
-		$query->select('*');
-		$query->from($db->qn('#__thm_groups_groups'));
+		/*
+		 * Build Query for usergroup sorting
+		 * begin: /administrator/components/com_users/models/groups.php: getListQuery()
+		 */
+		$query->select(
+				$this->getState(
+						'list.select',
+						'a.*'
+				)
+		);
+		$query->from($db->quoteName('#__usergroups') . ' AS a');
 
+		// Add the level in the tree.
+		$query->select('COUNT(DISTINCT c2.id) AS level');
+		$query->join('LEFT OUTER', $db->quoteName('#__usergroups') . ' AS c2 ON a.lft > c2.lft AND a.rgt < c2.rgt');
+		$query->group('a.id, a.lft, a.rgt, a.parent_id, a.title');
+
+		// Filter the comments over the search string if set.
+		$search = $this->getState('filter.search');
+		if (!empty($search)) 
+		{
+			if (stripos($search, 'id:') === 0) 
+			{
+				$query->where('a.id = ' . (int) substr($search, 3));
+			} 
+			else 
+			{
+				$search = $db->Quote('%' . $db->escape($search, true) . '%');
+				$query->where('a.title LIKE ' . $search);
+			}
+		}
+		else 
+		{
+			
+		}
+
+		// Add the list ordering clause.
+		$query->order($db->escape($this->getState('list.ordering', 'a.lft')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+		
+		/*
+		 * end: /administrator/components/com_users/models/groups.php: getListQuery()
+		 */
+		
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
+		
+		/*
+		 * Add additional Info from thm_groups_groups
+		 */
+		foreach ($rows as $row)
+		{
+			$db = JFactory::getDBO();
+			$query = $db->getQuery(true);
+			
+			$query->select($db->quoteName('picture') . "," . $db->quoteName('info'));
+			$query->from($db->quoteName('#__thm_groups_groups'));
+			$query->where($db->quoteName('id') . " = " . $row->id);
+			
+			$db->setQuery($query->__toString());
+			$adds = $db->loadObjectList();
+			if ($adds[0]->info == '')
+			{
+				$row->longinfo = null;
+			}
+			else
+			{
+				$row->longinfo = $adds[0]->info;
+			}
+			if ($adds[0]->picture == '')
+			{
+				$row->picture = null;
+			}
+			else
+			{
+				$row->picture = $adds[0]->picture;
+			}
+		}
+		
 		return $rows;
 	}
 

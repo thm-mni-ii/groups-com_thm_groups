@@ -126,14 +126,12 @@ ul.gs_advtable_right {
 
 #gs_advlist_memberwrapper {
 	width: 500px;
-	min-height: 50px;
 	margin-top: 0px;
-	margin-bottom: 30px;
+	margin-bottom: 10px;
 }
 
 #gs_advtable_memberwrapper {
 	width: 300px;
-	min-height: 50px;
 	margin-top: 0px;
 	margin-bottom: 30px;
 	margin-right: 20px;
