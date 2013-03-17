@@ -80,6 +80,8 @@ class THMGroupsViewProfile extends JView
 	 */
 	public function display($tpl = null)
 	{
+		$app	= JFactory::getApplication();
+		$pathway = $app->getPathway();
 		$document   = & JFactory::getDocument();
 		$document->addStyleSheet("administrator/components/com_thm_groups/css/membermanager/icon.css");
 
@@ -90,6 +92,26 @@ class THMGroupsViewProfile extends JView
 		$structure = &$this->get('Structure');
 		$gsgid     = JRequest::getVar('gsgid');
 
+		$name = "";
+		foreach ($items as $val)
+		{
+			if ($val->structid == 2)
+			{
+				$name = $val->value . ', ' . $name;
+			}
+			else 
+			{
+				if ($val->structid == 1)
+				{
+					$name = $name . $val->value;
+				}
+				else 
+				{
+				}
+			}
+		}
+		$pathway->addItem($name, '');
+		
 		// Daten für die Form
 		$textField = array();
 		foreach ($structure as $structureItem)

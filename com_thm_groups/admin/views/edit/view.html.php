@@ -49,11 +49,11 @@ class THMGroupsViewedit extends JView
 			. "id='$name' ";
 		if (isset($extra))
 		{
-			$output .= "size='$extra'";
+			$output .= "maxlength='$extra'";
 		}
 		else
 		{
-			$output .= "size='$size'";
+			$output .= "maxlength='$size'";
 		}
 		$output .= "value='$value'"
 			. " />";

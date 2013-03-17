@@ -44,14 +44,9 @@ else
 		function editFormValidation(){
 			var message = '';
 			var emailRegExp = /.+@.+\..+/g;
-			var title = document.getElementById("Titel").value;//$("input#titel").val();
 			var vorname = document.getElementById("Vorname").value;
 			var nachname = document.getElementById("Nachname").value;
 			var email = document.getElementById("EMail").value;
-			if(title == '')
-			{
-				message += '<?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_TITLE'); ?>\n';
-			}
 			if(vorname == '')
 			{
 				message += '<?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_FIRSTNAME'); ?>\n';
@@ -112,6 +107,28 @@ else
 
 		<table>
 			<tr>
+				<td colspan="3">
+					<input type="submit" 
+					id="gs_editView_buttons" 
+					name="save" 
+					value="<?php echo JText::_("COM_THM_GROUPS_SAVE");?>" 
+					onclick='document.forms["adminForm"].elements["task"].value = "edit.save";return editFormValidation();'
+					task='edit.save'/>
+					<input type='submit'
+					id="gs_editView_buttons"
+					onclick='document.forms["adminForm"].elements["task"].value = "edit.apply";return editFormValidation();'
+					value='<?php echo JText::_("COM_THM_GROUPS_APPLY");?>'
+					name='apply'
+					task='edit.apply' />
+					<input type='submit'
+					id="gs_editView_buttons"
+					onclick='document.forms["adminForm"].elements["task"].value = "edit.BackToRefUrl"'
+					value='<?php echo JText::_("COM_THM_GROUPS_BACK");?>'
+					name='backToRefUrl'
+					task='edit.backToRefUrl' />					
+				</td>
+			</tr>
+			<tr>
 				<td/><td/>
 				<td width="110" class="op">
 					<label for="title">
@@ -142,6 +159,8 @@ else
 			<?php
 				foreach ($this->structure as $structureItem)
 				{
+					if ($structureItem->field != 'Username')
+					{
 			?>
 			<tr>
 				<td width="110" class="key">
@@ -217,34 +236,16 @@ else
 				</td>-->
 			</tr>
 			<?php
+					}
+					else 
+					{
+					}
 				}
 			?>
 
 
 			<tr>
 				<td colspan="3"><hr></td>
-			</tr>
-			<tr>
-				<td colspan="3">
-					<input type="submit" 
-					id="gs_editView_buttons" 
-					name="save" 
-					value="<?php echo JText::_("COM_THM_GROUPS_SAVE");?>" 
-					onclick='document.forms["adminForm"].elements["task"].value = "edit.save";return editFormValidation();'
-					task='edit.save'/>
-					<input type='submit'
-					id="gs_editView_buttons"
-					onclick='document.forms["adminForm"].elements["task"].value = "edit.apply";return editFormValidation();'
-					value='<?php echo JText::_("COM_THM_GROUPS_APPLY");?>'
-					name='apply'
-					task='edit.apply' />
-					<input type='submit'
-					id="gs_editView_buttons"
-					onclick='document.forms["adminForm"].elements["task"].value = "edit.BackToRefUrl"'
-					value='<?php echo JText::_("COM_THM_GROUPS_BACK");?>'
-					name='backToRefUrl'
-					task='edit.backToRefUrl' />					
-				</td>
 			</tr>
 		</table>
 		<input type='hidden' name="structid"  value='' />

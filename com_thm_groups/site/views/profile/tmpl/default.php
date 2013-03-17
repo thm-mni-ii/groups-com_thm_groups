@@ -204,7 +204,7 @@ $layout_old = 0;
 		<input 	type='submit'
 				id="gs_profileView_buttons"
 				onclick='document.forms["adminForm"].elements["task"].value = "profile.BackToRefUrl"'
-				value='<?php echo JText::_("COM_THM_GROUPS_BACK");?>'
+				value='<?php echo JText::_("COM_THM_GROUPS_BACK_BUTTON");?>'
 				name='backToRefUrl'
 				task='profile.backToRefUrl' />	
 		<input type='hidden' name="structid"  value='' />

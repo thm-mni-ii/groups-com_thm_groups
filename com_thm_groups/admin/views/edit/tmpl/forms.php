@@ -8,6 +8,7 @@
  * @description THMGroupsVieweditForms file from com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
+ * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -63,6 +64,8 @@ JHTML::_('behavior.calendar');
 			<?php
 				foreach ($this->structure as $structureItem)
 				{
+					if ($structureItem->field != 'Username') 
+					{
 			?>
 			<tr>
 				<td width="110" class="key">
@@ -134,6 +137,10 @@ JHTML::_('behavior.calendar');
 				</td>-->
 			</tr>
 			<?php
+					}
+					else
+					{
+					}
 				}
 			?>
 

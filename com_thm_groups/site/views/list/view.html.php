@@ -40,10 +40,10 @@ class THMGroupsViewList extends JView
 	{
 		$mainframe = Jfactory::getApplication();
 		$model =& $this->getModel();
-
 		$document =& JFactory::getDocument();
 		$document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/frontend.php');
-
+		$userid = JRequest::getVar('gsuid', 0);
+		
 		// Mainframe Parameter
 		$params = $mainframe->getParams();
 		$pagetitle = $params->get('page_title');
@@ -57,6 +57,24 @@ class THMGroupsViewList extends JView
 		}
 		$this->assignRef('desc', $model->getDesc());
 		$this->assignRef('params', $params);
+		if ($userid)
+		{
+			$pathway = $mainframe->getPathway();
+			$db = JFactory::getDBO();
+			$query = $db->getQuery(true);
+			$query->select('value');
+			$query->from($db->qn('#__thm_groups_text'));
+			$query->where('userid = ' . $userid);
+			$query->where('structid = 1');
+			
+			$db->setQuery($query);
+			$firstname = $db->loadObjectList();
+			$name = $firstname[0]->value . ' ' . JRequest::getVar('name', '');
+			$pathway->addItem($name, '');
+		}
+		else 
+		{
+		}
 		parent::display($tpl);
 	}
 }

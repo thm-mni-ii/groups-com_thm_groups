@@ -141,15 +141,6 @@ class THMGroupsModeledit extends JModelForm
 			$data = JRequest::getVar($structureItem->field, '', 'post', '', JREQUEST_ALLOWHTML);
 			switch ($structureItem->field)
 			{
-				case 'Titel': 	
-					if ($data == '')
-					{
-						$message .= JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_TITLE') . "<br>";
-					}
-					else
-					{
-					}
-				break;
 				case 'Vorname': 
 					if ($data == '')
 					{
@@ -213,12 +204,12 @@ class THMGroupsModeledit extends JModelForm
 				}
 				
 				/* Check if struct = firstname / lastname and save */
-				if( strtolower($structureItem->type)=='text' && $structureItem->id == '2' )
+				if ( strtolower($structureItem->type) == 'text' && $structureItem->id == '2' )
 				{
 					$lastName = htmlspecialchars($field);
 					var_dump($lastName);
 				}
-				if(	strtolower($structureItem->type)=='text' && $structureItem->id == '1' )
+				if (	strtolower($structureItem->type) == 'text' && $structureItem->id == '1' )
 				{
 					$firstName = htmlspecialchars($field);
 					var_dump($firstName);
@@ -933,5 +924,35 @@ class THMGroupsModeledit extends JModelForm
 	public function getErrorMessage()
 	{
 		return $this->_msg;
+	}
+	
+	/**
+	 * Method to get extra data
+	 *
+	 * @param   Int  $structid  StructID
+	 *
+	 * @access	public
+	 * @return	null / value
+	 */
+	public function getPicPath($structid)
+	{
+		$db = JFactory::getDBO();
+		/*
+		 $query = "SELECT value FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
+		*/
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from($db->qn('#__thm_groups_picture_extra'));
+		$query->where('structid = ' . $structid);
+		$db->setQuery($query);
+		$res = $db->loadObject();
+		if (isset($res->path))
+		{
+			return $res->path;
+		}
+		else
+		{
+			return null;
+		}
 	}
 }
