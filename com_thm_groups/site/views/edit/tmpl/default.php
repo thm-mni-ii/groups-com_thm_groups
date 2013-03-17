@@ -44,14 +44,9 @@ else
 		function editFormValidation(){
 			var message = '';
 			var emailRegExp = /.+@.+\..+/g;
-			var title = document.getElementById("Titel").value;//$("input#titel").val();
 			var vorname = document.getElementById("Vorname").value;
 			var nachname = document.getElementById("Nachname").value;
 			var email = document.getElementById("EMail").value;
-			if(title == '')
-			{
-				message += '<?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_TITLE'); ?>\n';
-			}
 			if(vorname == '')
 			{
 				message += '<?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_FIRSTNAME'); ?>\n';

@@ -114,14 +114,15 @@ class THMGroupsControllermembermanager extends JController
 		if ($model->store())
 		{
 			$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+			$link = 'index.php?option=com_thm_groups&view=membermanager';
+			$this->setRedirect($link, $msg);
 		}
 		else
 		{
+			$id = JRequest::getVar('userid');
 			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR') . '<br>' . $model->getErrorMessage();
+			$this->setRedirect('index.php?option=com_thm_groups&task=membermanager.edit&cid[]=' . $id, $msg);
 		}
-
-		$link = 'index.php?option=com_thm_groups&view=membermanager';
-		$this->setRedirect($link, $msg);
 	}
 
 	/**
