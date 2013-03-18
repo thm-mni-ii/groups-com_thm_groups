@@ -143,7 +143,7 @@ ul.gs_advtable_right {
 #gs_advlist_memberwrapper {
 	width: 500px;
 	margin-top: 0px;
-	margin-bottom: 30px;
+	margin-bottom: 10px;
 }
 
 #gs_advtable_memberwrapper {

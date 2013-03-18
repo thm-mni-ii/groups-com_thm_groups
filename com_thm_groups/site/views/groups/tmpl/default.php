@@ -12,6 +12,7 @@
  * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
+ * @author      Tobias Schmitt, <tobias.schmitt@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -33,10 +34,11 @@
 					$displayInline = "style='display: inline'";
 					echo "</div>";
 					echo "<div id='gs_advlistTopic'>";
+					echo str_repeat("-", $group->level);
 					echo "<a href="
 						. JRoute::_('index.php?option=com_thm_groups&view=groups&layout=default&Itemid=' . $this->itemid . '&gsgid=' . $group->id)
 						. ">"
-						. "<div class='gs_advlist_longinfo'" . $displayInline . ">" . $group->name . "</div> "
+						. "<div class='gs_advlist_longinfo'" . $displayInline . ">" . $group->title . "</div> "
 						. "</a>";
 
 					// Daten fuer die EditForm
@@ -65,9 +67,12 @@
 						. JHTML :: image("components/com_thm_groups/img/edit.png", 'bearbeiten', $attribs) . "</a>";
 					}
 					echo "</div>";
-					echo "<div class='gs_advlist_longinfo'>";
-						echo $group->info . "\n";
-					echo "</div>";
+					if ($group->longinfo != null)
+					{
+						echo "<div class='gs_advlist_longinfo'>";
+							echo $group->longinfo . "\n";
+						echo "</div>";
+					}
 				echo "</div>";
 				echo "</div>";
 			echo"</li>";
