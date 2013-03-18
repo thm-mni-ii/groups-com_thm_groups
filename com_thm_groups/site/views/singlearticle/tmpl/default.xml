@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="THM Groups - Advanced View">
+		<message>
+			<![CDATA[COM_THM_GROUPS_ADVANCED_VIEW_DESC]]>
+		</message>
+	</layout>
+	<fields name="params">
+		<fieldset name="basic">
+			<field 
+				addfieldpath="/administrator/components/com_thm_groups/elements/" 
+				name="selGroup" 
+				type="groupitemselect" 
+				label="COM_THM_GROUPS_SELECT_GROUP_LABEL" 
+				description="COM_THM_GROUPS_SELECT_GROUP_DESC" 
+			/>
+			<field 
+				addfieldpath="/administrator/components/com_thm_groups/elements/" 
+				name="roleid" 
+				type="roleitemselect" 
+				default="1" 
+				label="COM_THM_GROUPS_SELECT_ROLE_LABEL" 
+				description="COM_THM_GROUPS_SELECT_ROLE_DESC" 
+			/>
+			<field 
+				addfieldpath="/administrator/components/com_thm_groups/elements/" 
+				name="struct" 
+				type="structureselect" 
+				label="COM_THM_GROUPS_STRUCTURE_LABEL" 
+				description="COM_THM_GROUPS_STRUCTURE_DESC" 
+			/>
+			<field 
+				type="radio" 
+				name="advancedview" 
+				label="COM_THM_GROUPS_SELECT_ADVANCED_VIEW_LABEL" 
+				description="COM_THM_GROUPS_SELECT_ADVANCED_VIEW_DESC"
+				default="1">
+					<option value="1">COM_THM_GROUPS_SELECT_ADVANCED_VIEW_OPTION_1</option>
+					<option value="0">COM_THM_GROUPS_SELECT_ADVANCED_VIEW_OPTION_2</option>
+			</field>
+		</fieldset>
+		<fieldset name="advanced">
+			<field 
+				name="lineSpacing" 
+				type="text" 
+				label="COM_THM_GROUPS_LINE_SPACING_LABEL" 
+				default="1" 
+				description="COM_THM_GROUPS_LINE_SPACING_DESC"  
+			/>
+			<field 
+				name="zSpacing" 
+				type="text" 
+				label="COM_THM_GROUPS_Z_SPACING_LABEL" 
+				default="1" 
+				description="COM_THM_GROUPS_Z_SPACING_DESC" 
+			/>
+			<field 
+				name="sortedgrouproles" 
+				id="sortedgrouproles" 
+				type="hidden" 
+			/>
+		</fieldset>
+	</fields>
+</metadata>
