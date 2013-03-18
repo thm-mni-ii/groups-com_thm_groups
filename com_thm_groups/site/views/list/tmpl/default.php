@@ -277,7 +277,7 @@
 												case '2':
 														if ( array_search('0', $linkElement) !== null && array_search('0', $linkElement) !== false )
 														{
-															echo "<a href=" . JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->firstName) . '&gsgid=' . $groupid);
+															echo "<a href=" . JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid);
 															echo ">";
 														}
 														else 
