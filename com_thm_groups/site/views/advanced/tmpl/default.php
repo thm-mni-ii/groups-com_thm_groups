@@ -41,6 +41,7 @@ if ($this->view == 0)
 		$lastName = "";
 		$picture = null;
 		$picpath = null;
+		$paramLinkTarget = $this->params->get('linkTarget');
 		$wrapTitle = false;
 		$wrapFirstName = false;
 		$canEdit = ($user->id == $id || $this->canEdit);
@@ -87,10 +88,27 @@ if ($this->view == 0)
 		{
 			echo "<div class='gs_advlist_longinfo'" . ($wrapTitle ? "" : $displayInline) . ">" . trim($title) . "</div> ";
 		}
-		$path = "index.php?option=com_thm_groups&view=advanced&layout=list&Itemid=";
-		echo "<a href="
-				. JRoute::_($path . $this->itemid . '&gsuid=' . $id . '&name=' . trim($lastName) . '&gsgid=' . $this->gsgid)
-				. ">";
+		switch ($paramLinkTarget)
+		{
+			case "module":
+				$path = "index.php?option=com_thm_groups&view=advanced&layout=list&Itemid=";
+				echo "<a href="
+						. JRoute::_($path . $this->itemid . '&gsuid=' . $id . '&name=' . trim($lastName) . '&gsgid=' . $this->gsgid)
+						. ">";
+				break;
+			case "profile":
+				$path = 'index.php?option=com_thm_groups&view=profile&layout=default';
+				echo "<a href="
+						. JRoute::_($path . '&gsuid=' . $id . '&name=' . trim($lastName) . '&gsgid=' . $this->gsgid)
+						. ">";
+				break;
+			default:
+				$path = "index.php?option=com_thm_groups&view=advanced&layout=list&Itemid=";
+				echo "<a href="
+						. JRoute::_($path . $this->itemid . '&gsuid=' . $id . '&name=' . trim($lastName) . '&gsgid=' . $this->gsgid)
+						. ">";
+		}
+		
 		if (trim($firstName) != "")
 		{
 			echo "<div class='gs_advlist_longinfo'" . ($wrapTitle && $wrapFirstName ? "" : $displayInline) . ">" . trim($firstName) . "</div> ";
@@ -218,6 +236,7 @@ else
 	$model = $this->getmodel('advanced');
 	$struct = array();
 	$picpath = null;
+	$paramLinkTarget = $this->params->get('linkTarget');
 	foreach ($this->structure as $structItem)
 	{
 		$struct[$structItem->id] = $structItem->field;
@@ -289,9 +308,27 @@ else
 			{
 				echo "<div class='gs_advlist_longinfo'" . ($wrapTitle ? "" : $displayInline) . ">" . trim($title) . "</div> ";
 			}
-			$path = "index.php?option=com_thm_groups&view=advanced&layout=table&Itemid=";
-			echo "<a href=" . JRoute::_($path . $this->itemid . '&gsuid=' . $id . '&name=' . trim($lastName) . '&gsgid=' . $this->gsgid)
-					. ">";
+			switch ($paramLinkTarget)
+			{
+				case "module":
+					$path = "index.php?option=com_thm_groups&view=advanced&layout=list&Itemid=";
+					echo "<a href="
+							. JRoute::_($path . $this->itemid . '&gsuid=' . $id . '&name=' . trim($lastName) . '&gsgid=' . $this->gsgid)
+							. ">";
+					break;
+				case "profile":
+					$path = 'index.php?option=com_thm_groups&view=profile&layout=default';
+					echo "<a href="
+							. JRoute::_($path . '&gsuid=' . $id . '&name=' . trim($lastName) . '&gsgid=' . $this->gsgid)
+							. ">";
+					break;
+				default:
+					$path = "index.php?option=com_thm_groups&view=advanced&layout=list&Itemid=";
+					echo "<a href="
+							. JRoute::_($path . $this->itemid . '&gsuid=' . $id . '&name=' . trim($lastName) . '&gsgid=' . $this->gsgid)
+							. ">";
+			}
+			
 			if (trim($firstName) != "")
 			{
 				echo "<div class='gs_advlist_longinfo'" . ($wrapTitle && $wrapFirstName ? "" : $displayInline) . ">" . trim($firstName) . "</div> ";
