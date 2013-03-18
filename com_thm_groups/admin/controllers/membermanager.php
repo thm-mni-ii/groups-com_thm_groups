@@ -119,9 +119,6 @@ class THMGroupsControllermembermanager extends JController
 		}
 		else
 		{
-			$id = JRequest::getVar('userid');
-			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR') . '<br>' . $model->getErrorMessage();
-			$this->setRedirect('index.php?option=com_thm_groups&task=membermanager.edit&cid[]=' . $id, $msg);
 		}
 	}
 
