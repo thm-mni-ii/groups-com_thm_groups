@@ -9,6 +9,7 @@
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
+ * @author      Tobias Schmitt, <tobias.schmitt@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -26,7 +27,6 @@ jimport('joomla.application.component.modelform');
 */
 class THMGroupsModeledit extends JModelForm
 {
-	private $_msg = '';
 
 	/**
 	 * Constructor
@@ -134,141 +134,117 @@ class THMGroupsModeledit extends JModelForm
 		$structure = $this->getStructure();
 		$userid = JRequest::getVar('userid');
 		$err = 0;
-		$message = "";
-		
+
+		$firstName = null;
+		$lastName = null;
 		foreach ($structure as $structureItem)
 		{
-			$data = JRequest::getVar($structureItem->field, '', 'post', '', JREQUEST_ALLOWHTML);
-			switch ($structureItem->field)
+			$puffer = null;
+			$structureItem->field = str_replace(' ', '_', $structureItem->field);
+			$field = JRequest::getVar($structureItem->field, '', 'post', '', JREQUEST_ALLOWHTML);
+			$publish = 0;
+			if ($structureItem->type == 'MULTISELECT')
 			{
-				case 'Vorname': 
-					if ($data == '')
+				$field = implode(';', $field);
+			}
+			$publishPuffer = JRequest::getVar('publish' . str_replace(" ", "", $structureItem->field));
+
+			if (isset($publishPuffer))
+			{
+				$publish = 1;
+			}
+
+			/* Check if struct = firstname / lastname and save */
+			if ( strtolower($structureItem->type) == 'text' && $structureItem->id == '2' )
+			{
+				$lastName = htmlspecialchars($field);
+				var_dump($lastName);
+			}
+			if (	strtolower($structureItem->type) == 'text' && $structureItem->id == '1' )
+			{
+				$firstName = htmlspecialchars($field);
+				var_dump($firstName);
+			}
+
+			/*
+			 $query = "SELECT structid FROM #__thm_groups_" . strtolower($structureItem->type) .
+			" WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
+			*/
+			$query = $db->getQuery(true);
+			$query->select('structid');
+			$query->from("#__thm_groups_" . strtolower($structureItem->type));
+			$query->where("userid = " . $userid);
+			$query->where("structid = " . $structureItem->id);
+
+			$db->setQuery($query);
+			$puffer = $db->loadObject();
+
+			if (isset($structureItem->field))
+			{
+				$query = $db->getQuery(true);
+
+				if (isset($puffer))
+				{
+					/*
+					 $query = "UPDATE #__thm_groups_" . strtolower($structureItem->type) . " SET";
+					*/
+					$query->update("#__thm_groups_" . strtolower($structureItem->type));
+
+					if ($structureItem->type != 'PICTURE' && $structureItem->type != 'TABLE')
 					{
-						$message .= JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_FIRSTNAME') . "<br>";
+						/*
+						 $query .= " value='" . $field . "',";
+						*/
+						$query->set("value = \"" . htmlspecialchars($field) . "\"");
 					}
-					else
-					{
-					}
-				break;
-				case 'Nachname':
-					if ($data == '')
-					{
-						$message .= JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_LASTNAME') . "<br>";
-					}
-					else
-					{
-					}
-				break;
-				case 'EMail':
-					if ($data == '')
-					{
-						$message .= JText::_('COM_THM_GROUPS_MEMBERMANAGER_MISSING_EMAIL') . "<br>";
-					}
-					else
-					{
-						if (preg_match('/^\S+@\S+$/i', $data))
-						{
-						}
-						else
-						{
-							$message .= JText::_('COM_THM_GROUPS_MEMBERMANAGER_INVALID_EMAIL') . "<br>";
-						}
-					}
-					break;
+					/*
+					 $query .= " publish='" . $publish . "'"
+					. " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
+					*/
+					$query->set("publish = " . $publish);
+					$query->where("userid = '" . $userid . "'");
+					$query->where("structid = '" . $structureItem->id . "'");
+				}
+				else
+				{
+					/*
+					 $query = "INSERT INTO #__thm_groups_" . strtolower($structureItem->type) . " ( `userid`, `structid`, `value`, `publish`)"
+					. " VALUES ($userid"
+							. ", " . $structureItem->id
+							. ", '" . $field . "'"
+							. ", " . $publish . ")";
+					*/
+					$query->insert("#__thm_groups_" . strtolower($structureItem->type));
+					$query->set("`userid` = " . $userid);
+					$query->set("`structid` = " . $structureItem->id);
+					$query->set("`value` = \"" . htmlspecialchars($field) . "\"");
+					$query->set("`publish` = " . $publish);
+				}
+				echo $query->__toString() . "<br />";
+				$db->setQuery($query);
+				if (!$db->query())
+				{
+					$err = 1;
+				}
+			}
+
+			if ($structureItem->type == 'PICTURE' && $_FILES[$structureItem->field]['name'] != "")
+			{
+				if (!$this->updatePic($userid, $structureItem->id, $structureItem->field))
+				{
+					$err = 1;
+				}
 			}
 		}
-		if ($message != '')
-		{
-			$this->_msg = $message;
-			$err = 1;
-		}
-		else 
-		{
-			$firstName = null;
-			$lastName = null;
-			foreach ($structure as $structureItem)
-			{
-				$puffer = null;
-				$structureItem->field = str_replace(' ', '_', $structureItem->field);
-				$field = JRequest::getVar($structureItem->field, '', 'post', '', JREQUEST_ALLOWHTML);
-				$publish = 0;
-				if ($structureItem->type == 'MULTISELECT')
-				{
-					$field = implode(';', $field);
-				}
-				$publishPuffer = JRequest::getVar('publish' . str_replace(" ", "", $structureItem->field));
-	
-				if (isset($publishPuffer))
-				{
-					$publish = 1;
-				}
-				
-				/* Check if struct = firstname / lastname and save */
-				if ( strtolower($structureItem->type) == 'text' && $structureItem->id == '2' )
-				{
-					$lastName = htmlspecialchars($field);
-					var_dump($lastName);
-				}
-				if (	strtolower($structureItem->type) == 'text' && $structureItem->id == '1' )
-				{
-					$firstName = htmlspecialchars($field);
-					var_dump($firstName);
-				}
-				
-				/*
-				 $query = "SELECT structid FROM #__thm_groups_" . strtolower($structureItem->type) .
-				" WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
-				*/
-				$query = $db->getQuery(true);
-				$query->select('structid');
-				$query->from("#__thm_groups_" . strtolower($structureItem->type));
-				$query->where("userid = " . $userid);
-				$query->where("structid = " . $structureItem->id);
-	
-				$db->setQuery($query);
-				$puffer = $db->loadObject();
-	
-				if (isset($structureItem->field))
+		/* 
+		 * Sync Names with #__users
+		 
+				if (isset($firstName) && isset($lastName))
 				{
 					$query = $db->getQuery(true);
-	
-					if (isset($puffer))
-					{
-						/*
-						 $query = "UPDATE #__thm_groups_" . strtolower($structureItem->type) . " SET";
-						*/
-						$query->update("#__thm_groups_" . strtolower($structureItem->type));
-	
-						if ($structureItem->type != 'PICTURE' && $structureItem->type != 'TABLE')
-						{
-							/*
-							 $query .= " value='" . $field . "',";
-							*/
-							$query->set("value = \"" . htmlspecialchars($field) . "\"");
-						}
-						/*
-						 $query .= " publish='" . $publish . "'"
-						. " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
-						*/
-						$query->set("publish = " . $publish);
-						$query->where("userid = '" . $userid . "'");
-						$query->where("structid = '" . $structureItem->id . "'");
-					}
-					else
-					{
-						/*
-						 $query = "INSERT INTO #__thm_groups_" . strtolower($structureItem->type) . " ( `userid`, `structid`, `value`, `publish`)"
-						. " VALUES ($userid"
-								. ", " . $structureItem->id
-								. ", '" . $field . "'"
-								. ", " . $publish . ")";
-						*/
-						$query->insert("#__thm_groups_" . strtolower($structureItem->type));
-						$query->set("`userid` = " . $userid);
-						$query->set("`structid` = " . $structureItem->id);
-						$query->set("`value` = \"" . htmlspecialchars($field) . "\"");
-						$query->set("`publish` = " . $publish);
-					}
+					$query->update("#__users");
+					$query->set('name = "' . $firstName . ' ' . $lastName . '"');
+					$query->where("id = '" . $userid . "'");
 					echo $query->__toString() . "<br />";
 					$db->setQuery($query);
 					if (!$db->query())
@@ -276,31 +252,28 @@ class THMGroupsModeledit extends JModelForm
 						$err = 1;
 					}
 				}
-				
-				if ($structureItem->type == 'PICTURE' && $_FILES[$structureItem->field]['name'] != "")
-				{
-					if (!$this->updatePic($userid, $structureItem->id, $structureItem->field))
-					{
-						$err = 1;
-					}
-				}
-			}
-		}
-		/* 
-		 * If firstName and lastName set (MUST be, but safe is safe ;-) ) update it into __users database.
+		 */
+		/*
+		 * Update thm_quickpages name
 		 */
 		if (isset($firstName) && isset($lastName))
 		{
+			// Path
+			$qp_alias = strtolower($lastName) . "-" . strtolower(str_replace(" ", "-", $firstName)) . "-" . $userid;
 			$query = $db->getQuery(true);
-			$query->update("#__users");
-			$query->set('name = "' . $firstName . ' ' . $lastName . '"');
-			$query->where("id = '" . $userid . "'");
-			echo $query->__toString() . "<br />";
+			$query->update("#__categories SET path='quickpages/" . $qp_alias . "', alias='" . $qp_alias . "'");
+			$query->where("alias LIKE '%" . $userid . "'");
+				
 			$db->setQuery($query);
-			if (!$db->query())
-			{
-				$err = 1;
-			}
+			$db->query();
+			
+			// Category Name
+			$query = $db->getQuery(true);
+			$query->update("#__categories SET title='" . $lastName . ", " . $firstName . "'");
+			$query->where("alias LIKE '%" . $userid . "'");
+				
+			$db->setQuery($query);
+			$db->query();			
 		}
 		if (!$err)
 		{
@@ -912,20 +885,7 @@ class THMGroupsModeledit extends JModelForm
 		// Encapsulate executeDbData() with transaction-safety enabled
 		return($this->executeDbData($query, true));
 	}
-	
-	/**
-	 * Returns Error Message.
-	 *
-	 * This function returns a error message.
-	 *
-	 * @access  private
-	 * @return	String          The message errors.
-	 */
-	public function getErrorMessage()
-	{
-		return $this->_msg;
-	}
-	
+
 	/**
 	 * Method to get extra data
 	 *

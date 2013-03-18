@@ -30,6 +30,7 @@ jimport('joomla.filesystem.path');
  */
 class THMGroupsModelAdvanced extends JModel
 {
+	
 	/**
 	 * DAO
 	 *
