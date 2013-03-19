@@ -232,7 +232,21 @@ $user = JFactory::getUser();
 		}
 		?>
 		</td>
-		<td valign="top"><?php echo $row->lastName; ?></td>
+		<td valign="top">
+		<?php 
+		if (($user->authorise('core.edit', 'com_users') || (($user->authorise('core.edit.own', 'com_users') && $row->userid == $user->get('id')))) 
+		 && $user->authorise('core.manage', 'com_users') && !((!$user->authorise('core.admin')) && JAccess::check($row->userid, 'core.admin')))
+		{
+			echo "<a href='$link'>";
+			echo $row->lastName;
+			echo "</a>";
+		}
+		else
+		{
+			echo $row->lastName;
+		}
+		?>
+		</td>
 		<td valign="top"><?php echo $row->EMail; ?></td>
 		<td valign="top" align="center"><?php echo $published; ?></td>
 		<td valign="top" align="center">

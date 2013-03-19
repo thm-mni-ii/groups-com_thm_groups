@@ -12,6 +12,7 @@
  * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
+ * @author      Tobias Schmitt, <tobias.schmitt@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -172,6 +173,18 @@ class THMGroupsModeledit extends JModelForm
 			{
 				$publish = 1;
 			}
+			
+			/* Check if struct = firstname / lastname and save */
+			if ( strtolower($structureItem->type) == 'text' && $structureItem->id == '2' )
+			{
+				$lastName = htmlspecialchars($field);
+				var_dump($lastName);
+			}
+			if (	strtolower($structureItem->type) == 'text' && $structureItem->id == '1' )
+			{
+				$firstName = htmlspecialchars($field);
+				var_dump($firstName);
+			}
 
 			/*
 			$query = "SELECT structid FROM #__thm_groups_" . strtolower($structureItem->type)
@@ -236,6 +249,44 @@ class THMGroupsModeledit extends JModelForm
 					$err = 1;
 				}
 			}
+		}
+		/*
+		 * Sync Names with #__users
+		if (isset($firstName) && isset($lastName))
+		{
+			$query = $db->getQuery(true);
+			$query->update("#__users");
+			$query->set('name = "' . $firstName . ' ' . $lastName . '"');
+			$query->where("id = '" . $userid . "'");
+			echo $query->__toString() . "<br />";
+			$db->setQuery($query);
+			if (!$db->query())
+			{
+				$err = 1;
+			}
+		}
+		*/
+		/*
+		 * Update thm_quickpages name
+		*/
+		if (isset($firstName) && isset($lastName))
+		{
+			// Path
+			$qp_alias = strtolower($lastName) . "-" . strtolower(str_replace(" ", "-", $firstName)) . "-" . $userid;
+			$query = $db->getQuery(true);
+			$query->update("#__categories SET path='quickpages/" . $qp_alias . "', alias='" . $qp_alias . "'");
+			$query->where("alias LIKE '%" . $userid . "'");
+		
+			$db->setQuery($query);
+			$db->query();
+				
+			// Category Name
+			$query = $db->getQuery(true);
+			$query->update("#__categories SET title='" . $lastName . ", " . $firstName . "'");
+			$query->where("alias LIKE '%" . $userid . "'");
+		
+			$db->setQuery($query);
+			$db->query();
 		}
 		if (!$err)
 		{
