@@ -284,7 +284,8 @@
 														{
 														}
 														echo trim($row->firstName);
-														if ($run == 0 && $showTitle == 1)
+														if (($run == 0 && $showTitle == 1 && $arrOrderAtt[1] != "3" && $rows[0]->title != '') 
+														 || ($run == 1 && $showTitle == 1 && $arrOrderAtt[2] == 1 && $rows[0]->title != ''))
 														{
 															echo ',';
 														}
@@ -310,7 +311,9 @@
 														{
 														}
     													echo trim($row->lastName);
-    													if ($run == 0 || ($run == 1 && $showTitle == 1))
+    													if ($run == 0 || ($run == 1 && $showTitle == 1 && $rows[0]->title != '') 
+														 || ($run == 1 && $showTitle == 0 && $arrOrderAtt[0] == "1")
+														 || ($run == 1 && $showTitle == 1 && $arrOrderAtt[2] == "2"))
     													{
     														echo ',';
     													}
@@ -378,7 +381,7 @@
 		}
 		
 	?>
-		</div>
+	<!-- 	</div>  -->
 <?php 
 		
 	}
