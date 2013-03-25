@@ -12,6 +12,7 @@
  * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
+ * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -281,12 +282,16 @@ class THMGroupsViewEdit extends JView
 	 */
 	public function display($tpl = null)
 	{
+		$app	 = JFactory::getApplication();
+		$pathway = $app->getPathway();
+		$pathwayItems = $pathway->getPathway();
 		$document   = & JFactory::getDocument();
 		$document->addStyleSheet("administrator/components/com_thm_groups/css/membermanager/icon.css");
 
 		$cid = JRequest::getVar('gsuid', 0);
 
-		// $model =& $this->getModel();
+		$name = JRequest::getVar('name', 0) . ', ';
+		$firstname = "";
 		$items =& $this->get('Data');
 		$structure =& $this->get('Structure');
 		$gsgid = JRequest::getVar('gsgid');
@@ -302,12 +307,31 @@ class THMGroupsViewEdit extends JView
 				{
 					$value = $item->value;
 				}
+				if ($item->structid == 1)
+				{
+					$firstname = $item->value;
+				}
+				else
+				{
+				}
 			}
 			if ($structureItem->type == "TEXTFIELD")
 			{
 				$textField[$structureItem->field] = $value;
 			}
 		}
+		$link = 'index.php?';
+		$params = 'option=' . JRequest::getVar('option_old', 0)
+				. '&view=' . JRequest::getVar('view_old', 0)
+				. '&layout=' . JRequest::getVar('layout_old', 0)
+				. '&gsuid=' . $cid
+				. '&gsgid=' . JRequest::getVar('gsgid', 0)
+				. '&name=' . JRequest::getVar('name', 0);
+		
+		$u =& JURI::getInstance($link . $params);
+		
+		$pathway->addItem($name . $firstname, $u->toString());
+		$pathway->addItem(JText::_("COM_THM_GROUPS_EDIT_BREADCRUMB"), '');
 
 		// Daten für die Form
 		$this->form = $this->get('Form');
@@ -321,7 +345,7 @@ class THMGroupsViewEdit extends JView
 		$option_old = JRequest::getVar('option_old');
 		$layout_old = JRequest::getVar('layout_old');
 		$view_old = JRequest::getVar('view_old');
-
+		
 		$this->assignRef('option_old', $option_old);
 		$this->assignRef('layout_old', $layout_old);
 		$this->assignRef('view_old', $view_old);
@@ -330,6 +354,7 @@ class THMGroupsViewEdit extends JView
 		$this->assignRef('userid', $cid);
 		$this->assignRef('structure', $structure);
 		$this->assignRef('gsgid', $gsgid);
+		$this->assignRef('backRef', $params);
 
 		parent::display($tpl);
 	}

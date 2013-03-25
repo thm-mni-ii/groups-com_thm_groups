@@ -223,9 +223,10 @@ else
 		<input type="hidden" name="name" value="<?php echo JRequest::getVar('name'); ?>" />
 		<input type="hidden" name="tablekey" value="" />
 		<input type="hidden" name="controller" value="edit" />
-		<input type='hidden' name="option_old" value=" <?php echo JRequest::getVar('option_old', 0, 'post'); ?> " />
+		<input type='hidden' name="option_old" value="<?php echo $this->option_old; ?>" />
 		<input type='hidden' name="view_old" value="<?php echo  $view_old; ?>"/>
 		<input type='hidden' name="layout_old" value="<?php echo  $layout_old; ?>" />
+		<input type='hidden' name="backRef" value="<?php echo  $this->backRef; ?>" />
 	</fieldset>
 	</div>
 </form>
