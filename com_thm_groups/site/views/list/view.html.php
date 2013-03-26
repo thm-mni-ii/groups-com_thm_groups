@@ -47,7 +47,6 @@ class THMGroupsViewList extends JView
 		// Mainframe Parameter
 		$params = $mainframe->getParams();
 		$pagetitle = $params->get('page_title');
-		$showall = $params->get('showAll');
 		$showpagetitle = $params->get('show_page_heading');
 		$columncount = $params->get('columnCount');
 		$this->assignRef('model', $model);
@@ -55,11 +54,12 @@ class THMGroupsViewList extends JView
 		{
 			$this->assignRef('title', $pagetitle);
 		}
+		$this->assignRef('titleForLink', $pagetitle);
 		$this->assignRef('desc', $model->getDesc());
 		$this->assignRef('params', $params);
+		$pathway = $mainframe->getPathway();
 		if ($userid)
 		{
-			$pathway = $mainframe->getPathway();
 			$db = JFactory::getDBO();
 			$query = $db->getQuery(true);
 			$query->select('value');
@@ -69,7 +69,7 @@ class THMGroupsViewList extends JView
 			
 			$db->setQuery($query);
 			$firstname = $db->loadObjectList();
-			$name = $firstname[0]->value . ' ' . JRequest::getVar('name', '');
+			$name = JRequest::getVar('name', '') . ', ' . $firstname[0]->value;
 			$pathway->addItem($name, '');
 		}
 		else 

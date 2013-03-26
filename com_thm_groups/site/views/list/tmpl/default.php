@@ -84,11 +84,12 @@
 	/**
 	 * Method to get list all
 	 *
-	 * @param   object  $model  model
+	 * @param   object  $model      model
+	 * @param   String  $pagetitle  Title of the page
 	 * 
 	 * @return database object
 	 */
-	function getgListAll($model)
+	function getgListAll($model, $pagetitle)
 	{
 		$params = $model->getViewParams();
 
@@ -109,6 +110,7 @@
 		}
 		else
 		{
+			$arrOrderAtt = null;
 		}
 
 		if (isset($numColumns))
@@ -178,7 +180,8 @@
 				$linkTarget = 'index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid;
 				break;
 			case "profile":
-				$linkTarget = 'index.php?option=com_thm_groups&view=profile&layout=default';
+				$linkTarget = 'index.php?option=com_thm_groups&view=profile&layout=default&Itemid=' . $itemid
+							  . '&pageTitle=' . rawurlencode($pagetitle);
 				break;
 			default:
 				$linkTarget = 'index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid;
@@ -257,88 +260,7 @@
 ?>
 								<div style="margin-bottom:-11px;">
 <?php								
-									// Wenn der Paramter orderingAttributes gestzt ist soll entsprechend die Parameter geordnet werden ansonten default Sortierung
-									if ($orderAttr)
-									{
-										$run = 0;
-										foreach ($arrOrderAtt as $val)
-										{
-											switch ($val)
-											{
-												case '1': 
-														if ($showTitle == 1) 
-														{
-															echo $row->title . ' ';
-														}
-														else 
-														{
-														}
-														break;
-												case '2':
-														if ( array_search('0', $linkElement) !== null && array_search('0', $linkElement) !== false )
-														{
-															echo "<a href=" . JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid);
-															echo ">";
-														}
-														else 
-														{
-														}
-														echo trim($row->firstName);
-														if (($run == 0 && $showTitle == 1 && $arrOrderAtt[1] != "3" && $rows[0]->title != '') 
-														 || ($run == 1 && $showTitle == 1 && $arrOrderAtt[2] == 1 && $rows[0]->title != ''))
-														{
-															echo ',';
-														}
-														else
-														{
-														}
-														echo ' ';
-														if ( array_search('0', $linkElement) !== null && array_search('0', $linkElement) !== false)
-														{
-															echo '</a>';
-														}
-														else
-														{
-														}
-														break;
-												case '3':
-														if ( array_search('1', $linkElement) !== false && array_search('1', $linkElement) !== null)
-														{
-															echo "<a href=" . JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid);
-															echo ">";
-														}
-														else 
-														{
-														}
-    													echo trim($row->lastName);
-    													if ($run == 0 || ($run == 1 && $showTitle == 1 && $rows[0]->title != '') 
-														 || ($run == 1 && $showTitle == 0 && $arrOrderAtt[0] == "1")
-														 || ($run == 1 && $showTitle == 1 && $arrOrderAtt[2] == "2"))
-    													{
-    														echo ',';
-    													}
-    													else
-    													{
-    													}
-    													echo ' ';
-    													if ( array_search('1', $linkElement) !== false && array_search('1', $linkElement) !== null)
-    													{
-    														echo '</a>';
-    													}
-    													else 
-    													{
-    													}
-														break;
-											}
-											$run++;
-										}
-									}
-									else
-									{
-										echo $row->title . " " . "<a href=";
-										echo JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid);
-										echo ">" . trim($row->lastName) . '</a>';
-									}
+									echo writeName($orderAttr, $arrOrderAtt, $row, $showTitle, $rows, $linkElement, $linkTarget, $groupid);
 									$actualRowPlaced++;
 									$allCount++;
 									$actualLetterPlaced++;
@@ -389,21 +311,31 @@
 	/**
 	 * Method to get list alphabet
 	 *
-	 * @param   object  $model  model
+	 * @param   object  $model      model
+	 * @param	String	$pagetitle	Title of teh page
 	 *
 	 * @return String
 	 */
-	function getgListAlphabet($model)
+	function getgListAlphabet($model, $pagetitle)
 	{
 		$params = $model->getViewParams();
 
 		// $showAll = $model->getShowMode();
 		$groupid = $model->getGroupNumber();
+		if ($groupid == null)
+		{
+			$groupid = JRequest::getVar('groupid', 0);
+		}
+		else
+		{
+		}
 		$retString = "";
 
 		// $margin = $params->get('lineSpacing');
 		$zmargin = $params->get('zSpacing') - 12;
 		$shownLetter = JRequest::getVar('letter');
+		$paramLinkTarget = $params->get('linkTarget');
+		$itemid = JRequest::getVar('Itemid', 0);
 
 		$allLastNames = $model->getDiffLettersToFirstletter($groupid);
 		$orderAttr = $params->get('orderingAttributes');
@@ -415,8 +347,9 @@
 		}
 		else
 		{
+			$arrOrderAtt = null;
 		}
-
+		
 		$itemid = JRequest::getVar('Itemid', 0);
 		$abc = array(
 				'A',
@@ -489,6 +422,20 @@
 			$shownLetter = $alleAnfangsbuchstaben[0];
 		}
 
+		switch ($paramLinkTarget)
+		{
+			case "module":
+				$linkTarget = 'index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid
+				. '&groupid=' . $groupid . '&letter=' . $shownLetter;
+				break;
+			case "profile":
+				$linkTarget = 'index.php?option=com_thm_groups&view=profile&layout=default&Itemid=' . $itemid
+								. '&pageTitle=' . rawurlencode($pagetitle);
+				break;
+			default:
+				$linkTarget = 'index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid;
+		}
+		
 		$retString .= "<div class='alphabet'>";
 		foreach ($abc as $char)
 		{
@@ -542,7 +489,7 @@
 		
 		foreach ($groupMember as $member)
 		{
-			$searchUm = str_replace("Ãƒâ€“", "&Ouml;", $member['lastName']);
+			$searchUm = str_replace("Ãƒâ€“", "&Ouml;", $member->lastName);
 			$searchUm = str_replace("ÃƒÂ¶", "&ouml;", $searchUm);
 			$searchUm = str_replace("Ãƒâ€ž", "&Auml;", $searchUm);
 			$searchUm = str_replace("ÃƒÂ¤", "&auml;", $searchUm);
@@ -570,100 +517,8 @@
 			else
 			{
 				$path = "'index.php?option=com_thm_groups&view=list&layout=default&Itemid='";
-				$trmimname = trim($member['lastName']);
-				if ($orderAttr)
-				{
-					$run = 0;
-					$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>";
-					foreach ($arrOrderAtt as $val)
-					{
-						switch ($val)
-						{
-							case '1':
-								if ($showTitle == 1)
-								{
-									$retString .= $member['title'] . ' ';
-								}
-								else
-								{
-								}
-								break;
-							case '2':
-								if ( array_search('0', $linkElement) !== false && array_search('0', $linkElement) !== null)
-								{
-									$retString .= "<a href="
-										. JRoute::_(
-											$path . $itemid . '&letter=' . $shownLetter . '&gsuid=' . $member['id'] . '&name=' . $trmimname . '&gsgid=' 
-											. $groupid
-										)
-										. ">";
-								}
-								else
-								{
-								}
-								$retString .= trim($member['firstName']);
-								if ($run == 0 && $showTitle == 1)
-								{
-									$retString .= ',';
-								}
-								else
-								{
-								}
-								$retString .= ' ';
-								if ( array_search('0', $linkElement) !== false && array_search('0', $linkElement) !== null)
-								{
-									$retString .= '</a>';
-								}
-								else
-								{
-								}
-								break;
-							case '3':
-								if ( array_search('1', $linkElement) !== false && array_search('1', $linkElement) !== null)
-								{
-									$retString .= "<a href="
-										. JRoute::_(
-											$path . $itemid . '&letter=' . $shownLetter . '&gsuid=' . $member['id'] . '&name=' . $trmimname . '&gsgid=' 
-											. $groupid
-										)
-										. ">";
-								}
-								else
-								{
-								}
-								$retString .= trim($member['lastName']);
-								if ($run == 0 || ($run == 1 && $showTitle == 1))
-								{
-									$retString .= ',';
-								}
-								else
-								{
-								}
-								$retString .= ' ';
-								if ( array_search('1', $linkElement) !== false && array_search('1', $linkElement) !== null)
-								{
-									$retString .= '</a>';
-								}
-								else
-								{
-								}
-								break;
-						}
-						$run++;
-					}
-					$retString .= '</div><br/>';
-				}
-				else
-				{
-					$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $member['title'] . " "
-						. "<a href="
-								. JRoute::_(
-									$path . $itemid . '&letter=' . $shownLetter . '&gsuid=' . $member['id'] . '&name=' . $trmimname . '&gsgid=' 
-									. $groupid
-								)
-								. ">" . trim($member['firstName']) . " " . trim($member['lastName'])
-								. "</a></div><br/>";
-				}
+				$trmimname = trim($member->lastName);
+				$retString .= writeName($orderAttr, $arrOrderAtt, $member, $showTitle, $groupMember, $linkElement, $linkTarget, $groupid);
 				$actualRowPlaced++;
 			}
 			
@@ -681,104 +536,115 @@
 			$path = "'index.php?option=com_thm_groups&view=list&layout=default&Itemid='";
 			$trmimname = trim($member['lastName']);
 
-			if ($orderAttr)
-			{
-				$run = 0;
-				$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>";
-				foreach ($arrOrderAtt as $val)
-				{
-					switch ($val)
-					{
-						case '1':
-								if ($showTitle == 1)
-								{
-									$retString .= $member['title'] . ' ';
-								}
-								else
-								{
-								}
-							break;
-						case '2':
-								if ( array_search('0', $linkElement) !== false && array_search('0', $linkElement) !== null)
-								{
-									$retString .= "<a href="
-										. JRoute::_(
-											$path . $itemid . '&letter=' . $shownLetter . '&gsuid=' . $member['id'] . '&name=' . $trmimname . '&gsgid=' 
-											. $groupid
-										)
-										. ">";
-								}
-								else
-								{
-								}
-								$retString .= trim($member['firstName']);
-								if ($run == 0 && $showTitle == 1)
-								{
-									$retString .= ',';
-								}
-								else
-								{
-								}
-								$retString .= ' ';
-								if ( array_search('0', $linkElement) !== false && array_search('0', $linkElement) !== null)
-								{
-									$retString .= '</a>';
-								}
-								else
-								{
-								}
-							break;
-						case '3':
-							if ( array_search('1', $linkElement) !== false && array_search('1', $linkElement) !== null)
-							{
-								$retString .= "<a href="
-										. JRoute::_(
-												$path . $itemid . '&letter=' . $shownLetter . '&gsuid=' . $member['id'] . '&name=' . $trmimname . '&gsgid='
-												. $groupid
-										)
-										. ">";
-							}
-							else
-							{
-							}
-							$retString .= trim($member['lastName']);
-							if ($run == 0 || ($run == 1 && $showTitle == 1))
-							{
-								$retString .= ',';
-							}
-							else
-							{
-							}
-							$retString .= ' ';
-							if ( array_search('1', $linkElement) !== false && array_search('1', $linkElement) !== null)
-							{
-								$retString .= '</a>';
-							}
-							else
-							{
-							}
-							break;
-					}
-					$run++;
-				}
-				$retString .= '</div><br/>';
-			}
-			else
-			{
-				$retString .= "<div style='margin-bottom:" . $zmargin . "px;'>" . $member['title'] . " "
-					. "<a href="
-							. JRoute::_(
-								$path . $itemid . '&letter=' . $shownLetter . '&gsuid=' . $member['id'] . '&name=' . $trmimname . '&gsgid=' 
-								. $groupid
-							)
-							. ">" . trim($member['firstName']) . " " . trim($member['lastName'])
-							. "</a></div><br/>";
-			}
+			$retString .= writeName($orderAttr, $arrOrderAtt, $member, $showTitle, $groupMember, $linkElement, $linkTarget, $groupid);
 		}
 		$retString .= "</ul>";
 		return $retString;
 	}
 	
+	/**
+	 * Method to show the name correct
+	 *
+	 * @param   String   $orderAttr    String of the Attributes order 
+	 * @param	object	 $arrOrderAtt  Array of the attributes order
+	 * @param	object	 $row		   Data of the user
+	 * @param	Boolean	 $showTitle	   Show the title of the users
+	 * @param	object	 $rows  	   Data of all Users
+	 * @param	String	 $linkElement  The Elements where a link should place
+	 * @param	String   $linkTarget   Link Target
+	 * @param	String	 $groupid  	   Groupid
+	 *
+	 * @return  String  $string  Return String
+	 */
+	function writeName($orderAttr, $arrOrderAtt, $row, $showTitle, $rows, $linkElement, $linkTarget, $groupid)
+	{
+		$string = "";
+
+		// Wenn der Paramter orderingAttributes gestzt ist soll entsprechend die Parameter geordnet werden ansonten default Sortierung
+		if ($orderAttr)
+		{
+			$run = 0;
+			foreach ($arrOrderAtt as $val)
+			{
+				switch ($val)
+				{
+					case '1':
+						if ($showTitle == 1)
+						{
+							$string .= $row->title . ' ';
+						}
+						else
+						{
+						}
+						break;
+					case '2':
+						if (array_search('0', $linkElement) !== null && array_search('0', $linkElement) !== false)
+						{
+							$string .= "<a href=" . $linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid;
+							$string .= ">";
+						}
+						else
+						{
+						}
+						$string .= trim($row->firstName);
+						       if (($run == 0 && $showTitle == 1 && $arrOrderAtt[1] != "3" && $rows[0]->title != '') 
+								|| ($run == 1 && $showTitle == 1 && $arrOrderAtt[2] == 1 && $rows[0]->title != ''))
+							   {
+									$string .= ',';
+							   }
+								else
+								{
+								}
+						$string .= ' ';
+						if (array_search('0', $linkElement) !== null && array_search('0', $linkElement) !== false)
+						{
+							$string .= '</a>';
+					    }
+						else
+						{
+						}
+						break;
+					case '3':
+						if (array_search('1', $linkElement) !== false && array_search('1', $linkElement) !== null)
+						{
+							$string .= "<a href=" . $linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid;
+							$string .= ">";
+						}
+						else
+						{
+						}
+						$string .= trim($row->lastName);
+						if ($run == 0 || ($run == 1 && $showTitle == 1 && $rows[0]->title != '')
+						 || ($run == 1 && $showTitle == 0 && $arrOrderAtt[0] == "1")
+						 || ($run == 1 && $showTitle == 1 && $arrOrderAtt[2] == "2"))
+						{
+							$string .= ',';
+						}
+						else
+						{
+						}
+						$string .= ' ';
+						if (array_search('1', $linkElement) !== false && array_search('1', $linkElement) !== null)
+						{
+							$string .= '</a>';
+						}
+						else
+						{
+						}
+						break;
+				}
+				$run++;
+			}
+		}
+		else
+		{
+			$string .= $row->title . " " . "<a href=";
+			$string .= $linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid;
+			$string .= ">" . trim($row->lastName) . '</a>';
+		}
+		
+		return $string;
+	}
 	$mainframe = Jfactory::getApplication();
 	$model = $this->model;
 
@@ -797,11 +663,11 @@
 	$this->assignRef('desc', $model->getDesc());
 	if ($showall == 1)
 	{
-		getgListAll($model);
+		getgListAll($model, $this->titleForLink);
 	}
 	else
 	{
-		echo getgListAlphabet($model);
+		echo getgListAlphabet($model, $this->titleForLink);
 	}
 ?>
 </div>

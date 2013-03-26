@@ -93,8 +93,6 @@ class THMGroupsViewProfile extends JView
 		$structure = &$this->get('Structure');
 		$gsgid     = JRequest::getVar('gsgid');
 		
-		$backRef = $pathwayitems[count($pathwayitems) - 1]->link;
-
 		$name = "";
 		foreach ($items as $val)
 		{
@@ -113,6 +111,19 @@ class THMGroupsViewProfile extends JView
 				}
 			}
 		}
+		$pathLinks = array();
+		foreach ($pathwayitems as $pwitem)
+		{
+			array_push($pathLinks, $pwitem->name);
+		}
+		if (!array_search(JRequest::getVar('pageTitle', ''), $pathLinks))
+		{
+			$pathway->addItem(JRequest::getVar('pageTitle', ''), 'index.php?option=com_thm_groups&view=list&Itemid=' . JRequest::getVar('Itemid', 0));
+		}
+		else 
+		{
+		}
+		$backRef = $pathwayitems[count($pathwayitems) - 1]->link;
 		$pathway->addItem($name, '');
 		
 		// Daten für die Form

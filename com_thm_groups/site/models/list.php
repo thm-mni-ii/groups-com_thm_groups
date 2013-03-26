@@ -431,6 +431,6 @@ class THMGroupsModelList extends JModel
 		$query->where("gid = $gid");
 		$query->order("lastName");
 		$db->setQuery($query);
-		return $db->loadAssocList();
+		return $db->loadObjectList();
 	}
 }
