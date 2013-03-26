@@ -177,14 +177,14 @@
 		switch ($paramLinkTarget)
 		{
 			case "module":
-				$linkTarget = 'index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid;
+				$linkTarget = JURI::current() . '?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid;
 				break;
 			case "profile":
-				$linkTarget = 'index.php?option=com_thm_groups&view=profile&layout=default&Itemid=' . $itemid
+				$linkTarget = JURI::current() . '?option=com_thm_groups&view=profile&layout=default&Itemid=' . $itemid
 							  . '&pageTitle=' . rawurlencode($pagetitle);
 				break;
 			default:
-				$linkTarget = 'index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid;
+				$linkTarget = JURI::current() . '?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid;
 		}
 
 		$actualRowPlaced = 0;
@@ -425,15 +425,16 @@
 		switch ($paramLinkTarget)
 		{
 			case "module":
-				$linkTarget = 'index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid
-				. '&groupid=' . $groupid . '&letter=' . $shownLetter;
+				$linkTarget = JURI::current() . '?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid
+							. '&groupid=' . $groupid . '&letter=' . $shownLetter;
 				break;
 			case "profile":
-				$linkTarget = 'index.php?option=com_thm_groups&view=profile&layout=default&Itemid=' . $itemid
+				$linkTarget = JURI::current() . '?option=com_thm_groups&view=profile&layout=default&Itemid=' . $itemid
 								. '&pageTitle=' . rawurlencode($pagetitle);
 				break;
 			default:
-				$linkTarget = 'index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid;
+				$linkTarget = JURI::current() . '?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid
+							. '&groupid=' . $groupid . '&letter=' . $shownLetter;
 		}
 		
 		$retString .= "<div class='alphabet'>";
