@@ -7,6 +7,7 @@
  * @name        THMGroups component entry
  * @description Template file of module mod_thm_groups_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
+ * @author		Alexander Boll, <alexander.boll@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -99,9 +100,10 @@ if ($view == "articles")
 }
 else
 {
-	$controller = Jcontroller::getInstance('thmgroups');
+		$controller = Jcontroller::getInstance('thmgroups');
 
-	$controller->execute(JRequest::getCmd('task'));
+		$controller->execute(JRequest::getCmd('task'));
 
-	$controller->redirect();
+		$controller->redirect();
 }
+
