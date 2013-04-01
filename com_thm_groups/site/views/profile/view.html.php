@@ -80,9 +80,10 @@ class THMGroupsViewProfile extends JView
 	 */
 	public function display($tpl = null)
 	{
-		$app	= JFactory::getApplication();
+		$app	 = JFactory::getApplication();
 		$pathway = $app->getPathway();
-		$document   = & JFactory::getDocument();
+		$pathwayitems = $pathway->getPathWay();
+		$document = & JFactory::getDocument();
 		$document->addStyleSheet("administrator/components/com_thm_groups/css/membermanager/icon.css");
 
 		$cid = JRequest::getVar('gsuid', 0);
@@ -91,7 +92,7 @@ class THMGroupsViewProfile extends JView
 		$items     = &$this->get('Data');
 		$structure = &$this->get('Structure');
 		$gsgid     = JRequest::getVar('gsgid');
-
+		
 		$name = "";
 		foreach ($items as $val)
 		{
@@ -110,6 +111,19 @@ class THMGroupsViewProfile extends JView
 				}
 			}
 		}
+		$pathLinks = array();
+		foreach ($pathwayitems as $pwitem)
+		{
+			array_push($pathLinks, $pwitem->name);
+		}
+		if (!array_search(JRequest::getVar('pageTitle', ''), $pathLinks))
+		{
+			$pathway->addItem(JRequest::getVar('pageTitle', ''), 'index.php?option=com_thm_groups&view=list&Itemid=' . JRequest::getVar('Itemid', 0));
+		}
+		else 
+		{
+		}
+		$backRef = $pathwayitems[count($pathwayitems) - 1]->link;
 		$pathway->addItem($name, '');
 		
 		// Daten für die Form
@@ -139,6 +153,7 @@ class THMGroupsViewProfile extends JView
 
 		$itemid = JRequest::getVar('Itemid', 0);
 
+		$this->assignRef('backRef', $backRef);
 		$this->assignRef('items', $items);
 		$this->assignRef('itemid', $itemid);
 		$this->assignRef('canEdit', $model->canEdit());
