@@ -116,15 +116,22 @@ class THMGroupsViewProfile extends JView
 		{
 			array_push($pathLinks, $pwitem->name);
 		}
-		if (!array_search(JRequest::getVar('pageTitle', ''), $pathLinks))
+		$pageTitle = JRequest::getVar('pageTitle', '');
+		if (!array_search($pageTitle, $pathLinks) && $pageTitle != '')
 		{
-			$pathway->addItem(JRequest::getVar('pageTitle', ''), 'index.php?option=com_thm_groups&view=list&Itemid=' . JRequest::getVar('Itemid', 0));
+			$pathway->addItem($pageTitle, 'index.php?option=com_thm_groups&view=list&Itemid=' . JRequest::getVar('Itemid', 0));
 		}
 		else 
 		{
 		}
 		$backRef = $pathwayitems[count($pathwayitems) - 1]->link;
-		$pathway->addItem($name, '');
+		if ($name != '')
+		{
+			$pathway->addItem($name, '');
+		}
+		else 
+		{
+		}
 		
 		// Daten für die Form
 		$textField = array();
