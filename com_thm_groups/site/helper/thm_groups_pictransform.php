@@ -287,7 +287,6 @@ class THMPicTransform
 
 		$newImg = imagecreatetruecolor($newWidth, $newHeight);
 
-		//imagecopyresized($newImg, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
 		imagecopyresampled($newImg, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
 
 		return $newImg;
