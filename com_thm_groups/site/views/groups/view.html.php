@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1 
+ * @version     v3.0.2
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -12,6 +12,7 @@
  * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
+ * @author      Tobias Schmitt, <tobias.schmitt@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -38,12 +39,23 @@ class THMGroupsViewGroups extends JView
 	 */
 	public function display($tpl = null)
 	{
+		$mainframe = Jfactory::getApplication();
+		$params = $mainframe->getParams();
+		$rootgroup = $params->get('rootGroup');
 		$model =& $this->getModel();
-		$groups = $model->getGroups();
+		if(isset($rootgroup)) 
+		{
+			$groups = $model->getGroups($rootgroup);
+		}
+		else
+		{
+			$groups = $model->getGroups(0);
+		}
 		$itemid = JRequest::getVar('Itemid', 0);
 		$this->assignRef('groups', $groups);
 		$this->assignRef('itemid',  $itemid);
 		$this->assignRef('canEdit',  $model->canEdit());
+		$this->assignRef('params', $params);
 		parent::display($tpl);
 	}
 }

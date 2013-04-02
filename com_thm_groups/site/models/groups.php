@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.0.2
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -36,7 +36,7 @@ class THMGroupsModelGroups extends JModel
 	 *
 	 * @return database object
 	 */
-	public function getGroups()
+	public function getGroups($rootgroup)
 	{
 		$db = JFactory::getDBO();
 		/*
@@ -45,50 +45,31 @@ class THMGroupsModelGroups extends JModel
 		$query = $db->getQuery(true);
 		/*
 		 * Build Query for usergroup sorting
-		 * begin: /administrator/components/com_users/models/groups.php: getListQuery()
 		 */
+		$innerQuery = '( SELECT a.*, COUNT(DISTINCT c2.id) AS level ' .
+								'FROM `#__usergroups` AS a ' .
+								'LEFT OUTER JOIN `#__usergroups` AS c2 ON a.lft > c2.lft AND a.rgt < c2.rgt ' .
+								'WHERE a.id = ' . $rootgroup . ' ' .
+								'GROUP BY a.id, a.lft, a.rgt, a.parent_id, a.title ' .
+								'ORDER BY a.lft ASC ) ';
+		
 		$query->select(
 				$this->getState(
 						'list.select',
 						'a.*'
 				)
 		);
-		$query->from($db->quoteName('#__usergroups') . ' AS a');
-
-		// Add the level in the tree.
-		$query->select('COUNT(DISTINCT c2.id) AS level');
-		$query->join('LEFT OUTER', $db->quoteName('#__usergroups') . ' AS c2 ON a.lft > c2.lft AND a.rgt < c2.rgt');
+		$query->from($db->quoteName('#__usergroups') . ' AS a, ' . $db->quoteName('#__usergroups') . ' AS c2, ' . 
+				$db->quoteName('#__usergroups') . ' AS c2sub, ' . $innerQuery . 'AS asub');
+		$query->select('(COUNT(c2.title) - (asub.level + 1)) AS level');
+		$query->where('a.lft BETWEEN c2.lft AND c2.rgt ' . 
+				'AND a.lft BETWEEN c2sub.lft AND c2sub.rgt ' .
+    			'AND c2sub.title = asub.title');
 		$query->group('a.id, a.lft, a.rgt, a.parent_id, a.title');
-
-		// Filter the comments over the search string if set.
-		$search = $this->getState('filter.search');
-		if (!empty($search)) 
-		{
-			if (stripos($search, 'id:') === 0) 
-			{
-				$query->where('a.id = ' . (int) substr($search, 3));
-			} 
-			else 
-			{
-				$search = $db->Quote('%' . $db->escape($search, true) . '%');
-				$query->where('a.title LIKE ' . $search);
-			}
-		}
-		else 
-		{
-			
-		}
-
-		// Add the list ordering clause.
 		$query->order($db->escape($this->getState('list.ordering', 'a.lft')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
-		
-		/*
-		 * end: /administrator/components/com_users/models/groups.php: getListQuery()
-		 */
 		
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
-		
 		/*
 		 * Add additional Info from thm_groups_groups
 		 */
@@ -120,7 +101,6 @@ class THMGroupsModelGroups extends JModel
 				$row->picture = $adds[0]->picture;
 			}
 		}
-		
 		return $rows;
 	}
 
