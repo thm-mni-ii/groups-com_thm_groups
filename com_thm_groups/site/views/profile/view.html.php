@@ -92,7 +92,11 @@ class THMGroupsViewProfile extends JView
 		$items     = &$this->get('Data');
 		$structure = &$this->get('Structure');
 		$gsgid     = JRequest::getVar('gsgid');
-		
+		$gsuid     = JRequest::getVar('gsuid');
+		$old_layout = JRequest::getVar('layout');
+		$old_view = JRequest::getVar('view');
+		$old_item = JRequest::getVar('Itemid');
+
 		$name = "";
 		foreach ($items as $val)
 		{
@@ -119,7 +123,7 @@ class THMGroupsViewProfile extends JView
 		$pageTitle = JRequest::getVar('pageTitle', '');
 		if (!array_search($pageTitle, $pathLinks) && $pageTitle != '')
 		{
-			$pathway->addItem($pageTitle, 'index.php?option=com_thm_groups&view=list&Itemid=' . JRequest::getVar('Itemid', 0));
+			$pathway->addItem($pageTitle, JURI::base() . 'index.php?option=com_thm_groups&view=list&Itemid=' . JRequest::getVar('Itemid', 0));
 		}
 		else 
 		{
@@ -127,7 +131,8 @@ class THMGroupsViewProfile extends JView
 		$backRef = $pathwayitems[count($pathwayitems) - 1]->link;
 		if ($name != '')
 		{
-			$pathway->addItem($name, '');
+			$pathway->addItem($name, JURI::base() . 'index.php?option=com_thm_groups&view=' . $old_view . '&layout=' . $old_layout
+					. '&gsuid=' . $gsuid . '&Itemid=' . $old_item);
 		}
 		else 
 		{
