@@ -34,6 +34,8 @@ class THMGroupsModelGroups extends JModel
 	/**
 	 * Method to get groups
 	 *
+	 * @param   object  $rootgroup  Root group
+	 *
 	 * @return database object
 	 */
 	public function getGroups($rootgroup)
@@ -59,10 +61,12 @@ class THMGroupsModelGroups extends JModel
 						'a.*'
 				)
 		);
-		$query->from($db->quoteName('#__usergroups') . ' AS a, ' . $db->quoteName('#__usergroups') . ' AS c2, ' . 
-				$db->quoteName('#__usergroups') . ' AS c2sub, ' . $innerQuery . 'AS asub');
+		$query->from(
+				$db->quoteName('#__usergroups') . ' AS a, ' . $db->quoteName('#__usergroups') . ' AS c2, ' .
+				$db->quoteName('#__usergroups') . ' AS c2sub, ' . $innerQuery . 'AS asub'
+				);
 		$query->select('(COUNT(c2.title) - (asub.level + 1)) AS level');
-		$query->where('a.lft BETWEEN c2.lft AND c2.rgt ' . 
+		$query->where('a.lft BETWEEN c2.lft AND c2.rgt ' .
 				'AND a.lft BETWEEN c2sub.lft AND c2sub.rgt ' .
     			'AND c2sub.title = asub.title');
 		$query->group('a.id, a.lft, a.rgt, a.parent_id, a.title');

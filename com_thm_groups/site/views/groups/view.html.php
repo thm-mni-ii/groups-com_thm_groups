@@ -43,7 +43,7 @@ class THMGroupsViewGroups extends JView
 		$params = $mainframe->getParams();
 		$rootgroup = $params->get('rootGroup');
 		$model =& $this->getModel();
-		if(isset($rootgroup)) 
+		if (isset($rootgroup)) 
 		{
 			$groups = $model->getGroups($rootgroup);
 		}

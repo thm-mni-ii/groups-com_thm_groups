@@ -38,7 +38,7 @@
 						}
 					echo "</div>";
 				}
-				else if ($this->params->get('showPicture') == "yesnodef" )
+				elseif ($this->params->get('showPicture') == "yesnodef" )
 				{
 					if (JFile::exists("components/com_thm_groups/img/portraits/$group->picture"))
 					{

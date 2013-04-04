@@ -131,8 +131,10 @@ class THMGroupsViewProfile extends JView
 		$backRef = $pathwayitems[count($pathwayitems) - 1]->link;
 		if ($name != '')
 		{
-			$pathway->addItem($name, JURI::base() . 'index.php?option=com_thm_groups&view=' . $old_view . '&layout=' . $old_layout
-					. '&gsuid=' . $gsuid . '&Itemid=' . $old_item);
+			$pathway->addItem(
+					$name, JURI::base() . 'index.php?option=com_thm_groups&view=' . $old_view . '&layout=' . $old_layout
+					. '&gsuid=' . $gsuid . '&Itemid=' . $old_item
+					);
 		}
 		else 
 		{

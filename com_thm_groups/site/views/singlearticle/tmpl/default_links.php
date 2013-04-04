@@ -81,7 +81,10 @@ if ($urls && (!empty($urls->urla) || !empty($urls->urlb) || !empty($urls->urlc))
 					}
 				?>
 				</li>
-		<?php endforeach; ?>
+		<?php 
+			endforeach; 
+		?>
 	</ul>
 </div>
-<?php endif;
+<?php 
+endif;

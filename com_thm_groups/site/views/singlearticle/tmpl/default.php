@@ -30,7 +30,9 @@ if ($this->params->get('show_page_heading'))
 	<h1>
 	<?php echo $this->escape($this->params->get('page_heading')); ?>
 	</h1>
-<?php endif; ?>
+<?php 
+endif; 
+?>
 <?php
 if (!empty($this->item->pagination) AND $this->item->pagination && !$this->item->paginationposition && $this->item->paginationrelative)
 {
@@ -50,9 +52,13 @@ else
 		<?php echo $this->escape($this->item->title); ?></a>
 	<?php else : ?>
 		<?php echo $this->escape($this->item->title); ?>
-	<?php endif; ?>
+	<?php 
+endif; 
+	?>
 	</h2>
-<?php endif; ?>
+<?php 
+endif; 
+?>
 
 <?php if ($canEdit ||  $params->get('show_print_icon') || $params->get('show_email_icon')) 
 	: ?>
@@ -64,30 +70,40 @@ else
 			<li class="print-icon">
 			<?php echo JHtml::_('icon.print_popup',  $this->item, $params); ?>
 			</li>
-		<?php endif; ?>
+		<?php 
+endif; 
+		?>
 
 		<?php if ($params->get('show_email_icon')) 
 			: ?>
 			<li class="email-icon">
 			<?php echo JHtml::_('icon.email',  $this->item, $params); ?>
 			</li>
-		<?php endif; ?>
+		<?php 
+endif; 
+		?>
 
 		<?php if ($canEdit) 
 			: ?>
 			<li class="edit-icon">
 			<?php echo JHtml::_('icon.edit', $this->item, $params); ?>
 			</li>
-		<?php endif; ?>
+		<?php 
+endif; 
+		?>
 
 	<?php else : ?>
 		<li>
 		<?php echo JHtml::_('icon.print_screen',  $this->item, $params); ?>
 		</li>
-	<?php endif; ?>
+	<?php 
+endif; 
+	?>
 
 	</ul>
-<?php endif; ?>
+<?php 
+endif; 
+?>
 
 <?php  if (!$params->get('show_intro')) 
 	:
@@ -104,7 +120,9 @@ endif; ?>
 	: ?>
 	<dl class="article-info">
 	<dt class="article-info-term"><?php  echo JText::_('COM_CONTENT_ARTICLE_INFO'); ?></dt>
-<?php endif; ?>
+<?php 
+endif; 
+?>
 <?php if ($params->get('show_parent_category') && $this->item->parent_slug != '1:root') 
 	: ?>
 	<dd class="parent-category-name">
@@ -116,9 +134,13 @@ endif; ?>
 	<?php else 
 		: ?>
 		<?php echo JText::sprintf('COM_CONTENT_PARENT', $title); ?>
-	<?php endif; ?>
+	<?php 
+endif; 
+	?>
 	</dd>
-<?php endif; ?>
+<?php 
+endif; 
+?>
 <?php if ($params->get('show_category')) 
 	: ?>
 	<dd class="category-name">
@@ -129,27 +151,37 @@ endif; ?>
 		<?php echo JText::sprintf('COM_CONTENT_CATEGORY', $url); ?>
 	<?php else : ?>
 		<?php echo JText::sprintf('COM_CONTENT_CATEGORY', $title); ?>
-	<?php endif; ?>
+	<?php 
+endif; 
+	?>
 	</dd>
-<?php endif; ?>
+<?php 
+endif; 
+?>
 <?php if ($params->get('show_create_date')) 
 	: ?>
 	<dd class="create">
 	<?php echo JText::sprintf('COM_CONTENT_CREATED_DATE_ON', JHtml::_('date', $this->item->created, JText::_('DATE_FORMAT_LC2'))); ?>
 	</dd>
-<?php endif; ?>
+<?php 
+endif; 
+?>
 <?php if ($params->get('show_modify_date')) 
 	: ?>
 	<dd class="modified">
 	<?php echo JText::sprintf('COM_CONTENT_LAST_UPDATED', JHtml::_('date', $this->item->modified, JText::_('DATE_FORMAT_LC2'))); ?>
 	</dd>
-<?php endif; ?>
+<?php 
+endif; 
+?>
 <?php if ($params->get('show_publish_date')) 
 	: ?>
 	<dd class="published">
 	<?php echo JText::sprintf('COM_CONTENT_PUBLISHED_DATE_ON', JHtml::_('date', $this->item->publish_up, JText::_('DATE_FORMAT_LC2'))); ?>
 	</dd>
-<?php endif; ?>
+<?php 
+endif; 
+?>
 <?php if ($params->get('show_author') && !empty($this->item->author )) 
 	: ?>
 	<dd class="createdby">
@@ -165,29 +197,41 @@ endif; ?>
 		<?php echo JText::sprintf('COM_CONTENT_WRITTEN_BY', JHtml::_('link', JRoute::_($cntlink), $author)); ?>
 	<?php else: ?>
 		<?php echo JText::sprintf('COM_CONTENT_WRITTEN_BY', $author); ?>
-	<?php endif; ?>
+	<?php 
+endif; 
+	?>
 	</dd>
-<?php endif; ?>
+<?php 
+endif; 
+?>
 <?php if ($params->get('show_hits')) 
 	: ?>
 	<dd class="hits">
 	<?php echo JText::sprintf('COM_CONTENT_ARTICLE_HITS', $this->item->hits); ?>
 	</dd>
-<?php endif; ?>
+<?php 
+endif; 
+?>
 <?php if ($useDefList) 
 	: ?>
 	</dl>
-<?php endif; ?>
+<?php 
+endif; 
+?>
 
 <?php if (isset ($this->item->toc)) 
 	: ?>
 	<?php echo $this->item->toc; ?>
-<?php endif; ?>
+<?php 
+endif; 
+?>
 
 <?php if (isset($urls) AND ((!empty($urls->urls_position) AND ($urls->urls_position == '0')) OR  ($params->get('urls_position') == '0' AND empty($urls->urls_position) ))
  OR (empty($urls->urls_position) AND (!$params->get('urls_position'))))
 	: ?>
-<?php endif; ?>
+<?php 
+endif; 
+?>
 
 <?php if ($params->get('access-view'))
 	:?>
@@ -199,28 +243,35 @@ endif; ?>
 	<?php if ($images->image_fulltext_caption)
 		:
 		echo 'class="caption"' . ' title="' . htmlspecialchars($images->image_fulltext_caption) . '"';
-	endif; ?>
+endif; 
+?>
 	src="<?php echo htmlspecialchars($images->image_fulltext); ?>" 
 	alt="<?php echo htmlspecialchars($images->image_fulltext_alt); ?>"/>
 </div>
-<?php endif; ?>
+<?php 
+endif; 
+?>
 <?php
 if (!empty($this->item->pagination) AND $this->item->pagination AND !$this->item->paginationposition AND !$this->item->paginationrelative)
 	:
 	echo $this->item->pagination;
- endif;
+endif;
 ?>
 <?php echo $this->item->text; ?>
 <?php
 if (!empty($this->item->pagination) AND $this->item->pagination AND $this->item->paginationposition AND!$this->item->paginationrelative)
 	:
 	 echo $this->item->pagination;?>
-<?php endif; ?>
+<?php 
+endif; 
+?>
 
 <?php if (isset($urls) AND ((!empty($urls->urls_position)  AND ($urls->urls_position == '1')) OR ( $params->get('urls_position') == '1') ))
 	: ?>
 <?php echo $this->loadTemplate('links'); ?>
-<?php endif; ?>
+<?php 
+endif; 
+?>
 	<?php 
 // Optional teaser intro text for guests ?>
 <?php elseif ($params->get('show_noauth') == true and  $user->get('guest') ) 
@@ -252,13 +303,19 @@ if (!empty($this->item->pagination) AND $this->item->pagination AND $this->item-
 			echo JHtml::_('string.truncate', ($this->item->title), $params->get('readmore_limit'));
 		endif; ?></a>
 		</p>
-	<?php endif; ?>
-<?php endif; ?>
+	<?php 
+endif; 
+	?>
+<?php 
+endif; 
+?>
 <?php
 if (!empty($this->item->pagination) AND $this->item->pagination AND $this->item->paginationposition AND $this->item->paginationrelative)
 	:
 	 echo $this->item->pagination;?>
-<?php endif; ?>
+<?php 
+endif; 
+?>
 
 <?php echo $this->item->event->afterDisplayContent; ?>
 </div>
