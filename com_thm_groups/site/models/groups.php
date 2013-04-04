@@ -44,17 +44,21 @@ class THMGroupsModelGroups extends JModel
 		/*
 		$query = 'SELECT * FROM #__thm_groups_groups ';
 		*/
-		$query = $db->getQuery(true);
+		
 		/*
 		 * Build Query for usergroup sorting
 		 */
-		$innerQuery = '( SELECT a.*, COUNT(DISTINCT c2.id) AS level ' .
-								'FROM `#__usergroups` AS a ' .
-								'LEFT OUTER JOIN `#__usergroups` AS c2 ON a.lft > c2.lft AND a.rgt < c2.rgt ' .
-								'WHERE a.id = ' . $rootgroup . ' ' .
-								'GROUP BY a.id, a.lft, a.rgt, a.parent_id, a.title ' .
-								'ORDER BY a.lft ASC ) ';
 		
+		$innerQuery = $db->getQuery(true);
+		$innerQuery->select('a.*');
+		$innerQuery->select('COUNT(DISTINCT c2.id) AS level');
+		$innerQuery->from($db->quoteName('#__usergroups') . ' AS a');
+		$innerQuery->join('LEFT OUTER', $db->quoteName('#__usergroups') . ' AS c2 ON a.lft > c2.lft AND a.rgt < c2.rgt');
+		$innerQuery->where('a.id = ' . $rootgroup);
+		$innerQuery->group('a.id, a.lft, a.rgt, a.parent_id, a.title');
+		$innerQuery->order('a.lft ASC');
+		
+		$query = $db->getQuery(true);
 		$query->select(
 				$this->getState(
 						'list.select',
@@ -63,7 +67,7 @@ class THMGroupsModelGroups extends JModel
 		);
 		$query->from(
 				$db->quoteName('#__usergroups') . ' AS a, ' . $db->quoteName('#__usergroups') . ' AS c2, ' .
-				$db->quoteName('#__usergroups') . ' AS c2sub, ' . $innerQuery . 'AS asub'
+				$db->quoteName('#__usergroups') . ' AS c2sub, (' . $innerQuery->__toString() . ') AS asub'
 				);
 		$query->select('(COUNT(c2.title) - (asub.level + 1)) AS level');
 		$query->where('a.lft BETWEEN c2.lft AND c2.rgt ' .
@@ -71,9 +75,10 @@ class THMGroupsModelGroups extends JModel
     			'AND c2sub.title = asub.title');
 		$query->group('a.id, a.lft, a.rgt, a.parent_id, a.title');
 		$query->order($db->escape($this->getState('list.ordering', 'a.lft')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
-		
+
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
+
 		/*
 		 * Add additional Info from thm_groups_groups
 		 */

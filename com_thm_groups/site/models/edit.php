@@ -13,7 +13,7 @@
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
  * @author      Tobias Schmitt, <tobias.schmitt@mni.thm.de>
- * @author		Alexander Boll, <alexander.boll@mni.thm.de>
+ * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
