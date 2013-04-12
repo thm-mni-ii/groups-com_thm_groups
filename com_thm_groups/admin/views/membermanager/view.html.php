@@ -83,6 +83,7 @@ class THMGroupsViewmembermanager extends JView
 		{
 			JToolBarHelper::editListX('membermanager.edit', 'COM_THM_GROUPS_MEMBERMANAGER_EDIT');
 		}
+		JToolBarHelper::preferences('com_thm_groups');
 		JToolBarHelper::back('JTOOLBAR_BACK');
 
 		$mainframe = Jfactory::getApplication('Administrator');
