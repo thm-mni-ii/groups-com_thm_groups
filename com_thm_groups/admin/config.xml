@@ -38,4 +38,17 @@
 			validate="rules"
 			label="JCONFIG_PERMISSIONS_LABEL"
 			section="component" />
+	</fieldset>
+	<fieldset name="memberpermissions"
+		description="COM_THM_GROUPS_MEMBER_CONFIG_MEMBERPERMISSIONS_DESC"
+		label="COM_THM_GROUPS_MEMBER_CONFIG_MEMBERPERMISSIONS"
+	>
+		<field
+            name="editownprofile"
+            type="checkbox"
+            value="1"
+            default="0"
+            label="COM_THM_GROUPS_MEMBER_CONFIG_MEMBERPERMISSIONS_EDIT_PROFILE"
+            description="COM_THM_GROUPS_MEMBER_CONFIG_MEMBERPERMISSIONS_EDIT_PROFILE_DESC"
+        />
 	</fieldset></config>
