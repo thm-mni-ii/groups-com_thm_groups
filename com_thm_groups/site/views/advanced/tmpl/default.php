@@ -13,6 +13,7 @@
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
+ * @author      Tobias Schmitt, <tobias.schmitt@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -44,7 +45,8 @@ if ($this->view == 0)
 		$paramLinkTarget = $this->params->get('linkTarget');
 		$wrapTitle = false;
 		$wrapFirstName = false;
-		$canEdit = ($user->id == $id || $this->canEdit);
+		$componentparams = JComponentHelper::getParams('com_thm_groups');
+		$canEdit = (($user->id == $id && $componentparams->getValue('editownprofile', '0') == 1) || $this->canEdit);
 		foreach ($member as $memberhead)
 		{
 			// Daten fuer den HEAD in Variablen speichern
@@ -267,7 +269,8 @@ else
 			$picture = null;
 			$wrapTitle = false;
 			$wrapFirstName = false;
-			$canEdit = ($user->id == $id || $this->canEdit);
+			$componentparams = JComponentHelper::getParams('com_thm_groups');
+			$canEdit = (($user->id == $id && $componentparams->getValue('editownprofile', '0') == 1) || $this->canEdit);
 			foreach ($member as $memberhead)
 			{
 				// Daten fuer den HEAD in Variablen speichern

@@ -12,6 +12,7 @@
  * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
+ * @author      Tobias Schmitt, <tobias.schmitt@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -23,7 +24,8 @@ JHTML::_('behavior.modal', 'a.modal-button');
 JHTML::_('behavior.calendar');
 
 $user = & JFactory::getUser();
-$canEdit = ($user->id == $this->userid || $this->canEdit);
+$componentparams = JComponentHelper::getParams('com_thm_groups');
+$canEdit = (($user->id == $this->userid && $componentparams->getValue('editownprofile', '0') == 1) || $this->canEdit);
 
 $view_old = 0;
 $layout_old = 0;
