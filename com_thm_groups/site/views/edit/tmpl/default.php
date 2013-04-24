@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.3
+ * @version     v3.2.6
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -20,7 +20,7 @@
 defined('_JEXEC') or die('Restricted access');
 $user = & JFactory::getUser();
 
-if ($user->id != $this->userid && !$this->is_mod)
+if ((!($user->id > 0)) || (empty($this->userid)) || $user->id != $this->userid && !$this->is_mod)
 {
 	$mainframe = Jfactory::getApplication();
 	$itemid = JRequest :: getVar('Itemid', 0);

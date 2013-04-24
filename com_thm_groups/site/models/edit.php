@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.2
+ * @version     v3.2.6
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -179,12 +179,10 @@ class THMGroupsModeledit extends JModelForm
 			if ( strtolower($structureItem->type) == 'text' && $structureItem->id == '2' )
 			{
 				$lastName = htmlspecialchars($field);
-				var_dump($lastName);
 			}
 			if (	strtolower($structureItem->type) == 'text' && $structureItem->id == '1' )
 			{
 				$firstName = htmlspecialchars($field);
-				var_dump($firstName);
 			}
 
 			/*
@@ -270,21 +268,22 @@ class THMGroupsModeledit extends JModelForm
 		/*
 		 * Update thm_quickpages name
 		*/
-		if (isset($firstName) && isset($lastName) && isset(intval($userid)))
+		$userid = intval($userid);
+		
+		if (isset($firstName) && isset($lastName) && $userid > 0)
 		{
 			// Path
 			$qp_alias = strtolower($lastName) . "-" . strtolower(str_replace(" ", "-", $firstName)) . "-" . $userid;
 			$query = $db->getQuery(true);
 			$query->update("#__categories SET path='quickpages/" . $qp_alias . "', alias='" . $qp_alias . "'");
-			$query->where("alias LIKE '%" . $userid . "'");
+			$query->where("alias LIKE '-%" . $userid . "'");
 		
 			$db->setQuery($query);
 			$db->query();
-				
 			// Category Name
 			$query = $db->getQuery(true);
 			$query->update("#__categories SET title='" . $lastName . ", " . $firstName . "'");
-			$query->where("alias LIKE '%" . $userid . "'");
+			$query->where("alias LIKE '-%" . $userid . "'");
 		
 			$db->setQuery($query);
 			$db->query();
