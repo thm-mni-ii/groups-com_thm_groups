@@ -270,7 +270,7 @@ class THMGroupsModeledit extends JModelForm
 		/*
 		 * Update thm_quickpages name
 		*/
-		if (isset($firstName) && isset($lastName))
+		if (isset($firstName) && isset($lastName) && isset(intval($userid)))
 		{
 			// Path
 			$qp_alias = strtolower($lastName) . "-" . strtolower(str_replace(" ", "-", $firstName)) . "-" . $userid;
