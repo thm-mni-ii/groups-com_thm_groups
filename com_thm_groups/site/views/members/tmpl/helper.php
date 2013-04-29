@@ -143,7 +143,7 @@ class THMGroupsModelMembers
 		$query->select('params');
 		$query->from('#__extensions');
 		// DON'T FORGET TO CHANGE A NAME OF AN ELEMENT!!!!!
-		$query->where('element = \'plg_thm_groups_content_replace_user\'');
+		$query->where('element = \'plg_thm_groups_content_members\'');
 		$db->setQuery($query);
 		$data = $db -> loadObjectList();
 		$parameters = $data[0]->params;
