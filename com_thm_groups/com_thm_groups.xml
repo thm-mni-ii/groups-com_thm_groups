@@ -90,4 +90,7 @@
 		<dependency type="plugin" minversion="1.0.0">plg_thm_groups_sync</dependency>
 	</dependencies>
 -->
+	<packages>
+		<package element="pkg_thm_groups"/>
+	</packages>
 </extension>
