@@ -1,0 +1,124 @@
+body 
+	{	
+		
+	}
+
+#THM_Plugin_Members_Main
+	{
+		background-color:#DDDDDD;
+		position: absolute;
+		width: 98%;
+		height: 98%;
+		border-top:1px solid; 
+	}
+	
+#THM_Plugin_Members_Titel
+	{
+		background-color:#DDDDDD;
+		position: relative;
+		float: left;
+		width: 74.9%;
+		height: 15%;
+		border-left:1px solid; 
+		border-bottom:1px solid; 
+	}
+
+#THM_Plugin_Members_Content
+	{
+		background-color:	#EEEEEE;
+		position: relative;
+		width: 75%;
+		height: 85%;
+		float:left;
+		border-right:1px solid; 
+	}
+	
+#THM_Plugin_Members_Titel_Options
+	{
+		background-color:#DDDDDD;
+		position: relative;
+		float: left;
+	}	
+	
+#THM_Plugin_Members_Tipp1
+	{
+		background-color:#7DBD21;
+		color:white;
+		position:relative;
+		float:left;
+		width:150px;
+		margin-left:15px;
+		padding:5px 5px 5px 5px;
+		word-wrap:break-word;	
+	}	
+
+#THM_Plugin_Members_Tipp2
+	{
+		background-color:#7DBD21;
+		color:white;
+		width:150px;
+		float:left;
+		margin-left:15px;
+		margin-top:15px;
+		padding:5px 5px 5px 5px;
+		word-wrap:break-word;	
+	}
+	
+#THM_Plugin_Members_Tipp3
+	{
+		background-color:#7DBD21;
+		color:white;
+		width: 90%;
+		float:right;
+		padding:5px 5px 5px 5px;
+		word-wrap:break-word;
+		margin-bottom:15px;	
+	}
+	
+#THM_Plugin_Members_Attributes
+	{
+		position:relative;
+	}	
+	
+#THM_Plugin_Members_SelectMenu
+	{
+		color:green;
+		float:left;
+		
+	}
+	
+#THM_Plugin_Members_DivForContentOptions
+	{
+		position:relative;
+		float:left;
+		
+	}
+	
+#THM_Plugin_Members_AddButton
+	{
+		position:absolute;
+		right:0px;
+		bottom:0px;	
+	}
+
+#THM_Plugin_Members_Options
+	{
+		background-color:#DDDDDD;
+		color:#445c20;	
+		position: relative;
+		float : right;
+		width: 24%;
+		height: auto;
+		
+	}
+	
+#THM_Plugin_Members_GroupOptions
+	{
+		background-color:#DDDDDD;
+		color:#445c20;	
+		position: relative;
+		float : right;
+		width: 24%;
+		height: auto;
+		top:15%;
+	}
