@@ -55,6 +55,7 @@ class THMGroupsViewSinglearticle extends JViewLegacy
 		$user		= JFactory::getUser();
 		$userId		= $user->get('id');
 		$gsuid      = JRequest::getVar('gsuid', 0);
+		$name		= JRequest::getVar('name', 0);
 		$old_option = JRequest::getVar('old_option', 0);
 		$old_view   = JRequest::getVar('old_view', 0);
 		$old_layout = JRequest::getVar('old_layout', 0);
@@ -65,7 +66,7 @@ class THMGroupsViewSinglearticle extends JViewLegacy
 		$dispatcher	= JDispatcher::getInstance();
 
 		$pathway = $app->getPathway();
-		$backURL = JRoute::_('index.php?option=' . $old_option . '&view=' . $old_view . '&layout=' . $old_layout . '&gsgid=' . $old_gsgid . '&gsuid=' . $gsuid);
+		$backURL = JRoute::_('index.php?option=' . $old_option . '&view=' . $old_view . '&layout=' . $old_layout . '&gsgid=' . $old_gsgid . '&gsuid=' . $gsuid . '&name=' . $name);
 
 		$pathway->addItem($this->getUsername($gsuid), $backURL);
 		$parts = explode(":", JRequest::getVar('id', ''));
