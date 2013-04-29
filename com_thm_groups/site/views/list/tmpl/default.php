@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.3
+ * @version     v3.2.6
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -177,14 +177,14 @@
 		switch ($paramLinkTarget)
 		{
 			case "module":
-				$linkTarget = JURI::current() . '?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid;
+				$linkTarget = 'index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid;
 				break;
 			case "profile":
-				$linkTarget = JURI::current() . '?option=com_thm_groups&view=profile&layout=default&Itemid=' . $itemid
+				$linkTarget = 'index.php?option=com_thm_groups&view=profile&layout=default&Itemid=' . $itemid
 							  . '&pageTitle=' . rawurlencode($pagetitle);
 				break;
 			default:
-				$linkTarget = JURI::current() . '?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid;
+				$linkTarget = 'index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid;
 		}
 
 		$actualRowPlaced = 0;
@@ -425,15 +425,15 @@
 		switch ($paramLinkTarget)
 		{
 			case "module":
-				$linkTarget = JURI::current() . '?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid
+				$linkTarget = 'index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid
 							. '&groupid=' . $groupid . '&letter=' . $shownLetter;
 				break;
 			case "profile":
-				$linkTarget = JURI::current() . '?option=com_thm_groups&view=profile&layout=default&Itemid=' . $itemid
+				$linkTarget = 'index.php?option=com_thm_groups&view=profile&layout=default&Itemid=' . $itemid
 								. '&pageTitle=' . rawurlencode($pagetitle);
 				break;
 			default:
-				$linkTarget = JURI::current() . '?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid
+				$linkTarget = 'index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid
 							. '&groupid=' . $groupid . '&letter=' . $shownLetter;
 		}
 		
@@ -581,7 +581,7 @@
 					case '2':
 						if (array_search('0', $linkElement) !== null && array_search('0', $linkElement) !== false)
 						{
-							$string .= "<a href=" . $linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid;
+							$string .= "<a href=" . JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid);
 							$string .= ">";
 						}
 						else
@@ -608,7 +608,7 @@
 					case '3':
 						if (array_search('1', $linkElement) !== false && array_search('1', $linkElement) !== null)
 						{
-							$string .= "<a href=" . $linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid;
+							$string .= "<a href=" . JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid);
 							$string .= ">";
 						}
 						else
@@ -640,7 +640,7 @@
 		else
 		{
 			$string .= $row->title . " " . "<a href=";
-			$string .= $linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid;
+			$string .= JRoute::_($linkTarget . '&gsuid=' . $row->id . '&name=' . trim($row->lastName) . '&gsgid=' . $groupid);
 			$string .= ">" . trim($row->lastName) . '</a>';
 		}
 		
