@@ -280,6 +280,7 @@ class THMGroupsModeledit extends JModelForm
 		
 			$db->setQuery($query);
 			$db->query();
+			
 			// Category Name
 			$query = $db->getQuery(true);
 			$query->update("#__categories SET title='" . $lastName . ", " . $firstName . "'");

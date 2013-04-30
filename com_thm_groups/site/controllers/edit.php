@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.1.0
+ * @version     v3.2.6
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -108,7 +108,7 @@ class THMGroupsControllerEdit extends JController
 		{
 			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
 		}
-		$this->setRedirect($link, $msg);
+		$this->setRedirect(JRoute::_($link, false), $msg);
 	}
 
 	/**
@@ -223,7 +223,7 @@ class THMGroupsControllerEdit extends JController
 		$backRef = JRequest::getVar('backRef', 0);
 		$u =& JURI::getInstance(html_entity_decode($backRef));
 		$backRef = $u->toString();
-		$this->setRedirect($link->toString(), $msg);
+		$this->setRedirect(JRoute::_($link->toString(), false), $msg);
 	}
 	
 	/**
@@ -263,6 +263,6 @@ class THMGroupsControllerEdit extends JController
 		{
 			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
 		}
-		$this->setRedirect($link->toString(), $msg);
+		$this->setRedirect(JRoute::_($link->toString(), false), $msg);
 	}
 }
