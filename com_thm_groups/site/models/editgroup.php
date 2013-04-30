@@ -461,7 +461,11 @@ class THMGroupsModelEditGroup extends JModelForm
 	 */
 	public function getParentId()
 	{
-		$gid = JRequest::getVar('gsgid');
+		$gid = JRequest::getVar('gsgid', 0, 'get', 'INTEGER');
+		if (!isset($gid))
+		{
+			$gid = JRequest::getVar('gsgid', 0, 'post', 'INTEGER');
+		}
 		$db = JFactory::getDBO();
 		/*
 		$query = "SELECT parent_id FROM #__usergroups WHERE id=" . $gid;

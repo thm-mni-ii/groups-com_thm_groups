@@ -20,6 +20,7 @@
  */
 defined('_JEXEC') or die();
 jimport('joomla.application.component.modelform');
+jimport('thm_quickpages.lib_thm_quickpages');
 
 /**
  * THMGroupsModeledit class for component com_thm_groups
@@ -69,7 +70,7 @@ class THMGroupsModeledit extends JModelForm
 	 */
 	public function getData()
 	{
-		$cid   = JRequest::getVar('gsuid', '');
+		$cid   = JRequest::getVar('gsuid', 0, 'get', 'INTEGER');
 		$types = $this->getTypes();
 		$db = JFactory::getDBO();
 		$puffer = array();
@@ -156,8 +157,12 @@ class THMGroupsModeledit extends JModelForm
 	{
 		$db = JFactory::getDBO();
 		$structure = $this->getStructure();
-		$userid	= JRequest::getVar('userid');
+		$userid	= JRequest::getVar('userid', 0, 'post', 'INTEGER');
+		$userid = intval($userid);
+		
 		$err	   = 0;
+		$cat_id = THMLibThmQuickpages::getuserCategory($userid);
+		
 		foreach ($structure as $structureItem)
 		{
 			$puffer = null;
@@ -223,11 +228,7 @@ class THMGroupsModeledit extends JModelForm
 				}
 				else
 				{
-					/*
-					$query = "INSERT INTO #__thm_groups_" . strtolower($structureItem->type)
-					. " ( `userid`, `structid`, `value`, `publish`)"
-					. " VALUES ($userid" . ", " . $structureItem->id . ", '" . $field . "'" . ", " . $publish . ")";
-					*/
+					
 					$query = $db->getQuery(true);
 					$query->insert($db->qn('#__thm_groups_' . strtolower($structureItem->type)));
 					$query->set("`userid` = '" . $userid . "'");
@@ -249,42 +250,30 @@ class THMGroupsModeledit extends JModelForm
 				}
 			}
 		}
-		/*
-		 * Sync Names with #__users
-		if (isset($firstName) && isset($lastName))
-		{
-			$query = $db->getQuery(true);
-			$query->update("#__users");
-			$query->set('name = "' . $firstName . ' ' . $lastName . '"');
-			$query->where("id = '" . $userid . "'");
-			echo $query->__toString() . "<br />";
-			$db->setQuery($query);
-			if (!$db->query())
-			{
-				$err = 1;
-			}
-		}
-		*/
-		/*
-		 * Update thm_quickpages name
-		*/
-		$userid = intval($userid);
+	
 		
-		if (isset($firstName) && isset($lastName) && $userid > 0)
+		
+		if (isset($firstName) && isset($lastName) && $userid > 0 && isset($cat_id))
 		{
+			
 			// Path
 			$qp_alias = strtolower($lastName) . "-" . strtolower(str_replace(" ", "-", $firstName)) . "-" . $userid;
 			$query = $db->getQuery(true);
 			$query->update("#__categories SET path='quickpages/" . $qp_alias . "', alias='" . $qp_alias . "'");
-			$query->where("alias LIKE '-%" . $userid . "'");
+			$query->where('id = ' . $cat_id->catid);
 		
+			
+			
 			$db->setQuery($query);
 			$db->query();
 			// Category Name
 			$query = $db->getQuery(true);
 			$query->update("#__categories SET title='" . $lastName . ", " . $firstName . "'");
-			$query->where("alias LIKE '-%" . $userid . "'");
+			$query->where('id = ' . $cat_id->catid);
 		
+			
+			
+			
 			$db->setQuery($query);
 			$db->query();
 		}
@@ -615,9 +604,9 @@ class THMGroupsModeledit extends JModelForm
 	public function editTableRow()
 	{
 		$db = JFactory::getDBO();
-		$uid	  = JRequest::getVar('userid');
-		$structid = JRequest::getVar('structid');
-		$key	  = JRequest::getVar('tablekey');
+		$uid	  = JRequest::getVar('userid', 0, 'post', 'INTEGER');
+		$structid = JRequest::getVar('structid', 0, 'post', 'INTEGER');
+		$key	  = JRequest::getVar('tablekey', 0, 'post', 'INTEGER');
 		$arrRow   = array();
 		$arrValue = array();
 		$err	  = 0;
@@ -782,4 +771,5 @@ class THMGroupsModeledit extends JModelForm
 		$link = substr($item->link . "&Itemid=" . $itemid, 0, strlen($item->link . "&Itemid=" . $itemid));
 		return $link . "&/$id-" . $userInfo['lastName'] . "&letter=$letter";
 	}
+	
 }
