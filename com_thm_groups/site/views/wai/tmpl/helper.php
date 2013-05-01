@@ -11,7 +11,7 @@
 defined('_JEXEC') or die();
 
 /**
- * THMGroupsModelMembers class for component com_thm_groups
+ * THMGroupsModelWai class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
