@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.3.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -42,10 +42,10 @@ class THMGroupsViewAdvanced extends JView
 
 		// $layout = $this->getLayout();
 		$model =& $this->getmodel('advanced');
-
+		
 		// Mainframe Parameter
 		$params = & $mainframe->getParams();
-
+		$userid = JRequest::getVar('gsuid', 0);
 		$pagetitle = $params->get('page_title');
 		$showpagetitle = $params->get('show_page_heading');
 		if ($showpagetitle)
@@ -55,6 +55,24 @@ class THMGroupsViewAdvanced extends JView
 		else
 		{
 			$title = "";
+		}
+		$pathway = $mainframe->getPathway();
+		if ($userid)
+		{
+			$db = JFactory::getDBO();
+			$query = $db->getQuery(true);
+			$query->select('value');
+			$query->from($db->qn('#__thm_groups_text'));
+			$query->where('userid = ' . $userid);
+			$query->where('structid = 1');
+				
+			$db->setQuery($query);
+			$firstname = $db->loadObjectList();
+			$name = JRequest::getVar('name', '') . ', ' . $firstname[0]->value;
+			$pathway->addItem($name, '');
+		}
+		else
+		{
 		}
 		$this->assignRef('title', $title);
 		$itemid = JRequest::getVar('Itemid', 0, 'get');

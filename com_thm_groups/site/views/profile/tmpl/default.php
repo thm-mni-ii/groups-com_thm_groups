@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.3
+ * @version     v3.3.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -68,7 +68,8 @@ $layout_old = 0;
 		<table>
 			<?php
 				echo "<h2 class='contentheading'>" . $title . " " . $firstName . " " . $lastName;
-
+				$componentparams = JComponentHelper::getParams('com_thm_groups');
+				$canEdit = (($user->id == $this->userid && $componentparams->getValue('editownprofile', '0') == 1));
 				if ($canEdit)
 				{
 					$attribs['title'] = 'bearbeiten';

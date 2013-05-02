@@ -120,7 +120,7 @@ if ($this->view == 0)
 			echo "<div class='gs_advlist_longinfo'" . ($canEdit || !$wrapFirstName ? $displayInline : "") . ">" . trim($lastName) . "</div>";
 		}
 		echo "</a>";
-
+		$canEdit = (($user->id == $id && $componentparams->getValue('editownprofile', '0') == 1) || $this->canEdit);
 		// Jeder Benutzer kann sich selbst editieren
 		if ($canEdit)
 		{

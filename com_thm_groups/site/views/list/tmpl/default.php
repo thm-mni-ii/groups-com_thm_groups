@@ -180,8 +180,8 @@
 				$linkTarget = 'index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid;
 				break;
 			case "profile":
-				$linkTarget = 'index.php?option=com_thm_groups&view=profile&layout=default&Itemid=' . $itemid
-							  . '&pageTitle=' . rawurlencode($pagetitle);
+				$linkTarget = 'index.php?option=com_thm_groups&view=profile&layout=default&Itemid=' . $itemid;
+							  //. '&pageTitle=' . rawurlencode($pagetitle);
 				break;
 			default:
 				$linkTarget = 'index.php?option=com_thm_groups&view=list&layout=default&Itemid=' . $itemid;
