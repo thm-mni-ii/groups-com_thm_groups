@@ -45,12 +45,12 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
 <form action="<?php echo JRoute::_('index.php?option=com_thm_groups&view=articles' . $itemParam); ?>" method="post" name="adminForm" id="adminForm">
 	<fieldset id="filter-bar">
 		<div style ="inline:block; float:left; align:text-bottom;">
-		<!--<?php echo JText::_('COM_THM_QUICKPAGES_CATEGORY_LABEL'); ?>-->
-			<h3>
+		<?php echo JText::_('COM_THM_QUICKPAGES_CATEGORY_LABEL') . ":"; ?>
+			<b>
 				<?php 
 				echo $this->categories[0]->title; 
 				?>
-			</h3>
+			</b>
          </div>
          <div style ="inline:block; float:left; align:text-bottom; margin-left: 10px;">
 			<select name="filter_published"  onchange="this.form.submit()">
