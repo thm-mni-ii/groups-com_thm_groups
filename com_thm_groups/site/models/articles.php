@@ -379,41 +379,13 @@ class THMGroupsModelArticles extends JModelList
 		// Create a new query object.
 		$db = $this->getDbo();
 		$query = $db->getQuery(true);
-
-		// Select the required fields from the table.
-		$query->select('c.id, c.title, c.alias');
-		$query->from('#__categories AS c');
-
-		// Join over the quickpage categories.
-		$query->join('LEFT', THMLibThmQuickpages::TABLE_NAME . ' AS qc ON qc.catid = c.id');
-
-		// Join the groups of the current users.
-		$query->join('LEFT', THMLibThmQuickpages::TABLE_NAME_THM_GROUPS_GROUPS_MAP . ' AS cug ON cug.uid = ' . (int) $this->_currUser->get('id'));
-
-		// Join over articles.
-		$query->join('LEFT', '#__content AS a ON a.catid = c.id');
-
-		// Filter own articles or quickpage articles
-		$whereClause = '( ';
-		$whereClause .= 'a.created_by = ' . ((int) $this->_currUser->get('id')) . ' ';
-		$whereClause .= 'OR qc.id = ' . ((int) $this->_currUser->get('id'));
-		$whereClause .= ' AND qc.id_kind = ' . $db->quote(THMLibThmQuickpages::TABLE_USER_ID_KIND) . ' ';
-		$whereClause .= 'OR qc.id = cug.gid';
-		$whereClause .= ' AND qc.id_kind = ' . $db->quote(THMLibThmQuickpages::TABLE_GROUP_ID_KIND) . ' ';
-		$whereClause .= ') ';
-		$query->where($whereClause);
-		$query->where('c.extension = \'com_content\'');
-
-		// Set order by category title
-		$query->order('c.title ASC');
-
-		// Group by category id to distinct selected rows
-		$query->group('c.id');
-
-		// Setup the query
-		$db->setQuery($query->__toString());
-
-		// Return the result
+		$cat_id  = THMLibThmQuickpages::getuserCategory($this->_currUser->get('id'));
+		$query->select("*");
+		$query->from("#__categories");
+		$query->where("id =" . $cat_id->catid);
+		$db->setQuery($query);
+		$db->query();
+		$result = $db->loadObjectList();
 		return $db->loadObjectList();
 	}
 

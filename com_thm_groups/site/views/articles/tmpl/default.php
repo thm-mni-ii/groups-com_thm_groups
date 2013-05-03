@@ -44,20 +44,16 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
 
 <form action="<?php echo JRoute::_('index.php?option=com_thm_groups&view=articles' . $itemParam); ?>" method="post" name="adminForm" id="adminForm">
 	<fieldset id="filter-bar">
-		<div class="qp_filter_select">
-			<label class="qp_filter_label" for="filter_category_id"><?php echo JText::_('COM_THM_QUICKPAGES_CATEGORY_LABEL'); ?></label>
-			<select name="filter_category_id" class="qp_inputbox" onchange="this.form.submit()">
-				<?php /* echo JHtml::_('select.options', 
-					JHtml::_('category.options', 'com_content'), 
-					'value', 
-					'text',
-					$this->state->get('filter.category_id')
-					); 
-				*/?>
-				<?php echo JHtml::_('select.options', $this->categories, 'id', 'title', $this->state->get('filter.category_id'));?>
-			</select>
-
-			<select name="filter_published" class="qp_inputbox" onchange="this.form.submit()">
+		<div style ="inline:block; float:left; align:text-bottom;">
+		<!--<?php echo JText::_('COM_THM_QUICKPAGES_CATEGORY_LABEL'); ?>-->
+			<h3>
+				<?php 
+				echo $this->categories[0]->title; 
+				?>
+			</h3>
+         </div>
+         <div style ="inline:block; float:left; align:text-bottom; margin-left: 10px;">
+			<select name="filter_published"  onchange="this.form.submit()">
 				<option value=""><?php echo JText::_('COM_THM_QUICKPAGES_SELECT_PUBLISHED');?></option>
 				<?php echo JHtml::_(
 						'select.options', 
@@ -67,6 +63,7 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
 						$this->state->get('filter.published'), true
 						);?>
 			</select>
+			
 		</div>
 		<div class="qp_filter_search">
 			<label class="qp_filter_label" for="filter_search"><?php echo JText::_('COM_THM_QUICKPAGES_FILTER_LABEL'); ?></label>

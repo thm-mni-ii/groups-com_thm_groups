@@ -16,6 +16,7 @@
  */
 defined('_JEXEC') or die();
 jimport('joomla.application.component.modelform');
+jimport('thm_quickpages.lib_thm_quickpages');
 
 /**
  * THMGroupsModeledit class for component com_thm_groups
@@ -134,7 +135,7 @@ class THMGroupsModeledit extends JModelForm
 		$structure = $this->getStructure();
 		$userid = JRequest::getVar('userid');
 		$err = 0;
-
+		$cat_id = THMLibThmQuickpages::getuserCategory($userid);
 		$firstName = null;
 		$lastName = null;
 		foreach ($structure as $structureItem)
@@ -263,7 +264,7 @@ class THMGroupsModeledit extends JModelForm
 			$qp_alias = strtolower($lastName) . "-" . strtolower(str_replace(" ", "-", $firstName)) . "-" . $userid;
 			$query = $db->getQuery(true);
 			$query->update("#__categories SET path='quickpages/" . $qp_alias . "', alias='" . $qp_alias . "'");
-			$query->where("alias LIKE '-%" . $userid . "'");
+			$query->where('id = ' . $cat_id->catid);
 
 			$db->setQuery($query);
 			$db->query();
@@ -271,7 +272,7 @@ class THMGroupsModeledit extends JModelForm
 			// Category Name
 			$query = $db->getQuery(true);
 			$query->update("#__categories SET title='" . $lastName . ", " . $firstName . "'");
-			$query->where("alias LIKE '-%" . $userid . "'");
+			$query->where('id = ' . $cat_id->catid);
 				
 			$db->setQuery($query);
 			$db->query();			
