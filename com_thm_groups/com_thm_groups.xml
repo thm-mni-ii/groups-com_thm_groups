@@ -91,6 +91,6 @@
 	</dependencies>
 -->
 	<packages>
-		<package element="pkg_thm_groups"/>
+		<package name="pkg_thm_groups" git="git://scm.thm.de/icampus/pkg_thm_groups.git"/>
 	</packages>
 </extension>
