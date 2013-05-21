@@ -82,6 +82,8 @@ class THMGroupsModelEditGroupTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($result,$expected);
 	}
 	
+	/*
+	 
 	// tests getParentID
 	// getParentID use $array['gsgid'] = '2';
 	// should return GSGID = 1 form Public Group
@@ -94,7 +96,7 @@ class THMGroupsModelEditGroupTest extends PHPUnit_Framework_TestCase
 		$expected = "1"; // ID from Group Public
 		$this->assertEquals($expected, $result);
 	}
-	
+	*/
 	// tests getAllGroups
 	// getAllGroups use $array['gid'] = '1';
 	// should return objectlist, sorted by id
