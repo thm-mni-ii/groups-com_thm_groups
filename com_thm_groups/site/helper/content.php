@@ -12,7 +12,7 @@
 
 // No direct access
 defined('_JEXEC') or die;
-
+// @codingStandardsIgnoreStart
 /**
  * Content component helper.
  *
@@ -235,3 +235,4 @@ class ContentHelper
 		return $text;
 	}
 }
+// @codingStandardsIgnoreEnd

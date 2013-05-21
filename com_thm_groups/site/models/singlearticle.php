@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
  * @package		Joomla.Site
  * @subpackage	com_content
