@@ -20,10 +20,15 @@ class ThmGroupsViewMembers extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		if ($this->getLayout() == 'add') {
+		
+			//JHtml::_('script', 'media/popup-imagemanager.js', true, true);
+			//JHtml::_('script', 'components/com_thm_groups/views/members/tmpl/script/functions.js', true, true);
+			//JHtml::_('script', 'components/com_thm_groups/views/members/tmpl/script/jquery-1.9.1.js', true, true);
+			//JHtml::_('script', 'components/com_thm_groups/views/members/tmpl/script/jquery-ui.js', true, true);
+			//JHtml::_('stylesheet', 'components/com_thm_groups/css/members.css', array(), true);
+			// JHtml::_('stylesheet', 'components/com_thm_groups/views/members/tmpl/script/jquery-ui.css', array(), true);
 			parent::display($tpl);
-			return;
-		}
+		
 
 		
 
