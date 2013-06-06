@@ -1,4 +1,16 @@
 <?php
+/**
+ * @category    Joomla component
+* @package     THM_Groups
+* @subpackage  com_thm_groups.admin
+* @name        include_default
+* @description include_default file from com_thm_groups
+* @author      Ilja Michajlow,  <ilja.michajlow@mni.thm.de>
+* @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
+* @copyright   2013 TH Mittelhessen
+* @license     GNU GPL v.2
+* @link        www.mni.thm.de
+*/
 defined('_JEXEC') or die ('Restricted access');
 
 ?>
@@ -7,13 +19,17 @@ defined('_JEXEC') or die ('Restricted access');
 
 	<div id="THM_Plugin_Members_Parameters">
 		<?php 
-		if ($personOrGroup == "person"){
+		if ($personOrGroup == "person")
+		{
 			echo '<h2>';
 			echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_CHOISE_PERSON");
+
 			// 			echo '<span class="jQtooltip mini" title="Tooltip">!</span>';
+
 			echo '</h2>';
 
 			// 			echo $callisto->getInput();
+
 			echo '<div class="search_area">';
 
 			echo '<input type="text" name="query" id="search_box" value="type some text" autocomplete="off">';
@@ -24,19 +40,31 @@ defined('_JEXEC') or die ('Restricted access');
 			echo $callisto->getKeyword();
 
 		}
-		if ($personOrGroup == "group"){
+		else
+		{
+			
+		}
+		if ($personOrGroup == "group")
+		{
 			echo '<h2>';
 			echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_CHOISE_GROUP");
+
 			// 			echo '<span class="jQtooltip mini" title="Tooltip">!</span>';
+
 			echo '</h2>';
 
 			echo $callisto->getListOfGroups(2);
-
-			//			echo '<div id="button_single_user" class="button">';
-			//			echo '<h3>';
-			//		echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_SINGLE_PERSON");
-			//	echo '</h3>';
-			//	echo '</div>';
+			/*
+			 echo '<div id="button_single_user" class="button">';
+			echo '<h3>';
+			echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_SINGLE_PERSON");
+			echo '</h3>';
+			echo '</div>';
+			*/
+		}
+		else
+		{
+				
 		}
 		?>
 
@@ -134,7 +162,8 @@ defined('_JEXEC') or die ('Restricted access');
 					class="styled_number" /><a class="plus" href="#">&nbsp+&nbsp</a></td>
 			</tr>
 			<?php 
-			if($personOrGroup == "group"){
+			if ($personOrGroup == "group")
+			{
 				echo '<tr>';
 				echo '<td><span class="hasTip" title=';
 				echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_COLUMN_NUMBER_DESCRIPTION");
@@ -142,9 +171,15 @@ defined('_JEXEC') or die ('Restricted access');
 				echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_COLUMN_NUMBER");
 				echo '</span>';
 				echo '</td>';
+
 				// 				echo '<td><input type="number" id="group_column" min="1" max="5" class="styled_number"></td>';
+				
 				echo '<td><a class="minus" href="#">&nbsp-&nbsp</a><input type="text" value="1" id="group_column" class="styled_number" /><a class="plus" href="#">&nbsp+&nbsp</a></td>';
 				echo '</tr>';
+			}
+			else
+			{
+					
 			}
 			?>
 			<tr>
@@ -162,7 +197,8 @@ defined('_JEXEC') or die ('Restricted access');
 		</table>
 	</div>
 	<?php 
-	if($personOrGroup == "group"){
+	if ($personOrGroup == "group")
+	{
 		echo '<div id="button_single_user" class="button">';
 		echo '<h3>';
 		echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_SINGLE_PERSON");
@@ -184,21 +220,34 @@ defined('_JEXEC') or die ('Restricted access');
 	?>
 	<div id="THM_Plugin_Members_Attributes">
 		<?php 
-		if ($personOrGroup == "person"){
+		if ($personOrGroup == "person")
+		{
 			echo $callisto->getInputParams(1);
-		}else{
+		}
+		else
+		{
 			echo $callisto->getInputParams(2);
 		}
 		?>
 	</div>
 	<div id="THM_Plugin_Members_AddButton">
 		<?php 
-		if($personOrGroup == "person"){
+		if ($personOrGroup == "person")
+		{
 			echo '<button onclick="insert(1);">';
 		}
-		if ($personOrGroup == "group"){
+		else
+		{
+				
+		}
+		if ($personOrGroup == "group")
+		{
 			echo '<button onclick="insert(2);">';
 			echo '<input type="hidden" name="single_user" id="single_user" value="false" />';
+		}
+		else
+		{
+				
 		}
 		?>
 		<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_ADD'); ?>

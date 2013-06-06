@@ -1,34 +1,31 @@
 <?php
 /**
- * @version     v1.0.0
- * @category 	Joomla plugin
- * @package     THM_Groups_WAI
- * @subpackage  mod_thm_groups.site
- * @name        HelperPage
- * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @author      Simon Sch�fer, <simon.schaefer@mni.thm.de>
+ * @category    Joomla component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.admin
+ * @name        THMGroupsModelMembers
+ * @description THMGroupsModelMembers file from com_thm_groups
+ * @author      Ilja Michajlow,  <ilja.michajlow@mni.thm.de>
  * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
- * @author      Cedric Takongmo, <cedric.takongmo@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2013 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
- *
  */
 defined('_JEXEC') or die ('Restricted access(default)');
-include 'helper.php';
 $lang = JFactory::getLanguage();
-$lang->load('com_thm_groups',JPATH_ADMINISTRATOR);
+$lang->load('com_thm_groups', JPATH_ADMINISTRATOR);
 $document = JFactory::getDocument();
+include 'helper.php';
 
-$document->addScript($this->baseurl.'/components/com_thm_groups/views/members/tmpl/script/functions.js');
-$document->addScript($this->baseurl.'/components/com_thm_groups/views/members/tmpl/script/jquery-1.9.1.js');
-$document->addScript($this->baseurl.'/components/com_thm_groups/views/members/tmpl/script/tabs.js');
-$document->addScript($this->baseurl.'/components/com_thm_groups/views/members/tmpl/script/tooltip.js');
-$document->addScript($this->baseurl.'/components/com_thm_groups/views/members/tmpl/script/ajax_select_options.js');
-$document->addScript($this->baseurl.'/components/com_thm_groups/views/members/tmpl/script/hide_show.js');
-$document->addScript($this->baseurl.'/components/com_thm_groups/views/members/tmpl/script/plus_minus.js');
-$document->addScript($this->baseurl.'/components/com_thm_groups/views/members/tmpl/script/autocomplete.js');
-$document->addStyleSheet($this->baseurl.'/components/com_thm_groups/css/members/members.css');
+$document->addScript($this->baseurl . '/components/com_thm_groups/views/members/tmpl/script/functions.js');
+$document->addScript($this->baseurl . '/components/com_thm_groups/views/members/tmpl/script/jquery-1.9.1.js');
+$document->addScript($this->baseurl . '/components/com_thm_groups/views/members/tmpl/script/tabs.js');
+$document->addScript($this->baseurl . '/components/com_thm_groups/views/members/tmpl/script/tooltip.js');
+$document->addScript($this->baseurl . '/components/com_thm_groups/views/members/tmpl/script/ajax_select_options.js');
+$document->addScript($this->baseurl . '/components/com_thm_groups/views/members/tmpl/script/hide_show.js');
+$document->addScript($this->baseurl . '/components/com_thm_groups/views/members/tmpl/script/plus_minus.js');
+$document->addScript($this->baseurl . '/components/com_thm_groups/views/members/tmpl/script/autocomplete.js');
+$document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/members/members.css');
 
 ?>
 
