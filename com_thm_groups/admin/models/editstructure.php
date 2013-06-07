@@ -104,20 +104,55 @@ class THMGroupsModelEditStructure extends JModel
 	 */
 	public function store()
 	{
-		$id = JRequest::getVar('cid');
+	$id = intval(JRequest::getVar('cid')[0]);
 		$name = JRequest::getVar('name');
 		$relation = JRequest::getVar('relation');
+		
 		$extra = JRequest::getVar($relation . '_extra');
 		$picpath = JRequest::getVar($relation . '_extra_path');
+		$structure = $this->getItem();
 		$err = false;
-
 		$db = JFactory::getDBO();
-		/*
-			$query = "UPDATE #__thm_groups_structure SET"
-			. " field='" . $name . "'"
-			. ", type='" . $relation . "'"
-			. " WHERE id=" . $id[0];
-		*/
+		
+		//if the Type not same, aber changeable. Tha Data will be copy
+		
+		if($this->canTypechange($structure->type, $relation))
+		{
+			
+			$changeQuery =  $db->getQuery(true);
+			
+			$changeQuery->select('*')->from('#__thm_groups_' . strtolower($structure->type))->where('structid ='. $id);
+			$db->setQuery($changeQuery);
+			$toChangevalue = $db->loadObjectList();
+			$zielTable = '#__thm_groups_' . strtolower($relation) . "(`userid` , `structid`, `value`, `publish` , `group`)";
+			if(isset($toChangevalue))
+			{
+				$addquery = $db->getQuery(true);
+				$deletequery = $db->getQuery(true);
+				foreach ($toChangevalue as $changeItem)
+				{
+					$addquery->insert($zielTable)
+							->values($changeItem->userid . " , "  . $changeItem->structid . " , " 
+									. "'$changeItem->value' , '$changeItem->publish' , '$changeItem->group'");
+				  $sd = $db->setQuery($addquery);
+				if (!$db->query())
+				{
+				
+					return false;
+				}
+				}
+				
+				$deletequery->delete('#__thm_groups_' . strtolower($structure->type))->where('structid ='. $id);
+				$db->setQuery($deletequery);
+			if (!$db->query())
+				{
+		
+					return false;
+				}
+				
+			}
+			
+		}
 		$query = $db->getQuery(true);
 		$query->update($db->qn('#__thm_groups_structure'));
 		$query->set("`field` = '" . $name . "'");

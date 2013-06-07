@@ -59,14 +59,31 @@ class THMGroupsControllerEditStructure extends JControllerForm
 	{
 		$model = $this->getModel('editstructure');
 		$id = JRequest::getVar('cid');
-
-		if ($model->store())
+		$structure = $model->getItem();
+		$relation = JRequest::getVar('relation');
+		if (isset($structure))
 		{
-			$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+		if(strcmp(strtolower($structure->type), strtolower($relation)) == 0 ||	$model->canTypechange(strtolower($structure->type), strtolower($relation)) == true)
+		{
+			if ($model->store())
+			{
+				$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+			}
+			else
+			{
+				$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+			}		
+		
+		
 		}
-		else
+		else 
 		{
-			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+			$msg = JText::_('COM_THM_GROUPS_DATA_NOT_CHANGEABLE');
+		}
+		}
+		else 
+		{
+			$msg = JText::_('COM_THM_GROUPS_DATA_NOT_EXIST');
 		}
 		$this->setRedirect('index.php?option=com_thm_groups&task=editstructure.edit&cid[]=' . $id[0], $msg);
 	}
@@ -78,15 +95,33 @@ class THMGroupsControllerEditStructure extends JControllerForm
  	 */
 	public function save()
 	{
-		$model = $this->getModel('editstructure');
-
-		if ($model->store())
+	$model = $this->getModel('editstructure');
+		$id = JRequest::getVar('cid');
+		$structure = $model->getItem();
+		$relation = JRequest::getVar('relation');
+		if (isset($structure))
 		{
-			$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+		if(strcmp(strtolower($structure->type), strtolower($relation)) == 0 ||	$model->canTypechange(strtolower($structure->type), strtolower($relation)) == true)
+		{
+			if ($model->store())
+			{
+				$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+			}
+			else
+			{
+				$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+			}		
+		
+		
 		}
-		else
+		else 
 		{
-			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+			$msg = JText::_('COM_THM_GROUPS_DATA_NOT_CHANGEABLE');
+		}
+		}
+		else 
+		{
+			$msg = JText::_('COM_THM_GROUPS_DATA_NOT_EXIST');
 		}
 
 		$this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
@@ -99,15 +134,33 @@ class THMGroupsControllerEditStructure extends JControllerForm
 	 */
 	public function save2new()
 	{
-		$model = $this->getModel('editstructure');
-
-		if ($model->store())
+	$model = $this->getModel('editstructure');
+		$id = JRequest::getVar('cid');
+		$structure = $model->getItem();
+		$relation = JRequest::getVar('relation');
+		if (isset($structure))
 		{
-			$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+		if(strcmp(strtolower($structure->type), strtolower($relation)) == 0 ||	$model->canTypechange(strtolower($structure->type), strtolower($relation)) == true)
+		{
+			if ($model->store())
+			{
+				$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+			}
+			else
+			{
+				$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+			}		
+		
+		
 		}
-		else
+		else 
 		{
-			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+			$msg = JText::_('COM_THM_GROUPS_DATA_NOT_CHANGEABLE');
+		}
+		}
+		else 
+		{
+			$msg = JText::_('COM_THM_GROUPS_DATA_NOT_EXIST');
 		}
 
 		$this->setRedirect('index.php?option=com_thm_groups&view=addstructure', $msg);
