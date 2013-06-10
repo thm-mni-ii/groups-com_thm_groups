@@ -208,12 +208,12 @@ defined('_JEXEC') or die ('Restricted access');
 		echo 	'<div>';
 		echo 	'<select multiple class="select_user" id="selectFrom">';
 			
-		echo 	'</select> <a class="link" href="#" id="add">add &gt;&gt;</a>';
+		echo 	'</select> <div class="button" id="add">add &gt;&gt;</div>';
 		echo	'</div>';
 		echo	'<div>';
 		echo	'<select multiple class="select_user" id="selectTo">';
 			
-		echo	'</select> <a class="link" href="#" id="remove">&lt;&lt; remove</a>';
+		echo	'</select> <a class="button" id="remove">&lt;&lt; remove</div>';
 		echo	'</div>';
 		echo	'</div>';
 	}
