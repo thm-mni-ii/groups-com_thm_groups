@@ -25,7 +25,7 @@ $document->addScript($this->baseurl . '/components/com_thm_groups/views/members/
 $document->addScript($this->baseurl . '/components/com_thm_groups/views/members/tmpl/script/hide_show.js');
 $document->addScript($this->baseurl . '/components/com_thm_groups/views/members/tmpl/script/plus_minus.js');
 $document->addScript($this->baseurl . '/components/com_thm_groups/views/members/tmpl/script/autocomplete.js');
-$document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/members/members.css');
+$document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/members.css');
 
 ?>
 
