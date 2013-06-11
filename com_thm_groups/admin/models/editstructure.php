@@ -73,6 +73,25 @@ class THMGroupsModelEditStructure extends JModel
 		$db->setQuery($query);
 		return $db->loadObject();
 	}
+	
+	/**
+	 * Method to get, ob the Type can to change
+	 *
+	 * @param   String  $altType  contain the old type of Structure
+	 * @param	String  $newType  contain the new Type of Structure
+	 *
+	 * @return	boolean
+	 */
+	public function canTypechange($altType, $newType)
+	{
+		if (strcasecmp($altType, "text") == 0 && strcasecmp($newType, "textfield") == 0)
+		{
+			return true;
+		}
+			
+		return false;
+	}
+	
 
 	/**
 	 * Method to get extra
@@ -104,7 +123,8 @@ class THMGroupsModelEditStructure extends JModel
 	 */
 	public function store()
 	{
-	$id = intval(JRequest::getVar('cid')[0]);
+	$idarr = JRequest::getVar('cid');
+		$id = intval($idarr[0]);
 		$name = JRequest::getVar('name');
 		$relation = JRequest::getVar('relation');
 		
@@ -114,26 +134,29 @@ class THMGroupsModelEditStructure extends JModel
 		$err = false;
 		$db = JFactory::getDBO();
 		
-		//if the Type not same, aber changeable. Tha Data will be copy
+		// If the Type not same, aber changeable. Tha Data will be copy
 		
-		if($this->canTypechange($structure->type, $relation))
+		if ($this->canTypechange($structure->type, $relation))
 		{
 			
-			$changeQuery =  $db->getQuery(true);
+			$changeQuery = $db->getQuery(true);
 			
-			$changeQuery->select('*')->from('#__thm_groups_' . strtolower($structure->type))->where('structid ='. $id);
+			$changeQuery->select('*')->from('#__thm_groups_' . strtolower($structure->type))->where('structid =' . $id);
 			$db->setQuery($changeQuery);
 			$toChangevalue = $db->loadObjectList();
 			$zielTable = '#__thm_groups_' . strtolower($relation) . "(`userid` , `structid`, `value`, `publish` , `group`)";
-			if(isset($toChangevalue))
+			if (isset($toChangevalue))
 			{
 				$addquery = $db->getQuery(true);
 				$deletequery = $db->getQuery(true);
 				foreach ($toChangevalue as $changeItem)
 				{
-					$addquery->insert($zielTable)
-							->values($changeItem->userid . " , "  . $changeItem->structid . " , " 
-									. "'$changeItem->value' , '$changeItem->publish' , '$changeItem->group'");
+					$addquery
+					->insert($zielTable)
+					->values(
+							$changeItem->userid . " , " .
+							$changeItem->structid . " , " . "'$changeItem->value' , '$changeItem->publish' , '$changeItem->group'"
+					);
 				  $sd = $db->setQuery($addquery);
 				if (!$db->query())
 				{
@@ -142,30 +165,33 @@ class THMGroupsModelEditStructure extends JModel
 				}
 				}
 				
-				$deletequery->delete('#__thm_groups_' . strtolower($structure->type))->where('structid ='. $id);
+				$deletequery->delete('#__thm_groups_' . strtolower($structure->type))->where('structid =' . $id);
 				$db->setQuery($deletequery);
 			if (!$db->query())
-				{
-		
+			{
 					return false;
-				}
+			}
 				
 			}
 			
 		}
+
+		
 		$query = $db->getQuery(true);
 		$query->update($db->qn('#__thm_groups_structure'));
 		$query->set("`field` = '" . $name . "'");
 		$query->set("`type` = '" . $relation . "'");
-		$query->where("`id` = '" . $id[0] . "'");
+		$query->where("`id` = '" . $id . "'");
 		$db->setQuery($query);
 		if (!$db->query())
 		{
 			$err = true;
+			
 		}
 		else
 		{
 		}
+		
 
 		if (isset($extra))
 		{
