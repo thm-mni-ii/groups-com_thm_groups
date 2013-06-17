@@ -13,6 +13,7 @@
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
+ * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -32,7 +33,10 @@ jimport('joomla.filesystem.path');
  */
 class THMGroupsViewProfile extends JView
 {
+	
 	protected $form;
+	
+	protected $links;
 
 	/**
 	 * Method to get extra
@@ -81,6 +85,7 @@ class THMGroupsViewProfile extends JView
 	public function display($tpl = null)
 	{
 		$app	 = JFactory::getApplication();
+		
 		$pathway = $app->getPathway();
 		$pathwayitems = $pathway->getPathWay();
 		$document = & JFactory::getDocument();
@@ -93,10 +98,27 @@ class THMGroupsViewProfile extends JView
 		$structure = &$this->get('Structure');
 		$gsgid     = JRequest::getVar('gsgid');
 		$gsuid     = JRequest::getVar('gsuid');
-		$old_layout = JRequest::getVar('layout');
-		$old_view = JRequest::getVar('view');
-		$old_item = JRequest::getVar('Itemid');
-
+		
+		$var = array();
+		if (isset($_GET))
+		{
+			$var = $_GET;
+		
+		  $attribut = " ";
+		foreach ($var as $index => $value)
+		{
+		    $pos = strpos($index, '_old');
+		   
+		    if ($pos !== false)
+		    {
+		    	$temp = explode('_old', $index);
+		    	$attribut .= $temp[0] . "=" . $value . '&';
+		    	
+		    }
+		    
+			
+		}
+		}
 		$name = "";
 		foreach ($items as $val)
 		{
@@ -115,29 +137,48 @@ class THMGroupsViewProfile extends JView
 				}
 			}
 		}
+		
 		$pathLinks = array();
-		foreach ($pathwayitems as $pwitem)
-		{
-			array_push($pathLinks, $pwitem->name);
-		}
-		$pageTitle = JRequest::getVar('pageTitle', '');
-		if (!array_search($pageTitle, $pathLinks) && $pageTitle != '')
-		{
-			$pathway->addItem($pageTitle, JURI::base() . 'index.php?option=com_thm_groups&view=list&Itemid=' . JRequest::getVar('Itemid', 0));
-		}
-		else 
-		{
-		}
+		
 		$backRef = $pathwayitems[count($pathwayitems) - 1]->link;
-		if ($name != '')
+		if (isset($attribut))
 		{
-			$pathway->addItem(
-					$name, JURI::base() . 'index.php?option=com_thm_groups&view=' . $old_view . '&layout=' . $old_layout
-					. '&gsuid=' . $gsuid . '&Itemid=' . $old_item
-					);
+			$this->links = JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid;
+				
+			$old_option = JRequest::getVar("option_old");
+			
+			switch ($old_option)
+			{
+				case "com_content":  
+					$artikleId = JRequest::getVar("id_old");
+					$artikelname = explode(":", $artikleId)[1];
+					if (isset($artikelname))
+					{
+					$pathway->addItem($artikelname, JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
+					}
+					else 
+					{
+						$pathway->addItem(JFactory::getDocument()->get('title'), JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
+					}
+					break;
+					
+				case "com_thm_groups":
+					$pathway->addItem(JFactory::getDocument()->get('title'), JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
+					break;
+				default:
+					$pathway->addItem(JFactory::getDocument()->get('title'), JURI::base() . 'index.php?' . $attribut);
+					break;
+			}
+			
+			
+			$pathway->addItem($name);
 		}
+		
 		else 
 		{
+			$this->links = JURI::base() . 'index.php';
+			$pathway->addItem($name);
+			
 		}
 		
 		// Daten für die Form

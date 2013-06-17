@@ -15,7 +15,7 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
-jimport('thm_quickpages.lib_thm_quickpages');
+jimport('thm_groups.data.lib_thm_groups_quickpages');
 
 
 /**

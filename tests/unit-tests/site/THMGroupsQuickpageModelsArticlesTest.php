@@ -15,7 +15,7 @@ require_once JPATH_BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARAT
 	DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'articles.php';
 
 /**
- * LibThmQuickpagesTest class for library lib_thm_quickpages
+ * LibThmQuickpagesTest class for library lib_thm_groups_quickpages
  *
  * @category  Joomla.Component.Site
  * @package   thm_quickpages
@@ -24,7 +24,7 @@ require_once JPATH_BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARAT
 class ModelsArticleTest extends PHPUnit_Framework_TestCase
 {
 	/**
-	 * @var lib_thm_quickpages
+	 * @var lib_thm_groups_quickpages
 	 */
 	protected $instance;
 

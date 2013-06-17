@@ -20,7 +20,7 @@ $view = JRequest::getCmd('view');
 
 if ($view == "articles")
 {
-	jimport('thm_quickpages.lib_thm_quickpages');
+	jimport('thm_groups.data.lib_thm_groups_quickpages');
 
 	// Get user object
 	$currUser = JFactory::getUser();

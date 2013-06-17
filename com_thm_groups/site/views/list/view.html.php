@@ -13,11 +13,12 @@
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
+ * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
-
+jimport('thm_groups.view.lib_thm_groups_listview');
 jimport('joomla.application.component.view');
 /**
  * THMGroupsViewList class for component com_thm_groups
@@ -55,7 +56,6 @@ class THMGroupsViewList extends JView
 			$this->assignRef('title', $pagetitle);
 		}
 		$this->assignRef('titleForLink', $pagetitle);
-		$this->assignRef('desc', $model->getDesc());
 		$this->assignRef('params', $params);
 		$pathway = $mainframe->getPathway();
 		if ($userid)
