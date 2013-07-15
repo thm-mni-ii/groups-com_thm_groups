@@ -12,21 +12,26 @@
  * @link        www.mni.thm.de
  */
 defined('_JEXEC') or die ('Restricted access(default)');
+
+//THM Groups library path
+
+$library_path = JURI::root() . 'libraries/thm_groups';
+
+require_once (JPATH_LIBRARIES . '/thm_groups/helper/helper_members.php');
+
 $lang = JFactory::getLanguage();
 $lang->load('com_thm_groups', JPATH_ADMINISTRATOR);
 $document = JFactory::getDocument();
-include 'helper.php';
 
-$document->addScript($this->baseurl . '/components/com_thm_groups/views/members/tmpl/script/functions.js');
-$document->addScript($this->baseurl . '/components/com_thm_groups/views/members/tmpl/script/jquery-1.9.1.js');
-$document->addScript($this->baseurl . '/components/com_thm_groups/views/members/tmpl/script/tabs.js');
-$document->addScript($this->baseurl . '/components/com_thm_groups/views/members/tmpl/script/tooltip.js');
-$document->addScript($this->baseurl . '/components/com_thm_groups/views/members/tmpl/script/ajax_select_options.js');
-$document->addScript($this->baseurl . '/components/com_thm_groups/views/members/tmpl/script/hide_show.js');
-$document->addScript($this->baseurl . '/components/com_thm_groups/views/members/tmpl/script/plus_minus.js');
-$document->addScript($this->baseurl . '/components/com_thm_groups/views/members/tmpl/script/autocomplete.js');
-$document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/members/members.css');
-
+$document->addScript($library_path . '/assets/js/members/functions.js');
+$document->addScript($library_path . '/assets/js/members/jquery-1.9.1.js');
+$document->addScript($library_path . '/assets/js/members/tabs.js');
+$document->addScript($library_path . '/assets/js/members/tooltip.js');
+$document->addScript($library_path . '/assets/js/members/ajax_select_options.js');
+$document->addScript($library_path . '/assets/js/members/hide_show.js');
+$document->addScript($library_path . '/assets/js/members/plus_minus.js');
+$document->addScript($library_path . '/assets/js/members/autocomplete.js');
+$document->addStyleSheet($library_path . '/assets/css/members/members.css');
 ?>
 
 <div class="section">
