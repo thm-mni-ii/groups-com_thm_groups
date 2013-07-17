@@ -20,13 +20,6 @@ class ThmGroupsViewWai extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		if ($this->getLayout() == 'add') {
-			parent::display($tpl);
-			return;
-		}
-
-		
-
-		
+		parent::display($tpl);	
 	}
 }
