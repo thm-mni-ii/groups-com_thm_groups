@@ -18,6 +18,7 @@ defined('_JEXEC') or die ('Restricted access(default)');
 $library_path = JURI::root() . 'libraries/thm_groups';
 
 require_once (JPATH_LIBRARIES . '/thm_groups/helper/helper_members.php');
+require_once (JPATH_LIBRARIES . '/thm_groups/assets/elements/orderattributes.php');
 
 $lang = JFactory::getLanguage();
 $lang->load('com_thm_groups', JPATH_ADMINISTRATOR);
@@ -32,6 +33,7 @@ $document->addScript($library_path . '/assets/js/members/hide_show.js');
 $document->addScript($library_path . '/assets/js/members/plus_minus.js');
 $document->addScript($library_path . '/assets/js/members/autocomplete.js');
 $document->addStyleSheet($library_path . '/assets/css/members/members.css');
+
 ?>
 
 <div class="section">

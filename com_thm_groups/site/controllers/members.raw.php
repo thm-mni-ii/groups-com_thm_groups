@@ -41,6 +41,7 @@ class THMGroupsControllerMembers extends JControllerForm
 	 */
 	public function getUsersOfGroup()
 	{
+		$temp = '';
 		$id = JRequest::getVar('uid');
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -70,8 +71,10 @@ class THMGroupsControllerMembers extends JControllerForm
 	 *
 	 * @return	 array    $temp 	 contains user information
 	 */
-	public function getLol()
+	public function getSearchAnswer()
 	{
+		$temp = '';
+		
 		$query_string = JRequest::getVar('query');
 
 		$db = JFactory::getDbo();

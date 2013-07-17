@@ -15,17 +15,18 @@ defined('_JEXEC') or die ('Restricted access');
 
 ?>
 
-<div id="THM_Plugin_Members_Content">
+<?php 
+$helper = new THMGroupsModelMembers;
+$groupOptions = $helper->getGroupSelectOptions();
+?>
 
+<div id="THM_Plugin_Members_Content">
 	<div id="THM_Plugin_Members_Parameters">
 		<?php 
 		if ($personOrGroup == "person")
 		{
 			echo '<h2>';
 			echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_CHOISE_PERSON");
-
-			// 			echo '<span class="jQtooltip mini" title="Tooltip">!</span>';
-
 			echo '</h2>';
 
 			// 			echo $callisto->getInput();
@@ -48,12 +49,26 @@ defined('_JEXEC') or die ('Restricted access');
 		{
 			echo '<h2>';
 			echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_CHOISE_GROUP");
-
-			// 			echo '<span class="jQtooltip mini" title="Tooltip">!</span>';
-
 			echo '</h2>';
-
-			echo $callisto->getListOfGroups(2);
+		?>
+			<select name="groups" id="groups" class="styled">
+				<?php
+					echo "<option value='' selected>" . JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_GROUPS_LIST') . "</option>";
+					foreach ($groupOptions as $groupOption)
+					{
+						$disabled = $groupOption->disable ? ' disabled="disabled"' : '';
+						if (1 == $groupOption->value)
+						{
+							echo '<option value="' . $groupOption->value . '">' . $groupOption->text . '</option>';
+						}
+						else
+						{
+							echo '<option value="' . $groupOption->value . '"' . $disabled . '>' . $groupOption->text . '</option>';
+						}
+					}
+				?>
+			</select>
+			<?php 
 			/*
 			 echo '<div id="button_single_user" class="button">';
 			echo '<h3>';
@@ -129,6 +144,7 @@ defined('_JEXEC') or die ('Restricted access');
 						</option>
 				</select>
 				</td>
+				
 			</tr>
 			<tr>
 				<td><span class="hasTip"

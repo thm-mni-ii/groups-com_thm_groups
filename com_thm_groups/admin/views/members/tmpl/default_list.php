@@ -10,7 +10,6 @@
  * @link        www.mni.thm.de
  */
 defined('_JEXEC') or die ('Restricted access');
-require 'elements/orderattributes.php';
 
 $personOrGroup = "list";
 

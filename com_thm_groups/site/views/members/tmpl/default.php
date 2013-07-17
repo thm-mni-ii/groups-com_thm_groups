@@ -12,11 +12,13 @@
  * @link        www.mni.thm.de
  */
 defined('_JEXEC') or die ('Restricted access(default)');
+
 //THM Groups library path
 
 $library_path = JURI::root() . 'libraries/thm_groups';
 
 require_once (JPATH_LIBRARIES . '/thm_groups/helper/helper_members.php');
+require_once (JPATH_LIBRARIES . '/thm_groups/assets/elements/orderattributes.php');
 
 $lang = JFactory::getLanguage();
 $lang->load('com_thm_groups', JPATH_ADMINISTRATOR);

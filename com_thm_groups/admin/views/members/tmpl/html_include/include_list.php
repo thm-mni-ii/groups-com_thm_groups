@@ -13,6 +13,9 @@
  */
 defined('_JEXEC') or die ('Restricted access');
 $test = new JFormFieldOrderAttributes;
+
+$helper = new THMGroupsModelMembers;
+$groupOptions = $helper->getGroupSelectOptions();
 ?>
 
 <div id="THM_Plugin_Members_Content">
@@ -31,7 +34,23 @@ $test = new JFormFieldOrderAttributes;
 				</td>
 			</tr>
 			<tr>
-				<?php echo $callisto->getListOfGroups(3);?>
+				<select name="groups_list" id="groups_list" class="styled">
+				<?php
+					echo "<option value='' selected>" . JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_GROUPS_LIST') . "</option>";
+					foreach ($groupOptions as $groupOption)
+					{
+						$disabled = $groupOption->disable ? ' disabled="disabled"' : '';
+						if (1 == $groupOption->value)
+						{
+							echo '<option value="' . $groupOption->value . '">' . $groupOption->text . '</option>';
+						}
+						else
+						{
+							echo '<option value="' . $groupOption->value . '"' . $disabled . '>' . $groupOption->text . '</option>';
+						}
+					}
+				?>
+			</select>
 
 			</tr>
 
@@ -66,6 +85,28 @@ $test = new JFormFieldOrderAttributes;
 				<td><input type="radio" name="title" id="titleYes" value="1"
 					checked> <?php echo JText::_("JYES")?> <input type="radio"
 					name="title" id="titleNo" value="0"> <?php echo JText::_("JNO")?>
+				</td>
+			</tr>
+			<tr>
+				<td><span class="hasTip"
+					title=<?php echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_SHOW_NAME_DESCRIPTION");?>>
+						<?php echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_SHOW_NAME");?>
+				</span>
+				</td>
+				<td><input type="radio" name="name" id="nameYes" value="1"
+					checked> <?php echo JText::_("JYES")?> <input type="radio"
+					name="name" id="nameNo" value="0"> <?php echo JText::_("JNO")?>
+				</td>
+			</tr>
+			<tr>
+				<td><span class="hasTip"
+					title=<?php echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_SHOW_FIRSTNAME_DESCRIPTION");?>>
+						<?php echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_SHOW_FIRSTNAME");?>
+				</span>
+				</td>
+				<td><input type="radio" name="firstname" id="firstnameYes" value="1"
+					checked> <?php echo JText::_("JYES")?> <input type="radio"
+					name="firstname" id="firstnameNo" value="0"> <?php echo JText::_("JNO")?>
 				</td>
 			</tr>
 			<tr>
