@@ -6,7 +6,7 @@
  * @subpackage  lib_thm_groups
  * @name        HelperPage
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @author      Simon Sch√§fer, <simon.schaefer@mni.thm.de>
+ * @author      Simon Sch‰fer, <simon.schaefer@mni.thm.de>
  * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
  * @author      Cedric Takongmo, <cedric.takongmo@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
@@ -37,7 +37,7 @@ $helper->getKeyword();
 <h2>
 	<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_MEMBERSHIP')?>
 </h2>
-<div id="left">
+<div id="THM_left">
 	<?php echo $helper->getInput(); ?>
 	<h3>
 		<span class="hasTip"
@@ -69,7 +69,7 @@ $helper->getKeyword();
 		</tr>
 	</table>
 </div>
-<div id="right">
+<div id="THM_right">
 	<h3>
 		<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_DISPOSITION')?>
 	</h3>
