@@ -34,13 +34,15 @@ class THMGroupsControllerRolemanager extends JControllerForm
 	{
 		parent::__construct();
 	}
-
 	/**
-  	 * Edit
-  	 * 
- 	 * @return void
- 	 */
-	public function edit()
+	 * Edit
+	 *
+	 * @param   Integer  $key     contain key
+	 * @param   String   $urlVar  contain url
+	 *
+	 * @return void
+	 */
+	public function edit($key = NULL, $urlVar = NULL)
 	{
 		JRequest::setVar('view', 'editrole');
 		JRequest::setVar('layout', 'default');
@@ -51,9 +53,11 @@ class THMGroupsControllerRolemanager extends JControllerForm
 	/**
 	 * Cancel
 	 *
+	 *@param Integer @keys contains the key
+	 *
 	 * @return void
 	 */
-	public function cancel()
+	public function cancel($key = NULL)
 	{
 		$msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
 		$this->setRedirect('index.php?option=com_thm_groups', $msg);

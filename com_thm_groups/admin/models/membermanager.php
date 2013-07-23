@@ -190,7 +190,7 @@ class THMGroupsModelmembermanager extends JModelList
 	 * @access  protected
 	 * @return	populatestate
 	 */
-	protected function populateState()
+	protected function populateState($ordering = null, $direction = null)
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');

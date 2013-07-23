@@ -121,6 +121,7 @@ if ($this->view == 0)
 		}
 		echo "</a>";
 		$canEdit = (($user->id == $id && $componentparams->getValue('editownprofile', '0') == 1) || $this->canEdit);
+		
 		// Jeder Benutzer kann sich selbst editieren
 		if ($canEdit)
 		{

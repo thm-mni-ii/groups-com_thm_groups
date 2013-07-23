@@ -15,6 +15,7 @@
  */
 
 jimport('joomla.application.component.controllerform');
+jimport('thm_groups.assets.elements.explorer');
 
 /**
  * THMGroupsControllerEditStructure class for component com_thm_groups
@@ -40,9 +41,12 @@ class THMGroupsControllerEditStructure extends JControllerForm
 	/**
   	 * Edit
   	 * 
+  	 * @param   Integer  $key     contain key
+  	 * @param   String   $urlVar  contain url
+  	 * 
  	 * @return void
  	 */
-	public function edit()
+	public function edit($key = NULL, $urlVar = NULL)
 	{
 		JRequest::setVar('view', 'editstructure');
 		JRequest::setVar('layout', 'default');
@@ -93,7 +97,7 @@ class THMGroupsControllerEditStructure extends JControllerForm
   	 * 
  	 * @return void
  	 */
-	public function save()
+	public function save($key = NULL, $urlVar = NULL)
 	{
 	$model = $this->getModel('editstructure');
 		$id = JRequest::getVar('cid');
@@ -167,11 +171,13 @@ class THMGroupsControllerEditStructure extends JControllerForm
 	}
 
 	/**
-  	 * Cancel
-  	 * 
- 	 * @return void
- 	 */
-	public function cancel()
+	 * Cancel
+	 *
+	 *@param Integer @keys contains the key
+	 *
+	 * @return void
+	 */
+	public function cancel($key = NULL)
 	{
 		$msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
 		$this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
@@ -189,10 +195,11 @@ class THMGroupsControllerEditStructure extends JControllerForm
 		$field = JRequest::getVar('field');
 		$value = $model->getExtra($field);
 
+		
 		if (!isset($value))
 		{
 			$value = new stdClass;
-			switch ($field)
+			switch (strtoupper($field))
 			{
 			case "TEXT":
 				$value->value = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TEXT");
@@ -210,12 +217,11 @@ class THMGroupsControllerEditStructure extends JControllerForm
 				$value->value = "";
 			}
 		}
-
 		// $id = JRequest::getVar('sid');
 		$output = "";
 
 		// $output =  "COM_THM_GROUPS_STRUCTURE_EXTRA_PARAMS: <br />";
-		switch ($field)
+		switch (strtoupper($field))
 		{
 			case "TEXT":
 				$output .= "<input "
@@ -271,6 +277,8 @@ class THMGroupsControllerEditStructure extends JControllerForm
 						. "value='" . $value->path . "'"
 						. "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE_PATH") . "' "
 						. "/>";
+				$mein = new JFormFieldExplorer;
+				$output .= $mein->explorerHTML($field . "_extra_path", "media");
 				break;
 		}
 		echo $output;

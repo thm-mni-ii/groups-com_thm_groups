@@ -38,9 +38,12 @@ class THMGroupsControllerStructure extends JControllerForm
 	/**
   	 * Edit
   	 * 
+  	 * @param   Integer  $key     contain key
+  	 * @param   String   $urlVar  contain url
+  	 * 
  	 * @return void
  	 */
-	public function edit()
+	public function edit($key, $urlVar)
 	{
 
 		$cid = JRequest::getVar('cid',   array(), 'post', 'array');
@@ -75,9 +78,11 @@ class THMGroupsControllerStructure extends JControllerForm
 	/**
 	 * Cancel
 	 *
+	 *@param   Integer  $key  contains the key
+	 *
 	 * @return void
 	 */
-	public function cancel()
+	public function cancel($key)
 	{
 		$msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
 		$this->setRedirect('index.php?option=com_thm_groups', $msg);

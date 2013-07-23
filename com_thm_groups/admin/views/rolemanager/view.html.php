@@ -39,7 +39,7 @@ class THMGroupsViewRolemanager extends JView
 	public function display($tpl = null)
 	{
 
-		$document   = & JFactory::getDocument();
+		$document   = JFactory::getDocument();
 		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
 
 		JToolBarHelper::title(
@@ -59,7 +59,7 @@ class THMGroupsViewRolemanager extends JView
 		JToolBarHelper::cancel('rolemanager.cancel', 'JTOOLBAR_CANCEL');
 		JToolBarHelper::back('JTOOLBAR_BACK');
 
-		$uri =& JFactory::getURI();
+		$uri = JFactory::getURI();
 
 		// $query = $uri->getQuery();
 
@@ -72,7 +72,8 @@ class THMGroupsViewRolemanager extends JView
 
 		$this->assignRef('items', $items);
 		$this->assignRef('pagination', $pagination);
-		$this->assignRef('request_url', $uri->toString());
+		$stringvalue = $uri->toString();
+		$this->assignRef('request_url', $stringvalue);
 
 		parent::display($tpl);
 	}

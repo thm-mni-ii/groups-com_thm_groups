@@ -45,7 +45,7 @@ class THMGroupsVieweditrole extends JView
 		JToolBarHelper::back('JTOOLBAR_BACK');
 
 		// $model =& $this->getModel();
-		$item =& $this->get('Data');
+		$item = $this->get('Data');
 		$this->assignRef('item', $item);
 
 		parent::display($tpl);

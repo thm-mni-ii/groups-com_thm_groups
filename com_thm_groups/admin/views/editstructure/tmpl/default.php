@@ -13,36 +13,46 @@
  * @link        www.mni.thm.de
  */
 defined('_JEXEC') or die ('Restricted access');
-JHTML::_('behavior.mootools');
+
+$scriptDir = "libraries/thm_groups/assets/js/";
+JHTML::script('jquery-1.10.0.min.js', $scriptDir);
+$doc = JFactory::getDocument();
+$doc->addStyleSheet(JURI::root(true) . "/libraries/thm_groups/assets/elements/explorer.css");
 ?>
 
 <script type="text/javascript">
-function getFieldExtras(){
 
-	var field = $('relation');
+jstruct = jQuery.noConflict();
+	
+jstruct.fn.getFieldExtras = function(){
 
-	var b = new Request.HTML({
+	var field = jstruct('#relation option:selected').text();
+	
+	//$('#jquery-select option:selected').text();
 
+	jstruct.ajax({
+		type: "POST",
 		url: "index.php?option=com_thm_groups&controller=editstructure&task=editstructure.getFieldExtrasLabel&field="
-			+field[field.selectedIndex].value,
+			+field,
 
-    	onComplete: function( response ) {
-            $('ajax-container').empty().adopt(response);
+			success: function(response) {
+				jstruct('#ajax-container').html(response);
 		}
-	}).send();
+	});
 
-	var a = new Request.HTML({
+	jstruct.ajax({
+		type: "POST",
 		url: "index.php?option=com_thm_groups&controller=editstructure&task=editstructure.getFieldExtras&sid="
-			+<?php echo $this->rowItem->id;?>+"&field="+field[field.selectedIndex].value,
-
-    	onComplete: function( response ) {
-            $('ajax-container2').empty().adopt(response);
-
-                        }
-	}).send();
+			+<?php echo $this->rowItem->id;?>+"&field="+field,
+		datatype:"HTML",
+		success: function(response)
+		{ 
+			jstruct('#ajax-container2').html(response);
+		}
+	});
 }
-
-window.addEvent( 'domready', function(){ getFieldExtras();});
+jstruct(document).ready(function(){jstruct.fn.getFieldExtras();});
+//window.addEvent( 'domready', function(){ getFieldExtras();});
 </script >
 
 <form action="index.php" method="post" name="adminForm">

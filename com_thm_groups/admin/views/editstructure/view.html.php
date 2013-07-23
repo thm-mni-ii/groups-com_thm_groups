@@ -45,8 +45,8 @@ class THMGroupsVieweditStructure extends JView
 		JToolBarHelper::back('JTOOLBAR_BACK');
 
 		// $model =& $this->getModel();
-		$rowItem =& $this->get('Item');
-		$items =& $this->get('Data');
+		$rowItem = $this->get('Item');
+		$items = $this->get('Data');
 		$this->assignRef('items', $items);
 		$this->assignRef('rowItem', $rowItem);
 		parent::display($tpl);

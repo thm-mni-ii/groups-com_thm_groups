@@ -38,7 +38,7 @@ class THMGroupsViewmembermanager extends JView
 	public function display($tpl = null)
 	{
 		// $SQLAL = new SQLAbstractionLayer;
-		$document   = & JFactory::getDocument();
+		$document   = JFactory::getDocument();
 		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
 		$user = JFactory::getUser();
 		JToolBarHelper::title(
@@ -88,12 +88,12 @@ class THMGroupsViewmembermanager extends JView
 
 		$mainframe = Jfactory::getApplication('Administrator');
 
-		$db = & JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$this->state = $this->get('State');
 		$search = $mainframe->getUserStateFromRequest("com_thm_groups.search", 'search', '', 'string');
 		$search = $db->getEscaped(trim(JString::strtolower($search)));
 
-		$model =& $this->getModel();
+		$model = $this->getModel();
 		$model->sync();
 		$items = $this->get('Items');
 		$pagination = $this->get('Pagination');

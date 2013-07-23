@@ -41,6 +41,24 @@ class THMGroupsModelEditStructure extends JModel
 		$query->from($db->qn('#__thm_groups_relationtable'));
 		return $query->__toString();
 	}
+	
+	/**
+	 * Method to get, ob the Type can to change
+	 * 
+	 * @param   String  $altType  contain the old type of Structure
+	 * @param	String  $newType  contain the new Type of Structure
+	 *
+	 * @return	boolean   
+	 */
+	public function canTypechange($altType, $newType)
+	{
+		if (strcasecmp($altType, "text") == 0 && strcasecmp($newType, "textfield") == 0)
+		{
+			return true;
+		}
+			
+		return false;
+	}
 
 	/**
 	 * Method to get data
@@ -73,25 +91,6 @@ class THMGroupsModelEditStructure extends JModel
 		$db->setQuery($query);
 		return $db->loadObject();
 	}
-	
-	/**
-	 * Method to get, ob the Type can to change
-	 *
-	 * @param   String  $altType  contain the old type of Structure
-	 * @param	String  $newType  contain the new Type of Structure
-	 *
-	 * @return	boolean
-	 */
-	public function canTypechange($altType, $newType)
-	{
-		if (strcasecmp($altType, "text") == 0 && strcasecmp($newType, "textfield") == 0)
-		{
-			return true;
-		}
-			
-		return false;
-	}
-	
 
 	/**
 	 * Method to get extra
@@ -104,9 +103,7 @@ class THMGroupsModelEditStructure extends JModel
 	{
 		$db = JFactory::getDBO();
 		$id = JRequest::getVar('sid');
-		/*
-			$query = "SELECT value FROM #__thm_groups_" . strtolower($relation) . "_extra WHERE structid=$id";
-		*/
+		
 		$query = $db->getQuery(true);
 		$query->select('*');
 		$query->from($db->qn('#__thm_groups_' . strtolower($relation) . '_extra'));
@@ -123,20 +120,22 @@ class THMGroupsModelEditStructure extends JModel
 	 */
 	public function store()
 	{
-	$idarr = JRequest::getVar('cid');
+		
+		$idarr = JRequest::getVar('cid');
 		$id = intval($idarr[0]);
 		$name = JRequest::getVar('name');
 		$relation = JRequest::getVar('relation');
 		
-		$extra = JRequest::getVar($relation . '_extra');
-		$picpath = JRequest::getVar($relation . '_extra_path');
+		
+		$extra = JRequest::getVar(strtolower($relation) . '_extra');
+		$picpath = JRequest::getVar(strtolower($relation) . '_extra_path');
 		$structure = $this->getItem();
 		$err = false;
 		$db = JFactory::getDBO();
 		
 		// If the Type not same, aber changeable. Tha Data will be copy
 		
-		if ($this->canTypechange($structure->type, $relation))
+		if ($this->canTypechange($structure->type, $relation) == true)
 		{
 			
 			$changeQuery = $db->getQuery(true);
@@ -192,47 +191,58 @@ class THMGroupsModelEditStructure extends JModel
 		{
 		}
 		
-
-		if (isset($extra))
+		if (isset($extra) == true || isset($picpath) == true)
 		{
-			/*
-			 $query = "INSERT INTO #__thm_groups_" . strtolower($relation) . "_extra ( `structid`, `value`)"
-			. " VALUES ($id[0]"
-					. ", '" . $extra . "')"
-			. " ON DUPLICATE KEY UPDATE"
-			. " value='" . $extra . "'";
-			*/
-
 			$query = $db->getQuery(true);
 			$query->select('*');
 			$query->from($db->qn('#__thm_groups_' . strtolower($relation) . '_extra'));
-			$query->where('structid = ' . $id[0]);
+			$query->where('structid = ' . $id);
 			$db->setQuery($query);
 			$db->query();
-			$count = $db->getNumRows();
-
-			if ($count == "0")
+			$element = $db->loadObjectList();
+			$altPicpath = $element[0];
+			
+			
+			if (!isset($altPicpath))
 			{
 				$query = $db->getQuery(true);
 				if (isset($picpath))
 				{
 					$query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`, `path`)");
-					$query->values("'" . $id[0] . "', '" . $extra . "', '" . $picpath . "'");
+					$query->values("'" . $id . "', '" . $extra . "', '" . $picpath . "'");
 				}
 				else
 				{
 					$query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`)");
-					$query->values("'" . $id[0] . "', '" . $extra . "'");
+					$query->values("'" . $id . "', '" . $extra . "'");
 				}
 
 				$db->setQuery($query);
 				if (!$db->query())
 				{
 					$err = true;
+				
 				}
 			}
 			else
 			{
+				$dir = is_dir(JPATH_ROOT . DS . $altPicpath->path);
+				
+				
+				if ($dir == false)
+				{
+					$err = !JFile::copy(JPATH_ROOT . DS . 'components/com_thm_groups/index.html', JPATH_ROOT . DS . $picpath);
+				}
+				else 
+				{
+					
+					$err = !JFile::move(JPATH_ROOT . DS . $altPicpath->path, JPATH_ROOT . DS . $picpath);
+					
+					if (!$err)
+					{
+						unlink(JPATH_ROOT . DS . $altPicpath->path);
+					}
+				}				
 				$query = $db->getQuery(true);
 				$query->update("`#__thm_groups_" . strtolower($relation) . "_extra`");
 				$query->set("`value` = '" . $extra . "'");
@@ -240,17 +250,19 @@ class THMGroupsModelEditStructure extends JModel
 				{
 					$query->set("`path` = '" . $picpath . "'");
 				}
-				$query->where('structid = ' . $id[0]);
+				$query->where('structid = ' . $id);
 				$db->setQuery($query);
 				if (!$db->query())
 				{
 					$err = true;
+					
 				}
 			}
 		}
 
 		if (!$err)
 		{
+			
 			return true;
 		}
 		else

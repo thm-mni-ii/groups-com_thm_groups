@@ -29,10 +29,13 @@ class THMGroupsModelRolemanager extends JModelList
 	/**
 	 * Method to populate
 	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
 	 * @access  protected
 	 * @return	populatestate
 	 */
-	protected function populateState()
+	protected function populateState($ordering = null, $direction = null)
 	{
 		// List state information.
 		parent::populateState('rname', 'asc');
@@ -50,7 +53,7 @@ class THMGroupsModelRolemanager extends JModelList
 		$orderCol	= $this->state->get('list.ordering');
 		$orderDirn	= $this->state->get('list.direction');
 
-		$db = & JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		$query = "select id,name as rname from #__thm_groups_roles";
 		$query .= " ORDER BY $orderCol $orderDirn";
@@ -71,7 +74,7 @@ class THMGroupsModelRolemanager extends JModelList
 	 */
 	public function delRole($rid)
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ($rid == 1 || $rid == 2)
 		{

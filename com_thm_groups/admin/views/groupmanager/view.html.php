@@ -42,7 +42,7 @@ class THMGroupsViewgroupmanager extends JView
 	 */
 	public function display($tpl = null)
 	{
-		$document   = & JFactory::getDocument();
+		$document   = JFactory::getDocument();
 		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
 		$user = JFactory::getUser();
 		JToolBarHelper::title(
@@ -75,23 +75,23 @@ class THMGroupsViewgroupmanager extends JView
 		JToolBarHelper::cancel('groupmanager.cancel', 'JTOOLBAR_CANCEL');
 		JToolBarHelper::back('JTOOLBAR_BACK');
 
-		$uri =& JFactory::getURI();
+		$uri = JFactory::getURI();
 
 		// $query = $uri->getQuery();
 
-		$model =& $this->getModel();
+		$model = $this->getModel();
 
 		// $mainframe = Jfactory::getApplication('Administrator');
 
 		$this->state = $this->get('State');
 		$items = $this->get('Items');
 		$pagination = $this->get('Pagination');
-
+		$uriname = $uri->toString();
 		$this->assignRef('items', $items);
 		$this->assignRef('pagination', $pagination);
-		$this->assignRef('request_url', $uri->toString());
+		$this->assignRef('request_url', $uriname);
 
-		$jgroups =& $this->get('JoomlaGroups');
+		$jgroups = $this->get('JoomlaGroups');
 		$this->assignRef('jgroups', $jgroups);
 		$this->assignRef('model', $model);
 
