@@ -38,7 +38,7 @@ class THMGroupsViewQuickpage extends JView
 	 */
 	public function display($tpl = null)
 	{
-		$document   = & JFactory::getDocument();
+		$document   = JFactory::getDocument();
 		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
 
 		JToolBarHelper::title(
