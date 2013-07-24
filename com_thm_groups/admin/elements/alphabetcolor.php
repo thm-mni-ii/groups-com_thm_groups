@@ -43,7 +43,7 @@ class JFormFieldAlphabetColor extends JFormField
 	public function getInput()
 	{
 		$scriptDir = str_replace(JPATH_SITE . DS, '', "administrator/components/com_thm_groups/elements/");
-		$document =& JFactory::getDocument();
+		$document = JFactory::getDocument();
 		$document->addStyleSheet(JUri::root() . '/administrator/components/com_thm_groups/elements/mooRainbow.css');
 
 		// Add script-code to the document head
