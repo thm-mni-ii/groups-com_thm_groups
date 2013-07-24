@@ -43,7 +43,7 @@
 	
 	$mycss = THMLibThmListview::getCssView($paramsArray);
 	
-	$document =& JFactory::getDocument();
+	$document = JFactory::getDocument();
 	$document->addStyleDeclaration($mycss);
 
 	// Mainframe Parameter
