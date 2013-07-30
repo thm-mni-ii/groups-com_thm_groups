@@ -23,9 +23,10 @@ defined('_JEXEC') or die('Restricted access');
 JHTML::_('behavior.modal', 'a.modal-button');
 JHTML::_('behavior.calendar');
 
-$user = & JFactory::getUser();
+$user = JFactory::getUser();
 $componentparams = JComponentHelper::getParams('com_thm_groups');
 $canEdit = (($user->id == $this->userid && $componentparams->getValue('editownprofile', '0') == 1) || $this->canEdit);
+$model = new THMGroupsModelProfile;
 
 $view_old = 0;
 $layout_old = 0;
@@ -55,7 +56,7 @@ $layout_old = 0;
 				{
 					if ($item->publish)
 					{
-						$picpath = THMGroupsModelProfile::getPicPath($item->structid);
+						$picpath = $model->getPicPath($item->structid);
 						$picture = $item->value;
 					}
 				}
@@ -94,7 +95,7 @@ $layout_old = 0;
 				else 
 				{
 					$picStrcutId = "";
-					$allStructs = THMGroupsModelProfile::getStructure();
+					$allStructs = $model->getStructure();
 					foreach ($allStructs as $struct) 
 					{
 						if ($struct->type == "PICTURE")
@@ -105,7 +106,7 @@ $layout_old = 0;
 						{
 						}
 					}
-					$path = JURI::base() . THMGroupsModelProfile::getPicPath($picStrcutId);
+					$path = JURI::base() . $model->getPicPath($picStrcutId);
 					$picture = THMGroupsModelProfile::getDefaultPic($picStrcutId);
 					echo JHTML :: image($path . '/' . $picture, "Portrait", array ());
 				}

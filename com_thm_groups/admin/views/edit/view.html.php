@@ -41,7 +41,7 @@ class THMGroupsViewedit extends JView
 	 */
 	public function getTextForm ($name, $size, $value, $structid)
 	{
-		$model =& $this->getModel();
+		$model = $this->getModel();
 		$extra = $model->getExtra($structid, 'TEXT');
 		$output = "<input "
 			. "class='inputbox' "
@@ -72,7 +72,7 @@ class THMGroupsViewedit extends JView
 	 */
 	public function getTextArea ($name, $rows, $value, $structid)
 	{
-		$model =& $this->getModel();
+		$model = $this->getModel();
 		$extra = $model->getExtra($structid, 'TEXTFIELD');
 		$output = "<textarea ";
 
@@ -102,7 +102,7 @@ class THMGroupsViewedit extends JView
 	 */
 	public function getPictureArea ($name, $structid, $value)
 	{
-		$model =& $this->getModel();
+		$model = $this->getModel();
 		$extra = $model->getExtra($structid, 'PICTURE'); 
 		$path = JURI::base() . '../' . $model->getPicPath($structid);
 		if ($value != "")
@@ -132,7 +132,7 @@ class THMGroupsViewedit extends JView
 	 */
 	public function getTableArea ($name, $value, $structid)
 	{
-		$model =& $this->getModel();
+		$model = $this->getModel();
 		$cid = JRequest::getVar('cid', array(0), '', 'array');
 		$extra = $model->getExtra($structid, 'TABLE');
 		$arrValue = json_decode($value);
@@ -237,7 +237,7 @@ class THMGroupsViewedit extends JView
 	public function getMultiSelectForm ($name, $size, $value, $structid)
 	{
 		$arrValue = explode(';', $value);
-		$model =& $this->getModel();
+		$model = $this->getModel();
 		$extra = $model->getExtra($structid, 'MULTISELECT');
 		$arrExtra = explode(';', $extra);
 		$output = "<select MULTIPLE size='" . (count($arrExtra)) . "' name='" . $name . "[]' id='$name' >";
@@ -282,7 +282,7 @@ class THMGroupsViewedit extends JView
 				$app->redirect('index.php?option=com_thm_groups&view=membermanager', $msg);
 			}
 		}
-		$document   = & JFactory::getDocument();
+		$document = JFactory::getDocument();
 		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
 
 		JToolBarHelper::title(JText::_('COM_THM_GROUPS_EDITUSER_TITLE'), 'generic.png');
@@ -291,9 +291,9 @@ class THMGroupsViewedit extends JView
 		JToolBarHelper::cancel('membermanager.cancel', 'JTOOLBAR_CANCEL');
 
 		$cid = JRequest::getVar('cid', array(0), '', 'array');
-		$model =& $this->getModel();
-		$items =& $this->get('Data');
-		$structure =& $this->get('Structure');
+		$model = $this->getModel();
+		$items = $this->get('Data');
+		$structure = $this->get('Structure');
 
 		$textField = array();
 		foreach ($structure as $structureItem)

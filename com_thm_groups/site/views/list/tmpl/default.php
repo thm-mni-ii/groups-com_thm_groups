@@ -31,7 +31,6 @@
 ?>
 </div>
 
-<div id="desc"><?php echo $this->desc; ?></div>
 
 <?php 
 		

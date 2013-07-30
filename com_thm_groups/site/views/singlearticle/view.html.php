@@ -78,8 +78,8 @@ class THMGroupsViewSinglearticle extends JViewLegacy
 		$this->state	= $this->get('State');
 		$this->user		= $user;
 		
-		$comContentParams =& JComponentHelper::getParams('com_content');
-		$comComp =& JComponentHelper::getComponent('com_content');
+		$comContentParams = JComponentHelper::getParams('com_content');
+		$comComp = JComponentHelper::getComponent('com_content');
 		
 		$this->state->params = $comContentParams;
 		$this->state->params->display_num = '10';

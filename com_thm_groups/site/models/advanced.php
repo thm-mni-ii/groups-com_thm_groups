@@ -168,7 +168,7 @@ class THMGroupsModelAdvanced extends JModel
 	{
 		$canEdit = 0;
 		$groupid = $this->getGroupNumber();
-		$user    = & JFactory::getUser();
+		$user    = JFactory::getUser();
 		$query   = $this->db->getQuery(true);
 
 		$query->select('rid');

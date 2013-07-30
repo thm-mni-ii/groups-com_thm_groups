@@ -34,7 +34,7 @@ class THMGroupsViewTHMGroups extends JView
 	 */
 	public function display($tpl = null)
 	{
-		$document   = & JFactory::getDocument();
+		$document   = JFactory::getDocument();
 		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
 
 		JToolBarHelper::title(JText::_('COM_THM_GROUPS_HOME_TITLE'), 'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png');

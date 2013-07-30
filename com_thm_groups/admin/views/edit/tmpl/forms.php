@@ -95,7 +95,7 @@ JHTML::_('behavior.calendar');
 								$this->getTextForm($structureItem->field, 30, $value, $structureItem->id);
 								break;
 							case "TEXTFIELD":
-								$editor =& JFactory::getEditor();
+								$editor = JFactory::getEditor();
 								echo $editor->display($structureItem->field, $value, '', '', '', '', false);
 								break;
 							case "LINK":

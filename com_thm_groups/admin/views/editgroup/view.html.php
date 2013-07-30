@@ -59,13 +59,13 @@ class THMGroupsVieweditgroup extends JView
 		JToolBarHelper::back('JTOOLBAR_BACK');
 
 		// $model =& $this->getModel();
-		$item =& $this->get('Data');
+		$item = $this->get('Data');
 		$this->assignRef('item', $item);
 
-		$groups =& $this->get('AllGroups');
+		$groups = $this->get('AllGroups');
 		$this->assignRef('groups', $groups);
 
-		$parent_id =& $this->get('ParentId');
+		$parent_id = $this->get('ParentId');
 		$this->assignRef('item_parent_id', $parent_id);
 
 		$this->form = $this->get('Form');

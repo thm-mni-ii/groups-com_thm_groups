@@ -26,7 +26,7 @@ if ($this->view == 0)
 
 <?php
 	$members = $this->data;
-	$user = & JFactory::getUser();
+	$user = JFactory::getUser();
 	$struct = array();
 	foreach ($this->structure as $structItem)
 	{
@@ -235,7 +235,7 @@ else
 
 <?php
 	$members = $this->dataTable;
-	$user = & JFactory::getUser();
+	$user = JFactory::getUser();
 	$model = $this->getmodel('advanced');
 	$struct = array();
 	$picpath = null;

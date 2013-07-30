@@ -41,10 +41,10 @@ class THMGroupsViewAdvanced extends JView
 		$mainframe = Jfactory::getApplication();
 
 		// $layout = $this->getLayout();
-		$model =& $this->getmodel('advanced');
+		$model = $this->getmodel('advanced');
 		
 		// Mainframe Parameter
-		$params = & $mainframe->getParams();
+		$params = $mainframe->getParams();
 		$userid = JRequest::getVar('gsuid', 0);
 		$pagetitle = $params->get('page_title');
 		$showpagetitle = $params->get('show_page_heading');
@@ -76,15 +76,21 @@ class THMGroupsViewAdvanced extends JView
 		}
 		$this->assignRef('title', $title);
 		$itemid = JRequest::getVar('Itemid', 0, 'get');
-		
-		$this->assignRef('params', $model->getViewParams());
-		$this->assignRef('gsgid', $model->getGroupNumber());
+		$viewparams = $model->getViewParams();
+		$this->assignRef('params', $viewparams);
+		$groupnumber = $model->getGroupNumber();
+		$this->assignRef('gsgid', $groupnumber);
 		$this->assignRef('itemid', $itemid);
-		$this->assignRef('canEdit', $model->canEdit());
-		$this->assignRef('data', $model->getData());
-		$this->assignRef('dataTable', $model->getDataTable());
-		$this->assignRef('structure', $model->getStructure());
-		$this->assignRef('view', $model->getAdvancedView());
+		$canEdit = $model->canEdit();
+		$this->assignRef('canEdit', $canEdit);
+		$tempdata = $model->getData();
+		$this->assignRef('data', $tempdata);
+		$gettable = $model->getDataTable();
+		$this->assignRef('dataTable', $gettable);
+		$getStructur = $model->getStructure();
+		$this->assignRef('structure', $getStructur);
+		$getanvancedView = $model->getAdvancedView(); 
+		$this->assignRef('view', $getanvancedView);
 
 		parent::display($tpl);
 	}

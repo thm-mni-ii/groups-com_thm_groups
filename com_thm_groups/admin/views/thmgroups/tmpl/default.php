@@ -14,7 +14,7 @@
  */
 defined('_JEXEC') or die('Restricted access');
 
-$document   = & JFactory::getDocument();
+$document   = JFactory::getDocument();
 $document->addStyleSheet("components/com_thm_groups/css/thmgroups/thmgroups.css");
 ?>
 
