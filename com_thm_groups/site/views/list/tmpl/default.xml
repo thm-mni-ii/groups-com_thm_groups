@@ -40,20 +40,21 @@
                 description="COM_THM_GROUPS_LIST_VIEW_PARAM_COLUMNCOUNT_DESCRIPTION">
             </field>
             <field
-                addfieldpath="/administrator/components/com_thm_groups/elements/" 
+                addfieldpath="/libraries/thm_groups/assets/elements"
                 name="orderingAttributes"
                 type="orderattributes"
                 label="COM_THM_GROUPS_ORDERING_ATTIBUTES_LABEL"
                 description="COM_THM_GROUPS_ORDERING_ATTIBUTES_DESC">
             </field>
             <field
-                name="showtitle"
-                type="radio"
-                label="COM_THM_GROUPS_LIST_VIEW_PARAM_SHOW_TITLE_LABEL"
-                default="0"
-                description="COM_THM_GROUPS_LIST_VIEW_PARAM_SHOW_TITLE_DESCRIPTION">
-                <option value="0">JNO</option>
-                <option value="1">JYES</option>
+                name="showstructure"
+                type="checkboxes"
+                label="COM_THM_GROUPS_LIST_VIEW_PARAM_SHOW_STRUCTURE"
+                multiple="true"
+                description="COM_THM_GROUPS_LIST_VIEW_PARAM_SHOW_STRUCTURE_DESCRIPTION">
+                <option value="0">COM_THM_GROUPS_VORNAME</option>
+                <option value="1">COM_THM_GROUPS_NACHNAME</option>
+                <option value="2">COM_THM_GROUPS_TITLE</option>
             </field>
             <field
                 name="showLinks"
@@ -63,6 +64,7 @@
                 description="COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_DESCRIPTION">
                 <option value="0">COM_THM_GROUPS_VORNAME</option>
                 <option value="1">COM_THM_GROUPS_NACHNAME</option>
+                <option value="2">COM_THM_GROUPS_TITLE</option>
             </field>
         </fieldset>
         <fieldset name="advanced">

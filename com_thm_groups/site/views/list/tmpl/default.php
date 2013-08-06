@@ -57,11 +57,11 @@
 	}
 	
 	
-	
+
 	
 	if ($showall == 1)
 	{
-	
+		
 		echo THMLibThmListview::getListAll($paramsArray, $pagetitle, $model->getGroupNumber());
 	}
 	else
