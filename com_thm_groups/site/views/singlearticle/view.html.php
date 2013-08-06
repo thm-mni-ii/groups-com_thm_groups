@@ -62,7 +62,7 @@ class THMGroupsViewSinglearticle extends JViewLegacy
 		$old_gsgid  = JRequest::getVar('old_gsgid', 0);
 		$start  = JRequest::getVar('start');
 		$showall  = JRequest::getVar('showall');
-		$u =& JFactory::getURI();
+		$u = JFactory::getURI();
 		$dispatcher	= JDispatcher::getInstance();
 
 		$pathway = $app->getPathway();
