@@ -127,19 +127,19 @@ $groupOptions = $helper->getGroupSelectOptions();
 						<option selected value="default">
 							<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_DEFAULT'); ?>
 						</option>
-						<option value="None">
+						<option value="none">
 							<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_BORDER_NONE'); ?>
 						</option>
-						<option value="Solid">
+						<option value="solid">
 							<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_BORDER_SOLID'); ?>
 						</option>
-						<option value="Dotted">
+						<option value="dotted">
 							<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_BORDER_DOTTED'); ?>
 						</option>
-						<option value="Dashed">
+						<option value="dashed">
 							<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_BORDER_DASHED'); ?>
 						</option>
-						<option value="Double">
+						<option value="double">
 							<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_BORDER_DOUBLE'); ?>
 						</option>
 				</select>

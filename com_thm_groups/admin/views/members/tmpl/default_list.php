@@ -11,8 +11,6 @@
  */
 defined('_JEXEC') or die ('Restricted access');
 
-$personOrGroup = "list";
-
 $callisto = new THMGroupsModelMembers;
 
 include 'html_include/include_list.php';

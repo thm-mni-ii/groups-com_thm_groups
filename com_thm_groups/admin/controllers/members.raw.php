@@ -110,4 +110,156 @@ class THMGroupsControllerMembers extends JControllerForm
 		}
 		echo $temp;
 	}
+	
+	/**
+	 * Parse the Attribut
+	 *
+	 * @param   String  $attribut  content the new Attribute
+	 *
+	 * @return  Array  $result
+	 */
+	public function parseAttribut()
+	{
+		
+		$attribut = JRequest::getVar('placeholder');
+		$modus_temp = explode(':', $attribut);
+		$modus = $modus_temp[1];
+		if (strcmp($modus, 'list') != 0)
+		{
+			// Person:{Schlüsselwort:person:uid:links(name,vorname):params(Max-Breite,Position,Rahmen,float):struct(...):userlist(none)}
+	
+			// Groups Advanced:{Schlüsselwort:advanced:gid:links(name,vorname):params(Max-breite,ColumnNumber,Position,Rahmen,float):struct(...):userlist(...)}
+	
+			list($keys, $mode, $id, $link, $param, $struct, $userlist) = explode(':', $attribut);
+			$result = array();
+	
+			// Keys Bearbeitung
+			$temp = explode('{', $keys);
+			$result['keys'] = $temp[1];
+	
+	
+			// Mode Bearbeitung
+			$result['mode'] = $mode;
+	
+			// Id Bearbeitung
+			$result['id'] = $id;
+	
+			// Links Bearbeitung
+			$temp = explode('(', $link);
+			$temp = explode(')', $temp[1]);
+			$tempX = explode(',', $temp[0]);
+			$result['links'] = $tempX;//0,1,2
+	
+			// Params Bearbeitung
+			$result['param'] = self::paramsParse($param, $mode);
+	
+	
+			// Structure bearbeitung
+			$temp = explode('(', $struct);
+			$temp = explode(')', $temp[1]);
+			$tempX = explode(',', $temp[0]);
+			$result['struct'] = $tempX;
+			
+			// Structure bearbeitung
+			$temp = explode('(', $userlist);
+			$temp = explode(')', $temp[1]);
+			$tempX = explode(',', $temp[0]);
+			$result['userlist'] = $tempX;
+	
+		}
+		if ( strcmp($modus, 'list') == 0)
+		{
+			// {Schlüsselwort:list:gid:showlinks(0,1):viewall:ColumnNumber:ordering(1,2,3):showstructure()}
+	
+			list($keys, $modus, $gid, $showlinks, $showall, $column, $ordering, $showStructure) = explode(':', $attribut);
+			$temp = explode('{', $keys);
+			$result['keys'] = $temp[1];
+	
+			$result['mode'] = $modus;
+	
+			$result['gid'] = $gid;
+	
+			// Structure bearbeitung
+			$temp = explode('(', $showlinks);
+			$temp = explode(')', $temp[1]);
+			$tempX = explode(',', $temp[0]);
+	
+			$result['showLinks'] = $tempX;
+	
+			$result['showAll']  = intval($showall);
+	
+			$result['columnCount'] = $column;
+	
+			$temp1 = explode('(', $ordering);
+			$temp1 = explode(')', $temp1[1]);
+			$result['orderingAttributes'] = $temp1[0];
+	
+			$temp = explode('}', $showStructure);
+			$temp1 = explode('(', $temp[0]);
+			$tempX = explode(')', $temp1[1]);
+	
+			$temp = explode(',', $tempX[0]);
+	
+			$result['showstructure'] = $temp;
+			$result['linkTarget'] = 'profile';
+	
+	
+		}
+		
+		echo json_encode($result);
+	}
+	
+	public function paramsParse($parameter,$mode)
+	{
+		// Person:{Schlüsselwort:person:uid:links(name,vorname):params(Max-Breite,Position,Rahmen,float):struct(...):userlist(none)}
+	
+		// Groups Advanced:{Schlüsselwort:advanced:gid:links(name,vorname):params(Max-breite,ColumnNumber,Position,Rahmen,float):struct(...):userlist(...)}
+		$result = array();
+		$temp = explode('(', $parameter);
+		$temp = explode(')', $temp[1]);
+		$tempX = explode(',', $temp[0]);
+		$result['param'] = $tempX;
+		if (strcmp($mode, 'person') == 0)
+		{
+			$result['param'][0] = $result['param'][0];
+			$result['param'][1] = $result['param'][1];
+			$result['param'][2] = $result['param'][2];
+			$result['param'][3] = $result['param'][3];
+		}
+		if (strcmp($mode, 'advanced') == 0)
+		{
+			$result['param'][0] = $result['param'][0];
+			$result['param'][1] = $result['param'][1];
+			$result['param'][2] = $result['param'][2];
+			$result['param'][3] = $result['param'][3];
+			$result['param'][4] = $result['param'][4];
+		}
+		return $result['param'];
+	
+	}
+	
+	public function getUserInfoById(){
+		if(JRequest::getVar('id') != null){
+			$id = JRequest::getVar('id');
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			
+			$array = array();
+				
+			$query->select("a.userid, a.value AS vorname, b.value AS nachname");
+			$query->from("#__thm_groups_text AS a");
+			$query->innerJoin("#__thm_groups_text AS b ON a.userid = b.userid");
+			$query->where("a.publish = 1");
+			$query->where("a.structid = 1");
+			$query->where("b.structid = 2");
+			$query->where("a.userid = " . $id);
+			$query->group("a.userid");
+			$query->order("b.value LIMIT 10");
+			
+			$db->setQuery($query);
+			$request = $db->loadObjectList();
+			
+			echo json_encode($request, JSON_FORCE_OBJECT);
+		}
+	}
 }

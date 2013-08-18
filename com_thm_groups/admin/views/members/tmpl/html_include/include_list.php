@@ -11,18 +11,19 @@
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
-defined('_JEXEC') or die ('Restricted access');
-$test = new JFormFieldOrderAttributes;
+defined ( '_JEXEC' ) or die ( 'Restricted access' );
+$test = new JFormFieldOrderAttributes ();
 
-$helper = new THMGroupsModelMembers;
-$groupOptions = $helper->getGroupSelectOptions();
+$helper = new THMGroupsModelMembers ();
+$groupOptions = $helper->getGroupSelectOptions ();
 ?>
 
 <div id="THM_Plugin_Members_Content">
 	<h2>
 		<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_CHOISE_LIST');?>
 	</h2>
-	<div id="THM_Plugin_Members_Parameters" style="clear:both; width:100%;">
+	<div id="THM_Plugin_Members_Parameters"
+		style="clear: both; width: 100%;">
 		<table id="myTable">
 			<tr>
 				<td>
@@ -36,19 +37,15 @@ $groupOptions = $helper->getGroupSelectOptions();
 			<tr>
 				<select name="groups_list" id="groups_list" class="styled">
 				<?php
-					echo "<option value='' selected>" . JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_GROUPS_LIST') . "</option>";
-					foreach ($groupOptions as $groupOption)
-					{
-						$disabled = $groupOption->disable ? ' disabled="disabled"' : '';
-						if (1 == $groupOption->value)
-						{
-							echo '<option value="' . $groupOption->value . '">' . $groupOption->text . '</option>';
-						}
-						else
-						{
-							echo '<option value="' . $groupOption->value . '"' . $disabled . '>' . $groupOption->text . '</option>';
-						}
+				echo "<option value='' selected>" . JText::_ ( 'COM_THM_GROUPS_EDITORS_XTD_MEMBERS_GROUPS_LIST' ) . "</option>";
+				foreach ( $groupOptions as $groupOption ) {
+					$disabled = $groupOption->disable ? ' disabled="disabled"' : '';
+					if (1 == $groupOption->value) {
+						echo '<option value="' . $groupOption->value . '">' . $groupOption->text . '</option>';
+					} else {
+						echo '<option value="' . $groupOption->value . '"' . $disabled . '>' . $groupOption->text . '</option>';
 					}
+				}
 				?>
 			</select>
 
@@ -58,8 +55,7 @@ $groupOptions = $helper->getGroupSelectOptions();
 				<td><span class="hasTip"
 					title=<?php echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_COLUMN_NUMBER_DESCRIPTION");?>>
 						<?php echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_COLUMN_NUMBER");?>
-				</span>
-				</td>
+				</span></td>
 				<td><a class="minus" href="#">&nbsp-&nbsp</a><input type="text"
 					value="1" id="list_column" class="styled_number" /><a class="plus"
 					href="#">&nbsp+&nbsp</a></td>
@@ -69,8 +65,7 @@ $groupOptions = $helper->getGroupSelectOptions();
 				<td><span class="hasTip"
 					title=<?php echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_ALPHABET_DESCRIPTION");?>>
 						<?php echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_ALPHABET");?>
-				</span>
-				</td>
+				</span></td>
 				<td><input type="radio" name="alphabet" id="alphabetYes" value="1"
 					checked> <?php echo JText::_("JYES")?> <input type="radio"
 					name="alphabet" id="alphabetNo" value="0"> <?php echo JText::_("JNO")?>
@@ -78,67 +73,67 @@ $groupOptions = $helper->getGroupSelectOptions();
 			</tr>
 			<tr>
 				<td><span class="hasTip"
-					title=<?php echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_SHOW_TITLE_DESCRIPTION");?>>
-						<?php echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_SHOW_TITLE");?>
-				</span>
-				</td>
-				<td><input type="radio" name="title" id="titleYes" value="1"
-					checked> <?php echo JText::_("JYES")?> <input type="radio"
-					name="title" id="titleNo" value="0"> <?php echo JText::_("JNO")?>
-				</td>
-			</tr>
-			<tr>
-				<td><span class="hasTip"
-					title=<?php echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_SHOW_NAME_DESCRIPTION");?>>
-						<?php echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_SHOW_NAME");?>
-				</span>
-				</td>
-				<td><input type="radio" name="name" id="nameYes" value="1"
-					checked> <?php echo JText::_("JYES")?> <input type="radio"
-					name="name" id="nameNo" value="0"> <?php echo JText::_("JNO")?>
+					title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_ORDER_DESCRIPTION'); ?>>
+						<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_ORDER'); ?>
+					</span></td>
+				<td>
+					<div style="float: left">
+						<?php echo $test->getInput();?>
+					</div>
 				</td>
 			</tr>
 			<tr>
-				<td><span class="hasTip"
+				<td><?php echo JText::_("COM_THM_GROUPS_LIST_VIEW_PARAM_SHOW_STRUCTURE");?></td>
+				<td><input type="checkbox" name="structure" id="struct_firstName" value="0"> <span
+					class="hasTip"
 					title=<?php echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_SHOW_FIRSTNAME_DESCRIPTION");?>>
 						<?php echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_SHOW_FIRSTNAME");?>
-				</span>
-				</td>
-				<td><input type="radio" name="firstname" id="firstnameYes" value="1"
-					checked> <?php echo JText::_("JYES")?> <input type="radio"
-					name="firstname" id="firstnameNo" value="0"> <?php echo JText::_("JNO")?>
-				</td>
+				</span></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><input type="checkbox" name="structure" id="struct_name" value="1"> <span
+					class="hasTip"
+					title=<?php echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_SHOW_NAME_DESCRIPTION");?>>
+						<?php echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_SHOW_NAME");?>
+				</span></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><input type="checkbox" name="structure" id="struct_title" value="2"> <span
+					class="hasTip"
+					title=<?php echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_SHOW_TITLE_DESCRIPTION");?>>
+						<?php echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_SHOW_TITLE");?>
+				</span></td>
 			</tr>
 			<tr>
 				<td><span class="hasTip"
-					title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_LINK_DESCRIPTION'); ?>><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_LINK'); ?>
-				</span>
-				</td>
-				<td><input type="checkbox" name="<?php echo $personOrGroup?>Link"
-					id="<?php echo $personOrGroup?>LinkName" value="0"> <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_LINK_NAME'); ?>
-					&nbsp; <input type="checkbox"
-					name="<?php echo $personOrGroup?>Link"
-					id="<?php echo $personOrGroup?>LinkFirstName" value="1"> <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_LINK_FIRST_NAME'); ?>
+					title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_LINK_DESCRIPTION'); ?>><?php echo JText::_('COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_LABEL'); ?>
+					</span></td>
+				<td><input type="checkbox" name="link" id="list_link_firstName" value="0">
+					<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_LINK_FIRST_NAME'); ?>
+				 <br></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><input type="checkbox" name="link" id="list_link_name" value="1"> 
+					<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_LINK_NAME'); ?>
 				</td>
 			</tr>
-
+			<tr>
+				<td></td>
+				<td><input type="checkbox" name="link" id="list_link_title" value="2">
+					<?php echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_SHOW_TITLE");?>
+				</td>
+			</tr>
 		</table>
 	</div>
-	<div id="THM_Plugin_Members_Attributes" style="float:left;">
-	<div style="float:left;width:75px">
-		<span class="hasTip"
-					title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_ORDER_DESCRIPTION'); ?>>
-					<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_ORDER'); ?>
-				</span>
-	</div>
-		<div style="float:left">
-		<?php echo $test->getInput();?>
-</div>
-	</div>
-	<div id="THM_Plugin_Members_AddButton">
-		<button onclick="insert(3);">
+	<div id="THM_Plugin_Members_Attributes" style="float: left;">
+		<div style="float: left; width: 75px"></div>
+		<div id="THM_Plugin_Members_AddButton">
+			<button onclick="insert(3);">
 		<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_ADD'); ?>
 		</button>
+		</div>
+
 	</div>
-	
-</div>
