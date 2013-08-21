@@ -151,7 +151,8 @@ class THMGroupsViewProfile extends JView
 			{
 				case "com_content":  
 					$artikleId = JRequest::getVar("id_old");
-					$artikelname = explode(":", $artikleId)[1];
+					$artikelnametemp = explode(":", $artikleId);
+					$artikelname = $artikelnametemp[1];
 					if (isset($artikelname))
 					{
 					$pathway->addItem($artikelname, JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
