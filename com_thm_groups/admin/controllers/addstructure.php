@@ -15,6 +15,7 @@
  */
 
 jimport('joomla.application.component.controllerform');
+jimport('thm_groups.assets.elements.explorer');
 
 /**
  * THMGroupsControllerAddStructure class for component com_thm_groups
@@ -40,9 +41,12 @@ class THMGroupsControllerAddStructure extends JControllerForm
 	/**
   	 * Edit
   	 * 
+  	 * @param   Integer  $key     contain key
+  	 * @param   String   $urlVar  contain url
+  	 * 
  	 * @return void
  	 */
-	public function edit()
+	public function edit($key = null, $urlVar = null)
 	{
 		JRequest::setVar('view', 'editstructure');
 		JRequest::setVar('layout', 'default');
@@ -76,9 +80,12 @@ class THMGroupsControllerAddStructure extends JControllerForm
 	/**
   	 * Save
   	 * 
+  	 * @param   Integer  $key     contain key
+  	 * @param   String   $urlVar  contain url
+  	 * 
  	 * @return void
  	 */
-	public function save()
+	public function save($key = null, $urlVar = null)
 	{
 		$model = $this->getModel('addstructure');
 
@@ -116,11 +123,13 @@ class THMGroupsControllerAddStructure extends JControllerForm
 	}
 
 	/**
-  	 * Cancel
-  	 * 
- 	 * @return void
- 	 */
-	public function cancel()
+	 * Cancel
+	 *
+	 *@param  Integer  @keys  contains the key
+	 *
+	 * @return void
+	 */
+	public function cancel($key = null)
 	{
 		$msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
 		$this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
@@ -196,6 +205,9 @@ class THMGroupsControllerAddStructure extends JControllerForm
 						. "value='components/com_thm_groups/img/portraits' "
 						. "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE_PATH") . "' "
 						. "/>";
+				
+				$mein = new JFormFieldExplorer;
+				$output .= $mein->explorerHTML($field . "_extra_path", "media");
 				break;
 		}
 		echo $output;

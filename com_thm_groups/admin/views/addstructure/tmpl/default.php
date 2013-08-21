@@ -13,35 +13,45 @@
  * @link        www.mni.thm.de
  */
 defined('_JEXEC') or die ('Restricted access');
-JHTML::_('behavior.mootools');
+JHTML::_('behavior.tooltip');
+$scriptDir = "libraries/thm_groups/assets/js/";
+JHTML::script('jquery-1.10.0.min.js', $scriptDir);
+$doc = JFactory::getDocument();
+$doc->addStyleSheet(JURI::root(true) . "/libraries/thm_groups/assets/elements/explorer.css");
 ?>
 
 <script type="text/javascript">
-function getFieldExtras(){
+jstructadd = jQuery.noConflict();
 
-	var field = $('relation');
+jstructadd.fn.getFieldExtras = function(){
 
-	var b = new Request.HTML({
+	var field = jstructadd('#relation option:selected').text();
+	
+	//$('#jquery-select option:selected').text();
+ if(field.length == null)
+	 return null;
+	jstructadd.ajax({
+		type: "POST",
+		url: "index.php?option=com_thm_groups&controller=editstructure&task=addstructure.getFieldExtrasLabel&field="
+			+field,
 
-		url: "index.php?option=com_thm_groups&controller=addstructure&task=addstructure.getFieldExtrasLabel&field="+field[field.selectedIndex].value,
-
-    	onComplete: function( response ) {
-            $('ajax-container').empty().adopt(response);
+			success: function(response) {
+				jstructadd('#ajax-container').html(response);
 		}
-	}).send();
+	});
 
-	var a = new Request.HTML({
-		url: "index.php?option=com_thm_groups&controller=addstructure&task=addstructure.getFieldExtras&field="+field[field.selectedIndex].value,
-
-    	onComplete: function( response ) {
-            $('ajax-container2').empty().adopt(response);
-
-                        }
-	}).send();
-
+	jstructadd.ajax({
+		type: "POST",
+		url: "index.php?option=com_thm_groups&controller=editstructure&task=addstructure.getFieldExtras&sid="
+			+0+"&field="+field,
+		datatype:"HTML",
+		success: function(response)
+		{ 
+			jstructadd('#ajax-container2').html(response);
+		}
+	});
 }
-
-window.addEvent( 'domready', function(){ getFieldExtras();});
+jstructadd(document).ready(function(){jstructadd.fn.getFieldExtras();});
 </script >
 
 <form action="index.php" method="post" name="adminForm">
@@ -68,7 +78,7 @@ window.addEvent( 'domready', function(){ getFieldExtras();});
 					</label>
 				</td>
 				<td>
-					<select name="relation" id="relation" size="1" onchange='getFieldExtras();'>
+					<select name="relation" id="relation" size="1" onchange='jstructadd.fn.getFieldExtras();'>
 			    	<?php
 						foreach ($this->items as $item)
 						{

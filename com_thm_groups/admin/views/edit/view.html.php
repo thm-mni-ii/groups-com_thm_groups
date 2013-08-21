@@ -35,14 +35,19 @@ class THMGroupsViewedit extends JView
 	 * @param   String  $name      Name
 	 * @param   String  $size      Size
 	 * @param   String  $value     Value
-	 * @param   Int     $structid  StructID
+	 * @param   Object  $structur  StructID
 	 *
 	 * @return void
 	 */
-	public function getTextForm ($name, $size, $value, $structid)
+	public function getTextForm ($name, $size, $value, $structur)
 	{
 		$model = $this->getModel();
-		$extra = $model->getExtra($structid, 'TEXT');
+		$extra = null;
+	
+		if (strcmp($structur->type, "LINK") != 0)
+		{
+		  $extra = $model->getExtra($structur->id, 'TEXT');
+		}
 		$output = "<input "
 			. "class='inputbox' "
 			. "type='text' name='$name' "

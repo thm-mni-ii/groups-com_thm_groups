@@ -45,7 +45,7 @@ function getGroupItemSelect(selected_group) {
 	// remove the last char (,) from the string
 	temp = temp.substr(0, temp.length-1);
 	// write sorted roles to hidden parameter box
-	document.getElementById('jform_params_sortedgrouproles').value = temp;
+	document.getElementById('sortedgrouproles').value = temp;
 }
 
 // fills the selectionBox with all Roles
@@ -108,7 +108,7 @@ function roleup() {
 		// remove the last char (,) from the string
 		temp = temp.substr(0, temp.length-1);
 		// write sorted roles to hidden parameter box
-		document.getElementById('jform_params_sortedgrouproles').value = temp;
+		document.getElementById('sortedgrouproles').value = temp;
 		//------------------------------------------------------------
 	}
 }
@@ -140,7 +140,7 @@ function roledown() {
 		// remove the last char (,) from the string
 		temp = temp.substr(0, temp.length-1);
 		// write sorted roles to hidden parameter box
-		document.getElementById('jform_params_sortedgrouproles').value = temp;
+		document.getElementById('sortedgrouproles').value = temp;
 		//------------------------------------------------------------
 	}
 }

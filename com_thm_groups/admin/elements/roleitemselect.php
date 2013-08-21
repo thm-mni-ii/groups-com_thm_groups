@@ -16,6 +16,7 @@
 defined('_JEXEC') or die( 'Restricted access' );
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
+jimport('joomla.application.menu');
 
 /**
  * JFormFieldRoleItemSelect class for component com_thm_groups
@@ -53,56 +54,75 @@ class JFormFieldRoleItemSelect extends JFormField
 		{
 			$id = JRequest::getVar('id');
 		}
+		$menuquery = $db->getQuery(true);
+		$menuquery->select("params");
+		$menuquery->from('#__menu');
+		$menuquery->where('id=' . $id);
+		$db->setQuery($menuquery);
+		$menulist = $db->loadObject();
+		
+		$paramsMenu = json_decode($menulist->params, true);
+       
+		$gid = $paramsMenu['selGroup'];
 
-		if (isset($id))
+		$arrParamRoles = explode(",", $this->value);
+		//var_dump($this->value);
+		$newgroupsRole = array();
+		if (isset($gid))
 		{
-			$queryParams = $db->getQuery(true);
-				
-			$queryParams->select('params');
-			$queryParams->from("#__menu");
-			$queryParams->where("id=" . $id);
-				
-			$db = JFactory::getDBO();
-			$db->setQuery($queryParams);
-			$params = $db->loadObjectList();
-			$sort = "sortedgrouproles";
-
-			$paramRoles = substr(
-				$params[0]->params,
-				stripos($params[0]->params, "sortedgrouproles") + strlen("':sortedgrouproles:"),
-				stripos(substr($params[0]->params, stripos($params[0]->params, $sort) + strlen("':sortedgrouproles:")), "\",\"menu-anchor_title")
-			);
-			$paramRoles = trim($paramRoles);
+			$querynewRole = $db->getQuery(true);
+			
+			$querynewRole->select("rid");
+			$querynewRole->from("#__thm_groups_groups_map");
+			$querynewRole->where("gid =" . $gid);
+			$db->setQuery($querynewRole);
+			$newroleList = $db->loadObjectList();
+			
+			foreach ($newroleList as $newrole)
+			{
+				$isdrin = false;
+				foreach ($arrParamRoles as $altrole)
+				{
+					if ($newrole->rid == $altrole)
+					{
+						$isdrin = true;
+						
+					}
+				}
+				if ($isdrin == false)
+				{
+					array_push($arrParamRoles, $newrole->rid);
+				}
+			}
 		}
-
-		$arrParamRoles = explode(",", $paramRoles);
+		//var_dump($arrParamRoles);
+		
 		$queryRoles = $db->getQuery(true);
 		
-		$queryRoles->select('id, name');
+		$queryRoles->select('distinct id, name');
 		$queryRoles->from("#__thm_groups_roles");
-		$queryRoles->order("name");
+		$queryRoles->order("id");
 		$db->setQuery($queryRoles);
 		$listR = $db->loadObjectList();
+		
+		
 		$html = '<select name="' . $this->name . '" size="5" id="paramsroleid" class = "selGroup" style="display:block"">';
+		
+		$isdrinR = array();
+		$tempHtml = " ";
 		foreach ($arrParamRoles as $sortedRole)
 		{
-			if ($sortedRole == 0)
-			{
-				$html .= '<option value=0>' . JText::_('COM_THM_GROUPS_NO_ROLES_FOR_THIS_GROUP') . '</option>';
-				$sortButtons = false;
-			}
-			else
-			{
+			
 				foreach ($listR as $roleRow)
 				{
 					if ($roleRow->id == $sortedRole)
 					{
 						$html .= '<option value=' . $roleRow->id . ' >' . $roleRow->name . ' </option>';
 					}
+					
 				}
-			}
+			
 		}
-
 		$html .= '</select>';
 		if ($sortButtons)
 		{
@@ -126,8 +146,8 @@ class JFormFieldRoleItemSelect extends JFormField
 			$html .= JText::_('COM_THM_GROUPS_ROLE_DOWN') . '" />';
 			$html .= '</a>';
 		}
-		$html .= '<!--<input type="hidden" name="jform[params][sortedgrouproles]" id="sortedgrouproles" value="' . $paramRoles . '" />-->';
-
+		$html .= '<input type="hidden" name="' . $this->name . '" id="sortedgrouproles" value="' . $this->value . '" />';
+       
 		return $html;
 	}
 }

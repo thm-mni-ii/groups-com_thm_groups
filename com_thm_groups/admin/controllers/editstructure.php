@@ -173,7 +173,7 @@ class THMGroupsControllerEditStructure extends JControllerForm
 	/**
 	 * Cancel
 	 *
-	 *@param Integer @keys contains the key
+	 *@param  Integer  @keys  contains the key
 	 *
 	 * @return void
 	 */
@@ -212,9 +212,11 @@ class THMGroupsControllerEditStructure extends JControllerForm
 				break;
 			case "PICTURE":
 				$value->value = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_PICTURE");
+				$value->path = " ";
 				break;
 			default:
 				$value->value = "";
+				$value->path = " ";
 			}
 		}
 		// $id = JRequest::getVar('sid');

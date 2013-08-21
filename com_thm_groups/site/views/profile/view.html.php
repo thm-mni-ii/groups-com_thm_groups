@@ -62,7 +62,7 @@ class THMGroupsViewProfile extends JView
 	 */
 	public function getStructureType($structId)
 	{
-		$model = $this->getModel();
+		$model = &$this->getModel();
 		$structure = $model->getStructure();
 		$structureType = null;
 		foreach ($structure as $structureItem)
@@ -88,14 +88,14 @@ class THMGroupsViewProfile extends JView
 		
 		$pathway = $app->getPathway();
 		$pathwayitems = $pathway->getPathWay();
-		$document = JFactory::getDocument();
+		$document = & JFactory::getDocument();
 		$document->addStyleSheet("administrator/components/com_thm_groups/css/membermanager/icon.css");
 
 		$cid = JRequest::getVar('gsuid', 0);
 
-		$model     = $this->getModel();
-		$items     = $this->get('Data');
-		$structure = $this->get('Structure');
+		$model     = &$this->getModel();
+		$items     = &$this->get('Data');
+		$structure = &$this->get('Structure');
 		$gsgid     = JRequest::getVar('gsgid');
 		$gsuid     = JRequest::getVar('gsuid');
 		
@@ -151,8 +151,7 @@ class THMGroupsViewProfile extends JView
 			{
 				case "com_content":  
 					$artikleId = JRequest::getVar("id_old");
-					$temp =  explode(":", $artikleId);
-					$artikelname = $temp[1];
+					$artikelname = explode(":", $artikleId)[1];
 					if (isset($artikelname))
 					{
 					$pathway->addItem($artikelname, JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
@@ -212,8 +211,7 @@ class THMGroupsViewProfile extends JView
 		$this->assignRef('backRef', $backRef);
 		$this->assignRef('items', $items);
 		$this->assignRef('itemid', $itemid);
-		$canedit = $model->canEdit();
-		$this->assignRef('canEdit', $canedit);
+		$this->assignRef('canEdit', $model->canEdit());
 		$this->assignRef('userid', $cid);
 		$this->assignRef('structure', $structure);
 		$this->assignRef('gsgid', $gsgid);

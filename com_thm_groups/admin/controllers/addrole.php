@@ -39,9 +39,12 @@ class THMGroupsControllerAddRole extends JControllerForm
 	/**
   	 * Edit
   	 * 
+  	 * @param   Integer  $key     contain key
+  	 * @param   String   $urlVar  contain url
+  	 * 
  	 * @return void
  	 */
-	public function edit()
+	public function edit($key = null, $urlVar = null)
 	{
 		JRequest::setVar('view', 'editrole');
 		JRequest::setVar('layout', 'default');
@@ -75,9 +78,12 @@ class THMGroupsControllerAddRole extends JControllerForm
 	/**
   	 * Save
   	 * 
+  	 * @param   Integer  $key     contain key
+  	 * @param   String   $urlVar  contain url
+  	 * 
  	 * @return void
  	 */
-	public function save()
+	public function save($key = null, $urlVar = null)
 	{
 		$model = $this->getModel('addrole');
 
@@ -115,11 +121,13 @@ class THMGroupsControllerAddRole extends JControllerForm
 	}
 
 	/**
-  	 * Cancel
-  	 * 
- 	 * @return void
- 	 */
-	public function cancel()
+	 * Cancel
+	 *
+	 *@param  Integer  @keys  contains the key
+	 *
+	 * @return void
+	 */
+	public function cancel($key = null)
 	{
 		$msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
 		$this->setRedirect('index.php?option=com_thm_groups&view=rolemanager', $msg);
