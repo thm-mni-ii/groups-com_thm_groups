@@ -71,7 +71,7 @@ class THMGroupsModelProfile extends JModelForm
 	{
 		$canEdit = 0;
 		$groupid = $this->getGroupNumber();
-		$user =& JFactory::getUser();
+		$user = JFactory::getUser();
 		/*
 		 $query = "SELECT rid FROM #__thm_groups_groups_map " . "WHERE uid = $user->id AND gid = $groupid";
 		*/
@@ -257,7 +257,7 @@ class THMGroupsModelProfile extends JModelForm
 	 */
 	public function getModerator()
 	{
-		$user =& JFactory::getUser();
+		$user = JFactory::getUser();
 		$id  = $user->id;
 		$gid = $this->getGroupNumber();
 		$db = JFactory::getDBO();
@@ -295,7 +295,7 @@ class THMGroupsModelProfile extends JModelForm
 		$id				   = JRequest::getVar('id', 0);
 		$userInfo['lastName'] = JRequest::getVar('lastName', 0);
 		$letter			   = strtoupper(substr($userInfo['lastName'], 0, 1));
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		/*
 		 $query = "SELECT link FROM `#__menu` where id= $itemid";
 		*/
@@ -317,7 +317,7 @@ class THMGroupsModelProfile extends JModelForm
 	 * @access public
 	 * @return String value
 	 */
-	public function getDefaultPic($structid)
+	public  function getDefaultPic($structid)
 	{
 		$db = JFactory::getDBO();
 		/*

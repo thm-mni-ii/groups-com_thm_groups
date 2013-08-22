@@ -107,7 +107,7 @@ $layout_old = 0;
 						}
 					}
 					$path = JURI::base() . $model->getPicPath($picStrcutId);
-					$picture = THMGroupsModelProfile::getDefaultPic($picStrcutId);
+					$picture = $model->getDefaultPic($picStrcutId);
 					echo JHTML :: image($path . '/' . $picture, "Portrait", array ());
 				}
 				foreach ($this->structure as $structureItem)

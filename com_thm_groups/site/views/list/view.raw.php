@@ -6,8 +6,8 @@
  * @subpackage  com_thm_groups.site
  * @name        THMGroupsViewGroups
  * @description THMGroupsViewGroups file from com_thm_groups
- * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
- * @author      Tobias Schmitt, <tobias.schmitt@mni.thm.de>
+ * @author      Ilja Michajlow,  <ilja.michajlow@mni.thm.de>
+ * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de

@@ -125,7 +125,7 @@ class THMGroupsControllerAddStructure extends JControllerForm
 	/**
 	 * Cancel
 	 *
-	 *@param  Integer  @keys  contains the key
+	 * @param   Integer  $key  contains the key
 	 *
 	 * @return void
 	 */
@@ -207,7 +207,7 @@ class THMGroupsControllerAddStructure extends JControllerForm
 						. "/>";
 				
 				$mein = new JFormFieldExplorer;
-				$output .= $mein->explorerHTML($field . "_extra_path", "media");
+				$output .= $mein->explorerHTML($field . "_extra_path", "images");
 				break;
 		}
 		echo $output;

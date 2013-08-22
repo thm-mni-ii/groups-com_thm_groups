@@ -27,9 +27,8 @@ class THMGroupsControllerMembers extends JControllerForm
 	/**
 	 * constructor (registers additional tasks to methods)
 	 *
-	 * @return   void
 	 */
-	function construct()
+	public function __construct()
 	{
 		parent::__construct();
 	}
@@ -88,7 +87,8 @@ class THMGroupsControllerMembers extends JControllerForm
 		$query->where("a.publish = 1");
 		$query->where("a.structid = 1");
 		$query->where("b.structid = 2");
-		$query->where("(a.value LIKE '" . $query_string . "%' OR a.value LIKE '%" . $query_string . "' OR b.value LIKE '%" . $query_string . "' OR b.value LIKE '" . $query_string . "%')");
+		$query->where("(a.value LIKE '" . $query_string . "%' OR a.value LIKE '%" . $query_string . "' OR b.value LIKE '%" . $query_string 
+				. "' OR b.value LIKE '" . $query_string . "%')");
 		$query->group("a.userid");
 		$query->order("b.value LIMIT 10");
 
@@ -113,8 +113,6 @@ class THMGroupsControllerMembers extends JControllerForm
 	
 	/**
 	 * Parse the Attribut
-	 *
-	 * @param   String  $attribut  content the new Attribute
 	 *
 	 * @return  Array  $result
 	 */
@@ -148,7 +146,11 @@ class THMGroupsControllerMembers extends JControllerForm
 			$temp = explode('(', $link);
 			$temp = explode(')', $temp[1]);
 			$tempX = explode(',', $temp[0]);
-			$result['links'] = $tempX;//0,1,2
+			
+			// 0,1,2
+			
+			$result['links'] = $tempX;
+			
 	
 			// Params Bearbeitung
 			$result['param'] = self::paramsParse($param, $mode);
@@ -209,7 +211,15 @@ class THMGroupsControllerMembers extends JControllerForm
 		echo json_encode($result);
 	}
 	
-	public function paramsParse($parameter,$mode)
+	/**
+	 * Parse die Parameter
+	 * 
+	 * @param   Array    $parameter  contain many Parameter of  view
+	 * @param   Integer  $mode       contain the type of the view
+	 * 
+	 * @return  Array  with Attributs
+	 */
+	public function paramsParse($parameter, $mode)
 	{
 		// Person:{Schlüsselwort:person:uid:links(name,vorname):params(Max-Breite,Position,Rahmen,float):struct(...):userlist(none)}
 	
@@ -237,9 +247,15 @@ class THMGroupsControllerMembers extends JControllerForm
 		return $result['param'];
 	
 	}
-	
-	public function getUserInfoById(){
-		if(JRequest::getVar('id') != null){
+	/**
+	 * search user Information
+	 * 
+	 * @return void
+	 */
+	public function getUserInfoById()
+	{
+		if (JRequest::getVar('id') != null)
+		{
 			$id = JRequest::getVar('id');
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);

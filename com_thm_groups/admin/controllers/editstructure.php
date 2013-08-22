@@ -46,7 +46,7 @@ class THMGroupsControllerEditStructure extends JControllerForm
   	 * 
  	 * @return void
  	 */
-	public function edit($key = NULL, $urlVar = NULL)
+	public function edit($key = null, $urlVar = null)
 	{
 		JRequest::setVar('view', 'editstructure');
 		JRequest::setVar('layout', 'default');
@@ -67,7 +67,8 @@ class THMGroupsControllerEditStructure extends JControllerForm
 		$relation = JRequest::getVar('relation');
 		if (isset($structure))
 		{
-		if(strcmp(strtolower($structure->type), strtolower($relation)) == 0 ||	$model->canTypechange(strtolower($structure->type), strtolower($relation)) == true)
+		if (strcmp(strtolower($structure->type), strtolower($relation)) == 0 
+         || $model->canTypechange(strtolower($structure->type), strtolower($relation)) == true)
 		{
 			if ($model->store())
 			{
@@ -80,12 +81,12 @@ class THMGroupsControllerEditStructure extends JControllerForm
 		
 		
 		}
-		else 
+		else
 		{
 			$msg = JText::_('COM_THM_GROUPS_DATA_NOT_CHANGEABLE');
 		}
 		}
-		else 
+		else
 		{
 			$msg = JText::_('COM_THM_GROUPS_DATA_NOT_EXIST');
 		}
@@ -95,9 +96,12 @@ class THMGroupsControllerEditStructure extends JControllerForm
 	/**
   	 * Save
   	 * 
+  	 * @param   Integer  $key     the id of a object
+  	 * @param   Integer  $urlVar  the url value
+  	 * 
  	 * @return void
  	 */
-	public function save($key = NULL, $urlVar = NULL)
+	public function save($key = null, $urlVar = null)
 	{
 	$model = $this->getModel('editstructure');
 		$id = JRequest::getVar('cid');
@@ -105,7 +109,8 @@ class THMGroupsControllerEditStructure extends JControllerForm
 		$relation = JRequest::getVar('relation');
 		if (isset($structure))
 		{
-		if(strcmp(strtolower($structure->type), strtolower($relation)) == 0 ||	$model->canTypechange(strtolower($structure->type), strtolower($relation)) == true)
+		if (strcmp(strtolower($structure->type), strtolower($relation)) == 0 
+         ||	$model->canTypechange(strtolower($structure->type), strtolower($relation)) == true)
 		{
 			if ($model->store())
 			{
@@ -144,7 +149,8 @@ class THMGroupsControllerEditStructure extends JControllerForm
 		$relation = JRequest::getVar('relation');
 		if (isset($structure))
 		{
-		if(strcmp(strtolower($structure->type), strtolower($relation)) == 0 ||	$model->canTypechange(strtolower($structure->type), strtolower($relation)) == true)
+		if (strcmp(strtolower($structure->type), strtolower($relation)) == 0 
+		 ||	$model->canTypechange(strtolower($structure->type), strtolower($relation)) == true)
 		{
 			if ($model->store())
 			{
@@ -173,11 +179,11 @@ class THMGroupsControllerEditStructure extends JControllerForm
 	/**
 	 * Cancel
 	 *
-	 *@param  Integer  @keys  contains the key
+	 *@param   Integer  $key  contains the key
 	 *
 	 * @return void
 	 */
-	public function cancel($key = NULL)
+	public function cancel($key = null)
 	{
 		$msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
 		$this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
@@ -280,7 +286,7 @@ class THMGroupsControllerEditStructure extends JControllerForm
 						. "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE_PATH") . "' "
 						. "/>";
 				$mein = new JFormFieldExplorer;
-				$output .= $mein->explorerHTML($field . "_extra_path", "media");
+				$output .= $mein->explorerHTML($field . "_extra_path", "images");
 				break;
 		}
 		echo $output;

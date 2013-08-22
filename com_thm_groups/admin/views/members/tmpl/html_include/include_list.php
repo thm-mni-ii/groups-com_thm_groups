@@ -1,21 +1,21 @@
 <?php
 /**
- * @category    Joomla component
- * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        include_list
- * @description include_list file from com_thm_groups
- * @author      Ilja Michajlow,  <ilja.michajlow@mni.thm.de>
- * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
- * @copyright   2013 TH Mittelhessen
- * @license     GNU GPL v.2
- * @link        www.mni.thm.de
- */
-defined ( '_JEXEC' ) or die ( 'Restricted access' );
-$test = new JFormFieldOrderAttributes ();
+* @category    Joomla component
+* @package     THM_Groups
+* @subpackage  com_thm_groups.admin
+* @name        include_default
+* @description include_default file from com_thm_groups
+* @author      Ilja Michajlow,  <ilja.michajlow@mni.thm.de>
+* @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
+* @copyright   2013 TH Mittelhessen
+* @license     GNU GPL v.2
+* @link        www.mni.thm.de
+*/
+ defined('_JEXEC') or die('Restricted access');
+ $test = new JFormFieldOrderAttributes;
 
-$helper = new THMGroupsModelMembers ();
-$groupOptions = $helper->getGroupSelectOptions ();
+ $helper = new THMGroupsModelMembers;
+ $groupOptions = $helper->getGroupSelectOptions();
 ?>
 
 <div id="THM_Plugin_Members_Content">
@@ -38,8 +38,9 @@ $groupOptions = $helper->getGroupSelectOptions ();
 				<select name="groups_list" id="groups_list" class="styled">
 				<?php
 				echo "<option value='' selected>" . JText::_ ( 'COM_THM_GROUPS_EDITORS_XTD_MEMBERS_GROUPS_LIST' ) . "</option>";
-				foreach ( $groupOptions as $groupOption ) {
-					$disabled = $groupOption->disable ? ' disabled="disabled"' : '';
+				foreach ($groupOptions as $groupOption) 
+				{
+					$disabled = ($groupOption->disable) ? ' disabled="disabled"' : '';
 					if (1 == $groupOption->value) {
 						echo '<option value="' . $groupOption->value . '">' . $groupOption->text . '</option>';
 					} else {

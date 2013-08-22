@@ -186,7 +186,10 @@ class THMGroupsModelmembermanager extends JModelList
 
 	/**
 	 * Method to populate
-	 *
+	 * 
+	 * @param   Object  $ordering   contain the order for the Sortalgorithmus
+	 * @param   Object  $direction  contain the the element
+	 * 
 	 * @access  protected
 	 * @return	populatestate
 	 */

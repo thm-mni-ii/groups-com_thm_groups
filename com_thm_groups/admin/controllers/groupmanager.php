@@ -48,7 +48,7 @@ class THMGroupsControllerGroupmanager extends JControllerForm
   	 * 
  	 * @return void
  	 */
-	public function edit($key = NULL, $urlVar = NULL)
+	public function edit($key = null, $urlVar = null)
 	{
 		JRequest::setVar('view', 'editgroup');
 		JRequest::setVar('layout', 'default');
@@ -59,11 +59,11 @@ class THMGroupsControllerGroupmanager extends JControllerForm
 	/**
 	 * Cancel
 	 *
-	 *@param Integer @keys contains the key
+	 * @param   Integer  $key  contains the key
 	 *
 	 * @return void
 	 */
-	public function cancel($key = NULL)
+	public function cancel($key = null)
 	{
 		$msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
 		$this->setRedirect('index.php?option=com_thm_groups', $msg);

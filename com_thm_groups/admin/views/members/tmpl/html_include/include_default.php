@@ -1,6 +1,6 @@
 <?php
 /**
- * @category    Joomla component
+* @category    Joomla component
 * @package     THM_Groups
 * @subpackage  com_thm_groups.admin
 * @name        include_default
@@ -88,7 +88,8 @@ $groupOptions = $helper->getGroupSelectOptions();
 				<td>
 					<h3>
 						<span class="hasTip"
-							title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_DESCRIPTION'); ?>><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS'); ?>
+							title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_DESCRIPTION'); ?>>
+							<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS'); ?>
 						</span>
 					</h3>
 				</td>
@@ -97,7 +98,8 @@ $groupOptions = $helper->getGroupSelectOptions();
 			</tr>
 			<tr>
 				<td><span class="hasTip"
-					title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_FLOAT_DESCRIPTION'); ?>><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_POSITION'); ?>
+					title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_FLOAT_DESCRIPTION'); ?>>
+					<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_POSITION'); ?>
 				</span>
 				</td>
 				<td><select name="<?php echo $personOrGroup?>Position"
@@ -119,7 +121,8 @@ $groupOptions = $helper->getGroupSelectOptions();
 			</tr>
 			<tr>
 				<td><span class="hasTip"
-					title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_BORDER_DESCRIPTION'); ?>><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_BORDER'); ?>
+					title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_BORDER_DESCRIPTION'); ?>>
+					<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_BORDER'); ?>
 				</span>
 				</td>
 				<td><select name="<?php echo $personOrGroup?>Border"
@@ -148,7 +151,8 @@ $groupOptions = $helper->getGroupSelectOptions();
 			</tr>
 			<tr>
 				<td><span class="hasTip"
-					title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_CLEAR_DESCRIPTION'); ?>><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_FLOAT'); ?>
+					title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_CLEAR_DESCRIPTION'); ?>>
+					<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_FLOAT'); ?>
 				</span>
 				</td>
 				<td><select name="<?php echo $personOrGroup?>Float"
@@ -170,7 +174,8 @@ $groupOptions = $helper->getGroupSelectOptions();
 			</tr>
 			<tr>
 				<td><span class="hasTip"
-					title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_WIDTH_DESCRIPTION'); ?>><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_WIDTH'); ?>
+					title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_WIDTH_DESCRIPTION'); ?>>
+					<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_WIDTH'); ?>
 				</span>
 				</td>
 				<td><a class="minus" href="#">&nbsp-&nbsp</a><input type="text"
@@ -200,7 +205,8 @@ $groupOptions = $helper->getGroupSelectOptions();
 			?>
 			<tr>
 				<td><span class="hasTip"
-					title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_LINK_DESCRIPTION'); ?>><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_LINK'); ?>
+					title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_LINK_DESCRIPTION'); ?>>
+					<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_LINK'); ?>
 				</span>
 				</td>
 				<td><input type="checkbox" name="<?php echo $personOrGroup?>Link"

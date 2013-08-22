@@ -1,37 +1,41 @@
 <?php
 /**
- * @copyright	Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
+ * @version     v3.0.1
+ * @category    Joomla component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.admin
+ * @name        THMGroupsViewAddStructure
+ * @description THMGroupsViewAddStructure file from com_thm_groups
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @copyright   2012 TH Mittelhessen
+ * @license     GNU GPL v.2
+ * @link        www.mni.thm.de
  */
 
 defined('_JEXEC') or die;
 
 /**
- * View to edit an article.
+ * ThmGroupsViewMembers class for component com_thm_groups
  *
- * @package		Joomla.Administrator
- * @subpackage	com_content
- * @since		1.6
+ * @category  Joomla.Component.Admin
+ * @package   com_thm_groups.admin
+ * @link      www.mni.thm.de
+ * @since     Class available since Release 2.0
  */
 class ThmGroupsViewMembers extends JViewLegacy
 {
 	/**
-	 * Display the view
+	 * Method to get display
+	 *
+	 * @param   Object  $tpl  template
+	 *
+	 * @return void
 	 */
 	public function display($tpl = null)
 	{
 		
-			//JHtml::_('script', 'media/popup-imagemanager.js', true, true);
-			//JHtml::_('script', 'components/com_thm_groups/views/members/tmpl/script/functions.js', true, true);
-			//JHtml::_('script', 'components/com_thm_groups/views/members/tmpl/script/jquery-1.9.1.js', true, true);
-			//JHtml::_('script', 'components/com_thm_groups/views/members/tmpl/script/jquery-ui.js', true, true);
-			//JHtml::_('stylesheet', 'components/com_thm_groups/css/members.css', array(), true);
-			// JHtml::_('stylesheet', 'components/com_thm_groups/views/members/tmpl/script/jquery-ui.css', array(), true);
+		
 			parent::display($tpl);
-		
-
-		
-
 		
 	}
 }

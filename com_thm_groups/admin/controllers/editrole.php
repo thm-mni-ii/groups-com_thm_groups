@@ -122,7 +122,7 @@ class THMGroupsControllerEditRole extends JControllerForm
 	/**
 	 * Cancel
 	 *
-	 *@param   Integer  @keys  contains the key
+	 * @param   Integer  $key  contains the key
 	 *
 	 * @return void
 	 */
