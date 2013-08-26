@@ -17,7 +17,7 @@
  */
 function replaceCharAt(str, index, char) {
 	var newStr = "";
-	for(var i = 0; i < str.length; i++)
+	for (var i = 0; i < str.length; i++)
 	{
 		if (i == index) {
 			newStr += char;

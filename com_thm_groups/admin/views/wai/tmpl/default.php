@@ -6,7 +6,7 @@
  * @subpackage  lib_thm_groups
  * @name        HelperPage
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @author      Simon Schäfer, <simon.schaefer@mni.thm.de>
+ * @author      Simon Schï¿½fer, <simon.schaefer@mni.thm.de>
  * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
  * @author      Cedric Takongmo, <cedric.takongmo@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
@@ -16,11 +16,11 @@
  */
 defined('_JEXEC') or die ('Restricted access');
 
-//THM Groups library path
+// THM Groups library path
 
 $library_path = JURI::root() . 'libraries/thm_groups';
 
-require_once (JPATH_LIBRARIES . '/thm_groups/helper/helper_wai.php');
+require_once JPATH_LIBRARIES . '/thm_groups/helper/helper_wai.php';
 
 $lang = JFactory::getLanguage();
 $lang->load('com_thm_groups', JPATH_ADMINISTRATOR);
@@ -41,7 +41,8 @@ $helper->getKeyword();
 	<?php echo $helper->getInput(); ?>
 	<h3>
 		<span class="hasTip"
-			title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_DESCRIPTION'); ?>><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS'); ?>
+			title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_DESCRIPTION'); ?>>
+			<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS'); ?>
 		</span>
 	</h3>
 	<table width="100%" align="center">
@@ -49,21 +50,24 @@ $helper->getKeyword();
 
 			<td class="key" align="left"><input type="checkbox" id="showList"
 				name="showList" value="showlist"><span class="hasTip"
-				title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_LIST_DESC'); ?>><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_LIST'); ?>
+				title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_LIST_DESC'); ?>>
+				<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_LIST'); ?>
 			</span>
 			</td>
 		</tr>
 		<tr>
 			<td><input type="checkbox" id="showAdvanced" name="showAdvanced"
 				value="showadvanced"><span class="hasTip"
-				title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_ADVANCED_DESC'); ?>><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_ADVANCED'); ?>
+				title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_ADVANCED_DESC'); ?>>
+				<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_ADVANCED'); ?>
 			</span>
 			</td>
 		</tr>
 		<tr>
 			<td><input type="checkbox" id="showSmallview" name="showSmallview"
 				value="showsmallview"><span class="hasTip"
-				title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_SMALLVIEW_DESC'); ?>><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_SMALLVIEW'); ?>
+				title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_SMALLVIEW_DESC'); ?>>
+				<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_SMALLVIEW'); ?>
 			</span>
 			</td>
 		</tr>

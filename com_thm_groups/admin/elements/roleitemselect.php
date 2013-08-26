@@ -66,7 +66,8 @@ class JFormFieldRoleItemSelect extends JFormField
 		$gid = $paramsMenu['selGroup'];
 
 		$arrParamRoles = explode(",", $this->value);
-		//var_dump($this->value);
+		
+		// Var_dump($this->value);
 		$newgroupsRole = array();
 		if (isset($gid))
 		{
@@ -95,7 +96,8 @@ class JFormFieldRoleItemSelect extends JFormField
 				}
 			}
 		}
-		//var_dump($arrParamRoles);
+		
+		// Var_dump($arrParamRoles);
 		
 		$queryRoles = $db->getQuery(true);
 		
