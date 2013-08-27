@@ -15,4 +15,4 @@ $personOrGroup = "person";
 
 $callisto = new THMGroupsModelMembers;
 
-include 'html_include/include_default.php';
+include JPATH_LIBRARIES . '/thm_groups/assets/html/include_default.php';

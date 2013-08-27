@@ -13,21 +13,18 @@
  */
 defined('_JEXEC') or die ('Restricted access(default)');
 
-//THM Groups library path
-
 $library_path = JURI::root() . 'libraries/thm_groups';
 
-require_once (JPATH_LIBRARIES . '/thm_groups/helper/helper_members.php');
-require_once (JPATH_LIBRARIES . '/thm_groups/assets/elements/orderattributes.php');
+require_once JPATH_LIBRARIES . '/thm_groups/helper/helper_members.php';
+require_once JPATH_LIBRARIES . '/thm_groups/assets/elements/orderattributes.php';
 
 $lang = JFactory::getLanguage();
 $lang->load('com_thm_groups', JPATH_ADMINISTRATOR);
 $document = JFactory::getDocument();
 
 $document->addScript($library_path . '/assets/js/members/functions.js');
-$document->addScript($library_path . '/assets/js/members/jquery-1.9.1.js');
+$document->addScript($library_path . '/assets/js/jquery-1.9.1.min.js');
 $document->addScript($library_path . '/assets/js/members/tabs.js');
-$document->addScript($library_path . '/assets/js/members/tooltip.js');
 $document->addScript($library_path . '/assets/js/members/ajax_select_options.js');
 $document->addScript($library_path . '/assets/js/members/hide_show.js');
 $document->addScript($library_path . '/assets/js/members/plus_minus.js');
