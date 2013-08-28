@@ -1,7 +1,7 @@
 <?php
 /**
  * @version     v1.0.0
- * @category 	Joomla library
+ * @category    Joomla library
  * @package     THM_Groups
  * @subpackage  lib_thm_groups
  * @name        HelperPage
@@ -35,57 +35,57 @@ $helper->getKeyword();
 ?>
 
 <h2>
-	<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_MEMBERSHIP')?>
+    <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_MEMBERSHIP')?>
 </h2>
 <div id="THM_left">
-	<?php echo $helper->getInput(); ?>
-	<h3>
-		<span class="hasTip"
-			title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_DESCRIPTION'); ?>>
-			<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS'); ?>
-		</span>
-	</h3>
-	<table width="100%" align="center">
-		<tr>
+    <?php echo $helper->getInput(); ?>
+    <h3>
+        <span class="hasTip"
+            title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_DESCRIPTION'); ?>>
+            <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS'); ?>
+        </span>
+    </h3>
+    <table width="100%" align="center">
+        <tr>
 
-			<td class="key" align="left"><input type="checkbox" id="showList"
-				name="showList" value="showlist"><span class="hasTip"
-				title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_LIST_DESC'); ?>>
-				<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_LIST'); ?>
-			</span>
-			</td>
-		</tr>
-		<tr>
-			<td><input type="checkbox" id="showAdvanced" name="showAdvanced"
-				value="showadvanced"><span class="hasTip"
-				title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_ADVANCED_DESC'); ?>>
-				<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_ADVANCED'); ?>
-			</span>
-			</td>
-		</tr>
-		<tr>
-			<td><input type="checkbox" id="showSmallview" name="showSmallview"
-				value="showsmallview"><span class="hasTip"
-				title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_SMALLVIEW_DESC'); ?>>
-				<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_SMALLVIEW'); ?>
-			</span>
-			</td>
-		</tr>
-	</table>
+            <td class="key" align="left"><input type="checkbox" id="showList"
+                name="showList" value="showlist"><span class="hasTip"
+                title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_LIST_DESC'); ?>>
+                <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_LIST'); ?>
+            </span>
+            </td>
+        </tr>
+        <tr>
+            <td><input type="checkbox" id="showAdvanced" name="showAdvanced"
+                value="showadvanced"><span class="hasTip"
+                title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_ADVANCED_DESC'); ?>>
+                <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_ADVANCED'); ?>
+            </span>
+            </td>
+        </tr>
+        <tr>
+            <td><input type="checkbox" id="showSmallview" name="showSmallview"
+                value="showsmallview"><span class="hasTip"
+                title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_SMALLVIEW_DESC'); ?>>
+                <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_SMALLVIEW'); ?>
+            </span>
+            </td>
+        </tr>
+    </table>
 </div>
 <div id="THM_right">
-	<h3>
-		<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_DISPOSITION')?>
-	</h3>
-	<br /> <input type="radio" id="horOrVert" name="group1"
-		value="horizontal"> Horizontal <br> <input type="radio" id="horOrVert"
-		name="group1" value="vertical"> Vertical
+    <h3>
+        <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_DISPOSITION')?>
+    </h3>
+    <br /> <input type="radio" id="horOrVert" name="group1"
+        value="horizontal"> Horizontal <br> <input type="radio" id="horOrVert"
+        name="group1" value="vertical"> Vertical
 
 </div>
 <div id="THM_Plugin_Members_AddButton">
-	<button onclick="insertOptions();">
-		<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_ADD'); ?>
-	</button>
+    <button onclick="insertOptions();">
+        <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_ADD'); ?>
+    </button>
 </div>
 
 

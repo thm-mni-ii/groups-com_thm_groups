@@ -23,51 +23,49 @@
 
 
 <div id="title">
-<?php 
-	if (isset($this->title))
-	{
-		echo "<h2 class='contentheading'>" . $this->title . "</h2>";
-	}
+<?php
+    if (isset($this->title))
+    {
+        echo "<h2 class='contentheading'>" . $this->title . "</h2>";
+    }
 ?>
 </div>
 
 
-<?php 
-		
-	$mainframe = Jfactory::getApplication();
-	$model = $this->model;
-	$params = $mainframe->getParams();
-	$paramsArray = $params->toArray();
-	$ziel = JPATH_COMPONENT . '/css/mycss.css';
-	
-	$mycss = THMLibThmListview::getCssView($paramsArray);
-	
-	$document = JFactory::getDocument();
-	$document->addStyleDeclaration($mycss);
+<?php
 
-	// Mainframe Parameter
-	
-	$pagetitle = $params->get('page_title');
-	$showall = $params->get('showAll');
-	$showpagetitle = $params->get('show_page_heading');
-	
-	if ($showpagetitle)
-	{
-		$this->assignRef('title', $pagetitle);
-	}
-	
-	
+    $mainframe = Jfactory::getApplication();
+    $model = $this->model;
+    $params = $mainframe->getParams();
+    $paramsArray = $params->toArray();
+    $ziel = JPATH_COMPONENT . '/css/mycss.css';
 
-	
-	if ($showall == 1)
-	{
-		
-		echo THMLibThmListview::getListAll($paramsArray, $pagetitle, $model->getGroupNumber());
-	}
-	else
-	{
-	
-	echo THMLibThmListview::getListAlphabet($paramsArray, $pagetitle, $model->getGroupNumber());
-	}
-?>
+    $mycss = THMLibThmListview::getCssView($paramsArray);
 
+    $document = JFactory::getDocument();
+    $document->addStyleDeclaration($mycss);
+
+    // Mainframe Parameter
+
+    $pagetitle = $params->get('page_title');
+    $showall = $params->get('showAll');
+    $showpagetitle = $params->get('show_page_heading');
+
+    if ($showpagetitle)
+    {
+        $this->assignRef('title', $pagetitle);
+    }
+
+
+
+
+    if ($showall == 1)
+    {
+
+        echo THMLibThmListview::getListAll($paramsArray, $pagetitle, $model->getGroupNumber());
+    }
+    else
+    {
+
+    echo THMLibThmListview::getListAlphabet($paramsArray, $pagetitle, $model->getGroupNumber());
+    }

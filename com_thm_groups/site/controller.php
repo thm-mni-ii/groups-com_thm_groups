@@ -27,32 +27,37 @@ jimport('joomla.application.component.controller');
  */
 class THMGroupsController extends JControllerLegacy
 {
-	/**
-	 * Constuctor
-	 * 
-	 * @param   Array  $config  Config Params
-	 */
-	function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
-	
-	/**
-	 * Inherited method, which calls the method display() of parent JController.
-	 * 
-	 * @param   boolean  $cachable   cachable
-	 * @param   boolean  $urlparams  url param
-	 *
-	 * @since   Method available since Release 1.0
-	 * @return  void
-	 */
-	public function display($cachable = false, $urlparams = false)
-	{
-		$cachable = true;
-		
-		JHtml::_('behavior.caption');
-		$safeurlparams = array('catid' => 'INT', 'id' => 'INT', 'cid' => 'ARRAY', 'year' => 'INT', 'month' => 'INT', 'limit' => 'UINT', 'limitstart' => 'UINT',
-				'showall' => 'INT', 'return' => 'BASE64', 'filter' => 'STRING', 'filter_order' => 'CMD', 'filter_order_Dir' => 'CMD', 'filter-search' => 'STRING', 'print' => 'BOOLEAN', 'lang' => 'CMD');
-		parent::display($cachable, $urlparams);
-	}
+    /**
+     * Constuctor
+     *
+     * @param   Array  $config  Config Params
+     */
+    public function __construct($config = array())
+    {
+        parent::__construct($config);
+    }
+
+    /**
+     * Inherited method, which calls the method display() of parent JController.
+     *
+     * @param   boolean  $cachable   cachable
+     * @param   boolean  $urlparams  url param
+     *
+     * @since   Method available since Release 1.0
+     * @return  void
+     */
+    public function display($cachable = false, $urlparams = false)
+    {
+        $cachable = true;
+
+        JHtml::_('behavior.caption');
+        $safeurlparams = array
+                        (
+                        'catid' => 'INT', 'id' => 'INT', 'cid' => 'ARRAY', 'year' => 'INT', 'month' => 'INT', 'limit' => 'UINT',
+                                 'limitstart' => 'UINT','showall' => 'INT', 'return' => 'BASE64', 'filter' => 'STRING',
+                                'filter_order' => 'CMD', 'filter_order_Dir' => 'CMD', 'filter-search' => 'STRING',
+                                 'print' => 'BOOLEAN', 'lang' => 'CMD'
+                        );
+        parent::display($cachable, $urlparams);
+    }
 }

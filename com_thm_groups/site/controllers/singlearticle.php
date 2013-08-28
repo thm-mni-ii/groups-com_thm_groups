@@ -16,7 +16,7 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controllerform');
-	
+
 /**
  * Articles list controller class.
  *
@@ -27,330 +27,330 @@ jimport('joomla.application.component.controllerform');
 class THMGroupsControllerSinglearticle extends JControllerForm
 {
 /**
-	 * @since	1.6
-	 */
-	protected $view_item = 'form';
+     * @since	1.6
+     */
+    protected $view_item = 'form';
 
-	/**
-	 * @since	1.6
-	 */
-	protected $view_list = 'categories';
-	
-	/**
-	 *  Constructor (registers additional tasks to methods)
-	 *@since  Method available since Release 2.1
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->registerTask('showArticle', '');
-	}
-	
-	/**
-	 * Method to add a new record.
-	 *
-	 * @return	boolean	True if the article can be added, false if not.
-	 * 
-	 * @since	1.6
-	 */
-	public function add()
-	{
-		if (!parent::add()) 
-		{
-			// Redirect to the return page.
-			$this->setRedirect($this->getReturnPage());
-		}
-	}
+    /**
+     * @since	1.6
+     */
+    protected $view_list = 'categories';
 
-	/**
-	 * Method override to check if you can add a new record.
-	 *
-	 * @param	array  $data  An array of input data.
-	 *
-	 * @return	boolean
-	 * 
-	 * @since	1.6
-	 */
-	protected function allowAdd($data = array())
-	{
-		// Initialise variables.
-		$user		= JFactory::getUser();
-		$categoryId	= JArrayHelper::getValue($data, 'catid', JRequest::getInt('catid'), 'int');
-		$allow		= null;
+    /**
+     *  Constructor (registers additional tasks to methods)
+     *@since  Method available since Release 2.1
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->registerTask('showArticle', '');
+    }
 
-		if ($categoryId) 
-		{
-			// If the category has been passed in the data or URL check it.
-			$allow	= $user->authorise('core.create', 'com_content.category.' . $categoryId);
-		}
+    /**
+     * Method to add a new record.
+     *
+     * @return	boolean	True if the article can be added, false if not.
+     *
+     * @since	1.6
+     */
+    public function add()
+    {
+        if (!parent::add())
+        {
+            // Redirect to the return page.
+            $this->setRedirect($this->getReturnPage());
+        }
+    }
 
-		if ($allow === null) 
-		{
-			// In the absense of better information, revert to the component permissions.
-			return parent::allowAdd();
-		}
-		else 
-		{
-			return $allow;
-		}
-	}
+    /**
+     * Method override to check if you can add a new record.
+     *
+     * @param   array  $data  An array of input data.
+     *
+     * @return	boolean
+     *
+     * @since	1.6
+     */
+    protected function allowAdd($data = array())
+    {
+        // Initialise variables.
+        $user		= JFactory::getUser();
+        $categoryId	= JArrayHelper::getValue($data, 'catid', JRequest::getInt('catid'), 'int');
+        $allow		= null;
 
-	/**
-	 * Method override to check if you can edit an existing record.
-	 *
-	 * @param	array	$data  An array of input data.
-	 * @param	string	$key   The name of the key for the primary key.
-	 *
-	 * @return	boolean
-	 * 
-	 * @since	1.6
-	 */
-	protected function allowEdit($data = array(), $key = 'id')
-	{
-		// Initialise variables.
-		$recordId	= (int) isset($data[$key]) ? $data[$key] : 0;
-		$user		= JFactory::getUser();
-		$userId		= $user->get('id');
-		$asset		= 'com_content.article.' . $recordId;
+        if ($categoryId)
+        {
+            // If the category has been passed in the data or URL check it.
+            $allow	= $user->authorise('core.create', 'com_content.category.' . $categoryId);
+        }
 
-		// Check general edit permission first.
-		if ($user->authorise('core.edit', $asset)) 
-		{
-			return true;
-		}
+        if ($allow === null)
+        {
+            // In the absense of better information, revert to the component permissions.
+            return parent::allowAdd();
+        }
+        else
+        {
+            return $allow;
+        }
+    }
 
-		// Fallback on edit.own.
-		// First test if the permission is available.
-		if ($user->authorise('core.edit.own', $asset)) 
-		{
-			// Now test the owner is the user.
-			$ownerId	= (int) isset($data['created_by']) ? $data['created_by'] : 0;
-			if (empty($ownerId) && $recordId) 
-			{
-				// Need to do a lookup from the model.
-				$record		= $this->getModel()->getItem($recordId);
+    /**
+     * Method override to check if you can edit an existing record.
+     *
+     * @param   array   $data  An array of input data.
+     * @param   string  $key   The name of the key for the primary key.
+     *
+     * @return	boolean
+     *
+     * @since	1.6
+     */
+    protected function allowEdit($data = array(), $key = 'id')
+    {
+        // Initialise variables.
+        $recordId	= (int) isset($data[$key]) ? $data[$key] : 0;
+        $user		= JFactory::getUser();
+        $userId		= $user->get('id');
+        $asset		= 'com_content.article.' . $recordId;
 
-				if (empty($record)) 
-				{
-					return false;
-				}
+        // Check general edit permission first.
+        if ($user->authorise('core.edit', $asset))
+        {
+            return true;
+        }
 
-				$ownerId = $record->created_by;
-			}
+        // Fallback on edit.own.
+        // First test if the permission is available.
+        if ($user->authorise('core.edit.own', $asset))
+        {
+            // Now test the owner is the user.
+            $ownerId	= (int) isset($data['created_by']) ? $data['created_by'] : 0;
+            if (empty($ownerId) && $recordId)
+            {
+                // Need to do a lookup from the model.
+                $record		= $this->getModel()->getItem($recordId);
 
-			// If the owner matches 'me' then do the test.
-			if ($ownerId == $userId) 
-			{
-				return true;
-			}
-		}
+                if (empty($record))
+                {
+                    return false;
+                }
 
-		// Since there is no asset tracking, revert to the component permissions.
-		return parent::allowEdit($data, $key);
-	}
+                $ownerId = $record->created_by;
+            }
 
-	/**
-	 * Method to cancel an edit.
-	 *
-	 * @param	string	$key  The name of the primary key of the URL variable.
-	 *
-	 * @return	Boolean	True if access level checks pass, false otherwise.
-	 * 
-	 * @since	1.6
-	 */
-	public function cancel($key = 'a_id')
-	{
-		parent::cancel($key);
+            // If the owner matches 'me' then do the test.
+            if ($ownerId == $userId)
+            {
+                return true;
+            }
+        }
 
-		// Redirect to the return page.
-		$this->setRedirect($this->getReturnPage());
-	}
+        // Since there is no asset tracking, revert to the component permissions.
+        return parent::allowEdit($data, $key);
+    }
 
-	/**
-	 * Method to edit an existing record.
-	 *
-	 * @param	string	$key	 The name of the primary key of the URL variable.
-	 * @param	string	$urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
-	 *
-	 * @return	Boolean	True if access level check and checkout passes, false otherwise.
-	 * 
-	 * @since	1.6
-	 */
-	public function edit($key = null, $urlVar = 'a_id')
-	{
-		$result = parent::edit($key, $urlVar);
+    /**
+     * Method to cancel an edit.
+     *
+     * @param   string  $key  The name of the primary key of the URL variable.
+     *
+     * @return	Boolean	True if access level checks pass, false otherwise.
+     *
+     * @since	1.6
+     */
+    public function cancel($key = 'a_id')
+    {
+        parent::cancel($key);
 
-		return $result;
-	}
+        // Redirect to the return page.
+        $this->setRedirect($this->getReturnPage());
+    }
 
-	/**
-	 * Method to get a model object, loading it if required.
-	 *
-	 * @param	string	$name	 The model name. Optional.
-	 * @param	string	$prefix  The class prefix. Optional.
-	 * @param	array	$config	 Configuration array for model. Optional.
-	 *
-	 * @return	object	The model.
-	 *
-	 * @since	1.5
-	 */
-	public function getModel($name = 'form', $prefix = '', $config = array('ignore_request' => true))
-	{
-		$model = parent::getModel($name, $prefix, $config);
+    /**
+     * Method to edit an existing record.
+     *
+     * @param   string  $key     The name of the primary key of the URL variable.
+     * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+     *
+     * @return	Boolean	True if access level check and checkout passes, false otherwise.
+     *
+     * @since	1.6
+     */
+    public function edit($key = null, $urlVar = 'a_id')
+    {
+        $result = parent::edit($key, $urlVar);
 
-		return $model;
-	}
+        return $result;
+    }
 
-	/**
-	 * Gets the URL arguments to append to an item redirect.
-	 *
-	 * @param	int		$recordId  The primary key id for the item.
-	 * @param	string	$urlVar	   The name of the URL variable for the id.
-	 *
-	 * @return	string	The arguments to append to the redirect URL.
-	 * 
-	 * @since	1.6
-	 */
-	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id')
-	{
-		// Need to override the parent method completely.
-		$tmpl		= JRequest::getCmd('tmpl');
-		$layout		= JRequest::getCmd('layout', 'edit');
-		$append		= '';
+    /**
+     * Method to get a model object, loading it if required.
+     *
+     * @param   string  $name    The model name. Optional.
+     * @param   string  $prefix  The class prefix. Optional.
+     * @param   array   $config  Configuration array for model. Optional.
+     *
+     * @return	object	The model.
+     *
+     * @since	1.5
+     */
+    public function getModel($name = 'form', $prefix = '', $config = array('ignore_request' => true))
+    {
+        $model = parent::getModel($name, $prefix, $config);
 
-		// Setup redirect info.
-		if ($tmpl) 
-		{
-			$append .= '&tmpl=' . $tmpl;
-		}
-		$append .= '&layout=edit';
+        return $model;
+    }
 
-		if ($recordId) 
-		{
-			$append .= '&' . $urlVar . '=' . $recordId;
-		}
+    /**
+     * Gets the URL arguments to append to an item redirect.
+     *
+     * @param   int     $recordId  The primary key id for the item.
+     * @param   string  $urlVar    The name of the URL variable for the id.
+     *
+     * @return	string	The arguments to append to the redirect URL.
+     *
+     * @since	1.6
+     */
+    protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id')
+    {
+        // Need to override the parent method completely.
+        $tmpl		= JRequest::getCmd('tmpl');
+        $layout		= JRequest::getCmd('layout', 'edit');
+        $append		= '';
 
-		$itemId	= JRequest::getInt('Itemid');
-		$return	= $this->getReturnPage();
-		$catId = JRequest::getInt('catid', null, 'get');
+        // Setup redirect info.
+        if ($tmpl)
+        {
+            $append .= '&tmpl=' . $tmpl;
+        }
+        $append .= '&layout=edit';
 
-		if ($itemId) 
-		{
-			$append .= '&Itemid=' . $itemId;
-		}
+        if ($recordId)
+        {
+            $append .= '&' . $urlVar . '=' . $recordId;
+        }
 
-		if ($catId) 
-		{
-			$append .= '&catid=' . $catId;
-		}
+        $itemId	= JRequest::getInt('Itemid');
+        $return	= $this->getReturnPage();
+        $catId = JRequest::getInt('catid', null, 'get');
 
-		if ($return) 
-		{
-			$append .= '&return=' . base64_encode($return);
-		}
+        if ($itemId)
+        {
+            $append .= '&Itemid=' . $itemId;
+        }
 
-		return $append;
-	}
+        if ($catId)
+        {
+            $append .= '&catid=' . $catId;
+        }
 
-	/**
-	 * Get the return URL.
-	 *
-	 * If a "return" variable has been passed in the request
-	 *
-	 * @return	string	The return URL.
-	 * 
-	 * @since	1.6
-	 */
-	protected function getReturnPage()
-	{
-		$return = JRequest::getVar('return', null, 'default', 'base64');
+        if ($return)
+        {
+            $append .= '&return=' . base64_encode($return);
+        }
 
-		if (empty($return) || !JUri::isInternal(base64_decode($return))) 
-		{
-			return JURI::base();
-		}
-		else 
-		{
-			return base64_decode($return);
-		}
-	}
+        return $append;
+    }
 
-	/**
-	 * Function that allows child controller access to model data after the data has been saved.
-	 *
-	 * @param	JModel	&$model		The data model object.
-	 * @param	array	$validData  The validated data.
-	 *
-	 * @return	void
-	 * 
-	 * @since	1.6
-	 */
-	protected function postSaveHook(JModel &$model, $validData)
-	{
-		$task = $this->getTask();
+    /**
+     * Get the return URL.
+     *
+     * If a "return" variable has been passed in the request
+     *
+     * @return	string	The return URL.
+     *
+     * @since	1.6
+     */
+    protected function getReturnPage()
+    {
+        $return = JRequest::getVar('return', null, 'default', 'base64');
 
-		if ($task == 'save') 
-		{
-			$this->setRedirect(JRoute::_('index.php?option=com_content&view=category&id=' . $validData['catid'], false));
-		}
-	}
+        if (empty($return) || !JUri::isInternal(base64_decode($return)))
+        {
+            return JURI::base();
+        }
+        else
+        {
+            return base64_decode($return);
+        }
+    }
 
-	/**
-	 * Method to save a record.
-	 *
-	 * @param	string	$key	 The name of the primary key of the URL variable.
-	 * @param	string	$urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
-	 *
-	 * @return	Boolean	True if successful, false otherwise.
-	 * 
-	 * @since	1.6
-	 */
-	public function save($key = null, $urlVar = 'a_id')
-	{
-		// Load the backend helper for filtering.
-		require_once JPATH_ADMINISTRATOR . '/components/com_content/helpers/content.php';
+    /**
+     * Function that allows child controller access to model data after the data has been saved.
+     *
+     * @param   JModel  &$model     The data model object.
+     * @param   array   $validData  The validated data.
+     *
+     * @return	void
+     *
+     * @since	1.6
+     */
+    protected function postSaveHook(JModel &$model, $validData)
+    {
+        $task = $this->getTask();
 
-		$result = parent::save($key, $urlVar);
+        if ($task == 'save')
+        {
+            $this->setRedirect(JRoute::_('index.php?option=com_content&view=category&id=' . $validData['catid'], false));
+        }
+    }
 
-		// If ok, redirect to the return page.
-		if ($result) 
-		{
-			$this->setRedirect($this->getReturnPage());
-		}
+    /**
+     * Method to save a record.
+     *
+     * @param   string  $key     The name of the primary key of the URL variable.
+     * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+     *
+     * @return	Boolean	True if successful, false otherwise.
+     *
+     * @since	1.6
+     */
+    public function save($key = null, $urlVar = 'a_id')
+    {
+        // Load the backend helper for filtering.
+        require_once JPATH_ADMINISTRATOR . '/components/com_content/helpers/content.php';
 
-		return $result;
-	}
+        $result = parent::save($key, $urlVar);
 
-	/**
-	 * Method to save a vote.
-	 *
-	 * @return	void
-	 * 
-	 * @since	1.6.1
-	 */
-	function vote()
-	{
-		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+        // If ok, redirect to the return page.
+        if ($result)
+        {
+            $this->setRedirect($this->getReturnPage());
+        }
 
-		$user_rating = JRequest::getInt('user_rating', -1);
+        return $result;
+    }
 
-		if ( $user_rating > -1 ) 
-		{
-			$url = JRequest::getString('url', '');
-			$id = JRequest::getInt('id', 0);
-			$viewName = JRequest::getString('view', $this->default_view);
-			$model = $this->getModel($viewName);
+    /**
+     * Method to save a vote.
+     *
+     * @return	void
+     *
+     * @since	1.6.1
+     */
+    public function vote()
+    {
+        // Check for request forgeries.
+        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-			if ($model->storeVote($id, $user_rating)) 
-			{
-				$this->setRedirect($url, JText::_('COM_CONTENT_ARTICLE_VOTE_SUCCESS'));
-			} 
-			else 
-			{
-				$this->setRedirect($url, JText::_('COM_CONTENT_ARTICLE_VOTE_FAILURE'));
-			}
-		}
-	}
+        $user_rating = JRequest::getInt('user_rating', -1);
+
+        if ( $user_rating > -1 )
+        {
+            $url = JRequest::getString('url', '');
+            $id = JRequest::getInt('id', 0);
+            $viewName = JRequest::getString('view', $this->default_view);
+            $model = $this->getModel($viewName);
+
+            if ($model->storeVote($id, $user_rating))
+            {
+                $this->setRedirect($url, JText::_('COM_CONTENT_ARTICLE_VOTE_SUCCESS'));
+            }
+            else
+            {
+                $this->setRedirect($url, JText::_('COM_CONTENT_ARTICLE_VOTE_FAILURE'));
+            }
+        }
+    }
 }
 

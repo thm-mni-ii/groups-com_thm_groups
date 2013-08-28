@@ -27,349 +27,349 @@ jimport('thm_groups.assets.elements.explorer');
  */
 class THMGroupsControllerEditStructure extends JControllerForm
 {
-	/**
- 	 * constructor (registers additional tasks to methods)
- 	 *
- 	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->registerTask('apply', 'apply');
-		$this->registerTask('save2new', 'save2new');
-	}
+    /**
+      * constructor (registers additional tasks to methods)
+      *
+      */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->registerTask('apply', 'apply');
+        $this->registerTask('save2new', 'save2new');
+    }
 
-	/**
-  	 * Edit
-  	 * 
-  	 * @param   Integer  $key     contain key
-  	 * @param   String   $urlVar  contain url
-  	 * 
- 	 * @return void
- 	 */
-	public function edit($key = null, $urlVar = null)
-	{
-		JRequest::setVar('view', 'editstructure');
-		JRequest::setVar('layout', 'default');
-		JRequest::setVar('hidemainmenu', 1);
-		parent::display();
-	}
+    /**
+       * Edit
+       *
+       * @param   Integer  $key     contain key
+       * @param   String   $urlVar  contain url
+       *
+      * @return void
+      */
+    public function edit($key = null, $urlVar = null)
+    {
+        JRequest::setVar('view', 'editstructure');
+        JRequest::setVar('layout', 'default');
+        JRequest::setVar('hidemainmenu', 1);
+        parent::display();
+    }
 
-	/**
-	 * Apply
-	 *
-	 * @return void
-	 */
-	public function apply()
-	{
-		$model = $this->getModel('editstructure');
-		$id = JRequest::getVar('cid');
-		$structure = $model->getItem();
-		$relation = JRequest::getVar('relation');
-		if (isset($structure))
-		{
-		if (strcmp(strtolower($structure->type), strtolower($relation)) == 0 
+    /**
+     * Apply
+     *
+     * @return void
+     */
+    public function apply()
+    {
+        $model = $this->getModel('editstructure');
+        $id = JRequest::getVar('cid');
+        $structure = $model->getItem();
+        $relation = JRequest::getVar('relation');
+        if (isset($structure))
+        {
+        if (strcmp(strtolower($structure->type), strtolower($relation)) == 0
          || $model->canTypechange(strtolower($structure->type), strtolower($relation)) == true)
-		{
-			if ($model->store())
-			{
-				$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
-			}
-			else
-			{
-				$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-			}		
-		
-		
-		}
-		else
-		{
-			$msg = JText::_('COM_THM_GROUPS_DATA_NOT_CHANGEABLE');
-		}
-		}
-		else
-		{
-			$msg = JText::_('COM_THM_GROUPS_DATA_NOT_EXIST');
-		}
-		$this->setRedirect('index.php?option=com_thm_groups&task=editstructure.edit&cid[]=' . $id[0], $msg);
-	}
+        {
+            if ($model->store())
+            {
+                $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+            }
+            else
+            {
+                $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+            }
 
-	/**
-  	 * Save
-  	 * 
-  	 * @param   Integer  $key     the id of a object
-  	 * @param   Integer  $urlVar  the url value
-  	 * 
- 	 * @return void
- 	 */
-	public function save($key = null, $urlVar = null)
-	{
-	$model = $this->getModel('editstructure');
-		$id = JRequest::getVar('cid');
-		$structure = $model->getItem();
-		$relation = JRequest::getVar('relation');
-		if (isset($structure))
-		{
-		if (strcmp(strtolower($structure->type), strtolower($relation)) == 0 
+
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_DATA_NOT_CHANGEABLE');
+        }
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_DATA_NOT_EXIST');
+        }
+        $this->setRedirect('index.php?option=com_thm_groups&task=editstructure.edit&cid[]=' . $id[0], $msg);
+    }
+
+    /**
+       * Save
+       *
+       * @param   Integer  $key     the id of a object
+       * @param   Integer  $urlVar  the url value
+       *
+      * @return void
+      */
+    public function save($key = null, $urlVar = null)
+    {
+    $model = $this->getModel('editstructure');
+        $id = JRequest::getVar('cid');
+        $structure = $model->getItem();
+        $relation = JRequest::getVar('relation');
+        if (isset($structure))
+        {
+        if (strcmp(strtolower($structure->type), strtolower($relation)) == 0
          ||	$model->canTypechange(strtolower($structure->type), strtolower($relation)) == true)
-		{
-			if ($model->store())
-			{
-				$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
-			}
-			else
-			{
-				$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-			}		
-		
-		
-		}
-		else 
-		{
-			$msg = JText::_('COM_THM_GROUPS_DATA_NOT_CHANGEABLE');
-		}
-		}
-		else 
-		{
-			$msg = JText::_('COM_THM_GROUPS_DATA_NOT_EXIST');
-		}
+        {
+            if ($model->store())
+            {
+                $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+            }
+            else
+            {
+                $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+            }
 
-		$this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
-	}
 
-	/**
-	 * Save2New
-	 *
-	 * @return void
-	 */
-	public function save2new()
-	{
-	$model = $this->getModel('editstructure');
-		$id = JRequest::getVar('cid');
-		$structure = $model->getItem();
-		$relation = JRequest::getVar('relation');
-		if (isset($structure))
-		{
-		if (strcmp(strtolower($structure->type), strtolower($relation)) == 0 
-		 ||	$model->canTypechange(strtolower($structure->type), strtolower($relation)) == true)
-		{
-			if ($model->store())
-			{
-				$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
-			}
-			else
-			{
-				$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-			}		
-		
-		
-		}
-		else 
-		{
-			$msg = JText::_('COM_THM_GROUPS_DATA_NOT_CHANGEABLE');
-		}
-		}
-		else 
-		{
-			$msg = JText::_('COM_THM_GROUPS_DATA_NOT_EXIST');
-		}
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_DATA_NOT_CHANGEABLE');
+        }
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_DATA_NOT_EXIST');
+        }
 
-		$this->setRedirect('index.php?option=com_thm_groups&view=addstructure', $msg);
-	}
+        $this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
+    }
 
-	/**
-	 * Cancel
-	 *
-	 *@param   Integer  $key  contains the key
-	 *
-	 * @return void
-	 */
-	public function cancel($key = null)
-	{
-		$msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
-		$this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
-	}
+    /**
+     * Save2New
+     *
+     * @return void
+     */
+    public function save2new()
+    {
+    $model = $this->getModel('editstructure');
+        $id = JRequest::getVar('cid');
+        $structure = $model->getItem();
+        $relation = JRequest::getVar('relation');
+        if (isset($structure))
+        {
+        if (strcmp(strtolower($structure->type), strtolower($relation)) == 0
+         ||	$model->canTypechange(strtolower($structure->type), strtolower($relation)) == true)
+        {
+            if ($model->store())
+            {
+                $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+            }
+            else
+            {
+                $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+            }
 
-	/**
-	 * getFieldExtras
-	 *
-	 * @return void
-	 */
-	public function getFieldExtras()
-	{
-		$mainframe = Jfactory::getApplication();
-		$model = $this->getModel('editstructure');
-		$field = JRequest::getVar('field');
-		$value = $model->getExtra($field);
 
-		
-		if (!isset($value))
-		{
-			$value = new stdClass;
-			switch (strtoupper($field))
-			{
-			case "TEXT":
-				$value->value = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TEXT");
-				break;
-			case "TEXTFIELD":
-				$value->value = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TEXTFIELD");
-				break;
-			case "MULTISELECT":
-				$value->value = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_MULTISELECT");
-				break;
-			case "PICTURE":
-				$value->value = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_PICTURE");
-				$value->path = " ";
-				break;
-			default:
-				$value->value = "";
-				$value->path = " ";
-			}
-		}
-		// $id = JRequest::getVar('sid');
-		$output = "";
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_DATA_NOT_CHANGEABLE');
+        }
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_DATA_NOT_EXIST');
+        }
 
-		// $output =  "COM_THM_GROUPS_STRUCTURE_EXTRA_PARAMS: <br />";
-		switch (strtoupper($field))
-		{
-			case "TEXT":
-				$output .= "<input "
-				. "class='inputbox' "
-				. "type='text' name='" . $field . "_extra' "
-				. "id='" . $field . "_extra' "
-				. "size='40'"
-				. "value='" . $value->value . "' "
-				. "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT") . "' "
-				. "/>";
-				break;
-			case "TEXTFIELD":
-				$output .= "<input "
-				. "class='inputbox' "
-				. "type='text' name='" . $field . "_extra' "
-				. "id='" . $field . "_extra' "
-				. "size='40'"
-				. "value='" . $value->value . "' "
-				. "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXTFIELD") . "' "
-				. "/>";
-				break;
-			case "TABLE":
-				$output .= "<textarea "
-				. "rows='5' "
-				. "name='" . $field . "_extra' "
-				. "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TABLE") . "'>"
-				. $value->value
-				. "</textarea>";
-				break;
-			case "MULTISELECT":
-				$output .= "<textarea "
-				. "rows='5' "
-				. "name='" . $field . "_extra' "
-				. "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_MULTISELECT") . "'>"
-				. $value->value
-				. "</textarea>";
-				break;
-			case "PICTURE":
-				$output .= "<input "
-				. "class='inputbox' "
-				. "type='text' name='" . $field . "_extra' "
-				. "id='" . $field . "_extra' "
-				. "size='40'"
-				. "value='" . $value->value . "'"
-				. "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE") . "' "
-				. "/>";
-				$output .= "<br><br>";
-				$output .= "<input "
-						. "class='inputbox' "
-						. "type='text' name='" . $field . "_extra_path' "
-						. "id='" . $field . "_extra_path' "
-						. "size='40'"
-						. "value='" . $value->path . "'"
-						. "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE_PATH") . "' "
-						. "/>";
-				$mein = new JFormFieldExplorer;
-				$output .= $mein->explorerHTML($field . "_extra_path", "images");
-				break;
-		}
-		echo $output;
-		$mainframe->close();
-	}
+        $this->setRedirect('index.php?option=com_thm_groups&view=addstructure', $msg);
+    }
 
-	/**
-	 * getFieldExtrasLabel
-	 *
-	 * @return void
-	 */
-	public function getFieldExtrasLabel()
-	{
-		$mainframe = Jfactory::getApplication();
-		$field = JRequest::getVar('field');
-		$output = "";
+    /**
+     * Cancel
+     *
+     *@param   Integer  $key  contains the key
+     *
+     * @return void
+     */
+    public function cancel($key = null)
+    {
+        $msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
+        $this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
+    }
 
-		switch ($field)
-		{
-			case "TEXT":
-				$output = "<span title='"
-					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT")
-					. "'>"
-					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_SIZE")
-					. ":</span>";
-				break;
-			case "TEXTFIELD":
-				$output = "<span title='"
-					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXTFIELD")
-					. "'>"
-					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_ROWS")
-					. ":</span>";
-				break;
-			case "TABLE":
-				$output = "<span title='"
-					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TABLE")
-					. "'>"
-					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_FIELDS")
-					. ":</span>";
-				break;
-			case "MULTISELECT":
-				$output = "<span title='"
-					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_MULTISELECT")
-					. "'>"
-					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_FIELDS")
-					. ":</span>";
-				break;
-			case "PICTURE":
-				$output = "<span title='"
-					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE")
-					. "'>"
-					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT")
-					. ":</span>";
-					$output .= "<br><br>";
-					$output .= "<span title='"
-					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE_PATH")
-					. "'>"
-					. JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_PATH")
-					. ":</span>";
-				break;
-			default :
-				$output = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_NO_PARAMS") . "...";
-				break;
-		}
+    /**
+     * getFieldExtras
+     *
+     * @return void
+     */
+    public function getFieldExtras()
+    {
+        $mainframe = Jfactory::getApplication();
+        $model = $this->getModel('editstructure');
+        $field = JRequest::getVar('field');
+        $value = $model->getExtra($field);
 
-		echo $output;
-		$mainframe->close();
-	}
 
-	/**
-	 * getLoader
-	 *
-	 * @return void
-	 */
-	public function getLoader()
-	{
-		$mainframe = Jfactory::getApplication();
-		$attribs['width'] = '40px';
-		$attribs['height'] = '40px';
+        if (!isset($value))
+        {
+            $value = new stdClass;
+            switch (strtoupper($field))
+            {
+            case "TEXT":
+                $value->value = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TEXT");
+                break;
+            case "TEXTFIELD":
+                $value->value = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TEXTFIELD");
+                break;
+            case "MULTISELECT":
+                $value->value = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_MULTISELECT");
+                break;
+            case "PICTURE":
+                $value->value = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_PICTURE");
+                $value->path = " ";
+                break;
+            default:
+                $value->value = "";
+                $value->path = " ";
+            }
+        }
+        // $id = JRequest::getVar('sid');
+        $output = "";
 
-		echo JHTML::image("administrator/components/com_thm_groups/img/ajax-loader.gif", 'loader', $attribs);
+        // $output =  "COM_THM_GROUPS_STRUCTURE_EXTRA_PARAMS: <br />";
+        switch (strtoupper($field))
+        {
+            case "TEXT":
+                $output .= "<input "
+                . "class='inputbox' "
+                . "type='text' name='" . $field . "_extra' "
+                . "id='" . $field . "_extra' "
+                . "size='40'"
+                . "value='" . $value->value . "' "
+                . "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT") . "' "
+                . "/>";
+                break;
+            case "TEXTFIELD":
+                $output .= "<input "
+                . "class='inputbox' "
+                . "type='text' name='" . $field . "_extra' "
+                . "id='" . $field . "_extra' "
+                . "size='40'"
+                . "value='" . $value->value . "' "
+                . "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXTFIELD") . "' "
+                . "/>";
+                break;
+            case "TABLE":
+                $output .= "<textarea "
+                . "rows='5' "
+                . "name='" . $field . "_extra' "
+                . "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TABLE") . "'>"
+                . $value->value
+                . "</textarea>";
+                break;
+            case "MULTISELECT":
+                $output .= "<textarea "
+                . "rows='5' "
+                . "name='" . $field . "_extra' "
+                . "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_MULTISELECT") . "'>"
+                . $value->value
+                . "</textarea>";
+                break;
+            case "PICTURE":
+                $output .= "<input "
+                . "class='inputbox' "
+                . "type='text' name='" . $field . "_extra' "
+                . "id='" . $field . "_extra' "
+                . "size='40'"
+                . "value='" . $value->value . "'"
+                . "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE") . "' "
+                . "/>";
+                $output .= "<br><br>";
+                $output .= "<input "
+                        . "class='inputbox' "
+                        . "type='text' name='" . $field . "_extra_path' "
+                        . "id='" . $field . "_extra_path' "
+                        . "size='40'"
+                        . "value='" . $value->path . "'"
+                        . "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE_PATH") . "' "
+                        . "/>";
+                $mein = new JFormFieldExplorer;
+                $output .= $mein->explorerHTML($field . "_extra_path", "images");
+                break;
+        }
+        echo $output;
+        $mainframe->close();
+    }
 
-		$mainframe->close();
-	}
+    /**
+     * getFieldExtrasLabel
+     *
+     * @return void
+     */
+    public function getFieldExtrasLabel()
+    {
+        $mainframe = Jfactory::getApplication();
+        $field = JRequest::getVar('field');
+        $output = "";
+
+        switch ($field)
+        {
+            case "TEXT":
+                $output = "<span title='"
+                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT")
+                    . "'>"
+                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_SIZE")
+                    . ":</span>";
+                break;
+            case "TEXTFIELD":
+                $output = "<span title='"
+                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXTFIELD")
+                    . "'>"
+                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_ROWS")
+                    . ":</span>";
+                break;
+            case "TABLE":
+                $output = "<span title='"
+                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TABLE")
+                    . "'>"
+                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_FIELDS")
+                    . ":</span>";
+                break;
+            case "MULTISELECT":
+                $output = "<span title='"
+                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_MULTISELECT")
+                    . "'>"
+                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_FIELDS")
+                    . ":</span>";
+                break;
+            case "PICTURE":
+                $output = "<span title='"
+                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE")
+                    . "'>"
+                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT")
+                    . ":</span>";
+                    $output .= "<br><br>";
+                    $output .= "<span title='"
+                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE_PATH")
+                    . "'>"
+                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_PATH")
+                    . ":</span>";
+                break;
+            default :
+                $output = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_NO_PARAMS") . "...";
+                break;
+        }
+
+        echo $output;
+        $mainframe->close();
+    }
+
+    /**
+     * getLoader
+     *
+     * @return void
+     */
+    public function getLoader()
+    {
+        $mainframe = Jfactory::getApplication();
+        $attribs['width'] = '40px';
+        $attribs['height'] = '40px';
+
+        echo JHTML::image("administrator/components/com_thm_groups/img/ajax-loader.gif", 'loader', $attribs);
+
+        $mainframe->close();
+    }
 
 }
