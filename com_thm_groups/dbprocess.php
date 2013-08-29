@@ -24,7 +24,11 @@
 
  // Get quickpages
 
- $result = mysql_query("SELECT * FROM " . $prefix . "categories WHERE path LIKE 'quickpages/%' AND alias LIKE 'quickpage-%'") or die("Error:" . mysql_error());
+ $result = mysql_query(
+         "SELECT * FROM " . $prefix
+         . "categories WHERE path LIKE 'quickpages/%' AND alias LIKE 'quickpage-%'"
+        )
+         or die("Error:" . mysql_error());
  $quickpagesquery = array();
  while ($row = mysql_fetch_object($result))
  {
@@ -54,7 +58,8 @@
 
     // Reorder elemnent to "pageID;username;Lastname, Firstname1 Firstname2;lastname-firstname1-firstname2"
 
-    $element = $catid . ";" . $username . ";" . $lastname . ", " . $element . ";" . strtolower($lastname) . "-" . str_replace(" ", "-", strtolower($element));
+    $element = $catid . ";" . $username . ";" . $lastname . ", " . $element . ";"
+            . strtolower($lastname) . "-" . str_replace(" ", "-", strtolower($element));
 
     // Get userid from database
 

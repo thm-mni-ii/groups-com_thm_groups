@@ -226,7 +226,8 @@ endif;
 endif;
 ?>
 
-<?php if (isset($urls) AND ((!empty($urls->urls_position) AND ($urls->urls_position == '0')) OR  ($params->get('urls_position') == '0' AND empty($urls->urls_position) ))
+<?php if (isset($urls) AND ((!empty($urls->urls_position)
+ AND ($urls->urls_position == '0')) OR  ($params->get('urls_position') == '0' AND empty($urls->urls_position) ))
  OR (empty($urls->urls_position) AND (!$params->get('urls_position'))))
     : ?>
 <?php

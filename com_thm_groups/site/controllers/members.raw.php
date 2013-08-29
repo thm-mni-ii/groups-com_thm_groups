@@ -218,9 +218,6 @@ class THMGroupsControllerMembers extends JControllerForm
      */
     public function paramsParse($parameter, $mode)
     {
-        // Person:{Schlüsselwort:person:uid:links(name,vorname):params(Max-Breite,Position,Rahmen,float):struct(...):userlist(none)}
-
-        // Groups Advanced:{Schlüsselwort:advanced:gid:links(name,vorname):params(Max-breite,ColumnNumber,Position,Rahmen,float):struct(...):userlist(...)}
         $result = array();
         $temp = explode('(', $parameter);
         $temp = explode(')', $temp[1]);
