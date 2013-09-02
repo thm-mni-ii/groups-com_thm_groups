@@ -30,39 +30,39 @@ jimport('joomla.filesystem.path');
  */
 class THMGroupsViewAddGroup extends JView
 {
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object  $tpl  template
-	 * 
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		$app = JFactory::getApplication();
-		$user = JFactory::getUser();
-		if (!($user->authorise('core.admin')))
-		{
-			$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_NO_RIGHTS_TO_ADD_GROUP');
-			$app->redirect('index.php?option=com_thm_groups&view=groupmanager', $msg);
-		}
-		
-		$document   = & JFactory::getDocument();
-		$document->addStyleSheet("components/com_staff/css/membermanager/icon.css");
+    /**
+     * Method to get display
+     *
+     * @param   Object  $tpl  template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
+        $app = JFactory::getApplication();
+        $user = JFactory::getUser();
+        if (!($user->authorise('core.admin')))
+        {
+            $msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_NO_RIGHTS_TO_ADD_GROUP');
+            $app->redirect('index.php?option=com_thm_groups&view=groupmanager', $msg);
+        }
 
-		// $model =& $this->getModel('addgroup');
-		$groups =& $this->get('AllGroups');
-		$this->assignRef('groups', $groups);
+        $document   = JFactory::getDocument();
+        $document->addStyleSheet("components/com_staff/css/membermanager/icon.css");
 
-		JToolBarHelper::title(JText::_('COM_THM_GROUPS_ADDGROUP_TITLE'), 'generic.png');
-		JToolBarHelper::apply('addgroup.apply', 'JTOOLBAR_APPLY');
-		JToolBarHelper::save('addgroup.save', 'JTOOLBAR_SAVE');
-		JToolBarHelper::custom('addgroup.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-		JToolBarHelper::cancel('addgroup.cancel', 'JTOOLBAR_CANCEL');
-		JToolBarHelper::back('JTOOLBAR_BACK');
+        // $model =& $this->getModel('addgroup');
+        $groups = $this->get('AllGroups');
+        $this->assignRef('groups', $groups);
 
-		$this->form = $this->get('Form');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS_ADDGROUP_TITLE'), 'generic.png');
+        JToolBarHelper::apply('addgroup.apply', 'JTOOLBAR_APPLY');
+        JToolBarHelper::save('addgroup.save', 'JTOOLBAR_SAVE');
+        JToolBarHelper::custom('addgroup.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+        JToolBarHelper::cancel('addgroup.cancel', 'JTOOLBAR_CANCEL');
+        JToolBarHelper::back('JTOOLBAR_BACK');
 
-		parent::display($tpl);
-	}
+        $this->form = $this->get('Form');
+
+        parent::display($tpl);
+    }
 }

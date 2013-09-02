@@ -26,25 +26,25 @@ jimport('joomla.filesystem.path');
  */
 class THMGroupsViewAddRole extends JView
 {
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object  $tpl  template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		$document   = & JFactory::getDocument();
-		$document->addStyleSheet("components/com_staff/css/membermanager/icon.css");
+    /**
+     * Method to get display
+     *
+     * @param   Object  $tpl  template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
+        $document   = JFactory::getDocument();
+        $document->addStyleSheet("components/com_staff/css/membermanager/icon.css");
 
-		JToolBarHelper::title(JText::_('COM_THM_GROUPS_ADDROLE_TITLE'), 'generic.png');
-		JToolBarHelper::apply('addrole.apply', 'JTOOLBAR_APPLY');
-		JToolBarHelper::save('addrole.save', 'JTOOLBAR_SAVE');
-		JToolBarHelper::custom('addrole.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-		JToolBarHelper::cancel('addrole.cancel', 'JTOOLBAR_CANCEL');
-		JToolBarHelper::back('JTOOLBAR_BACK');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS_ADDROLE_TITLE'), 'generic.png');
+        JToolBarHelper::apply('addrole.apply', 'JTOOLBAR_APPLY');
+        JToolBarHelper::save('addrole.save', 'JTOOLBAR_SAVE');
+        JToolBarHelper::custom('addrole.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+        JToolBarHelper::cancel('addrole.cancel', 'JTOOLBAR_CANCEL');
+        JToolBarHelper::back('JTOOLBAR_BACK');
 
-		parent::display($tpl);
-	}
+        parent::display($tpl);
+    }
 }
