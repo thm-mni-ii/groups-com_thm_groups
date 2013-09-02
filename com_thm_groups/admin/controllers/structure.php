@@ -25,159 +25,159 @@ jimport('joomla.application.component.controllerform');
  */
 class THMGroupsControllerStructure extends JControllerForm
 {
-	/**
- 	 * constructor (registers additional tasks to methods)
- 	 * 
- 	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->registerTask('add', 'add');
-	}
+    /**
+      * constructor (registers additional tasks to methods)
+      *
+      */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->registerTask('add', 'add');
+    }
 
-	/**
-  	 * Edit
-  	 * 
-  	 * @param   Integer  $key     contain key
-  	 * @param   String   $urlVar  contain url
-  	 * 
- 	 * @return void
- 	 */
-	public function edit($key, $urlVar)
-	{
+    /**
+       * Edit
+       *
+       * @param   Integer  $key     contain key
+       * @param   String   $urlVar  contain url
+       *
+      * @return void
+      */
+    public function edit($key = null, $urlVar = null)
+    {
 
-		$cid = JRequest::getVar('cid',   array(), 'post', 'array');
-		for ($i = 1; $i < 5; $i++)
-		{
-			if (in_array($i, $cid))
-			{
-				$msg = JText::_('COM_THM_GROUPS_EDIT_ERROR');
-				$this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
-			}
-		}
+        $cid = JRequest::getVar('cid',   array(), 'post', 'array');
+        for ($i = 1; $i < 5; $i++)
+        {
+            if (in_array($i, $cid))
+            {
+                $msg = JText::_('COM_THM_GROUPS_EDIT_ERROR');
+                $this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
+            }
+        }
 
-		JRequest::setVar('view', 'editstructure');
-		JRequest::setVar('layout', 'default');
-		JRequest::setVar('hidemainmenu', 1);
-		parent::display();
-	}
+        JRequest::setVar('view', 'editstructure');
+        JRequest::setVar('layout', 'default');
+        JRequest::setVar('hidemainmenu', 1);
+        parent::display();
+    }
 
-	/**
-	 * Add
-	 *
-	 * @return void
-	 */
-	public function add()
-	{
-		JRequest::setVar('view', 'addstructure');
-		JRequest::setVar('layout', 'default');
-		JRequest::setVar('hidemainmenu', 1);
-		parent::display();
-	}
+    /**
+     * Add
+     *
+     * @return void
+     */
+    public function add()
+    {
+        JRequest::setVar('view', 'addstructure');
+        JRequest::setVar('layout', 'default');
+        JRequest::setVar('hidemainmenu', 1);
+        parent::display();
+    }
 
-	/**
-	 * Cancel
-	 *
-	 *@param   Integer  $key  contains the key
-	 *
-	 * @return void
-	 */
-	public function cancel($key)
-	{
-		$msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
-		$this->setRedirect('index.php?option=com_thm_groups', $msg);
-	}
+    /**
+     * Cancel
+     *
+     *@param   Integer  $key  contains the key
+     *
+     * @return void
+     */
+    public function cancel($key = null)
+    {
+        $msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
+        $this->setRedirect('index.php?option=com_thm_groups', $msg);
+    }
 
-	/**
-	 * Remove
-	 *
-	 * @return void
-	 */
-	public function remove()
-	{
-		$model = $this->getModel('structure');
+    /**
+     * Remove
+     *
+     * @return void
+     */
+    public function remove()
+    {
+        $model = $this->getModel('structure');
 
-		if ($model->remove())
-		{
-			$msg = JText::_('COM_THM_GROUPS_REMOVED_SUCCESSFUL');
-		}
-		else
-		{
-			$msg = JText::_('COM_THM_GROUPS_REMOVE_ERROR');
-		}
+        if ($model->remove())
+        {
+            $msg = JText::_('COM_THM_GROUPS_REMOVED_SUCCESSFUL');
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_REMOVE_ERROR');
+        }
 
-		$cid = JRequest::getVar('cid', array(), 'post', 'array');
+        $cid = JRequest::getVar('cid', array(), 'post', 'array');
 
-		for ($i = 1; $i < 5; $i++)
-		{
-			if (in_array($i, $cid))
-			{
-				echo "<br />";
-				$msg .= JText::_('COM_THM_GROUPS_CAN_NOT_DELETE_ITEM');
-				echo " " . $i;
-			}
-		}
-		$this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
-	}
+        for ($i = 1; $i < 5; $i++)
+        {
+            if (in_array($i, $cid))
+            {
+                echo "<br />";
+                $msg .= JText::_('COM_THM_GROUPS_CAN_NOT_DELETE_ITEM');
+                echo " " . $i;
+            }
+        }
+        $this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
+    }
 
-	/**
-	 * Save order
-	 *
-	 * @return void
-	 */
-	public function saveorder()
-	{
-		$model = $this->getModel('structure');
+    /**
+     * Save order
+     *
+     * @return void
+     */
+    public function saveorder()
+    {
+        $model = $this->getModel('structure');
 
-		if ($model->reorder())
-		{
-			$msg = JText::_('COM_THM_GROUPS_ORDER_SUCCESSFUL');
-		}
-		else
-		{
-			$msg = JText::_('COM_THM_GROUPS_ORDER_ERROR');
-		}
-		$this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
-	}
+        if ($model->reorder())
+        {
+            $msg = JText::_('COM_THM_GROUPS_ORDER_SUCCESSFUL');
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_ORDER_ERROR');
+        }
+        $this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
+    }
 
-	/**
-	 * Order up
-	 *
-	 * @return void
-	 */
-	public function orderup()
-	{
-		$model = $this->getModel('structure');
+    /**
+     * Order up
+     *
+     * @return void
+     */
+    public function orderup()
+    {
+        $model = $this->getModel('structure');
 
-		if ($model->reorder(-1))
-		{
-			$msg = JText::_('COM_THM_GROUPS_ORDER_SUCCESSFUL');
-		}
-		else
-		{
-			$msg = JText::_('COM_THM_GROUPS_ORDER_ERROR');
-		}
-		$this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
-	}
+        if ($model->reorder(-1))
+        {
+            $msg = JText::_('COM_THM_GROUPS_ORDER_SUCCESSFUL');
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_ORDER_ERROR');
+        }
+        $this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
+    }
 
-	/**
-	 * Order down
-	 *
-	 * @return void
-	 */
-	public function orderdown()
-	{
-		$model = $this->getModel('structure');
+    /**
+     * Order down
+     *
+     * @return void
+     */
+    public function orderdown()
+    {
+        $model = $this->getModel('structure');
 
-		if ($model->reorder(1))
-		{
-			$msg = JText::_('COM_THM_GROUPS_ORDER_SUCCESSFUL');
-		}
-		else
-		{
-			$msg = JText::_('COM_THM_GROUPS_ORDER_ERROR');
-		}
+        if ($model->reorder(1))
+        {
+            $msg = JText::_('COM_THM_GROUPS_ORDER_SUCCESSFUL');
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_ORDER_ERROR');
+        }
 
-		$this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
-	}
+        $this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
+    }
 }
