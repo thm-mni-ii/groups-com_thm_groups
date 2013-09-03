@@ -30,51 +30,51 @@ jimport('joomla.application.component.view');
  */
 class THMGroupsViewList extends JView
 {
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object  $tpl  template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		$mainframe = Jfactory::getApplication();
-		$model =& $this->getModel();
-		$document =& JFactory::getDocument();
-		$document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/frontend.php');
-		$userid = JRequest::getVar('gsuid', 0);
-		
-		// Mainframe Parameter
-		$params = $mainframe->getParams();
-		$pagetitle = $params->get('page_title');
-		$showpagetitle = $params->get('show_page_heading');
-		$columncount = $params->get('columnCount');
-		$this->assignRef('model', $model);
-		if ($showpagetitle)
-		{
-			$this->assignRef('title', $pagetitle);
-		}
-		$this->assignRef('titleForLink', $pagetitle);
-		$this->assignRef('params', $params);
-		$pathway = $mainframe->getPathway();
-		if ($userid)
-		{
-			$db = JFactory::getDBO();
-			$query = $db->getQuery(true);
-			$query->select('value');
-			$query->from($db->qn('#__thm_groups_text'));
-			$query->where('userid = ' . $userid);
-			$query->where('structid = 1');
-			
-			$db->setQuery($query);
-			$firstname = $db->loadObjectList();
-			$name = JRequest::getVar('name', '') . ', ' . $firstname[0]->value;
-			$pathway->addItem($name, '');
-		}
-		else 
-		{
-		}
-		parent::display($tpl);
-	}
+    /**
+     * Method to get display
+     *
+     * @param   Object  $tpl  template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
+        $mainframe = Jfactory::getApplication();
+        $model = $this->getModel();
+        $document = JFactory::getDocument();
+        $document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/frontend.php');
+        $userid = JRequest::getVar('gsuid', 0);
+
+        // Mainframe Parameter
+        $params = $mainframe->getParams();
+        $pagetitle = $params->get('page_title');
+        $showpagetitle = $params->get('show_page_heading');
+        $columncount = $params->get('columnCount');
+        $this->assignRef('model', $model);
+        if ($showpagetitle)
+        {
+            $this->assignRef('title', $pagetitle);
+        }
+        $this->assignRef('titleForLink', $pagetitle);
+        $this->assignRef('params', $params);
+        $pathway = $mainframe->getPathway();
+        if ($userid)
+        {
+            $db = JFactory::getDBO();
+            $query = $db->getQuery(true);
+            $query->select('value');
+            $query->from($db->qn('#__thm_groups_text'));
+            $query->where('userid = ' . $userid);
+            $query->where('structid = 1');
+
+            $db->setQuery($query);
+            $firstname = $db->loadObjectList();
+            $name = JRequest::getVar('name', '') . ', ' . $firstname[0]->value;
+            $pathway->addItem($name, '');
+        }
+        else
+        {
+        }
+        parent::display($tpl);
+    }
 }
