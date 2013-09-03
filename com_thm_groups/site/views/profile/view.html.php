@@ -33,190 +33,191 @@ jimport('joomla.filesystem.path');
  */
 class THMGroupsViewProfile extends JView
 {
-	
-	protected $form;
-	
-	protected $links;
 
-	/**
-	 * Method to get extra
-	 *
-	 * @param   Int     $structId  StructID
-	 * @param   String  $type      Type
-	 *
-	 * @return $extra
-	 */
-	public function getExtra($structId, $type)
-	{
-		$model = $this->getModel();
-		$extra = $model->getExtra($structId, $type);
-		return $extra;
-	}
+    protected $form;
 
-	/**
-	 * Method to get structe type
-	 *
-	 * @param   Int  $structId  StructID
-	 *
-	 * @return structureType
-	 */
-	public function getStructureType($structId)
-	{
-		$model = $this->getModel();
-		$structure = $model->getStructure();
-		$structureType = null;
-		foreach ($structure as $structureItem)
-		{
-			if ($structureItem->id == $structId)
-			{
-				$structureType = $structureItem->type;
-			}
-		}
-		return $structureType;
-	}
+    protected $links;
 
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object  $tpl  template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		$app	 = JFactory::getApplication();
-		
-		$pathway = $app->getPathway();
-		$pathwayitems = $pathway->getPathWay();
-		$document = JFactory::getDocument();
-		$document->addStyleSheet("administrator/components/com_thm_groups/css/membermanager/icon.css");
+    /**
+     * Method to get extra
+     *
+     * @param   Int     $structId  StructID
+     * @param   String  $type      Type
+     *
+     * @return $extra
+     */
+    public function getExtra($structId, $type)
+    {
+        $model = $this->getModel();
+        $extra = $model->getExtra($structId, $type);
+        return $extra;
+    }
 
-		$cid = JRequest::getVar('gsuid', 0);
+    /**
+     * Method to get structe type
+     *
+     * @param   Int  $structId  StructID
+     *
+     * @return structureType
+     */
+    public function getStructureType($structId)
+    {
+        $model = $this->getModel();
+        $structure = $model->getStructure();
+        $structureType = null;
+        foreach ($structure as $structureItem)
+        {
+            if ($structureItem->id == $structId)
+            {
+                $structureType = $structureItem->type;
+            }
+        }
+        return $structureType;
+    }
 
-		$model     = $this->getModel();
-		$items     = $this->get('Data');
-		$structure = $this->get('Structure');
-		$gsgid     = JRequest::getVar('gsgid');
-		$gsuid     = JRequest::getVar('gsuid');
-		
-		$var = array();
-		if (isset($_GET))
-		{
-			$var = $_GET;
-		
-		  $attribut = " ";
-		foreach ($var as $index => $value)
-		{
-		    $pos = strpos($index, '_old');
-		   
-		    if ($pos !== false)
-		    {
-		    	$temp = explode('_old', $index);
-		    	$attribut .= $temp[0] . "=" . $value . '&';
-		    	
-		    }
-		    
-			
-		}
-		}
-		$name = "";
-		foreach ($items as $val)
-		{
-			if ($val->structid == 2)
-			{
-				$name = $val->value . ', ' . $name;
-			}
-			else 
-			{
-				if ($val->structid == 1)
-				{
-					$name = $name . $val->value;
-				}
-				else 
-				{
-				}
-			}
-		}
+    /**
+     * Method to get display
+     *
+     * @param   Object  $tpl  template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
+        $app	 = JFactory::getApplication();
 
-		$pathLinks = array();
-		$backRef = (count($pathwayitems) > 0)? $pathwayitems[count($pathwayitems) - 1]->link : " ";
-		if (isset($attribut))
-		{
-			$this->links = JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid;
-				
-			$old_option = JRequest::getVar("option_old");
-			
-			switch ($old_option)
-			{
-				case "com_content":  
-					$artikleId = JRequest::getVar("id_old");
-					$artikelnametemp = explode(":", $artikleId);
-					$artikelname = (count($artikelnametemp) > 1)? $artikelnametemp[1] : $artikelnametemp[0]; 
-					if (isset($artikelname))
-					{
-					$pathway->addItem($artikelname, JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
-					}
-					else 
-					{
-						$pathway->addItem(JFactory::getDocument()->get('title'), JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
-					}
-					break;
-					
-				case "com_thm_groups":
-					$pathway->addItem(JFactory::getDocument()->get('title'), JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
-					break;
-				default:
-					$pathway->addItem(JFactory::getDocument()->get('title'), JURI::base() . 'index.php?' . $attribut);
-					break;
-			}
-			
-			
-			$pathway->addItem($name);
-		}
-		
-		else 
-		{
-			$this->links = JURI::base() . 'index.php';
-			$pathway->addItem($name);
-			
-		}
-		
-		// Daten für die Form
-		$textField = array();
-		foreach ($structure as $structureItem)
-		{
-			foreach ($items as $item)
-			{
-				if ($item->structid == $structureItem->id)
-				{
-					$value = $item->value;
-				}
-			}
-			if ($structureItem->type == "TEXTFIELD")
-			{
-				$textField[$structureItem->field] = $value;
-			}
-		}
+        $pathway = $app->getPathway();
+        $pathwayitems = $pathway->getPathWay();
+        $document = JFactory::getDocument();
+        $document->addStyleSheet("administrator/components/com_thm_groups/css/membermanager/icon.css");
 
-		// Daten für die Form
-		$this->form = $this->get('Form');
+        $cid = JRequest::getVar('gsuid', 0);
 
-		if (!empty($textField))
-		{
-			$this->form->bind($textField);
-		}
+        $model     = $this->getModel();
+        $items     = $this->get('Data');
+        $structure = $this->get('Structure');
+        $gsgid     = JRequest::getVar('gsgid');
+        $gsuid     = JRequest::getVar('gsuid');
 
-		$itemid = JRequest::getVar('Itemid', 0);
+        $var = array();
+        if (isset($_GET))
+        {
+            $var = $_GET;
 
-		$this->assignRef('backRef', $backRef);
-		$this->assignRef('items', $items);
-		$this->assignRef('itemid', $itemid);
-		$canedit = $model->canEdit();
-		$this->assignRef('canEdit', $canedit);
-		$this->assignRef('userid', $cid);
-		$this->assignRef('structure', $structure);
-		$this->assignRef('gsgid', $gsgid);
+          $attribut = " ";
+        foreach ($var as $index => $value)
+        {
+            $pos = strpos($index, '_old');
 
-		parent::display($tpl);
-	}
+            if ($pos !== false)
+            {
+                $temp = explode('_old', $index);
+                $attribut .= $temp[0] . "=" . $value . '&';
+
+            }
+
+
+        }
+        }
+        $name = "";
+        foreach ($items as $val)
+        {
+            if ($val->structid == 2)
+            {
+                $name = $val->value . ', ' . $name;
+            }
+            else
+            {
+                if ($val->structid == 1)
+                {
+                    $name = $name . $val->value;
+                }
+                else
+                {
+                }
+            }
+        }
+
+        $pathLinks = array();
+        $backRef = (count($pathwayitems) > 0)? $pathwayitems[count($pathwayitems) - 1]->link : " ";
+        if (isset($attribut))
+        {
+            $this->links = JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid;
+
+            $old_option = JRequest::getVar("option_old");
+
+            switch ($old_option)
+            {
+
+                case "com_content":
+
+                    $artikleId = JRequest::getVar("id_old");
+                    $artikelnametemp = (JFactory::getConfig()->getValue('config.sef') == 1)? explode(":", $artikleId, 2) : explode(":", $artikleId);
+                    $artikelname = (count($artikelnametemp) > 1)? $artikelnametemp[1] : $artikelnametemp[0];
+                    if (isset($artikelname))
+                    {
+                    $pathway->addItem($artikelname, JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
+                    }
+                    else
+                    {
+                        $pathway->addItem(JFactory::getDocument()->get('title'), JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
+                    }
+                    $pathway->addItem($name);
+                    break;
+
+                case "com_thm_groups":
+                   // $pathway->addItem(JFactory::getDocument()->get('title'), JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
+
+                    break;
+
+            }
+
+            $pathway->addItem($name);
+        }
+
+        else
+        {
+            $this->links = JURI::base() . 'index.php';
+            $pathway->addItem($name);
+
+        }
+
+        // Daten für die Form
+        $textField = array();
+        foreach ($structure as $structureItem)
+        {
+            foreach ($items as $item)
+            {
+                if ($item->structid == $structureItem->id)
+                {
+                    $value = $item->value;
+                }
+            }
+            if ($structureItem->type == "TEXTFIELD")
+            {
+                $textField[$structureItem->field] = $value;
+            }
+        }
+
+        // Daten für die Form
+        $this->form = $this->get('Form');
+
+        if (!empty($textField))
+        {
+            $this->form->bind($textField);
+        }
+
+        $itemid = JRequest::getVar('Itemid', 0);
+
+        $this->assignRef('backRef', $backRef);
+        $this->assignRef('items', $items);
+        $this->assignRef('itemid', $itemid);
+        $canedit = $model->canEdit();
+        $this->assignRef('canEdit', $canedit);
+        $this->assignRef('userid', $cid);
+        $this->assignRef('structure', $structure);
+        $this->assignRef('gsgid', $gsgid);
+
+        parent::display($tpl);
+    }
 }
