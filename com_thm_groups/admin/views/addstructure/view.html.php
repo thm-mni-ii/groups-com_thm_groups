@@ -26,28 +26,28 @@ jimport('joomla.filesystem.path');
  */
 class THMGroupsViewAddStructure extends JView
 {
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object  $tpl  template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
+    /**
+     * Method to get display
+     *
+     * @param   Object  $tpl  template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
 
-		JToolBarHelper::title(JText::_('COM_THM_GROUPS_ADDSTRUCTURE_TITLE'), 'generic.png');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS_ADDSTRUCTURE_TITLE'), 'generic.png');
 
-		JToolBarHelper::apply('addstructure.apply', 'JTOOLBAR_APPLY');
-		JToolBarHelper::save('addstructure.save', 'JTOOLBAR_SAVE');
-		JToolBarHelper::custom('addstructure.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-		JToolBarHelper::cancel('addstructure.cancel', 'JTOOLBAR_CANCEL');
-		JToolBarHelper::back('JTOOLBAR_BACK');
+        JToolBarHelper::apply('addstructure.apply', 'JTOOLBAR_APPLY');
+        JToolBarHelper::save('addstructure.save', 'JTOOLBAR_SAVE');
+        JToolBarHelper::custom('addstructure.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+        JToolBarHelper::cancel('addstructure.cancel', 'JTOOLBAR_CANCEL');
+        JToolBarHelper::back('JTOOLBAR_BACK');
 
-		// $model =& $this->getModel();
-		$items =& $this->get('Data');
-		$this->assignRef('items', $items);
+        // $model =& $this->getModel();
+        $items = $this->get('Data');
+        $this->assignRef('items', $items);
 
-		parent::display($tpl);
-	}
+        parent::display($tpl);
+    }
 }
