@@ -12,7 +12,10 @@
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
-
+defined('_JEXEC') or die();
+jimport('joomla.application.component.model');
+jimport('joomla.filesystem.folder');
+jimport('joomla.filesystem.file');
 /**
  * THMGroupsModelEditStructure class for component com_thm_groups
  *
@@ -203,6 +206,7 @@ class THMGroupsModelEditStructure extends JModel
             $altPicpath = $element[0];
 
 
+
             if (!isset($altPicpath))
             {
                 $query = $db->getQuery(true);
@@ -226,22 +230,52 @@ class THMGroupsModelEditStructure extends JModel
             }
             else
             {
-                $dir = is_dir(JPATH_ROOT . DS . $altPicpath->path);
+                $directori = is_dir(JPATH_ROOT . DS . $altPicpath->path);
 
-
-                if ($dir == false)
+                if ($directori == false)
                 {
                     $err = !JFile::copy(JPATH_ROOT . DS . 'components/com_thm_groups/index.html', JPATH_ROOT . DS . $picpath);
+
                 }
                 else
                 {
 
-                    $err = !JFile::move(JPATH_ROOT . DS . $altPicpath->path, JPATH_ROOT . DS . $picpath);
 
-                    if (!$err)
+                    $source = JPATH_ROOT . DS . $altPicpath->path;
+                    $dest = JPATH_ROOT . DS . $picpath;
+
+                    if (!is_dir($dest))
                     {
-                        unlink(JPATH_ROOT . DS . $altPicpath->path);
+                        $err = !mkdir($dest);
                     }
+                    $handle = opendir(JPATH_ROOT . DS . $altPicpath->path);
+                    if (!$handle)
+                    {
+                        $err = false;
+                    }
+                    else
+                    {
+
+                        $datei = readdir($handle);
+
+                    while ($datei !== false)
+                    {
+
+                    if (!is_dir($source . $datei))
+                    {
+                      $res = copy($source . DS . $datei, $dest . DS . $datei);
+
+                    }
+                      $datei = readdir($handle);
+                    }
+                    closedir($handle);
+                    }
+                    if ($err = false)
+                    {
+                        $err = !JFolder::delete($source);
+
+                    }
+
                 }
                 $query = $db->getQuery(true);
                 $query->update("`#__thm_groups_" . strtolower($relation) . "_extra`");
