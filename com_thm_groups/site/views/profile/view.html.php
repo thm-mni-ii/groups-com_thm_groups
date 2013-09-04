@@ -22,6 +22,7 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
 jimport('joomla.filesystem.path');
 
+
 /**
  * THMGroupsViewProfile class for component com_thm_groups
  *
@@ -51,6 +52,32 @@ class THMGroupsViewProfile extends JView
         $model = $this->getModel();
         $extra = $model->getExtra($structId, $type);
         return $extra;
+    }
+
+    /**
+     * Method to get structe type
+     *
+     * @param   Int  $aid  content the Artikel ID
+     *
+     * @return String $result  content the artikel name
+     */
+    public function getArtikelname($aid)
+    {
+
+        $tempaid = intval($aid);
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select("title")->from("#__content")->where("id =" . $tempaid);
+        $db->setQuery($query);
+        $db->query();
+
+        $artikel = $db->loadObject();
+
+
+        $result = $artikel->title;
+
+        return $result;
+
     }
 
     /**
@@ -152,22 +179,25 @@ class THMGroupsViewProfile extends JView
                 case "com_content":
 
                     $artikleId = JRequest::getVar("id_old");
-                    $artikelnametemp = (JFactory::getConfig()->getValue('config.sef') == 1)? explode(":", $artikleId, 2) : explode(":", $artikleId);
-                    $artikelname = (count($artikelnametemp) > 1)? $artikelnametemp[1] : $artikelnametemp[0];
+               $artikelname = (JFactory::getConfig()->getValue('config.sef') == 1)? $this->getArtikelname($artikleId) : explode(":", $artikleId);
                     if (isset($artikelname))
                     {
+
                     $pathway->addItem($artikelname, JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
                     }
                     else
                     {
                         $pathway->addItem(JFactory::getDocument()->get('title'), JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
                     }
-                    $pathway->addItem($name);
+
                     break;
 
                 case "com_thm_groups":
-                   // $pathway->addItem(JFactory::getDocument()->get('title'), JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
-
+                    $layout = JRequest::getVar("layout_old");
+                    if ($layout == 'singlearticle')
+                    {
+                     $pathway->addItem(JFactory::getDocument()->get('title'), JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
+                    }
                     break;
 
             }
@@ -220,4 +250,5 @@ class THMGroupsViewProfile extends JView
 
         parent::display($tpl);
     }
+
 }
