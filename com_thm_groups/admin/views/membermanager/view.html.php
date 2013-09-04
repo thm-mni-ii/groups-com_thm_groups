@@ -26,157 +26,160 @@ jimport('joomla.filesystem.path');
  */
 class THMGroupsViewmembermanager extends JView
 {
-	protected $state;
+    protected $state;
 
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object  $tpl  template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		// $SQLAL = new SQLAbstractionLayer;
-		$document   = JFactory::getDocument();
-		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
-		$user = JFactory::getUser();
-		JToolBarHelper::title(
-				JText::_('COM_THM_GROUPS_MEMBERMANAGER_TITLE'),
-				'membermanager.png',
-				JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
-		);
-		if (($user->authorise('core.edit', 'com_users')
-		 || $user->authorise('core.edit.own', 'com_users'))
-		 && $user->authorise('core.manage', 'com_users'))
-		{
-			JToolBarHelper::custom(
-					'membermanager.setGroupsAndRoles',
-					'moderate.png',
-					JPATH_COMPONENT . DS . 'img' . DS . 'moderate.png',
-					'COM_THM_GROUPS_MEMBERMANAGER_ADD',
-					true,
-					true
-			);
-			JToolBarHelper::custom(
-					'membermanager.delGroupsAndRoles',
-					'unmoderate.png',
-					JPATH_COMPONENT . DS . 'img' . DS . 'unmoderate.png',
-					'COM_THM_GROUPS_MEMBERMANAGER_DELETE',
-					true,
-					true
-			);
-		}
-		if ($user->authorise('core.delete', 'com_users') && $user->authorise('core.manage', 'com_users'))
-		{
-			JToolBarHelper::deleteList('Wirklich l&ouml;schen?', 'membermanager.delete', 'JTOOLBAR_DELETE');
-		}
-		if ($user->authorise('core.edit.state', 'com_users') && $user->authorise('core.manage', 'com_users'))
-		{	
-			JToolBarHelper::publishList('membermanager.publish', 'COM_THM_GROUPS_MEMBERMANAGER_PUBLISH');
-			JToolBarHelper::unpublishList('membermanager.unpublish', 'COM_THM_GROUPS_MEMBERMANAGER_DISABLE');
-		}
-		JToolBarHelper::cancel('membermanager.cancel', 'JTOOLBAR_CANCEL');
-		if (($user->authorise('core.edit', 'com_users')
-		 || $user->authorise('core.edit.own', 'com_users'))
-		 && $user->authorise('core.manage', 'com_users'))
-		{
-			JToolBarHelper::editListX('membermanager.edit', 'COM_THM_GROUPS_MEMBERMANAGER_EDIT');
-		}
-		JToolBarHelper::preferences('com_thm_groups');
-		JToolBarHelper::back('JTOOLBAR_BACK');
+    /**
+     * Method to get display
+     *
+     * @param   Object  $tpl  template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
+        // $SQLAL = new SQLAbstractionLayer;
+        $document   = JFactory::getDocument();
+        $document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
+        $user = JFactory::getUser();
+        JToolBarHelper::title(
+                JText::_('COM_THM_GROUPS_MEMBERMANAGER_TITLE'),
+                'membermanager.png',
+                JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
+        );
+        if (($user->authorise('core.edit', 'com_users')
+         || $user->authorise('core.edit.own', 'com_users'))
+         && $user->authorise('core.manage', 'com_users'))
+        {
+            JToolBarHelper::custom(
+                    'membermanager.setGroupsAndRoles',
+                    'moderate.png',
+                    JPATH_COMPONENT . DS . 'img' . DS . 'moderate.png',
+                    'COM_THM_GROUPS_MEMBERMANAGER_ADD',
+                    true,
+                    true
+            );
+            JToolBarHelper::custom(
+                    'membermanager.delGroupsAndRoles',
+                    'unmoderate.png',
+                    JPATH_COMPONENT . DS . 'img' . DS . 'unmoderate.png',
+                    'COM_THM_GROUPS_MEMBERMANAGER_DELETE',
+                    true,
+                    true
+            );
+        }
+        if ($user->authorise('core.delete', 'com_users') && $user->authorise('core.manage', 'com_users'))
+        {
+            JToolBarHelper::deleteList('Wirklich l&ouml;schen?', 'membermanager.delete', 'JTOOLBAR_DELETE');
+        }
+        if ($user->authorise('core.edit.state', 'com_users') && $user->authorise('core.manage', 'com_users'))
+        {
+            JToolBarHelper::publishList('membermanager.publish', 'COM_THM_GROUPS_MEMBERMANAGER_PUBLISH');
+            JToolBarHelper::unpublishList('membermanager.unpublish', 'COM_THM_GROUPS_MEMBERMANAGER_DISABLE');
+        }
+        JToolBarHelper::cancel('membermanager.cancel', 'JTOOLBAR_CANCEL');
+        if (($user->authorise('core.edit', 'com_users')
+         || $user->authorise('core.edit.own', 'com_users'))
+         && $user->authorise('core.manage', 'com_users'))
+        {
+            JToolBarHelper::editListX('membermanager.edit', 'COM_THM_GROUPS_MEMBERMANAGER_EDIT');
+        }
+        if ($user->authorise('core.admin', 'com_users'))
+        {
+            JToolBarHelper::preferences('com_thm_groups');
+        }
+        JToolBarHelper::back('JTOOLBAR_BACK');
 
-		$mainframe = Jfactory::getApplication('Administrator');
+        $mainframe = Jfactory::getApplication('Administrator');
 
-		$db = JFactory::getDBO();
-		$this->state = $this->get('State');
-		$search = $mainframe->getUserStateFromRequest("com_thm_groups.search", 'search', '', 'string');
-		$search = $db->getEscaped(trim(JString::strtolower($search)));
+        $db = JFactory::getDBO();
+        $this->state = $this->get('State');
+        $search = $mainframe->getUserStateFromRequest("com_thm_groups.search", 'search', '', 'string');
+        $search = $db->getEscaped(trim(JString::strtolower($search)));
 
-		$model = $this->getModel();
-		$model->sync();
-		$items = $this->get('Items');
-		$pagination = $this->get('Pagination');
+        $model = $this->getModel();
+        $model->sync();
+        $items = $this->get('Items');
+        $pagination = $this->get('Pagination');
 
-		$groupOptions = $model->getGroupSelectOptions();
-		$groups = $model->getGroups();
-		$roles = $model->getRoles();
+        $groupOptions = $model->getGroupSelectOptions();
+        $groups = $model->getGroups();
+        $roles = $model->getRoles();
 
-		// Search filter
-		$filters = array();
-		$filters[] = JHTML::_('select.option', '1', JText::_('COM_THM_GROUPS_NACHNAME'));
-		$filters[] = JHTML::_('select.option', '2', JText::_('COM_THM_GROUPS_VORNAME'));
-		$filters[] = JHTML::_('select.option', '3', JText::_('COM_THM_GROUPS_USERNAME'));
+        // Search filter
+        $filters = array();
+        $filters[] = JHTML::_('select.option', '1', JText::_('COM_THM_GROUPS_NACHNAME'));
+        $filters[] = JHTML::_('select.option', '2', JText::_('COM_THM_GROUPS_VORNAME'));
+        $filters[] = JHTML::_('select.option', '3', JText::_('COM_THM_GROUPS_USERNAME'));
 
-		if (isset($lists['filter']))
-		{
-			$lists['filter'] = JHTML::_('select.genericlist', $filters, 'filter', 'size="1" class="inputbox"', 'value', 'text', $_POST['filter']);
-		}
-		if (!isset($_POST['groupFilters']))
-		{
-			$_POST['groupFilters'] = null;
-		}
-		if (!isset($_POST['rolesFilters']))
-		{
-			$_POST['rolesFilters'] = null;
-		}
+        if (isset($lists['filter']))
+        {
+            $lists['filter'] = JHTML::_('select.genericlist', $filters, 'filter', 'size="1" class="inputbox"', 'value', 'text', $_POST['filter']);
+        }
+        if (!isset($_POST['groupFilters']))
+        {
+            $_POST['groupFilters'] = null;
+        }
+        if (!isset($_POST['rolesFilters']))
+        {
+            $_POST['rolesFilters'] = null;
+        }
 
-		$groupFilters = array();
-		$groupFilters[] = JHTML::_('select.option', 0, JText::_('COM_THM_GROUPS_ALL'));
+        $groupFilters = array();
+        $groupFilters[] = JHTML::_('select.option', 0, JText::_('COM_THM_GROUPS_ALL'));
 
-		foreach ($groupOptions as $option)
-		{
-			$groupFilters[] = $option;
-		}
-		$lists['groups'] = JHTML::_(
-			'select.genericlist',
-			$groupFilters,
-			'groupFilters',
-			'size="1" class="inputbox"',
-			'value',
-			'text',
-			$_POST['groupFilters']
-		);
+        foreach ($groupOptions as $option)
+        {
+            $groupFilters[] = $option;
+        }
+        $lists['groups'] = JHTML::_(
+            'select.genericlist',
+            $groupFilters,
+            'groupFilters',
+            'size="1" class="inputbox"',
+            'value',
+            'text',
+            $_POST['groupFilters']
+        );
 
-		$rolesFilters = array();
-		$rolesFilters[] = JHTML::_('select.option', 0, JText::_('COM_THM_GROUPS_ALL'));
-		foreach ($roles as $role)
-		{
-			$rolesFilters[] = JHTML::_('select.option', $role->id, $role->name);
-		}
-		$lists['roles'] = JHTML::_(
-			'select.genericlist',
-			$rolesFilters,
-			'rolesFilters',
-			'size="1" class="inputbox"',
-			'value',
-			'text',
-			$_POST['rolesFilters']
-		);
-		$checked = "checked='checked'";
-		$grcheck = 1;
+        $rolesFilters = array();
+        $rolesFilters[] = JHTML::_('select.option', 0, JText::_('COM_THM_GROUPS_ALL'));
+        foreach ($roles as $role)
+        {
+            $rolesFilters[] = JHTML::_('select.option', $role->id, $role->name);
+        }
+        $lists['roles'] = JHTML::_(
+            'select.genericlist',
+            $rolesFilters,
+            'rolesFilters',
+            'size="1" class="inputbox"',
+            'value',
+            'text',
+            $_POST['rolesFilters']
+        );
+        $checked = "checked='checked'";
+        $grcheck = 1;
 
-		if ((JRequest::getVar('grcheck') != 'on') && (JRequest::getVar('grchecked') == 'off'))
-		{
-			$checked = "";
-			$grcheck = 0;
-		}
+        if ((JRequest::getVar('grcheck') != 'on') && (JRequest::getVar('grchecked') == 'off'))
+        {
+            $checked = "";
+            $grcheck = 0;
+        }
 
-		$lists['groupsrolesoption'] = "<input type='checkbox' name='grcheck' $checked title='Nur ausgew&auml;hlte Gruppe/Rolle anzeigen'/>";
-		$lists['search'] = $search;
+        $lists['groupsrolesoption'] = "<input type='checkbox' name='grcheck' $checked title='Nur ausgew&auml;hlte Gruppe/Rolle anzeigen'/>";
+        $lists['search'] = $search;
 
-		// Assign data to template
-		$this->assignRef('items', $items);
-		$this->assignRef('pagination', $pagination);
-		$this->assignRef('lists', $lists);
-		$this->assignRef('groups', $groups);
-		$this->assignRef('groupOptions', $groupOptions);
-		$this->assignRef('roles', $roles);
-		$this->assignRef('rolesFilters', $_POST['rolesFilters']);
-		$this->assignRef('groupFilters', $_POST['groupFilters']);
-		$this->assignRef('grcheckon', $grcheck);
-		$this->assignRef('model', $model);
+        // Assign data to template
+        $this->assignRef('items', $items);
+        $this->assignRef('pagination', $pagination);
+        $this->assignRef('lists', $lists);
+        $this->assignRef('groups', $groups);
+        $this->assignRef('groupOptions', $groupOptions);
+        $this->assignRef('roles', $roles);
+        $this->assignRef('rolesFilters', $_POST['rolesFilters']);
+        $this->assignRef('groupFilters', $_POST['groupFilters']);
+        $this->assignRef('grcheckon', $grcheck);
+        $this->assignRef('model', $model);
 
-		parent::display($tpl);
-	}
+        parent::display($tpl);
+    }
 }

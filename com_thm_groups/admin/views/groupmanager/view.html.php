@@ -54,13 +54,9 @@ class THMGroupsViewgroupmanager extends JView
 
         if ($user->authorise('core.admin'))
         {
-            JToolBarHelper::custom(
+             JToolBarHelper::addNewX(
                     'groupmanager.addGroup',
-                    'moderate.png',
-                    JPATH_COMPONENT . DS . 'img' . DS . 'moderate.png',
-                    'COM_THM_GROUPS_GROUPMANAGER_ADD',
-                    false,
-                    false
+                    'COM_THM_GROUPS_GROUPMANAGER_ADD'
             );
         }
         if ($user->authorise('core.edit', 'com_users') && $user->authorise('core.manage', 'com_users'))
@@ -73,7 +69,10 @@ class THMGroupsViewgroupmanager extends JView
             JToolBarHelper::deleteList('COM_THM_GROUPS_GROUPMANAGER_REALLY_DELETE', 'groupmanager.remove', 'JTOOLBAR_DELETE');
         }
         JToolBarHelper::cancel('groupmanager.cancel', 'JTOOLBAR_CANCEL');
-        JToolBarHelper::preferences('com_thm_groups');
+        if ($user->authorise('core.admin', 'com_users'))
+        {
+            JToolBarHelper::preferences('com_thm_groups');
+        }
         JToolBarHelper::back('JTOOLBAR_BACK');
 
         $uri = JFactory::getURI();

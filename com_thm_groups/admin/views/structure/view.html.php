@@ -63,7 +63,10 @@ class THMGroupsViewStructure extends JView
         JToolBarHelper::editListX('structure.edit', 'COM_THM_GROUPS_STRUCTURE_EDIT');
         JToolBarHelper::deleteList('COM_THM_GROUPS_STRUCTURE_REALLY_DELETE', 'structure.remove', 'JTOOLBAR_DELETE');
         JToolBarHelper::cancel('structure.cancel', 'JTOOLBAR_CANCEL');
-        JToolBarHelper::preferences('com_thm_groups');
+        if ($user->authorise('core.admin', 'com_users'))
+        {
+            JToolBarHelper::preferences('com_thm_groups');
+        }
         JToolBarHelper::back('JTOOLBAR_BACK');
         parent::display($tpl);
 

@@ -27,38 +27,41 @@ jimport('joomla.application.component.view');
  */
 class THMGroupsViewQuickpage extends JView
 {
-	/**
-	 * Display
-	 *
-	 * @param   object  $tpl  Template
-	 *
-	 * @see JView::display()
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		$document   = JFactory::getDocument();
-		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
+    /**
+     * Display
+     *
+     * @param   object  $tpl  Template
+     *
+     * @see JView::display()
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
+        $document   = JFactory::getDocument();
+        $document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
 
-		JToolBarHelper::title(
-				JText::_('COM_THM_GROUPS_QUICKPAGE_TITLE'),
-				'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
-		);
+        JToolBarHelper::title(
+                JText::_('COM_THM_GROUPS_QUICKPAGE_TITLE'),
+                'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
+        );
 
-        JToolBarHelper::preferences('com_thm_groups');
+        if ($user->authorise('core.admin', 'com_users'))
+        {
+            JToolBarHelper::preferences('com_thm_groups');
+        }
         $this->setDocument();
         parent::display($tpl);
-	}
+    }
 
-	/**
-	 * Set Document
-	 *
-	 * @return void
-	 */
-	protected function setDocument()
-	{
-		$document = JFactory::getDocument();
-		$document->setTitle(JText::_('COM_THM_QUICKPAGES_ADMINISTRATION'));
-	}
+    /**
+     * Set Document
+     *
+     * @return void
+     */
+    protected function setDocument()
+    {
+        $document = JFactory::getDocument();
+        $document->setTitle(JText::_('COM_THM_QUICKPAGES_ADMINISTRATION'));
+    }
 }
