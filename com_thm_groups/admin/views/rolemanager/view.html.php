@@ -41,23 +41,24 @@ class THMGroupsViewRolemanager extends JView
 
         $document   = JFactory::getDocument();
         $document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
+        $user = JFactory::getUser();
 
         JToolBarHelper::title(
                 JText::_('COM_THM_GROUPS_ROLEMANAGER_TITLE'),
                 'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
         );
-        JToolBarHelper::custom(
+        JToolBarHelper::addNewX(
             'rolemanager.addRole',
-            'moderate.png',
-            JPATH_COMPONENT . DS . 'img' . DS . 'moderate.png',
             'COM_THM_GROUPS_ROLEMANAGER_ADD',
-            false,
             false
         );
         JToolBarHelper::editListX('rolemanager.edit', 'COM_THM_GROUPS_ROLEMANAGER_EDIT');
         JToolBarHelper::deleteList('COM_THM_GROUPS_REALLY_DELETE', 'rolemanager.remove', 'JTOOLBAR_DELETE');
         JToolBarHelper::cancel('rolemanager.cancel', 'JTOOLBAR_CANCEL');
-        JToolBarHelper::preferences('com_thm_groups');
+        if ($user->authorise('core.admin', 'com_users'))
+        {
+            JToolBarHelper::preferences('com_thm_groups');
+        }
         JToolBarHelper::back('JTOOLBAR_BACK');
 
         $uri = JFactory::getURI();

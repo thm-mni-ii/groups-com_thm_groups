@@ -40,6 +40,7 @@ class THMGroupsViewQuickpage extends JView
     {
         $document   = JFactory::getDocument();
         $document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
+        $user = JFactory::getUser();
 
         JToolBarHelper::title(
                 JText::_('COM_THM_GROUPS_QUICKPAGE_TITLE'),
