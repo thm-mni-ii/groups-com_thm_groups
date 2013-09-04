@@ -43,6 +43,7 @@ class THMGroupsViewStructure extends JView
     {
         $document   = JFactory::getDocument();
         $document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
+        $user = JFactory::getUser();
 
         $this->items		= $this->get('Items');
         $this->pagination	= $this->get('Pagination');
