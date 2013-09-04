@@ -65,6 +65,7 @@ class THMGroupsControllerEditStructure extends JControllerForm
         $id = JRequest::getVar('cid');
         $structure = $model->getItem();
         $relation = JRequest::getVar('relation');
+        $type = "";
         if (isset($structure))
         {
         if (strcmp(strtolower($structure->type), strtolower($relation)) == 0
@@ -73,10 +74,12 @@ class THMGroupsControllerEditStructure extends JControllerForm
             if ($model->store())
             {
                 $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+                $type = "message";
             }
             else
             {
                 $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+                $type = "warning";
             }
 
 
@@ -84,13 +87,15 @@ class THMGroupsControllerEditStructure extends JControllerForm
         else
         {
             $msg = JText::_('COM_THM_GROUPS_DATA_NOT_CHANGEABLE');
+            $type = "notice";
         }
         }
         else
         {
             $msg = JText::_('COM_THM_GROUPS_DATA_NOT_EXIST');
+            $type = "warning";
         }
-        $this->setRedirect('index.php?option=com_thm_groups&task=editstructure.edit&cid[]=' . $id[0], $msg);
+        $this->setRedirect('index.php?option=com_thm_groups&task=editstructure.edit&cid[]=' . $id[0], $msg, $type);
     }
 
     /**
@@ -107,6 +112,7 @@ class THMGroupsControllerEditStructure extends JControllerForm
         $id = JRequest::getVar('cid');
         $structure = $model->getItem();
         $relation = JRequest::getVar('relation');
+        $type = "";
         if (isset($structure))
         {
         if (strcmp(strtolower($structure->type), strtolower($relation)) == 0
@@ -115,10 +121,12 @@ class THMGroupsControllerEditStructure extends JControllerForm
             if ($model->store())
             {
                 $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+                $type = "message";
             }
             else
             {
                 $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+                $type = "warning";
             }
 
 
@@ -126,14 +134,16 @@ class THMGroupsControllerEditStructure extends JControllerForm
         else
         {
             $msg = JText::_('COM_THM_GROUPS_DATA_NOT_CHANGEABLE');
+            $type = "notice";
         }
         }
         else
         {
             $msg = JText::_('COM_THM_GROUPS_DATA_NOT_EXIST');
+            $type = "warning";
         }
 
-        $this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
+        $this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg, $type);
     }
 
     /**
@@ -147,6 +157,7 @@ class THMGroupsControllerEditStructure extends JControllerForm
         $id = JRequest::getVar('cid');
         $structure = $model->getItem();
         $relation = JRequest::getVar('relation');
+        $type = "";
         if (isset($structure))
         {
         if (strcmp(strtolower($structure->type), strtolower($relation)) == 0
@@ -155,10 +166,12 @@ class THMGroupsControllerEditStructure extends JControllerForm
             if ($model->store())
             {
                 $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+                $type = "message";
             }
             else
             {
                 $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+                $type = "warning";
             }
 
 
@@ -166,14 +179,16 @@ class THMGroupsControllerEditStructure extends JControllerForm
         else
         {
             $msg = JText::_('COM_THM_GROUPS_DATA_NOT_CHANGEABLE');
+            $type = "notice";
         }
         }
         else
         {
             $msg = JText::_('COM_THM_GROUPS_DATA_NOT_EXIST');
+            $type = "warning";
         }
 
-        $this->setRedirect('index.php?option=com_thm_groups&view=addstructure', $msg);
+        $this->setRedirect('index.php?option=com_thm_groups&view=addstructure', $msg, $type);
     }
 
     /**
@@ -304,7 +319,7 @@ class THMGroupsControllerEditStructure extends JControllerForm
         $field = JRequest::getVar('field');
         $output = "";
 
-        switch ($field)
+        switch (strtoupper($field))
         {
             case "TEXT":
                 $output = "<span title='"

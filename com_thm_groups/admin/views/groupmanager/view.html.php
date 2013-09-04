@@ -31,70 +31,70 @@ jimport('joomla.filesystem.path');
 class THMGroupsViewgroupmanager extends JView
 {
 
-	protected $state;
+    protected $state;
 
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object  $tpl  template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		$document   = JFactory::getDocument();
-		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
-		$user = JFactory::getUser();
-		JToolBarHelper::title(
-				JText::_('COM_THM_GROUPS_GROUPMANAGER_TITLE'),
-				'membermanager.png',
-				JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
-			);
-		
-		
-		if ($user->authorise('core.admin'))
-		{
-			JToolBarHelper::custom(
-					'groupmanager.addGroup',
-					'moderate.png',
-					JPATH_COMPONENT . DS . 'img' . DS . 'moderate.png',
-					'COM_THM_GROUPS_GROUPMANAGER_ADD',
-					false,
-					false
-			);
-		}
-		if ($user->authorise('core.edit', 'com_users') && $user->authorise('core.manage', 'com_users'))
-		{
-			
-			JToolBarHelper::editListX('groupmanager.edit', 'COM_THM_GROUPS_GROUPMANAGER_EDIT');
-		}
-		if ($user->authorise('core.admin'))
-		{
-			JToolBarHelper::deleteList('COM_THM_GROUPS_GROUPMANAGER_REALLY_DELETE', 'groupmanager.remove', 'JTOOLBAR_DELETE');
-		}
-		JToolBarHelper::cancel('groupmanager.cancel', 'JTOOLBAR_CANCEL');
-		JToolBarHelper::back('JTOOLBAR_BACK');
+    /**
+     * Method to get display
+     *
+     * @param   Object  $tpl  template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
+        $document   = JFactory::getDocument();
+        $document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
+        $user = JFactory::getUser();
+        JToolBarHelper::title(
+                JText::_('COM_THM_GROUPS_GROUPMANAGER_TITLE'),
+                'membermanager.png',
+                JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
+            );
 
-		$uri = JFactory::getURI();
 
-		// $query = $uri->getQuery();
+        if ($user->authorise('core.admin'))
+        {
+             JToolBarHelper::addNewX(
+                    'groupmanager.addGroup',
+                    'COM_THM_GROUPS_GROUPMANAGER_ADD'
+            );
+        }
+        if ($user->authorise('core.edit', 'com_users') && $user->authorise('core.manage', 'com_users'))
+        {
 
-		$model = $this->getModel();
+            JToolBarHelper::editListX('groupmanager.edit', 'COM_THM_GROUPS_GROUPMANAGER_EDIT');
+        }
+        if ($user->authorise('core.admin'))
+        {
+            JToolBarHelper::deleteList('COM_THM_GROUPS_GROUPMANAGER_REALLY_DELETE', 'groupmanager.remove', 'JTOOLBAR_DELETE');
+        }
+        JToolBarHelper::cancel('groupmanager.cancel', 'JTOOLBAR_CANCEL');
+        if ($user->authorise('core.admin', 'com_users'))
+        {
+            JToolBarHelper::preferences('com_thm_groups');
+        }
+        JToolBarHelper::back('JTOOLBAR_BACK');
 
-		// $mainframe = Jfactory::getApplication('Administrator');
+        $uri = JFactory::getURI();
 
-		$this->state = $this->get('State');
-		$items = $this->get('Items');
-		$pagination = $this->get('Pagination');
-		$uriname = $uri->toString();
-		$this->assignRef('items', $items);
-		$this->assignRef('pagination', $pagination);
-		$this->assignRef('request_url', $uriname);
+        // $query = $uri->getQuery();
 
-		$jgroups = $this->get('JoomlaGroups');
-		$this->assignRef('jgroups', $jgroups);
-		$this->assignRef('model', $model);
+        $model = $this->getModel();
 
-		parent::display($tpl);
-	}
+        // $mainframe = Jfactory::getApplication('Administrator');
+
+        $this->state = $this->get('State');
+        $items = $this->get('Items');
+        $pagination = $this->get('Pagination');
+        $uriname = $uri->toString();
+        $this->assignRef('items', $items);
+        $this->assignRef('pagination', $pagination);
+        $this->assignRef('request_url', $uriname);
+
+        $jgroups = $this->get('JoomlaGroups');
+        $this->assignRef('jgroups', $jgroups);
+        $this->assignRef('model', $model);
+
+        parent::display($tpl);
+    }
 }

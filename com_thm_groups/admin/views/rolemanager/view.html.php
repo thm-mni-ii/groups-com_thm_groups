@@ -27,54 +27,56 @@ jimport('joomla.filesystem.path');
 class THMGroupsViewRolemanager extends JView
 {
 
-	protected $state;
+    protected $state;
 
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object  $tpl  template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
+    /**
+     * Method to get display
+     *
+     * @param   Object  $tpl  template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
 
-		$document   = JFactory::getDocument();
-		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
+        $document   = JFactory::getDocument();
+        $document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
+        $user = JFactory::getUser();
 
-		JToolBarHelper::title(
-				JText::_('COM_THM_GROUPS_ROLEMANAGER_TITLE'),
-				'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
-		);
-		JToolBarHelper::custom(
-			'rolemanager.addRole',
-			'moderate.png',
-			JPATH_COMPONENT . DS . 'img' . DS . 'moderate.png',
-			'COM_THM_GROUPS_ROLEMANAGER_ADD',
-			false,
-			false
-		);
-		JToolBarHelper::editListX('rolemanager.edit', 'COM_THM_GROUPS_ROLEMANAGER_EDIT');
-		JToolBarHelper::deleteList('COM_THM_GROUPS_REALLY_DELETE', 'rolemanager.remove', 'JTOOLBAR_DELETE');
-		JToolBarHelper::cancel('rolemanager.cancel', 'JTOOLBAR_CANCEL');
-		JToolBarHelper::back('JTOOLBAR_BACK');
+        JToolBarHelper::title(
+                JText::_('COM_THM_GROUPS_ROLEMANAGER_TITLE'),
+                'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
+        );
+        JToolBarHelper::addNewX(
+            'rolemanager.addRole',
+            'COM_THM_GROUPS_ROLEMANAGER_ADD',
+            false
+        );
+        JToolBarHelper::editListX('rolemanager.edit', 'COM_THM_GROUPS_ROLEMANAGER_EDIT');
+        JToolBarHelper::deleteList('COM_THM_GROUPS_REALLY_DELETE', 'rolemanager.remove', 'JTOOLBAR_DELETE');
+        JToolBarHelper::cancel('rolemanager.cancel', 'JTOOLBAR_CANCEL');
+        if ($user->authorise('core.admin', 'com_users'))
+        {
+            JToolBarHelper::preferences('com_thm_groups');
+        }
+        JToolBarHelper::back('JTOOLBAR_BACK');
 
-		$uri = JFactory::getURI();
+        $uri = JFactory::getURI();
 
-		// $query = $uri->getQuery();
+        // $query = $uri->getQuery();
 
-		// $mainframe = Jfactory::getApplication('Administrator');
+        // $mainframe = Jfactory::getApplication('Administrator');
 
-		$this->state = $this->get('State');
+        $this->state = $this->get('State');
 
-		$items = $this->get('Items');
-		$pagination = $this->get('Pagination');
+        $items = $this->get('Items');
+        $pagination = $this->get('Pagination');
 
-		$this->assignRef('items', $items);
-		$this->assignRef('pagination', $pagination);
-		$stringvalue = $uri->toString();
-		$this->assignRef('request_url', $stringvalue);
+        $this->assignRef('items', $items);
+        $this->assignRef('pagination', $pagination);
+        $stringvalue = $uri->toString();
+        $this->assignRef('request_url', $stringvalue);
 
-		parent::display($tpl);
-	}
+        parent::display($tpl);
+    }
 }

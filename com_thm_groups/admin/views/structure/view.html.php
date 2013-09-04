@@ -26,45 +26,48 @@ jimport('joomla.filesystem.path');
  */
 class THMGroupsViewStructure extends JView
 {
-	protected $items;
+    protected $items;
 
-	protected $pagination;
+    protected $pagination;
 
-	protected $state;
+    protected $state;
 
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object  $tpl  template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		$document   = JFactory::getDocument();
-		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
+    /**
+     * Method to get display
+     *
+     * @param   Object  $tpl  template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
+        $document   = JFactory::getDocument();
+        $document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
+        $user = JFactory::getUser();
 
-		$this->items		= $this->get('Items');
-		$this->pagination	= $this->get('Pagination');
-		$this->state		= $this->get('State');
+        $this->items		= $this->get('Items');
+        $this->pagination	= $this->get('Pagination');
+        $this->state		= $this->get('State');
 
-		JToolBarHelper::title(
-				JText::_('COM_THM_GROUPS_STRUCTURE_TITLE'),
-				'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
-		);
-		JToolBarHelper::custom(
-			'structure.add',
-			'moderate.png',
-			JPATH_COMPONENT . DS . 'img' . DS . 'moderate.png',
-			'COM_THM_GROUPS_STRUCTURE_ADD',
-			false,
-			false
-		);
-		JToolBarHelper::editListX('structure.edit', 'COM_THM_GROUPS_STRUCTURE_EDIT');
-		JToolBarHelper::deleteList('COM_THM_GROUPS_STRUCTURE_REALLY_DELETE', 'structure.remove', 'JTOOLBAR_DELETE');
-		JToolBarHelper::cancel('structure.cancel', 'JTOOLBAR_CANCEL');
-		JToolBarHelper::back('JTOOLBAR_BACK');
-		parent::display($tpl);
+        JToolBarHelper::title(
+                JText::_('COM_THM_GROUPS_STRUCTURE_TITLE'),
+                'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
+        );
+        JToolBarHelper::addNew(
+            'structure.add',
+            'COM_THM_GROUPS_STRUCTURE_ADD',
+            false
+        );
 
-	}
+        JToolBarHelper::editListX('structure.edit', 'COM_THM_GROUPS_STRUCTURE_EDIT');
+        JToolBarHelper::deleteList('COM_THM_GROUPS_STRUCTURE_REALLY_DELETE', 'structure.remove', 'JTOOLBAR_DELETE');
+        JToolBarHelper::cancel('structure.cancel', 'JTOOLBAR_CANCEL');
+        if ($user->authorise('core.admin', 'com_users'))
+        {
+            JToolBarHelper::preferences('com_thm_groups');
+        }
+        JToolBarHelper::back('JTOOLBAR_BACK');
+        parent::display($tpl);
+
+    }
 }
