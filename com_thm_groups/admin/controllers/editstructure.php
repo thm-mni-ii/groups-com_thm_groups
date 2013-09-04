@@ -319,7 +319,7 @@ class THMGroupsControllerEditStructure extends JControllerForm
         $field = JRequest::getVar('field');
         $output = "";
 
-        switch ($field)
+        switch (strtoupper($field))
         {
             case "TEXT":
                 $output = "<span title='"
