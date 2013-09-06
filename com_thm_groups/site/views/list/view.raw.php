@@ -29,39 +29,40 @@ JHTML::_('behavior.framework', true);
 */
 class THMGroupsViewList extends JView
 {
-	
-	/**
-	 * Method to get extra
-	 *
-	 * @param   String  $tpl  template
-	 *
-	 * @return void
-	 *
-	 * @see JView::display()
-	 */
-	public function display($tpl = null)
-	{
-		$task = JRequest::getVar('task');
-		$this->$task();
-	}
-	
 
-	/**
-	 * Search a Groups of User for one Letter
-	 *
-	 * @return String $result a groups of user for one Letter
-	 */
-	public function getUserAlphabet()
-	{
-		$gid = JRequest::getVar('gid');
-		$letter = JRequest::getVar('letter');
-		$column = JRequest::getVar('column');
-		$paramLinkTarget = JRequest::getVar('paramLinkTarget');
-		$orderAttr = JRequest::getVar('orderAttr');
-		$showTitle = JRequest::getVar('showTitle');
-		$linkElement = explode(",", JRequest::getVar('linkElement'));
-		$oldattribut = JRequest::getVar('oldattribut');
-	
-		echo THMLibThmListview::getUserForLetter($gid, $column, $letter, $paramLinkTarget, $orderAttr, $showTitle, $linkElement, $oldattribut);
-	}
+    /**
+     * Method to get extra
+     *
+     * @param   String  $tpl  template
+     *
+     * @return void
+     *
+     * @see JView::display()
+     */
+    public function display($tpl = null)
+    {
+        $task = JRequest::getVar('task');
+        $this->$task();
+    }
+
+
+    /**
+     * Search a Groups of User for one Letter
+     *
+     * @return String $result a groups of user for one Letter
+     */
+    public function getUserAlphabet()
+    {
+        $gid = JRequest::getVar('gid');
+        $letter = JRequest::getVar('letter');
+        $column = JRequest::getVar('column');
+        $paramLinkTarget = JRequest::getVar('paramLinkTarget');
+        $orderAttr = JRequest::getVar('orderAttr');
+        $showstructure = JRequest::getVar('showStructure');
+        $arrshowstructure = explode(",", $showstructure);
+        $linkElement = explode(",", JRequest::getVar('linkElement'));
+        $oldattribut = JRequest::getVar('oldattribut');
+
+        echo THMLibThmListview::getUserForLetter($gid, $column, $letter, $paramLinkTarget, $orderAttr, $arrshowstructure, $linkElement, $oldattribut);
+    }
 }
