@@ -1,7 +1,7 @@
 <?php
 /**
  * @version     v1.0.0
- * @category 	Joomla library
+ * @category    Joomla library
  * @package     THM_Groups
  * @subpackage  lib_thm_groups
  * @name        HelperPage
