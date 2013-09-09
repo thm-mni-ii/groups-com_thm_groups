@@ -91,7 +91,7 @@ jstruct(document).ready(function(){jstruct.fn.getFieldExtras();});
                     </label>
                 </td>
                 <td>
-                    <select name="relation" id="relation" size="1" onchange='getFieldExtras();' >
+                    <select name="relation" id="relation" size="1" onchange='jstruct.fn.getFieldExtras();' >
                     <?php
                         foreach ($this->items as $item)
                         {
