@@ -1,96 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension type="component" version="2.5" method="upgrade">
-	<name>COM_THM_GROUPS</name>
-	<creationDate>March 2010</creationDate>
-	<author>Dennis Priefer</author>
-	<authorEmail>dennis.priefer@mni.thm.de</authorEmail>
-	<authorUrl>http://www.fh-giessen.de</authorUrl>
-	<copyright>TH Mittelhessen</copyright>
-	<license>GNU/GPL Version 2</license>
-	<version>3.3.1</version>
-	<description></description>
-	<scriptfile>script.php</scriptfile>
-	<install>
-		<sql>
-	         <file driver="mysql" charset="utf8">sql/install.sql</file>
-	    </sql>
-	</install>
-	<uninstall>
-		<sql>
-	         <file driver="mysql" charset="utf8">sql/uninstall.sql</file>
-	    </sql>
-	</uninstall>
-	<update>
+    <name>COM_THM_GROUPS</name>
+    <creationDate>March 2010</creationDate>
+    <author>Dennis Priefer</author>
+    <authorEmail>dennis.priefer@mni.thm.de</authorEmail>
+    <authorUrl>http://www.fh-giessen.de</authorUrl>
+    <copyright>TH Mittelhessen</copyright>
+    <license>GNU/GPL Version 2</license>
+    <version>3.4.1</version>
+    <description></description>
+    <scriptfile>script.php</scriptfile>
+    <install>
+        <sql>
+             <file driver="mysql" charset="utf8">sql/install.sql</file>
+        </sql>
+    </install>
+    <uninstall>
+        <sql>
+             <file driver="mysql" charset="utf8">sql/uninstall.sql</file>
+        </sql>
+    </uninstall>
+    <update>
         <schemas>
              <schemapath type="mysql">sql/updates/mysql</schemapath>
         </schemas>
     </update>
-	<files folder="site">
-		<filename>index.html</filename>
-		<filename>thm_groups.php</filename>
-		<filename>controller.php</filename>
-		<filename>router.php</filename>
-		
-		<folder>css</folder>
-		<folder>img</folder>
-		<folder>views</folder>
-		<folder>models</folder>
-		<folder>controllers</folder>
-		<folder>helper</folder>
-	</files>
-	
-	<languages>
-		<language tag="en-GB" client="site">language/en-GB/en-GB.com_thm_groups.ini</language>
-		<language tag="de-DE" client="site">language/de-DE/de-DE.com_thm_groups.ini</language>
-	</languages>
+    <files folder="site">
+        <filename>index.html</filename>
+        <filename>thm_groups.php</filename>
+        <filename>controller.php</filename>
+        <filename>router.php</filename>
 
-	<administration>
-		<menu img="components/com_thm_groups/img/icon-16-staff.png">COM_THM_GROUPS</menu>
-		<submenu>
-			<menu alias="Home" link="option=com_thm_groups&amp;view=thmgroups" view="thmgroups" img="components/com_thm_groups/img/icon-16-staff.png"
-				alt="THM-Groups/Home">COM_THM_GROUPS_HOME</menu>
-			<menu alias="Member Manager" link="option=com_thm_groups&amp;view=membermanager" view="membermanager" img="components/com_thm_groups/img/icon-16-staff.png"
-				alt="THM-Groups/Member Manager">COM_THM_GROUPS_MEMBERMANAGER</menu>
-			<menu link="option=com_thm_groups&amp;view=groupmanager" view="groupmanager" img="components/com_thm_groups/img/icon-16-staff.png"
-				alt="THM-Groups/Group Manager">COM_THM_GROUPS_GROUPMANAGER</menu>
-			<menu link="option=com_thm_groups&amp;view=rolemanager" view="rolemanager" img="components/com_thm_groups/img/icon-16-staff.png"
-				alt="THM-Groups/Role Manager">COM_THM_GROUPS_ROLEMANAGER</menu>
-			<menu link="option=com_thm_groups&amp;view=structure" view="structure" img="components/com_thm_groups/img/icon-16-staff.png"
-				alt="THM-Groups/Structure">COM_THM_GROUPS_STRUCTURE</menu>
-			<menu link="option=com_thm_groups&amp;view=quickpage" view="quickpage" img="components/com_thm_groups/img/icon-16-staff.png"
-				alt="THM-Groups/Quickpage">COM_THM_GROUPS_QUICKPAGE</menu>
-		</submenu>
+        <folder>css</folder>
+        <folder>img</folder>
+        <folder>views</folder>
+        <folder>models</folder>
+        <folder>controllers</folder>
+        <folder>helper</folder>
+    </files>
 
-		<files folder="admin">
-			<filename>index.html</filename>
-			<filename>thm_groups.php</filename>
-			<filename>controller.php</filename>
-         	<filename>access.xml</filename>
-         	<filename>config.xml</filename>
+    <languages>
+        <language tag="en-GB" client="site">language/en-GB/en-GB.com_thm_groups.ini</language>
+        <language tag="de-DE" client="site">language/de-DE/de-DE.com_thm_groups.ini</language>
+    </languages>
 
-			<folder>controllers</folder>
-			<folder>css</folder>
-			<folder>elements</folder>
-			<folder>img</folder>
-			<folder>models</folder>
-			<folder>tables</folder>
-			<folder>views</folder>
-			<folder>sql</folder>
-		</files>
-		
-		<languages>
-			<language tag="en-GB">language/en-GB/en-GB.com_thm_groups.ini</language>
-			<language tag="en-GB">language/en-GB/en-GB.com_thm_groups.sys.ini</language>
-			<language tag="de-DE">language/de-DE/de-DE.com_thm_groups.ini</language>
-			<language tag="de-DE">language/de-DE/de-DE.com_thm_groups.sys.ini</language>
-		</languages>
-	</administration>
+    <administration>
+        <menu img="components/com_thm_groups/img/icon-16-staff.png">COM_THM_GROUPS</menu>
+        <submenu>
+            <menu alias="Home" link="option=com_thm_groups&amp;view=thmgroups" view="thmgroups" img="components/com_thm_groups/img/icon-16-staff.png"
+                alt="THM-Groups/Home">COM_THM_GROUPS_HOME</menu>
+            <menu alias="Member Manager" link="option=com_thm_groups&amp;view=membermanager" view="membermanager" img="components/com_thm_groups/img/icon-16-staff.png"
+                alt="THM-Groups/Member Manager">COM_THM_GROUPS_MEMBERMANAGER</menu>
+            <menu link="option=com_thm_groups&amp;view=groupmanager" view="groupmanager" img="components/com_thm_groups/img/icon-16-staff.png"
+                alt="THM-Groups/Group Manager">COM_THM_GROUPS_GROUPMANAGER</menu>
+            <menu link="option=com_thm_groups&amp;view=rolemanager" view="rolemanager" img="components/com_thm_groups/img/icon-16-staff.png"
+                alt="THM-Groups/Role Manager">COM_THM_GROUPS_ROLEMANAGER</menu>
+            <menu link="option=com_thm_groups&amp;view=structure" view="structure" img="components/com_thm_groups/img/icon-16-staff.png"
+                alt="THM-Groups/Structure">COM_THM_GROUPS_STRUCTURE</menu>
+            <menu link="option=com_thm_groups&amp;view=quickpage" view="quickpage" img="components/com_thm_groups/img/icon-16-staff.png"
+                alt="THM-Groups/Quickpage">COM_THM_GROUPS_QUICKPAGE</menu>
+        </submenu>
+
+        <files folder="admin">
+            <filename>index.html</filename>
+            <filename>thm_groups.php</filename>
+            <filename>controller.php</filename>
+             <filename>access.xml</filename>
+             <filename>config.xml</filename>
+
+            <folder>controllers</folder>
+            <folder>css</folder>
+            <folder>elements</folder>
+            <folder>img</folder>
+            <folder>models</folder>
+            <folder>tables</folder>
+            <folder>views</folder>
+            <folder>sql</folder>
+        </files>
+
+        <languages>
+            <language tag="en-GB">language/en-GB/en-GB.com_thm_groups.ini</language>
+            <language tag="en-GB">language/en-GB/en-GB.com_thm_groups.sys.ini</language>
+            <language tag="de-DE">language/de-DE/de-DE.com_thm_groups.ini</language>
+            <language tag="de-DE">language/de-DE/de-DE.com_thm_groups.sys.ini</language>
+        </languages>
+    </administration>
 <!--
-	<dependencies>
-		<dependency type="plugin" minversion="1.0.0">plg_thm_groups_sync</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency type="plugin" minversion="1.0.0">plg_thm_groups_sync</dependency>
+    </dependencies>
 -->
-	<packages>
-		<package name="pkg_thm_groups" git="git://scm.thm.de/icampus/pkg_thm_groups.git"/>
-	</packages>
+    <packages>
+        <package name="pkg_thm_groups" git="git://scm.thm.de/icampus/pkg_thm_groups.git"/>
+    </packages>
 </extension>
