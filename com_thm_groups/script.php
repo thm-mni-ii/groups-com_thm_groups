@@ -29,7 +29,7 @@ if (!defined('DS'))
 require_once JPATH_BASE . DS . 'includes' . DS . 'defines.php';
 require_once JPATH_BASE . DS . 'includes' . DS . 'framework.php';
 
-require JPATH_BASE . DS . "administrator" . DS . "components" . DS . "com_installer" . DS . "models" . DS . "manage.php";
+require JPATH_ROOT . DS . "administrator" . DS . "components" . DS . "com_installer" . DS . "models" . DS . "manage.php";
 
 
 $mainframe = JFactory::getApplication('site');
