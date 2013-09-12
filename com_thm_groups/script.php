@@ -108,12 +108,15 @@ class Com_THM_GroupsInstallerScript
 
         $query->select("extension_id");
         $query->from("#__extensions");
-        $query->where("(element = 'plg_thm_groups_content_members') OR (element = 'plg_thm_groups_content_wai') OR (element = 'plg_thm_groups_editors_xtd_members') OR (element = 'plg_thm_groups_editors_xtd_wai')");
+        $query->where("(element = 'plg_thm_groups_content_members') OR"
+                . "(element = 'plg_thm_groups_content_wai') OR (element = 'plg_thm_groups_editors_xtd_members') OR"
+                . "(element = 'plg_thm_groups_editors_xtd_wai')"
+                    );
 
         $db->setQuery($query);
         $ids = $db->loadResultArray();
 
-        if(count($ids))
+        if (count($ids))
         {
             $uninstall = new InstallerModelManage;
             $uninstall->remove($ids);
