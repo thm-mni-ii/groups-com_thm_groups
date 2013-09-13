@@ -7,7 +7,7 @@
     <authorUrl>http://www.fh-giessen.de</authorUrl>
     <copyright>TH Mittelhessen</copyright>
     <license>GNU/GPL Version 2</license>
-    <version>3.4.1</version>
+    <version>3.4.2</version>
     <description></description>
     <scriptfile>script.php</scriptfile>
     <install>
@@ -90,7 +90,11 @@
         <dependency type="plugin" minversion="1.0.0">plg_thm_groups_sync</dependency>
     </dependencies>
 -->
-    <packages>
+<!--     <packages>
         <package name="pkg_thm_groups" git="git://scm.thm.de/icampus/pkg_thm_groups.git"/>
     </packages>
+-->
+    <updateservers>
+        <server type="extension" priority="1" name="COM_THM_GROUPS">https://jenkins.mni.thm.de/jenkins/job/J.THM.Releases/lastSuccessfulBuild/artifact/updates/com_thm_groups.xml</server>
+    </updateservers>
 </extension>
