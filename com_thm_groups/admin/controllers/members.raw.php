@@ -79,8 +79,6 @@ class THMGroupsControllerMembers extends JControllerForm
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
-        $array = array();
-
         $query->select("a.userid, a.value AS vorname, b.value AS nachname");
         $query->from("#__thm_groups_text AS a");
         $query->innerJoin("#__thm_groups_text AS b ON a.userid = b.userid");
@@ -253,8 +251,6 @@ class THMGroupsControllerMembers extends JControllerForm
             $id = JRequest::getVar('id');
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
-
-            $array = array();
 
             $query->select("a.userid, a.value AS vorname, b.value AS nachname");
             $query->from("#__thm_groups_text AS a");
