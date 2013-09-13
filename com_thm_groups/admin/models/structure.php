@@ -26,293 +26,295 @@ jimport('joomla.application.component.modellist');
  */
 class THMGroupsModelStructure extends JModelList
 {
-	/**
-	 * Method to remove record
-	 *
-	 * @return	Bool true on sucess
-	 */
-	public function remove()
-	{
-		$db =& JFactory::getDBO();
-		$cid = JRequest::getVar('cid', array(), 'post', 'array');
-		$err = 0;
+    /**
+     * Method to remove record
+     *
+     * @return	Bool true on sucess
+     */
+    public function remove()
+    {
+        $db =& JFactory::getDBO();
+        $cid = JRequest::getVar('cid', array(), 'post', 'array');
+        $err = 0;
 
-		foreach ($cid as $toDel)
-		{
-			if ($toDel > 4)
-			{
-				/*
-				$query = "SELECT type FROM #__thm_groups_structure WHERE `id` = " . $toDel . "; ";
-				*/
-				$query = $db->getQuery(true);
-				$query->select('type');
-				$query->from($db->qn('#__thm_groups_structure'));
-				$query->where("`id` = '" . $toDel . "'");
+        foreach ($cid as $toDel)
+        {
+            if ($toDel > 4)
+            {
+                /*
+                $query = "SELECT type FROM #__thm_groups_structure WHERE `id` = " . $toDel . "; ";
+                */
+                $query = $db->getQuery(true);
+                $query->select('type');
+                $query->from($db->qn('#__thm_groups_structure'));
+                $query->where("`id` = '" . $toDel . "'");
 
-				echo $query;
+                echo $query;
 
-				$db->setQuery($query);
-				$type = $db->loadObject();
+                $db->setQuery($query);
+                $type = $db->loadObject();
 
-				/*
-				$query = "DELETE FROM #__thm_groups_structure WHERE `id` = " . $toDel . "; ";
-				*/
-				$query = $db->getQuery(true);
-				$query->from('#__thm_groups_structure');
-				$query->delete();
-				$query->where("`id` = '" . $toDel . "'");
+                /*
+                $query = "DELETE FROM #__thm_groups_structure WHERE `id` = " . $toDel . "; ";
+                */
+                $query = $db->getQuery(true);
+                $query->from('#__thm_groups_structure');
+                $query->delete();
+                $query->where("`id` = '" . $toDel . "'");
 
-				$db->setQuery($query);
-				if (!$db->query())
-				{
-					$err = 1;
-				}
-				/*
-				$query = "DELETE FROM "
-					. "#__thm_groups_" . $type->type . "_extra "
-					. "WHERE `structid` = " . $toDel . "; ";
-				*/
-				$query = $db->getQuery(true);
-				$query->from("#__thm_groups_" . $type->type . "_extra");
-				$query->delete();
-				$query->where("`structid` = '" . $toDel . "'");
+                $db->setQuery($query);
+                if (!$db->query())
+                {
+                    $err = 1;
+                }
+                /*
+                $query = "DELETE FROM "
+                    . "#__thm_groups_" . $type->type . "_extra "
+                    . "WHERE `structid` = " . $toDel . "; ";
+                */
+                $query = $db->getQuery(true);
+                $query->from("#__thm_groups_" . $type->type . "_extra");
+                $query->delete();
+                $query->where("`structid` = '" . $toDel . "'");
 
-				$db->setQuery($query);
-				if (!$db->query())
-				{
-					$err = 1;
-				}
+                $db->setQuery($query);
+                if (!$db->query())
+                {
+                    $err = 1;
+                }
 
-				/*
-				$query = "DELETE FROM "
-					. "#__thm_groups_" . $type->type
-					. " WHERE `structid` = " . $toDel . "; ";
-					*/
-				$query = $db->getQuery(true);
-				$query->from("#__thm_groups_" . $type->type);
-				$query->delete();
-				$query->where("`structid` = '" . $toDel . "'");
+                /*
+                $query = "DELETE FROM "
+                    . "#__thm_groups_" . $type->type
+                    . " WHERE `structid` = " . $toDel . "; ";
+                    */
+                $query = $db->getQuery(true);
+                $query->from("#__thm_groups_" . $type->type);
+                $query->delete();
+                $query->where("`structid` = '" . $toDel . "'");
 
-				$db->setQuery($query);
-				if (!$db->query())
-				{
-					$err = 1;
-				}
-				
-				/*
-				 $query = "DELETE FROM "
-				. "#__thm_groups_text
-				. " WHERE `structid` = " . $toDel . "; ";
-				*/
-				$query = $db->getQuery(true);
-				$query->from("#__thm_groups_text");
-				$query->delete();
-				$query->where("`structid` = '" . $toDel . "'");
-				
-				$db->setQuery($query);
-				if (!$db->query())
-				{
-					$err = 1;
-				}
-			}
-		}
-		if (!$err)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+                $db->setQuery($query);
+                if (!$db->query())
+                {
+                    $err = 1;
+                }
 
-	/**
-	 * Method to reorder
-	 * 
-	 * @param   String  $direction  null
-	 *
-	 * @return	Bool true on sucess
-	 */
-	public function reorder($direction = null)
-	{
-		$db =& JFactory::getDBO();
-		$cid = JRequest::getVar('cid', array(), 'post', 'array');
-		$order = JRequest::getVar('order', array(), 'post', 'array');
-		$err = 0;
+                /*
+                 $query = "DELETE FROM "
+                . "#__thm_groups_text
+                . " WHERE `structid` = " . $toDel . "; ";
+                */
+                $query = $db->getQuery(true);
+                $query->from("#__thm_groups_text");
+                $query->delete();
+                $query->where("`structid` = '" . $toDel . "'");
 
-		if (isset($direction))
-		{
-			/*
-			$query = "SELECT a.order FROM #__thm_groups_structure as a WHERE `id` = " . $cid[0] . "; ";
-			*/
-			$query = $db->getQuery(true);
-			$query->select('a.order');
-			$query->from($db->qn('#__thm_groups_structure') . " AS a");
-			$query->where("id = " . $cid[0]);
+                $db->setQuery($query);
+                if (!$db->query())
+                {
+                    $err = 1;
+                }
+            }
+        }
+        if (!$err)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
-			$db->setQuery($query);
-			$itemOrder = $db->loadObject();
+    /**
+     * Method to reorder
+     *
+     * @param   String  $direction  null
+     *
+     * @return	Bool true on sucess
+     */
+    public function reorder($direction = null)
+    {
+        $db =& JFactory::getDBO();
+        $cid = JRequest::getVar('cid', array(), 'post', 'array');
+        $order = JRequest::getVar('order', array(), 'post', 'array');
+        $err = 0;
 
-			if ($direction == -1)
-			{
-				/*
-				$query = "UPDATE #__thm_groups_structure as a SET"
-					. " a.order=" . $itemOrder->order
-					. " WHERE a.order=" . ($itemOrder->order - 1);
-				*/
-				$query = $db->getQuery(true);
-				$query->update($db->qn('#__thm_groups_structure') . " AS a");
-				$query->set("a.order = " . $itemOrder->order);
-				$query->where("a.order = " . ($itemOrder->order - 1));
+        if (isset($direction))
+        {
+            /*
+            $query = "SELECT a.order FROM #__thm_groups_structure as a WHERE `id` = " . $cid[0] . "; ";
+            */
+            $query = $db->getQuery(true);
+            $query->select('a.order');
+            $query->from($db->qn('#__thm_groups_structure') . " AS a");
+            $query->where("id = " . $cid[0]);
 
-				$db->setQuery($query);
-				if (!$db->query())
-				{
-					$err = 1;
-				}
-				/*
-				$query = "UPDATE #__thm_groups_structure as a SET"
-					. " a.order=" . ($itemOrder->order - 1)
-					. " WHERE a.id=" . $cid[0];
-				*/
-				$query = $db->getQuery(true);
-				$query->update($db->qn('#__thm_groups_structure') . " AS a");
-				$query->set("a.order = " . ($itemOrder->order - 1));
-				$query->where("a.id = " . $cid[0]);
+            $db->setQuery($query);
+            $itemOrder = $db->loadObject();
 
-				$db->setQuery($query);
-				if (!$db->query())
-				{
-					$err = 1;
-				}
-			}
-			elseif ($direction == 1)
-			{
-				/*
-				$query = "UPDATE #__thm_groups_structure as a SET"
-					. " a.order=" . $itemOrder->order
-					. " WHERE a.order=" . ($itemOrder->order + 1);
-				*/
-				$query = $db->getQuery(true);
-				$query->update($db->qn('#__thm_groups_structure') . " AS a");
-				$query->set("a.order = " . $itemOrder->order);
-				$query->where("a.order = " . ($itemOrder->order + 1));
+            if ($direction == -1)
+            {
+                /*
+                $query = "UPDATE #__thm_groups_structure as a SET"
+                    . " a.order=" . $itemOrder->order
+                    . " WHERE a.order=" . ($itemOrder->order - 1);
+                */
+                $query = $db->getQuery(true);
+                $query->update($db->qn('#__thm_groups_structure') . " AS a");
+                $query->set("a.order = " . $itemOrder->order);
+                $query->where("a.order = " . ($itemOrder->order - 1));
 
-				$db->setQuery($query);
-				if (!$db->query())
-				{
-					$err = 1;
-				}
-				/*
-				$query = "UPDATE #__thm_groups_structure as a SET"
-					. " a.order=" . ($itemOrder->order + 1)
-					. " WHERE a.id=" . $cid[0];
-				*/
-				$query = $db->getQuery(true);
-				$query->update($db->qn('#__thm_groups_structure') . " AS a");
-				$query->set("a.order = " . ($itemOrder->order + 1));
-				$query->where("a.id = " . $cid[0]);
-				$db->setQuery($query);
-				if (!$db->query())
-				{
-					$err = 1;
-				}
-			}
-		}
-		else
-		{
-			$i = 0;
-			foreach ($order as $itemOrder)
-			{
-				/*
-				$query = "UPDATE #__thm_groups_structure as a SET"
-					. " a.order=" . ($itemOrder)
-					. " WHERE a.id=" . $cid[$i];
-				*/
-				$query = $db->getQuery(true);
-				$query->update($db->qn('#__thm_groups_structure') . " AS a");
-				$query->set("a.order = " . ($itemOrder));
-				$query->where("a.id = " . $cid[$i]);
+                $db->setQuery($query);
+                if (!$db->query())
+                {
+                    $err = 1;
+                }
+                /*
+                $query = "UPDATE #__thm_groups_structure as a SET"
+                    . " a.order=" . ($itemOrder->order - 1)
+                    . " WHERE a.id=" . $cid[0];
+                */
+                $query = $db->getQuery(true);
+                $query->update($db->qn('#__thm_groups_structure') . " AS a");
+                $query->set("a.order = " . ($itemOrder->order - 1));
+                $query->where("a.id = " . $cid[0]);
 
-				$db->setQuery($query);
-				if (!$db->query())
-				{
-					$err = 1;
-				}
-				$i++;
-			}
-		}
-		if (!$err)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+                $db->setQuery($query);
+                if (!$db->query())
+                {
+                    $err = 1;
+                }
+            }
+            elseif ($direction == 1)
+            {
+                /*
+                $query = "UPDATE #__thm_groups_structure as a SET"
+                    . " a.order=" . $itemOrder->order
+                    . " WHERE a.order=" . ($itemOrder->order + 1);
+                */
+                $query = $db->getQuery(true);
+                $query->update($db->qn('#__thm_groups_structure') . " AS a");
+                $query->set("a.order = " . $itemOrder->order);
+                $query->where("a.order = " . ($itemOrder->order + 1));
 
-	/**
-	 * Method to auto-populate the model state.
-	 *
-	 * @param   String  $ordering   null
-	 * @param   String  $direction  null
-	 *
-	 * @return	void
-	 */
-	protected function populateState($ordering = null, $direction = null)
-	{
-		// Initialise variables.
-		$app = JFactory::getApplication();
+                $db->setQuery($query);
+                if (!$db->query())
+                {
+                    $err = 1;
+                }
+                /*
+                $query = "UPDATE #__thm_groups_structure as a SET"
+                    . " a.order=" . ($itemOrder->order + 1)
+                    . " WHERE a.id=" . $cid[0];
+                */
+                $query = $db->getQuery(true);
+                $query->update($db->qn('#__thm_groups_structure') . " AS a");
+                $query->set("a.order = " . ($itemOrder->order + 1));
+                $query->where("a.id = " . $cid[0]);
+                $db->setQuery($query);
+                if (!$db->query())
+                {
+                    $err = 1;
+                }
+            }
+        }
+        else
+        {
+            $i = 0;
+            foreach ($order as $itemOrder)
+            {
+                /*
+                $query = "UPDATE #__thm_groups_structure as a SET"
+                    . " a.order=" . ($itemOrder)
+                    . " WHERE a.id=" . $cid[$i];
+                */
+                $query = $db->getQuery(true);
+                $query->update($db->qn('#__thm_groups_structure') . " AS a");
+                $query->set("a.order = " . ($itemOrder));
+                $query->where("a.id = " . $cid[$i]);
 
-		// Adjust the context to support modal layouts.
-		if ($layout = JRequest::getVar('layout'))
-		{
-			$this->context .= '.' . $layout;
-		}
+                $db->setQuery($query);
+                if (!$db->query())
+                {
+                    $err = 1;
+                }
+                $i++;
+            }
+        }
+        if (!$err)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
-		$order = $app->getUserStateFromRequest($this->context . '.filter_order', 'filter_order', '');
-		$dir = $app->getUserStateFromRequest($this->context . '.filter_order_Dir', 'filter_order_Dir', '');
+    /**
+     * Method to auto-populate the model state.
+     *
+     * @param   String  $ordering   null
+     * @param   String  $direction  null
+     *
+     * @return	void
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    protected function populateState($ordering = null, $direction = null)
+    {
+        // Initialise variables.
+        $app = JFactory::getApplication();
 
-		$this->setState('list.ordering', $order);
-		$this->setState('list.direction', $dir);
+        // Adjust the context to support modal layouts.
+        if ($layout = JRequest::getVar('layout'))
+        {
+            $this->context .= '.' . $layout;
+        }
 
-		if ($order == '')
-		{
-			parent::populateState("id", "ASC");
-		}
-		else
-		{
-			parent::populateState($order, $dir);
-		}
-	}
+        $order = $app->getUserStateFromRequest($this->context . '.filter_order', 'filter_order', '');
+        $dir = $app->getUserStateFromRequest($this->context . '.filter_order_Dir', 'filter_order_Dir', '');
 
-	/**
-	 * Build an SQL query to load the list data.
-	 *
-	 * @return	JDatabaseQuery
-	 */
-	protected function getListQuery()
-	{
-		// Create a new query object.
-		$db = $this->getDbo();
-		$query = $db->getQuery(true);
+        $this->setState('list.ordering', $order);
+        $this->setState('list.direction', $dir);
 
-		// Select the required fields from the table.
-		$query->select(
-			$this->getState(
-				'list.select',
-				'a.id, a.field, a.type, a.order'
-			)
-		);
-		$query->from('#__thm_groups_structure AS a');
+        if ($order == '')
+        {
+            parent::populateState("id", "ASC");
+        }
+        else
+        {
+            parent::populateState($order, $dir);
+        }
+    }
 
-		// Add the list ordering clause.
-		$orderCol	= $this->state->get('list.ordering');
-		$orderDirn	= $this->state->get('list.direction');
+    /**
+     * Build an SQL query to load the list data.
+     *
+     * @return	JDatabaseQuery
+     */
+    protected function getListQuery()
+    {
+        // Create a new query object.
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
 
-		$query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
+        // Select the required fields from the table.
+        $query->select(
+            $this->getState(
+                'list.select',
+                'a.id, a.field, a.type, a.order'
+            )
+        );
+        $query->from('#__thm_groups_structure AS a');
 
-		return $query;
-	}
+        // Add the list ordering clause.
+        $orderCol	= $this->state->get('list.ordering');
+        $orderDirn	= $this->state->get('list.direction');
+
+        $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
+
+        return $query;
+    }
 }

@@ -45,6 +45,8 @@ class THMGroupsControllerAddStructure extends JControllerForm
        * @param   String   $urlVar  contain url
        *
       * @return void
+      *
+      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
       */
     public function edit($key = null, $urlVar = null)
     {
@@ -84,6 +86,8 @@ class THMGroupsControllerAddStructure extends JControllerForm
        * @param   String   $urlVar  contain url
        *
       * @return void
+      *
+      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
       */
     public function save($key = null, $urlVar = null)
     {
@@ -128,6 +132,8 @@ class THMGroupsControllerAddStructure extends JControllerForm
      * @param   Integer  $key  contains the key
      *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function cancel($key = null)
     {

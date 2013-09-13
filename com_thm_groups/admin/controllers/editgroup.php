@@ -30,133 +30,139 @@ jimport('joomla.application.component.controllerform');
 class THMGroupsControllerEditgroup extends JControllerForm
 {
 
-	/**
- 	 * constructor (registers additional tasks to methods)
- 	 *
- 	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->registerTask('apply', 'apply');
-		$this->registerTask('save2new', 'save2new');
-	}
+    /**
+      * constructor (registers additional tasks to methods)
+      *
+      */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->registerTask('apply', 'apply');
+        $this->registerTask('save2new', 'save2new');
+    }
 
-	/**
-  	 * Edit
-  	 * 
-  	 * @param   Integer  $key     contain key
-  	 * @param   String   $urlVar  contain url
-  	 * 
- 	 * @return void
- 	 */
-	public function edit($key = null, $urlVar = null)
-	{
-		JRequest::setVar('view', 'editgroup');
-		JRequest::setVar('layout', 'default');
-		JRequest::setVar('hidemainmenu', 1);
-		parent::display();
-	}
+    /**
+       * Edit
+       *
+       * @param   Integer  $key     contain key
+       * @param   String   $urlVar  contain url
+       *
+      * @return void
+      *
+      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+      */
+    public function edit($key = null, $urlVar = null)
+    {
+        JRequest::setVar('view', 'editgroup');
+        JRequest::setVar('layout', 'default');
+        JRequest::setVar('hidemainmenu', 1);
+        parent::display();
+    }
 
-	/**
-	 * Apply
-	 *
-	 * @return void
-	 */
-	public function apply()
-	{
-		$model = $this->getModel('editgroup');
-		$id = JRequest::getVar('gid');
+    /**
+     * Apply
+     *
+     * @return void
+     */
+    public function apply()
+    {
+        $model = $this->getModel('editgroup');
+        $id = JRequest::getVar('gid');
 
-		if ($model->store())
-		{
-			$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
-		}
-		else
-		{
-			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-		}
+        if ($model->store())
+        {
+            $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+        }
 
-		$this->setRedirect('index.php?option=com_thm_groups&task=editgroup.edit&cid[]=' . $id, $msg);
-	}
+        $this->setRedirect('index.php?option=com_thm_groups&task=editgroup.edit&cid[]=' . $id, $msg);
+    }
 
-	/**
-  	 * Save
-  	 * 
-  	 * @param   Integer  $key     contain key
-  	 * @param   String   $urlVar  contain url
-  	 * 
- 	 * @return void
- 	 */
-	public function save($key = null, $urlVar = null)
-	{
-		$model = $this->getModel('editgroup');
+    /**
+       * Save
+       *
+       * @param   Integer  $key     contain key
+       * @param   String   $urlVar  contain url
+       *
+      * @return void
+      *
+      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+      */
+    public function save($key = null, $urlVar = null)
+    {
+        $model = $this->getModel('editgroup');
 
-		if ($model->store())
-		{
-			$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
-		}
-		else
-		{
-			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-		}
+        if ($model->store())
+        {
+            $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+        }
 
-		$this->setRedirect('index.php?option=com_thm_groups&view=groupmanager', $msg);
-	}
+        $this->setRedirect('index.php?option=com_thm_groups&view=groupmanager', $msg);
+    }
 
-	/**
-	 * Save2new
-	 *
-	 * @return void
-	 */
-	public function save2new()
-	{
-		$model = $this->getModel('editgroup');
+    /**
+     * Save2new
+     *
+     * @return void
+     */
+    public function save2new()
+    {
+        $model = $this->getModel('editgroup');
 
-		if ($model->store())
-		{
-			$msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
-		}
-		else
-		{
-			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-		}
+        if ($model->store())
+        {
+            $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+        }
 
-		$this->setRedirect('index.php?option=com_thm_groups&view=addgroup', $msg);
-	}
+        $this->setRedirect('index.php?option=com_thm_groups&view=addgroup', $msg);
+    }
 
-	/**
-	 * Cancel
-	 *
-	 * @param   Integer  $key  contains the key
-	 *
-	 * @return void
-	 */
-	public function cancel($key = null)
-	{
-		$msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
-		$this->setRedirect('index.php?option=com_thm_groups&view=groupmanager', $msg);
-	}
+    /**
+     * Cancel
+     *
+     * @param   Integer  $key  contains the key
+     *
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function cancel($key = null)
+    {
+        $msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
+        $this->setRedirect('index.php?option=com_thm_groups&view=groupmanager', $msg);
+    }
 
-	/**
-	 * delPic
-	 *
-	 * @return void
-	 */
-	public function delPic()
-	{
-		$model = $this->getModel('editgroup');
-		$id = JRequest::getVar('gid');
+    /**
+     * delPic
+     *
+     * @return void
+     */
+    public function delPic()
+    {
+        $model = $this->getModel('editgroup');
+        $id = JRequest::getVar('gid');
 
-		if ($model->delPic())
-		{
-			$msg = JText::_('COM_THM_GROUPS_PICTURE_REMOVED');
-		}
-		else
-		{
-			$msg = JText::_('COM_THM_GROUPS_REMOVE_PICTURE_ERROR');
-		}
+        if ($model->delPic())
+        {
+            $msg = JText::_('COM_THM_GROUPS_PICTURE_REMOVED');
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_REMOVE_PICTURE_ERROR');
+        }
 
-		// $this->apply();
-		$this->setRedirect('index.php?option=com_thm_groups&task=editgroup.edit&cid[]=' . $id, $msg);
-	}
+        // $this->apply();
+        $this->setRedirect('index.php?option=com_thm_groups&task=editgroup.edit&cid[]=' . $id, $msg);
+    }
 }

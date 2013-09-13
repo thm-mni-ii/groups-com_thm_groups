@@ -29,180 +29,182 @@ jimport('joomla.form.formfield');
 class JFormFieldStructureSelect extends JFormField
 {
 
-	/**
-	 * Element name
-	 *
-	 * @access	protected
-	 * @var		string
-	 * 
-	 * @return html
-	 */
-	public function getInput()
-	{
-		$scriptDir = str_replace(JPATH_SITE . DS, '', "administrator/components/com_thm_groups/elements/");
+    /**
+     * Element name
+     *
+     * @access	protected
+     * @var		string
+     *
+     * @return html
+     */
+    public function getInput()
+    {
+        $scriptDir = str_replace(JPATH_SITE . DS, '', "administrator/components/com_thm_groups/elements/");
 
-		// $sortButtons = true;
+        // $sortButtons = true;
 
-		// Add script-code to the document head
-		JHTML::script('structureselect.js', $scriptDir, false);
+        // Add script-code to the document head
+        JHTML::script('structureselect.js', $scriptDir, false);
 
-		// Initialize variables.
-		$html = array();
+        // Initialize variables.
+        $html = array();
 
-		// Initialize some field attributes.
-		$class = $this->element['class'] ? ' class="checkboxes ' . (string) $this->element['class'] . '"' : ' class="checkboxes"';
+        // Initialize some field attributes.
+        $class = $this->element['class'] ? ' class="checkboxes ' . (string) $this->element['class'] . '"' : ' class="checkboxes"';
 
-		// Start the checkbox field output.
-		$html[] = '<fieldset id="' . $this->name . '"' . $class . '>';
+        // Start the checkbox field output.
+        $html[] = '<fieldset id="' . $this->name . '"' . $class . '>';
 
-		// Get selected items
-		$selected = $this->value;
+        // Get selected items
+        $selected = $this->value;
 
-		// Parse selected items
-		$selectedItems = array();
-		if ($selected != "")
-		{
-			foreach ($selected as $item)
-			{
-				$tempItem = array();
-				$tempItem['id'] = substr($item, 0, strlen($item) - 2);
-				$tempItem['showName'] = substr($item, -2, 1);
-				$tempItem['wrapAfter'] = substr($item, -1, 1);
-				$selectedItems[] = $tempItem;
-			}
-		}
-		else
-		{
-		}
+        // Parse selected items
+        $selectedItems = array();
+        if ($selected != "")
+        {
+            foreach ($selected as $item)
+            {
+                $tempItem = array();
+                $tempItem['id'] = substr($item, 0, strlen($item) - 2);
+                $tempItem['showName'] = substr($item, -2, 1);
+                $tempItem['wrapAfter'] = substr($item, -1, 1);
+                $selectedItems[] = $tempItem;
+            }
+        }
+        else
+        {
+        }
 
-		// Get the field options.
-		$options = $this->getOptions($selectedItems);
+        // Get the field options.
+        $options = $this->getOptions($selectedItems);
 
-		// Build the checkbox field output.
-		$html[] = '<table>' .
-				'<thead>' .
-				'<tr><th>' .
-				JText::_('COM_THM_GROUPS_ATTRIBUTE') .
-				'</th><th>' .
-				JText::_('COM_THM_GROUPS_SHOW') .
-				'</th><th>' .
-				JText::_('COM_THM_GROUPS_NAME') .
-				'</th><th>' .
-				JText::_('COM_THM_GROUPS_WRAP') .
-				'</th></tr>' .
-				'</thead>' .
-				'<tbody>';
+        // Build the checkbox field output.
+        $html[] = '<table>' .
+                '<thead>' .
+                '<tr><th>' .
+                JText::_('COM_THM_GROUPS_ATTRIBUTE') .
+                '</th><th>' .
+                JText::_('COM_THM_GROUPS_SHOW') .
+                '</th><th>' .
+                JText::_('COM_THM_GROUPS_NAME') .
+                '</th><th>' .
+                JText::_('COM_THM_GROUPS_WRAP') .
+                '</th></tr>' .
+                '</thead>' .
+                '<tbody>';
 
-		foreach ($options as $i => $option)
-		{
-			// Initialize some option attributes.
-			$value = null;
-			$checked = '';
-			$checkedShowName = '';
-			$checkedWrapAfter = '';
-			$disabled = '';
+        foreach ($options as $i => $option)
+        {
+            // Initialize some option attributes.
+            $value = null;
+            $checked = '';
+            $checkedShowName = '';
+            $checkedWrapAfter = '';
+            $disabled = '';
 
-			foreach ($selectedItems as $item)
-			{
-				if ($item['id'] == $option->value)
-				{
-					$checked = ' checked="checked"';
-					if ($item['showName'] == "1")
-					{
-						$checkedShowName = ' checked="checked"';
-					}
-					else
-					{
-						$checkedShowName = '';
-					}
+            foreach ($selectedItems as $item)
+            {
+                if ($item['id'] == $option->value)
+                {
+                    $checked = ' checked="checked"';
+                    if ($item['showName'] == "1")
+                    {
+                        $checkedShowName = ' checked="checked"';
+                    }
+                    else
+                    {
+                        $checkedShowName = '';
+                    }
 
-					if ($item['wrapAfter'] == "1")
-					{
-						$checkedWrapAfter = ' checked="checked"';
-					}
-					else
-					{
-						$checkedWrapAfter = '';
-					}
+                    if ($item['wrapAfter'] == "1")
+                    {
+                        $checkedWrapAfter = ' checked="checked"';
+                    }
+                    else
+                    {
+                        $checkedWrapAfter = '';
+                    }
 
-					$value = $option->value . $item['showName'] . $item['wrapAfter'];
-				}
-			}
-			if (!isset($value))
-			{
-				$value = $option->value . "00";
-				$disabled = ' disabled="disabled"';
-			}
+                    $value = $option->value . $item['showName'] . $item['wrapAfter'];
+                }
+            }
+            if (!isset($value))
+            {
+                $value = $option->value . "00";
+                $disabled = ' disabled="disabled"';
+            }
 
-			$html[] = '<tr>'
-				. '<td>'
-					. '<label for="' . $this->name . $i . '"' . $class . '>' . JText::_($option->text) . '</label>'
-				. '</td>'
-				. '<td>'
-					. '<input type="checkbox" '
-						. 'id="' . $this->name . $i . '" '
-						. 'name="' . $this->name . '[' . $i . ']"' . ' '
-						. 'value="' . $value . '" '
-						. 'onchange="switchEnablingAdditionalAttr(' . "'" . $this->name . $i . "'" . ')"' . $checked
-					. ' />'
-				. '</td>'
-				. '<td>'
-					. '<input type="checkbox" '
-						. 'id="' . $this->name . $i . 'ShowName" '
-						. 'onchange="switchAttributeName(' . "'" . $this->name . $i . "'" . ')"' . $checkedShowName . $disabled
-					. ' />'
-				. '</td>'
-				. '<td>'
-					. '<input type="checkbox" '
-						. 'id="' . $this->name . $i . 'WrapAfter" '
-						. 'onchange="switchAttributeWrap(' . "'" . $this->name . $i . "'" . ')"' . $checkedWrapAfter . $disabled
-					. ' />'
-				. '</td>'
-				. '</tr>';
-		}
-		$html[] = '</tbody>' .
-				'</table>';
+            $html[] = '<tr>'
+                . '<td>'
+                    . '<label for="' . $this->name . $i . '"' . $class . '>' . JText::_($option->text) . '</label>'
+                . '</td>'
+                . '<td>'
+                    . '<input type="checkbox" '
+                        . 'id="' . $this->name . $i . '" '
+                        . 'name="' . $this->name . '[' . $i . ']"' . ' '
+                        . 'value="' . $value . '" '
+                        . 'onchange="switchEnablingAdditionalAttr(' . "'" . $this->name . $i . "'" . ')"' . $checked
+                    . ' />'
+                . '</td>'
+                . '<td>'
+                    . '<input type="checkbox" '
+                        . 'id="' . $this->name . $i . 'ShowName" '
+                        . 'onchange="switchAttributeName(' . "'" . $this->name . $i . "'" . ')"' . $checkedShowName . $disabled
+                    . ' />'
+                . '</td>'
+                . '<td>'
+                    . '<input type="checkbox" '
+                        . 'id="' . $this->name . $i . 'WrapAfter" '
+                        . 'onchange="switchAttributeWrap(' . "'" . $this->name . $i . "'" . ')"' . $checkedWrapAfter . $disabled
+                    . ' />'
+                . '</td>'
+                . '</tr>';
+        }
+        $html[] = '</tbody>' .
+                '</table>';
 
-		// End the checkbox field output.
-		$html[] = '</fieldset>';
+        // End the checkbox field output.
+        $html[] = '</fieldset>';
 
-		return implode($html);
-	}
+        return implode($html);
+    }
 
-	/**
-	 * Method to get the field options.
-	 * 
-	 * @param   String  $selected  Selected field
-	 *
-	 * @return	array	The field option objects.
-	 */
-	protected function getOptions($selected)
-	{
-		$db = JFactory::getDBO();
-		$query = $db->getQuery(true);
-			
-		$query->select('a.id, a.field');
-		$query->from("#__thm_groups_structure as a");
-		$query->order("a.order");
-		$db->setQuery($query);
-		$list = $db->loadObjectList();
+    /**
+     * Method to get the field options.
+     *
+     * @param   String  $selected  Selected field
+     *
+     * @return	array	The field option objects.
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    protected function getOptions($selected)
+    {
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
 
-		// Initialize variables.
-		$options = array();
+        $query->select('a.id, a.field');
+        $query->from("#__thm_groups_structure as a");
+        $query->order("a.order");
+        $db->setQuery($query);
+        $list = $db->loadObjectList();
 
-		// OLD: foreach ($list as $i => $structure)
-		foreach ($list as $structure)
-		{
-			// Create a new option object based on the <option /> element.
-			$tmp = JHtml::_('select.option', $structure->id, $structure->field);
+        // Initialize variables.
+        $options = array();
 
-			// Add the option object to the result set.
-			$options[] = $tmp;
-		}
+        // OLD: foreach ($list as $i => $structure)
+        foreach ($list as $structure)
+        {
+            // Create a new option object based on the <option /> element.
+            $tmp = JHtml::_('select.option', $structure->id, $structure->field);
 
-		reset($structure);
+            // Add the option object to the result set.
+            $options[] = $tmp;
+        }
 
-		return $options;
-	}
+        reset($structure);
+
+        return $options;
+    }
 
 }

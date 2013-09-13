@@ -192,6 +192,8 @@ class THMGroupsModelmembermanager extends JModelList
      *
      * @access  protected
      * @return	populatestate
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function populateState($ordering = null, $direction = null)
     {
