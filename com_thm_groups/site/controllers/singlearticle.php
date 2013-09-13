@@ -215,7 +215,6 @@ class THMGroupsControllerSinglearticle extends JControllerForm
     {
         // Need to override the parent method completely.
         $tmpl		= JRequest::getCmd('tmpl');
-        $layout		= JRequest::getCmd('layout', 'edit');
         $append		= '';
 
         // Setup redirect info.

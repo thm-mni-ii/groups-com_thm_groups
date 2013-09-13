@@ -49,7 +49,6 @@ class THMGroupsViewList extends JView
         $params = $mainframe->getParams();
         $pagetitle = $params->get('page_title');
         $showpagetitle = $params->get('show_page_heading');
-        $columncount = $params->get('columnCount');
         $this->assignRef('model', $model);
         if ($showpagetitle)
         {

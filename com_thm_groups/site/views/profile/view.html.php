@@ -165,7 +165,6 @@ class THMGroupsViewProfile extends JView
             }
         }
 
-        $pathLinks = array();
         $backRef = (count($pathwayitems) > 0)? $pathwayitems[count($pathwayitems) - 1]->link : " ";
         if (isset($attribut))
         {

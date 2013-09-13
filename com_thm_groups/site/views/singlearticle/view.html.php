@@ -53,7 +53,6 @@ class THMGroupsViewSinglearticle extends JViewLegacy
         // Initialise variables.
         $app		= JFactory::getApplication();
         $user		= JFactory::getUser();
-        $userId		= $user->get('id');
         $gsuid      = JRequest::getVar('gsuid', 0);
         $name		= JRequest::getVar('name', 0);
         $old_option = JRequest::getVar('old_option', 0);
@@ -82,7 +81,6 @@ class THMGroupsViewSinglearticle extends JViewLegacy
         $this->user		= $user;
 
         $comContentParams = JComponentHelper::getParams('com_content');
-        $comComp = JComponentHelper::getComponent('com_content');
 
         $this->state->params = $comContentParams;
         $this->state->params->display_num = '10';
@@ -345,7 +343,6 @@ class THMGroupsViewSinglearticle extends JViewLegacy
     {
         $app	= JFactory::getApplication();
         $menus	= $app->getMenu();
-        $pathway = $app->getPathway();
         $title = null;
 
         // Because the application sets a default page title,
