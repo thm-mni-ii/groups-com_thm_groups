@@ -159,7 +159,8 @@ class THMGroupsModelEditStructure extends JModel
                             $changeItem->userid . " , " .
                             $changeItem->structid . " , " . "'$changeItem->value' , '$changeItem->publish' , '$changeItem->group'"
                     );
-                  $sd = $db->setQuery($addquery);
+                  // What? $sd = $db->setQuery($addquery);
+
                 if (!$db->query())
                 {
 
@@ -263,8 +264,7 @@ class THMGroupsModelEditStructure extends JModel
 
                     if (!is_dir($source . $datei))
                     {
-                      $res = copy($source . DS . $datei, $dest . DS . $datei);
-
+                      // What? $res = copy($source . DS . $datei, $dest . DS . $datei);
                     }
                       $datei = readdir($handle);
                     }
