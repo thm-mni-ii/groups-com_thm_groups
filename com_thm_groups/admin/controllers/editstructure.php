@@ -109,7 +109,6 @@ class THMGroupsControllerEditStructure extends JControllerForm
     public function save($key = null, $urlVar = null)
     {
     $model = $this->getModel('editstructure');
-        $id = JRequest::getVar('cid');
         $structure = $model->getItem();
         $relation = JRequest::getVar('relation');
         $type = "";
@@ -154,7 +153,6 @@ class THMGroupsControllerEditStructure extends JControllerForm
     public function save2new()
     {
     $model = $this->getModel('editstructure');
-        $id = JRequest::getVar('cid');
         $structure = $model->getItem();
         $relation = JRequest::getVar('relation');
         $type = "";
