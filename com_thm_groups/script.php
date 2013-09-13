@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.2
+ * @version     v3.2.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.general
@@ -134,35 +134,5 @@ class Com_THM_GroupsInstallerScript
             <strong>&nbsp;Installation of version <?php echo $this->release; ?> successful!</strong>
         </p>
         <?php
-    }
-
-    /**
-     * method to run before an install/update/uninstall method
-     *
-     * @param   Object  $type    content type
-     *
-     * @param   Object  $parent  conten parent
-     *
-     * @return void
-     */
-    public function preflight($type, $parent)
-    {
-
-
-    }
-
-    /**
-     * method to run after an install/update/uninstall method
-     *
-     * @param   Object  $type    content type
-     *
-     * @param   Object  $parent  conten parent
-     *
-     * @return void
-     */
-    public function postflight($type, $parent)
-    {
-        // $parent is the class calling this method
-        // $type is the type of change (install, update or discover_install)
     }
 }
