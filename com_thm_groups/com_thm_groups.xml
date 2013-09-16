@@ -95,6 +95,6 @@
     </packages>
 -->
     <updateservers>
-        <server type="extension" priority="1" name="COM_THM_GROUPS">https://jenkins.mni.thm.de/jenkins/job/J.THM.Releases/lastSuccessfulBuild/artifact/updates/com_thm_groups.xml</server>
+        <server type="extension" priority="1" name="THM Groups Component">https://jenkins.mni.thm.de/jenkins/job/J.THM.Releases/lastSuccessfulBuild/artifact/updates/com_thm_groups.xml</server>
     </updateservers>
 </extension>
