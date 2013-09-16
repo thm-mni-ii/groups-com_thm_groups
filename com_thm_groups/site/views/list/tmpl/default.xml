@@ -84,7 +84,7 @@
                 type="alphabetColor"
                 label="COM_THM_GROUPS_BACKGROUND_COLOR"
                 description="COM_THM_GROUPS_BACKGROUND_COLOR_DESC"
-                default="#000000"
+                default="#4A5C66"
             />
             <field
                 addfieldpath="/administrator/components/com_thm_groups/elements/"
@@ -106,7 +106,7 @@
                 type="alphabetColor"
                 label="COM_THM_GROUPS_BACKGROUND_COLOR"
                 description="COM_THM_GROUPS_BACKGROUND_COLOR_DESC"
-                default="#000000"
+                default="#4A5C66"
             />
             <field
                 addfieldpath="/administrator/components/com_thm_groups/elements/"
@@ -127,7 +127,7 @@
                 type="alphabetColor"
                 label="COM_THM_GROUPS_BACKGROUND_COLOR"
                 description="COM_THM_GROUPS_BACKGROUND_COLOR_DESC"
-                default="#000000"
+                default="#4A5C66"
             />
             <field
                 addfieldpath="/administrator/components/com_thm_groups/elements/"
