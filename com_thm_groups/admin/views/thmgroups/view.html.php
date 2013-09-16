@@ -25,21 +25,26 @@ jimport('joomla.application.component.view');
  */
 class THMGroupsViewTHMGroups extends JView
 {
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object  $tpl  template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		$document   = JFactory::getDocument();
-		$document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
+    /**
+     * Method to get display
+     *
+     * @param   Object  $tpl  template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
+        $document   = JFactory::getDocument();
+        $document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
+        $user = JFactory::getUser();
 
-		JToolBarHelper::title(JText::_('COM_THM_GROUPS_HOME_TITLE'), 'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png');
-		JToolBarHelper::back();
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS_HOME_TITLE'), 'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png');
+        if ($user->authorise('core.admin', 'com_users'))
+        {
+            JToolBarHelper::preferences('com_thm_groups');
+        }
+        JToolBarHelper::back();
 
-		parent::display($tpl);
-	}
+        parent::display($tpl);
+    }
 }
