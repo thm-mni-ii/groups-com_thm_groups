@@ -182,6 +182,7 @@ class THMGroupsControllerAddStructure extends JControllerForm
                 . "rows='5' "
                 . "name='" . $field . "_extra' "
                 . "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TABLE") . "'>"
+                . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TABLE")
                 . "</textarea>";
                 break;
             case "MULTISELECT":

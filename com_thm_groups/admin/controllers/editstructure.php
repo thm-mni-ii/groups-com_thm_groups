@@ -239,6 +239,9 @@ class THMGroupsControllerEditStructure extends JControllerForm
                 $value->value = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_PICTURE");
                 $value->path = " ";
                 break;
+            case "TABLE":
+                $value->value = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TABLE");
+                break;
             default:
                 $value->value = "";
                 $value->path = " ";
