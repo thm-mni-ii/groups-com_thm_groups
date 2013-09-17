@@ -27,6 +27,7 @@ jstruct = jQuery.noConflict();
 jstruct.fn.getFieldExtras = function(){
 
     var field = jstruct('#relation option:selected').text();
+    console.log(field);
 
     //$('#jquery-select option:selected').text();
 
@@ -42,7 +43,7 @@ jstruct.fn.getFieldExtras = function(){
 
     jstruct.ajax({
         type: "POST",
-        url: "index.php?option=com_thm_groups&controller=editstructure&task=editstructure.getFieldExtras&sid="
+        url: "index.php?option=com_thm_groups&controller=editstructure&task=editstructure.getFieldExtras&cid="
             +<?php echo $this->rowItem->id;?>+"&field="+field,
         datatype:"HTML",
         success: function(response)

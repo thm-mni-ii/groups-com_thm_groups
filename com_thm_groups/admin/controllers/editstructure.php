@@ -220,7 +220,6 @@ class THMGroupsControllerEditStructure extends JControllerForm
         $field = JRequest::getVar('field');
         $value = $model->getExtra($field);
 
-
         if (!isset($value))
         {
             $value = new stdClass;

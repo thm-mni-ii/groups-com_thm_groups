@@ -105,7 +105,7 @@ class THMGroupsModelEditStructure extends JModel
     public function getExtra($relation)
     {
         $db = JFactory::getDBO();
-        $id = JRequest::getVar('sid');
+        $id = JRequest::getVar('cid');
 
         $query = $db->getQuery(true);
         $query->select('*');
