@@ -12,12 +12,13 @@
             description="COM_THM_QUICKPAGES_CONFIG_ROOT_CATEGORY_CONTENT_SETTING_DESC"
             extension="com_content"
         />
+
         <field
-            name="repository_category"
-            type="category"
-            label="COM_THM_QUICKPAGES_CONFIG_ROOT_CATEGORY_REPOSITORY_SETTING_LABEL"
-            description="COM_THM_QUICKPAGES_CONFIG_ROOT_CATEGORY_REPOSITORY_SETTING_DESC"
-            extension="com_thm_repository"
+        addfieldpath="/administrator/components/com_thm_groups/elements/"
+                name="repository_category"
+                type="repoComExist"
+                label="COM_THM_QUICKPAGES_CONFIG_ROOT_CATEGORY_REPOSITORY_SETTING_LABEL"
+                description="COM_THM_QUICKPAGES_CONFIG_ROOT_CATEGORY_REPOSITORY_SETTING_DESC"
         />
         <field
             name="modthmgroupscontent_category"
@@ -27,28 +28,31 @@
             extension="com_content"
         />
     </fieldset>
-	<fieldset name="permissions"
-		description="JCONFIG_PERMISSIONS_DESC"
-		label="JCONFIG_PERMISSIONS_LABEL"
-	>
 
-		<field name="rules" type="rules"
-			component="com_thm_groups"
-			filter="rules"
-			validate="rules"
-			label="JCONFIG_PERMISSIONS_LABEL"
-			section="component" />
-	</fieldset>
-	<fieldset name="memberpermissions"
-		description="COM_THM_GROUPS_MEMBER_CONFIG_MEMBERPERMISSIONS_DESC"
-		label="COM_THM_GROUPS_MEMBER_CONFIG_MEMBERPERMISSIONS"
-	>
-		<field
-            name="editownprofile"
-            type="checkbox"
-            value="1"
-            default="0"
-            label="COM_THM_GROUPS_MEMBER_CONFIG_MEMBERPERMISSIONS_EDIT_PROFILE"
-            description="COM_THM_GROUPS_MEMBER_CONFIG_MEMBERPERMISSIONS_EDIT_PROFILE_DESC"
+    <fieldset name="permissions"
+        description="JCONFIG_PERMISSIONS_DESC"
+        label="JCONFIG_PERMISSIONS_LABEL"
+    >
+        <field name="rules" type="rules"
+                component="com_thm_groups"
+                filter="rules"
+                validate="rules"
+                label="JCONFIG_PERMISSIONS_LABEL"
+                section="component"
         />
-	</fieldset></config>
+    </fieldset>
+
+    <fieldset name="memberpermissions"
+        description="COM_THM_GROUPS_MEMBER_CONFIG_MEMBERPERMISSIONS_DESC"
+        label="COM_THM_GROUPS_MEMBER_CONFIG_MEMBERPERMISSIONS"
+    >
+        <field
+                name="editownprofile"
+                type="checkbox"
+                value="1"
+                default="0"
+                label="COM_THM_GROUPS_MEMBER_CONFIG_MEMBERPERMISSIONS_EDIT_PROFILE"
+                description="COM_THM_GROUPS_MEMBER_CONFIG_MEMBERPERMISSIONS_EDIT_PROFILE_DESC"
+        />
+    </fieldset>
+</config>
