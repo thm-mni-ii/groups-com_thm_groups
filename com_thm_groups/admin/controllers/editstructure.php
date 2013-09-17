@@ -229,9 +229,6 @@ class THMGroupsControllerEditStructure extends JControllerForm
             case "TEXT":
                 $value->value = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TEXT");
                 break;
-            case "TEXTFIELD":
-                $value->value = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TEXTFIELD");
-                break;
             case "MULTISELECT":
                 $value->value = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_MULTISELECT");
                 break;
@@ -261,16 +258,6 @@ class THMGroupsControllerEditStructure extends JControllerForm
                 . "size='40'"
                 . "value='" . $value->value . "' "
                 . "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT") . "' "
-                . "/>";
-                break;
-            case "TEXTFIELD":
-                $output .= "<input "
-                . "class='inputbox' "
-                . "type='text' name='" . $field . "_extra' "
-                . "id='" . $field . "_extra' "
-                . "size='40'"
-                . "value='" . $value->value . "' "
-                . "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXTFIELD") . "' "
                 . "/>";
                 break;
             case "TABLE":

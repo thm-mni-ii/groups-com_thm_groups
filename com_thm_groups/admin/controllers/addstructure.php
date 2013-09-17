@@ -166,17 +166,6 @@ class THMGroupsControllerAddStructure extends JControllerForm
                 . "' title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT") . "' "
                 . "/>";
                 break;
-            case "TEXTFIELD":
-                $output .= "<input "
-                . "class='inputbox' "
-                . "type='text' name='" . $field . "_extra' "
-                . "id='" . $field . "_extra' "
-                . "size='40'"
-                . "value='"
-                . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TEXTFIELD")
-                . "' title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXTFIELD") . "' "
-                . "/>";
-                break;
             case "TABLE":
                 $output .= "<textarea "
                 . "rows='5' "
@@ -240,13 +229,6 @@ class THMGroupsControllerAddStructure extends JControllerForm
                     . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT")
                     . "'>"
                     . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_SIZE")
-                    . ":</span>";
-                break;
-            case "TEXTFIELD":
-                $output = "<span title='"
-                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXTFIELD")
-                    . "'>"
-                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_ROWS")
                     . ":</span>";
                 break;
             case "TABLE":
