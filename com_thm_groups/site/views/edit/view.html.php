@@ -47,7 +47,7 @@ class THMGroupsViewEdit extends JView
      */
     public function getTextForm ($name, $size, $value, $structid)
     {
-        $model =& $this->getModel();
+        $model =  $this->getModel();
         $extra = $model->getExtra($structid, 'TEXT');
         $output = "<input " .
             "class='inputbox' " .
@@ -78,7 +78,7 @@ class THMGroupsViewEdit extends JView
      */
     public function getTextArea ($name, $rows, $value, $structid)
     {
-        $model =& $this->getModel();
+        $model =  $this->getModel();
         $extra = $model->getExtra($structid, 'TEXTFIELD');
         $output = "<textarea ";
             if (isset($extra))
@@ -106,7 +106,7 @@ class THMGroupsViewEdit extends JView
      */
     public function getPictureArea ($name, $structid, $value)
     {
-        $model =& $this->getModel();
+        $model =  $this->getModel();
         $extra = $model->getExtra($structid, 'PICTURE');
         $path = JURI::base() . $model->getPicPath($structid);
         if ($value != "")
@@ -137,7 +137,7 @@ class THMGroupsViewEdit extends JView
      */
     public function getTableArea ($name, $value, $structid)
     {
-        $model =& $this->getModel();
+        $model =  $this->getModel();
 
         // $cid = JRequest::getVar('cid', array(0), '', 'array');
         $extra = $model->getExtra($structid, 'TABLE');
@@ -252,7 +252,7 @@ class THMGroupsViewEdit extends JView
     public function getMultiSelectForm ($name, $size, $value, $structid)
     {
         $arrValue = explode(';', $value);
-        $model =& $this->getModel();
+        $model = $this->getModel();
         $extra = $model->getExtra($structid, 'MULTISELECT');
         $arrExtra = explode(';', $extra);
         $output = "<select MULTIPLE size='" . (count($arrExtra)) . "' name='" . $name . "[]' id='$name' >";
@@ -284,17 +284,17 @@ class THMGroupsViewEdit extends JView
     {
         $app	 = JFactory::getApplication();
         $pathway = $app->getPathway();
-        $document   = & JFactory::getDocument();
+        $document   =  JFactory::getDocument();
         $document->addStyleSheet("administrator/components/com_thm_groups/css/membermanager/icon.css");
 
         $cid = JRequest::getVar('gsuid', 0);
 
         $name = JRequest::getVar('name', 0) . ', ';
         $firstname = "";
-        $items =& $this->get('Data');
-        $structure =& $this->get('Structure');
+        $items = $this->get('Data');
+        $structure = $this->get('Structure');
         $gsgid = JRequest::getVar('gsgid');
-        $is_mod =& $this->get('Moderator');
+        $is_mod = $this->get('Moderator');
 
         // Daten für die Form
         $textField = array();
@@ -327,7 +327,7 @@ class THMGroupsViewEdit extends JView
                 . '&gsgid=' . JRequest::getVar('gsgid', 0)
                 . '&name=' . JRequest::getVar('name', 0);
 
-        $u =& JURI::getInstance($link . $params);
+        $u = JURI::getInstance($link . $params);
 
         $pathway->addItem($name . $firstname, $u->toString());
         $pathway->addItem(JText::_("COM_THM_GROUPS_EDIT_BREADCRUMB"), '');

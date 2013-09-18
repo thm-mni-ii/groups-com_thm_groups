@@ -706,11 +706,11 @@ class THMGroupsModeledit extends JModelForm
      */
     public function getModerator()
     {
-        $user =& JFactory::getUser();
+        $user = JFactory::getUser();
         $id = $user->id;
         $gid = $this->getGroupNumber();
         $this->_isModerator = false;
-        $db =& JFactory::getDBO();
+        $db = JFactory::getDBO();
         if (!empty($id) && !empty($gid))
         {
             /*
