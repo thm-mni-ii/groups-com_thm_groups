@@ -52,7 +52,7 @@ jstructadd.fn.getFieldExtras = function(){
     });
 }
 jstructadd(document).ready(function(){jstructadd.fn.getFieldExtras();});
-</script >
+</script>
 
 <form action="index.php" method="post" name="adminForm">
 <div>
