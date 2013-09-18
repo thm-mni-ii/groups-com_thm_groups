@@ -18,7 +18,7 @@
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
-jimport('thm_groups.view.lib_thm_groups_listview');
+jimport('thm_groups.data.lib_thm_groups');
 jimport('joomla.application.component.view');
 /**
  * THMGroupsViewList class for component com_thm_groups

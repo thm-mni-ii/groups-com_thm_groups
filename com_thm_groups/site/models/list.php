@@ -32,76 +32,73 @@ jimport('joomla.filesystem.path');
  */
 class THMGroupsModelList extends JModel
 {
-	// Wegen Nichtverwendung auskommentiert: private $_conf;
+    // Wegen Nichtverwendung auskommentiert: private $_conf;
 
-	/**
+    /**
      * Constructor
      *
      */
-	public function __construct()
-	{
-		parent::__construct();
-	}
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
-	/**
+    /**
      * Method to get view
      *
      * @return view
      */
-	public function getView()
-	{
-		return $this->getHead() . $this->getList();
-	}
+    public function getView()
+    {
+        return $this->getHead() . $this->getList();
+    }
 
-	/**
+    /**
      * Method to get view parameters
      *
      * @return params
      */
-	public function getViewParams()
-	{
-		$mainframe = Jfactory::getApplication();
-		return $mainframe->getParams();
-	}
+    public function getViewParams()
+    {
+        $mainframe = Jfactory::getApplication();
+        return $mainframe->getParams();
+    }
 
-	/**
+    /**
      * Method to get group number
      *
      * @return groupid
      */
-	public function getGroupNumber()
-	{
-		$params = $this->getViewParams();
-		return $params->get('selGroup');
-	}
+    public function getGroupNumber()
+    {
+        $params = $this->getViewParams();
+        return $params->get('selGroup');
+    }
 
-	/**
+    /**
      * Method to get show mode
      *
      * @return showmode
      */
-	public function getShowMode()
-	{
-		$params = $this->getViewParams();
-		return $params->get('showAll');
-	}
+    public function getShowMode()
+    {
+        $params = $this->getViewParams();
+        return $params->get('showAll');
+    }
 
-	/**
+    /**
      * Method to get title
      *
      * @return String
      */
-	public function getTitle()
-	{
-		$retString = '';
-		$groupid   = $this->getGroupNumber();
-		if ($this->getTitleState($groupid))
-		{
-			$retString .= $this->getTitleGroup($groupid);
-		}
-		return $retString;
-	}
-
-	
-	
+    public function getTitle()
+    {
+        $retString = '';
+        $groupid   = $this->getGroupNumber();
+        if ($this->getTitleState($groupid))
+        {
+            $retString .= $this->getTitleGroup($groupid);
+        }
+        return $retString;
+    }
 }
