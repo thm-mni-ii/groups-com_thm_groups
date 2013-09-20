@@ -47,7 +47,7 @@ class THMGroupsViewEdit extends JView
      */
     public function getTextForm ($name, $size, $value, $structid)
     {
-        $model =  $this->getModel();
+        $model = $this->getModel();
         $extra = $model->getExtra($structid, 'TEXT');
         $output = "<input " .
             "class='inputbox' " .
@@ -78,7 +78,7 @@ class THMGroupsViewEdit extends JView
      */
     public function getTextArea ($name, $rows, $value, $structid)
     {
-        $model =  $this->getModel();
+        $model = $this->getModel();
         $extra = $model->getExtra($structid, 'TEXTFIELD');
         $output = "<textarea ";
             if (isset($extra))
@@ -106,7 +106,7 @@ class THMGroupsViewEdit extends JView
      */
     public function getPictureArea ($name, $structid, $value)
     {
-        $model =  $this->getModel();
+        $model = $this->getModel();
         $extra = $model->getExtra($structid, 'PICTURE');
         $path = JURI::base() . $model->getPicPath($structid);
         if ($value != "")
@@ -137,7 +137,7 @@ class THMGroupsViewEdit extends JView
      */
     public function getTableArea ($name, $value, $structid)
     {
-        $model =  $this->getModel();
+        $model = $this->getModel();
 
         // $cid = JRequest::getVar('cid', array(0), '', 'array');
         $extra = $model->getExtra($structid, 'TABLE');
@@ -282,9 +282,9 @@ class THMGroupsViewEdit extends JView
      */
     public function display($tpl = null)
     {
-        $app	 = JFactory::getApplication();
+        $app = JFactory::getApplication();
         $pathway = $app->getPathway();
-        $document   =  JFactory::getDocument();
+        $document = JFactory::getDocument();
         $document->addStyleSheet("administrator/components/com_thm_groups/css/membermanager/icon.css");
 
         $cid = JRequest::getVar('gsuid', 0);

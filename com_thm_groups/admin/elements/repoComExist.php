@@ -16,7 +16,7 @@ defined('_JEXEC') or die( 'Restricted access' );
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
 jimport('joomla.application.menu');
-jimport( 'joomla.application.component.controller' );
+jimport('joomla.application.component.controller');
 
 /**
  * JFormFieldRoleItemSelect class for component com_thm_groups
@@ -52,9 +52,9 @@ class JFormFieldRepoComExist extends JFormField
 
             // Make selectbox with categories of Repository
             $html .= '<select name=' . $this->name . ' id="jform_params_repocomexist" onchange="saveSelectedValue()">';
-            foreach($repoCats as $cat)
+            foreach ($repoCats as $cat)
             {
-                    if($cat->id == $selectedValue)
+                    if ($cat->id == $selectedValue)
                     {
                         $html .= "<option value =" . $cat->id . " selected>" . $cat->title . "</option>";
                     }

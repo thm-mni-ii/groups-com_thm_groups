@@ -215,7 +215,7 @@ function getListAll($params, $pagetitle, $gid)
 
               $result .= '<div style="margin-bottom:-11px;">';
 
-              $result .=  writeName($arrOrderAtt, $row, $showStructure, $linkElement, $linkTarget, $groupid);
+              $result .= writeName($arrOrderAtt, $row, $showStructure, $linkElement, $linkTarget, $groupid);
               $actualRowPlaced++;
               $allCount++;
               $actualLetterPlaced++;
@@ -264,7 +264,8 @@ function getListAll($params, $pagetitle, $gid)
  *
  * @return String  $result 	Contain the HTML Code of the view
  */
-function getListAlphabet($params, $pagetitle, $gid) {
+function getListAlphabet($params, $pagetitle, $gid)
+{
     $scriptDir = str_replace(JPATH_SITE . DS, '', "libraries/thm_groups/assets/js/");
         JHTML::script('jquery-1.9.1.min.js', $scriptDir, false);
         JHTML::script('getUserOfLetter.js', $scriptDir, false);
@@ -414,7 +415,7 @@ function getListAlphabet($params, $pagetitle, $gid) {
             $retString .= "<div style='float:left'><br />Keine Mitglieder vorhanden.</div>";
         }
 
-        $retString .=  getUserForLetter(
+        $retString .= getUserForLetter(
                 $groupid,
                 $params['columnCount'],
                 $shownLetter,
@@ -440,7 +441,8 @@ function getListAlphabet($params, $pagetitle, $gid) {
  *
  * @return  String  $string  Return String
  */
-function getUserForLetter($gid, $column, $letter, $paramLinkTarget, $orderAttr, $showStructure, $linkElement, $oldattrinut) {
+function getUserForLetter($gid, $column, $letter, $paramLinkTarget, $orderAttr, $showStructure, $linkElement, $oldattrinut)
+{
     $retString = '<div id="new_user_list">';
         $retString .= "<ul><br /><br />";
 
@@ -529,7 +531,7 @@ function getUserForLetter($gid, $column, $letter, $paramLinkTarget, $orderAttr, 
             {
                 $path = "'index.php?option=com_thm_groups&view=list&layout=default&Itemid='";
                 $trmimname = trim($member->lastName);
-                $retString .=  writeName($arrOrderAtt, $member, $showStructure, $linkElement, $linkTarget, $groupid);
+                $retString .= writeName($arrOrderAtt, $member, $showStructure, $linkElement, $linkTarget, $groupid);
                 $actualRowPlaced++;
             }
 
@@ -546,7 +548,7 @@ function getUserForLetter($gid, $column, $letter, $paramLinkTarget, $orderAttr, 
         {
             $path = "'index.php?option=com_thm_groups&view=list&layout=default&Itemid='";
             $trmimname = trim($member['lastName']);
-            $retString .=  writeName($arrOrderAtt, $member, $showStructure, $linkElement, $linkTarget, $groupid);
+            $retString .= writeName($arrOrderAtt, $member, $showStructure, $linkElement, $linkTarget, $groupid);
         }
         $retString .= "</ul>";
         $retString .= '</div>';
@@ -565,7 +567,8 @@ function getUserForLetter($gid, $column, $letter, $paramLinkTarget, $orderAttr, 
  *
  * @return  String  $string  Return String
  */
-function writeName($arrOrderAtt, $member, $arrshowStructure, $linkElement, $linkTarget, $groupid) {
+function writeName($arrOrderAtt, $member, $arrshowStructure, $linkElement, $linkTarget, $groupid)
+{
     $string = "";
         $showTitle = 0;
 
@@ -702,7 +705,7 @@ function writeName($arrOrderAtt, $member, $arrshowStructure, $linkElement, $link
 /**
  * Method to write the  Stylesheet for List View im
  *
- * @param   Array   $params  contain the Paramter for the View
+ * @param   Array  $params  contain the Paramter for the View
  *
  * @return  String  $result  the HTML code of te view
  */
@@ -783,4 +786,3 @@ else
 {
     echo getListAlphabet($paramsArray, $pagetitle, $model->getGroupNumber());
 }
-?>
