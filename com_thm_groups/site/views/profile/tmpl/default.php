@@ -58,6 +58,7 @@ $layout_old = 0;
                     {
                         $picpath = $model->getPicPath($item->structid);
                         $picture = $item->value;
+                        $structId = $item->structid;
                     }
                 }
                 break;
@@ -65,8 +66,10 @@ $layout_old = 0;
     }
 ?></div>
     <div>
-        <table>
+
             <?php
+
+                // Row with title and name
                 echo "<h2 class='contentheading'>" . $title . " " . $firstName . " " . $lastName;
                 $componentparams = JComponentHelper::getParams('com_thm_groups');
                 $canEdit = (($user->id == $this->userid && $componentparams->getValue('editownprofile', '0') == 1));
@@ -86,18 +89,26 @@ $layout_old = 0;
                     . "'> "
                     . JHTML::image("components/com_thm_groups/img/icon-32-edit.png", 'bearbeiten', $attribs) . "</a></span>";
                 }
-
                 echo "</h2>";
+                echo "<table>";
+
+                // Get picture, if exists
                 if ($picture != null)
                 {
-                    echo JHTML :: image($picpath . '/' . $picture, "Portrait", array ());
+                    $attribs['class'] = 'picture';
+                    $attribs['id'] = $structId;
+                    echo JHTML :: image($picpath . '/' . $picture, "Portrait", $attribs);
                 }
+
+                // Get default picture
                 else
                 {
                     $picStrcutId = "";
                     $allStructs = $model->getStructure();
                     foreach ($allStructs as $struct)
                     {
+
+                        // Find first structure of type picture
                         if ($struct->type == "PICTURE")
                         {
                             $picStrcutId = $struct->id;
@@ -106,10 +117,14 @@ $layout_old = 0;
                         {
                         }
                     }
+                    $attribs['id'] = $picStrcutId;
+                    $attribs['class'] = 'picture';
                     $path = JURI::base() . $model->getPicPath($picStrcutId);
                     $picture = $model->getDefaultPic($picStrcutId);
-                    echo JHTML :: image($path . '/' . $picture, "Portrait", array ());
+                    echo JHTML :: image($path . '/' . $picture, "Portrait", $attribs);
                 }
+
+
                 foreach ($this->structure as $structureItem)
                 {
                     if ($structureItem->id > 3 && $structureItem->id != 5 && $structureItem->type != 'PICTURE')
@@ -119,15 +134,21 @@ $layout_old = 0;
                                 if ($item->structid == $structureItem->id && $item->value != "" && $item->publish == 1)
                                 {
                                 ?>
+
                     <tr>
                         <td width="110" class="key">
+
                             <label for="title">
                                   <b><?php
+
+                                      // Name of structure, like E-Mail, Telefon, Fax
                                     echo $structureItem->field . ":"; ?></b>
                             </label>
                         </td>
                         <td>
                             <?php
+
+                                    // Value of structure
                                     switch ($structureItem->type)
                                     {
                                         case 'TABLE':
