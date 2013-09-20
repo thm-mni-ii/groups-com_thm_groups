@@ -28,18 +28,18 @@ require_once dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'Joomla
  */
 class AllComThmGroupsGuiTests
 {
-	/**
-	 * Testsuite
-	 *
-	 * @return suite
-	 */
-	public static function suite()
-	{
-		$suite = new PHPUnit_Framework_TestSuite('Component THM Groups GUI Test');
+    /**
+     * Testsuite
+     *
+     * @return suite
+     */
+    public static function suite()
+    {
+        $suite = new PHPUnit_Framework_TestSuite('Component THM Groups GUI Test');
 
-		$suite->addTestFile(__DIR__ . '/com_thm_groups__administration_home__en_gb.php');
-		
+        $suite->addTestFile(__DIR__ . '/com_thm_groups__administration_home__en_gb.php');
+        $suite->addTestFile(__DIR__ . '/com_thm_groups_structmanager.php');
 
-		return $suite;
-	}
+        return $suite;
+    }
 }
