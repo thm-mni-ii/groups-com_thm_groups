@@ -8,15 +8,19 @@ class ComThmGroupsStructManager extends JoomlaSeleniumTest
         $this->waitForPageToLoad("30000");
         $this->click("css=span.icon-32-new");
         $this->waitForPageToLoad("30000");
+
+        // Name of structure
         try {
-            $this->assertTrue($this->isElementPresent("id=namee"));
+            $this->assertTrue($this->isElementPresent("id=name"));
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
-            array_push($this->verificationErrors, "Es wurde ID Name erwartet!!!");
+            array_push($this->verificationErrors, "Element with id=name does not exist!");
         }
+
+        // Type of structure
         try {
             $this->assertEquals("date,link,multiselect,number,picture,table,text,textfield", implode(',', $this->getSelectOptions("id=relation")));
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
-            array_push($this->verificationErrors, $e->toString());
+            array_push($this->verificationErrors, "Dropdown Error!");
         }
     }
 }
