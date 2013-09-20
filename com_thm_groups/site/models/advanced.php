@@ -426,21 +426,21 @@ class THMGroupsModelAdvanced extends JModel
     {
         $memberleft = array();
         $memberright = array();
-        $i = 0;
+        $index = 0;
         $_data = $this->getData();
         if (!empty($_data))
         {
             foreach ($_data as $key => $member)
             {
-                if ($i == 0)
+                if ($index == 0)
                 {
                     $memberleft[$key] = $member;
-                    $i++;
+                    $index++;
                 }
                 else
                 {
                     $memberright[$key] = $member;
-                    $i--;
+                    $index--;
                 }
             }
         }

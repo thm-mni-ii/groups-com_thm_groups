@@ -156,10 +156,10 @@ class THMGroupsViewedit extends JView
             $output .= "</tr>";
             if ($value != "" && $value != "[]")
             {
-            $k = 0;
+            $index = 0;
                 foreach ($arrValue as $key => $row)
                 {
-                    if ($k)
+                    if ($index)
                     {
                         $output .= "<tr style='background-color:#F7F7F7;'>";
                     }
@@ -176,7 +176,7 @@ class THMGroupsViewedit extends JView
                     . ".' class='modal-button hasTip' rel=\"{handler: 'iframe', "
                     . "size: {x: 400, y: 300}}\"><img src='components/com_thm_groups/img/icon-16-edit.png' /></a> </td>";
                     $output .= "</tr>";
-                    $k = 1 - $k;
+                    $index = 1 - $index;
 
                 }
             }

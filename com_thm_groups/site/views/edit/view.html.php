@@ -157,10 +157,10 @@ class THMGroupsViewEdit extends JView
             $output .= "</tr>";
             if ($value != "" && $value != "[]")
             {
-                $k = 0;
+                $index = 0;
                 foreach ($arrValue as $key => $row)
                 {
-                    if ($k)
+                    if ($index)
                     {
                         $output .= "<tr style='background-color:#F7F7F7;'>";
                     }
@@ -178,7 +178,7 @@ class THMGroupsViewEdit extends JView
                     . ".' class='modal-button hasTip' rel=\"{handler: 'iframe', size: {x: 400, y: 300}}\"><img src='"
                     . JURI::root(true) . "/components/com_thm_groups/img/icon-16-edit.png' /></a> </td>";
                     $output .= "</tr>";
-                    $k = 1 - $k;
+                    $index = 1 - $index;
 
                 }
             }
@@ -327,9 +327,9 @@ class THMGroupsViewEdit extends JView
                 . '&gsgid=' . JRequest::getVar('gsgid', 0)
                 . '&name=' . JRequest::getVar('name', 0);
 
-        $u = JURI::getInstance($link . $params);
+        $uri = JURI::getInstance($link . $params);
 
-        $pathway->addItem($name . $firstname, $u->toString());
+        $pathway->addItem($name . $firstname, $uri->toString());
         $pathway->addItem(JText::_("COM_THM_GROUPS_EDIT_BREADCRUMB"), '');
 
         // Daten für die Form
