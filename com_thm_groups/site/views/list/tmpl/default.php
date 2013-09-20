@@ -110,13 +110,13 @@ function getListAll($params, $pagetitle, $gid)
 
         // Anzahl der verschiedenen Anfangsbuchstaben ermitteln
 
-        $alleAnfangsbuchstaben = array();
+        $fLetters = array();
 
         foreach ($allLastNames as $name)
         {
-            if (!in_array(strtoupper(substr($name->lastName, 0, 1)), $alleAnfangsbuchstaben))
+            if (!in_array(strtoupper(substr($name->lastName, 0, 1)), $fLetters))
             {
-                $alleAnfangsbuchstaben[] = strtoupper(substr($name->lastName, 0, 1));
+                $fLetters[] = strtoupper(substr($name->lastName, 0, 1));
             }
         }
 
@@ -316,7 +316,7 @@ function getListAlphabet($params, $pagetitle, $gid)
                 'Y',
                 'Z'
         );
-        $alleAnfangsbuchstaben = array();
+        $fLetters = array();
         foreach ($allLastNames as $name)
         {
             $searchUm = str_replace("Ãƒâ€“", "O", $name->lastName);
@@ -347,16 +347,16 @@ function getListAlphabet($params, $pagetitle, $gid)
             $searchUm = str_replace("Ã¼", "u", $searchUm);
             $searchUm = str_replace("Ãœ", "U", $searchUm);
 
-            if (!in_array(strtoupper(substr($searchUm, 0, 1)), $alleAnfangsbuchstaben))
+            if (!in_array(strtoupper(substr($searchUm, 0, 1)), $fLetters))
             {
-                $alleAnfangsbuchstaben[] = strtoupper(substr($searchUm, 0, 1));
+                $fLetters[] = strtoupper(substr($searchUm, 0, 1));
             }
         }
         // When first call of the view, search first character with members in it
-        sort($alleAnfangsbuchstaben);
+        sort($fLetters);
         if (!isset($shownLetter))
         {
-            $shownLetter = $alleAnfangsbuchstaben[0];
+            $shownLetter = $fLetters[0];
         }
         $linkElementString = " ";
         if (!empty($linkElement))
@@ -392,7 +392,7 @@ function getListAlphabet($params, $pagetitle, $gid)
         {
             $idvalue = "thm_groups_letter" . $char;
 
-            if (in_array(strtoupper($char), $alleAnfangsbuchstaben))
+            if (in_array(strtoupper($char), $fLetters))
             {
                 if ($char == $shownLetter)
                 {
@@ -410,7 +410,7 @@ function getListAlphabet($params, $pagetitle, $gid)
         }
 
         $retString .= "</div>";
-        if ($alleAnfangsbuchstaben == null)
+        if ($fLetters == null)
         {
             $retString .= "<div style='float:left'><br />Keine Mitglieder vorhanden.</div>";
         }
