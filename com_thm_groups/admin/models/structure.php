@@ -221,7 +221,7 @@ class THMGroupsModelStructure extends JModelList
         }
         else
         {
-            $i = 0;
+            $index = 0;
             foreach ($order as $itemOrder)
             {
                 /*
@@ -232,7 +232,7 @@ class THMGroupsModelStructure extends JModelList
                 $query = $db->getQuery(true);
                 $query->update($db->qn('#__thm_groups_structure') . " AS a");
                 $query->set("a.order = " . ($itemOrder));
-                $query->where("a.id = " . $cid[$i]);
+                $query->where("a.id = " . $cid[$index]);
 
                 $db->setQuery($query);
                 if (!$db->query())

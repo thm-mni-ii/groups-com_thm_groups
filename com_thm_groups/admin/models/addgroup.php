@@ -262,15 +262,15 @@ class THMGroupsModelAddGroup extends JModelForm
 
         try
         {
-            $p = new THMPicTransform($_FILES[$picField]);
-            $p->safeSpecial(JPATH_ROOT . DS . "components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS, "g" . $gid, 200, 200, "JPG");
+            $pic = new THMPicTransform($_FILES[$picField]);
+            $pic->safeSpecial(JPATH_ROOT . DS . "components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS, "g" . $gid, 200, 200, "JPG");
             if (JModuleHelper::isEnabled('mod_thm_groups')->id != 0)
             {
-                $p->safeSpecial(JPATH_ROOT . DS . "modules" . DS . "mod_thm_groups" . DS . "images" . DS, "g" . $gid, 200, 200, "JPG");
+                $pic->safeSpecial(JPATH_ROOT . DS . "modules" . DS . "mod_thm_groups" . DS . "images" . DS, "g" . $gid, 200, 200, "JPG");
             }
             if (JModuleHelper::isEnabled('mod_thm_groups_smallview')->id != 0)
             {
-                $p->safeSpecial(JPATH_ROOT . DS . "modules" . DS . "mod_thm_groups_smallview" . DS . "images" . DS, "g" . $gid, 200, 200, "JPG");
+                $pic->safeSpecial(JPATH_ROOT . DS . "modules" . DS . "mod_thm_groups_smallview" . DS . "images" . DS, "g" . $gid, 200, 200, "JPG");
             }
         }
         catch (Exception $e)
