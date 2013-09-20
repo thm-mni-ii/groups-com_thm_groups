@@ -283,6 +283,8 @@ class THMGroupsControllerSinglearticle extends JControllerForm
      * @return	void
      *
      * @since	1.6
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function postSaveHook(JModel &$model, $validData)
     {

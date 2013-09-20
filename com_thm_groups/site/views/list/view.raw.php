@@ -38,6 +38,8 @@ class THMGroupsViewList extends JView
      * @return void
      *
      * @see JView::display()
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function display($tpl = null)
     {

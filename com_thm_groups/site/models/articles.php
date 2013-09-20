@@ -145,6 +145,8 @@ class THMGroupsModelArticles extends JModelList
      * @param   object  $direction  Direction
      *
      * @return	void
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function populateState($ordering = null, $direction = null)
     {
