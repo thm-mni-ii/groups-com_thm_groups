@@ -44,7 +44,7 @@ class THMGroupsModelEditGroup extends JModelForm
      * @param   Array  $data      Data
      * @param   Bool   $loadData  true
      *
-     * @return	boolean	True on success
+     * @return	String	True on success
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */

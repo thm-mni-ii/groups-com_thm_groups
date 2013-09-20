@@ -304,7 +304,7 @@ class THMGroupsModelAddGroup extends JModelForm
      * @param   Int     $structid  StructID
      * @param   String  $type      Type
      *
-     * @return	boolean	True on success
+     * @return	String	Value
      */
     public function getExtra($structid, $type)
     {
@@ -540,7 +540,7 @@ class THMGroupsModelAddGroup extends JModelForm
     /**
      * Get all groups
      *
-     * @return	boolean	True on success
+     * @return	array	List of groups
      */
     public function getAllGroups()
     {

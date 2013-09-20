@@ -185,7 +185,7 @@ class THMGroupsModelProfile extends JModelForm
      * @param   String  $type      Type
      *
      * @access	public
-     * @return	boolean	True on success
+     * @return	String	True on success
      */
     public function getExtra($structid, $type)
     {
