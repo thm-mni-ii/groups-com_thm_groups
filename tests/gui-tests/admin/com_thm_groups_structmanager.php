@@ -11,7 +11,7 @@ class ComThmGroupsStructManager extends JoomlaSeleniumTest
         try {
             $this->assertTrue($this->isElementPresent("id=namee"));
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
-            array_push($this->verificationErrors, $e->toString());
+            array_push($this->verificationErrors, "Es wurde ID Name erwartet!!!");
         }
         try {
             $this->assertEquals("date,link,multiselect,number,picture,table,text,textfield", implode(',', $this->getSelectOptions("id=relation")));
