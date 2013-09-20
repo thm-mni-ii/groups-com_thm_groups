@@ -9,7 +9,7 @@ class ComThmGroupsStructManager extends JoomlaSeleniumTest
         $this->click("css=span.icon-32-new");
         $this->waitForPageToLoad("30000");
         try {
-            $this->assertTrue($this->isElementPresent("id=name"));
+            $this->assertTrue($this->isElementPresent("id=namee"));
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             array_push($this->verificationErrors, $e->toString());
         }

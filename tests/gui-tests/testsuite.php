@@ -37,8 +37,8 @@ class AllComThmGroupsGuiTests
     {
         $suite = new PHPUnit_Framework_TestSuite('Component THM Groups GUI Test');
 
-        $suite->addTestFile(__DIR__ . '/com_thm_groups__administration_home__en_gb.php');
         $suite->addTestFile(__DIR__ . '/com_thm_groups_structmanager.php');
+        $suite->addTestFile(__DIR__ . '/com_thm_groups__administration_home__en_gb.php');
 
         return $suite;
     }
