@@ -31,9 +31,9 @@
 <div id="desc"><?php echo $this->desc; ?></div>
 
 <div id="gslistview">
+</div>
 
 <?php
-
 /**
  * Method to get list all
  *
@@ -424,6 +424,7 @@ function getListAlphabet($params, $pagetitle, $gid) {
          );
 
         return $retString;
+}
 
 /**
  * Method to get a many user with the same Letter
@@ -754,29 +755,32 @@ function getCssView($params)
     return $out;
 }
 
-$mainframe = Jfactory::getApplication ();
+$mainframe = Jfactory::getApplication();
 $model = $this->model;
-$params = $mainframe->getParams ();
-$paramsArray = $params->toArray ();
+$params = $mainframe->getParams();
+$paramsArray = $params->toArray();
 $mycss = getCssView($paramsArray);
 
-$document = JFactory::getDocument ();
+$document = JFactory::getDocument();
 $document->addStyleDeclaration($mycss);
 
 // Mainframe Parameter
 
-$pagetitle = $params->get ( 'page_title' );
-$showall = $params->get ( 'showAll' );
-$showpagetitle = $params->get ( 'show_page_heading' );
+$pagetitle = $params->get('page_title');
+$showall = $params->get('showAll');
+$showpagetitle = $params->get('show_page_heading');
 
-if ($showpagetitle) {
-    $this->assignRef ( 'title', $pagetitle );
+if ($showpagetitle)
+{
+    $this->assignRef('title', $pagetitle);
 }
 
-if ($showall == 1) {
-    echo getListAll ( $paramsArray, $pagetitle, $model->getGroupNumber () );
-} else {
-    echo getListAlphabet ( $paramsArray, $pagetitle, $model->getGroupNumber () );
+if ($showall == 1)
+{
+    echo getListAll($paramsArray, $pagetitle, $model->getGroupNumber());
+}
+else
+{
+    echo getListAlphabet($paramsArray, $pagetitle, $model->getGroupNumber());
 }
 ?>
-</div>
