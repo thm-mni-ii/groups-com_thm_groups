@@ -4,6 +4,7 @@ class ComThmGroupsStructManager extends JoomlaSeleniumTest
     public function testThmGroupsStructOptionsAvailable()
     {
         $this->performBackendLogin();
+
         $this->click("link=Structure");
         $this->waitForPageToLoad("30000");
         $this->click("css=span.icon-32-new");
@@ -22,5 +23,7 @@ class ComThmGroupsStructManager extends JoomlaSeleniumTest
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             array_push($this->verificationErrors, "Dropdown Error!");
         }
+
+        $this->performBackendLogout();
     }
 }
