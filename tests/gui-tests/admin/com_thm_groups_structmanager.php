@@ -24,6 +24,8 @@ class ComThmGroupsStructManager extends JoomlaSeleniumTest
             array_push($this->verificationErrors, "Dropdown Error!");
         }
 
+        $this->click("css=span.icon-32-cancel");
+
         $this->performBackendLogout();
     }
 }
