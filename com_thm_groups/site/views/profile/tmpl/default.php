@@ -18,214 +18,284 @@
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
-defined('_JEXEC') or die('Restricted access');
+defined ( '_JEXEC' ) or die ( 'Restricted access' );
 
-JHTML::_('behavior.modal', 'a.modal-button');
-JHTML::_('behavior.calendar');
+JHTML::_ ( 'behavior.modal', 'a.modal-button' );
+JHTML::_ ( 'behavior.calendar' );
 
-$user = JFactory::getUser();
-$componentparams = JComponentHelper::getParams('com_thm_groups');
-$canEdit = (($user->id == $this->userid && $componentparams->getValue('editownprofile', '0') == 1) || $this->canEdit);
-$model = new THMGroupsModelProfile;
+$user = JFactory::getUser ();
+$componentparams = JComponentHelper::getParams ( 'com_thm_groups' );
+$canEdit = (($user->id == $this->userid && $componentparams->getValue ( 'editownprofile', '0' ) == 1) || $this->canEdit);
+$model = new THMLibThmGroupsUser;
+$userInfoAsObject = $model::getUserInfo($this->userid);
+$userInfoArray = $userInfoAsObject->profilInfos;
 
-$view_old = 0;
-$layout_old = 0;
-?>
-<div id="title"><?php
-    $title = '';
-    $firstName = '';
-    $lastName = '';
-    $picture = null;
-    $picpath = null;
-    foreach ($this->items as $item)
+$out = buildInfo($this->userid, $userInfoArray);
+
+// Get css
+$mycss = getProfilCss($out[1]);
+
+$document = JFactory::getDocument();
+$document->addStyleDeclaration($mycss);
+
+// Print
+echo $out[0];
+
+/**
+ * Return information about user
+ *
+ * @param   Integer  $userid  contains user id
+ *
+ * @param   Array  $userData  user data
+ *
+ * @return information about user
+ */
+function buildinfo($userid, $userData) {
+    $head = '<div class="contentheading">';
+    $body = '<div class="contentbody">';
+    $result = '';
+
+    $msg = array();
+
+    $arrayWithIds = array();
+    $firstPic = true;
+
+    // For edit url
+    $attribut = THMLibThmGroupsUser::getUrl(array("name", "gsuid", "gsgid"));
+    $result .= '<div class="thm_groups_content_profile">';
+
+    // For edit Button
+    $tempName = JFactory::getUser($userid)->get('name');
+    $nameArray = explode(" ", $tempName);
+    $lastName =(array_key_exists(1, $nameArray) ? $nameArray[1] : "");
+
+    if ($userid)
     {
-        // Daten fuer den HEAD in Variablen speichern
-        switch ($item->structid)
+        $struct = array();
+
+        foreach (THMLibThmGroupsUser::getStructure() as $structItem)
         {
-            case "1":
-                $firstName = $item->value;
-                break;
-            case "2":
-                $lastName = $item->value;
-                break;
-            case "5":
-                $title = $item->value;
-                break;
-            default:
-                if ($this->getStructureType($item->structid) == "PICTURE" && $picture == null)
-                {
-                    if ($item->publish)
-                    {
-                        $picpath = $model->getPicPath($item->structid);
-                        $picture = $item->value;
-                        $structId = $item->structid;
-                    }
+            $struct[$structItem->id] = $structItem->field;
+        }
+
+        // Edit icon
+        if ($userid == JFactory::getUser()->id && THMLibThmGroupsUser::canEdit() == true)
+        {
+            $head .= '<div class="thm_groups_content_profile_edit">';
+
+            $head .= "<a href='" . JRoute::_('index.php?option=com_thm_groups&view=edit&layout=default&' . $attribut . '&gsuid=' . $userid
+                    . '&name=' . trim($lastName) . '&gsgid=4' ) . "'>"
+                    . JHTML::image("libraries/thm_groups/assets/icons/edit.png", 'bearbeiten', 'bearbeiten') . "</a>";
+            $head .= '</div>';
+        }
+
+        for ($index = 0; $index < count($userData); $index ++)
+        {
+
+            $data = $userData[$index];
+
+            if ($data->value != "" && $data->publish)
+            {
+                switch ($data->structid) {
+                    // Vorname
+                    case "1" :
+                        $head .= '<div class="thm_groups_text" id="' . $struct[$data->structid] .'">';
+                        $head .= $data->value . "&nbsp;";
+                        $head .= '</div>';
+                        array_push($arrayWithIds, $struct[$data->structid]);
+                        break;
+
+                    // Nachname
+                    case "2" :
+                        $head .= '<div class="thm_groups_text" id="' . $struct[$data->structid] .'">';
+                        $head .= $data->value . "&nbsp;";
+                        $head .= '</div>';
+                        array_push($arrayWithIds, $struct[$data->structid]);
+                        break;
+
+                    // Titel
+                    case "5" :
+                        $head .= '<div class="thm_groups_text" id="' . $struct[$data->structid] .'">';
+                        $head .= $data->value . "&nbsp;";
+                        $head .= '</div>';
+                        array_push($arrayWithIds, $struct[$data->structid]);
+                        break;
+
+                    // Posttitel
+                    case "7" :
+                        $head .= '<div class="thm_groups_text" id="' . $struct[$data->structid] .'">';
+                        $head .= $data->value . "&nbsp;";
+                        $head .= '</div>';
+                        array_push($arrayWithIds, $struct[$data->structid]);
+                        break;
+
+                    // EMail
+                    case "4" :
+                        $body .= '<div class="thm_groups_field_container" id="field_' . $struct[$data->structid] . '">';
+                        $body .= '<div class="thm_groups_label" id="' . $struct[$data->structid] . '_label">';
+                        $body .= '<b>' . $struct[$data->structid] . '</b>';
+                        $body .= '</div>';
+                        $body .= '<div class="thm_groups_value" id="' . $struct[$data->structid] . '_value">';
+                        $body .= JHTML::_('email.cloak', $data->value, 1, $data->value, 0);
+                        $body .= '</div>';
+                        $body .= '</div>';
+                        array_push($arrayWithIds, 'field_' . $struct[$data->structid]);
+                        array_push($arrayWithIds, $struct[$data->structid] . '_label');
+                        array_push($arrayWithIds, $struct[$data->structid] . '_value');
+                        break;
+                    default :
+                        switch ($data->type)
+                        {
+                            case "LINK" :
+                                if ($data->type == 'LINK' && trim($data->value) != "")
+                                {
+                                    $body .= '<div class="thm_groups_field_container" id="field_' . $struct[$data->structid] . '">';
+                                    $body .= '<div class="thm_groups_label" id="' . $struct[$data->structid] . '_label">';
+                                    $body .= '<b>' . $struct[$data->structid] . '</b>';
+                                    $body .= '</div>';
+                                    $body .= '<div class="thm_groups_value" id="' . $struct[$data->structid] . '_value">';
+                                    $body .= "<a href='" . htmlspecialchars_decode($data->value) . "'>"
+                                             . htmlspecialchars_decode($data->value) . "</a>";
+                                    $body .= '</div>';
+                                    $body .= '</div>';
+                                    array_push($arrayWithIds, 'field_' . $struct[$data->structid]);
+                                    array_push($arrayWithIds, $struct[$data->structid] . '_label');
+                                    array_push($arrayWithIds, $struct[$data->structid] . '_value');
+                                }
+                                break;
+
+                            case "PICTURE" :
+                                $attribs['class'] = 'picture';
+                                $attribs['id'] = 'pic_' . $data->structid;
+                                $path = THMLibthmGroupsUser::getPicPath($data->structid);
+
+                                if($firstPic)
+                                {
+                                    $image = JHTML::image("$path" . $data->value, 'Portrait', $attribs);
+                                    $head .= $image;
+                                    $firstPic = false;
+
+                                }
+                                else
+                                {
+                                    $body .= '<div class="thm_groups_field_container" id="field_' . $struct[$data->structid] . '">';
+                                    $body .= '<div class="thm_groups_label" id="' . $struct[$data->structid] . '_label">';
+                                    $body .= '<b>' . $struct[$data->structid] . '</b>';
+                                    $body .= '</div>';
+                                    $body .= '<div class="thm_groups_picture" id="' . $struct[$data->structid] . '_value">';
+                                    $image = JHTML::image("$path" . $data->value, 'Image', $attribs);
+                                    $body .= $image;
+                                    $body .= '</div>';
+                                    $body .= '</div>';
+                                    array_push($arrayWithIds, 'field_' . $struct[$data->structid]);
+                                    array_push($arrayWithIds, $struct[$data->structid] . '_label');
+                                    array_push($arrayWithIds, $struct[$data->structid] . '_value');
+                                    array_push($arrayWithIds, 'pic_' . $data->structid);
+                                }
+
+                                break;
+
+                            case "TABLE" :
+                                $body .= '<div class="thm_groups_field_container" id="field_' . $struct[$data->structid] . '">';
+                                $body .= '<div class="thm_groups_label" id="' . $struct[$data->structid] . '_label">';
+                                $body .= '<b>' . $struct[$data->structid] . '</b>';
+                                $body .= '</div>';
+                                $body .= '<div class="thm_groups_table" id="' . $struct[$data->structid] . '_value">';
+                                $body .= getTable($data->value);
+                                $body .= '</div>';
+                                $body .= '</div>';
+                                array_push($arrayWithIds, 'field_' . $struct[$data->structid]);
+                                array_push($arrayWithIds, $struct[$data->structid] . '_label');
+                                array_push($arrayWithIds, $struct[$data->structid] . '_value');
+                                break;
+
+                            default :
+                                $body .= '<div class="thm_groups_field_container" id="field_' . $struct[$data->structid] . '">';
+                                $body .= '<div class="thm_groups_label" id="' . $struct[$data->structid] . '_label">';
+                                $body .= '<b>' . $struct[$data->structid] . '</b>';
+                                $body .= '</div>';
+                                $body .= '<div class="thm_groups_value" id="' . $struct[$data->structid] . '_value">';
+                                $body .= nl2br(htmlspecialchars_decode($data->value)) . "&nbsp;";
+                                $body .= '</div>';
+                                $body .= '</div>';
+                                array_push($arrayWithIds, 'field_' . $struct[$data->structid]);
+                                array_push($arrayWithIds, $struct[$data->structid] . '_label');
+                                array_push($arrayWithIds, $struct[$data->structid] . '_value');
+                                break;
+                        }
+                        break;
                 }
-                break;
+            }
         }
     }
-?></div>
-    <div>
 
-            <?php
+    $head .= '</div>';
+    $body .= '</div>';
+    $result .= $head . $body;
+    $result .= '</div>';
 
-                // Row with title and name
-                echo "<h2 class='contentheading'>" . $title . " " . $firstName . " " . $lastName;
-                $componentparams = JComponentHelper::getParams('com_thm_groups');
-                $canEdit = (($user->id == $this->userid && $componentparams->getValue('editownprofile', '0') == 1));
-                if ($canEdit)
-                {
-                    $attribs['title'] = 'bearbeiten';
+    array_push($msg, $result);
+    array_push($msg, $arrayWithIds);
 
-                    // Daten fuer die EditForm
-                    $option = JRequest :: getVar('option', 0);
-                    $layout = JRequest :: getVar('layout', 0);
-                    $view   = JRequest :: getVar('view', 0);
+    return $msg;
+}
 
-                    $path = "index.php?option=com_thm_groups&view=edit&layout=default&Itemid=";
-                    $path2 = "&option_old=$option&view_old=$view&layout_old=$layout";
-                    echo "<span style='float:right;'><a href='"
-                    . JRoute::_($path . $this->itemid . '&gsuid=' . $this->userid . '&name=' . trim($lastName) . '&gsgid=' . $this->gsgid . $path2)
-                    . "'> "
-                    . JHTML::image("components/com_thm_groups/img/icon-32-edit.png", 'bearbeiten', $attribs) . "</a></span>";
-                }
-                echo "</h2>";
-                echo "<table>";
+/**
+ * getTable
+ *
+ * @param   Array  $dataTable  data
+ *
+ * @return String
+ */
+function getTable($data)
+{
+    $jsonTable = json_decode($data);
+    $table = "<table class='table'><tr>";
+    foreach ($jsonTable[0] as $key => $value)
+    {
+        $headItem = str_replace("_", " ", $key);
+        $table = $table . "<th>" . $headItem . "</th>";
+    }
+    $table = $table . "</tr>";
+    foreach ($jsonTable as $item)
+    {
+        $table = $table . "<tr>";
+        foreach ($item as $value)
+        {
+            $table = $table . "<td>" . $value . "</td>";
+        }
+        $table = $table . "</tr>";
+    }
+    $table = $table . "</table>";
+    return $table;
+}
 
-                // Get picture, if exists
-                if ($picture != null)
-                {
-                    $attribs['class'] = 'picture';
-                    $attribs['id'] = $structId;
-                    echo JHTML :: image($picpath . '/' . $picture, "Portrait", $attribs);
-                }
-
-                // Get default picture
-                else
-                {
-                    $picStrcutId = "";
-                    $allStructs = $model->getStructure();
-                    foreach ($allStructs as $struct)
-                    {
-
-                        // Find first structure of type picture
-                        if ($struct->type == "PICTURE")
-                        {
-                            $picStrcutId = $struct->id;
-                        }
-                        else
-                        {
-                        }
-                    }
-                    $attribs['id'] = $picStrcutId;
-                    $attribs['class'] = 'picture';
-                    $path = JURI::base() . $model->getPicPath($picStrcutId);
-                    $picture = $model->getDefaultPic($picStrcutId);
-                    echo JHTML :: image($path . '/' . $picture, "Portrait", $attribs);
-                }
-
-
-                foreach ($this->structure as $structureItem)
-                {
-                    if ($structureItem->id > 3 && $structureItem->id != 5 && $structureItem->type != 'PICTURE')
-                    {
-                        foreach ($this->items as $item)
-                        {
-                                if ($item->structid == $structureItem->id && $item->value != "" && $item->publish == 1)
-                                {
-                                ?>
-
-                    <tr>
-                        <td width="110" class="key">
-
-                            <label for="title">
-                                  <b><?php
-
-                                      // Name of structure, like E-Mail, Telefon, Fax
-                                    echo $structureItem->field . ":"; ?></b>
-                            </label>
-                        </td>
-                        <td>
-                            <?php
-
-                                    // Value of structure
-                                    switch ($structureItem->type)
-                                    {
-                                        case 'TABLE':
-                                            $head = explode(';', $this->getExtra($structureItem->id, $structureItem->type));
-                                            $arrValue = json_decode($item->value);?>
-                                            <table>
-                                                <tr>
-                                            <?php
-                                            foreach ($head as $headItem)
-                                            {
-                                                    echo "<th>" . htmlspecialchars_decode($headItem) . "</th>";
-                                            }
-                                            ?>
-                                                </tr>
-                                            <?php
-                                                if ($item->value != "" && $item->value != "[]")
-                                                {
-                                                    $k = 0;
-                                                    foreach ($arrValue as $row)
-                                                    {
-                                                        if ($k)
-                                                        {
-                                                            echo "<tr style='background-color:#F7F7F7;'>";
-                                                        }
-                                                        else
-                                                        {
-                                                            echo "<tr>";
-                                                        }
-                                                        foreach ($row as $rowItem)
-                                                        {
-                                                            echo "<td>" . htmlspecialchars_decode($rowItem) . "</td>";
-                                                        }
-                                                        echo "</tr>";
-                                                        $k = 1 - $k;
-                                                    }
-                                                }
-                                            ?>
-                                            </table>
-                                        <?php
-                                            break;
-                                        case 'PICTURE':
-                                            break;
-                                        case "LINK":
-                                                if (trim($item->value) != "")
-                                                {
-                                                    echo "<a href='" . htmlspecialchars_decode($item->value) . "'>"
-                                                         . htmlspecialchars_decode($item->value) . "</a>";
-                                                }
-                                                break;
-                                        case 'MULTISELECT':
-                                                if (trim($item->value) != "")
-                                                {
-                                                    echo htmlspecialchars_decode($item->value);
-                                                }
-                                                break;
-                                            break;
-                                        default:
-                                            if ($item->structid == '4')
-                                            {
-                                                echo JHTML :: _('email.cloak', $item->value, 1, $item->value, 0);
-                                            }
-                                            else
-                                            {
-                                                echo JText::_(htmlspecialchars_decode($item->value));
-                                            }
-                                    }
-                                }
-                        }
-                            ?>
-                        </td>
-                    </tr>
-                <?php
-                    }
-                }
-                ?>
-        </table>
-        <a href="<?php echo  $this->links; ?>">
-   <input type="button" value="<?php echo JText::_("COM_THM_GROUPS_BACK_BUTTON") ?>" />
-</a>
-    </div>
+/**
+ * Generates the css code
+ *
+ * @return String with css code
+ */
+function getProfilCss($IDs)
+{
+    $out = '';
+    var_dump($IDs);
+    $out .= '
+            .thm_groups_content_profile
+            {
+                width:200px;
+            }
+            .thm_groups_content_profile div
+            {
+                float:left;
+            }
+            .thm_groups_content_profile_edit
+            {
+                float:right !important;
+            }
+            .thm_groups_value
+            {
+                margin-left:20px;
+            }
+            ';
+    return $out;
+}

@@ -21,7 +21,7 @@
 defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
 jimport('joomla.filesystem.path');
-
+jimport('thm_groups.data.lib_thm_groups_user');
 
 /**
  * THMGroupsViewProfile class for component com_thm_groups
