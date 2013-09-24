@@ -215,7 +215,7 @@ function buildinfo($userid, $userData) {
                                 $body .= '<b>' . $struct[$data->structid] . '</b>';
                                 $body .= '</div>';
                                 $body .= '<div class="thm_groups_value" id="' . $struct[$data->structid] . '_value">';
-                                $body .= nl2br(htmlspecialchars_decode($data->value)) . "&nbsp;";
+                                $body .= nl2br(htmlspecialchars_decode($data->value));
                                 $body .= '</div>';
                                 $body .= '</div>';
                                 array_push($arrayWithIds, 'field_' . $struct[$data->structid]);
@@ -278,19 +278,35 @@ function getTable($data)
 function getProfilCss($IDs)
 {
     $out = '';
-    var_dump($IDs);
     $out .= '
             .thm_groups_content_profile
             {
                 width:200px;
             }
-            .thm_groups_content_profile div
+            .thm_groups_content_profile > div
+            {
+                float:left;
+            }
+            .contentheading > div
             {
                 float:left;
             }
             .thm_groups_content_profile_edit
             {
                 float:right !important;
+            }
+            .contentbody > div
+            {
+                float:left;
+                clear:both;
+            }
+            .thm_groups_field_container
+            {
+                margin-top:20px;
+            }
+            .thm_groups_field_container >div
+            {
+                float:left;
             }
             .thm_groups_value
             {
