@@ -25,6 +25,7 @@ class ComThmGroupsStructManager extends JoomlaSeleniumTest
         }
 
         $this->click("css=span.icon-32-cancel");
+        $this->waitForPageToLoad("30000");
 
         $this->performBackendLogout();
     }
