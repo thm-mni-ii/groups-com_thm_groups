@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.2
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -28,119 +28,119 @@ jimport('joomla.application.component.model');
 class THMGroupsModelAddStructure extends JModel
 {
 
-	/**
-	 * Builds query
-	 *
-	 * @return	Query
-	 */
-	public function _buildQuery()
-	{
-		/*
-			$query = "SELECT * FROM #__thm_groups_relationtable";
-		 */
-		$db = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('*');
-		$query->from($db->qn('#__thm_groups_relationtable'));
+    /**
+     * Builds query
+     *
+     * @return	Query
+     */
+    public function _buildQuery()
+    {
+        /*
+            $query = "SELECT * FROM #__thm_groups_relationtable";
+         */
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+        $query->select('*');
+        $query->from($db->qn('#__thm_groups_relationtable'));
 
-		return $query->__toString();
-	}
+        return $query->__toString();
+    }
 
-	/**
-	 * Gets data
-	 *
-	 * @return	result
-	 */
-	public function getData()
-	{
-		$query = $this->_buildQuery();
-		$this->_data = $this->_getList($query);
-		return $this->_data;
-	}
+    /**
+     * Gets data
+     *
+     * @return	result
+     */
+    public function getData()
+    {
+        $query = $this->_buildQuery();
+        $this->_data = $this->_getList($query);
+        return $this->_data;
+    }
 
-	/**
-	 * Stores data
-	 *
-	 * @return	boolean	True on success
-	 */
-	public function store()
-	{
+    /**
+     * Stores data
+     *
+     * @return	boolean	True on success
+     */
+    public function store()
+    {
 
-		$name = JRequest::getVar('name');
-		$relation = JRequest::getVar('relation');
-		$extra = JRequest::getVar($relation . '_extra');
-		$picpath = JRequest::getVar($relation . '_extra_path');
-		
-		$err = 0;
+        $name = JRequest::getVar('name');
+        $relation = JRequest::getVar('relation');
+        $extra = JRequest::getVar(strtolower($relation) . '_extra');
+        $picpath = JRequest::getVar(strtolower($relation) . '_extra_path');
 
-		/*
-		$query = "SELECT a.order FROM #__thm_groups_structure as a ORDER BY a.order DESC";
-		*/
-		$db = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('a.order');
-		$query->from($db->qn('#__thm_groups_structure') . " AS a");
-		$query->order('a.order DESC');
-		$db->setQuery($query);
-		$maxOrder = $db->loadObject();
-		$newOrder = $maxOrder->order + 1;
+        $err = 0;
 
-		/*$query1 = "INSERT INTO `#__thm_groups_structure` (`id`, `field`, `type`, `order`)"
-			. " VALUES (null"
-			. ", '" . $name . "'"
-			. ", '" . $relation . "'"
-			. ", " . ($newOrder) . ")";
-		*/
-		$query = $db->getQuery(true);
-		$query->insert("`#__thm_groups_structure` (`id`, `field`, `type`, `order`)");
-		$query->values("NULL, '" . $name . "', '" . $relation . "', '" . ($newOrder) . "'");
-		$db->setQuery($query);
-		if ($db->query())
-		{
-			$id = $db->insertid();
-			JRequest::setVar('cid[]', $id, 'get');
-		}
-		else
-		{
-			$err = 1;
-		}
+        /*
+        $query = "SELECT a.order FROM #__thm_groups_structure as a ORDER BY a.order DESC";
+        */
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+        $query->select('a.order');
+        $query->from($db->qn('#__thm_groups_structure') . " AS a");
+        $query->order('a.order DESC');
+        $db->setQuery($query);
+        $maxOrder = $db->loadObject();
+        $newOrder = $maxOrder->order + 1;
 
-		if (isset($extra))
-		{
-			/*
-				$query = "INSERT INTO #__thm_groups_" . strtolower($relation) . "_extra ( `structid`, `value`)"
-				. " VALUES ($id"
-				. ", '" . $extra . "')";
-			*/
-			$query = $db->getQuery(true);
-			
-			// Besondere behandlung fuer picture, da andere parameter
-			if (isset($picpath))
-			{
-				$query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`, `path`)");
-				$query->values("'" . $id . "', '" . $extra . "', '" . $picpath . "'");
-			}
-			else
-			{
-				$query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`)");
-				$query->values("'" . $id . "', '" . $extra . "'");
-			}
-			
-			$db->setQuery($query);
-			if (!$db->query())
-			{
-				$err = 1;
-			}	
-		}
-		
+        /*$query1 = "INSERT INTO `#__thm_groups_structure` (`id`, `field`, `type`, `order`)"
+            . " VALUES (null"
+            . ", '" . $name . "'"
+            . ", '" . $relation . "'"
+            . ", " . ($newOrder) . ")";
+        */
+        $query = $db->getQuery(true);
+        $query->insert("`#__thm_groups_structure` (`id`, `field`, `type`, `order`)");
+        $query->values("NULL, '" . $name . "', '" . $relation . "', '" . ($newOrder) . "'");
+        $db->setQuery($query);
+        if ($db->query())
+        {
+            $id = $db->insertid();
+            JRequest::setVar('cid[]', $id, 'get');
+        }
+        else
+        {
+            $err = 1;
+        }
 
-		if (!$err)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+        if (isset($extra))
+        {
+            /*
+                $query = "INSERT INTO #__thm_groups_" . strtolower($relation) . "_extra ( `structid`, `value`)"
+                . " VALUES ($id"
+                . ", '" . $extra . "')";
+            */
+            $query = $db->getQuery(true);
+
+            // Besondere behandlung fuer picture, da andere parameter
+            if (isset($picpath))
+            {
+                $query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`, `path`)");
+                $query->values("'" . $id . "', '" . $extra . "', '" . $picpath . "'");
+            }
+            else
+            {
+                $query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`)");
+                $query->values("'" . $id . "', '" . $extra . "'");
+            }
+
+            $db->setQuery($query);
+            if (!$db->query())
+            {
+                $err = 1;
+            }
+        }
+
+
+        if (!$err)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
