@@ -45,7 +45,7 @@
     </languages>
 
     <administration>
-        <menu img="components/com_thm_groups/assets/images/icon-16-staff.png">COM_THM_GROUPS</menu>
+        <menu img="components/com_thm_groups/assets/images/mni.png">COM_THM_GROUPS</menu>
         <submenu>
             <menu alias="Home" link="option=com_thm_groups&amp;view=thmgroups" view="thmgroups" img="components/com_thm_groups/assets/images/mni.png"
                 alt="THM-Groups/Home">COM_THM_GROUPS_HOME</menu>
