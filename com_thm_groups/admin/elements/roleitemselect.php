@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.0
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -125,22 +125,22 @@ class JFormFieldRoleItemSelect extends JFormField
         if ($sortButtons)
         {
             $html .= '<a onclick="roleup()" id="sortup">';
-            $html .= '<img src="../administrator/components/com_thm_groups/img/uparrow.png" title="';
+            $html .= '<img src="../administrator/components/com_thm_groups/assets/images/uparrow.png" title="';
             $html .= JText::_('COM_THM_GROUPS_ROLE_UP') . '" />';
             $html .= '</a><br />';
             $html .= '<a onclick="roledown()" id="sortdown">';
-            $html .= '<img src="../administrator/components/com_thm_groups/img/downarrow.png" title="';
+            $html .= '<img src="../administrator/components/com_thm_groups/assets/images/downarrow.png" title="';
             $html .= JText::_('COM_THM_GROUPS_ROLE_DOWN') . '" />';
             $html .= '</a>';
         }
         else
         {
             $html .= '<a onclick="roleup()" id="sortup" style="visibility:hidden">';
-            $html .= '<img src="../administrator/components/com_thm_groups/img/uparrow.png" title="';
+            $html .= '<img src="../administrator/components/com_thm_groups/assets/images/uparrow.png" title="';
             $html .= JText::_('COM_THM_GROUPS_ROLE_UP') . '" />';
             $html .= '</a><br />';
             $html .= '<a onclick="roledown()" id="sortdown" style="visibility:hidden">';
-            $html .= '<img src="../administrator/components/com_thm_groups/img/downarrow.png" title="';
+            $html .= '<img src="../administrator/components/com_thm_groups/assets/images/downarrow.png" title="';
             $html .= JText::_('COM_THM_GROUPS_ROLE_DOWN') . '" />';
             $html .= '</a>';
         }

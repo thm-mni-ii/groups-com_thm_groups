@@ -1,11 +1,11 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsModelStructure
- * @description THMGroupsModelStructure file from com_thm_groups
+ * @name        THMGroupsModelStructuremanager
+ * @description THMGroupsModelStructuremanager file from com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
@@ -17,14 +17,14 @@ defined('_JEXEC') or die();
 jimport('joomla.application.component.modellist');
 
 /**
- * THMGroupsModelStructure class for component com_thm_groups
+ * THMGroupsModelStructuremanager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsModelStructure extends JModelList
+class THMGroupsModelStructuremanager extends JModelList
 {
     /**
      * Method to remove record

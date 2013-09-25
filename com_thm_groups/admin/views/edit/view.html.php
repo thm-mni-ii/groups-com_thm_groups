@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.1.0
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -169,12 +169,12 @@ class THMGroupsViewedit extends JView
                     }
                     $output .= "<td><a href='javascript:delTableRow($key, $structid );' title='" . JText::_('COM_THM_GROUPS_ROW_LABEL') . ": "
                     . ($key + 1) . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROW') . ".' "
-                    . "class='hasTip'><img src='" . JURI::root(true) . "/components/com_thm_groups/img/icon-16-trash.png' /></a> </td>";
+                    . "class='hasTip'><img src='../administrator/components/com_thm_groups/assets/images/icon-16-trash.png' /></a> </td>";
                     $output .= "<td><a href='index.php?option=com_thm_groups&view=edit&layout="
                     . "edit_table&tmpl=component&cid=$cid[0]&structid=$structid&key=$key' "
                     . "title='" . JText::_('COM_THM_GROUPS_ROW_LABEL') . ": " . ($key + 1) . "::" . JText::_('COM_THM_GROUPS_EDIT_ROW')
                     . ".' class='modal-button hasTip' rel=\"{handler: 'iframe', "
-                    . "size: {x: 400, y: 300}}\"><img src='components/com_thm_groups/img/icon-16-edit.png' /></a> </td>";
+                    . "size: {x: 400, y: 300}}\"><img src='../administrator/components/com_thm_groups/assets/images/icon-16-edit.png' /></a> </td>";
                     $output .= "</tr>";
                     $index = 1 - $index;
 
@@ -288,12 +288,12 @@ class THMGroupsViewedit extends JView
             }
         }
         $document = JFactory::getDocument();
-        $document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
+        $document->addStyleSheet("components/com_thm_groups/assets/css/thm_groups.css");
 
-        JToolBarHelper::title(JText::_('COM_THM_GROUPS_EDITUSER_TITLE'), 'generic.png');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS_EDITUSER_TITLE'), mni);
         JToolBarHelper::apply('membermanager.apply', 'JTOOLBAR_APPLY');
         JToolBarHelper::save('membermanager.save', 'JTOOLBAR_SAVE');
-        JToolBarHelper::cancel('membermanager.cancel', 'JTOOLBAR_CANCEL');
+        JToolBarHelper::cancel('membermanager.cancel', 'JTOOLBAR_CLOSE');
 
         $cid = JRequest::getVar('cid', array(0), '', 'array');
         $model = $this->getModel();

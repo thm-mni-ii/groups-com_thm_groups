@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.1.1
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -146,7 +146,7 @@ class THMGroupsControllerEditStructure extends JControllerForm
             $type = "warning";
         }
 
-        $this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg, $type);
+        $this->setRedirect('index.php?option=com_thm_groups&view=structuremanager', $msg, $type);
     }
 
     /**
@@ -204,8 +204,7 @@ class THMGroupsControllerEditStructure extends JControllerForm
      */
     public function cancel($key = null)
     {
-        $msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
-        $this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
+        $this->setRedirect('index.php?option=com_thm_groups&view=structuremanager');
     }
 
     /**
@@ -375,7 +374,7 @@ class THMGroupsControllerEditStructure extends JControllerForm
         $attribs['width'] = '40px';
         $attribs['height'] = '40px';
 
-        echo JHTML::image("administrator/components/com_thm_groups/img/ajax-loader.gif", 'loader', $attribs);
+        echo JHTML::image("administrator/components/com_thm_groups/assets/images/ajax-loader.gif", 'loader', $attribs);
 
         $mainframe->close();
     }

@@ -1,11 +1,11 @@
 <?php
 /**
- * @version     v3.1.0
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsControllerStructure
- * @description THMGroupsControllerStructure class from com_thm_groups
+ * @name        THMGroupsControllerStructuremanager
+ * @description THMGroupsControllerStructuremanager class from com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
@@ -16,14 +16,14 @@ defined('_JEXEC') or die();
 jimport('joomla.application.component.controllerform');
 
 /**
- * THMGroupsControllerStructure class for component com_thm_groups
+ * THMGroupsControllerStructuremanager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsControllerStructure extends JControllerForm
+class THMGroupsControllerStructuremanager extends JControllerForm
 {
     /**
       * constructor (registers additional tasks to methods)
@@ -54,7 +54,7 @@ class THMGroupsControllerStructure extends JControllerForm
             if (in_array($i, $cid))
             {
                 $msg = JText::_('COM_THM_GROUPS_EDIT_ERROR');
-                $this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
+                $this->setRedirect('index.php?option=com_thm_groups&view=structuremanager', $msg);
             }
         }
 
@@ -99,7 +99,7 @@ class THMGroupsControllerStructure extends JControllerForm
      */
     public function remove()
     {
-        $model = $this->getModel('structure');
+        $model = $this->getModel('structuremanager');
 
         if ($model->remove())
         {
@@ -121,7 +121,7 @@ class THMGroupsControllerStructure extends JControllerForm
                 echo " " . $i;
             }
         }
-        $this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
+        $this->setRedirect('index.php?option=com_thm_groups&view=structuremanager', $msg);
     }
 
     /**
@@ -131,7 +131,7 @@ class THMGroupsControllerStructure extends JControllerForm
      */
     public function saveorder()
     {
-        $model = $this->getModel('structure');
+        $model = $this->getModel('structuremanager');
 
         if ($model->reorder())
         {
@@ -141,7 +141,7 @@ class THMGroupsControllerStructure extends JControllerForm
         {
             $msg = JText::_('COM_THM_GROUPS_ORDER_ERROR');
         }
-        $this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
+        $this->setRedirect('index.php?option=com_thm_groups&view=structuremanager', $msg);
     }
 
     /**
@@ -151,7 +151,7 @@ class THMGroupsControllerStructure extends JControllerForm
      */
     public function orderup()
     {
-        $model = $this->getModel('structure');
+        $model = $this->getModel('structuremanager');
 
         if ($model->reorder(-1))
         {
@@ -161,7 +161,7 @@ class THMGroupsControllerStructure extends JControllerForm
         {
             $msg = JText::_('COM_THM_GROUPS_ORDER_ERROR');
         }
-        $this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
+        $this->setRedirect('index.php?option=com_thm_groups&view=structuremanager', $msg);
     }
 
     /**
@@ -171,7 +171,7 @@ class THMGroupsControllerStructure extends JControllerForm
      */
     public function orderdown()
     {
-        $model = $this->getModel('structure');
+        $model = $this->getModel('structuremanager');
 
         if ($model->reorder(1))
         {
@@ -182,6 +182,6 @@ class THMGroupsControllerStructure extends JControllerForm
             $msg = JText::_('COM_THM_GROUPS_ORDER_ERROR');
         }
 
-        $this->setRedirect('index.php?option=com_thm_groups&view=structure', $msg);
+        $this->setRedirect('index.php?option=com_thm_groups&view=structuremanager', $msg);
     }
 }

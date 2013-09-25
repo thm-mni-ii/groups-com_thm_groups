@@ -1,11 +1,11 @@
 <?php
 /**
- * @version     v3.2.0
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsViewStructure
- * @description THMGroupsViewStructure file from com_thm_groups
+ * @name        THMGroupsViewStructuremanager
+ * @description THMGroupsViewStructuremanager file from com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @authors     Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
@@ -17,14 +17,14 @@ jimport('joomla.application.component.view');
 jimport('joomla.filesystem.path');
 
 /**
- * THMGroupsViewStructure class for component com_thm_groups
+ * THMGroupsViewStructuremanager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewStructure extends JView
+class THMGroupsViewStructuremanager extends JView
 {
     protected $items;
 
@@ -42,7 +42,7 @@ class THMGroupsViewStructure extends JView
     public function display($tpl = null)
     {
         $document   = JFactory::getDocument();
-        $document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
+        $document->addStyleSheet("components/com_thm_groups/assets/css/thm_groups.css");
         $user = JFactory::getUser();
 
         $this->items		= $this->get('Items');
@@ -50,23 +50,19 @@ class THMGroupsViewStructure extends JView
         $this->state		= $this->get('State');
 
         JToolBarHelper::title(
-                JText::_('COM_THM_GROUPS_STRUCTURE_TITLE'),
-                'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
-        );
+                JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_STRUCTUREMANAGER'), mni);
         JToolBarHelper::addNew(
-            'structure.add',
+            'structuremanager.add',
             'COM_THM_GROUPS_STRUCTURE_ADD',
             false
         );
-
-        JToolBarHelper::editListX('structure.edit', 'COM_THM_GROUPS_STRUCTURE_EDIT');
-        JToolBarHelper::deleteList('COM_THM_GROUPS_STRUCTURE_REALLY_DELETE', 'structure.remove', 'JTOOLBAR_DELETE');
-        JToolBarHelper::cancel('structure.cancel', 'JTOOLBAR_CANCEL');
+        JToolBarHelper::editListX('structuremanager.edit', 'COM_THM_GROUPS_STRUCTURE_EDIT');
+        JToolBarHelper::deleteList('COM_THM_GROUPS_STRUCTURE_REALLY_DELETE', 'structuremanager.remove', 'JTOOLBAR_DELETE');
         if ($user->authorise('core.admin', 'com_users'))
         {
+        	JToolBarHelper::divider();
             JToolBarHelper::preferences('com_thm_groups');
         }
-        JToolBarHelper::back('JTOOLBAR_BACK');
         parent::display($tpl);
 
     }

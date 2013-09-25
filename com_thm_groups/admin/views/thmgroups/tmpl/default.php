@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -12,102 +12,34 @@
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
-defined('_JEXEC') or die('Restricted access');
 
-$document   = JFactory::getDocument();
-$document->addStyleSheet("components/com_thm_groups/css/thmgroups/thmgroups.css");
+defined('_JEXEC') or die;
+$logoURL = 'administrator/components/com_thm_groups/assets/images/THM_Groups_Logo_t.png';
 ?>
-
-<!--logo-->
-<div class="logo2">
-    <img src="components/com_thm_groups/img/thm_groups_logo.png" >
+<?php
+    echo JHTML::_('image', $logoURL, JText::_('COM_THM_GROUPS'), array( 'class' => 'thm_groups_main_image'));
+?>
+<div id="thm_groups_main_description" class='thm_groups_main_description'>
+    <?php echo JText::_("COM_THM_GROUPS_MAIN_DESC"); ?>
 </div>
-
-<div class="descriptiontext">
-	<p>
-		<?php echo JText::_('COM_THM_GROUPS_MAIN_INFO');?>
-	</p>
-
-
-<!-- now Main Page Menu from Giessen_Staff -->
-<div class="description1">
-    Main Menu
-</div>
-
-<div id="gimenu1">
-
-    <!-- Manage Entries -->
-    <hr />
-    <div class="menuitem">
-    	<div class="icon" onclick="location.href='index.php?option=com_thm_groups&view=membermanager';">
-        	<div class="picture2">
-           		<img src="components/com_thm_groups/img/icon-48-staff.png" alt="Entries Manager"/>
-        	</div>
-       		<div class="description2">Member Manager</div>
-    	</div>
-
-		<div class="menudescription">
-		    	<?php echo JText::_('COM_THM_GROUPS_MEMBERMANAGER_INFO');?>
-		</div>
-	</div>
-
-
-	<div class="menuitem">
-	    <div class="icon" onclick="location.href='index.php?option=com_thm_groups&view=groupmanager';">
-	         <div class="picture2">
-	           <img src="components/com_thm_groups/img/icon-48-staff.png" alt="Group Manager"/>
-	         </div>
-	         <div class="description2">Group Manager</div>
-	    </div>
-		<div class="menudescription">
-		    	<?php echo JText::_('COM_THM_GROUPS_GROUPMANAGER_INFO');?>
-		</div>
-	</div>
-	<div class="menuitem">
-	    <div class="icon" onclick="location.href='index.php?option=com_thm_groups&view=rolemanager';">
-	         <div class="picture2">
-	           <img src="components/com_thm_groups/img/icon-48-staff.png" alt="Role Manager"/>
-	         </div>
-
-	        <div class="description2">Role Manager</div>
-	    </div>
-	    <div class="menudescription">
-		    	<?php echo JText::_('COM_THM_GROUPS_ROLEMANAGER_INFO');?>
-		</div>
-	</div>
-    <div class="menuitem">
-        <div class="icon" onclick="location.href='index.php?option=com_thm_groups&view=structure';">
-         <div class="picture2">
-           <img src="components/com_thm_groups/img/icon-48-staff.png" alt="Structure"/>
-         </div>
-
-        <div class="description2">Structure</div>
-
-    </div>
-    <div class="menudescription">
-		    	<?php echo JText::_('COM_THM_GROUPS_STRUCTURE_INFO');?>
-		</div>
-	</div>
-    <div class="menuitem">
-        <div class="icon" onclick="location.href='index.php?option=com_thm_groups&view=quickpage';">
-         <div class="picture2">
-           <img src="components/com_thm_groups/img/icon-48-staff.png" alt="Quickpage"/>
-         </div>
-
-        <div class="description2">Quickpage</div>
-
-    </div>
-    <div class="menudescription">
-		    	<?php echo JText::_('COM_THM_GROUPS_QUICKPAGE_INFO');?>
-		</div>
-	</div>
-    <!-- About
-    <div class="icon" onclick="location.href='index2.php?option=com_giessen_staff&task=about';">
-        <div class="picture2">
-            <img src="components/com_giessen_staff/img/backend/about.png" alt="About"/>
+<div id="cpanel" class='cpanel'>
+<?php foreach ($this->views as $view)
+{
+?>
+    <div class="thm_groups_main_submenu" >
+        <div class="thm_groups_main_linkdiv" >
+            <div class="icon">
+                <a href='<?php echo $view['url']; ?>'
+                   class='hasTip' title='<?php echo $view['tooltip']; ?>' >
+<?php
+    echo JHTML::_('image', $view['image'], $view['title'], array( 'class' => 'thm_groups_main_image'));
+?>
+                    <span><?php echo $view['title']; ?></span>
+                </a>
+            </div>
         </div>
-
-        <div class="description2">About</div>
-    </div>  -->
-</div>
+    </div>
+<?php
+}
+?>
 </div>

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -24,7 +24,7 @@ $listDirn	= $this->state->get('list.direction');
 $saveOrder	= $listOrder == 'a.order';
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_thm_groups&view=structure'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_thm_groups&view=structuremanager'); ?>" method="post" name="adminForm" id="adminForm">
     <table class="adminlist">
         <thead>
             <tr>
@@ -42,7 +42,7 @@ $saveOrder	= $listOrder == 'a.order';
                     <?php
                     if ($saveOrder)
                     {
-                        echo JHtml::_('grid.order',  $this->items, 'filesave.png', 'structure.saveorder');
+                        echo JHtml::_('grid.order',  $this->items, 'filesave.png', 'structuremanager.saveorder');
                     }
                     ?>
                 </th>
@@ -64,7 +64,7 @@ $saveOrder	= $listOrder == 'a.order';
         foreach ($this->items as $i => $item)
         {
             $ordering	= $listOrder == 'a.order';
-            $link = JRoute::_('index.php?option=com_thm_groups&task=structure.edit&cid[]=' . $item->id);
+            $link = JRoute::_('index.php?option=com_thm_groups&task=structuremanager.edit&cid[]=' . $item->id);
             ?>
             <tr class="row<?php echo $i % 2; ?>">
                 <td class="center">
@@ -95,12 +95,12 @@ $saveOrder	= $listOrder == 'a.order';
                             {
                             ?>
                                 <span>
-                                    <?php echo $this->pagination->orderUpIcon($i, 1, 'structure.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?>
+                                    <?php echo $this->pagination->orderUpIcon($i, 1, 'structuremanager.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?>
                                 </span>
                                 <span>
                                     <?php
                                         echo $this->pagination->orderDownIcon(
-                                                $i, $this->pagination->total, 1, 'structure.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering
+                                                $i, $this->pagination->total, 1, 'structuremanager.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering
                                                 );
                                     ?>
                                 </span>
@@ -110,12 +110,12 @@ $saveOrder	= $listOrder == 'a.order';
                             {
                             ?>
                                 <span>
-                                    <?php echo $this->pagination->orderUpIcon($i, 1, 'structure.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?>
+                                    <?php echo $this->pagination->orderUpIcon($i, 1, 'structuremanager.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?>
                                 </span>
                                 <span>
                                     <?php
                                         echo $this->pagination->orderDownIcon(
-                                                $i, $this->pagination->total, 1, 'structure.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering
+                                                $i, $this->pagination->total, 1, 'structuremanager.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering
                                                 );
                                     ?>
                                 </span>

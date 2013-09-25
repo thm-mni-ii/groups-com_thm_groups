@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -120,7 +120,7 @@ defined('_JEXEC') or die ('Restricted access');
 						name='delPic' task='editgroup.delPic' />
 					</td>
 				</tr>
-				<tr>
+				<!-- <tr>
 					<td width="110" class="key">
 						<label for="title">
 	  						<?php echo JText::_('COM_THM_GROUPS_MODE'); ?>:
@@ -185,7 +185,7 @@ defined('_JEXEC') or die ('Restricted access');
 							</option>
 						</SELECT>
 					</td>
-				</tr>
+				</tr> -->
 			</table>
 			<input type="hidden" name="option" value="com_thm_groups" />
 			<input type="hidden" name="task"   value="editgroup.delPic" />

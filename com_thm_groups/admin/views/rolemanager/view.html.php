@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -40,13 +40,10 @@ class THMGroupsViewRolemanager extends JView
     {
 
         $document   = JFactory::getDocument();
-        $document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
+        $document->addStyleSheet("components/com_thm_groups/assets/css/thm_groups.css");
         $user = JFactory::getUser();
 
-        JToolBarHelper::title(
-                JText::_('COM_THM_GROUPS_ROLEMANAGER_TITLE'),
-                'membermanager.png', JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
-        );
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_ROLEMANAGER'), mni);
         JToolBarHelper::addNewX(
             'rolemanager.addRole',
             'COM_THM_GROUPS_ROLEMANAGER_ADD',
@@ -54,13 +51,12 @@ class THMGroupsViewRolemanager extends JView
         );
         JToolBarHelper::editListX('rolemanager.edit', 'COM_THM_GROUPS_ROLEMANAGER_EDIT');
         JToolBarHelper::deleteList('COM_THM_GROUPS_REALLY_DELETE', 'rolemanager.remove', 'JTOOLBAR_DELETE');
-        JToolBarHelper::cancel('rolemanager.cancel', 'JTOOLBAR_CANCEL');
         if ($user->authorise('core.admin', 'com_users'))
         {
-            JToolBarHelper::preferences('com_thm_groups');
+        	JToolBarHelper::divider();
+        	JToolBarHelper::preferences('com_thm_groups');
         }
-        JToolBarHelper::back('JTOOLBAR_BACK');
-
+        
         $uri = JFactory::getURI();
 
         // $query = $uri->getQuery();

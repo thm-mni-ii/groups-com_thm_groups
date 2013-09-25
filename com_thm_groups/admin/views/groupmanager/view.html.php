@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.0
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -43,13 +43,10 @@ class THMGroupsViewgroupmanager extends JView
     public function display($tpl = null)
     {
         $document   = JFactory::getDocument();
-        $document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
+        $document->addStyleSheet("components/com_thm_groups/assets/css/thm_groups.css");
         $user = JFactory::getUser();
         JToolBarHelper::title(
-                JText::_('COM_THM_GROUPS_GROUPMANAGER_TITLE'),
-                'membermanager.png',
-                JPATH_COMPONENT . DS . 'img' . DS . 'membermanager.png'
-            );
+                JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_GROUPMANAGER'), mni);
 
 
         if ($user->authorise('core.admin'))
@@ -68,13 +65,12 @@ class THMGroupsViewgroupmanager extends JView
         {
             JToolBarHelper::deleteList('COM_THM_GROUPS_GROUPMANAGER_REALLY_DELETE', 'groupmanager.remove', 'JTOOLBAR_DELETE');
         }
-        JToolBarHelper::cancel('groupmanager.cancel', 'JTOOLBAR_CANCEL');
         if ($user->authorise('core.admin', 'com_users'))
         {
-            JToolBarHelper::preferences('com_thm_groups');
+        	JToolBarHelper::divider();
+        	JToolBarHelper::preferences('com_thm_groups');
         }
-        JToolBarHelper::back('JTOOLBAR_BACK');
-
+        
         $uri = JFactory::getURI();
 
         // $query = $uri->getQuery();

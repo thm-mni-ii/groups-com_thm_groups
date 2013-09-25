@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.0
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -48,18 +48,17 @@ class THMGroupsViewAddGroup extends JView
         }
 
         $document   = JFactory::getDocument();
-        $document->addStyleSheet("components/com_staff/css/membermanager/icon.css");
+        $document->addStyleSheet("components/com_thm_groups/assets/css/thm_groups.css");
 
         // $model =& $this->getModel('addgroup');
         $groups = $this->get('AllGroups');
         $this->assignRef('groups', $groups);
 
-        JToolBarHelper::title(JText::_('COM_THM_GROUPS_ADDGROUP_TITLE'), 'generic.png');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS_ADDGROUP_TITLE'), mni);
         JToolBarHelper::apply('addgroup.apply', 'JTOOLBAR_APPLY');
         JToolBarHelper::save('addgroup.save', 'JTOOLBAR_SAVE');
         JToolBarHelper::custom('addgroup.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-        JToolBarHelper::cancel('addgroup.cancel', 'JTOOLBAR_CANCEL');
-        JToolBarHelper::back('JTOOLBAR_BACK');
+        JToolBarHelper::cancel('addgroup.cancel', 'JTOOLBAR_CLOSE');
 
         $this->form = $this->get('Form');
 

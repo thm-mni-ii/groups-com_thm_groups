@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.0
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -44,19 +44,21 @@ class THMGroupsVieweditgroup extends JView
 	{
 		$app = JFactory::getApplication();
 		$user = JFactory::getUser();
+		$document = JFactory::getDocument();
+		$document->addStyleSheet($this->baseurl . "/components/com_thm_groups/assets/css/thm_groups.css");
+		
 		if (!($user->authorise('core.edit', 'com_users') && $user->authorise('core.manage', 'com_users')))
 		{
 			$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_NO_RIGHTS_TO_EDIT_GROUP');
 			$app->redirect('index.php?option=com_thm_groups&view=groupmanager', $msg);
 		}
 		
-		JToolBarHelper::title(JText::_('COM_THM_GROUPS_EDITGROUP_TITLE'), 'generic.png');
+		JToolBarHelper::title(JText::_('COM_THM_GROUPS_EDITGROUP_TITLE'), mni);
 
 		JToolBarHelper::apply('editgroup.apply', 'JTOOLBAR_APPLY');
 		JToolBarHelper::save('editgroup.save', 'JTOOLBAR_SAVE');
 		JToolBarHelper::custom('editgroup.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-		JToolBarHelper::cancel('editgroup.cancel', 'JTOOLBAR_CANCEL');
-		JToolBarHelper::back('JTOOLBAR_BACK');
+		JToolBarHelper::cancel('editgroup.cancel', 'JTOOLBAR_CLOSE');
 
 		// $model =& $this->getModel();
 		$item = $this->get('Data');

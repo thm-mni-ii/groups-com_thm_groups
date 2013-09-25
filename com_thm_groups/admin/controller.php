@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.2.4
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -59,14 +59,9 @@ class THMGroupsController extends JController
 			$vName == 'rolemanager'
 		);
 		JSubMenuHelper::addEntry(
-			JText::_('COM_THM_GROUPS_STRUCTURE'),
-			'index.php?option=com_thm_groups&view=structure',
-			$vName == 'structure'
-		);
-		JSubMenuHelper::addEntry(
-			JText::_('COM_THM_GROUPS_QUICKPAGE'),
-			'index.php?option=com_thm_groups&view=quickpage',
-			$vName == 'quickpage'
+			JText::_('COM_THM_GROUPS_STRUCTUREMANAGER'),
+			'index.php?option=com_thm_groups&view=structuremanager',
+			$vName == 'structuremanager'
 		);
 
 		parent::display($cachable, $urlparams);

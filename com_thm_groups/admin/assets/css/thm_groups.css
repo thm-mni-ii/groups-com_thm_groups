@@ -1,0 +1,35 @@
+/******************************************************************************/
+/* com_thm_organizer                                                          */
+/******************************************************************************/
+
+.tip-wrap{ z-index: 99; }
+
+.adminForm div.m{ padding: 5px; }
+
+.toolbar-close{ font-size: 1em; }
+
+.cpanel{ width: 100%; margin-top: 4px; }
+
+.thm_groups_label{ padding-right: 5px;}
+
+.thm_groups_check_column{ width: 10px; }
+
+.thm_groups_search_div{ padding-right: 8px; }
+
+.icon-48-mni { background: url('../images/icon-48-mni.png') 0 0 no-repeat; }
+
+/*thm_groups view**********************************************************/
+
+.thm_groups_main{ padding: 5px; }
+
+.thm_groups_main_description{ font-size: 16px; padding-bottom: 8px; }
+
+.thm_groups_main_linkdiv{ float: left; }
+
+.icon-32-moderate {
+	background-image: url(../../assets/images/icon-32-moderate.png);
+}
+
+.icon-32-unmoderate {
+	background-image: url(../../assets/images/icon-32-unmoderate.png);
+}

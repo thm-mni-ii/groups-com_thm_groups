@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -35,14 +35,15 @@ class THMGroupsViewAddStructure extends JView
      */
     public function display($tpl = null)
     {
+    	$document = JFactory::getDocument();
+    	$document->addStyleSheet($this->baseurl . "/components/com_thm_groups/assets/css/thm_groups.css");
 
-        JToolBarHelper::title(JText::_('COM_THM_GROUPS_ADDSTRUCTURE_TITLE'), 'generic.png');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS_ADDSTRUCTURE_TITLE'), mni);
 
         JToolBarHelper::apply('addstructure.apply', 'JTOOLBAR_APPLY');
         JToolBarHelper::save('addstructure.save', 'JTOOLBAR_SAVE');
         JToolBarHelper::custom('addstructure.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-        JToolBarHelper::cancel('addstructure.cancel', 'JTOOLBAR_CANCEL');
-        JToolBarHelper::back('JTOOLBAR_BACK');
+        JToolBarHelper::cancel('addstructure.cancel', 'JTOOLBAR_CLOSE');
 
         // $model =& $this->getModel();
         $items = $this->get('Data');

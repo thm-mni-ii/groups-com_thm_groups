@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version     v0.1.0
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -39,7 +39,7 @@ class THMGroupsViewQuickpage extends JView
     public function display($tpl = null)
     {
         $document   = JFactory::getDocument();
-        $document->addStyleSheet("components/com_thm_groups/css/membermanager/icon.css");
+        $document->addStyleSheet("components/com_thm_groups/assets/css/membermanager.css");
         $user = JFactory::getUser();
 
         JToolBarHelper::title(

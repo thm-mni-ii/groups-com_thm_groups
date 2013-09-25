@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.0
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -298,7 +298,7 @@ $user = JFactory::getUser();
                                         $grouprole->roleid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": "
                                         . $grouprole->groupname . " - " . JText::_('COM_THM_GROUPS_ROLE')
                                         . ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE')
-                                        . ".' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+                                        . ".' class='hasTip'><img src='components/com_thm_groups/assets/images/unmoderate.png' width='16px'/></a> ";
                                     }
                                 }
                             }
@@ -315,7 +315,7 @@ $user = JFactory::getUser();
                                             $grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " . $grouprole->groupid .
                                             ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": " . $grouprole->groupname . "::"
                                             . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES')
-                                            . ".' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+                                            . ".' class='hasTip'><img src='components/com_thm_groups/assets/images/unmoderate.png' width='16px'/></a> ";
                                         }
                                     }
                                     $grouproles .= '<span><b>' . $grouprole->groupname . ': </b>' . $grouprole->rolename;
@@ -333,7 +333,7 @@ $user = JFactory::getUser();
                                                 $grouprole->groupname
                                                 . " - " . JText::_('COM_THM_GROUPS_ROLE') . ": " .
                                                 $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE') . "' class='hasTip'>
-                                                <img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+                                                <img src='components/com_thm_groups/assets/images/unmoderate.png' width='16px'/></a> ";
                                             }
                                         }
                                     }
@@ -355,7 +355,7 @@ $user = JFactory::getUser();
                                             $grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " .
                                             $grouprole->groupid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": " . $grouprole->groupname .
                                             "::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') . ".' class='hasTip'>
-                                            <img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
+                                            <img src='components/com_thm_groups/assets/images/unmoderate.png' width='16px'/></a>";
                                         }
                                     }
                                     $grouproles .= '<span><b>' . $grouprole->groupname . ': </b>' . $grouprole->rolename;
@@ -372,7 +372,7 @@ $user = JFactory::getUser();
                                                 . $grouprole->roleid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": "
                                                 . $grouprole->groupname . " - " . JText::_('COM_THM_GROUPS_ROLE') . ": " . $grouprole->rolename . "::"
                                                 . JText::_('COM_THM_GROUPS_REMOVE_ROLE')
-                                                . "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
+                                                . "' class='hasTip'><img src='components/com_thm_groups/assets/images/unmoderate.png' width='16px'/></a>";
                                             }
                                         }
                                     }
@@ -400,7 +400,7 @@ $user = JFactory::getUser();
                                     $row->userid . ", " . $grouprole->groupid . ", " . $grouprole->roleid . ");' title='"
                                     . JText::_('COM_THM_GROUPS_GROUP') . ": " . $grouprole->groupname . " - " . JText::_('COM_THM_GROUPS_ROLE') . ": "
                                     . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE')
-                                    . "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+                                    . "' class='hasTip'><img src='components/com_thm_groups/assets/images/unmoderate.png' width='16px'/></a> ";
                                 }
                             }
                         }
@@ -417,7 +417,7 @@ $user = JFactory::getUser();
                                         $grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " .
                                         $grouprole->groupid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": " . $grouprole->groupname .
                                         "::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') . ".' class='hasTip'>
-                                        <img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
+                                        <img src='components/com_thm_groups/assets/images/unmoderate.png' width='16px'/></a>";
                                     }
                                 }
                                 $grouproles .= '<span><b>' . $grouprole->groupname . ': </b>' . $grouprole->rolename;
@@ -433,7 +433,7 @@ $user = JFactory::getUser();
                                             . $grouprole->roleid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": " . $grouprole->groupname
                                             . " - " . JText::_('COM_THM_GROUPS_ROLE') . ": " . $grouprole->rolename . "::"
                                             . JText::_('COM_THM_GROUPS_REMOVE_ROLE')
-                                            . "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a>";
+                                            . "' class='hasTip'><img src='components/com_thm_groups/assets/images/unmoderate.png' width='16px'/></a>";
                                         }
                                     }
                                 }
@@ -455,7 +455,7 @@ $user = JFactory::getUser();
                                         $grouproles .= "<a href='javascript:delAllGrouproles(" . $row->userid . ", " . $grouprole->groupid .
                                         ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": " . $grouprole->groupname .
                                         "::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') . ".' class='hasTip'>
-                                        <img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+                                        <img src='components/com_thm_groups/assets/images/unmoderate.png' width='16px'/></a> ";
                                     }
                                 }
                                 $grouproles .= '<span><b>' . $grouprole->groupname . ': </b>' . $grouprole->rolename;
@@ -471,7 +471,7 @@ $user = JFactory::getUser();
                                             $grouprole->roleid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": " . $grouprole->groupname
                                             . " - " . JText::_('COM_THM_GROUPS_ROLE')
                                             . ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE')
-                                            . "' class='hasTip'><img src='components/com_thm_groups/img/unmoderate.png' width='16px'/></a> ";
+                                            . "' class='hasTip'><img src='components/com_thm_groups/assets/images/unmoderate.png' width='16px'/></a> ";
                                         }
                                     }
                                 }
