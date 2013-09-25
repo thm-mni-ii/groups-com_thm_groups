@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.3.0
+ * @version     v3.4.2
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -14,6 +14,7 @@
  * @author      Peter May,      <peter.may@mni.thm.de>
  * @author      Tobias Schmitt, <tobias.schmitt@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -24,13 +25,18 @@ JHTML::_('behavior.modal', 'a.modal-button');
 JHTML::_('behavior.calendar');
 
 $user = JFactory::getUser();
+
 $componentparams = JComponentHelper::getParams('com_thm_groups');
+
 $canEdit = (($user->id == $this->userid && $componentparams->getValue('editownprofile', '0') == 1) || $this->canEdit);
+
 $model = new THMLibThmGroupsUser;
+
+// Get user information
 $userInfoAsObject = $model::getUserInfo($this->userid);
 $userInfoArray = $userInfoAsObject->profilInfos;
 
-$html = buildInfo($this->userid, $userInfoArray);
+$html = buildHtmlOutput($this->userid, $userInfoArray);
 
 // Get css
 $mycss = getProfilCss();
@@ -41,8 +47,10 @@ $document->addStyleDeclaration($mycss);
 // Print HTML
 echo $html;
 
+// ************************************Functions************************************
+
 /**
- * Return information about user
+ * Returns styled information about user
  *
  * @param   Integer  $userid    contains user id
  *
@@ -50,10 +58,15 @@ echo $html;
  *
  * @return information about user
  */
-function buildinfo($userid, $userData)
+function buildHtmlOutput($userid, $userData)
 {
+    // Class for title, first name, name, post title and portrait image
     $head = '<div class="contentheading">';
+
+    // Class for user information
     $body = '<div class="contentbody">';
+
+    // Contains at the end $head and $body
     $result = '';
 
     $firstPic = true;
@@ -71,6 +84,7 @@ function buildinfo($userid, $userData)
     {
         $struct = array();
 
+        // Save structure names
         foreach (THMLibThmGroupsUser::getStructure() as $structItem)
         {
             $struct[$structItem->id] = $structItem->field;
@@ -87,6 +101,7 @@ function buildinfo($userid, $userData)
             $head .= '</div>';
         }
 
+        // Loop through all structures
         for ($index = 0; $index < count($userData); $index ++)
         {
 
@@ -98,28 +113,28 @@ function buildinfo($userid, $userData)
                 {
                     // Vorname
                     case "1" :
-                        $head .= '<div class="thm_groups_text" id="' . $struct[$data->structid] . '">';
+                        $head .= '<div class="thm_groups_head_text" id="' . $struct[$data->structid] . '">';
                         $head .= '<h2>' . $data->value . '&nbsp;</h2>';
                         $head .= '</div>';
                         break;
 
                     // Nachname
                     case "2" :
-                        $head .= '<div class="thm_groups_text" id="' . $struct[$data->structid] . '">';
+                        $head .= '<div class="thm_groups_head_text" id="' . $struct[$data->structid] . '">';
                         $head .= '<h2>' . $data->value . '&nbsp;</h2>';
                         $head .= '</div>';
                         break;
 
                     // Titel
                     case "5" :
-                        $head .= '<div class="thm_groups_text" id="' . $struct[$data->structid] . '">';
+                        $head .= '<div class="thm_groups_head_text" id="' . $struct[$data->structid] . '">';
                         $head .= '<h2>' . $data->value . '&nbsp;</h2>';
                         $head .= '</div>';
                         break;
 
                     // Posttitel
                     case "7" :
-                        $head .= '<div class="thm_groups_text" id="' . $struct[$data->structid] . '">';
+                        $head .= '<div class="thm_groups_head_text" id="' . $struct[$data->structid] . '">';
                         $head .= '<h2>' . $data->value . '&nbsp;</h2>';
                         $head .= '</div>';
                         break;
@@ -158,6 +173,7 @@ function buildinfo($userid, $userData)
                                 $attribs['id'] = 'pic_' . $data->structid;
                                 $path = THMLibthmGroupsUser::getPicPath($data->structid);
 
+                                // The first structure of the type image will be a portrait picture
                                 if ($firstPic)
                                 {
                                     $image = JHTML::image("$path" . '/' . $data->value, 'Portrait', $attribs);
@@ -165,6 +181,8 @@ function buildinfo($userid, $userData)
                                     $firstPic = false;
 
                                 }
+
+                                // All other pictures
                                 else
                                 {
                                     $body .= '<div class="thm_groups_field_container" id="' . $struct[$data->structid] . '_field">';
@@ -253,6 +271,7 @@ function getTable($data)
  */
 function getProfilCss()
 {
+    // Here you can define or change css styles
     $out = '';
     $out .= '
             .thm_groups_content_profile
