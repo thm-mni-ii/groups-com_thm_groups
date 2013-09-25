@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -123,12 +123,10 @@ class THMGroupsModelEditStructure extends JModel
      */
     public function store()
     {
-
         $idarr = JRequest::getVar('cid');
         $id = intval($idarr[0]);
         $name = JRequest::getVar('name');
         $relation = JRequest::getVar('relation');
-
 
         $extra = JRequest::getVar(strtolower($relation) . '_extra');
         $picpath = JRequest::getVar(strtolower($relation) . '_extra_path');
