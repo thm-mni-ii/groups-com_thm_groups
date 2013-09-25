@@ -7,7 +7,7 @@
     <authorUrl>http://www.fh-giessen.de</authorUrl>
     <copyright>TH Mittelhessen</copyright>
     <license>GNU/GPL Version 2</license>
-    <version>3.4.2</version>
+    <version>3.4.3</version>
     <description></description>
     <scriptfile>script.php</scriptfile>
     <install>
@@ -45,20 +45,18 @@
     </languages>
 
     <administration>
-        <menu img="components/com_thm_groups/img/icon-16-staff.png">COM_THM_GROUPS</menu>
+        <menu img="components/com_thm_groups/assets/images/icon-16-staff.png">COM_THM_GROUPS</menu>
         <submenu>
-            <menu alias="Home" link="option=com_thm_groups&amp;view=thmgroups" view="thmgroups" img="components/com_thm_groups/img/icon-16-staff.png"
+            <menu alias="Home" link="option=com_thm_groups&amp;view=thmgroups" view="thmgroups" img="components/com_thm_groups/assets/images/mni.png"
                 alt="THM-Groups/Home">COM_THM_GROUPS_HOME</menu>
-            <menu alias="Member Manager" link="option=com_thm_groups&amp;view=membermanager" view="membermanager" img="components/com_thm_groups/img/icon-16-staff.png"
+            <menu alias="Member Manager" link="option=com_thm_groups&amp;view=membermanager" view="membermanager" img="components/com_thm_groups/assets/images/mni.png"
                 alt="THM-Groups/Member Manager">COM_THM_GROUPS_MEMBERMANAGER</menu>
-            <menu link="option=com_thm_groups&amp;view=groupmanager" view="groupmanager" img="components/com_thm_groups/img/icon-16-staff.png"
+            <menu link="option=com_thm_groups&amp;view=groupmanager" view="groupmanager" img="components/com_thm_groups/assets/images/mni.png"
                 alt="THM-Groups/Group Manager">COM_THM_GROUPS_GROUPMANAGER</menu>
-            <menu link="option=com_thm_groups&amp;view=rolemanager" view="rolemanager" img="components/com_thm_groups/img/icon-16-staff.png"
+            <menu link="option=com_thm_groups&amp;view=rolemanager" view="rolemanager" img="components/com_thm_groups/assets/images/mni.png"
                 alt="THM-Groups/Role Manager">COM_THM_GROUPS_ROLEMANAGER</menu>
-            <menu link="option=com_thm_groups&amp;view=structure" view="structure" img="components/com_thm_groups/img/icon-16-staff.png"
-                alt="THM-Groups/Structure">COM_THM_GROUPS_STRUCTURE</menu>
-            <menu link="option=com_thm_groups&amp;view=quickpage" view="quickpage" img="components/com_thm_groups/img/icon-16-staff.png"
-                alt="THM-Groups/Quickpage">COM_THM_GROUPS_QUICKPAGE</menu>
+            <menu link="option=com_thm_groups&amp;view=structuremanager" view="structuremanager" img="components/com_thm_groups/assets/images/mni.png"
+                alt="THM-Groups/Structuremanager">COM_THM_GROUPS_STRUCTUREMANAGER</menu>
         </submenu>
 
         <files folder="admin">
@@ -69,9 +67,8 @@
              <filename>config.xml</filename>
 
             <folder>controllers</folder>
-            <folder>css</folder>
+            <folder>assets</folder>
             <folder>elements</folder>
-            <folder>img</folder>
             <folder>models</folder>
             <folder>tables</folder>
             <folder>views</folder>
@@ -89,10 +86,6 @@
     <dependencies>
         <dependency type="plugin" minversion="1.0.0">plg_thm_groups_sync</dependency>
     </dependencies>
--->
-<!--     <packages>
-        <package name="pkg_thm_groups" git="git://scm.thm.de/icampus/pkg_thm_groups.git"/>
-    </packages>
 -->
     <updateservers>
         <server type="extension" priority="1" name="THM Groups Component">https://jenkins.mni.thm.de/jenkins/job/J.THM.Releases/lastSuccessfulBuild/artifact/updates/com_thm_groups.xml</server>
