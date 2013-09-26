@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.4.0
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -33,7 +33,7 @@ class JFormFieldPreviewButton extends JFormField
 
 	/**
 	 * Get Input Type Button to load Preview
-	 * 
+	 *
 	 * @return  string
 	 */
 	public function getInput()
@@ -41,11 +41,12 @@ class JFormFieldPreviewButton extends JFormField
 		// Add script-code to the document head
 		$scriptDir = str_replace(JPATH_SITE . DS, '', "libraries/thm_groups/assets/js/");
 		JHTML::script('jquery-1.9.1.min.js', $scriptDir, false);
-		
+
 		$scriptDir = str_replace(JPATH_SITE . DS, '', "administrator/components/com_thm_groups/elements/");
 		JHTML::script('previewButton.js', $scriptDir, false);
 
-		return '<input type="button" id="thm_groups_adv_view_preview_button" value="' . JText::_('THM_GROUPS_PROFILE_CONTAINER_PREVIEW') . '" onclick="ProfilePreview.open();" />';
+		return '<input type="button" id="thm_groups_adv_view_preview_button" value="' . JText::_('COM_THM_GROUPS_PROFILE_CONTAINER_PREVIEW')
+				. '" onclick="ProfilePreview.open();" />';
 	}
 
 }

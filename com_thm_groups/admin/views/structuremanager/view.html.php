@@ -50,7 +50,7 @@ class THMGroupsViewStructuremanager extends JView
         $this->state		= $this->get('State');
 
         JToolBarHelper::title(
-                JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_STRUCTUREMANAGER'), mni);
+                JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_STRUCTUREMANAGER'), 'mni');
         JToolBarHelper::addNew(
             'structuremanager.add',
             'COM_THM_GROUPS_STRUCTURE_ADD',

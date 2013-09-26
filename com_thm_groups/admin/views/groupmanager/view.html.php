@@ -46,7 +46,7 @@ class THMGroupsViewgroupmanager extends JView
         $document->addStyleSheet("components/com_thm_groups/assets/css/thm_groups.css");
         $user = JFactory::getUser();
         JToolBarHelper::title(
-                JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_GROUPMANAGER'), mni);
+                JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_GROUPMANAGER'), 'mni');
 
 
         if ($user->authorise('core.admin'))
@@ -70,7 +70,7 @@ class THMGroupsViewgroupmanager extends JView
         	JToolBarHelper::divider();
         	JToolBarHelper::preferences('com_thm_groups');
         }
-        
+
         $uri = JFactory::getURI();
 
         // $query = $uri->getQuery();

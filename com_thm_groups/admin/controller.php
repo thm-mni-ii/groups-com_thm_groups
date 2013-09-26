@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.4
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -27,7 +27,7 @@ class THMGroupsController extends JController
 {
 	/**
 	 * Method to display admincenter
-	 * 
+	 *
 	 * @param   boolean  $cachable   cachable
 	 * @param   boolean  $urlparams  url param
 	 *

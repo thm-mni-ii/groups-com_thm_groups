@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.general
@@ -38,7 +38,7 @@ $mainframe->initialise();
 
 /**
  * Function during installation
- * 
+ *
  * @return void
  */
 function Com_install()

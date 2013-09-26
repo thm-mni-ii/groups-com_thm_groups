@@ -5,7 +5,7 @@ class ComThmGroupsStructManager extends JoomlaSeleniumTest
     {
         $this->performBackendLogin();
 
-        $this->click("link=Structure");
+        $this->click("link=Structuremanager");
         $this->waitForPageToLoad("30000");
         $this->click("css=span.icon-32-new");
         $this->waitForPageToLoad("30000");

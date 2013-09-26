@@ -41,7 +41,7 @@ class THMGroupsViewmembermanager extends JView
         $document   = JFactory::getDocument();
         $document->addStyleSheet("components/com_thm_groups/assets/css/thm_groups.css");
         $user = JFactory::getUser();
-        JToolBarHelper::title(JText::_('COM_THM_Groups') . ': ' . JText::_('COM_THM_GROUPS_MEMBERMANAGER'), mni);
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_MEMBERMANAGER'), 'mni');
         if (($user->authorise('core.edit', 'com_users')
          || $user->authorise('core.edit.own', 'com_users'))
          && $user->authorise('core.manage', 'com_users'))

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.5
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -19,7 +19,7 @@ $urls = json_decode($this->item->urls);
 
 // Create shortcuts to some parameters.
 $params = $this->item->params;
-if ($urls && (!empty($urls->urla) || !empty($urls->urlb) || !empty($urls->urlc))) 
+if ($urls && (!empty($urls->urla) || !empty($urls->urlb) || !empty($urls->urlc)))
 	:
 ?>
 <div class="content-links">
@@ -30,14 +30,14 @@ if ($urls && (!empty($urls->urla) || !empty($urls->urlb) || !empty($urls->urlc))
 			array($urls->urlb, $urls->urlbtext, $urls->targetb, 'b'),
 			array($urls->urlc, $urls->urlctext, $urls->targetc, 'c')
 			);
-			foreach($urlarray as $url) 
+			foreach($urlarray as $url)
 				:
 				$link = $url[0];
 				$label = $url[1];
 				$target = $url[2];
 				$id = $url[3];
 
-				if (! $link) 
+				if (! $link)
 					:
 					continue;
 				endif;
@@ -63,7 +63,8 @@ if ($urls && (!empty($urls->urla) || !empty($urls->urlb) || !empty($urls->urlc))
 						case 2:
 							// Open in a popup window
 							$attribs = 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=600';
-							echo "<a href=\"" . htmlspecialchars($link) . "\" onclick=\"window.open(this.href, 'targetWindow', '" . $attribs . "'); return false;\">" .
+							echo "<a href=\"" . htmlspecialchars($link) . "\" onclick=\"window.open(this.href, 'targetWindow', '" . $attribs . "');"
+								. " return false;\">" .
 								htmlspecialchars($label) . '</a>';
 							break;
 						case 3:
@@ -81,10 +82,10 @@ if ($urls && (!empty($urls->urla) || !empty($urls->urlb) || !empty($urls->urlc))
 					}
 				?>
 				</li>
-		<?php 
-			endforeach; 
+		<?php
+			endforeach;
 		?>
 	</ul>
 </div>
-<?php 
+<?php
 endif;

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -263,7 +263,9 @@ class THMGroupsModelAddGroup extends JModelForm
         try
         {
             $pic = new THMPicTransform($_FILES[$picField]);
-            $pic->safeSpecial(JPATH_ROOT . DS . "components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS, "g" . $gid, 200, 200, "JPG");
+            $pic->safeSpecial(
+            		JPATH_ROOT . DS . "components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS, "g" . $gid, 200, 200, "JPG"
+        	);
             if (JModuleHelper::isEnabled('mod_thm_groups')->id != 0)
             {
                 $pic->safeSpecial(JPATH_ROOT . DS . "modules" . DS . "mod_thm_groups" . DS . "images" . DS, "g" . $gid, 200, 200, "JPG");

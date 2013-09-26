@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.4
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -28,7 +28,7 @@
 	// Show Profiles
 	$members = $this->data;
 	$User = JFactory::getUser();
-	
+
 	$struct = array();
 	foreach ($this->structure as $structItem)
 	{
@@ -36,10 +36,10 @@
 	}
 
     $countOfColoumns = $this->view + 1;
-	$elementCounter = 0;	
+	$elementCounter = 0;
 	$rowCounter = 0;
 	foreach ($members as $id => $member)
-	{	
+	{
 		/*
 		var_dump($member);
 		$UserInfo = new THMLibThmGroups;
@@ -47,18 +47,18 @@
 		var_dump($user);
 		die();
 		*/
-		
-					
+
+
 		// Open Row Tag - Even / Odd
 		if ($elementCounter % $countOfColoumns == 0)
 		{
 			// Count Elements
 			$rowCounter++;
-			
+
 			$cssListRowClass = ($rowCounter % 2) ? '_odd': '_even';
 			echo '<div class="thm_groups_profile_container_list_row' . $cssListRowClass . '">';
 		}
-		
+
 		// Open Coloumn Wrapper Tag - Only for float-attribute, now is easy to work with width:100%
 		if ($countOfColoumns == 1)
 		{
@@ -68,7 +68,8 @@
 		{
 			$cssListColoumnClass = ($elementCounter % $countOfColoumns == 0) ? '_left': '_right';
 		}
-		echo '<div class="thm_groups_profile_container_list_coloumn_wrapper thm_groups_profile_container_list_coloumn_wrapper' . $cssListColoumnClass . '">';	
+		echo '<div class="thm_groups_profile_container_list_coloumn_wrapper thm_groups_profile_container_list_coloumn_wrapper'
+			. $cssListColoumnClass . '">';
 
 		// Open Coloumn Tag - Only for dimensions
 		echo '<div class="thm_groups_profile_container_list_coloumn">';
@@ -76,7 +77,7 @@
 		// Open Content Wrapper Tag - For Properties like padding, border etc.
 		echo '<div class="thm_groups_profile_container_list_coloumn_content_wrapper">';
 
-		// Load Profile Content				
+		// Load Profile Content
 		$title = "";
 		$firstName = "";
 		$lastName = "";
@@ -112,15 +113,15 @@
 					break;
 			}
 		}
-		
+
 		echo "<div id='secondWrapper'>";
-		
+
 		// Darstellen des Portraits
 		if ($picture != null)
 		{
 			echo JHTML :: image($picpath . '/' . $picture, "Portrait", array ('class' => 'thm_groups_profile_container_profile_image'));
 		}
-		
+
 		// Darstellen des Links (Titel, Vorname, Name)
 		echo "<div id='gs_advlistTopic'>";
 		$displayInline = " style='display: inline'";
@@ -148,7 +149,7 @@
 						. JRoute::_($path . $this->itemid . '&gsuid=' . $id . '&name=' . trim($lastName) . '&gsgid=' . $this->gsgid)
 						. ">";
 		}
-		
+
 		if (trim($firstName) != "")
 		{
 			echo "<div class='gs_advlist_longinfo'" . ($wrapTitle && $wrapFirstName ? "" : $displayInline) . ">" . trim($firstName) . "</div> ";
@@ -159,12 +160,12 @@
 		}
 		echo "</a>";
 		$canEdit = (($User->id == $id && $componentparams->getValue('editownprofile', '0') == 1) || $this->canEdit);
-		
+
 		// Jeder Benutzer kann sich selbst editieren
 		if ($canEdit)
 		{
 			$attribs['title'] = 'bearbeiten';
-		
+
 			// Daten fuer die EditForm
 			$option = JRequest :: getVar('option', 0);
 			$layout = JRequest :: getVar('layout', 0);
@@ -173,14 +174,16 @@
 			$gspart = '&gsgid=' . $this->gsgid . '&option_old=';
 			$trim = "&name=" . trim($lastName);
 			echo "<a href="
-					. JRoute :: _($path . $this->itemid . '&gsuid=' . $id . $trim . $gspart . $option . '&view_old=' . $view . '&layout_old=' . $layout)
+					. JRoute :: _(
+							$path . $this->itemid . '&gsuid=' . $id . $trim . $gspart . $option . '&view_old=' . $view . '&layout_old=' . $layout
+					)
 					. ">"
 							. JHTML :: image("components/com_thm_groups/img/edit.png", 'bearbeiten', $attribs) . "</a>";
 		}
 		echo "</div>";
-		
+
 		$wrap = true;
-		
+
 		// Rest des Profils darstellen
 		echo "<div>";
 		foreach ($member as $memberitem)
@@ -196,12 +199,12 @@
 					echo "<div style='display: inline;'>";
 				}
 				// Attributnamen anzeigen
-		
+
 				if ($memberitem['structname'] == true)
 				{
 					echo '<span class="thm_groups_profile_container_line_label">' . JText::_($struct[$memberitem['structid']]) . ": " . '</span>';
 				}
-		
+
 				// Attribut anzeigen
 				switch ($memberitem['structid'])
 				{
@@ -223,14 +226,15 @@
 						$text = JString::trim(htmlspecialchars_decode($memberitem['value']));
 						if (!empty($text))
 						{
-							if (stripos($text, '<li>') === false) 
+							if (stripos($text, '<li>') === false)
 							{
 								$text = nl2br($text);
 							}
 							// Truncate Long Info Text
 							if ($this->truncateLongInfo)
 							{
-								echo '<span class="thm_groups_profile_container_profile_read_more">' . JText::_('THM_GROUPS_PROFILE_CONTAINER_LONG_INFO_READ_MORE') . '</span>';
+								echo '<span class="thm_groups_profile_container_profile_read_more">' .
+									JText::_('COM_THM_GROUPS_PROFILE_CONTAINER_LONG_INFO_READ_MORE') . '</span>';
 								echo '<div class="thm_groups_profile_container_profile_long_info" style="display:none;">' . $text . '</div>';
 							}
 							else
@@ -258,7 +262,7 @@
 						}
 						break;
 				}
-		
+
 				echo	"</div>";
 				if ($memberitem['structwrap'] == true)
 				{
@@ -278,31 +282,31 @@
 
 		echo '<div class="clearfix"></div>';
 		echo "</div>";
-		
+
 		// Close Content Wrapper Tag
-		echo '</div>'; 
-		
+		echo '</div>';
+
 		// Close Coloumn Tag
 		echo '</div>';
-		
+
 		// Close Coloumn Wrapper Tag
-		echo '</div>'; 
-		
+		echo '</div>';
+
 		// Close Wrapper Tag
 		if (($elementCounter + 1) % $countOfColoumns == 0)
 		{
 			echo '<div class="clearfix"></div>';
 			echo '</div>';
 		}
-		
+
 		// Count Elements
 		$elementCounter++;
-		
+
 	}
 ?>
 
 </div>
-<?php 
+<?php
 	// Truncate Long Info Text
 	if ($this->truncateLongInfo)
 	:
@@ -317,4 +321,3 @@
 </script>
 <?php
 	ENDIF;
-?>

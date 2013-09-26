@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.4
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -32,7 +32,7 @@ class JFormFieldOrderAttributes extends JFormField
 	 *
 	 * @access	protected
 	 * @var		string
-	 * 
+	 *
 	 * @return html
 	 */
 
@@ -44,7 +44,7 @@ class JFormFieldOrderAttributes extends JFormField
 		$id = JRequest::getVar('cid');
 		$orderAtt = null;
 		$orderSelect = '';
-		
+
 		// Get ID of the menu
 		if (isset($id))
 		{
@@ -54,21 +54,21 @@ class JFormFieldOrderAttributes extends JFormField
 		{
 			$id = JRequest::getVar('id');
 		}
-		
+
 		// Get params of menu for the ordering of the attributes
 		if (isset($id))
 		{
 			$queryParams = $db->getQuery(true);
-		
+
 			$queryParams->select('params');
 			$queryParams->from("#__menu");
 			$queryParams->where("id=" . $id);
-		
+
 			$db = JFactory::getDBO();
 			$db->setQuery($queryParams);
 			$params = $db->loadObjectList();
 			$sort = "orderingAttributes";
-		
+
 			$orderAtt = substr(
 					$params[0]->params,
 					stripos($params[0]->params, "orderingAttributes") + strlen("':orderingAttributes:"),
@@ -80,7 +80,7 @@ class JFormFieldOrderAttributes extends JFormField
 		$arrOrderAtt = explode(",", $orderAtt);
 		$queryRoles = $db->getQuery(true);
 		$orderSelect .= '<select size="5" id="paramsattr" class="selGroup" name="jform[params][orderingAttributes]" style="display:block">';
-		
+
 		// If the order Attributes param is used
 		if ($orderAtt)
 		{
@@ -97,12 +97,12 @@ class JFormFieldOrderAttributes extends JFormField
 						break;
 				}
 				$orderSelect .= '</option>';
-			} 
+			}
 		}
 		else
 		{
 			// Initialize the selectbox if no params are saved
-			
+
 			$orderSelect .= '<option value="1">' . JText::_('COM_THM_GROUPS_TITEL') . '</option>';
 			$orderSelect .= '<option value="2">' . JText::_('COM_THM_GROUPS_VORNAME') . '</option>';
 			$orderSelect .= '<option value="3">' . JText::_('COM_THM_GROUPS_NACHNAME') . '</option>';
@@ -116,7 +116,8 @@ class JFormFieldOrderAttributes extends JFormField
 		$orderSelect .= '<img src="../administrator/components/com_thm_groups/assets/images/downarrow.png" title="';
 		$orderSelect .= JText::_('COM_THM_GROUPS_ROLE_DOWN') . '" />';
 		$orderSelect .= '</a>';
-		$orderSelect .= '<input type="hidden" name="jform[params][orderingAttributes]" id="jform_params_orderingAttributes" value="' . $orderAtt . '" />';
+		$orderSelect .= '<input type="hidden" name="jform[params][orderingAttributes]" id="jform_params_orderingAttributes" value="' . $orderAtt
+						. '" />';
 		return $orderSelect;
 	}
 }

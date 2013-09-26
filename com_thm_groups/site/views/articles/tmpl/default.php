@@ -47,8 +47,8 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
 		<div style ="inline:block; float:left; align:text-bottom;">
 		<?php echo JText::_('COM_THM_QUICKPAGES_CATEGORY_LABEL') . ":"; ?>
 			<b>
-				<?php 
-				echo $this->categories[0]->title; 
+				<?php
+				echo $this->categories[0]->title;
 				?>
 			</b>
          </div>
@@ -56,21 +56,21 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
 			<select name="filter_published"  onchange="this.form.submit()">
 				<option value=""><?php echo JText::_('COM_THM_QUICKPAGES_SELECT_PUBLISHED');?></option>
 				<?php echo JHtml::_(
-						'select.options', 
-						JHtml::_('jgrid.publishedOptions'), 
-						'value', 
-						'text', 
+						'select.options',
+						JHtml::_('jgrid.publishedOptions'),
+						'value',
+						'text',
 						$this->state->get('filter.published'), true
 						);?>
 			</select>
-			
+
 		</div>
 		<div class="qp_filter_search">
 			<label class="qp_filter_label" for="filter_search"><?php echo JText::_('COM_THM_QUICKPAGES_FILTER_LABEL'); ?></label>
-			<input type="text" name="filter_search" id="filter_search" value="<?php 
-				echo $this->escape($this->state->get('filter.search')); 
-			?>" title="<?php 
-			echo JText::_('COM_THM_QUICKPAGES_FILTER_DESC'); 
+			<input type="text" name="filter_search" id="filter_search" value="<?php
+				echo $this->escape($this->state->get('filter.search'));
+			?>" title="<?php
+			echo JText::_('COM_THM_QUICKPAGES_FILTER_DESC');
 			?>" />
 
 			<button type="submit" class="qp_button"><?php echo JText::_('COM_THM_QUICKPAGES_FILTER_SUBMIT'); ?></button>
@@ -108,16 +108,16 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
 						if ($canCreate AND $currCategoryID != 0)
 						{
 							/*$editURL = JRoute::_('index.php?option=com_content&task=article.add&catid='.$currCategoryID.$itemParam.$staticParams);*/
-							$editURL = JRoute::_('index.php?option=com_content&view=form&layout=edit&catid=' 
-									. $currCategoryID 
-									. $itemParam 
+							$editURL = JRoute::_('index.php?option=com_content&view=form&layout=edit&catid='
+									. $currCategoryID
+									. $itemParam
 									. $staticParams
 									);
 
 							$imgSpanTag = '<span class="qp_icon_big qp_create_icon"><span class="qp_invisible_text">New</span></span>';
 
-							echo JHTML::_('link', $editURL, $imgSpanTag, 'title="' 
-									. JText::_('COM_THM_QUICKPAGES_HTML_CREATE') 
+							echo JHTML::_('link', $editURL, $imgSpanTag, 'title="'
+									. JText::_('COM_THM_QUICKPAGES_HTML_CREATE')
 									. '" class="qp_icon_link"'
 									);
 						}
@@ -165,7 +165,7 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
 					?>
 				</td>
 				<td class="center">
-					<?php 
+					<?php
 						echo JHtml::_('jgrid.published', $item->state, $i, 'articles.', $canChange, 'cb', $item->publish_up, $item->publish_down);
 					?>
 				</td>
@@ -175,74 +175,74 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
 						  	if ($saveOrder)
 						  	{
 						  		if ($listDirn == 'asc')
-						  		{ 
+						  		{
 						  	?>
 								<span>
-								<?php 
+								<?php
 									echo $this->pagination->orderUpIcon(
-											$i, 
-											($item->catid == @$this->items[$i - 1]->catid), 
-											'articles.orderup', 
-											'JLIB_HTML_MOVE_UP', 
-											$ordering
-											); 
-								?>
-								</span>
-								<span>
-								<?php 
-									echo $this->pagination->orderDownIcon(
-											$i, 
-											$this->pagination->total, 
-											($item->catid == @$this->items[$i + 1]->catid), 
-											'articles.orderdown', 
-											'JLIB_HTML_MOVE_DOWN', 
+											$i,
+											($item->catid == @$this->items[$i - 1]->catid),
+											'articles.orderup',
+											'JLIB_HTML_MOVE_UP',
 											$ordering
 											);
 								?>
 								</span>
-							<?php   
+								<span>
+								<?php
+									echo $this->pagination->orderDownIcon(
+											$i,
+											$this->pagination->total,
+											($item->catid == @$this->items[$i + 1]->catid),
+											'articles.orderdown',
+											'JLIB_HTML_MOVE_DOWN',
+											$ordering
+											);
+								?>
+								</span>
+							<?php
 						  		}
-								elseif ($listDirn == 'desc') 
+								elseif ($listDirn == 'desc')
 								{
 							?>
 								<span>
-								<?php 
+								<?php
 									echo $this->pagination->orderUpIcon(
-											$i, 
-											($item->catid == @$this->items[$i - 1]->catid), 
-											'articles.orderdown', 
-											'JLIB_HTML_MOVE_UP', 
+											$i,
+											($item->catid == @$this->items[$i - 1]->catid),
+											'articles.orderdown',
+											'JLIB_HTML_MOVE_UP',
 											$ordering
 											);
 								?>
 								</span>
 								<span>
-								<?php 
+								<?php
 									echo $this->pagination->orderDownIcon(
-											$i, 
-											$this->pagination->total, 
-											($item->catid == @$this->items[$i + 1]->catid), 
-											'articles.orderup', 
-											'JLIB_HTML_MOVE_DOWN', 
+											$i,
+											$this->pagination->total,
+											($item->catid == @$this->items[$i + 1]->catid),
+											'articles.orderup',
+											'JLIB_HTML_MOVE_DOWN',
 											$ordering
 											);
 								?>
 								</span>
-							<?php 
+							<?php
 								}
 							?>
 						<?php
-						  	} 
+						  	}
 						?>
 						<?php $disabled = $saveOrder ?  '' : 'disabled="disabled"'; ?>
-						<input type="text" name="order[]" size="5" value="<?php echo $item->ordering;?>" <?php 
+						<input type="text" name="order[]" size="5" value="<?php echo $item->ordering;?>" <?php
 						echo $disabled ?> class="text-area-order" />
-					<?php 
+					<?php
 }
-						  else 
-						  { 
+						  else
+						  {
 							echo $item->ordering;
-						  } 
+						  }
 				    ?>
 				</td>
 				<td class="center nowrap">
@@ -269,8 +269,8 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
 							/* $editURL = JRoute::_('index.php?option=com_content&view=form&layout=edit&a_id='.$item->id.$itemParam.$staticParams); */
 							$imgSpanTag = '<span class="state edit"><span class="text">Edit</span></span>';
 
-							echo JHTML::_('link', $editURL, $imgSpanTag, 'title="' 
-									. JText::_('COM_THM_QUICKPAGES_HTML_EDIT_ITEM') 
+							echo JHTML::_('link', $editURL, $imgSpanTag, 'title="'
+									. JText::_('COM_THM_QUICKPAGES_HTML_EDIT_ITEM')
 									. '" class="jgrid"'
 									);
 							echo "\n";
@@ -306,13 +306,15 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
 										),
 							);
 							$button = JHtml::_('jgrid.state', $states, ($item->state < 0 ? -3 : 3), $i, 'articles.', $canDelete);
-							$button = str_replace("onclick=\"", "onclick=\"if (confirm('" . JText::_('COM_THM_GROUPS_REALLY_DELETE') . "')) ", $button);
+							$button = str_replace(
+										"onclick=\"", "onclick=\"if (confirm('" . JText::_('COM_THM_GROUPS_REALLY_DELETE') . "')) ", $button
+									);
 							echo $button;
 						}
 					?>
 				</td>
 			</tr>
-<?php 
+<?php
 }
 ?>
 		</tbody>

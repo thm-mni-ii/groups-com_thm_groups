@@ -38,7 +38,7 @@ class THMGroupsVieweditStructure extends JView
 		$document = JFactory::getDocument();
 		$document->addStyleSheet($this->baseurl . "/components/com_thm_groups/assets/css/thm_groups.css");
 
-		JToolBarHelper::title(JText::_('COM_THM_GROUPS_EDITSTRUCTURE_TITLE'), mni);
+		JToolBarHelper::title(JText::_('COM_THM_GROUPS_EDITSTRUCTURE_TITLE'), 'mni');
 
 		JToolBarHelper::apply('editstructure.apply', 'JTOOLBAR_APPLY');
 		JToolBarHelper::save('editstructure.save', 'JTOOLBAR_SAVE');
