@@ -102,11 +102,6 @@ class THMGroupsViewTHMGroups extends JView
         $views['structuremanager']['url'] = "index.php?option=com_thm_groups&view=structuremanager";
         $views['structuremanager']['image'] = "administrator/components/com_thm_groups/assets/images/icon-48-mni.png";
 
-        $views['quickpage'] = array();
-        $views['quickpage']['title'] = JText::_('COM_THM_GROUPS_QUICKPAGE');
-        $views['quickpage']['tooltip'] = JText::_('COM_THM_GROUPS_QUICKPAGE') . '::' . JText::_('COM_THM_GROUPS_QUICKPAGE_DESC');
-        $views['quickpage']['url'] = "index.php?option=com_thm_groups&view=quickpage";
-        $views['quickpage']['image'] = "administrator/components/com_thm_groups/assets/images/icon-48-mni.png";
         $this->views = $views;
     }
 }

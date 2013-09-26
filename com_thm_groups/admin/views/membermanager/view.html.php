@@ -48,16 +48,16 @@ class THMGroupsViewmembermanager extends JView
         {
             JToolBarHelper::custom(
                     'membermanager.setGroupsAndRoles',
-                    'moderate.png',
-                    JPATH_COMPONENT . DS . 'img' . DS . 'moderate.png',
+                    'addassignment',
+                    JPATH_COMPONENT . DS . 'assets' . DS . 'images' . DS . 'icon-32-addassignment.png',
                     'COM_THM_GROUPS_MEMBERMANAGER_ADD',
                     true,
                     true
             );
             JToolBarHelper::custom(
                     'membermanager.delGroupsAndRoles',
-                    'unmoderate.png',
-                    JPATH_COMPONENT . DS . 'img' . DS . 'unmoderate.png',
+                    'removeassignment',
+                    JPATH_COMPONENT . DS . 'assets' . DS . 'images' . DS . 'icon-32-removeassignment.png',
                     'COM_THM_GROUPS_MEMBERMANAGER_DELETE',
                     true,
                     true
