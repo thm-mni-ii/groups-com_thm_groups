@@ -26,6 +26,7 @@ jimport('joomla.application.component.modellist');
  */
 class THMGroupsModelStructuremanager extends JModelList
 {
+
     /**
      * Method to remove record
      *
@@ -33,7 +34,7 @@ class THMGroupsModelStructuremanager extends JModelList
      */
     public function remove()
     {
-        $db =& JFactory::getDBO();
+        $db = JFactory::getDBO();
         $cid = JRequest::getVar('cid', array(), 'post', 'array');
         $err = 0;
 
@@ -41,6 +42,7 @@ class THMGroupsModelStructuremanager extends JModelList
         {
             if ($toDel > 4)
             {
+
                 /*
                 $query = "SELECT type FROM #__thm_groups_structure WHERE `id` = " . $toDel . "; ";
                 */
@@ -49,10 +51,15 @@ class THMGroupsModelStructuremanager extends JModelList
                 $query->from($db->qn('#__thm_groups_structure'));
                 $query->where("`id` = '" . $toDel . "'");
 
-                echo $query;
+
 
                 $db->setQuery($query);
                 $type = $db->loadObject();
+
+                if ($type->type == 'PICTURE')
+                {
+                    self::removeAllPicturesOfStructure($toDel);
+                }
 
                 /*
                 $query = "DELETE FROM #__thm_groups_structure WHERE `id` = " . $toDel . "; ";
@@ -124,6 +131,80 @@ class THMGroupsModelStructuremanager extends JModelList
         {
             return false;
         }
+    }
+
+    /**
+     * Deletes all pictures of selected structure with type Picture
+     *
+     * @param   Int  $structID  array with ids of structs to be deleted
+     *
+     * @return nothing
+     */
+    public function removeAllPicturesOfStructure($structID)
+    {
+        // Paths to pictures
+        $paths = self::getFolderPath($structID);
+
+        // Name of all pictures
+        $fileNames = self::getPictureNames($structID);
+
+        foreach ($paths as $path)
+        {
+            $dir = JPATH_ROOT . DS . $path->path;
+
+            foreach (scandir($dir) as $pic)
+            {
+                if (in_array($pic, $fileNames) != false)
+                {
+                    // Delete picture from folder
+                    unlink($dir . DS . $pic);
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns folder paths
+     *
+     * @param   Int  $structID  structure id
+     *
+     * @return Array with folder paths
+     */
+    public function getFolderPath($structID)
+    {
+        $db = JFactory::getDbo();
+        /*
+         $getFolderPathQuery = "SELECT path FROM #__thm_groups_picture_extra WHERE structid = $structID"
+        */
+        $getFolderPathQuery = $db->getQuery(true);
+        $getFolderPathQuery->select('path')
+        ->from('#__thm_groups_picture_extra')
+        ->where("structid = '" . $structID . "'");
+        $db->setQuery($getFolderPathQuery);
+
+        return $db->loadObjectList();
+    }
+
+    /**
+     * Returns picture names
+     *
+     * @param unknown $structID
+     *
+     * @return Array with picture names
+     */
+    public function getPictureNames($structID)
+    {
+        $db = JFactory::getDbo();
+        /*
+         $getFileNamesQuery = "SELECT value FROM #__thm_groups_picture WHERE structid = $structID"
+        */
+        $getFileNamesQuery = $db->getQuery(true);
+        $getFileNamesQuery->select('value')
+        ->from('#__thm_groups_picture')
+        ->where("structid = '" . $structID . "'");
+        $db->setQuery($getFileNamesQuery);
+
+        return $db->loadResultArray();
     }
 
     /**
