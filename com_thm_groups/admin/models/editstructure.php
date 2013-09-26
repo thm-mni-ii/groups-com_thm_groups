@@ -91,7 +91,7 @@ class THMGroupsModelEditStructure extends JModel
         $query->select('*');
         $query->from($db->qn('#__thm_groups_structure'));
         $query->where('id = ' . $id[0]);
-        $db->setQuery($query);
+        $db->setQuery((string)$query);
         return $db->loadObject();
     }
 
@@ -111,7 +111,7 @@ class THMGroupsModelEditStructure extends JModel
         $query->select('*');
         $query->from($db->qn('#__thm_groups_' . strtolower($relation) . '_extra'));
         $query->where('structid = ' . $id);
-        $db->setQuery($query);
+        $db->setQuery((string)$query);
         return $db->loadObject();
     }
 
@@ -124,184 +124,281 @@ class THMGroupsModelEditStructure extends JModel
     public function store()
     {
         $idarr = JRequest::getVar('cid');
-        $id = intval($idarr[0]);
+        $structID = intval($idarr[0]);
         $name = JRequest::getVar('name');
         $relation = JRequest::getVar('relation');
 
         $extra = JRequest::getVar(strtolower($relation) . '_extra');
-        $picpath = JRequest::getVar(strtolower($relation) . '_extra_path');
+        $newPicPath = JRequest::getVar(strtolower($relation) . '_extra_path');
         $structure = $this->getItem();
         $err = false;
         $db = JFactory::getDBO();
 
         // If the Type not same, aber changeable. Tha Data will be copy
-
         if ($this->canTypechange($structure->type, $relation) == true)
         {
-
             $changeQuery = $db->getQuery(true);
 
-            $changeQuery->select('*')->from('#__thm_groups_' . strtolower($structure->type))->where('structid =' . $id);
-            $db->setQuery($changeQuery);
+            $changeQuery->select('*')
+            ->from('#__thm_groups_' . strtolower($structure->type))
+            ->where('structid =' . $structID);
+
+            $db->setQuery((string)$changeQuery);
+
             $toChangevalue = $db->loadObjectList();
-            $zielTable = '#__thm_groups_' . strtolower($relation) . "(`userid` , `structid`, `value`, `publish` , `group`)";
+
+            $targetTable = '#__thm_groups_' . strtolower($relation) . "(`userid` , `structid`, `value`, `publish` , `group`)";
+
             if (isset($toChangevalue))
             {
                 $addquery = $db->getQuery(true);
                 $deletequery = $db->getQuery(true);
+
                 foreach ($toChangevalue as $changeItem)
                 {
                     $addquery
-                    ->insert($zielTable)
+                    ->insert($targetTable)
                     ->values(
                             $changeItem->userid . " , " .
                             $changeItem->structid . " , " . "'$changeItem->value' , '$changeItem->publish' , '$changeItem->group'"
                     );
 
-                  $sd = $db->setQuery($addquery);
+                    $db->setQuery((string)$addquery);
+                    try
+                    {
+                        $db->query();
+                    }
+                    catch (Exception $exception)
+                    {
+                        JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+                        return false;
+                    }
+                }
 
-                if (!$db->query())
+                $deletequery->delete('#__thm_groups_' . strtolower($structure->type))
+                ->where('structid =' . $structID);
+
+                $db->setQuery((string)$deletequery);
+                try
                 {
-
+                    $db->query();
+                }
+                catch (Exception $exception)
+                {
+                    JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
                     return false;
                 }
-                }
-
-                $deletequery->delete('#__thm_groups_' . strtolower($structure->type))->where('structid =' . $id);
-                $db->setQuery($deletequery);
-            if (!$db->query())
-            {
-                    return false;
             }
-
-            }
-
         }
 
+        $updateQuery = $db->getQuery(true);
+        $updateQuery->update('#__thm_groups_structure')
+        ->set("`field` = '" . $name . "'")
+        ->set("`type` = '" . $relation . "'")
+        ->where("`id` = '" . $structID . "'");
 
-        $query = $db->getQuery(true);
-        $query->update($db->qn('#__thm_groups_structure'));
-        $query->set("`field` = '" . $name . "'");
-        $query->set("`type` = '" . $relation . "'");
-        $query->where("`id` = '" . $id . "'");
-        $db->setQuery($query);
-        if (!$db->query())
-        {
-            $err = true;
+        $db->setQuery((string)$updateQuery);
 
-        }
-        else
+        try
         {
-        }
-
-        if (isset($extra) == true || isset($picpath) == true)
-        {
-            $query = $db->getQuery(true);
-            $query->select('*');
-            $query->from($db->qn('#__thm_groups_' . strtolower($relation) . '_extra'));
-            $query->where('structid = ' . $id);
-            $db->setQuery($query);
             $db->query();
-            $element = $db->loadObjectList();
-            $altPicpath = $element[0];
-
-
-
-            if (!isset($altPicpath))
-            {
-                $query = $db->getQuery(true);
-                if (isset($picpath))
-                {
-                    $query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`, `path`)");
-                    $query->values("'" . $id . "', '" . $extra . "', '" . $picpath . "'");
-                }
-                else
-                {
-                    $query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`)");
-                    $query->values("'" . $id . "', '" . $extra . "'");
-                }
-
-                $db->setQuery($query);
-                if (!$db->query())
-                {
-                    $err = true;
-
-                }
-            }
-            else
-            {
-                $directori = is_dir(JPATH_ROOT . DS . $altPicpath->path);
-
-                if ($directori == false)
-                {
-                    $err = !JFile::copy(JPATH_ROOT . DS . 'components/com_thm_groups/index.html', JPATH_ROOT . DS . $picpath);
-
-                }
-                else
-                {
-
-
-                    $source = JPATH_ROOT . DS . $altPicpath->path;
-                    $dest = JPATH_ROOT . DS . $picpath;
-
-                    if (!is_dir($dest))
-                    {
-                        $err = !mkdir($dest);
-                    }
-                    $handle = opendir(JPATH_ROOT . DS . $altPicpath->path);
-                    if (!$handle)
-                    {
-                        $err = false;
-                    }
-                    else
-                    {
-
-                        $datei = readdir($handle);
-
-                    while ($datei !== false)
-                    {
-
-                    if (!is_dir($source . $datei))
-                    {
-
-                      $res = copy($source . DS . $datei, $dest . DS . $datei);
-
-                    }
-                      $datei = readdir($handle);
-                    }
-                    closedir($handle);
-                    }
-                    if ($err = false)
-                    {
-                        $err = !JFolder::delete($source);
-
-                    }
-
-                }
-                $query = $db->getQuery(true);
-                $query->update("`#__thm_groups_" . strtolower($relation) . "_extra`");
-                $query->set("`value` = '" . $extra . "'");
-                if (isset($picpath))
-                {
-                    $query->set("`path` = '" . $picpath . "'");
-                }
-                $query->where('structid = ' . $id);
-                $db->setQuery($query);
-                if (!$db->query())
-                {
-                    $err = true;
-
-                }
-            }
+        }
+        catch (Exception $exception)
+        {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            return false;
         }
 
-        if (!$err)
+        if (isset($extra) == true || isset($newPicPath) == true)
         {
+            self::movePictures($relation, $structID, $extra, $newPicPath);
+        }
+    }
 
+    /**
+     * Moves pictures from one dorectory to another
+     *
+     * @param   String  $relation    PICTURE
+     * @param   Int     $structID    structure id
+     * @param   String  $extra       stadndard picture name(anonym.jpg)
+     * @param   String  $newPicPath  new directory path
+     *
+     * @return  true on success, false on fail
+     */
+    public function movePictures($relation, $structID, $extra, $newPicPath)
+    {
+        $oldPicPath = self::getCurrentPicturePath($relation, $structID);
+
+        if (!self::isDirExists($newPicPath))
+        {
+            self::makeNewDir($newPicPath);
+        }
+
+        self::copyPictures($oldPicPath->path, $newPicPath, $structID);
+        self::deletePictures($oldPicPath->path, $structID);
+
+        self::saveNewPicturePath($relation, $structID, $extra, $newPicPath);
+    }
+
+    /**
+     * Returns current picture path
+     *
+     * @param   String  $relation  PICTURE
+     * @param   Int     $structID  structure id
+     *
+     * @return  an object with current path
+     */
+    public function getCurrentPicturePath($relation, $structID)
+    {
+        $db = JFactory::getDbo();
+
+        // Get current path of pictures
+        $getFolderPathQuery = $db->getQuery(true);
+        $getFolderPathQuery->select('path');
+        $getFolderPathQuery->from('#__thm_groups_' . strtolower($relation) . '_extra');
+        $getFolderPathQuery->where('structid = ' . $structID);
+        $db->setQuery($getFolderPathQuery);
+
+        return $db->loadObject();
+    }
+
+    /**
+     * Checks, if directory exists
+     *
+     * @param   String  $path  directory path from DB
+     *
+     * @return boolean
+     */
+    public function isDirExists($path)
+    {
+        $dirPath = JPATH_ROOT . DS . $path;
+        if (file_exists($dirPath))
+        {
             return true;
         }
         else
         {
+            return false;
+        }
+    }
+
+    /**
+     * Makes a new directory
+     *
+     * @param   String  $newPicPath  new directory path
+     *
+     * @return nothing
+     */
+    public function makeNewDir($newPicPath)
+    {
+        mkdir(JPATH_ROOT . DS . $newPicPath, 0777, true);
+    }
+
+    /**
+     * Copies all pictures from old directory to new directory
+     *
+     * @param   String  $oldPath   old directory path
+     * @param   String  $newPath   new directory path
+     * @param   Int     $structID  structure id
+     *
+     * @return nothing
+     */
+    public function copyPictures($oldPath, $newPath, $structID)
+    {
+        // Name of all pictures
+        $fileNames = self::getPictureNames($structID);
+
+        $from = JPATH_ROOT . DS . $oldPath;
+        $to = JPATH_ROOT . DS . $newPath;
+
+        foreach (scandir($from) as $pic)
+        {
+            if (in_array($pic, $fileNames) != false)
+            {
+                copy($from . DS . $pic, $to . DS . $pic);
+            }
+        }
+    }
+
+    /**
+     * Deletes pictures from old directory
+     *
+     * @param   String  $path      old directory path
+     * @param   Int     $structID  structure id
+     *
+     * @return nothing
+     */
+    public function deletePictures($path, $structID)
+    {
+        // Name of all pictures
+        $fileNames = self::getPictureNames($structID);
+
+        $dir = JPATH_ROOT . DS . $path;
+
+        foreach (scandir($dir) as $pic)
+        {
+            if (in_array($pic, $fileNames) != false)
+            {
+                // Delete picture from folder
+                unlink($dir . DS . $pic);
+            }
+        }
+    }
+
+    /**
+     * Returns picture names
+     *
+     * @param   Int  $structID  structure id
+     *
+     * @return Array with picture names
+     */
+    public function getPictureNames($structID)
+    {
+        $db = JFactory::getDbo();
+        /*
+         $getFileNamesQuery = "SELECT value FROM #__thm_groups_picture WHERE structid = $structID"
+        */
+        $getFileNamesQuery = $db->getQuery(true);
+        $getFileNamesQuery->select('value')
+        ->from('#__thm_groups_picture')
+        ->where("structid = '" . $structID . "'");
+        $db->setQuery((string)$getFileNamesQuery);
+
+        return $db->loadResultArray();
+    }
+
+    /**
+     * Saves a new picture path in DB
+     *
+     * @param   String  $relation    PICTURE
+     * @param   Int     $structID    structure id
+     * @param   String  $extra       stadndard picture name(anonym.jpg)
+     * @param   String  $newPicPath  new directory path
+     *
+     * @return true if transaction ok and false if nope
+     */
+    public function saveNewPicturePath($relation, $structID, $extra, $newPicPath)
+    {
+        $db = JFactory::getDbo();
+
+        $query = $db->getQuery(true);
+        $query->update("`#__thm_groups_" . strtolower($relation) . "_extra`");
+        $query->set("`value` = '" . $extra . "'");
+        if (isset($newPicPath))
+        {
+            $query->set("`path` = '" . $newPicPath . "'");
+        }
+        $query->where('structid = ' . $structID);
+
+        $db->setQuery((string)$query);
+
+        try
+        {
+            $db->query();
+        }
+        catch (Exception $exception)
+        {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
             return false;
         }
     }
