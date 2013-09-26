@@ -25,45 +25,45 @@ jimport('joomla.application.component.controller');
  */
 class THMGroupsController extends JController
 {
-	/**
-	 * Method to display admincenter
-	 *
-	 * @param   boolean  $cachable   cachable
-	 * @param   boolean  $urlparams  url param
-	 *
-	 * @return void
-	 */
-	public function display($cachable = false, $urlparams = false)
-	{
-		$vName = JRequest::getWord('view', 'thmgroups');
+    /**
+     * Method to display admincenter
+     *
+     * @param   boolean  $cachable   cachable
+     * @param   boolean  $urlparams  url param
+     *
+     * @return void
+     */
+    public function display($cachable = false, $urlparams = false)
+    {
+        $vName = JRequest::getWord('view', 'thmgroups');
 
-		JSubMenuHelper::addEntry(
-			JText::_('COM_THM_GROUPS_HOME'),
-			'index.php?option=com_thm_groups&view=thmgroups',
-			$vName == 'thmgroups'
-		);
+        JSubMenuHelper::addEntry(
+            JText::_('COM_THM_GROUPS_HOME'),
+            'index.php?option=com_thm_groups&view=thmgroups',
+            $vName == 'thmgroups'
+        );
 
-		JSubMenuHelper::addEntry(
-			JText::_('COM_THM_GROUPS_MEMBERMANAGER'),
-			'index.php?option=com_thm_groups&view=membermanager',
-			$vName == 'membermanager'
-		);
-		JSubMenuHelper::addEntry(
-			JText::_('COM_THM_GROUPS_GROUPMANAGER'),
-			'index.php?option=com_thm_groups&view=groupmanager',
-			$vName == 'groupmanager'
-		);
-		JSubMenuHelper::addEntry(
-			JText::_('COM_THM_GROUPS_ROLEMANAGER'),
-			'index.php?option=com_thm_groups&view=rolemanager',
-			$vName == 'rolemanager'
-		);
-		JSubMenuHelper::addEntry(
-			JText::_('COM_THM_GROUPS_STRUCTUREMANAGER'),
-			'index.php?option=com_thm_groups&view=structuremanager',
-			$vName == 'structuremanager'
-		);
+        JSubMenuHelper::addEntry(
+            JText::_('COM_THM_GROUPS_MEMBERMANAGER'),
+            'index.php?option=com_thm_groups&view=membermanager',
+            $vName == 'membermanager'
+        );
+        JSubMenuHelper::addEntry(
+            JText::_('COM_THM_GROUPS_GROUPMANAGER'),
+            'index.php?option=com_thm_groups&view=groupmanager',
+            $vName == 'groupmanager'
+        );
+        JSubMenuHelper::addEntry(
+            JText::_('COM_THM_GROUPS_ROLEMANAGER'),
+            'index.php?option=com_thm_groups&view=rolemanager',
+            $vName == 'rolemanager'
+        );
+        JSubMenuHelper::addEntry(
+            JText::_('COM_THM_GROUPS_STRUCTUREMANAGER'),
+            'index.php?option=com_thm_groups&view=structuremanager',
+            $vName == 'structuremanager'
+        );
 
-		parent::display($cachable, $urlparams);
-	}
+        parent::display($cachable, $urlparams);
+    }
 }

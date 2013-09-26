@@ -31,22 +31,22 @@ $lang->load('com_thm_groups', JPATH_ADMINISTRATOR);
 class JFormFieldPreviewButton extends JFormField
 {
 
-	/**
-	 * Get Input Type Button to load Preview
-	 *
-	 * @return  string
-	 */
-	public function getInput()
-	{
-		// Add script-code to the document head
-		$scriptDir = str_replace(JPATH_SITE . DS, '', "libraries/thm_groups/assets/js/");
-		JHTML::script('jquery-1.9.1.min.js', $scriptDir, false);
+    /**
+     * Get Input Type Button to load Preview
+     *
+     * @return  string
+     */
+    public function getInput()
+    {
+        // Add script-code to the document head
+        $scriptDir = str_replace(JPATH_SITE . DS, '', "libraries/thm_groups/assets/js/");
+        JHTML::script('jquery-1.9.1.min.js', $scriptDir, false);
 
-		$scriptDir = str_replace(JPATH_SITE . DS, '', "administrator/components/com_thm_groups/elements/");
-		JHTML::script('previewButton.js', $scriptDir, false);
+        $scriptDir = str_replace(JPATH_SITE . DS, '', "administrator/components/com_thm_groups/elements/");
+        JHTML::script('previewButton.js', $scriptDir, false);
 
-		return '<input type="button" id="thm_groups_adv_view_preview_button" value="' . JText::_('COM_THM_GROUPS_PROFILE_CONTAINER_PREVIEW')
-				. '" onclick="ProfilePreview.open();" />';
-	}
+        return '<input type="button" id="thm_groups_adv_view_preview_button" value="' . JText::_('COM_THM_GROUPS_PROFILE_CONTAINER_PREVIEW')
+                . '" onclick="ProfilePreview.open();" />';
+    }
 
 }

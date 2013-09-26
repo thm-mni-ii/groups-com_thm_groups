@@ -19,15 +19,15 @@
 defined('_JEXEC') or die('Restricted access');
 if (!defined('_JEXEC'))
 {
-	define('_JEXEC', 1);
+    define('_JEXEC', 1);
 }
 if (!defined('JPATH_BASE'))
 {
-	define('JPATH_BASE', '../../../');
+    define('JPATH_BASE', '../../../');
 }
 if (!defined('DS'))
 {
-	define('DS', DIRECTORY_SEPARATOR);
+    define('DS', DIRECTORY_SEPARATOR);
 }
 
 require_once JPATH_BASE . DS . 'includes' . DS . 'defines.php';
@@ -44,39 +44,39 @@ $mainframe->initialise();
 function Com_install()
 {
 
-	?>
-	<h1 align="center">
-		<strong>&nbsp;THM Groups Installer!</strong>
-	</h1>
-	<?php
+    ?>
+    <h1 align="center">
+        <strong>&nbsp;THM Groups Installer!</strong>
+    </h1>
+    <?php
 
-	$db = JFactory::getDBO();
-	$query = $db->getQuery(true);
-	$query->select('*');
-	$query->from($db->qn('#__usergroups'));
-	$db->setQuery($query);
-	$db->query();
-	$rows = $db->loadObjectlist();
+    $db = JFactory::getDBO();
+    $query = $db->getQuery(true);
+    $query->select('*');
+    $query->from($db->qn('#__usergroups'));
+    $db->setQuery($query);
+    $db->query();
+    $rows = $db->loadObjectlist();
 
-	// Sync Groups to database
-	foreach ($rows as $row)
-	{
-		$query = $db->getQuery(true);
-		$query->insert("#__thm_groups_groups (id, name, info, picture, mode, injoomla)");
-		$query->values("$row->id , '" . $row->title . "' , ' ' , ' ' , ' ' , 1");
-		$db->setQuery($query);
+    // Sync Groups to database
+    foreach ($rows as $row)
+    {
+        $query = $db->getQuery(true);
+        $query->insert("#__thm_groups_groups (id, name, info, picture, mode, injoomla)");
+        $query->values("$row->id , '" . $row->title . "' , ' ' , ' ' , ' ' , 1");
+        $db->setQuery($query);
 
-		if ($db->query())
-		{
-			echo "
-			<p align=\"left\">
-			<strong>&nbsp;" . $row->title . " Group added to database!</strong>
-			</p>";
-		}
-	}
-	?>
-		<p align="center">
-			<strong>&nbsp;Installation successful!</strong>
-		</p>
-		<?php
+        if ($db->query())
+        {
+            echo "
+            <p align=\"left\">
+            <strong>&nbsp;" . $row->title . " Group added to database!</strong>
+            </p>";
+        }
+    }
+    ?>
+        <p align="center">
+            <strong>&nbsp;Installation successful!</strong>
+        </p>
+        <?php
 }

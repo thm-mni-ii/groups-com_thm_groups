@@ -34,21 +34,21 @@ $document->addStyleSheet($library_path . '/assets/css/members/members.css');
 ?>
 
 <div class="section">
-	<ul class="tabs">
-		<li id = "person_li" class="current"><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_CHOISE_PERSON'); ?>
-		</li>
-		<li id = "group_li"><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_CHOISE_GROUP'); ?>
-		</li>
-		<li id = "list_li"><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_CHOISE_LIST'); ?>
-		</li>
-	</ul>
-	<div class="box_tab visible" id = "person_box">
-		<?php echo $this->loadTemplate('profile'); ?>
-	</div>
-	<div class="box_tab" id="group_box">
-		<?php echo $this->loadTemplate('group'); ?>
-	</div>
-	<div class="box_tab" id="list_box">
-		<?php echo $this->loadTemplate('list'); ?>
-	</div>
+    <ul class="tabs">
+        <li id = "person_li" class="current"><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_CHOISE_PERSON'); ?>
+        </li>
+        <li id = "group_li"><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_CHOISE_GROUP'); ?>
+        </li>
+        <li id = "list_li"><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_CHOISE_LIST'); ?>
+        </li>
+    </ul>
+    <div class="box_tab visible" id = "person_box">
+        <?php echo $this->loadTemplate('profile'); ?>
+    </div>
+    <div class="box_tab" id="group_box">
+        <?php echo $this->loadTemplate('group'); ?>
+    </div>
+    <div class="box_tab" id="list_box">
+        <?php echo $this->loadTemplate('list'); ?>
+    </div>
 </div>

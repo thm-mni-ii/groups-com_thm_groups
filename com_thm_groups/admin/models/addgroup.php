@@ -264,8 +264,8 @@ class THMGroupsModelAddGroup extends JModelForm
         {
             $pic = new THMPicTransform($_FILES[$picField]);
             $pic->safeSpecial(
-            		JPATH_ROOT . DS . "components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS, "g" . $gid, 200, 200, "JPG"
-        	);
+                    JPATH_ROOT . DS . "components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS, "g" . $gid, 200, 200, "JPG"
+            );
             if (JModuleHelper::isEnabled('mod_thm_groups')->id != 0)
             {
                 $pic->safeSpecial(JPATH_ROOT . DS . "modules" . DS . "mod_thm_groups" . DS . "images" . DS, "g" . $gid, 200, 200, "JPG");

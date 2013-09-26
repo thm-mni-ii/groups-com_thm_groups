@@ -1,18 +1,18 @@
 
 button {
-	margin-top: 4px;
-	background: #fff;
-	border: 1px solid #ccc;
-	text-decoration: none;
-	padding-left: 5px;
-	padding-right: 5px;
+    margin-top: 4px;
+    background: #fff;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 button:hover {
-	cursor: pointer;
-	background: #E8F6FE;
-	text-decoration: none;
-	border: 1px solid #aaa;
+    cursor: pointer;
+    background: #E8F6FE;
+    text-decoration: none;
+    border: 1px solid #aaa;
 }
 
 
@@ -44,19 +44,19 @@ a.qp_icon_link { text-decoration: none; background-color: transparent; }
 a:hover.qp_icon_link { text-decoration: none; background: transparent !important; }
 
 span.qp_icon_big {
-	background-repeat: no-repeat;
-	display: inline-block;
-	height: 32px;
-	width: 32px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 32px;
+    width: 32px;
 }
 
 span.qp_create_icon {
-	background-image: url(../img/quickpage/toolbar/icon-32-new.png);
+    background-image: url(../img/quickpage/toolbar/icon-32-new.png);
 }
 
 span.qp_create_icon_disabled {
-	background-image: url(../img/quickpage/toolbar/icon-32-new.png);
-	background-position: 0 -32px;
+    background-image: url(../img/quickpage/toolbar/icon-32-new.png);
+    background-position: 0 -32px;
 }
 
 /* -- JGRID STYLES ----------------------------- */
@@ -69,17 +69,17 @@ input.text-area-order {
 }
 
 a.saveorder {
-	background: url('../img/quickpage/filesave.png') no-repeat scroll 0 0 transparent;
-	display: block;
-	float: right;
-	height: 16px;
-	margin-right: 8px;
-	overflow: hidden;
-	width: 16px;
+    background: url('../img/quickpage/filesave.png') no-repeat scroll 0 0 transparent;
+    display: block;
+    float: right;
+    height: 16px;
+    margin-right: 8px;
+    overflow: hidden;
+    width: 16px;
 }
 
 a img{
-	border: 0;
+    border: 0;
 }
 
 
@@ -87,9 +87,9 @@ a img{
 a.jgrid:hover { text-decoration: none; background: transparent !important; }
 
 .jgrid span.state {
-	display: inline-block;
-	height: 16px;
-	width: 16px;
+    display: inline-block;
+    height: 16px;
+    width: 16px;
 }
 .jgrid span.text 				{ display: none; }
 .jgrid span.edit				{ background-image: url(../img/quickpage/toolbar/icon-32-edit.png); width: 32px; height: 32px; }
@@ -114,89 +114,89 @@ a.jgrid:hover { text-decoration: none; background: transparent !important; }
 /* mainlist table */
 
 table.qp_mainlist {
-	width: 100%;
-	border-spacing: 1px;
-	background-color: #f3f3f3;
-	color: #666;
-	display: inline-block;
-	padding: 0;
-	margin: 0 auto;
+    width: 100%;
+    border-spacing: 1px;
+    background-color: #f3f3f3;
+    color: #666;
+    display: inline-block;
+    padding: 0;
+    margin: 0 auto;
 }
 
 table.qp_mainlist td,
 table.qp_mainlist th {
-	padding: 4px;
+    padding: 4px;
 }
 
 table.qp_mainlist td {padding-left: 8px;}
 
 table.qp_mainlist thead th {
-	text-align: center;
-	background: #f7f7f7;
-	color: #666;
-	border-bottom: 1px solid #CCC;
-	border-left: 1px solid #fff;
+    text-align: center;
+    background: #f7f7f7;
+    color: #666;
+    border-bottom: 1px solid #CCC;
+    border-left: 1px solid #fff;
 }
 
 table.qp_mainlist thead th.left {
-	text-align: left;
+    text-align: left;
 }
 
 table.qp_mainlist thead a:hover {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 table.qp_mainlist thead th img {
-	vertical-align: middle;
-	padding-left: 3px;
+    vertical-align: middle;
+    padding-left: 3px;
 }
 
 table.qp_mainlist tbody th {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 table.qp_mainlist tbody tr {
-	background-color: #fff;
-	text-align: left;
+    background-color: #fff;
+    text-align: left;
 }
 
 table.qp_mainlist tbody tr.row0:hover td,
 table.qp_mainlist tbody tr.row1:hover td	{
-	background-color: #e8f6fe;
+    background-color: #e8f6fe;
 }
 
 table.qp_mainlist tbody tr td {
-	background: #fff;
-	border: 1px solid #fff;
+    background: #fff;
+    border: 1px solid #fff;
 }
 
 table.qp_mainlist tbody tr.row1 td {
-	background: #f0f0f0;
-	border-top: 1px solid #FFF;
+    background: #f0f0f0;
+    border-top: 1px solid #FFF;
 }
 
 table.qp_mainlist tfoot tr {
-	text-align: center;
-	color: #333;
+    text-align: center;
+    color: #333;
 }
 
 table.qp_mainlist tfoot td,table.qp_mainlist tfoot th {
-	background-color: #f7f7f7;
-	border-top: 1px solid #999;
-	text-align: center;
+    background-color: #f7f7f7;
+    border-top: 1px solid #999;
+    text-align: center;
 }
 
 table.qp_mainlist td.order {
-	text-align: center;
-	white-space: nowrap;
-	width: 200px;
+    text-align: center;
+    white-space: nowrap;
+    width: 200px;
 }
 
 table.qp_mainlist td.order span {
-	float: left;
-	width: 20px;
-	text-align: center;
-	background-repeat: no-repeat;
-	height: 13px;
+    float: left;
+    width: 20px;
+    text-align: center;
+    background-repeat: no-repeat;
+    height: 13px;
 }
 

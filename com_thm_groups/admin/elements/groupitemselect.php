@@ -33,134 +33,134 @@ require_once JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_thm_groups' . D
  */
 class JFormFieldGroupItemSelect extends JFormField
 {
-	/**
-	 * Element name
-	 *
-	 * @access	protected
-	 * @var		string
-	 * 
-	 * @return html
-	 */
+    /**
+     * Element name
+     *
+     * @access	protected
+     * @var		string
+     *
+     * @return html
+     */
 
-	public function getInput()
-	{
-		$db = JFactory::getDBO();
+    public function getInput()
+    {
+        $db = JFactory::getDBO();
 
-		$SQL = new THMGroupsModelmembermanager;
+        $SQL = new THMGroupsModelmembermanager;
 
-		$groups = $SQL->getGroupsHirarchy();
-		$jgroups = $SQL->getJoomlaGroups();
+        $groups = $SQL->getGroupsHirarchy();
+        $jgroups = $SQL->getJoomlaGroups();
 
-		$injoomla = false;
-		$wasinjoomla = false;
-		$selectOptions = array();
-		foreach ($groups as $group)
-		{			
-			$query = $db->getQuery(true);
-			
-			$query->select('distinct id, name');
-			$query->from("#__thm_groups_roles, #__thm_groups_groups_map");
-			$query->where("id=rid");
-			$query->where("gid=" . $group->id);
-			$query->order("id");
-			
-			$db->setQuery($query);
-			$listR[$group->id] = $db->loadObjectList();
-			$listR[$group->id]['groupid'] = $group->id;
+        $injoomla = false;
+        $wasinjoomla = false;
+        $selectOptions = array();
+        foreach ($groups as $group)
+        {
+            $query = $db->getQuery(true);
 
-			$injoomla = $group->injoomla == 1 ? true : false;
-			if ($injoomla != $wasinjoomla)
-			{
-				$selectOptions[] = JHTML::_('select.option', -1, '- - - - - - - - - - - - - - - - - - - - - - - - - - - - -', 'value', 'text', true);
-			}
-			else
-			{
-			}
+            $query->select('distinct id, name');
+            $query->from("#__thm_groups_roles, #__thm_groups_groups_map");
+            $query->where("id=rid");
+            $query->where("gid=" . $group->id);
+            $query->order("id");
 
-			// Finde die Anzahl der parents
-			$tempgroup = $group;
-			$hirarchy = "";
-			while ($tempgroup->parent_id != 0)
-			{
-				$hirarchy .= "- ";
-				foreach ($jgroups as $actualgroup)
-				{
-					if ($tempgroup->parent_id == $actualgroup->id )
-					{
-						$tempgroup = $actualgroup;
-					}
-					else
-					{
-					}
-				}
-			}
-			$selectOptions[] = JHTML::_('select.option', $group->id, $hirarchy . $group->name);
-			$wasinjoomla = $injoomla;
-		}
+            $db->setQuery($query);
+            $listR[$group->id] = $db->loadObjectList();
+            $listR[$group->id]['groupid'] = $group->id;
 
-		$path = 'size="1" onchange="getGroupItemSelect(this.value)" class = "selGroup" style="display:block"';
-		$html = JHTML::_('select.genericlist', $selectOptions, $this->name, $path, 'value', 'text', $this->value);
+            $injoomla = $group->injoomla == 1 ? true : false;
+            if ($injoomla != $wasinjoomla)
+            {
+                $selectOptions[] = JHTML::_('select.option', -1, '- - - - - - - - - - - - - - - - - - - - - - - - - - - - -', 'value', 'text', true);
+            }
+            else
+            {
+            }
 
-		// Alle Rollen in Hidden-Felder schreiben, um Selectbox immer wieder zu füllen
+            // Finde die Anzahl der parents
+            $tempgroup = $group;
+            $hirarchy = "";
+            while ($tempgroup->parent_id != 0)
+            {
+                $hirarchy .= "- ";
+                foreach ($jgroups as $actualgroup)
+                {
+                    if ($tempgroup->parent_id == $actualgroup->id )
+                    {
+                        $tempgroup = $actualgroup;
+                    }
+                    else
+                    {
+                    }
+                }
+            }
+            $selectOptions[] = JHTML::_('select.option', $group->id, $hirarchy . $group->name);
+            $wasinjoomla = $injoomla;
+        }
 
-		$query = $db->getQuery(true);
+        $path = 'size="1" onchange="getGroupItemSelect(this.value)" class = "selGroup" style="display:block"';
+        $html = JHTML::_('select.genericlist', $selectOptions, $this->name, $path, 'value', 'text', $this->value);
 
-		$query->select('id, name');
-		$query->from("#__thm_groups_roles");
-		$query->order("name");
-		$db->setQuery($query);
-		$listRoles = $db->loadObjectList();
-		$rolePuffer = "";
-		foreach ($listRoles as $role)
-		{
-			if ($rolePuffer == "")
-			{
-				if ($role->id != null)
-				{
-					$rolePuffer .= $role->id . "," . $role->name;
-				}
-			}
-			else
-			{
-				if ($role->id != null)
-				{
-					$rolePuffer .= ";" . $role->id . "," . $role->name;
-				}
-			}
-		}
+        // Alle Rollen in Hidden-Felder schreiben, um Selectbox immer wieder zu füllen
 
-		$html .= '<input type="hidden" id="roles" value="' . $rolePuffer . '" />';
+        $query = $db->getQuery(true);
 
-		// Gruppenzugehörige Rollen als Strings in hidden-Felder schreiben, um die zu einer Gruppe zugehörigen Rollen anzuzeigen
-		foreach ($listR as $roleGroups)
-		{
-			$rolePuffer = "";
-			foreach ($roleGroups as $roleRow)
-			{
-				if ($rolePuffer == "")
-				{
-					if (isset($roleRow->id))
-					{
-						if ($roleRow->id != null)
-						{
-							$rolePuffer .= $roleRow->id;
-						}
-					}
-				}
-				else
-				{
-					if (isset($roleRow->id))
-					{
-						if ($roleRow->id != null)
-						{
-							$rolePuffer .= "," . $roleRow->id;
-						}
-					}
-				}
-			}
-			$html .= '<input type="hidden" name="grouproles[' . $roleGroups['groupid'] . ']" id="grouproles[' . $roleGroups['groupid']
-				. ']" value="' . $rolePuffer . '" />';
-		}
-		return $html;
-	}
+        $query->select('id, name');
+        $query->from("#__thm_groups_roles");
+        $query->order("name");
+        $db->setQuery($query);
+        $listRoles = $db->loadObjectList();
+        $rolePuffer = "";
+        foreach ($listRoles as $role)
+        {
+            if ($rolePuffer == "")
+            {
+                if ($role->id != null)
+                {
+                    $rolePuffer .= $role->id . "," . $role->name;
+                }
+            }
+            else
+            {
+                if ($role->id != null)
+                {
+                    $rolePuffer .= ";" . $role->id . "," . $role->name;
+                }
+            }
+        }
+
+        $html .= '<input type="hidden" id="roles" value="' . $rolePuffer . '" />';
+
+        // Gruppenzugehörige Rollen als Strings in hidden-Felder schreiben, um die zu einer Gruppe zugehörigen Rollen anzuzeigen
+        foreach ($listR as $roleGroups)
+        {
+            $rolePuffer = "";
+            foreach ($roleGroups as $roleRow)
+            {
+                if ($rolePuffer == "")
+                {
+                    if (isset($roleRow->id))
+                    {
+                        if ($roleRow->id != null)
+                        {
+                            $rolePuffer .= $roleRow->id;
+                        }
+                    }
+                }
+                else
+                {
+                    if (isset($roleRow->id))
+                    {
+                        if ($roleRow->id != null)
+                        {
+                            $rolePuffer .= "," . $roleRow->id;
+                        }
+                    }
+                }
+            }
+            $html .= '<input type="hidden" name="grouproles[' . $roleGroups['groupid'] . ']" id="grouproles[' . $roleGroups['groupid']
+                . ']" value="' . $rolePuffer . '" />';
+        }
+        return $html;
+    }
 }

@@ -30,32 +30,32 @@ jimport('joomla.application.component.view');
  */
 class THMGroupsViewGroups extends JView
 {
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object  $tpl  template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		$mainframe = Jfactory::getApplication();
-		$params = $mainframe->getParams();
-		$rootgroup = $params->get('rootGroup');
-		$model =& $this->getModel();
-		if (isset($rootgroup)) 
-		{
-			$groups = $model->getGroups($rootgroup);
-		}
-		else
-		{
-			$groups = $model->getGroups(0);
-		}
-		$itemid = JRequest::getVar('Itemid', 0);
-		$this->assignRef('groups', $groups);
-		$this->assignRef('itemid',  $itemid);
-		$this->assignRef('canEdit',  $model->canEdit());
-		$this->assignRef('params', $params);
-		parent::display($tpl);
-	}
+    /**
+     * Method to get display
+     *
+     * @param   Object  $tpl  template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
+        $mainframe = Jfactory::getApplication();
+        $params = $mainframe->getParams();
+        $rootgroup = $params->get('rootGroup');
+        $model =& $this->getModel();
+        if (isset($rootgroup))
+        {
+            $groups = $model->getGroups($rootgroup);
+        }
+        else
+        {
+            $groups = $model->getGroups(0);
+        }
+        $itemid = JRequest::getVar('Itemid', 0);
+        $this->assignRef('groups', $groups);
+        $this->assignRef('itemid',  $itemid);
+        $this->assignRef('canEdit',  $model->canEdit());
+        $this->assignRef('params', $params);
+        parent::display($tpl);
+    }
 }

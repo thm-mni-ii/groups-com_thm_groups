@@ -53,8 +53,8 @@ class THMGroupsViewRolemanager extends JView
         JToolBarHelper::deleteList('COM_THM_GROUPS_REALLY_DELETE', 'rolemanager.remove', 'JTOOLBAR_DELETE');
         if ($user->authorise('core.admin', 'com_users'))
         {
-        	JToolBarHelper::divider();
-        	JToolBarHelper::preferences('com_thm_groups');
+            JToolBarHelper::divider();
+            JToolBarHelper::preferences('com_thm_groups');
         }
 
         $uri = JFactory::getURI();

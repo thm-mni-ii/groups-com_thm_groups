@@ -78,12 +78,12 @@ class THMGroupsViewmembermanager extends JView
         }
         if ($user->authorise('core.delete', 'com_users') && $user->authorise('core.manage', 'com_users'))
         {
-        	JToolBarHelper::deleteList('Wirklich l&ouml;schen?', 'membermanager.delete', 'JTOOLBAR_DELETE');
+            JToolBarHelper::deleteList('Wirklich l&ouml;schen?', 'membermanager.delete', 'JTOOLBAR_DELETE');
         }
         if ($user->authorise('core.admin', 'com_users'))
         {
-        	JToolBarHelper::divider();
-        	JToolBarHelper::preferences('com_thm_groups');
+            JToolBarHelper::divider();
+            JToolBarHelper::preferences('com_thm_groups');
         }
         $mainframe = Jfactory::getApplication('Administrator');
 

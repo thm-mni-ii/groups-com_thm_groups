@@ -24,31 +24,31 @@ $document->addStyleSheet(JURI::base(true).'/components/com_thm_groups/css/wai/wa
 ?>
 
 <form>
-		<table width="100%" align="center">
-			
-				<td class="key" align="left">
-					<label for="title">
-						<input type="radio" id="horOrVert" name="group1" value="horizontal"> Horizontal<br>
- 						<input type="radio" id="horOrVert" name="group1" value="vertical"> Vertical<br>
-					</label>
-				</td>
-				<hr>
-				<td class="key" align="left">
-					<label for="alias">
-						<input type="checkbox" id="showList" name="showList" value="showlist"><span class = "hasTip" title = <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_LIST_DESC'); ?>><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_LIST'); ?></span>
- 						<input type="checkbox" id="showAdvanced" name="showAdvanced" value="showadvanced"><span class = "hasTip" title = <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_ADVANCED_DESC'); ?>><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_ADVANCED'); ?></span>
- 						<input type="checkbox" id="showSmallview" name="showSmallview" value="showsmallview"><span class = "hasTip" title = <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_SMALLVIEW_DESC'); ?>><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_SMALLVIEW'); ?></span>
- 						<?php
- 						$objekt1 = new THMGroupsModelWai();
- 						echo $objekt1->getInput();
- 						$objekt1->getKeyword();
-				 		?>
-					</label>
-				</td>
-				
-			
-		</table>
-		</form>
-		<button onclick="insertOptions();"><?php echo JText::_('Ok'); ?></button>
+        <table width="100%" align="center">
 
-	
+                <td class="key" align="left">
+                    <label for="title">
+                        <input type="radio" id="horOrVert" name="group1" value="horizontal"> Horizontal<br>
+                         <input type="radio" id="horOrVert" name="group1" value="vertical"> Vertical<br>
+                    </label>
+                </td>
+                <hr>
+                <td class="key" align="left">
+                    <label for="alias">
+                        <input type="checkbox" id="showList" name="showList" value="showlist"><span class = "hasTip" title = <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_LIST_DESC'); ?>><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_LIST'); ?></span>
+                         <input type="checkbox" id="showAdvanced" name="showAdvanced" value="showadvanced"><span class = "hasTip" title = <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_ADVANCED_DESC'); ?>><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_ADVANCED'); ?></span>
+                         <input type="checkbox" id="showSmallview" name="showSmallview" value="showsmallview"><span class = "hasTip" title = <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_SMALLVIEW_DESC'); ?>><?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_SMALLVIEW'); ?></span>
+                         <?php
+                         $objekt1 = new THMGroupsModelWai();
+                         echo $objekt1->getInput();
+                         $objekt1->getKeyword();
+                         ?>
+                    </label>
+                </td>
+
+
+        </table>
+        </form>
+        <button onclick="insertOptions();"><?php echo JText::_('Ok'); ?></button>
+
+

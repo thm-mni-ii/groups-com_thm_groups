@@ -31,46 +31,46 @@ jimport('joomla.filesystem.path');
 class THMGroupsViewEditgroup extends JView
 {
 
-	protected $form;
+    protected $form;
 
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object  $tpl  template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		// $model =& $this->getModel();
-		$item =& $this->get('Data');
-		$this->assignRef('item', $item);
+    /**
+     * Method to get display
+     *
+     * @param   Object  $tpl  template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
+        // $model =& $this->getModel();
+        $item =& $this->get('Data');
+        $this->assignRef('item', $item);
 
-		$groups =& $this->get('AllGroups');
-		$this->assignRef('groups', $groups);
+        $groups =& $this->get('AllGroups');
+        $this->assignRef('groups', $groups);
 
-		$parent_id =& $this->get('ParentId');
-		$this->assignRef('item_parent_id', $parent_id);
+        $parent_id =& $this->get('ParentId');
+        $this->assignRef('item_parent_id', $parent_id);
 
-		$this->form = $this->get('Form');
-		$info = array();
-		$info['groupinfo'] = $item[0]->info;
+        $this->form = $this->get('Form');
+        $info = array();
+        $info['groupinfo'] = $item[0]->info;
 
-		if (!empty($info))
-		{
-			$this->form->bind($info);
-		}
+        if (!empty($info))
+        {
+            $this->form->bind($info);
+        }
 
-		/* ZURÜCK BUTTON */
-		$option_old = JRequest::getVar('option_old');
-		$layout_old = JRequest::getVar('layout_old');
-		$view_old = JRequest::getVar('view_old');
+        /* ZURÜCK BUTTON */
+        $option_old = JRequest::getVar('option_old');
+        $layout_old = JRequest::getVar('layout_old');
+        $view_old = JRequest::getVar('view_old');
 
-		$this->assignRef('option_old', $option_old);
-		$this->assignRef('layout_old', $layout_old);
-		$this->assignRef('view_old', $view_old);
-		/* ###########   */
+        $this->assignRef('option_old', $option_old);
+        $this->assignRef('layout_old', $layout_old);
+        $this->assignRef('view_old', $view_old);
+        /* ###########   */
 
-		parent::display($tpl);
-	}
+        parent::display($tpl);
+    }
 }

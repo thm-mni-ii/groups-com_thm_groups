@@ -27,13 +27,13 @@
  */
 class TableGroupalignment extends JTable
 {
-	/**
+    /**
      * TableGroupalignment
      *
      * @param   Object  &$db  Database
      */
-	public function __construct(&$db)
-	{
-		parent::__construct('#__giessen_staff_groups', 'id', $db);
-	}
+    public function __construct(&$db)
+    {
+        parent::__construct('#__giessen_staff_groups', 'id', $db);
+    }
 }

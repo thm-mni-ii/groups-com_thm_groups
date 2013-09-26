@@ -24,75 +24,75 @@
 class THMGroupsModelEditRole extends JModel
 {
 
-	/**
-	 * Method to buil query
-	 * 
-	 * @return query
-	 */
-	public function _buildQuery()
-	{
-		$cid = JRequest::getVar('cid', array(0), '', 'array');
-		JArrayHelper::toInteger($cid, array(0));
+    /**
+     * Method to buil query
+     *
+     * @return query
+     */
+    public function _buildQuery()
+    {
+        $cid = JRequest::getVar('cid', array(0), '', 'array');
+        JArrayHelper::toInteger($cid, array(0));
 
-		/*
-		 	$query = "SELECT * FROM #__thm_groups_roles WHERE id=" . $cid[0];
-		 */
-		$db = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('*');
-		$query->from($db->qn('#__thm_groups_roles'));
-		$query->where('id = ' . $cid[0]);
-		return $query->__toString();
-	}
+        /*
+             $query = "SELECT * FROM #__thm_groups_roles WHERE id=" . $cid[0];
+         */
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+        $query->select('*');
+        $query->from($db->qn('#__thm_groups_roles'));
+        $query->where('id = ' . $cid[0]);
+        return $query->__toString();
+    }
 
-	/**
-	 * Method to get data
-	 *
-	 * @return	query
-	 */
-	public function getData()
-	{
-		$query = $this->_buildQuery();
-		$this->_data = $this->_getList($query);
-		return $this->_data;
-	}
+    /**
+     * Method to get data
+     *
+     * @return	query
+     */
+    public function getData()
+    {
+        $query = $this->_buildQuery();
+        $this->_data = $this->_getList($query);
+        return $this->_data;
+    }
 
-	/**
-	 * Method to store a record
-	 *
-	 * @access	public
-	 * @return	boolean	True on success
-	 */
-	public function store()
-	{
-		$r_name = JRequest::getVar('role_name');
-		$rid = JRequest::getVar('rid');
+    /**
+     * Method to store a record
+     *
+     * @access	public
+     * @return	boolean	True on success
+     */
+    public function store()
+    {
+        $r_name = JRequest::getVar('role_name');
+        $rid = JRequest::getVar('rid');
 
-		$db = JFactory::getDBO();
-		$err = 0;
+        $db = JFactory::getDBO();
+        $err = 0;
 
-		/*
-			$query1 = "UPDATE #__thm_groups_roles SET"
-			. " name='" . $r_name . "'"
-			. " WHERE id=" . $rid;
-		*/
-		$query = $db->getQuery(true);
-		$query->update($db->qn('#__thm_groups_roles'));
-		$query->set("`name` = '" . $r_name . "'");
-		$query->where("`id` = '" . $rid . "'");
+        /*
+            $query1 = "UPDATE #__thm_groups_roles SET"
+            . " name='" . $r_name . "'"
+            . " WHERE id=" . $rid;
+        */
+        $query = $db->getQuery(true);
+        $query->update($db->qn('#__thm_groups_roles'));
+        $query->set("`name` = '" . $r_name . "'");
+        $query->where("`id` = '" . $rid . "'");
 
-		$db->setQuery($query);
-		if (!$db->query())
-		{
-			$err = 1;
-		}
-		if (!$err)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+        $db->setQuery($query);
+        if (!$db->query())
+        {
+            $err = 1;
+        }
+        if (!$err)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }

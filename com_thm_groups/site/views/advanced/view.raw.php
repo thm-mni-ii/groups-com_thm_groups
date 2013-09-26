@@ -29,36 +29,36 @@ JHTML::_('behavior.framework', true);
 */
 class THMGroupsViewAdvanced extends JView
 {
-	
-	/**
-	 * Method to get extra
-	 *
-	 * @param   String  $tpl  template
-	 *
-	 * @return void
-	 *
-	 * @see JView::display()
-	 */
-	public function display($tpl = null)
-	{
-		$task = JRequest::getVar('task');
-		$this->$task();
-	}
-	
 
-	/**
-	 * Search a Groups of User for one Letter
-	 *
-	 * @return String $result a groups of user for one Letter
-	 */
-	public function notify()
-	{		
-		$itemId = JRequest::getVar('Itemid', false, 'post');
-		
-		// Notify Preview Observer
-		$model = $this->getmodel('advanced');
-		$token = $model->notifyPreviewObserver($itemId);
-		
-		echo $token;
-	}
+    /**
+     * Method to get extra
+     *
+     * @param   String  $tpl  template
+     *
+     * @return void
+     *
+     * @see JView::display()
+     */
+    public function display($tpl = null)
+    {
+        $task = JRequest::getVar('task');
+        $this->$task();
+    }
+
+
+    /**
+     * Search a Groups of User for one Letter
+     *
+     * @return String $result a groups of user for one Letter
+     */
+    public function notify()
+    {
+        $itemId = JRequest::getVar('Itemid', false, 'post');
+
+        // Notify Preview Observer
+        $model = $this->getmodel('advanced');
+        $token = $model->notifyPreviewObserver($itemId);
+
+        echo $token;
+    }
 }

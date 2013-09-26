@@ -16,16 +16,16 @@
  * @return Die neue Zeichenkette
  */
 function replaceCharAt(str, index, char) {
-	var newStr = "";
-	for (var i = 0; i < str.length; i++)
-	{
-		if (i == index) {
-			newStr += char;
-		} else {
-			newStr += str.charAt(i);
-		}
-	}
-	return newStr;
+    var newStr = "";
+    for (var i = 0; i < str.length; i++)
+    {
+        if (i == index) {
+            newStr += char;
+        } else {
+            newStr += str.charAt(i);
+        }
+    }
+    return newStr;
 }
 
 
@@ -36,16 +36,16 @@ function replaceCharAt(str, index, char) {
  * @additionalAttributeIndex Index des angefuegtes Attributs
  */
 function switchAdditionalAttribute(elementId, additionalAttributeIndex) {
-	var value = document.getElementById(elementId).value;
-	var attrNameIndex = value.length - additionalAttributeIndex;
-	if (value.charAt(attrNameIndex) == "1") {
-		//value[attrNameIndex] = '0';
-		value = replaceCharAt(value.toString(), attrNameIndex, "0");
-	} else {
-		//value[attrNameIndex] = '1';
-		value = replaceCharAt(value.toString(), attrNameIndex, "1");
-	}
-	document.getElementById(elementId).value = value;
+    var value = document.getElementById(elementId).value;
+    var attrNameIndex = value.length - additionalAttributeIndex;
+    if (value.charAt(attrNameIndex) == "1") {
+        //value[attrNameIndex] = '0';
+        value = replaceCharAt(value.toString(), attrNameIndex, "0");
+    } else {
+        //value[attrNameIndex] = '1';
+        value = replaceCharAt(value.toString(), attrNameIndex, "1");
+    }
+    document.getElementById(elementId).value = value;
 }
 
 
@@ -55,7 +55,7 @@ function switchAdditionalAttribute(elementId, additionalAttributeIndex) {
  * @elementId Id des zu bearbeitenden Elements
  */
 function switchAttributeName(elementId) {
-	switchAdditionalAttribute(elementId, 2);
+    switchAdditionalAttribute(elementId, 2);
 }
 
 
@@ -65,7 +65,7 @@ function switchAttributeName(elementId) {
  * @elementId Id des zu bearbeitenden Elements
  *///
 function switchAttributeWrap(elementId) {
-	switchAdditionalAttribute(elementId, 1);
+    switchAdditionalAttribute(elementId, 1);
 }
 
 
@@ -75,7 +75,7 @@ function switchAttributeWrap(elementId) {
  * @elementId Id des Hauptelements
  *///
 function switchEnablingAdditionalAttr(elementId) {
-	var disabled = !document.getElementById(elementId).checked;
-	document.getElementById(elementId + "ShowName").disabled = disabled;
-	document.getElementById(elementId + "WrapAfter").disabled = disabled;
+    var disabled = !document.getElementById(elementId).checked;
+    document.getElementById(elementId + "ShowName").disabled = disabled;
+    document.getElementById(elementId + "WrapAfter").disabled = disabled;
 }

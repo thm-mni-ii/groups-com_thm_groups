@@ -19,45 +19,45 @@ $listDirn	= $this->state->get('list.direction');
 <form action="index.php" method="post" name="adminForm">
 <div id="editcell">
 <table class="adminlist">
-	<thead>
-		<tr>
+    <thead>
+        <tr>
 <!--    	<th width="1" ><?php echo JHTML::_('grid.sort', 'Gruppen ID', 'id', $listDirn, $listOrder);?></th> -->
-			<th width="1%" ><input type="checkbox" name="toggle" value=""
-				onclick="checkAll(<?php echo count($this->items); ?>);" /></th>
+            <th width="1%" ><input type="checkbox" name="toggle" value=""
+                onclick="checkAll(<?php echo count($this->items); ?>);" /></th>
 
-			<th width="95%" align="center">
-				<?php echo JHTML::_('grid.sort', 'NAME', 'rname', $listDirn, $listOrder); ?>
-			</th>
-		</tr>
-	</thead>
+            <th width="95%" align="center">
+                <?php echo JHTML::_('grid.sort', 'NAME', 'rname', $listDirn, $listOrder); ?>
+            </th>
+        </tr>
+    </thead>
 
-	<?php
-	$k = 0;
-	for ($i = 0, $n = count($this->items); $i < $n; $i++)
-	{
-		$row = $this->items[$i];
-		$link = 'index.php?option=com_thm_groups&view=editrole&task=rolemanager.edit&cid=' . $row->id;
-		$checked = JHTML::_('grid.id',   $i, $row->id);
-		?>
-		<tr class="<?php echo "row$k"; ?>">
-			<td> <?php echo $checked; ?> </td>
-			<td> 
-				<a href="<?php echo $link; ?>"> 
-				<?php echo $row->rname; ?>
-				</a>
-			</td>
-		</tr>
-		<?php
-			$k = 1 - $k;
-	}
-	?>
-	<tfoot>
-    	<tr>
-    		<td colspan="9">
-    			<?php echo $this->pagination->getListFooter(); ?>
-    		</td>
-    	</tr>
-  	</tfoot>
+    <?php
+    $k = 0;
+    for ($i = 0, $n = count($this->items); $i < $n; $i++)
+    {
+        $row = $this->items[$i];
+        $link = 'index.php?option=com_thm_groups&view=editrole&task=rolemanager.edit&cid=' . $row->id;
+        $checked = JHTML::_('grid.id',   $i, $row->id);
+        ?>
+        <tr class="<?php echo "row$k"; ?>">
+            <td> <?php echo $checked; ?> </td>
+            <td>
+                <a href="<?php echo $link; ?>">
+                <?php echo $row->rname; ?>
+                </a>
+            </td>
+        </tr>
+        <?php
+            $k = 1 - $k;
+    }
+    ?>
+    <tfoot>
+        <tr>
+            <td colspan="9">
+                <?php echo $this->pagination->getListFooter(); ?>
+            </td>
+        </tr>
+      </tfoot>
 </table>
 </div>
 

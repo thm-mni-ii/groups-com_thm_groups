@@ -14,161 +14,161 @@
 
 // fetch selected items from the select box
 function getGroupItemSelect(selected_group) {
-	deleteSelection();
-	fillSelection();
-	var z = 0;
-	var grouproles = document.getElementById('grouproles[' + selected_group + ']' );
-	var arrgrouproles = grouproles.value.split(",");
-	var roles = document.getElementById('paramsroleid');
-	for(i=0;i<document.getElementById('paramsroleid').length;i++) {
-		for(j=0;j<arrgrouproles.length;j++){
-			if(roles.options[i].value == arrgrouproles[j])
-				z=1;
-		}
-		if(z == 0){
-			document.getElementById('paramsroleid').options[i]=null;
-			i--;
-		}
-		z=0;
-	}
-	if(document.getElementById('paramsroleid').length == 0){
-		document.getElementById('paramsroleid').options[0]=new Option("Keine Rollen fuer diese Gruppe", 0);
-		sortbuttons(false);
-	} else {
-		sortbuttons(true);
-	}
+    deleteSelection();
+    fillSelection();
+    var z = 0;
+    var grouproles = document.getElementById('grouproles[' + selected_group + ']' );
+    var arrgrouproles = grouproles.value.split(",");
+    var roles = document.getElementById('paramsroleid');
+    for(i=0;i<document.getElementById('paramsroleid').length;i++) {
+        for(j=0;j<arrgrouproles.length;j++){
+            if(roles.options[i].value == arrgrouproles[j])
+                z=1;
+        }
+        if(z == 0){
+            document.getElementById('paramsroleid').options[i]=null;
+            i--;
+        }
+        z=0;
+    }
+    if(document.getElementById('paramsroleid').length == 0){
+        document.getElementById('paramsroleid').options[0]=new Option("Keine Rollen fuer diese Gruppe", 0);
+        sortbuttons(false);
+    } else {
+        sortbuttons(true);
+    }
 
-	var temp="";
-	for(i=0;i<document.getElementById('paramsroleid').length;i++) {
-		temp += document.getElementById('paramsroleid').options[i].value + ',';
-	}
-	// remove the last char (,) from the string
-	temp = temp.substr(0, temp.length-1);
-	// write sorted roles to hidden parameter box
-	document.getElementById('sortedgrouproles').value = temp;
+    var temp="";
+    for(i=0;i<document.getElementById('paramsroleid').length;i++) {
+        temp += document.getElementById('paramsroleid').options[i].value + ',';
+    }
+    // remove the last char (,) from the string
+    temp = temp.substr(0, temp.length-1);
+    // write sorted roles to hidden parameter box
+    document.getElementById('sortedgrouproles').value = temp;
 }
 
 // fills the selectionBox with all Roles
 function fillSelection() {
 
-	var allroles = document.getElementById('roles');
-	var roles = allroles.value.split(";");
-	var idrole = null;
-	for(i=0;i<roles.length;i++) {
-		idrole = roles[i].split(",");
-		//alert(idrole[0] + ".-" + idrole[1]);
-  		document.getElementById('paramsroleid').options[document.getElementById('paramsroleid').length] = new Option(idrole[1], idrole[0], false, false);
-	}
+    var allroles = document.getElementById('roles');
+    var roles = allroles.value.split(";");
+    var idrole = null;
+    for(i=0;i<roles.length;i++) {
+        idrole = roles[i].split(",");
+        //alert(idrole[0] + ".-" + idrole[1]);
+          document.getElementById('paramsroleid').options[document.getElementById('paramsroleid').length] = new Option(idrole[1], idrole[0], false, false);
+    }
 }
 
 function deleteSelection() {
-	var len=document.getElementById('paramsroleid').length;
-	for(i=0;i<len;i++) {
-		document.getElementById('paramsroleid').options[0] = null;
-	}
+    var len=document.getElementById('paramsroleid').length;
+    for(i=0;i<len;i++) {
+        document.getElementById('paramsroleid').options[0] = null;
+    }
 }
 
 // fills the selectionBox with all Roles
 function sortbuttons(visible) {
-	if (visible==false){
-		document.getElementById('sortup').style.visibility = "hidden";
-		document.getElementById('sortdown').style.visibility = "hidden";
-	} else {
-		document.getElementById('sortup').style.visibility = "visible";
-		document.getElementById('sortdown').style.visibility = "visible";
-	}
+    if (visible==false){
+        document.getElementById('sortup').style.visibility = "hidden";
+        document.getElementById('sortdown').style.visibility = "hidden";
+    } else {
+        document.getElementById('sortup').style.visibility = "visible";
+        document.getElementById('sortdown').style.visibility = "visible";
+    }
 }
 
 // change the sort of the roles, selected role one position higher
 function roleup() {
 
-	var role = document.getElementById('paramsroleid');
+    var role = document.getElementById('paramsroleid');
 
-	// If no Param is selected------------------------------------
-	if (role.selectedIndex == -1)
-		alert("Bitte Rolle auswaehlen");
-	//------------------------------------------------------------
-	else {
-		// Change Roles down------------------------------------------
-		selected = role.selectedIndex;
-		var tmpvalue = role.options[selected].value;
-		var tmptext = role.options[selected].text;
-		document.getElementById('paramsroleid').options[selected].value = role.options[selected-1].value
-		document.getElementById('paramsroleid').options[selected].text = role.options[selected-1].text
-		document.getElementById('paramsroleid').options[selected-1].value = tmpvalue;
-		document.getElementById('paramsroleid').options[selected-1].text = tmptext;
-		document.getElementById('paramsroleid').options[selected-1].selected=true;
-		//------------------------------------------------------------
+    // If no Param is selected------------------------------------
+    if (role.selectedIndex == -1)
+        alert("Bitte Rolle auswaehlen");
+    //------------------------------------------------------------
+    else {
+        // Change Roles down------------------------------------------
+        selected = role.selectedIndex;
+        var tmpvalue = role.options[selected].value;
+        var tmptext = role.options[selected].text;
+        document.getElementById('paramsroleid').options[selected].value = role.options[selected-1].value
+        document.getElementById('paramsroleid').options[selected].text = role.options[selected-1].text
+        document.getElementById('paramsroleid').options[selected-1].value = tmpvalue;
+        document.getElementById('paramsroleid').options[selected-1].text = tmptext;
+        document.getElementById('paramsroleid').options[selected-1].selected=true;
+        //------------------------------------------------------------
 
-		// Write new sorted Roles into hidden paramsfield-------------
-		var temp="";
-		for(i=0;i<document.getElementById('paramsroleid').length;i++) {
-			temp += document.getElementById('paramsroleid').options[i].value + ',';
-		}
-		// remove the last char (,) from the string
-		temp = temp.substr(0, temp.length-1);
-		// write sorted roles to hidden parameter box
-		document.getElementById('sortedgrouproles').value = temp;
-		//------------------------------------------------------------
-	}
+        // Write new sorted Roles into hidden paramsfield-------------
+        var temp="";
+        for(i=0;i<document.getElementById('paramsroleid').length;i++) {
+            temp += document.getElementById('paramsroleid').options[i].value + ',';
+        }
+        // remove the last char (,) from the string
+        temp = temp.substr(0, temp.length-1);
+        // write sorted roles to hidden parameter box
+        document.getElementById('sortedgrouproles').value = temp;
+        //------------------------------------------------------------
+    }
 }
 // change the sort of the roles, selected role one position down
 function roledown() {
-	var role = document.getElementById('paramsroleid');
-	// If no Param is selected------------------------------------
-	if (role.selectedIndex == -1)
-		alert("Bitte Rolle auswaehlen");
-	//------------------------------------------------------------
-	else {
-		// Change Roles down------------------------------------------
-		selected = role.selectedIndex;
-		var tmpvalue = role.options[selected].value;
-		//alert(role.value);
-		var tmptext = role.options[selected].text;
-		document.getElementById('paramsroleid').options[selected].value = role.options[selected+1].value
-		document.getElementById('paramsroleid').options[selected].text = role.options[selected+1].text
-		document.getElementById('paramsroleid').options[selected+1].value = tmpvalue;
-		document.getElementById('paramsroleid').options[selected+1].text = tmptext;
-		document.getElementById('paramsroleid').options[selected+1].selected=true;
-		//------------------------------------------------------------
+    var role = document.getElementById('paramsroleid');
+    // If no Param is selected------------------------------------
+    if (role.selectedIndex == -1)
+        alert("Bitte Rolle auswaehlen");
+    //------------------------------------------------------------
+    else {
+        // Change Roles down------------------------------------------
+        selected = role.selectedIndex;
+        var tmpvalue = role.options[selected].value;
+        //alert(role.value);
+        var tmptext = role.options[selected].text;
+        document.getElementById('paramsroleid').options[selected].value = role.options[selected+1].value
+        document.getElementById('paramsroleid').options[selected].text = role.options[selected+1].text
+        document.getElementById('paramsroleid').options[selected+1].value = tmpvalue;
+        document.getElementById('paramsroleid').options[selected+1].text = tmptext;
+        document.getElementById('paramsroleid').options[selected+1].selected=true;
+        //------------------------------------------------------------
 
-		// Write new sorted Roles into hidden paramsfield-------------
-		var temp="";
-		for(i=0;i<document.getElementById('paramsroleid').length;i++) {
-			temp += document.getElementById('paramsroleid').options[i].value + ',';
-		}
-		// remove the last char (,) from the string
-		temp = temp.substr(0, temp.length-1);
-		// write sorted roles to hidden parameter box
-		document.getElementById('sortedgrouproles').value = temp;
-		//------------------------------------------------------------
-	}
+        // Write new sorted Roles into hidden paramsfield-------------
+        var temp="";
+        for(i=0;i<document.getElementById('paramsroleid').length;i++) {
+            temp += document.getElementById('paramsroleid').options[i].value + ',';
+        }
+        // remove the last char (,) from the string
+        temp = temp.substr(0, temp.length-1);
+        // write sorted roles to hidden parameter box
+        document.getElementById('sortedgrouproles').value = temp;
+        //------------------------------------------------------------
+    }
 }
 
 // disable select-box and clean hidden menuid parameter box
 function disableRoleItemSelectSelections(element_id) {
-	var e = document.getElementById('selectbox_' + element_id);
-	e.disabled = true;
-	var i = 0;
-	var n = e.options.length;
+    var e = document.getElementById('selectbox_' + element_id);
+    e.disabled = true;
+    var i = 0;
+    var n = e.options.length;
 
-	for (i = 0; i < n; i++) {
-		e.options[i].disabled = true;
-		e.options[i].selected = false;
-	}
-	document.getElementById(element_id).value = '';
+    for (i = 0; i < n; i++) {
+        e.options[i].disabled = true;
+        e.options[i].selected = false;
+    }
+    document.getElementById(element_id).value = '';
 }
 
 // enable disable select-box
 function enableRoleItemSelectSelections(element_id) {
-	var e = document.getElementById('selectbox_' + element_id);
-	e.disabled = false;
-	var i = 0;
-	var n = e.options.length;
+    var e = document.getElementById('selectbox_' + element_id);
+    e.disabled = false;
+    var i = 0;
+    var n = e.options.length;
 
-	for (i = 0; i < n; i++) {
-		e.options[i].disabled = false;
-	}
+    for (i = 0; i < n; i++) {
+        e.options[i].disabled = false;
+    }
 }
 // alle <option>s des sub-<select> entfernen
         function ResetSubSelect(form, subSelect)

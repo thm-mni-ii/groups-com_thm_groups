@@ -31,54 +31,54 @@ jimport('joomla.filesystem.path');
 class THMGroupsVieweditgroup extends JView
 {
 
-	protected $form;
+    protected $form;
 
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object  $tpl  template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		$app = JFactory::getApplication();
-		$user = JFactory::getUser();
-		$document = JFactory::getDocument();
-		$document->addStyleSheet($this->baseurl . "/components/com_thm_groups/assets/css/thm_groups.css");
+    /**
+     * Method to get display
+     *
+     * @param   Object  $tpl  template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
+        $app = JFactory::getApplication();
+        $user = JFactory::getUser();
+        $document = JFactory::getDocument();
+        $document->addStyleSheet($this->baseurl . "/components/com_thm_groups/assets/css/thm_groups.css");
 
-		if (!($user->authorise('core.edit', 'com_users') && $user->authorise('core.manage', 'com_users')))
-		{
-			$msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_NO_RIGHTS_TO_EDIT_GROUP');
-			$app->redirect('index.php?option=com_thm_groups&view=groupmanager', $msg);
-		}
+        if (!($user->authorise('core.edit', 'com_users') && $user->authorise('core.manage', 'com_users')))
+        {
+            $msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_NO_RIGHTS_TO_EDIT_GROUP');
+            $app->redirect('index.php?option=com_thm_groups&view=groupmanager', $msg);
+        }
 
-		JToolBarHelper::title(JText::_('COM_THM_GROUPS_EDITGROUP_TITLE'), 'mni');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS_EDITGROUP_TITLE'), 'mni');
 
-		JToolBarHelper::apply('editgroup.apply', 'JTOOLBAR_APPLY');
-		JToolBarHelper::save('editgroup.save', 'JTOOLBAR_SAVE');
-		JToolBarHelper::custom('editgroup.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-		JToolBarHelper::cancel('editgroup.cancel', 'JTOOLBAR_CLOSE');
+        JToolBarHelper::apply('editgroup.apply', 'JTOOLBAR_APPLY');
+        JToolBarHelper::save('editgroup.save', 'JTOOLBAR_SAVE');
+        JToolBarHelper::custom('editgroup.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+        JToolBarHelper::cancel('editgroup.cancel', 'JTOOLBAR_CLOSE');
 
-		// $model =& $this->getModel();
-		$item = $this->get('Data');
-		$this->assignRef('item', $item);
+        // $model =& $this->getModel();
+        $item = $this->get('Data');
+        $this->assignRef('item', $item);
 
-		$groups = $this->get('AllGroups');
-		$this->assignRef('groups', $groups);
+        $groups = $this->get('AllGroups');
+        $this->assignRef('groups', $groups);
 
-		$parent_id = $this->get('ParentId');
-		$this->assignRef('item_parent_id', $parent_id);
+        $parent_id = $this->get('ParentId');
+        $this->assignRef('item_parent_id', $parent_id);
 
-		$this->form = $this->get('Form');
-		$info = array();
-		$info['groupinfo'] = $item[0]->info;
+        $this->form = $this->get('Form');
+        $info = array();
+        $info['groupinfo'] = $item[0]->info;
 
-		if (!empty($info))
-		{
-			$this->form->bind($info);
-		}
+        if (!empty($info))
+        {
+            $this->form->bind($info);
+        }
 
-		parent::display($tpl);
-	}
+        parent::display($tpl);
+    }
 }

@@ -26,84 +26,84 @@ require_once JPATH_COMPONENT . DS . 'models' . DS . 'article.php';
  */
 class THMGroupsViewArticles extends JView
 {
-	protected $items;
+    protected $items;
 
-	protected $pagination;
+    protected $pagination;
 
-	protected $state;
+    protected $state;
 
-	protected $categories;
+    protected $categories;
 
-	protected $profileIdentData;
+    protected $profileIdentData;
 
-	/**
-	 * Display the view
-	 *
-	 * @param   object  $tpl  Template
-	 *
-	 * @return	void
-	 */
-	public function display($tpl = null)
-	{
-		$this->items		= $this->get('Items');
-		$this->pagination	= $this->get('Pagination');
-		$this->state		= $this->get('State');
-		/* $this->authors		= $this->get('Authors'); */
-		$this->categories	= $this->get('Categories');
-		$this->profileIdentData	= $this->get('ProfileIdentData');
+    /**
+     * Display the view
+     *
+     * @param   object  $tpl  Template
+     *
+     * @return	void
+     */
+    public function display($tpl = null)
+    {
+        $this->items		= $this->get('Items');
+        $this->pagination	= $this->get('Pagination');
+        $this->state		= $this->get('State');
+        /* $this->authors		= $this->get('Authors'); */
+        $this->categories	= $this->get('Categories');
+        $this->profileIdentData	= $this->get('ProfileIdentData');
 
-		// Check for errors.
-		if (count($errors = $this->get('Errors')))
-		{
-			JError::raiseError(500, implode("\n", $errors));
-			return false;
-		}
+        // Check for errors.
+        if (count($errors = $this->get('Errors')))
+        {
+            JError::raiseError(500, implode("\n", $errors));
+            return false;
+        }
 
-		// Load stylesheet
-		$document = JFactory::getDocument();
-		$document->addStyleSheet(JURI::base(true) . '/components/com_thm_groups/css/quickpage.css');
+        // Load stylesheet
+        $document = JFactory::getDocument();
+        $document->addStyleSheet(JURI::base(true) . '/components/com_thm_groups/css/quickpage.css');
 
-		parent::display($tpl);
-	}
+        parent::display($tpl);
+    }
 
 
-	/**
-	 * Method to test whether the session user
-	 * has the permission to do something with an article.
-	 *
-	 * @param   Strig   $rightName    The right name
-	 * @param   object  $articleItem  A article record object.
-	 *
-	 * @return	boolean	True if permission granted.
-	 */
-	protected function hasUserRightTo($rightName, $articleItem)
-	{
-		$methodName = 'can' . $rightName;
+    /**
+     * Method to test whether the session user
+     * has the permission to do something with an article.
+     *
+     * @param   Strig   $rightName    The right name
+     * @param   object  $articleItem  A article record object.
+     *
+     * @return	boolean	True if permission granted.
+     */
+    protected function hasUserRightTo($rightName, $articleItem)
+    {
+        $methodName = 'can' . $rightName;
 
-		$articleModel = new THMGroupsModelArticle;
+        $articleModel = new THMGroupsModelArticle;
 
-		if (method_exists($articleModel, $methodName))
-		{
-			return $articleModel->$methodName($articleItem);
-		}
+        if (method_exists($articleModel, $methodName))
+        {
+            return $articleModel->$methodName($articleItem);
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * Method to test whether the session user
-	 * has the permission to create a new article.
-	 *
-	 * @param   int  $categoryID  The category id to create the article in.
-	 *
-	 * @return	boolean	True if permission granted.
-	 */
-	protected function hasUserRightToCreateArticle($categoryID)
-	{
-		$articleModel = new THMGroupsModelArticle;
+    /**
+     * Method to test whether the session user
+     * has the permission to create a new article.
+     *
+     * @param   int  $categoryID  The category id to create the article in.
+     *
+     * @return	boolean	True if permission granted.
+     */
+    protected function hasUserRightToCreateArticle($categoryID)
+    {
+        $articleModel = new THMGroupsModelArticle;
 
-		return $articleModel->canCreate($categoryID);
-	}
+        return $articleModel->canCreate($categoryID);
+    }
 
 
 }

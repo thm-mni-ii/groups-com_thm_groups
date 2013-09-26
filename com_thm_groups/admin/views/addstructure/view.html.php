@@ -35,8 +35,8 @@ class THMGroupsViewAddStructure extends JView
      */
     public function display($tpl = null)
     {
-    	$document = JFactory::getDocument();
-    	$document->addStyleSheet($this->baseurl . "/components/com_thm_groups/assets/css/thm_groups.css");
+        $document = JFactory::getDocument();
+        $document->addStyleSheet($this->baseurl . "/components/com_thm_groups/assets/css/thm_groups.css");
 
         JToolBarHelper::title(JText::_('COM_THM_GROUPS_ADDSTRUCTURE_TITLE'), 'mni');
 

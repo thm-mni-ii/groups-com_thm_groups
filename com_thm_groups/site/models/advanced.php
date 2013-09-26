@@ -469,218 +469,218 @@ class THMGroupsModelAdvanced extends JModel
         }
         return $view;
     }
-	
-	
-	
-	
-	/**
-	 * Get Auto Increment Value of Database Table
-	 * 
-	 * @param   String  $dbTable  Database Table Name
-	 * 
-	 * @author	Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
-	 * @author	Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
-	 * 
-	 * @return  int   Value of Autoincrement
-	 */
-	public function getAutoIncrementValue($dbTable)
-	{
-		$sql = "SHOW TABLE STATUS LIKE '" . $this->db->getPrefix() . $dbTable . "';";
-		$query = $this->db->getQuery(true);
-		$this->db->setQuery($sql);
-		$result = $this->db->loadAssoc();
-		
-		if (empty($result) || !isset($result['Auto_increment']))
-		{
-			return false;
-		}
-		
-		return $result['Auto_increment'];
-	}
-	
-	
-	
-	
-	/**
-	 * Save Preview Data
-	 * 
-	 * @param   Mixed  $data  Data
-	 * 
-	 * @author	Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
-	 * @author	Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
-	 * 
-	 * @return  String  Token
-	 */
-	public function savePreviewData($data = false)
-	{
-		$session = JSession::getInstance('none', array());
-		
-		// Create Token (md5 - Token must have 32 chars)
-		$tokenKey = 'db::thm_groups_menu_row';	
-		$token = md5($tokenKey . microtime() . mt_rand(0, 255));
 
-		$session->set($token, $data);
-		
-		return $token;
-	}
-	
-	
-	
-	
-	/**
-	 * Load Preview Data
-	 * 
-	 * @param   String  $token  Token
-	 * 
-	 * @author	Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
-	 * @author	Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
-	 * 
-	 * @return  Mixed  $data  Data
-	 */
-	public function loadPreviewData($token = false)
-	{		
-		$session = JSession::getInstance('none', array());
-		return $session->get($token, false);
-	}
-	
-	
-	
-	
-	/**
-	 * Delete Preview Data
-	 * 
-	 * @param   String  $token  Token
-	 * 
-	 * @author	Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
-	 * @author	Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
-	 * 
-	 * @return  Mixed  $data  Data
-	 */
-	public function deletePreviewData($token = false)
-	{		
-		$session = JSession::getInstance('none', array());
-		$session->clear($token);
-	}
-	
-	
-	
 
-	/**
-	 * Preview Observer - Store/Restore Menu Row
-	 * 
-	 * @param   int     $id     Item ID (optional)
-	 * @param   string  $token  md5 Hash (optional)
-	 * 
-	 * @author	Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
-	 * @author	Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
-	 *
-	 * @return  bool OR string (token)
-	 */
-	public function notifyPreviewObserver($id = false, $token = false)
-	{
-		if (!is_numeric($id))
-		{
-			return false;
-		}
-		
-		$itemId = $id;
-		$dbTable = 'menu';
-		
-		// Store Mode
-		if ($token === false)
-		{						
-			// Get current Auto Increment
-			$autoIncrement = $this->getAutoIncrementValue($dbTable);
-			
-			// Item will be updated for preview
-			if (!empty($itemId))
-			{
-				$itemStatus = 'edit';
-				
-				$query = $this->db->getQuery(true);		
-				$query->select('*');
-				$query->from('#__' . $dbTable);
-				$query->where('id = ' . $itemId);
-				$this->db->setQuery($query);
-				$row = $this->db->loadAssoc();				
-			}
-			// A new item will be created for preview
-			else
-			{
-				$itemStatus = 'new';
-				$row = false;
-			}
-			
-			// Save Data and return Token
-			$data = array('itemStatus' => $itemStatus, 'itemId' => $itemId, 'autoIncrement' => $autoIncrement, 'row' => $row);	
-			return $this->savePreviewData($data);
-		} 
-		// Restore Mode
-		elseif (strlen($token) === 32)
-		{			
-			// Load Data by Token
-			$cacheData = $this->loadPreviewData($token);
-			
-			if (empty($cacheData) || !isset($cacheData['itemStatus']))
-			{
-				return false;
-			}
-			
-			// Restore edited item
-			if ($cacheData['itemStatus'] == 'edit' && $itemId == $cacheData['itemId'])
-			{
-				$query = $this->db->getQuery(true);
-				$query->update($this->db->getPrefix() . $dbTable);
-				foreach ($cacheData['row'] AS $key => $value)
-				{
-					$query->set($key . ' = ' . $this->db->quote($value));
-				}
-				$query->where('id = ' . $itemId);
-				$this->db->setQuery($query);
-				$this->db->execute();
-			}
-			// Delete new (preview) item and decrease Auto Increment value if possible
-			elseif ($cacheData['itemStatus'] == 'new' && $itemId >= $cacheData['autoIncrement'])
-			{				
-				try
-				{
-					$this->db->transactionStart();
-					
-					$autoIncrementOld = $cacheData['autoIncrement'];
-					$autoIncrementNew = $this->getAutoIncrementValue($dbTable);
-					
-					if ($autoIncrementOld >= $autoIncrementNew)
-					{
-						throw new Exception('An unexpected error occured!\nAuto Increment Value mismatch!');
-					}
-					
-					// Delete new item
-					$query = $this->db->getQuery(true);
-					$query->delete($this->db->getPrefix() . $dbTable);
-					$query->where('id = ' . $itemId);
-					$this->db->setQuery($query);
-					$this->db->execute();
-					
-					// Decrease Auto Increment Value
-					if ($autoIncrementOld + 1 == $autoIncrementNew)
-					{
-						$query = $this->db->getQuery(true);
-						$this->db->setQuery("ALTER TABLE " . $this->db->getPrefix() . $dbTable . " AUTO_INCREMENT = $autoIncrementOld");
-						$this->db->execute();
-					}
-					
-					$this->db->transactionCommit();
-				} 
-				catch (Exception $e)
-				{
-					$this->db->transactionRollback();
-				}
-			}
-			
-			$this->deletePreviewData($token);
-			return true;
-		}
-		return false;
-	}
-	
+
+
+    /**
+     * Get Auto Increment Value of Database Table
+     *
+     * @param   String  $dbTable  Database Table Name
+     *
+     * @author	Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
+     * @author	Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
+     *
+     * @return  int   Value of Autoincrement
+     */
+    public function getAutoIncrementValue($dbTable)
+    {
+        $sql = "SHOW TABLE STATUS LIKE '" . $this->db->getPrefix() . $dbTable . "';";
+        $query = $this->db->getQuery(true);
+        $this->db->setQuery($sql);
+        $result = $this->db->loadAssoc();
+
+        if (empty($result) || !isset($result['Auto_increment']))
+        {
+            return false;
+        }
+
+        return $result['Auto_increment'];
+    }
+
+
+
+
+    /**
+     * Save Preview Data
+     *
+     * @param   Mixed  $data  Data
+     *
+     * @author	Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
+     * @author	Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
+     *
+     * @return  String  Token
+     */
+    public function savePreviewData($data = false)
+    {
+        $session = JSession::getInstance('none', array());
+
+        // Create Token (md5 - Token must have 32 chars)
+        $tokenKey = 'db::thm_groups_menu_row';
+        $token = md5($tokenKey . microtime() . mt_rand(0, 255));
+
+        $session->set($token, $data);
+
+        return $token;
+    }
+
+
+
+
+    /**
+     * Load Preview Data
+     *
+     * @param   String  $token  Token
+     *
+     * @author	Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
+     * @author	Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
+     *
+     * @return  Mixed  $data  Data
+     */
+    public function loadPreviewData($token = false)
+    {
+        $session = JSession::getInstance('none', array());
+        return $session->get($token, false);
+    }
+
+
+
+
+    /**
+     * Delete Preview Data
+     *
+     * @param   String  $token  Token
+     *
+     * @author	Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
+     * @author	Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
+     *
+     * @return  Mixed  $data  Data
+     */
+    public function deletePreviewData($token = false)
+    {
+        $session = JSession::getInstance('none', array());
+        $session->clear($token);
+    }
+
+
+
+
+    /**
+     * Preview Observer - Store/Restore Menu Row
+     *
+     * @param   int     $id     Item ID (optional)
+     * @param   string  $token  md5 Hash (optional)
+     *
+     * @author	Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
+     * @author	Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
+     *
+     * @return  bool OR string (token)
+     */
+    public function notifyPreviewObserver($id = false, $token = false)
+    {
+        if (!is_numeric($id))
+        {
+            return false;
+        }
+
+        $itemId = $id;
+        $dbTable = 'menu';
+
+        // Store Mode
+        if ($token === false)
+        {
+            // Get current Auto Increment
+            $autoIncrement = $this->getAutoIncrementValue($dbTable);
+
+            // Item will be updated for preview
+            if (!empty($itemId))
+            {
+                $itemStatus = 'edit';
+
+                $query = $this->db->getQuery(true);
+                $query->select('*');
+                $query->from('#__' . $dbTable);
+                $query->where('id = ' . $itemId);
+                $this->db->setQuery($query);
+                $row = $this->db->loadAssoc();
+            }
+            // A new item will be created for preview
+            else
+            {
+                $itemStatus = 'new';
+                $row = false;
+            }
+
+            // Save Data and return Token
+            $data = array('itemStatus' => $itemStatus, 'itemId' => $itemId, 'autoIncrement' => $autoIncrement, 'row' => $row);
+            return $this->savePreviewData($data);
+        }
+        // Restore Mode
+        elseif (strlen($token) === 32)
+        {
+            // Load Data by Token
+            $cacheData = $this->loadPreviewData($token);
+
+            if (empty($cacheData) || !isset($cacheData['itemStatus']))
+            {
+                return false;
+            }
+
+            // Restore edited item
+            if ($cacheData['itemStatus'] == 'edit' && $itemId == $cacheData['itemId'])
+            {
+                $query = $this->db->getQuery(true);
+                $query->update($this->db->getPrefix() . $dbTable);
+                foreach ($cacheData['row'] AS $key => $value)
+                {
+                    $query->set($key . ' = ' . $this->db->quote($value));
+                }
+                $query->where('id = ' . $itemId);
+                $this->db->setQuery($query);
+                $this->db->execute();
+            }
+            // Delete new (preview) item and decrease Auto Increment value if possible
+            elseif ($cacheData['itemStatus'] == 'new' && $itemId >= $cacheData['autoIncrement'])
+            {
+                try
+                {
+                    $this->db->transactionStart();
+
+                    $autoIncrementOld = $cacheData['autoIncrement'];
+                    $autoIncrementNew = $this->getAutoIncrementValue($dbTable);
+
+                    if ($autoIncrementOld >= $autoIncrementNew)
+                    {
+                        throw new Exception('An unexpected error occured!\nAuto Increment Value mismatch!');
+                    }
+
+                    // Delete new item
+                    $query = $this->db->getQuery(true);
+                    $query->delete($this->db->getPrefix() . $dbTable);
+                    $query->where('id = ' . $itemId);
+                    $this->db->setQuery($query);
+                    $this->db->execute();
+
+                    // Decrease Auto Increment Value
+                    if ($autoIncrementOld + 1 == $autoIncrementNew)
+                    {
+                        $query = $this->db->getQuery(true);
+                        $this->db->setQuery("ALTER TABLE " . $this->db->getPrefix() . $dbTable . " AUTO_INCREMENT = $autoIncrementOld");
+                        $this->db->execute();
+                    }
+
+                    $this->db->transactionCommit();
+                }
+                catch (Exception $e)
+                {
+                    $this->db->transactionRollback();
+                }
+            }
+
+            $this->deletePreviewData($token);
+            return true;
+        }
+        return false;
+    }
+
 }

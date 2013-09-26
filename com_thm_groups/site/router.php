@@ -22,46 +22,46 @@
  */
 function THM_groupsBuildRoute(&$query)
 {
-	// Contains all SEF Elements as list
-	$segments = array();
-	if (isset ($query['view']))
-	{
-		$segments[] = $query['view'];
-		unset($query['view']);
-	}
+    // Contains all SEF Elements as list
+    $segments = array();
+    if (isset ($query['view']))
+    {
+        $segments[] = $query['view'];
+        unset($query['view']);
+    }
 
-	if (isset ($query['layout']))
-	{
-		$segments[] = $query['layout'];
-		unset($query['layout']);
-	}
+    if (isset ($query['layout']))
+    {
+        $segments[] = $query['layout'];
+        unset($query['layout']);
+    }
 
-	if (isset ($query['gsuid']))
-	{
-		if (isset ($query['name']))
-		{
-			if (isset ($query['gsgid']))
-			{
-				$segments[] = $query['gsgid'] . "-" . $query['gsuid'] . "-" . $query['name'];
-				unset($query['gsgid']);
-			}
-			else
-			{
-				$segments[] = $query['gsuid'] . "-" . $query['name'];
-			}
-			unset($query['gsuid']);
-			unset($query['name']);
-		}
-		else
-		{
-			$segments[] = $query['gsuid'];
-			unset($query['gsuid']);
-		}
-	}
-	else
-	{
-	}
-	return $segments;
+    if (isset ($query['gsuid']))
+    {
+        if (isset ($query['name']))
+        {
+            if (isset ($query['gsgid']))
+            {
+                $segments[] = $query['gsgid'] . "-" . $query['gsuid'] . "-" . $query['name'];
+                unset($query['gsgid']);
+            }
+            else
+            {
+                $segments[] = $query['gsuid'] . "-" . $query['name'];
+            }
+            unset($query['gsuid']);
+            unset($query['name']);
+        }
+        else
+        {
+            $segments[] = $query['gsuid'];
+            unset($query['gsuid']);
+        }
+    }
+    else
+    {
+    }
+    return $segments;
 }
 
 /**
@@ -76,33 +76,33 @@ function THM_groupsParseRoute($segments)
 {
 
 
-	$vars = array();
-	if ($segments[0] != "")
-	{
-		if (isset ($segments[2]))
-		{
-			$arrVar1 = explode(':', $segments[2]);
-		}
-		$vars['view']   = $segments[0];
-		if (isset ($segments[2]))
-		{
-			$vars['layout'] = $segments[1];
-		}
-		if (isset ($arrVar1[0]))
-		{
-			$arrVar2 = explode('-', $arrVar1[1]);
-			if (isset ($arrVar2[1]))
-			{
-				$vars['gsgid'] = $arrVar1[0];
-				$vars['gsuid'] = $arrVar2[0];
-				$vars['name']  = $arrVar2[1];
-			}
-			else
-			{
-				$vars['gsuid'] = $arrVar1[0];
-				$vars['name']  = $arrVar1[1];
-			}
-		}
-	}
-	return $vars;
+    $vars = array();
+    if ($segments[0] != "")
+    {
+        if (isset ($segments[2]))
+        {
+            $arrVar1 = explode(':', $segments[2]);
+        }
+        $vars['view']   = $segments[0];
+        if (isset ($segments[2]))
+        {
+            $vars['layout'] = $segments[1];
+        }
+        if (isset ($arrVar1[0]))
+        {
+            $arrVar2 = explode('-', $arrVar1[1]);
+            if (isset ($arrVar2[1]))
+            {
+                $vars['gsgid'] = $arrVar1[0];
+                $vars['gsuid'] = $arrVar2[0];
+                $vars['name']  = $arrVar2[1];
+            }
+            else
+            {
+                $vars['gsuid'] = $arrVar1[0];
+                $vars['name']  = $arrVar1[1];
+            }
+        }
+    }
+    return $vars;
 }

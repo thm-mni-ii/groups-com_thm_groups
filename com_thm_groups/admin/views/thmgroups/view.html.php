@@ -35,29 +35,29 @@ class THMGroupsViewTHMGroups extends JView
      */
     public function display($tpl = null)
     {
-    	if (!JFactory::getUser()->authorise('core.administrator'))
-    	{
-    		return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
-    	}
-    	
-    	JHtml::_('behavior.tooltip');
-    	
-    	$document = JFactory::getDocument();
-    	$document->addStyleSheet($this->baseurl . '/components/com_thm_groups/assets/css/thm_groups.css');
-    	
-    	$pane = JPane::getInstance('sliders');
-    	$this->pane = $pane;
-    	
-    	$application = JFactory::getApplication("administrator");
-    	$this->option = $application->scope;
-    	
-    	$this->addToolBar();
-    	
-    	$this->addViews();
-    	
-    	parent::display($tpl);
+        if (!JFactory::getUser()->authorise('core.administrator'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
+
+        JHtml::_('behavior.tooltip');
+
+        $document = JFactory::getDocument();
+        $document->addStyleSheet($this->baseurl . '/components/com_thm_groups/assets/css/thm_groups.css');
+
+        $pane = JPane::getInstance('sliders');
+        $this->pane = $pane;
+
+        $application = JFactory::getApplication("administrator");
+        $this->option = $application->scope;
+
+        $this->addToolBar();
+
+        $this->addViews();
+
+        parent::display($tpl);
     }
-    
+
     /**
      * creates a joomla administratoristrative tool bar
      *
@@ -65,10 +65,10 @@ class THMGroupsViewTHMGroups extends JView
      */
     private function addToolBar()
     {
-    	JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_HOME_TITLE'), 'mni');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_HOME_TITLE'), 'mni');
         JToolBarHelper::preferences('com_thm_groups');
     }
-    
+
     /**
      * creates html elements for the main menu
      *
@@ -76,37 +76,37 @@ class THMGroupsViewTHMGroups extends JView
      */
     private function addViews()
     {
-    	$views = array();
-    
-    	$views['membermanager'] = array();
-    	$views['membermanager']['title'] = JText::_('COM_THM_GROUPS_MEMBERMANAGER');
-    	$views['membermanager']['tooltip'] = JText::_('COM_THM_GROUPS_MEMBERMANAGER') . '::' . JText::_('COM_THM_GROUPS_MEMBERMANAGER_DESC');
-    	$views['membermanager']['url'] = "index.php?option=com_thm_groups&view=membermanager";
-    	$views['membermanager']['image'] = "administrator/components/com_thm_groups/assets/images/icon-48-mni.png";
-    
-    	$views['groupmanager'] = array();
-    	$views['groupmanager']['title'] = JText::_('COM_THM_GROUPS_GROUPMANAGER');
-    	$views['groupmanager']['tooltip'] = JText::_('COM_THM_GROUPS_GROUPMANAGER') . '::' . JText::_('COM_THM_GROUPS_GROUPMANAGER_DESC');
-    	$views['groupmanager']['url'] = "index.php?option=com_thm_groups&view=groupmanager";
-    	$views['groupmanager']['image'] = "administrator/components/com_thm_groups/assets/images/icon-48-mni.png";
-    
-    	$views['rolemanager'] = array();
-    	$views['rolemanager']['title'] = JText::_('COM_THM_GROUPS_ROLEMANAGER');
-    	$views['rolemanager']['tooltip'] = JText::_('COM_THM_GROUPS_ROLEMANAGER') . '::' . JText::_('COM_THM_GROUPS_ROLEMANAGER_DESC');
-    	$views['rolemanager']['url'] = "index.php?option=com_thm_groups&view=rolemanager";
-    	$views['rolemanager']['image'] = "administrator/components/com_thm_groups/assets/images/icon-48-mni.png";
-    
-    	$views['structuremanager'] = array();
-    	$views['structuremanager']['title'] = JText::_('COM_THM_GROUPS_STRUCTUREMANAGER');
-    	$views['structuremanager']['tooltip'] = JText::_('COM_THM_GROUPS_STRUCTUREMANAGER') . '::' . JText::_('COM_THM_GROUPS_STRUCTUREMANAGER_DESC');
-    	$views['structuremanager']['url'] = "index.php?option=com_thm_groups&view=structuremanager";
-    	$views['structuremanager']['image'] = "administrator/components/com_thm_groups/assets/images/icon-48-mni.png";
-    
-    	$views['quickpage'] = array();
-    	$views['quickpage']['title'] = JText::_('COM_THM_GROUPS_QUICKPAGE');
-    	$views['quickpage']['tooltip'] = JText::_('COM_THM_GROUPS_QUICKPAGE') . '::' . JText::_('COM_THM_GROUPS_QUICKPAGE_DESC');
-    	$views['quickpage']['url'] = "index.php?option=com_thm_groups&view=quickpage";
-    	$views['quickpage']['image'] = "administrator/components/com_thm_groups/assets/images/icon-48-mni.png";
-    	$this->views = $views;
+        $views = array();
+
+        $views['membermanager'] = array();
+        $views['membermanager']['title'] = JText::_('COM_THM_GROUPS_MEMBERMANAGER');
+        $views['membermanager']['tooltip'] = JText::_('COM_THM_GROUPS_MEMBERMANAGER') . '::' . JText::_('COM_THM_GROUPS_MEMBERMANAGER_DESC');
+        $views['membermanager']['url'] = "index.php?option=com_thm_groups&view=membermanager";
+        $views['membermanager']['image'] = "administrator/components/com_thm_groups/assets/images/icon-48-mni.png";
+
+        $views['groupmanager'] = array();
+        $views['groupmanager']['title'] = JText::_('COM_THM_GROUPS_GROUPMANAGER');
+        $views['groupmanager']['tooltip'] = JText::_('COM_THM_GROUPS_GROUPMANAGER') . '::' . JText::_('COM_THM_GROUPS_GROUPMANAGER_DESC');
+        $views['groupmanager']['url'] = "index.php?option=com_thm_groups&view=groupmanager";
+        $views['groupmanager']['image'] = "administrator/components/com_thm_groups/assets/images/icon-48-mni.png";
+
+        $views['rolemanager'] = array();
+        $views['rolemanager']['title'] = JText::_('COM_THM_GROUPS_ROLEMANAGER');
+        $views['rolemanager']['tooltip'] = JText::_('COM_THM_GROUPS_ROLEMANAGER') . '::' . JText::_('COM_THM_GROUPS_ROLEMANAGER_DESC');
+        $views['rolemanager']['url'] = "index.php?option=com_thm_groups&view=rolemanager";
+        $views['rolemanager']['image'] = "administrator/components/com_thm_groups/assets/images/icon-48-mni.png";
+
+        $views['structuremanager'] = array();
+        $views['structuremanager']['title'] = JText::_('COM_THM_GROUPS_STRUCTUREMANAGER');
+        $views['structuremanager']['tooltip'] = JText::_('COM_THM_GROUPS_STRUCTUREMANAGER') . '::' . JText::_('COM_THM_GROUPS_STRUCTUREMANAGER_DESC');
+        $views['structuremanager']['url'] = "index.php?option=com_thm_groups&view=structuremanager";
+        $views['structuremanager']['image'] = "administrator/components/com_thm_groups/assets/images/icon-48-mni.png";
+
+        $views['quickpage'] = array();
+        $views['quickpage']['title'] = JText::_('COM_THM_GROUPS_QUICKPAGE');
+        $views['quickpage']['tooltip'] = JText::_('COM_THM_GROUPS_QUICKPAGE') . '::' . JText::_('COM_THM_GROUPS_QUICKPAGE_DESC');
+        $views['quickpage']['url'] = "index.php?option=com_thm_groups&view=quickpage";
+        $views['quickpage']['image'] = "administrator/components/com_thm_groups/assets/images/icon-48-mni.png";
+        $this->views = $views;
     }
 }

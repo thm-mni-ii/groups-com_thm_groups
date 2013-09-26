@@ -17,16 +17,16 @@ defined('_JEXEC') or die('Restricted Access');
 JHtml::_('behavior.tooltip');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_helloworld'); ?>" method="post" name="adminForm">
-	<table class="adminlist">
-		<thead></thead>
-		<tfoot></tfoot>
-		<tbody></tbody>
-	</table>
-	<div>
-		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="boxchecked" value="0" />
-		<?php echo JHtml::_('form.token'); ?>
-	</div>
+    <table class="adminlist">
+        <thead></thead>
+        <tfoot></tfoot>
+        <tbody></tbody>
+    </table>
+    <div>
+        <input type="hidden" name="task" value="" />
+        <input type="hidden" name="boxchecked" value="0" />
+        <?php echo JHtml::_('form.token'); ?>
+    </div>
 </form>
 
 <h1><?php echo JText::_('COM_THM_GROUPS_QUICKPAGES_BACKEND_TITLE') ?></h1>

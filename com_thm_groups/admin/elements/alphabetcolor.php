@@ -31,45 +31,45 @@ jimport('joomla.form.formfield');
  */
 class JFormFieldAlphabetColor extends JFormField
 {
-	/**
-	 * Element name
-	 *
-	 * @access	protected
-	 * @var		string
-	 * 
-	 * @return html
-	 */
+    /**
+     * Element name
+     *
+     * @access	protected
+     * @var		string
+     *
+     * @return html
+     */
 
-	public function getInput()
-	{
-		$scriptDir = str_replace(JPATH_SITE . DS, '', "administrator/components/com_thm_groups/elements/");
-		$document = JFactory::getDocument();
-		$document->addStyleSheet(JUri::root() . '/administrator/components/com_thm_groups/elements/mooRainbow.css');
+    public function getInput()
+    {
+        $scriptDir = str_replace(JPATH_SITE . DS, '', "administrator/components/com_thm_groups/elements/");
+        $document = JFactory::getDocument();
+        $document->addStyleSheet(JUri::root() . '/administrator/components/com_thm_groups/elements/mooRainbow.css');
 
-		// Add script-code to the document head
-		JHTML::script('mooRainbow.js', $scriptDir, false);
-		$img = JUri::root() . '/administrator/components/com_thm_groups/elements/images/';
+        // Add script-code to the document head
+        JHTML::script('mooRainbow.js', $scriptDir, false);
+        $img = JUri::root() . '/administrator/components/com_thm_groups/elements/images/';
 ?>
 <script>
 var i=0;
 function change_<?php echo $this->fieldname?>(){
-		var r = new MooRainbow('<?php echo $this->name;?>', {
-			id: '<?php echo $this->fieldname?>' + i,
-			startColor: $('<?php echo $this->name;?>').style.backgroundColor,
-	    	'onChange': function(color) {
-		    	$('<?php echo $this->name;?>').value = color.hex;
-		        $('<?php echo $this->name;?>').setStyle("backgroundColor", color.hex);
-	     	},
-	     	imgPath: '<?php echo $img;?>'
-		});
-		i++;
-	}
+        var r = new MooRainbow('<?php echo $this->name;?>', {
+            id: '<?php echo $this->fieldname?>' + i,
+            startColor: $('<?php echo $this->name;?>').style.backgroundColor,
+            'onChange': function(color) {
+                $('<?php echo $this->name;?>').value = color.hex;
+                $('<?php echo $this->name;?>').setStyle("backgroundColor", color.hex);
+             },
+             imgPath: '<?php echo $img;?>'
+        });
+        i++;
+    }
 
 </script>
 <?php
 
-		$html = "<input id='" . $this->name . "' name='" . $this->name . "' type='text' size='13' value='"
-		. $this->value . "' style='background-color:" . $this->value . ";' onfocus='change_" . $this->fieldname . "()'/>";
-		return $html;
-	}
+        $html = "<input id='" . $this->name . "' name='" . $this->name . "' type='text' size='13' value='"
+        . $this->value . "' style='background-color:" . $this->value . ";' onfocus='change_" . $this->fieldname . "()'/>";
+        return $html;
+    }
 }

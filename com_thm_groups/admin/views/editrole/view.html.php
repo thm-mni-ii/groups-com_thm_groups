@@ -26,28 +26,28 @@ jimport('joomla.filesystem.path');
  */
 class THMGroupsVieweditrole extends JView
 {
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object  $tpl  template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		$document = JFactory::getDocument();
-		$document->addStyleSheet($this->baseurl . "/components/com_thm_groups/assets/css/thm_groups.css");
+    /**
+     * Method to get display
+     *
+     * @param   Object  $tpl  template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
+        $document = JFactory::getDocument();
+        $document->addStyleSheet($this->baseurl . "/components/com_thm_groups/assets/css/thm_groups.css");
 
-		JToolBarHelper::title(JText::_('COM_THM_GROUPS_EDITROLE_TITLE'), 'mni');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS_EDITROLE_TITLE'), 'mni');
 
-		JToolBarHelper::apply('editrole.apply', 'JTOOLBAR_APPLY');
-		JToolBarHelper::save('editrole.save', 'JTOOLBAR_SAVE');
-		JToolBarHelper::custom('editrole.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-		JToolBarHelper::cancel('editrole.cancel', 'JTOOLBAR_CLOSE');
+        JToolBarHelper::apply('editrole.apply', 'JTOOLBAR_APPLY');
+        JToolBarHelper::save('editrole.save', 'JTOOLBAR_SAVE');
+        JToolBarHelper::custom('editrole.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+        JToolBarHelper::cancel('editrole.cancel', 'JTOOLBAR_CLOSE');
 
-		$item = $this->get('Data');
-		$this->assignRef('item', $item);
+        $item = $this->get('Data');
+        $this->assignRef('item', $item);
 
-		parent::display($tpl);
-	}
+        parent::display($tpl);
+    }
 }

@@ -26,30 +26,30 @@ jimport('joomla.filesystem.path');
  */
 class THMGroupsVieweditStructure extends JView
 {
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object  $tpl  template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		$document = JFactory::getDocument();
-		$document->addStyleSheet($this->baseurl . "/components/com_thm_groups/assets/css/thm_groups.css");
+    /**
+     * Method to get display
+     *
+     * @param   Object  $tpl  template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
+        $document = JFactory::getDocument();
+        $document->addStyleSheet($this->baseurl . "/components/com_thm_groups/assets/css/thm_groups.css");
 
-		JToolBarHelper::title(JText::_('COM_THM_GROUPS_EDITSTRUCTURE_TITLE'), 'mni');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS_EDITSTRUCTURE_TITLE'), 'mni');
 
-		JToolBarHelper::apply('editstructure.apply', 'JTOOLBAR_APPLY');
-		JToolBarHelper::save('editstructure.save', 'JTOOLBAR_SAVE');
-		JToolBarHelper::custom('editstructure.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-		JToolBarHelper::cancel('editstructure.cancel', 'JTOOLBAR_CLOSE');
+        JToolBarHelper::apply('editstructure.apply', 'JTOOLBAR_APPLY');
+        JToolBarHelper::save('editstructure.save', 'JTOOLBAR_SAVE');
+        JToolBarHelper::custom('editstructure.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+        JToolBarHelper::cancel('editstructure.cancel', 'JTOOLBAR_CLOSE');
 
-		// $model =& $this->getModel();
-		$rowItem = $this->get('Item');
-		$items = $this->get('Data');
-		$this->assignRef('items', $items);
-		$this->assignRef('rowItem', $rowItem);
-		parent::display($tpl);
-	}
+        // $model =& $this->getModel();
+        $rowItem = $this->get('Item');
+        $items = $this->get('Data');
+        $this->assignRef('items', $items);
+        $this->assignRef('rowItem', $rowItem);
+        parent::display($tpl);
+    }
 }

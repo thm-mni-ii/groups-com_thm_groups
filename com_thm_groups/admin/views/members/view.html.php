@@ -24,17 +24,17 @@ defined('_JEXEC') or die;
  */
 class ThmGroupsViewMembers extends JViewLegacy
 {
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object  $tpl  template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
+    /**
+     * Method to get display
+     *
+     * @param   Object  $tpl  template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
 
-			parent::display($tpl);
-	
-	}
+            parent::display($tpl);
+
+    }
 }

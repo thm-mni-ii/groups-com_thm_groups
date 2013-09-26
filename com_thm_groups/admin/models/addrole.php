@@ -26,56 +26,56 @@ jimport('joomla.application.component.model');
 class THMGroupsModelAddRole extends JModel
 {
 
-	/**
-	 * Method to store a record
-	 *
-	 * @access	public
-	 * @return	boolean	True on success
-	 */
-	public function store()
-	{
-		$r_name = JRequest::getVar('role_name');
-		$id = null;
+    /**
+     * Method to store a record
+     *
+     * @access	public
+     * @return	boolean	True on success
+     */
+    public function store()
+    {
+        $r_name = JRequest::getVar('role_name');
+        $id = null;
 
-		$db = JFactory::getDBO();
-		$err = 0;
+        $db = JFactory::getDBO();
+        $err = 0;
 
-		/*
-		$query = "INSERT INTO #__thm_groups_roles ( `name`)"
-			. " VALUES ("
-			. "'" . $r_name . "')";
-		*/
-		$query = $db->getQuery(true);
-		$query->insert("`#__thm_groups_roles` (`name`)");
-		$query->values("'" . $r_name . "'");
-		$db->setQuery($query);
-		if ($db->query())
-		{
-			$id = $db->insertid();
-			JRequest::setVar('cid[]', $id, 'get');
-		}
-		else
-		{
-			$err = 1;
-		}
+        /*
+        $query = "INSERT INTO #__thm_groups_roles ( `name`)"
+            . " VALUES ("
+            . "'" . $r_name . "')";
+        */
+        $query = $db->getQuery(true);
+        $query->insert("`#__thm_groups_roles` (`name`)");
+        $query->values("'" . $r_name . "'");
+        $db->setQuery($query);
+        if ($db->query())
+        {
+            $id = $db->insertid();
+            JRequest::setVar('cid[]', $id, 'get');
+        }
+        else
+        {
+            $err = 1;
+        }
 
-		if (!$err)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+        if (!$err)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
-	/**
-	 * Apply
-	 *
-	 * @return	void
-	 */
-	public function apply()
-	{
-		$this->store();
-	}
+    /**
+     * Apply
+     *
+     * @return	void
+     */
+    public function apply()
+    {
+        $this->store();
+    }
 }

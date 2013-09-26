@@ -60,7 +60,7 @@ class THMGroupsViewStructuremanager extends JView
         JToolBarHelper::deleteList('COM_THM_GROUPS_STRUCTURE_REALLY_DELETE', 'structuremanager.remove', 'JTOOLBAR_DELETE');
         if ($user->authorise('core.admin', 'com_users'))
         {
-        	JToolBarHelper::divider();
+            JToolBarHelper::divider();
             JToolBarHelper::preferences('com_thm_groups');
         }
         parent::display($tpl);
