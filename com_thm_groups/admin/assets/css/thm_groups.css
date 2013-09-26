@@ -1,5 +1,5 @@
 /******************************************************************************/
-/* com_thm_organizer                                                          */
+/* com_thm_groups                                                          */
 /******************************************************************************/
 
 .tip-wrap{ z-index: 99; }
@@ -26,10 +26,10 @@
 
 .thm_groups_main_linkdiv{ float: left; }
 
-.icon-32-moderate {
-    background-image: url(../../assets/images/icon-32-moderate.png);
+.icon-32-addassignment {
+    background-image: url(../../assets/images/icon-32-addassignment.png);
 }
 
-.icon-32-unmoderate {
-    background-image: url(../../assets/images/icon-32-unmoderate.png);
+.icon-32-removeassignment {
+    background-image: url(../../assets/images/icon-32-removeassignment.png);
 }
