@@ -45,21 +45,6 @@ class ComThmGroupsStructManagerAddEntry extends JoomlaSeleniumTest {
         $this->performBackendLogout ();
     }
 
-    public function testLinkSaveAndNewAvailable() {
-        $this->performBackendLogin ();
-
-        $this->click ( "link=Structuremanager" );
-        $this->waitForPageToLoad ( "30000" );
-
-        try {
-            $this->assertTrue ( $this->isElementPresent ( "link=Save & New" ) );
-        } catch ( PHPUnit_Framework_AssertionFailedError $e ) {
-            array_push ( $this->verificationErrors, 'Button "Save & New" does not exist!' );
-        }
-
-        $this->performBackendLogout ();
-    }
-
     public function testLinkCloseAvailable() {
         $this->performBackendLogin ();
 
