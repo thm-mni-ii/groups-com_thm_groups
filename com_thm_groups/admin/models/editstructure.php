@@ -232,7 +232,7 @@ class THMGroupsModelEditStructure extends JModel
     {
         $oldPicPath = self::getCurrentPicturePath($relation, $structID);
 
-        if($oldPicPath->path != $newPicPath)
+        if ($oldPicPath->path != $newPicPath)
         {
             if (!self::isDirExists($newPicPath))
             {
