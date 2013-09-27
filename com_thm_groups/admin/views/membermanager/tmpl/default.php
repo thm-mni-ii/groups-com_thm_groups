@@ -298,7 +298,8 @@ $user = JFactory::getUser();
                                         $grouprole->roleid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": "
                                         . $grouprole->groupname . " - " . JText::_('COM_THM_GROUPS_ROLE')
                                         . ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE')
-                                        . ".' class='hasTip'><img src='components/com_thm_groups/assets/images/removeassignment.png' width='16px'/></a> ";
+                                        . ".' class='hasTip'><img src='components/com_thm_groups/assets/images/removeassignment.png' width='16px'/>"
+                                        . "</a> ";
                                     }
                                 }
                             }
@@ -373,7 +374,8 @@ $user = JFactory::getUser();
                                                 . $grouprole->roleid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": "
                                                 . $grouprole->groupname . " - " . JText::_('COM_THM_GROUPS_ROLE') . ": " . $grouprole->rolename . "::"
                                                 . JText::_('COM_THM_GROUPS_REMOVE_ROLE')
-                                                . "' class='hasTip'><img src='components/com_thm_groups/assets/images/removeassignment.png' width='16px'/></a>";
+                                                . "' class='hasTip'><img src='components/com_thm_groups/assets/images/removeassignment.png'"
+                                                . " width='16px'/></a>";
                                             }
                                         }
                                     }
@@ -434,7 +436,8 @@ $user = JFactory::getUser();
                                             . $grouprole->roleid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": " . $grouprole->groupname
                                             . " - " . JText::_('COM_THM_GROUPS_ROLE') . ": " . $grouprole->rolename . "::"
                                             . JText::_('COM_THM_GROUPS_REMOVE_ROLE')
-                                            . "' class='hasTip'><img src='components/com_thm_groups/assets/images/removeassignment.png' width='16px'/></a>";
+                                            . "' class='hasTip'><img src='components/com_thm_groups/assets/images/removeassignment.png'"
+                                            . " width='16px'/></a>";
                                         }
                                     }
                                 }
@@ -472,7 +475,8 @@ $user = JFactory::getUser();
                                             $grouprole->roleid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": " . $grouprole->groupname
                                             . " - " . JText::_('COM_THM_GROUPS_ROLE')
                                             . ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE')
-                                            . "' class='hasTip'><img src='components/com_thm_groups/assets/images/removeassignment.png' width='16px'/></a>";
+                                            . "' class='hasTip'><img src='components/com_thm_groups/assets/images/removeassignment.png'"
+                                            . " width='16px'/></a>";
                                         }
                                     }
                                 }
