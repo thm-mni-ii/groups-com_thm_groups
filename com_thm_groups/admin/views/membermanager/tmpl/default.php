@@ -298,12 +298,7 @@ $user = JFactory::getUser();
                                         $grouprole->roleid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": "
                                         . $grouprole->groupname . " - " . JText::_('COM_THM_GROUPS_ROLE')
                                         . ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE')
-<<<<<<< HEAD
                                         . ".' class='hasTip'><img src='components/com_thm_groups/assets/images/removeassignment.png' width='16px'/></a> ";
-=======
-                                        . ".' class='hasTip'><img src='components/com_thm_groups/assets/images/icon-32-removeassignment.png'"
-                                        . "width='16px'/></a> ";
->>>>>>> branch 'development' of gitorious@scm.thm.de:icampus/com_thm_groups.git
                                     }
                                 }
                             }
@@ -378,8 +373,7 @@ $user = JFactory::getUser();
                                                 . $grouprole->roleid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": "
                                                 . $grouprole->groupname . " - " . JText::_('COM_THM_GROUPS_ROLE') . ": " . $grouprole->rolename . "::"
                                                 . JText::_('COM_THM_GROUPS_REMOVE_ROLE')
-                                                . "' class='hasTip'><img src='components/com_thm_groups/assets/images/removeassignment.png'"
-                                                . " width='16px'/></a>";
+                                                . "' class='hasTip'><img src='components/com_thm_groups/assets/images/removeassignment.png' width='16px'/></a>";
                                             }
                                         }
                                     }
@@ -407,12 +401,7 @@ $user = JFactory::getUser();
                                     $row->userid . ", " . $grouprole->groupid . ", " . $grouprole->roleid . ");' title='"
                                     . JText::_('COM_THM_GROUPS_GROUP') . ": " . $grouprole->groupname . " - " . JText::_('COM_THM_GROUPS_ROLE') . ": "
                                     . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE')
-<<<<<<< HEAD
                                     . "' class='hasTip'><img src='components/com_thm_groups/assets/images/removeassignment.png' width='16px'/></a> ";
-=======
-                                    . "' class='hasTip'><img src='components/com_thm_groups/assets/images/icon-32-removeassignment.png'"
-                                    . "width='16px'/></a> ";
->>>>>>> branch 'development' of gitorious@scm.thm.de:icampus/com_thm_groups.git
                                 }
                             }
                         }
@@ -445,12 +434,7 @@ $user = JFactory::getUser();
                                             . $grouprole->roleid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": " . $grouprole->groupname
                                             . " - " . JText::_('COM_THM_GROUPS_ROLE') . ": " . $grouprole->rolename . "::"
                                             . JText::_('COM_THM_GROUPS_REMOVE_ROLE')
-<<<<<<< HEAD
                                             . "' class='hasTip'><img src='components/com_thm_groups/assets/images/removeassignment.png' width='16px'/></a>";
-=======
-                                            . "' class='hasTip'><img src='components/com_thm_groups/assets/images/icon-32-removeassignment.png'"
-                                            . "width='16px'/></a>";
->>>>>>> branch 'development' of gitorious@scm.thm.de:icampus/com_thm_groups.git
                                         }
                                     }
                                 }
@@ -488,12 +472,7 @@ $user = JFactory::getUser();
                                             $grouprole->roleid . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": " . $grouprole->groupname
                                             . " - " . JText::_('COM_THM_GROUPS_ROLE')
                                             . ": " . $grouprole->rolename . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE')
-<<<<<<< HEAD
                                             . "' class='hasTip'><img src='components/com_thm_groups/assets/images/removeassignment.png' width='16px'/></a>";
-=======
-                                            . "' class='hasTip'><img src='components/com_thm_groups/assets/images/icon-32-removeassignment.png'"
-                                            . "width='16px'/></a>";
->>>>>>> branch 'development' of gitorious@scm.thm.de:icampus/com_thm_groups.git
                                         }
                                     }
                                 }
