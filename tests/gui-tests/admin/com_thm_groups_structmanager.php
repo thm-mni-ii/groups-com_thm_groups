@@ -1,5 +1,7 @@
 <?php
 class ComThmGroupsStructManager extends JoomlaSeleniumTest {
+
+    // Add Entry
     public function testLinkAddEntryAvailable() {
         $this->performBackendLogin ();
 
@@ -14,6 +16,8 @@ class ComThmGroupsStructManager extends JoomlaSeleniumTest {
 
         $this->performBackendLogout ();
     }
+
+    // Edit Entry
     public function testLinkEditEntryAvailable() {
         $this->performBackendLogin ();
 
@@ -28,6 +32,8 @@ class ComThmGroupsStructManager extends JoomlaSeleniumTest {
 
         $this->performBackendLogout ();
     }
+
+    // Delete Entry
     public function testLinkDeleteEntryAvailable() {
         $this->performBackendLogin ();
 
@@ -42,6 +48,8 @@ class ComThmGroupsStructManager extends JoomlaSeleniumTest {
 
         $this->performBackendLogout ();
     }
+
+    // Options
     public function testLinkOptionsAvailable() {
         $this->performBackendLogin ();
 

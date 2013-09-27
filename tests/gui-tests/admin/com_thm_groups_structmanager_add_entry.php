@@ -1,5 +1,7 @@
 <?php
 class ComThmGroupsStructManagerAddEntry extends JoomlaSeleniumTest {
+
+    // Save
     public function testLinkSaveAvailable() {
         $this->performBackendLogin ();
 
@@ -12,9 +14,13 @@ class ComThmGroupsStructManagerAddEntry extends JoomlaSeleniumTest {
             array_push ( $this->verificationErrors, 'Button "Save" does not exist!' );
         }
 
+        $this->click ( "link=Close" );
+        $this->waitForPageToLoad ( "30000" );
+
         $this->performBackendLogout ();
     }
 
+    // Save & Close
     public function testLinkSaveAndCloseAvailable() {
         $this->performBackendLogin ();
 
@@ -27,9 +33,13 @@ class ComThmGroupsStructManagerAddEntry extends JoomlaSeleniumTest {
             array_push ( $this->verificationErrors, 'Button "Save & Close" does not exist!' );
         }
 
+        $this->click ( "link=Close" );
+        $this->waitForPageToLoad ( "30000" );
+
         $this->performBackendLogout ();
     }
 
+    // Save & New
     public function testLinkSaveAndNewAvailable() {
         $this->performBackendLogin ();
 
@@ -42,9 +52,13 @@ class ComThmGroupsStructManagerAddEntry extends JoomlaSeleniumTest {
             array_push ( $this->verificationErrors, 'Button "Save & New" does not exist!' );
         }
 
+        $this->click ( "link=Close" );
+        $this->waitForPageToLoad ( "30000" );
+
         $this->performBackendLogout ();
     }
 
+    // Close
     public function testLinkCloseAvailable() {
         $this->performBackendLogin ();
 
@@ -57,9 +71,13 @@ class ComThmGroupsStructManagerAddEntry extends JoomlaSeleniumTest {
             array_push ( $this->verificationErrors, 'Button "Close" does not exist!' );
         }
 
+        $this->click ( "link=Close" );
+        $this->waitForPageToLoad ( "30000" );
+
         $this->performBackendLogout ();
     }
 
+    // Field Fieldname
     public function testFieldFieldnameAvailable() {
         $this->performBackendLogin ();
 
@@ -81,6 +99,7 @@ class ComThmGroupsStructManagerAddEntry extends JoomlaSeleniumTest {
         $this->performBackendLogout ();
     }
 
+    // Field Type
     public function testFieldTypeAvailable(){
         $this->performBackendLogin ();
 
