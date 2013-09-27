@@ -213,6 +213,9 @@ class THMGroupsModelEditStructure extends JModel
         {
             self::movePictures($relation, $structID, $extra, $newPicPath);
         }
+
+        // Richtig?
+        return true;
     }
 
     /**

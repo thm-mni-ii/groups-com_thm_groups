@@ -14,8 +14,8 @@
  * @author      Peter May,       <peter.may@mni.thm.de>
  * @author      Alexander Boll,  <alexander.boll@mni.thm.de>
  * @author      Tobias Schmitt,  <tobias.schmitt@mni.thm.de>
- * @author		Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
- * @author		Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
+ * @author      Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
+ * @author      Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de

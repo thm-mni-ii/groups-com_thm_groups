@@ -6,8 +6,8 @@
  * @subpackage  com_thm_groups.site
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
- * @author		Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
- * @author		Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
+ * @author      Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
+ * @author      Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
  * @name        THMGroupsModelAdvanced
  * @description Advanced model of com_thm_groups
  * @copyright   2012 TH Mittelhessen
