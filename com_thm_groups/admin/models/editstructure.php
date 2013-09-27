@@ -232,15 +232,18 @@ class THMGroupsModelEditStructure extends JModel
     {
         $oldPicPath = self::getCurrentPicturePath($relation, $structID);
 
-        if (!self::isDirExists($newPicPath))
+        if($oldPicPath->path != $newPicPath)
         {
-            self::makeNewDir($newPicPath);
+            if (!self::isDirExists($newPicPath))
+            {
+                self::makeNewDir($newPicPath);
+            }
+
+            self::copyPictures($oldPicPath->path, $newPicPath, $structID);
+            self::deletePictures($oldPicPath->path, $structID);
+
+            self::saveNewPicturePath($relation, $structID, $extra, $newPicPath);
         }
-
-        self::copyPictures($oldPicPath->path, $newPicPath, $structID);
-        self::deletePictures($oldPicPath->path, $structID);
-
-        self::saveNewPicturePath($relation, $structID, $extra, $newPicPath);
     }
 
     /**
