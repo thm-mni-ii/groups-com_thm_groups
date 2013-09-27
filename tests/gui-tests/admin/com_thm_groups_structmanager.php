@@ -1,32 +1,59 @@
 <?php
-class ComThmGroupsStructManager extends JoomlaSeleniumTest
-{
-    public function testThmGroupsStructOptionsAvailable()
-    {
-        $this->performBackendLogin();
+class ComThmGroupsStructManager extends JoomlaSeleniumTest {
+    public function testLinkAddEntryAvailable() {
+        $this->performBackendLogin ();
 
-        $this->click("link=Structuremanager");
-        $this->waitForPageToLoad("30000");
-        $this->click("css=span.icon-32-new");
-        $this->waitForPageToLoad("30000");
+        $this->click ( "link=Structuremanager" );
+        $this->waitForPageToLoad ( "30000" );
 
-        // Name of structure
         try {
-            $this->assertTrue($this->isElementPresent("id=name"));
-        } catch (PHPUnit_Framework_AssertionFailedError $e) {
-            array_push($this->verificationErrors, "Element with id=name does not exist!");
+            $this->assertTrue ( $this->isElementPresent ( "link=Add Entry" ) );
+        } catch ( PHPUnit_Framework_AssertionFailedError $e ) {
+            array_push ( $this->verificationErrors, 'Button "Add Entry" does not exist' );
         }
 
-        // Type of structure
+        $this->performBackendLogout ();
+    }
+    public function testLinkEditEntryAvailable() {
+        $this->performBackendLogin ();
+
+        $this->click ( "link=Structuremanager" );
+        $this->waitForPageToLoad ( "30000" );
+
         try {
-            $this->assertEquals("date,link,multiselect,number,picture,table,text,textfield", implode(',', $this->getSelectOptions("id=relation")));
-        } catch (PHPUnit_Framework_AssertionFailedError $e) {
-            array_push($this->verificationErrors, "Dropdown Error!");
+            $this->assertTrue ( $this->isElementPresent ( "link=Edit Entry" ) );
+        } catch ( PHPUnit_Framework_AssertionFailedError $e ) {
+            array_push ( $this->verificationErrors, 'Button "Edit Entry" does not exist!' );
         }
 
-        $this->click("css=span.icon-32-cancel");
-        $this->waitForPageToLoad("30000");
+        $this->performBackendLogout ();
+    }
+    public function testLinkDeleteEntryAvailable() {
+        $this->performBackendLogin ();
 
-        $this->performBackendLogout();
+        $this->click ( "link=Structuremanager" );
+        $this->waitForPageToLoad ( "30000" );
+
+        try {
+            $this->assertTrue ( $this->isElementPresent ( "link=Delete" ) );
+        } catch ( PHPUnit_Framework_AssertionFailedError $e ) {
+            array_push ( $this->verificationErrors, 'Button "Delete Entry" does not exist!' );
+        }
+
+        $this->performBackendLogout ();
+    }
+    public function testLinkOptionsAvailable() {
+        $this->performBackendLogin ();
+
+        $this->click ( "link=Structuremanager" );
+        $this->waitForPageToLoad ( "30000" );
+
+        try {
+            $this->assertTrue ( $this->isElementPresent ( "link=Options" ) );
+        } catch ( PHPUnit_Framework_AssertionFailedError $e ) {
+            array_push ( $this->verificationErrors, 'Button "Options" does not exist!' );
+        }
+
+        $this->performBackendLogout ();
     }
 }
