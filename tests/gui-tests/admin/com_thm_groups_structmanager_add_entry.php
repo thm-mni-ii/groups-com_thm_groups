@@ -7,6 +7,8 @@ class ComThmGroupsStructManagerAddEntry extends JoomlaSeleniumTest {
 
         $this->click ( "link=Structuremanager" );
         $this->waitForPageToLoad ( "30000" );
+        $this->click ( "link=Add Entry" );
+        $this->waitForPageToLoad ( "30000" );
 
         try {
             $this->assertTrue ( $this->isElementPresent ( "link=Save" ) );
@@ -25,6 +27,8 @@ class ComThmGroupsStructManagerAddEntry extends JoomlaSeleniumTest {
         $this->performBackendLogin ();
 
         $this->click ( "link=Structuremanager" );
+        $this->waitForPageToLoad ( "30000" );
+        $this->click ( "link=Add Entry" );
         $this->waitForPageToLoad ( "30000" );
 
         try {
@@ -45,6 +49,8 @@ class ComThmGroupsStructManagerAddEntry extends JoomlaSeleniumTest {
 
         $this->click ( "link=Structuremanager" );
         $this->waitForPageToLoad ( "30000" );
+        $this->click ( "link=Add Entry" );
+        $this->waitForPageToLoad ( "30000" );
 
         try {
             $this->assertTrue ( $this->isElementPresent ( "link=Save & New" ) );
@@ -63,6 +69,8 @@ class ComThmGroupsStructManagerAddEntry extends JoomlaSeleniumTest {
         $this->performBackendLogin ();
 
         $this->click ( "link=Structuremanager" );
+        $this->waitForPageToLoad ( "30000" );
+        $this->click ( "link=Add Entry" );
         $this->waitForPageToLoad ( "30000" );
 
         try {
