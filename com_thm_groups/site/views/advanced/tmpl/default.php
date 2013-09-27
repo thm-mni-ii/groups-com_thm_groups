@@ -309,7 +309,7 @@
 <?php
     // Truncate Long Info Text
     if ($this->truncateLongInfo)
-    :
+    {
 ?>
 <script type="text/javascript">
     $('.thm_groups_profile_container_profile_read_more').click(
@@ -320,4 +320,4 @@
     );
 </script>
 <?php
-    ENDIF;
+    }

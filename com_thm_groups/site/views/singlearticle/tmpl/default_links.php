@@ -20,7 +20,7 @@ $urls = json_decode($this->item->urls);
 // Create shortcuts to some parameters.
 $params = $this->item->params;
 if ($urls && (!empty($urls->urla) || !empty($urls->urlb) || !empty($urls->urlc)))
-    :
+{
 ?>
 <div class="content-links">
     <ul>
@@ -30,17 +30,17 @@ if ($urls && (!empty($urls->urla) || !empty($urls->urlb) || !empty($urls->urlc))
             array($urls->urlb, $urls->urlbtext, $urls->targetb, 'b'),
             array($urls->urlc, $urls->urlctext, $urls->targetc, 'c')
             );
-            foreach($urlarray as $url)
-                :
+            foreach ($urlarray as $url)
+            {
                 $link = $url[0];
                 $label = $url[1];
                 $target = $url[2];
                 $id = $url[3];
 
                 if (! $link)
-                    :
+                {
                     continue;
-                endif;
+                }
 
                 // If no label is present, take the link
                 $label = ($label) ? $label : $link;
@@ -83,9 +83,9 @@ if ($urls && (!empty($urls->urla) || !empty($urls->urlb) || !empty($urls->urlc))
                 ?>
                 </li>
         <?php
-            endforeach;
+            }
         ?>
     </ul>
 </div>
 <?php
-endif;
+}
