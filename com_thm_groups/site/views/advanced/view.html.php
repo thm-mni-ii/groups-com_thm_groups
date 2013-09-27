@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.3.0
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -13,8 +13,8 @@
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
- * @author		Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
- * @author		Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
+ * @author      Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
+ * @author      Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
