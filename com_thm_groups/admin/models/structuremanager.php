@@ -188,7 +188,7 @@ class THMGroupsModelStructuremanager extends JModelList
     /**
      * Returns picture names
      *
-     * @param unknown $structID
+     * @param   Int  $structID  structure ID
      *
      * @return Array with picture names
      */

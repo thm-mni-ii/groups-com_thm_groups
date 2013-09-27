@@ -13,4 +13,4 @@ defined('_JEXEC') or die ('Restricted access');
 
 $callisto = new THMGroupsModelMembers;
 
-include JPATH_LIBRARIES . '/thm_groups/assets/html/include_list.php';
+include_once JPATH_LIBRARIES . '/thm_groups/assets/html/include_list.php';

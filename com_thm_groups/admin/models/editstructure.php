@@ -91,7 +91,7 @@ class THMGroupsModelEditStructure extends JModel
         $query->select('*');
         $query->from($db->qn('#__thm_groups_structure'));
         $query->where('id = ' . $id[0]);
-        $db->setQuery((string)$query);
+        $db->setQuery((string) $query);
         return $db->loadObject();
     }
 
@@ -111,7 +111,7 @@ class THMGroupsModelEditStructure extends JModel
         $query->select('*');
         $query->from($db->qn('#__thm_groups_' . strtolower($relation) . '_extra'));
         $query->where('structid = ' . $id);
-        $db->setQuery((string)$query);
+        $db->setQuery((string) $query);
         return $db->loadObject();
     }
 
@@ -143,7 +143,7 @@ class THMGroupsModelEditStructure extends JModel
             ->from('#__thm_groups_' . strtolower($structure->type))
             ->where('structid =' . $structID);
 
-            $db->setQuery((string)$changeQuery);
+            $db->setQuery((string) $changeQuery);
 
             $toChangevalue = $db->loadObjectList();
 
@@ -163,7 +163,7 @@ class THMGroupsModelEditStructure extends JModel
                             $changeItem->structid . " , " . "'$changeItem->value' , '$changeItem->publish' , '$changeItem->group'"
                     );
 
-                    $db->setQuery((string)$addquery);
+                    $db->setQuery((string) $addquery);
                     try
                     {
                         $db->query();
@@ -178,7 +178,7 @@ class THMGroupsModelEditStructure extends JModel
                 $deletequery->delete('#__thm_groups_' . strtolower($structure->type))
                 ->where('structid =' . $structID);
 
-                $db->setQuery((string)$deletequery);
+                $db->setQuery((string) $deletequery);
                 try
                 {
                     $db->query();
@@ -197,7 +197,7 @@ class THMGroupsModelEditStructure extends JModel
         ->set("`type` = '" . $relation . "'")
         ->where("`id` = '" . $structID . "'");
 
-        $db->setQuery((string)$updateQuery);
+        $db->setQuery((string) $updateQuery);
 
         try
         {
@@ -362,7 +362,7 @@ class THMGroupsModelEditStructure extends JModel
         $getFileNamesQuery->select('value')
         ->from('#__thm_groups_picture')
         ->where("structid = '" . $structID . "'");
-        $db->setQuery((string)$getFileNamesQuery);
+        $db->setQuery((string) $getFileNamesQuery);
 
         return $db->loadResultArray();
     }
@@ -390,7 +390,7 @@ class THMGroupsModelEditStructure extends JModel
         }
         $query->where('structid = ' . $structID);
 
-        $db->setQuery((string)$query);
+        $db->setQuery((string) $query);
 
         try
         {
