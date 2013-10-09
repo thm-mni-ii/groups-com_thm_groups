@@ -1,11 +1,12 @@
 <?php
 
 /**
- * @version     v0.1.0
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @author      Daniel Kirsten, <daniel.kirsten@mni.thm.de>
+ * @author		Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -194,5 +195,110 @@ class THMGroupsModelArticle extends JModelAdmin
     public function getForm($data = array(), $loadData = true)
     {
         return 'Fatal Error: No form supported for Quickpage articles';
+    }
+
+    /**
+     * Saves or deletes entrys from db
+     *
+     * @param   Int  $a_id  id of article
+     */
+    public static function featureArticle($a_id)
+    {
+       $isArticleFeatured = self::isArticleFeatured($a_id);
+
+       if($isArticleFeatured == null)
+       {
+            self::insertArticleId($a_id);
+            return true;
+       }
+       else
+       {
+            self::deleteArticleId($a_id);
+            return false;
+       }
+    }
+
+    /**
+     * Returns article state
+     *
+     * @param   Int  $a_id  article id
+     *
+     * @return StdObject
+     */
+    public static function isArticleFeatured($a_id)
+    {
+        $db = JFactory::getDbo();
+        $isFeaturedQuery = $db->getQuery(true);
+
+        $isFeaturedQuery->select('*')
+        ->from('#__thm_quickpages_featured')
+        ->where("conid = $a_id");
+        $db->setQuery((string)$isFeaturedQuery);
+
+        try
+        {
+            $result = $db->loadObject();
+        }
+        catch (Exception $exception)
+        {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            return false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Features article in DB
+     *
+     * @param   Int  $a_id  article id
+     *
+     * @return void
+     */
+    public static function insertArticleId($a_id)
+    {
+        $db = JFactory::getDbo();
+        $insertQuery = $db->getQuery(true);
+
+        $insertQuery->insert('#__thm_quickpages_featured', 'conid')
+        ->values($a_id);
+        $db->setQuery((string)$insertQuery);
+
+        try
+        {
+            $db->query();
+        }
+        catch (Exception $exception)
+        {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            return false;
+        }
+    }
+
+    /**
+     * Unfeatures article in DB
+     *
+     * @param   Int  $a_id  article id
+     *
+     * @return void
+     */
+    public static function deleteArticleId($a_id)
+    {
+        $db = JFactory::getDbo();
+        $deleteQuery = $db->getQuery(true);
+
+        $deleteQuery->delete('#__thm_quickpages_featured')
+        ->where("conid = $a_id");
+        $db->setQuery((string)$deleteQuery);
+
+        try
+        {
+            $db->query();
+        }
+        catch (Exception $exception)
+        {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            return false;
+        }
     }
 }

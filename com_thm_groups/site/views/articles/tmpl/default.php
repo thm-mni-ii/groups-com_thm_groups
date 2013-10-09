@@ -1,12 +1,13 @@
 <?php
 
 /**
- * @version     v3.2.5
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @author      Daniel Kirsten, <daniel.kirsten@mni.thm.de>
  * @author      Tobias Schmitt, <tobias.schmitt@mni.thm.de>
+ * @author		Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -14,6 +15,11 @@
 
 // No direct access
 defined('_JEXEC') or die;
+
+$helper_path = JPATH_BASE . '/components/com_thm_groups/helper';
+
+include_once $helper_path . '/articles_helper.php';
+$helperObject = new ArticleHelper();
 
 JHtml::addIncludePath(JPATH_COMPONENT . DS . 'helper' . DS . 'html');
 JHtml::_('behavior.tooltip');
@@ -127,6 +133,9 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
                         }
 
                     ?>
+                </th>
+                <th>
+                    Featured
                 </th>
             </tr>
         </thead>
@@ -267,7 +276,7 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
                         {
                             $editURL = JRoute::_('index.php?option=com_content&task=article.edit&a_id=' . $item->id . $itemParam . $staticParams);
                             /* $editURL = JRoute::_('index.php?option=com_content&view=form&layout=edit&a_id='.$item->id.$itemParam.$staticParams); */
-                            $imgSpanTag = '<span class="state edit"><span class="text">Edit</span></span>';
+                            $imgSpanTag = '<span class="state edit" style=""><span class="text">Edit</span></span>';
 
                             echo JHTML::_('link', $editURL, $imgSpanTag, 'title="'
                                     . JText::_('COM_THM_QUICKPAGES_HTML_EDIT_ITEM')
@@ -312,6 +321,27 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
                             echo $button;
                         }
                     ?>
+                </td>
+                <td class="center">
+                <?php
+
+                            $featureURL = JRoute::_('index.php?option=com_thm_groups&task=articles.featureArticle&a_id=' . $item->id);
+
+                            if($helperObject::isArticleFeatured($item->id) == null)
+                            {
+                                $imgSpanTag = '<span class="state unpublish"><span class="text">Unfeature</span></span>';
+                            }
+                            else
+                            {
+                                $imgSpanTag = '<span class="state publish"><span class="text">Feature</span></span>';
+                            }
+
+                            echo JHTML::_('link', $featureURL, $imgSpanTag, 'title="'
+                                    . JText::_('(Un)Feature')
+                                    . '" class="jgrid"'
+                                    );
+                            echo "\n";
+                 ?>
                 </td>
             </tr>
 <?php
