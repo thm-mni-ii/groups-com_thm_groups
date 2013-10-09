@@ -329,11 +329,11 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
 
                             if($helperObject::isArticleFeatured($item->id) == null)
                             {
-                                $imgSpanTag = '<span class="state unpublish"><span class="text">Unfeature</span></span>';
+                                $imgSpanTag = '<span class="state unpublish"><span class="text">' .  JText::_('COM_THM_GROUPS_UNFEATURE') . '</span></span>';
                             }
                             else
                             {
-                                $imgSpanTag = '<span class="state publish"><span class="text">Feature</span></span>';
+                                $imgSpanTag = '<span class="state publish"><span class="text">' .  JText::_('COM_THM_GROUPS_FEATURE') . '</span></span>';
                             }
 
                             echo JHTML::_('link', $featureURL, $imgSpanTag, 'title="'
