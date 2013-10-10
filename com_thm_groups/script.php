@@ -102,25 +102,25 @@ class Com_THM_GroupsInstallerScript
      */
     public function update($parent)
     {
-        $db = JFactory::getDbo();
+//         $db = JFactory::getDbo();
 
-        $query = $db->getQuery(true);
+//         $query = $db->getQuery(true);
 
-        $query->select("extension_id");
-        $query->from("#__extensions");
-        $query->where("(element = 'plg_thm_groups_content_members') OR"
-                . "(element = 'plg_thm_groups_content_wai') OR (element = 'plg_thm_groups_editors_xtd_members') OR"
-                . "(element = 'plg_thm_groups_editors_xtd_wai')"
-                    );
+//         $query->select("extension_id");
+//         $query->from("#__extensions");
+//         $query->where("(element = 'plg_thm_groups_content_members') OR"
+//                 . "(element = 'plg_thm_groups_content_wai') OR (element = 'plg_thm_groups_editors_xtd_members') OR"
+//                 . "(element = 'plg_thm_groups_editors_xtd_wai')"
+//                     );
 
-        $db->setQuery($query);
-        $ids = $db->loadResultArray();
+//         $db->setQuery($query);
+//         $ids = $db->loadResultArray();
 
-        if (count($ids))
-        {
-            $uninstall = new InstallerModelManage;
-            $uninstall->remove($ids);
-        }
+//         if (count($ids))
+//         {
+//             $uninstall = new InstallerModelManage;
+//             $uninstall->remove($ids);
+//         }
 
         ?>
         <h1 align="center">
