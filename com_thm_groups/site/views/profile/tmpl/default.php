@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.4.2
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -190,7 +190,7 @@ function buildHtmlOutput($userid, $userData)
                                     $body .= '<b>' . $struct[$data->structid] . ':</b>';
                                     $body .= '</div>';
                                     $body .= '<div class="thm_groups_value" id="' . $struct[$data->structid] . '_value">';
-                                    $image = JHTML::image("$path" . $data->value, 'Image', $attribs);
+                                    $image = JHTML::image("$path" . '/' . $data->value, 'Image', $attribs);
                                     $body .= $image;
                                     $body .= '</div>';
                                     $body .= '</div>';

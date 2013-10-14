@@ -9,6 +9,7 @@
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Mariusz Homeniuk, <mariusz.homeniuk@mni.thm.de>
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -119,6 +120,11 @@ class THMGroupsModelAddStructure extends JModel
             {
                 $query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`, `path`)");
                 $query->values("'" . $id . "', '" . $extra . "', '" . $picpath . "'");
+
+                if(!self::isDirExists($picpath))
+                {
+                    self::makeNewDir($picpath);
+                }
             }
             else
             {
@@ -142,5 +148,37 @@ class THMGroupsModelAddStructure extends JModel
         {
             return false;
         }
+    }
+
+    /**
+     * Checks, if directory exists
+     *
+     * @param   String  $path  directory path from DB
+     *
+     * @return boolean
+     */
+    public function isDirExists($path)
+    {
+        $dirPath = JPATH_ROOT . DS . $path;
+        if (file_exists($dirPath))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /**
+     * Makes a new directory
+     *
+     * @param   String  $newPicPath  new directory path
+     *
+     * @return nothing
+     */
+    public function makeNewDir($newPicPath)
+    {
+        mkdir(JPATH_ROOT . DS . $newPicPath, 0777, true);
     }
 }

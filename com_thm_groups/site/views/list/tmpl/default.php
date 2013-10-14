@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.6
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -28,7 +28,14 @@
 ?>
 </div>
 
-<div id="desc"><?php echo $this->desc; ?></div>
+<div id="desc">
+<?php
+    if(isset($this->desc))
+    {
+        echo $this->desc;
+    }
+?>
+</div>
 
 <div id="gslistview">
 </div>
