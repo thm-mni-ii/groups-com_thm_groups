@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.3
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.general
@@ -45,6 +45,25 @@ $mainframe->initialise();
  */
 class Com_THM_GroupsInstallerScript
 {
+
+    /**
+     * Deletes all files of component before install
+     *
+     * @param   Object  $type
+     * @param   Object  $parent
+     */
+    function preflight($type, $parent)
+    {
+        $admin = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_thm_groups';
+        $site = JPATH_ROOT . DS . 'components' . DS . 'com_thm_groups';
+
+        if(is_dir($admin) && is_dir($site))
+        {
+            self::deleteDir($admin);
+            self::deleteDir($site);
+        }
+    }
+
     /**
       * com_thm_groups install function
       *
@@ -102,25 +121,27 @@ class Com_THM_GroupsInstallerScript
      */
     public function update($parent)
     {
-//         $db = JFactory::getDbo();
+        /*
+        $db = JFactory::getDbo();
 
-//         $query = $db->getQuery(true);
+        $query = $db->getQuery(true);
 
-//         $query->select("extension_id");
-//         $query->from("#__extensions");
-//         $query->where("(element = 'plg_thm_groups_content_members') OR"
-//                 . "(element = 'plg_thm_groups_content_wai') OR (element = 'plg_thm_groups_editors_xtd_members') OR"
-//                 . "(element = 'plg_thm_groups_editors_xtd_wai')"
-//                     );
+        $query->select("extension_id");
+        $query->from("#__extensions");
+        $query->where("(element = 'plg_thm_groups_content_members') OR"
+                . "(element = 'plg_thm_groups_content_wai') OR (element = 'plg_thm_groups_editors_xtd_members') OR"
+                . "(element = 'plg_thm_groups_editors_xtd_wai')"
+                    );
 
-//         $db->setQuery($query);
-//         $ids = $db->loadResultArray();
+        $db->setQuery($query);
+        $ids = $db->loadResultArray();
 
-//         if (count($ids))
-//         {
-//             $uninstall = new InstallerModelManage;
-//             $uninstall->remove($ids);
-//         }
+        if (count($ids))
+        {
+            $uninstall = new InstallerModelManage;
+            $uninstall->remove($ids);
+        }
+        */
 
         ?>
         <h1 align="center">
@@ -135,4 +156,22 @@ class Com_THM_GroupsInstallerScript
         </p>
         <?php
     }
+
+    function deleteDir($path)
+    {
+        $it = new RecursiveDirectoryIterator($path);
+        $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
+
+        foreach($files as $file) {
+            if ($file->getFilename() === '.' || $file->getFilename() === '..') {
+                continue;
+            }
+            if ($file->isDir()){
+                rmdir($file->getRealPath());
+            } else {
+                unlink($file->getRealPath());
+            }
+        }
+    }
+
 }
