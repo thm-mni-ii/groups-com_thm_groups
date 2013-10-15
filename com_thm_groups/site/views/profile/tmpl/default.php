@@ -313,7 +313,7 @@ function getProfilCss()
 
             .thm_groups_label
             {
-                width:70px;
+                width:90px;
             }
 
             .thm_groups_value
