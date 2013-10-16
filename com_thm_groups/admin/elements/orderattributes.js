@@ -26,11 +26,15 @@ function attrup() {
         selected = role.selectedIndex;
         var tmpvalue = role.options[selected].value;
         var tmptext = role.options[selected].text;
-        document.getElementById('paramsattr').options[selected].value = role.options[selected - 1].value
-        document.getElementById('paramsattr').options[selected].text = role.options[selected - 1].text
-        document.getElementById('paramsattr').options[selected - 1].value = tmpvalue;
-        document.getElementById('paramsattr').options[selected - 1].text = tmptext;
-        document.getElementById('paramsattr').options[selected - 1].selected = true;
+
+        if(document.getElementById('paramsattr').options[selected - 1].disabled == false){
+            document.getElementById('paramsattr').options[selected].value = role.options[selected - 1].value
+            document.getElementById('paramsattr').options[selected].text = role.options[selected - 1].text
+            document.getElementById('paramsattr').options[selected - 1].value = tmpvalue;
+            document.getElementById('paramsattr').options[selected - 1].text = tmptext;
+            document.getElementById('paramsattr').options[selected - 1].selected = true;
+        }
+
         // ------------------------------------------------------------
 
         // Write new sorted Roles into hidden paramsfield-------------
@@ -59,11 +63,13 @@ function attrdown() {
         var tmpvalue = role.options[selected].value;
         // alert(role.value);
         var tmptext = role.options[selected].text;
-        document.getElementById('paramsattr').options[selected].value = role.options[selected + 1].value
-        document.getElementById('paramsattr').options[selected].text = role.options[selected + 1].text
-        document.getElementById('paramsattr').options[selected + 1].value = tmpvalue;
-        document.getElementById('paramsattr').options[selected + 1].text = tmptext;
-        document.getElementById('paramsattr').options[selected + 1].selected = true;
+        if(document.getElementById('paramsattr').options[selected + 1].disabled == false){
+            document.getElementById('paramsattr').options[selected].value = role.options[selected + 1].value
+            document.getElementById('paramsattr').options[selected].text = role.options[selected + 1].text
+            document.getElementById('paramsattr').options[selected + 1].value = tmpvalue;
+            document.getElementById('paramsattr').options[selected + 1].text = tmptext;
+            document.getElementById('paramsattr').options[selected + 1].selected = true;
+        }
         // ------------------------------------------------------------
 
         // Write new sorted Roles into hidden paramsfield-------------
