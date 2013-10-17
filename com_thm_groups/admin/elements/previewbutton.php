@@ -8,6 +8,7 @@
  * @description JFormFieldStructureSelect file from com_thm_groups
  * @author      Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
  * @author      Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -38,12 +39,13 @@ class JFormFieldPreviewButton extends JFormField
      */
     public function getInput()
     {
-        // Add script-code to the document head
-        $scriptDir = str_replace(JPATH_SITE . DS, '', "libraries/thm_groups/assets/js/");
-        JHTML::script('jquery-1.9.1.min.js', $scriptDir, false);
+        $library_path = JURI::root() . DS . 'libraries' . DS . 'thm_groups';
+        $elements_path = JURI::root() . DS . 'administrator' . DS . 'components' . DS . 'com_thm_groups' . DS . 'elements';
 
-        $scriptDir = str_replace(JPATH_SITE . DS, '', "administrator/components/com_thm_groups/elements/");
-        JHTML::script('previewButton.js', $scriptDir, false);
+        // Add script-code to the document head
+        $document = JFactory::getDocument();
+        $document->addScript($library_path . DS . 'assets' . DS . 'js' . DS . 'jquery-1.9.1.min.js');
+        $document->addScript($elements_path . DS .'previewbutton.js');
 
         return '<input type="button" id="thm_groups_adv_view_preview_button" value="' . JText::_('COM_THM_GROUPS_PROFILE_CONTAINER_PREVIEW')
                 . '" onclick="ProfilePreview.open();" />';

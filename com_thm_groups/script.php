@@ -8,7 +8,8 @@
  * @description Script file from com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @copyright   2013 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
@@ -157,19 +158,39 @@ class Com_THM_GroupsInstallerScript
         <?php
     }
 
+    /**
+     * Deletes recursively files
+     *
+     * @param   String  $path  path of admin and site part of component
+     */
     function deleteDir($path)
     {
         $it = new RecursiveDirectoryIterator($path);
         $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
 
-        foreach($files as $file) {
-            if ($file->getFilename() === '.' || $file->getFilename() === '..') {
+        $doNotDeleteDirs = array();
+        array_push($doNotDeleteDirs, '.');
+        array_push($doNotDeleteDirs, '..');
+
+        foreach ($files as $file)
+        {
+            if (in_array($file->getFilename(), $doNotDeleteDirs))
+            {
                 continue;
             }
-            if ($file->isDir()){
-                rmdir($file->getRealPath());
-            } else {
-                unlink($file->getRealPath());
+            if ($file->isDir())
+            {
+                if (strpos($file->getRealPath(), 'img') === false)
+                {
+                    rmdir($file->getRealPath());
+                }
+            }
+            else
+            {
+                if (strpos($file->getRealPath(), 'img') === false)
+                {
+                    unlink($file->getRealPath());
+                }
             }
         }
     }
