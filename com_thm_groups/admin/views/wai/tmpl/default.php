@@ -15,12 +15,11 @@
  *
  */
 defined('_JEXEC') or die ('Restricted access');
+require_once JPATH_ROOT . DS .'components' . DS . 'com_thm_groups' . DS . 'helper' . DS . 'helper_wai.php';
 
 // THM Groups library path
 
 $library_path = JURI::root() . 'libraries/thm_groups';
-
-require_once JPATH_LIBRARIES . '/thm_groups/helper/helper_wai.php';
 
 $lang = JFactory::getLanguage();
 $lang->load('com_thm_groups', JPATH_ADMINISTRATOR);
