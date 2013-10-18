@@ -16,4 +16,4 @@ $personOrGroup = "group";
 
 $callisto = new THMGroupsModelMembers;
 
-include JPATH_LIBRARIES . '/thm_groups/assets/html/include_default.php';
+include 'default.html.php';

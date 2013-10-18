@@ -40,7 +40,7 @@
                 description="COM_THM_GROUPS_LIST_VIEW_PARAM_COLUMNCOUNT_DESCRIPTION">
             </field>
             <field
-                addfieldpath="/libraries/thm_groups/assets/elements"
+                addfieldpath="/administrator/components/com_thm_groups/elements/"
                 name="orderingAttributes"
                 type="orderattributes"
                 label="COM_THM_GROUPS_ORDERING_ATTIBUTES_LABEL"
@@ -159,6 +159,3 @@
         </fieldset>
     </fields>
 </metadata>
-
-
-

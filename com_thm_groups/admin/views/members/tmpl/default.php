@@ -17,7 +17,7 @@ defined('_JEXEC') or die ('Restricted access(default)');
 $library_path = JURI::root() . 'libraries/thm_groups';
 
 require JPATH_LIBRARIES . '/thm_groups/helper/helper_members.php';
-require JPATH_LIBRARIES . '/thm_groups/assets/elements/orderattributes.php';
+// require JPATH_LIBRARIES . '/thm_groups/assets/elements/orderattributes.php';
 
 $lang = JFactory::getLanguage();
 $lang->load('com_thm_groups', JPATH_ADMINISTRATOR);
