@@ -1,32 +1,35 @@
 <?php
 /**
- * @version     v3.2.0
- * @category    Joomla component
+ * @version     v3.4.3
+ * @category    Joomla module
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
+ * @subpackage  mod_thm_groups_members
  * @name        JFormFieldStructureSelect
- * @description JFormFieldStructureSelect file from com_thm_groups
+ * @description JFormFieldStructureSelect file from mod_thm_groups_members
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
+ * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
 
-// Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die( 'Restricted access' );
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
+$lang = JFactory::getLanguage();
+$lang->load('lib_thm_groups', JPATH_SITE);
 
 /**
- * JFormFieldStructureSelect class for component com_thm_groups
+ * JFormFieldStructure class for module mod_thm_groups_members
  *
- * @category  Joomla.Component.Admin
- * @package   com_thm_groups.admin
+ * @category  Joomla.Module.Site
+ * @package   mod_thm_groups_members
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class JFormFieldStructureSelect extends JFormField
+class JFormFieldStructureselect extends JFormField
 {
 
     /**
@@ -34,31 +37,19 @@ class JFormFieldStructureSelect extends JFormField
      *
      * @access	protected
      * @var		string
-     *
-     * @return html
+     * @return	html
      */
     public function getInput()
     {
-        $scriptDir = str_replace(JPATH_SITE . DS, '', "administrator/components/com_thm_groups/elements/");
-
-        // $sortButtons = true;
-
-        // Add script-code to the document head
+        $scriptDir = JURI::root() . 'administrator' . DS . 'components' . DS . 'com_thm_groups' . DS . 'elements' . DS;
         JHTML::script('structureselect.js', $scriptDir, false);
 
-        // Initialize variables.
         $html = array();
-
-        // Initialize some field attributes.
-        $class = $this->element['class'] ? ' class="checkboxes ' . (string) $this->element['class'] . '"' : ' class="checkboxes"';
-
-        // Start the checkbox field output.
+        $class = $this->element['class'] ? ' class="checkboxes ' . (string) $this->element['class'] . '" ': ' class="checkboxes"';
         $html[] = '<fieldset id="' . $this->name . '"' . $class . '>';
 
-        // Get selected items
         $selected = $this->value;
 
-        // Parse selected items
         $selectedItems = array();
         if ($selected != "")
         {
@@ -71,9 +62,6 @@ class JFormFieldStructureSelect extends JFormField
                 $selectedItems[] = $tempItem;
             }
         }
-        else
-        {
-        }
 
         // Get the field options.
         $options = $this->getOptions($selectedItems);
@@ -82,13 +70,13 @@ class JFormFieldStructureSelect extends JFormField
         $html[] = '<table>' .
                 '<thead>' .
                 '<tr><th>' .
-                JText::_('COM_THM_GROUPS_ATTRIBUTE') .
+                JText::_('LIB_THM_GROUPS_ATTRIBUTE') .
                 '</th><th>' .
-                JText::_('COM_THM_GROUPS_SHOW') .
+                JText::_('LIB_THM_GROUPS_SHOW') .
                 '</th><th>' .
-                JText::_('COM_THM_GROUPS_NAME') .
+                JText::_('LIB_THM_GROUPS_NAME') .
                 '</th><th>' .
-                JText::_('COM_THM_GROUPS_WRAP') .
+                JText::_('LIB_THM_GROUPS_WRAP') .
                 '</th></tr>' .
                 '</thead>' .
                 '<tbody>';
@@ -101,7 +89,6 @@ class JFormFieldStructureSelect extends JFormField
             $checkedShowName = '';
             $checkedWrapAfter = '';
             $disabled = '';
-
             foreach ($selectedItems as $item)
             {
                 if ($item['id'] == $option->value)
@@ -115,7 +102,6 @@ class JFormFieldStructureSelect extends JFormField
                     {
                         $checkedShowName = '';
                     }
-
                     if ($item['wrapAfter'] == "1")
                     {
                         $checkedWrapAfter = ' checked="checked"';
@@ -124,7 +110,6 @@ class JFormFieldStructureSelect extends JFormField
                     {
                         $checkedWrapAfter = '';
                     }
-
                     $value = $option->value . $item['showName'] . $item['wrapAfter'];
                 }
             }
@@ -134,31 +119,18 @@ class JFormFieldStructureSelect extends JFormField
                 $disabled = ' disabled="disabled"';
             }
 
-            $html[] = '<tr>'
-                . '<td>'
-                    . '<label for="' . $this->name . $i . '"' . $class . '>' . JText::_($option->text) . '</label>'
-                . '</td>'
-                . '<td>'
-                    . '<input type="checkbox" '
-                        . 'id="' . $this->name . $i . '" '
-                        . 'name="' . $this->name . '[' . $i . ']"' . ' '
-                        . 'value="' . $value . '" '
-                        . 'onchange="switchEnablingAdditionalAttr(' . "'" . $this->name . $i . "'" . ')"' . $checked
-                    . ' />'
-                . '</td>'
-                . '<td>'
-                    . '<input type="checkbox" '
-                        . 'id="' . $this->name . $i . 'ShowName" '
-                        . 'onchange="switchAttributeName(' . "'" . $this->name . $i . "'" . ')"' . $checkedShowName . $disabled
-                    . ' />'
-                . '</td>'
-                . '<td>'
-                    . '<input type="checkbox" '
-                        . 'id="' . $this->name . $i . 'WrapAfter" '
-                        . 'onchange="switchAttributeWrap(' . "'" . $this->name . $i . "'" . ')"' . $checkedWrapAfter . $disabled
-                    . ' />'
-                . '</td>'
-                . '</tr>';
+            $html[] = '<tr><td>' .
+                    '<label for="' . $this->name . $i . '"' . $class . '>' . JText::_($option->text) . '</label>' .
+                    '</td><td>' .
+                    '<input type="checkbox" id="' . $this->name . $i . '" name="' . $this->name . '[' . $i . ']"'
+                    . ' value="' . $value . '" onchange="switchEnablingAdditionalAttr(' . "'" . $this->name . $i . "'" . ')"' . $checked . ' />' .
+                    '</td><td>' .
+                    '<input type="checkbox" id="' . $this->name . $i . 'ShowName" onchange="switchAttributeName(' . "'" . $this->name . $i . "'"
+                    . ')"' . $checkedShowName . $disabled . ' />' .
+                    '</td><td>' .
+                    '<input type="checkbox" id="' . $this->name . $i . 'WrapAfter" onchange="switchAttributeWrap(' . "'" . $this->name . $i . "'"
+                    . ')"' . $checkedWrapAfter . $disabled . ' />' .
+                    '</td></tr>';
         }
         $html[] = '</tbody>' .
                 '</table>';
@@ -172,27 +144,26 @@ class JFormFieldStructureSelect extends JFormField
     /**
      * Method to get the field options.
      *
-     * @param   String  $selected  Selected field
+     * @param   String  $selected  ID
      *
      * @return	array	The field option objects.
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function getOptions($selected)
     {
+        // $query = "SELECT a.id, a.field FROM `#__thm_groups_structure` as a Order by a.order";
         $db = JFactory::getDBO();
-        $query = $db->getQuery(true);
 
-        $query->select('a.id, a.field');
+        $query = $db->getQuery(true);
+        $query->select("a.id, a.field");
         $query->from("#__thm_groups_structure as a");
         $query->order("a.order");
+
         $db->setQuery($query);
         $list = $db->loadObjectList();
 
         // Initialize variables.
         $options = array();
 
-        // OLD: foreach ($list as $i => $structure)
         foreach ($list as $structure)
         {
             // Create a new option object based on the <option /> element.
@@ -206,5 +177,4 @@ class JFormFieldStructureSelect extends JFormField
 
         return $options;
     }
-
 }

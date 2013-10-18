@@ -1,12 +1,13 @@
 <?php
 /**
- * @version     v3.2.4
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        JFormFieldAlphabetColor
  * @description JFormFieldAlphabetColor file from com_thm_groups
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2013 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -32,8 +33,8 @@ class JFormFieldOrderAttributes extends JFormField
     /**
      * Element name
      *
-     * @access	protected
-     * @var		string
+     * @access  protected
+     * @var     string
      *
      * @return html
      */
@@ -41,11 +42,10 @@ class JFormFieldOrderAttributes extends JFormField
     public function getInput()
     {
         $orderSelect = "";
-        $library_path = JURI::root() . 'libraries/thm_groups';
-        $document = JFactory::getDocument();
+        $scriptDir = JURI::root() . 'administrator' . DS . 'components' . DS . 'com_thm_groups' . DS . 'elements' . DS;
+        $image_path = JURI::root() . 'administrator' . DS . 'components' . DS . 'com_thm_groups' . DS . 'elements' . DS . 'images';
 
-        $document->addScript($library_path . '/assets/elements/orderattributes.js');
-        $image_path = JURI::root() . 'libraries/thm_groups/assets/images';
+        JHTML::script('orderattributes.js', $scriptDir, false);
 
         $tagname = $this->name;
 

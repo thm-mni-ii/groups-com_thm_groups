@@ -39,8 +39,8 @@ class JFormFieldPreviewButton extends JFormField
      */
     public function getInput()
     {
-        $library_path = JURI::root() . DS . 'libraries' . DS . 'thm_groups';
-        $elements_path = JURI::root() . DS . 'administrator' . DS . 'components' . DS . 'com_thm_groups' . DS . 'elements';
+        $library_path = JURI::root() . 'libraries' . DS . 'thm_groups';
+        $elements_path = JURI::root() . 'administrator' . DS . 'components' . DS . 'com_thm_groups' . DS . 'elements';
 
         // Add script-code to the document head
         $document = JFactory::getDocument();
