@@ -61,10 +61,10 @@ echo $html;
 function buildHtmlOutput($userid, $userData)
 {
     // Class for title, first name, name, post title and portrait image
-    $head = '<div class="contentheading">';
+    $head = '<div class="thm_groups_contentheading">';
 
     // Class for user information
-    $body = '<div class="contentbody">';
+    $body = '<div class="thm_groups_contentbody">';
 
     // Contains at the end $head and $body
     $result = '';
@@ -114,28 +114,28 @@ function buildHtmlOutput($userid, $userData)
                     // Vorname
                     case "1" :
                         $head .= '<div class="thm_groups_head_text" id="' . $struct[$data->structid] . '">';
-                        $head .= '<h2>' . $data->value . '&nbsp;</h2>';
+                        $head .= '<h1>' . $data->value . '&nbsp;</h1>';
                         $head .= '</div>';
                         break;
 
                     // Nachname
                     case "2" :
                         $head .= '<div class="thm_groups_head_text" id="' . $struct[$data->structid] . '">';
-                        $head .= '<h2>' . $data->value . '&nbsp;</h2>';
+                        $head .= '<h1>' . $data->value . '&nbsp;</h1>';
                         $head .= '</div>';
                         break;
 
                     // Titel
                     case "5" :
                         $head .= '<div class="thm_groups_head_text" id="' . $struct[$data->structid] . '">';
-                        $head .= '<h2>' . $data->value . '&nbsp;</h2>';
+                        $head .= '<h1>' . $data->value . '&nbsp;</h1>';
                         $head .= '</div>';
                         break;
 
                     // Posttitel
                     case "7" :
                         $head .= '<div class="thm_groups_head_text" id="' . $struct[$data->structid] . '">';
-                        $head .= '<h2>' . $data->value . '&nbsp;</h2>';
+                        $head .= '<h1>' . $data->value . '&nbsp;</h1>';
                         $head .= '</div>';
                         break;
 
@@ -276,15 +276,15 @@ function getProfilCss()
     $out .= '
             .thm_groups_content_profile
             {
-                width:400px;
+                width:inherit;
             }
 
-            .contentheading > div
+            .thm_groups_contentheading > div
             {
                 float:left;
             }
 
-            .contentheading img
+            .thm_groups_contentheading img
             {
                 float:left;
                 clear:both;
@@ -295,7 +295,7 @@ function getProfilCss()
                 float:right !important;
             }
 
-            .contentbody > div
+            .thm_groups_contentbody > div
             {
                 float:left;
                 clear:both;
@@ -319,6 +319,7 @@ function getProfilCss()
             .thm_groups_value
             {
                 margin-left:20px;
+                width:500px;
             }
             ';
     return $out;

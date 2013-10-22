@@ -122,7 +122,6 @@ class Com_THM_GroupsInstallerScript
      */
     public function update($parent)
     {
-        /*
         $db = JFactory::getDbo();
 
         $query = $db->getQuery(true);
@@ -142,7 +141,6 @@ class Com_THM_GroupsInstallerScript
             $uninstall = new InstallerModelManage;
             $uninstall->remove($ids);
         }
-        */
 
         ?>
         <h1 align="center">

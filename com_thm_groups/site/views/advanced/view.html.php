@@ -94,6 +94,7 @@ class THMGroupsViewAdvanced extends JView
         $getStructur = $model->getStructure();
         $this->assignRef('structure', $getStructur);
         $advancedView = $model->getAdvancedView();
+
         $this->assignRef('view', $advancedView);
 
         // Long Info Truncate

@@ -38,17 +38,10 @@
     $countOfColoumns = $this->view + 1;
     $elementCounter = 0;
     $rowCounter = 0;
+    $lastIndex = count($members) - 1;
+
     foreach ($members as $id => $member)
     {
-        /*
-        var_dump($member);
-        $UserInfo = new THMLibThmGroups;
-        $user = $UserInfo->userInfodata($id, $this->params->get('struct'));
-        var_dump($user);
-        die();
-        */
-
-
         // Open Row Tag - Even / Odd
         if ($elementCounter % $countOfColoumns == 0)
         {
