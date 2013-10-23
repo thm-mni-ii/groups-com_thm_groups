@@ -227,6 +227,7 @@ function buildHtmlOutput($userid, $userData)
     }
 
     $head .= '</div>';
+    $body .= '<div><a href="' . $backLink .'"><input type="button" value="' . JText::_("COM_THM_GROUPS_BACK_BUTTON") . '" /></div>';
     $body .= '</div>';
     $result .= $head . $body;
     $result .= '</div>';
