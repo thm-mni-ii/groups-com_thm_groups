@@ -28,6 +28,7 @@ $user = JFactory::getUser();
 
 $componentparams = JComponentHelper::getParams('com_thm_groups');
 
+$backLink = $this->backRef;
 $canEdit = (($user->id == $this->userid && $componentparams->getValue('editownprofile', '0') == 1) || $this->canEdit);
 
 $model = new THMLibThmGroupsUser;
@@ -36,7 +37,7 @@ $model = new THMLibThmGroupsUser;
 $userInfoAsObject = $model::getUserInfo($this->userid);
 $userInfoArray = $userInfoAsObject->profilInfos;
 
-$html = buildHtmlOutput($this->userid, $userInfoArray);
+$html = buildHtmlOutput($this->userid, $userInfoArray, $backLink);
 
 // Get css
 $mycss = getProfilCss();
@@ -58,7 +59,7 @@ echo $html;
  *
  * @return information about user
  */
-function buildHtmlOutput($userid, $userData)
+function buildHtmlOutput($userid, $userData, $backLink)
 {
     // Class for title, first name, name, post title and portrait image
     $head = '<div class="thm_groups_contentheading">';
