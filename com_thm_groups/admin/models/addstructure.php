@@ -121,7 +121,7 @@ class THMGroupsModelAddStructure extends JModel
                 $query->insert("`#__thm_groups_" . strtolower($relation) . "_extra` (`structid`, `value`, `path`)");
                 $query->values("'" . $id . "', '" . $extra . "', '" . $picpath . "'");
 
-                if(!self::isDirExists($picpath))
+                if (!self::isDirExists($picpath))
                 {
                     self::makeNewDir($picpath);
                 }

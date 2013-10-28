@@ -30,7 +30,7 @@
 
 <div id="desc">
 <?php
-    if(isset($this->desc))
+    if (isset($this->desc))
     {
         echo $this->desc;
     }

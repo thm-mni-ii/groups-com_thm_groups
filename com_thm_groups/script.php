@@ -50,15 +50,17 @@ class Com_THM_GroupsInstallerScript
     /**
      * Deletes all files of component before install
      *
-     * @param   Object  $type
-     * @param   Object  $parent
+     * @param   Object  $type    something
+     * @param   Object  $parent  something
+     *
+     * @return void
      */
-    function preflight($type, $parent)
+    public function preflight($type, $parent)
     {
         $admin = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_thm_groups';
         $site = JPATH_ROOT . DS . 'components' . DS . 'com_thm_groups';
 
-        if(is_dir($admin) && is_dir($site))
+        if (is_dir($admin) && is_dir($site))
         {
             self::deleteDir($admin);
             self::deleteDir($site);
@@ -140,8 +142,10 @@ class Com_THM_GroupsInstallerScript
      * Deletes recursively files
      *
      * @param   String  $path  path of admin and site part of component
+     *
+     * @return void
      */
-    function deleteDir($path)
+    public function deleteDir($path)
     {
         $it = new RecursiveDirectoryIterator($path);
         $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);

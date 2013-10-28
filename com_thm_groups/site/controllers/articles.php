@@ -7,7 +7,7 @@
  * @subpackage  com_thm_groups.site
  * @author      Daniel Kirsten, <daniel.kirsten@mni.thm.de>
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
- * @author		Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -134,8 +134,10 @@ class THMGroupsControllerArticles extends JControllerAdmin
         }
         else
         {
+
             // Get the model.
             $model = $this->getModel();
+
             // Make sure the item ids are integers
             jimport('joomla.utilities.arrayhelper');
             JArrayHelper::toInteger($cid);
@@ -177,13 +179,14 @@ class THMGroupsControllerArticles extends JControllerAdmin
      */
     public function featureArticle()
     {
+
         // Get the model.
         $model = $this->getModel();
 
         // Get items to remove from the request.
         $a_id = JRequest::getVar('a_id', null, '', 'int');
 
-        if($model->featureArticle($a_id))
+        if ($model->featureArticle($a_id))
         {
             JFactory::getApplication()->enqueueMessage('Erfolgreich featured!', 'Message');
         }

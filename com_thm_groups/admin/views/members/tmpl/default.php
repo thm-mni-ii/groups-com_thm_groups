@@ -17,7 +17,7 @@ require JPATH_ROOT . DS . 'components' . DS . 'com_thm_groups' . DS . 'helper' .
 
 $library_path = JURI::root() . 'libraries/thm_groups';
 
-// require JPATH_LIBRARIES . '/thm_groups/assets/elements/orderattributes.php';
+// Require JPATH_LIBRARIES . '/thm_groups/assets/elements/orderattributes.php';
 
 $lang = JFactory::getLanguage();
 $lang->load('com_thm_groups', JPATH_ADMINISTRATOR);

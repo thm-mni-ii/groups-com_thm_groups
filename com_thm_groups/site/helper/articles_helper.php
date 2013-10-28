@@ -5,7 +5,7 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
- * @author		Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -14,8 +14,22 @@
 // No direct access
 defined('_JEXEC') or die;
 
+/**
+ * ArticleHelper class for component com_thm_groups
+ *
+ * @category  Joomla.Component
+ * @package   com_thm_groups
+ * @link      www.mni.thm.de
+ * @since     Class available since Release 3.0
+ */
 class ArticleHelper
 {
+    /**
+     * Returns state of article
+     *
+     * @param   Int  $a_id  article id
+     * @return  boolean
+     */
     public static function isArticleFeatured($a_id)
     {
         $db = JFactory::getDbo();
@@ -24,7 +38,7 @@ class ArticleHelper
         $isFeaturedQuery->select('*')
         ->from('#__thm_quickpages_featured')
         ->where("conid = $a_id");
-        $db->setQuery((string)$isFeaturedQuery);
+        $db->setQuery((string) $isFeaturedQuery);
 
         try
         {

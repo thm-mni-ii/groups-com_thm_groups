@@ -6,7 +6,7 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @author      Daniel Kirsten, <daniel.kirsten@mni.thm.de>
- * @author		Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -201,12 +201,14 @@ class THMGroupsModelArticle extends JModelAdmin
      * Saves or deletes entrys from db
      *
      * @param   Int  $a_id  id of article
+     *
+     * @return  mixed
      */
     public static function featureArticle($a_id)
     {
        $isArticleFeatured = self::isArticleFeatured($a_id);
 
-       if($isArticleFeatured == null)
+       if ($isArticleFeatured == null)
        {
             self::insertArticleId($a_id);
             return true;
@@ -233,7 +235,7 @@ class THMGroupsModelArticle extends JModelAdmin
         $isFeaturedQuery->select('*')
         ->from('#__thm_quickpages_featured')
         ->where("conid = $a_id");
-        $db->setQuery((string)$isFeaturedQuery);
+        $db->setQuery((string) $isFeaturedQuery);
 
         try
         {
@@ -262,7 +264,7 @@ class THMGroupsModelArticle extends JModelAdmin
 
         $insertQuery->insert('#__thm_quickpages_featured', 'conid')
         ->values($a_id);
-        $db->setQuery((string)$insertQuery);
+        $db->setQuery((string) $insertQuery);
 
         try
         {
@@ -289,7 +291,7 @@ class THMGroupsModelArticle extends JModelAdmin
 
         $deleteQuery->delete('#__thm_quickpages_featured')
         ->where("conid = $a_id");
-        $db->setQuery((string)$deleteQuery);
+        $db->setQuery((string) $deleteQuery);
 
         try
         {

@@ -57,6 +57,8 @@ echo $html;
  *
  * @param   Array    $userData  user data
  *
+ * @param   String   $backLink  back link
+ *
  * @return information about user
  */
 function buildHtmlOutput($userid, $userData, $backLink)
@@ -230,7 +232,8 @@ function buildHtmlOutput($userid, $userData, $backLink)
     $head .= '</div>';
 
     // Back button
-    $body .= '<div><a href="' . $backLink .'"><input type="button" style="margin-top:10px" value="' . JText::_("COM_THM_GROUPS_BACK_BUTTON") . '" /></div>';
+    $body .= '<div><a href="' . $backLink . '"><input type="button" style="margin-top:10px" value="'
+                . JText::_("COM_THM_GROUPS_BACK_BUTTON") . '" /></div>';
     $body .= '</div>';
     $result .= $head . $body;
     $result .= '</div>';

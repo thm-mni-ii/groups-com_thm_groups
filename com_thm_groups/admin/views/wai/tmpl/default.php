@@ -15,7 +15,7 @@
  *
  */
 defined('_JEXEC') or die ('Restricted access');
-require_once JPATH_ROOT . DS .'components' . DS . 'com_thm_groups' . DS . 'helper' . DS . 'helper_wai.php';
+require_once JPATH_ROOT . DS . 'components' . DS . 'com_thm_groups' . DS . 'helper' . DS . 'helper_wai.php';
 
 // THM Groups library path
 

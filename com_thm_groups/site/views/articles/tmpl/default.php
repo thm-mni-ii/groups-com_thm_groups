@@ -7,7 +7,7 @@
  * @subpackage  com_thm_groups.site
  * @author      Daniel Kirsten, <daniel.kirsten@mni.thm.de>
  * @author      Tobias Schmitt, <tobias.schmitt@mni.thm.de>
- * @author		Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -19,7 +19,7 @@ defined('_JEXEC') or die;
 $helper_path = JPATH_BASE . '/components/com_thm_groups/helper';
 
 include_once $helper_path . '/articles_helper.php';
-$helperObject = new ArticleHelper();
+$helperObject = new ArticleHelper;
 
 JHtml::addIncludePath(JPATH_COMPONENT . DS . 'helper' . DS . 'html');
 JHtml::_('behavior.tooltip');
@@ -327,13 +327,15 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
 
                             $featureURL = JRoute::_('index.php?option=com_thm_groups&task=articles.featureArticle&a_id=' . $item->id);
 
-                            if($helperObject::isArticleFeatured($item->id) == null)
+                            if ($helperObject::isArticleFeatured($item->id) == null)
                             {
-                                $imgSpanTag = '<span class="state unpublish"><span class="text">' .  JText::_('COM_THM_GROUPS_UNFEATURE') . '</span></span>';
+                                $imgSpanTag = '<span class="state unpublish"><span class="text">'
+                                     . JText::_('COM_THM_GROUPS_UNFEATURE') . '</span></span>';
                             }
                             else
                             {
-                                $imgSpanTag = '<span class="state publish"><span class="text">' .  JText::_('COM_THM_GROUPS_FEATURE') . '</span></span>';
+                                $imgSpanTag = '<span class="state publish"><span class="text">'
+                                    . JText::_('COM_THM_GROUPS_FEATURE') . '</span></span>';
                             }
 
                             echo JHTML::_('link', $featureURL, $imgSpanTag, 'title="'

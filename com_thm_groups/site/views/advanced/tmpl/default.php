@@ -293,7 +293,7 @@
             echo '</div>';
         }
 
-        if(($elementCounter % 2 == 0) && ($elementCounter == $lastIndex))
+        if (($elementCounter % 2 == 0) && ($elementCounter == $lastIndex))
         {
             echo '</div>';
         }
