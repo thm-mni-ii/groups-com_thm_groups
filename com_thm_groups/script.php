@@ -55,7 +55,14 @@ class Com_THM_GroupsInstallerScript
      */
     function preflight($type, $parent)
     {
+        $admin = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_thm_groups';
+        $site = JPATH_ROOT . DS . 'components' . DS . 'com_thm_groups';
 
+        if(is_dir($admin) && is_dir($site))
+        {
+            self::deleteDir($admin);
+            self::deleteDir($site);
+        }
     }
 
     /**
@@ -115,26 +122,6 @@ class Com_THM_GroupsInstallerScript
      */
     public function update($parent)
     {
-        $db = JFactory::getDbo();
-
-        $query = $db->getQuery(true);
-
-        $query->select("extension_id");
-        $query->from("#__extensions");
-        $query->where("(element = 'plg_thm_groups_content_members') OR"
-                . "(element = 'plg_thm_groups_content_wai') OR (element = 'plg_thm_groups_editors_xtd_members') OR"
-                . "(element = 'plg_thm_groups_editors_xtd_wai')"
-                    );
-
-        $db->setQuery($query);
-        $ids = $db->loadResultArray();
-
-        if (count($ids))
-        {
-            $uninstall = new InstallerModelManage;
-            $uninstall->remove($ids);
-        }
-
         ?>
         <h1 align="center">
             <strong>&nbsp;THM Groups Updater</strong>
