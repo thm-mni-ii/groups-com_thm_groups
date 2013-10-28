@@ -55,14 +55,7 @@ class Com_THM_GroupsInstallerScript
      */
     function preflight($type, $parent)
     {
-        $admin = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_thm_groups';
-        $site = JPATH_ROOT . DS . 'components' . DS . 'com_thm_groups';
 
-        if(is_dir($admin) && is_dir($site))
-        {
-            self::deleteDir($admin);
-            self::deleteDir($site);
-        }
     }
 
     /**

@@ -215,28 +215,6 @@
                         // EMail
                         echo JHTML :: _('email.cloak', $memberitem['value']);
                         break;
-                    case 96:
-                        // Long Info
-                        $text = JString::trim(htmlspecialchars_decode($memberitem['value']));
-                        if (!empty($text))
-                        {
-                            if (stripos($text, '<li>') === false)
-                            {
-                                $text = nl2br($text);
-                            }
-                            // Truncate Long Info Text
-                            if ($this->truncateLongInfo)
-                            {
-                                echo '<span class="thm_groups_profile_container_profile_read_more">' .
-                                    JText::_('COM_THM_GROUPS_PROFILE_CONTAINER_LONG_INFO_READ_MORE') . '</span>';
-                                echo '<div class="thm_groups_profile_container_profile_long_info" style="display:none;">' . $text . '</div>';
-                            }
-                            else
-                            {
-                                echo '<div class="thm_groups_profile_container_profile_long_info">' . $text . '</div>';
-                            }
-                        }
-                        break;
                     default:
                         switch ($memberitem['type'])
                         {
@@ -249,6 +227,28 @@
                                 break;
                             case "TABLE":
                                 echo $this->make_table($memberitem['value']);
+                                break;
+                            case "TEXTFIELD":
+                                // Long Info
+                                $text = JString::trim(htmlspecialchars_decode($memberitem['value']));
+                                if (!empty($text))
+                                {
+                                    if (stripos($text, '<li>') === false)
+                                    {
+                                        $text = nl2br($text);
+                                    }
+                                    // Truncate Long Info Text
+                                    if ($this->truncateLongInfo)
+                                    {
+                                        echo '<span class="thm_groups_profile_container_profile_read_more">' .
+                                                JText::_('COM_THM_GROUPS_PROFILE_CONTAINER_LONG_INFO_READ_MORE') . '</span>';
+                                        echo '<div class="thm_groups_profile_container_profile_long_info" style="display:none;">' . $text . '</div>';
+                                    }
+                                    else
+                                    {
+                                        echo '<div class="thm_groups_profile_container_profile_long_info">' . $text . '</div>';
+                                    }
+                                }
                                 break;
                             default:
                                 echo nl2br(htmlspecialchars_decode($memberitem['value']));
@@ -313,8 +313,7 @@
 <script type="text/javascript">
     $('.thm_groups_profile_container_profile_read_more').click(
         function() {
-            $(this).hide();
-            $(this).next().fadeIn("slow");
+            $(this).next().slideToggle();
         }
     );
 </script>

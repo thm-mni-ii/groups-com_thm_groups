@@ -325,6 +325,11 @@ function getProfilCss()
                 margin-left:20px;
                 width:500px;
             }
+
+            .thm_groups_table
+            {
+                margin-left: 20px;
+            }
             ';
     return $out;
 }
