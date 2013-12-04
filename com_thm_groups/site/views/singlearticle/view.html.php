@@ -1,12 +1,13 @@
 <?php
 /**
- * @version     v3.2.5
+ * @version     v3.4.5
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @name        THMGroupsSingleArticle
  * @description THMGroupsSingleArticle file from com_thm_groups (copy of com_content)
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2013 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -70,7 +71,7 @@ class THMGroupsViewSinglearticle extends JViewLegacy
                             . '&gsgid=' . $old_gsgid . '&gsuid=' . $gsuid . '&name=' . $name
                             );
 
-        $pathway->addItem($this->getUsername($gsuid), $backURL);
+        $pathway->addItem($this->getUsername($gsuid), base64_decode(JRequest::getVar('return')));
         $parts = explode(":", JRequest::getVar('id', ''));
         $pathway->addItem($parts[1], $uri->toString());
         $pagetitle = $parts[1];
@@ -79,6 +80,7 @@ class THMGroupsViewSinglearticle extends JViewLegacy
         $this->print	= JRequest::getBool('print');
         $this->state	= $this->get('State');
         $this->user		= $user;
+        $this->backRef  = base64_decode(JRequest::getVar('return'));
 
         $comContentParams = JComponentHelper::getParams('com_content');
 

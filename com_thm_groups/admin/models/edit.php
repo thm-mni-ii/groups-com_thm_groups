@@ -10,6 +10,7 @@
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Tobias Schmitt, <tobias.schmitt@mni.thm.de>
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -330,11 +331,12 @@ class THMGroupsModeledit extends JModelForm
     {
 
         require_once JPATH_ROOT . DS . "components" . DS . "com_thm_groups" . DS . "helper" . DS . "thm_groups_pictransform.php";
+        $picPath = self::getPicPath($structid);
         try
         {
             $pt = new THMPicTransform($_FILES[$picField]);
             $pt->safeSpecial(
-                    JPATH_ROOT . DS . "components" . DS . "com_thm_groups" . DS . "img" . DS . "portraits" . DS,
+                    JPATH_ROOT . DS . $picPath . DS,
                     $uid . "_" . $structid,
                     200,
                     200,

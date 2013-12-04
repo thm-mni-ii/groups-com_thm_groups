@@ -1,19 +1,20 @@
 <?php
 /**
- * @version     v3.2.5
+ * @version     v3.4.4
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @name        THMGroupsSingleArticle
  * @description THMGroupsSingleArticle file from com_thm_groups (copy of com_content)
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2013 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
 
 defined('_JEXEC') or die;
-
+jimport('joomla.application.component.helper');
 JHtml::addIncludePath(JPATH_COMPONENT . '/../com_content/helpers');
 
 // Create shortcuts to some parameters.
@@ -22,6 +23,7 @@ $images = json_decode($this->item->images);
 $urls = json_decode($this->item->urls);
 $canEdit = $this->item->params->get('access-edit');
 $user = JFactory::getUser();
+$backLink = $this->backRef;
 ?>
 <div class="item-page<?php echo $this->pageclass_sfx ?>">
 <?php
@@ -370,4 +372,16 @@ if (!empty($this->item->pagination) AND $this->item->pagination AND $this->item-
 ?>
 
 <?php echo $this->item->event->afterDisplayContent; ?>
+<?php
+if (JComponentHelper::getParams('com_thm_groups')->get('backButtonForQuickpages') == 1)
+{
+    echo '<div><a href="' . $backLink . '">
+            <input type="button"
+                   value="' . JText::_("COM_THM_GROUPS_BACK_BUTTON") . '"
+                   style="margin-top:10px"/>
+                    </a>
+                    </div>';
+}
+?>
+
 </div>

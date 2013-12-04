@@ -130,21 +130,17 @@ class THMGroupsViewProfile extends JView
         if (isset($_GET))
         {
             $var = $_GET;
-
-          $attribut = " ";
-        foreach ($var as $index => $value)
-        {
-            $pos = strpos($index, '_old');
-
-            if ($pos !== false)
+            $attribut = " ";
+            foreach ($var as $index => $value)
             {
-                $temp = explode('_old', $index);
-                $attribut .= $temp[0] . "=" . $value . '&';
+                $pos = strpos($index, '_old');
 
+                if ($pos !== false)
+                {
+                    $temp = explode('_old', $index);
+                    $attribut .= $temp[0] . "=" . $value . '&';
+                }
             }
-
-
-        }
         }
         $name = "";
         foreach ($items as $val)
@@ -166,23 +162,19 @@ class THMGroupsViewProfile extends JView
         }
 
         $backRef = (count($pathwayitems) > 0)? $pathwayitems[count($pathwayitems) - 1]->link : " ";
+
         if (isset($attribut))
         {
             $this->links = JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid;
-
             $old_option = JRequest::getVar("option_old");
-
             switch ($old_option)
             {
-
                 case "com_content":
-
                     $artikleId = JRequest::getVar("id_old");
-               $artikelname = (JFactory::getConfig()->getValue('config.sef') == 1)? $this->getArtikelname($artikleId) : explode(":", $artikleId);
+                    $artikelname = (JFactory::getConfig()->getValue('config.sef') == 1)? $this->getArtikelname($artikleId) : explode(":", $artikleId);
                     if (isset($artikelname))
                     {
-
-                    $pathway->addItem($artikelname, JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
+                        $pathway->addItem($artikelname, JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
                     }
                     else
                     {
@@ -195,20 +187,16 @@ class THMGroupsViewProfile extends JView
                     $layout = JRequest::getVar("layout_old");
                     if ($layout == 'singlearticle')
                     {
-                     $pathway->addItem(JFactory::getDocument()->get('title'), JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
+                        $pathway->addItem(JFactory::getDocument()->get('title'), JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
                     }
                     break;
-
             }
-
             $pathway->addItem($name);
         }
-
         else
         {
             $this->links = JURI::base() . 'index.php';
             $pathway->addItem($name);
-
         }
 
         // Daten für die Form
@@ -237,7 +225,6 @@ class THMGroupsViewProfile extends JView
         }
 
         $itemid = JRequest::getVar('Itemid', 0);
-
         $this->assignRef('backRef', $backRef);
         $this->assignRef('items', $items);
         $this->assignRef('itemid', $itemid);
@@ -246,7 +233,6 @@ class THMGroupsViewProfile extends JView
         $this->assignRef('userid', $cid);
         $this->assignRef('structure', $structure);
         $this->assignRef('gsgid', $gsgid);
-
         parent::display($tpl);
     }
 

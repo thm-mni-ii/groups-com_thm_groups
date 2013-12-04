@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version     v3.4.3
+ * @version     v3.4.4
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -133,6 +133,11 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
                         }
 
                     ?>
+                </th>
+                <th>
+                <?php
+                   echo JText::_('COM_THM_QUICKPAGES_TRASH');
+                ?>
                 </th>
                 <th>
                     Featured
@@ -288,39 +293,42 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
                         {
                             echo '<span class="jgrid"><span class="state edit_disabled"><span class="text">Edit</span></span></span>';
                         }
-
-                        // Output trash icon
-                        if ($item->state >= 0)
-                        {
-                            // Define state changes needed by JHtmlJGrid.state(), see also JHtmlJGrid.published()
-                            $states	= array(
-                                0	=> array(),		// Dummy: Wird nicht gebraucht, erzeugt aber sonst Notice
-                                3	=> array(
-                                        'trash',
-                                        'JPUBLISHED',
-                                        'COM_THM_QUICKPAGES_HTML_TRASH_ITEM',
-                                        'JPUBLISHED',
-                                        false,
-                                        'trash',
-                                        'trash_disabled'
-                                        ),
-                                -3	=> array(
-                                        'publish',
-                                        'JTRASHED',
-                                        'COM_THM_QUICKPAGES_HTML_UNTRASH_ITEM',
-                                        'JTRASHED',
-                                        false,
-                                        'untrash',
-                                        'untrash'
-                                        ),
-                            );
-                            $button = JHtml::_('jgrid.state', $states, ($item->state < 0 ? -3 : 3), $i, 'articles.', $canDelete);
-                            $button = str_replace(
-                                        "onclick=\"", "onclick=\"if (confirm('" . JText::_('COM_THM_GROUPS_REALLY_DELETE') . "')) ", $button
-                                    );
-                            echo $button;
-                        }
                     ?>
+                </td>
+                <td class="center">
+                <?php
+                // Output trash icon
+                if ($item->state >= 0)
+                {
+                    // Define state changes needed by JHtmlJGrid.state(), see also JHtmlJGrid.published()
+                    $states	= array(
+                            0	=> array(),		// Dummy: Wird nicht gebraucht, erzeugt aber sonst Notice
+                            3	=> array(
+                                    'trash',
+                                    'JPUBLISHED',
+                                    'COM_THM_QUICKPAGES_HTML_TRASH_ITEM',
+                                    'JPUBLISHED',
+                                    false,
+                                    'trash',
+                                    'trash_disabled'
+                            ),
+                            -3	=> array(
+                                    'publish',
+                                    'JTRASHED',
+                                    'COM_THM_QUICKPAGES_HTML_UNTRASH_ITEM',
+                                    'JTRASHED',
+                                    false,
+                                    'untrash',
+                                    'untrash'
+                            ),
+                    );
+                    $button = JHtml::_('jgrid.state', $states, ($item->state < 0 ? -3 : 3), $i, 'articles.', $canDelete);
+                    $button = str_replace(
+                            "onclick=\"", "onclick=\"if (confirm('" . JText::_('COM_THM_GROUPS_REALLY_DELETE') . "')) ", $button
+                    );
+                    echo $button;
+                }
+                ?>
                 </td>
                 <td class="center">
                 <?php
