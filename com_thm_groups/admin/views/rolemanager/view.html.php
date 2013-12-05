@@ -43,7 +43,7 @@ class THMGroupsViewRolemanager extends JView
         $document->addStyleSheet("components/com_thm_groups/assets/css/thm_groups.css");
         $user = JFactory::getUser();
 
-        JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_ROLEMANAGER'), 'mni');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_ROLEMANAGER'), 'rolemanager');
         JToolBarHelper::addNewX(
             'rolemanager.addRole',
             'COM_THM_GROUPS_ROLEMANAGER_ADD',

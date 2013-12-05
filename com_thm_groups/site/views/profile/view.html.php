@@ -133,11 +133,11 @@ class THMGroupsViewProfile extends JView
             $attribut = " ";
             foreach ($var as $index => $value)
             {
-                $pos = strpos($index, '_old');
+                $pos = strpos($index, '_back');
 
                 if ($pos !== false)
                 {
-                    $temp = explode('_old', $index);
+                    $temp = explode('_back', $index);
                     $attribut .= $temp[0] . "=" . $value . '&';
                 }
             }
@@ -166,11 +166,11 @@ class THMGroupsViewProfile extends JView
         if (isset($attribut))
         {
             $this->links = JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid;
-            $old_option = JRequest::getVar("option_old");
+            $old_option = JRequest::getVar("option_back");
             switch ($old_option)
             {
                 case "com_content":
-                    $artikleId = JRequest::getVar("id_old");
+                    $artikleId = JRequest::getVar("id_back");
                     $artikelname = (JFactory::getConfig()->getValue('config.sef') == 1)? $this->getArtikelname($artikleId) : explode(":", $artikleId);
                     if (isset($artikelname))
                     {
@@ -184,7 +184,7 @@ class THMGroupsViewProfile extends JView
                     break;
 
                 case "com_thm_groups":
-                    $layout = JRequest::getVar("layout_old");
+                    $layout = JRequest::getVar("layout_back");
                     if ($layout == 'singlearticle')
                     {
                         $pathway->addItem(JFactory::getDocument()->get('title'), JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);

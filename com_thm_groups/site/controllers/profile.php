@@ -58,14 +58,14 @@ class THMGroupsControllerProfile extends JController
     public function backToRefUrl()
     {
         /*
-        $option_old = JRequest::getVar('option_old', 0);
-        $layout_old = JRequest::getVar('layout_old', 0);
-        $view_old = JRequest::getVar('view_old', 0);
+        $option_back = JRequest::getVar('option_back', 0);
+        $layout_back = JRequest::getVar('layout_back', 0);
+        $view_back = JRequest::getVar('view_back', 0);
 
         $link = JRoute::_('index.php'
-            . '?option=' . $option_old
-            . '&view=' . $view_old
-            . '&layout_old=' . $layout_old
+            . '?option=' . $option_back
+            . '&view=' . $view_back
+            . '&layout_back=' . $layout_back
         );*/
         $this->setRedirect(JRequest::getVar('refUrl'));
     }

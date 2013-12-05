@@ -165,11 +165,11 @@
             $layout = JRequest :: getVar('layout', 0);
             $view = JRequest :: getVar('view', 0);
             $path = "index.php?option=com_thm_groups&view=edit&layout=default&Itemid=";
-            $gspart = '&gsgid=' . $this->gsgid . '&option_old=';
+            $gspart = '&gsgid=' . $this->gsgid . '&option_back=';
             $trim = "&name=" . trim($lastName);
             echo "<a href="
                     . JRoute :: _(
-                            $path . $this->itemid . '&gsuid=' . $id . $trim . $gspart . $option . '&view_old=' . $view . '&layout_old=' . $layout
+                            $path . $this->itemid . '&gsuid=' . $id . $trim . $gspart . $option . '&view_back=' . $view . '&layout_back=' . $layout
                     )
                     . ">"
                             . JHTML :: image("components/com_thm_groups/img/edit.png", 'bearbeiten', $attribs) . "</a>";

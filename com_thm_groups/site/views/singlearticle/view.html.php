@@ -80,7 +80,14 @@ class THMGroupsViewSinglearticle extends JViewLegacy
         $this->print	= JRequest::getBool('print');
         $this->state	= $this->get('State');
         $this->user		= $user;
-        $this->backRef  = base64_decode(JRequest::getVar('return'));
+        if(JRequest::getVar('return') != null)
+        {
+            $this->backRef = base64_decode(JRequest::getVar('return'));
+        }
+        else
+        {
+            $this->backRef  = $backURL;
+        }
 
         $comContentParams = JComponentHelper::getParams('com_content');
 

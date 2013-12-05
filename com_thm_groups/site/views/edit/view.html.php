@@ -204,16 +204,16 @@ class THMGroupsViewEdit extends JView
                     " />";
             }
 
-            $option_old = JRequest::getVar('option_old', '0', 'post');
-            $layout_old = JRequest::getVar('layout_old', '0', 'post');
-            $view_old = JRequest::getVar('view_old', '0', 'post');
+            $option_back = JRequest::getVar('option_back', '0', 'post');
+            $layout_back = JRequest::getVar('layout_back', '0', 'post');
+            $view_back = JRequest::getVar('view_back', '0', 'post');
 
             $output .= "<br /><br /><input type='submit' id='addTableRow" . $name . "' " .
                 "onclick='document.forms[\"adminForm\"].elements[\"structid\"].value =" . $structid . "," .
                 "document.forms[\"adminForm\"].elements[\"task\"].value = \"edit.addTableRow\", " .
-                "document.forms[\"adminForm\"].elements[\"option_old\"].value=" . $option_old . "," .
-                "document.forms[\"adminForm\"].elements[\"layout_old\"].value=" . $layout_old . "," .
-                "document.forms[\"adminForm\"].elements[\"view_old\"].value=" . $view_old . "' " .
+                "document.forms[\"adminForm\"].elements[\"option_back\"].value=" . $option_back . "," .
+                "document.forms[\"adminForm\"].elements[\"layout_back\"].value=" . $layout_back . "," .
+                "document.forms[\"adminForm\"].elements[\"view_back\"].value=" . $view_back . "' " .
                 "value='" . JText::_('COM_THM_GROUPS_ADD_TO_TABLE_TEXT') . "' name='addTableRow" . $name . "' task='edit.addTableRow' />";
 
         }
@@ -320,9 +320,9 @@ class THMGroupsViewEdit extends JView
             }
         }
         $link = 'index.php?';
-        $params = 'option=' . JRequest::getVar('option_old', 0)
-                . '&view=' . JRequest::getVar('view_old', 0)
-                . '&layout=' . JRequest::getVar('layout_old', 0)
+        $params = 'option=' . JRequest::getVar('option_back', 0)
+                . '&view=' . JRequest::getVar('view_back', 0)
+                . '&layout=' . JRequest::getVar('layout_back', 0)
                 . '&gsuid=' . $cid
                 . '&gsgid=' . JRequest::getVar('gsgid', 0)
                 . '&name=' . JRequest::getVar('name', 0);
@@ -341,13 +341,13 @@ class THMGroupsViewEdit extends JView
         }
 
         /* ZURÜCK BUTTON */
-        $option_old = JRequest::getVar('option_old');
-        $layout_old = JRequest::getVar('layout_old');
-        $view_old = JRequest::getVar('view_old');
+        $option_back = JRequest::getVar('option_back');
+        $layout_back = JRequest::getVar('layout_back');
+        $view_back = JRequest::getVar('view_back');
 
-        $this->assignRef('option_old', $option_old);
-        $this->assignRef('layout_old', $layout_old);
-        $this->assignRef('view_old', $view_old);
+        $this->assignRef('option_back', $option_back);
+        $this->assignRef('layout_back', $layout_back);
+        $this->assignRef('view_back', $view_back);
         $this->assignRef('items', $items);
         $this->assignRef('is_mod', $is_mod);
         $this->assignRef('userid', $cid);

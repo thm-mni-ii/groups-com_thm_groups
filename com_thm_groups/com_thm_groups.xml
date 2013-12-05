@@ -7,7 +7,7 @@
     <authorUrl>http://www.fh-giessen.de</authorUrl>
     <copyright>TH Mittelhessen</copyright>
     <license>GNU/GPL Version 2</license>
-    <version>3.4.4</version>
+    <version>3.4.5</version>
     <description></description>
     <scriptfile>script.php</scriptfile>
     <install>
@@ -45,17 +45,15 @@
     </languages>
 
     <administration>
-        <menu img="components/com_thm_groups/assets/images/mni.png">COM_THM_GROUPS</menu>
+        <menu img="components/com_thm_groups/assets/images/logo_16x16.png">COM_THM_GROUPS</menu>
         <submenu>
-            <menu alias="Home" link="option=com_thm_groups&amp;view=thmgroups" view="thmgroups" img="components/com_thm_groups/assets/images/mni.png"
-                alt="THM-Groups/Home">COM_THM_GROUPS_HOME</menu>
-            <menu alias="Member Manager" link="option=com_thm_groups&amp;view=membermanager" view="membermanager" img="components/com_thm_groups/assets/images/mni.png"
+            <menu alias="Member Manager" link="option=com_thm_groups&amp;view=membermanager" view="membermanager" img="components/com_thm_groups/assets/images/membermanager_16x16.png"
                 alt="THM-Groups/Member Manager">COM_THM_GROUPS_MEMBERMANAGER</menu>
-            <menu link="option=com_thm_groups&amp;view=groupmanager" view="groupmanager" img="components/com_thm_groups/assets/images/mni.png"
+            <menu link="option=com_thm_groups&amp;view=groupmanager" view="groupmanager" img="components/com_thm_groups/assets/images/groupmanager_16x16.png"
                 alt="THM-Groups/Group Manager">COM_THM_GROUPS_GROUPMANAGER</menu>
-            <menu link="option=com_thm_groups&amp;view=rolemanager" view="rolemanager" img="components/com_thm_groups/assets/images/mni.png"
+            <menu link="option=com_thm_groups&amp;view=rolemanager" view="rolemanager" img="components/com_thm_groups/assets/images/rolemanager_16x16.png"
                 alt="THM-Groups/Role Manager">COM_THM_GROUPS_ROLEMANAGER</menu>
-            <menu link="option=com_thm_groups&amp;view=structuremanager" view="structuremanager" img="components/com_thm_groups/assets/images/mni.png"
+            <menu link="option=com_thm_groups&amp;view=structuremanager" view="structuremanager" img="components/com_thm_groups/assets/images/structuremanager_16x16.png"
                 alt="THM-Groups/Structuremanager">COM_THM_GROUPS_STRUCTUREMANAGER</menu>
         </submenu>
 

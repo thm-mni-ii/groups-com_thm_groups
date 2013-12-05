@@ -86,8 +86,8 @@
                             $iid = $this->itemid;
                             echo "<a href="
                             . JRoute :: _(
-                                            $path . $iid . '&gsgid=' . $gid . '&option_old='
-                                            . $option . '&view_old=' . $view . '&layout_old=' . $layout
+                                            $path . $iid . '&gsgid=' . $gid . '&option_back='
+                                            . $option . '&view_back=' . $view . '&layout_back=' . $layout
                                         )
                             . "'> "
                             . JHTML :: image("components/com_thm_groups/img/edit.png", 'bearbeiten', $attribs) . "</a>";

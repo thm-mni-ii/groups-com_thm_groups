@@ -26,22 +26,22 @@ $userid = $user->id;
         <fieldset class="adminform">
             <legend>
                 <?php
-                if (JRequest::getVar('view_old', 'keinPost', 'post') == 'keinPost')
+                if (JRequest::getVar('view_back', 'keinPost', 'post') == 'keinPost')
                 {
-                    $view_old = JRequest :: getVar('view_old', 0);
+                    $view_back = JRequest :: getVar('view_back', 0);
                 }
                 else
                 {
-                    $view_old = JRequest :: getVar('view_old', 0, 'post');
+                    $view_back = JRequest :: getVar('view_back', 0, 'post');
                 }
 
-                if (JRequest::getVar('layout_old', 'keinPost', 'post') == 'keinPost')
+                if (JRequest::getVar('layout_back', 'keinPost', 'post') == 'keinPost')
                 {
-                    $layout_old = JRequest :: getVar('layout_old', 0);
+                    $layout_back = JRequest :: getVar('layout_back', 0);
                 }
                 else
                 {
-                    $layout_old = JRequest :: getVar('layout_old', 0, 'post');
+                    $layout_back = JRequest :: getVar('layout_back', 0, 'post');
                 }
                 echo   JText::_('COM_THM_GROUPS_DETAILS_VIEW_LABEL');
                 ?>
@@ -226,9 +226,9 @@ $userid = $user->id;
             <input type="hidden" name="layout" value="default" />
             <input type="hidden" name="Itemid" value="<?php echo JRequest::getVar('Itemid', '0');?>" />
             <input type="hidden" name="gsuid" value="<?php echo $userid; ?>" />
-            <input type='hidden' name="option_old" value=" <?php echo JRequest::getVar('option_old', 0, 'post');  ?> " />
-            <input type='hidden' name="view_old" value="<?php echo  $view_old; ?>"/>
-            <input type='hidden' name="layout_old" value="<?php echo  $layout_old; ?>" />
+            <input type='hidden' name="option_back" value=" <?php echo JRequest::getVar('option_back', 0, 'post');  ?> " />
+            <input type='hidden' name="view_back" value="<?php echo  $view_back; ?>"/>
+            <input type='hidden' name="layout_back" value="<?php echo  $layout_back; ?>" />
         </fieldset>
     </div>
 </form>

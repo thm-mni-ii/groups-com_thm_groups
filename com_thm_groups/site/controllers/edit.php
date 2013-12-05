@@ -80,10 +80,10 @@ class THMGroupsControllerEdit extends JController
         $this->uid   = JRequest::getVar('userid', 0);
         $this->uname = JRequest::getVar('name', 0);
         $gsgid 		 = JRequest::getVar('gsgid', 1);
-        $option_old  = JRequest::getVar('option_old', 0);
-        $layout_old  = JRequest::getVar('layout_old', 0);
-        $view_old    = JRequest::getVar('view_old', 0);
-        $itemid_old  = JRequest::getVar('item_id', 0);
+        $option_back  = JRequest::getVar('option_back', 0);
+        $layout_back  = JRequest::getVar('layout_back', 0);
+        $view_back    = JRequest::getVar('view_back', 0);
+        $itemid_back  = JRequest::getVar('item_id', 0);
 
         /*$this->assignRef('userid', $cid);
         $this->assignRef('structure', $structure);
@@ -92,10 +92,10 @@ class THMGroupsControllerEdit extends JController
         $model = $this->getModel('edit');
         $msg = JText::_('COM_THM_GROUPS_PROFILE_SAVED');
         $link =& JURI::getInstance('index.php'
-                . '?option=' . $option_old
-                . '&view=' . $view_old
-                . '&layout=' . $layout_old
-                . '&Itemid=' . $itemid_old
+                . '?option=' . $option_back
+                . '&view=' . $view_back
+                . '&layout=' . $layout_back
+                . '&Itemid=' . $itemid_back
                 . '&gsuid=' . $this->uid
                 . '&name=' . $this->uname
                 . '&gsgid=' . $gsgid
@@ -205,17 +205,17 @@ class THMGroupsControllerEdit extends JController
         $this->uid   = JRequest::getVar('userid', 0);
         $this->uname = JRequest::getVar('name', 0);
         $gsgid 		 = JRequest::getVar('gsgid', 1);
-        $option_old  = JRequest::getVar('option_old', 0);
-        $layout_old  = JRequest::getVar('layout_old', 0);
-        $view_old    = JRequest::getVar('view_old', 0);
-        $itemid_old  = JRequest::getVar('item_id', 0);
+        $option_back  = JRequest::getVar('option_back', 0);
+        $layout_back  = JRequest::getVar('layout_back', 0);
+        $view_back    = JRequest::getVar('view_back', 0);
+        $itemid_back  = JRequest::getVar('item_id', 0);
 
         $msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
         $link =& JURI::getInstance('index.php'
-            . '?option=' . $option_old
-            . '&view=' . $view_old
-            . '&layout=' . $layout_old
-            . '&Itemid=' . $itemid_old
+            . '?option=' . $option_back
+            . '&view=' . $view_back
+            . '&layout=' . $layout_back
+            . '&Itemid=' . $itemid_back
             . '&gsuid=' . $this->uid
             . '&name=' . $this->uname
             . '&gsgid=' . $gsgid
@@ -237,9 +237,9 @@ class THMGroupsControllerEdit extends JController
         $this->uid 	 = JRequest::getVar('userid', 0);
         $this->uname = JRequest::getVar('name', 0);
         $gsgid 		 = JRequest::getVar('gsgid', 1);
-        $layout_old  = JRequest::getVar('layout_old', /*0*/'LLLL');
-        $view_old 	 = JRequest::getVar('view_old', /*0*/'VVVV');
-        $option_old  = JRequest::getVar('option_old', /*0*/'VVVV');
+        $layout_back  = JRequest::getVar('layout_back', /*0*/'LLLL');
+        $view_back 	 = JRequest::getVar('view_back', /*0*/'VVVV');
+        $option_back  = JRequest::getVar('option_back', /*0*/'VVVV');
 
 
         $model = $this->getModel('edit');
@@ -251,9 +251,9 @@ class THMGroupsControllerEdit extends JController
             . "&gsuid=" . $this->uid
             . "&name=" . $this->uname
             . "&gsgid=" . $gsgid
-            . "&layout_old=" . $layout_old
-            . "&view_old=" . $view_old
-            . "&option_old=" . $option_old
+            . "&layout_back=" . $layout_back
+            . "&view_back=" . $view_back
+            . "&option_back=" . $option_back
         );
         if ($model->store())
         {

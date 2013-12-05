@@ -62,13 +62,13 @@ class THMGroupsViewEditgroup extends JView
         }
 
         /* ZURÜCK BUTTON */
-        $option_old = JRequest::getVar('option_old');
-        $layout_old = JRequest::getVar('layout_old');
-        $view_old = JRequest::getVar('view_old');
+        $option_back = JRequest::getVar('option_back');
+        $layout_back = JRequest::getVar('layout_back');
+        $view_back = JRequest::getVar('view_back');
 
-        $this->assignRef('option_old', $option_old);
-        $this->assignRef('layout_old', $layout_old);
-        $this->assignRef('view_old', $view_old);
+        $this->assignRef('option_back', $option_back);
+        $this->assignRef('layout_back', $layout_back);
+        $this->assignRef('view_back', $view_back);
         /* ###########   */
 
         parent::display($tpl);
