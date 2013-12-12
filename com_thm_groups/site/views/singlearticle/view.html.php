@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.4.5
+ * @version     v3.4.6
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -56,10 +56,10 @@ class THMGroupsViewSinglearticle extends JViewLegacy
         $user		= JFactory::getUser();
         $gsuid      = JRequest::getVar('gsuid', 0);
         $name		= JRequest::getVar('name', 0);
-        $old_option = JRequest::getVar('old_option', 0);
-        $old_view   = JRequest::getVar('old_view', 0);
-        $old_layout = JRequest::getVar('old_layout', 0);
-        $old_gsgid  = JRequest::getVar('old_gsgid', 0);
+        $old_option = JRequest::getVar('back_option', 0);
+        $old_view   = JRequest::getVar('back_view', 0);
+        $old_layout = JRequest::getVar('back_layout', 0);
+        $old_gsgid  = JRequest::getVar('back_gsgid', 0);
         $start  = JRequest::getVar('start');
         $showall  = JRequest::getVar('showall');
         $uri = JFactory::getURI();
@@ -71,9 +71,11 @@ class THMGroupsViewSinglearticle extends JViewLegacy
                             . '&gsgid=' . $old_gsgid . '&gsuid=' . $gsuid . '&name=' . $name
                             );
 
-        $pathway->addItem($this->getUsername($gsuid), base64_decode(JRequest::getVar('return')));
+
+        $pathway->addItem($this->getUsername($gsuid), $backURL);
         $parts = explode(":", JRequest::getVar('id', ''));
-        $pathway->addItem($parts[1], $uri->toString());
+        $pathway->addItem($parts[1]);
+
         $pagetitle = $parts[1];
 
         $this->item		= $this->get('Item');
