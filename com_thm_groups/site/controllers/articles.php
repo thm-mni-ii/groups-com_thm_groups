@@ -302,11 +302,11 @@ class THMGroupsControllerArticles extends JControllerAdmin
 
         if ($model->featureArticle($a_id))
         {
-            JFactory::getApplication()->enqueueMessage('Erfolgreich featured!', 'Message');
+            JFactory::getApplication()->enqueueMessage('JLIB_APPLICATION_SUCCESS_ORDERING_SAVED', 'Message');
         }
         else
         {
-            JFactory::getApplication()->enqueueMessage('Erfolgreich unfeatured!', 'Message');
+            JFactory::getApplication()->enqueueMessage('JLIB_APPLICATION_SUCCESS_ORDERING_SAVED', 'Message');
         }
 
         $extension = JRequest::getCmd('extension');
