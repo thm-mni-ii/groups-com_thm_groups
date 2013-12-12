@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.4.3
+ * @version     v3.4.6
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -13,6 +13,7 @@
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -654,8 +655,10 @@ function writeName($arrOrderAtt, $member, $arrshowStructure, $linkElement, $link
                             }
 
                             $string .= trim($member->lastName);
-                            if ($run == 0 || ($run == 1 && $showTitle == 1 && $member->title != '')
+                            if ((array_search('1', $arrshowStructure) !== false
+                             && ($run == 0 || ($run == 1 && $showTitle == 1 && $member->title != '')))
                              || ($run == 1 && $showTitle == 0 && $arrOrderAtt[0] == "1")
+                             || ($run == 1 && $arrshowStructure[count($arrshowStructure)-1]="3" && array_search('3', $arrshowStructure) !== false)
                              || ($run == 2 && !empty($member->posttitle)))
                             {
                                 $string .= ',';
