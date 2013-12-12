@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.4.3
+ * @version     v3.4.6
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -207,7 +207,7 @@ function buildHtmlOutput($userid, $userData, $backLink)
                                 $body .= '<b>' . $struct[$data->structid] . ':</b>';
                                 $body .= '</div>';
                                 $body .= '<div class="thm_groups_table" id="' . $struct[$data->structid] . '_value">';
-                                $body .= getTable($data->value);
+                                $body .= getTable($data);
                                 $body .= '</div>';
                                 $body .= '</div>';
                                 break;
@@ -258,13 +258,24 @@ function buildHtmlOutput($userid, $userData, $backLink)
  */
 function getTable($data)
 {
-    $jsonTable = json_decode($data);
+
+    // Get header of table from DB
+    $dbo = JFactory::getDbo();
+    $query = $dbo->getQuery(true);
+    $query->select('value')->from('#__thm_groups_table_extra')->where('structid =' . $data->structid);
+    $dbo->setQuery($query);
+    $result = $dbo->loadRow();
+
+    $jsonTable = json_decode($data->value);
+
     $table = "<table class='table'><tr>";
-    foreach ($jsonTable[0] as $key => $value)
+
+    $titles = explode(';', $result[0]);
+    foreach ($titles as $title)
     {
-        $headItem = str_replace("_", " ", $key);
-        $table = $table . "<th>" . $headItem . "</th>";
+        $table = $table . "<th>" . $title . "</th>";
     }
+
     $table = $table . "</tr>";
     foreach ($jsonTable as $item)
     {

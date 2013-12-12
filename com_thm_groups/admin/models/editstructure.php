@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.4.3
+ * @version     v3.4.6
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -58,9 +58,9 @@ class THMGroupsModelEditStructure extends JModel
     {
         if (strcasecmp($altType, "text") == 0 && strcasecmp($newType, "textfield") == 0)
         {
+
             return true;
         }
-
         return false;
     }
 
@@ -197,8 +197,14 @@ class THMGroupsModelEditStructure extends JModel
         ->set("`field` = '" . $name . "'")
         ->set("`type` = '" . $relation . "'")
         ->where("`id` = '" . $structID . "'");
-
         $db->setQuery((string) $updateQuery);
+
+        // TODO For Pictures types path for pics will be saved 2 times, Ändern!!!
+        $changeQuery = $db->getQuery(true);
+        $changeQuery->update('#__thm_groups_' . strtolower($structure->type) . '_extra')
+        ->set("`value` = '" . $extra . "'")
+        ->where('structid =' . $structID);
+        $db->setQuery((string) $changeQuery);
 
         try
         {
