@@ -38,7 +38,7 @@ class THMGroupsViewAddRole extends JView
         $document   = JFactory::getDocument();
         $document->addStyleSheet("components/com_thm_groups/assets/css/thm_groups.css");
 
-        JToolBarHelper::title(JText::_('COM_THM_GROUPS_ADDROLE_TITLE'), 'mni');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS_ADDROLE_TITLE'), 'rolemanager');
         JToolBarHelper::apply('addrole.apply', 'JTOOLBAR_APPLY');
         JToolBarHelper::save('addrole.save', 'JTOOLBAR_SAVE');
         JToolBarHelper::custom('addrole.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);

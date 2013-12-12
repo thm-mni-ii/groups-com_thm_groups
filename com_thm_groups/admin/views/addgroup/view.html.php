@@ -54,7 +54,7 @@ class THMGroupsViewAddGroup extends JView
         $groups = $this->get('AllGroups');
         $this->assignRef('groups', $groups);
 
-        JToolBarHelper::title(JText::_('COM_THM_GROUPS_ADDGROUP_TITLE'), 'mni');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS_ADDGROUP_TITLE'), 'groupmanager');
         JToolBarHelper::apply('addgroup.apply', 'JTOOLBAR_APPLY');
         JToolBarHelper::save('addgroup.save', 'JTOOLBAR_SAVE');
         JToolBarHelper::custom('addgroup.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);

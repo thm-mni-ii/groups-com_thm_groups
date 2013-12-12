@@ -290,7 +290,7 @@ class THMGroupsViewedit extends JView
         $document = JFactory::getDocument();
         $document->addStyleSheet("components/com_thm_groups/assets/css/thm_groups.css");
 
-        JToolBarHelper::title(JText::_('COM_THM_GROUPS_EDITUSER_TITLE'), 'mni');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS_EDITUSER_TITLE'), 'membermanager');
         JToolBarHelper::apply('membermanager.apply', 'JTOOLBAR_APPLY');
         JToolBarHelper::save('membermanager.save', 'JTOOLBAR_SAVE');
         JToolBarHelper::cancel('membermanager.cancel', 'JTOOLBAR_CLOSE');

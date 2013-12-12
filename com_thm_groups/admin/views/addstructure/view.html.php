@@ -38,7 +38,7 @@ class THMGroupsViewAddStructure extends JView
         $document = JFactory::getDocument();
         $document->addStyleSheet($this->baseurl . "/components/com_thm_groups/assets/css/thm_groups.css");
 
-        JToolBarHelper::title(JText::_('COM_THM_GROUPS_ADDSTRUCTURE_TITLE'), 'mni');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS_ADDSTRUCTURE_TITLE'), 'structuremanager');
 
         JToolBarHelper::apply('addstructure.apply', 'JTOOLBAR_APPLY');
         JToolBarHelper::save('addstructure.save', 'JTOOLBAR_SAVE');

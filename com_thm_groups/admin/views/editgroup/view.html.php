@@ -53,7 +53,7 @@ class THMGroupsVieweditgroup extends JView
             $app->redirect('index.php?option=com_thm_groups&view=groupmanager', $msg);
         }
 
-        JToolBarHelper::title(JText::_('COM_THM_GROUPS_EDITGROUP_TITLE'), 'mni');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS_EDITGROUP_TITLE'), 'groupmanager');
 
         JToolBarHelper::apply('editgroup.apply', 'JTOOLBAR_APPLY');
         JToolBarHelper::save('editgroup.save', 'JTOOLBAR_SAVE');
