@@ -136,7 +136,7 @@ else
 {
 ?>
 <dl class="article-info">
-    <dt class="article-info-term"><?php echo JText::_('COM_CONTENT_ARTICLE_INFO'); ?></dt>
+    <dt class="article-info-term"><?php echo JText::_('COM_THM_GROUPS_ARTICLE_INFO'); ?></dt>
     <?php
 }
     ?>
@@ -149,13 +149,13 @@ else
             <?php if ($params->get('link_parent_category') and $this->item->parent_slug)
             {
                 ?>
-                <?php echo JText::sprintf('COM_CONTENT_PARENT', $url); ?>
+                <?php echo JText::sprintf('COM_THM_GROUPS_PARENT', $url); ?>
             <?php
 }
             else
             {
                 ?>
-                <?php echo JText::sprintf('COM_CONTENT_PARENT', $title); ?>
+                <?php echo JText::sprintf('COM_THM_GROUPS_PARENT', $title); ?>
             <?php
             }
             ?>
@@ -172,12 +172,12 @@ else
             <?php if ($params->get('link_category') and $this->item->catslug)
             {
                 ?>
-                <?php echo JText::sprintf('COM_CONTENT_CATEGORY', $url); ?>
+                <?php echo JText::sprintf('COM_THM_GROUPS_CATEGORY', $url); ?>
             <?php
 }
             else
             { ?>
-                <?php echo JText::sprintf('COM_CONTENT_CATEGORY', $title); ?>
+                <?php echo JText::sprintf('COM_THM_GROUPS_CATEGORY', $title); ?>
             <?php
             }
             ?>
@@ -189,7 +189,7 @@ else
     {
         ?>
         <dd class="create">
-            <?php echo JText::sprintf('COM_CONTENT_CREATED_DATE_ON', JHtml::_('date', $this->item->created, JText::_('DATE_FORMAT_LC2'))); ?>
+            <?php echo JText::sprintf('COM_THM_GROUPS_CREATED_DATE_ON', JHtml::_('date', $this->item->created, JText::_('DATE_FORMAT_LC2'))); ?>
         </dd>
     <?php
 }
@@ -198,7 +198,7 @@ else
     {
         ?>
         <dd class="modified">
-            <?php echo JText::sprintf('COM_CONTENT_LAST_UPDATED', JHtml::_('date', $this->item->modified, JText::_('DATE_FORMAT_LC2'))); ?>
+            <?php echo JText::sprintf('COM_THM_GROUPS_LAST_UPDATED', JHtml::_('date', $this->item->modified, JText::_('DATE_FORMAT_LC2'))); ?>
         </dd>
     <?php
 }
@@ -207,7 +207,7 @@ else
     {
         ?>
         <dd class="published">
-            <?php echo JText::sprintf('COM_CONTENT_PUBLISHED_DATE_ON', JHtml::_('date', $this->item->publish_up, JText::_('DATE_FORMAT_LC2'))); ?>
+            <?php echo JText::sprintf('COM_THM_GROUPS_PUBLISHED_DATE_ON', JHtml::_('date', $this->item->publish_up, JText::_('DATE_FORMAT_LC2'))); ?>
         </dd>
     <?php
 }
@@ -226,12 +226,12 @@ else
                 $item    = $menu->getItems('link', $needle, true);
                 $cntlink = !empty($item) ? $needle . '&Itemid=' . $item->id : $needle;
                 ?>
-                <?php echo JText::sprintf('COM_CONTENT_WRITTEN_BY', JHtml::_('link', JRoute::_($cntlink), $author)); ?>
+                <?php echo JText::sprintf('COM_THM_GROUPS_WRITTEN_BY', JHtml::_('link', JRoute::_($cntlink), $author)); ?>
             <?php
 }
             else
             { ?>
-                <?php echo JText::sprintf('COM_CONTENT_WRITTEN_BY', $author); ?>
+                <?php echo JText::sprintf('COM_THM_GROUPS_WRITTEN_BY', $author); ?>
             <?php
             }
             ?>
@@ -243,7 +243,7 @@ else
     {
         ?>
         <dd class="hits">
-            <?php echo JText::sprintf('COM_CONTENT_ARTICLE_HITS', $this->item->hits); ?>
+            <?php echo JText::sprintf('COM_THM_GROUPS_ARTICLE_HITS', $this->item->hits); ?>
         </dd>
     <?php
 }
@@ -337,7 +337,7 @@ elseif ($params->get('show_noauth') == true and  $user->get('guest'))
             <?php
             if ($attribs->alternative_readmore == null)
             {
-                echo JText::_('COM_CONTENT_REGISTER_TO_READ_MORE');
+                echo JText::_('COM_THM_GROUPS_REGISTER_TO_READ_MORE');
             }
             elseif ($readmore = $this->item->alternative_readmore)
             {
@@ -349,11 +349,11 @@ elseif ($params->get('show_noauth') == true and  $user->get('guest'))
             }
             elseif ($params->get('show_readmore_title', 0) == 0)
             {
-                echo JText::sprintf('COM_CONTENT_READ_MORE_TITLE');
+                echo JText::sprintf('COM_THM_GROUPS_READ_MORE_TITLE');
             }
             else
             {
-                echo JText::_('COM_CONTENT_READ_MORE');
+                echo JText::_('COM_THM_GROUPS_READ_MORE');
                 echo JHtml::_('string.truncate', ($this->item->title), $params->get('readmore_limit'));
             } ?></a>
     </p>
