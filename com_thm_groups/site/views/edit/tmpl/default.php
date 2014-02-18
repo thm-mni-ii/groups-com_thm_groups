@@ -148,10 +148,10 @@ else
                         switch ($structureItem->type)
                         {
                             case "TEXT":
-                                $this->getTextForm($structureItem->field, 50, $value, $structureItem->id);
+                                $this->getTextForm(str_replace(' ', '', $structureItem->field), 50, $value, $structureItem->id);
                                 break;
                             case "NUMBER":
-                                $this->getTextForm($structureItem->field, 30, $value, $structureItem->id);
+                                $this->getTextForm(str_replace(' ', '', $structureItem->field), 30, $value, $structureItem->id);
                                 break;
                             case "TEXTFIELD":
                                 $editor = JFactory::getEditor();

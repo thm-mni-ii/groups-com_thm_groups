@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version     v3.4.4
+ * @version     v3.4.5
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -19,6 +19,9 @@ defined('_JEXEC') or die;
 $helper_path = JPATH_BASE . '/components/com_thm_groups/helper';
 
 include_once $helper_path . '/articles_helper.php';
+
+include_once 'libraries/thm_groups/data/lib_thm_groups.php';
+
 $helperObject = new ArticleHelper;
 
 JHtml::addIncludePath(JPATH_COMPONENT . DS . 'helper' . DS . 'html');
@@ -47,15 +50,33 @@ $currCategoryID = $this->state->get('filter.category_id');
 $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
 
 ?>
-
+<h1>Quickpages </h1>
 <form action="<?php echo JRoute::_('index.php?option=com_thm_groups&view=articles' . $itemParam); ?>" method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
         <div style ="inline:block; float:left; align:text-bottom;">
         <?php echo JText::_('COM_THM_QUICKPAGES_CATEGORY_LABEL') . ":"; ?>
             <b>
                 <?php
-                echo $this->categories[0]->title;
+
+                // Array with first name and name
+                $name = split(",", $this->categories[0]->title);
+
+                // Makes link
+                $attribut = THMLibThmGroups::getUrl(array("name", "gsuid", "gsgid"));
+                $itemid = JRequest::getVar('Itemid', 0);
+                $linkTarget = 'index.php?option=com_thm_groups&view=profile&layout=default&' . $attribut . 'Itemid=' . $itemid;
+
+                // HTML output
+                $lintToProfile = '<a href="' . JRoute::_(
+                                            $linkTarget . '&gsuid=' .
+                                            $this->categories[0]->created_user_id .
+                                             '&name=' . $name[0]
+                                         ) .
+                                '">';
+                $lintToProfile .= $this->categories[0]->title . '</a>&nbsp';
+                echo $lintToProfile;
                 ?>
+
             </b>
          </div>
          <div style ="inline:block; float:left; align:text-bottom; margin-left: 10px;">

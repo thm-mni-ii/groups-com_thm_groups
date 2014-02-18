@@ -142,7 +142,8 @@ class THMGroupsModeledit extends JModelForm
         foreach ($structure as $structureItem)
         {
             $puffer = null;
-            $structureItem->field = str_replace(' ', '_', $structureItem->field);
+
+            $structureItem->field = str_replace(' ', '', $structureItem->field);
             $field = JRequest::getVar($structureItem->field, '', 'post', '', JREQUEST_ALLOWHTML);
             $publish = 0;
             if ($structureItem->type == 'MULTISELECT')

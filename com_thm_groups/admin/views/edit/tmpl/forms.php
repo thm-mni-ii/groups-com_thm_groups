@@ -89,10 +89,10 @@ JHTML::_('behavior.calendar');
                         switch ($structureItem->type)
                         {
                             case "TEXT":
-                                $this->getTextForm($structureItem->field, 60, $value, $structureItem);
+                                $this->getTextForm(str_replace(' ', '', $structureItem->field), 60, $value, $structureItem);
                                 break;
                             case "NUMBER":
-                                $this->getTextForm($structureItem->field, 30, $value, $structureItem);
+                                $this->getTextForm(str_replace(' ', '', $structureItem->field), 30, $value, $structureItem);
                                 break;
                             case "TEXTFIELD":
                                 $editor = JFactory::getEditor();

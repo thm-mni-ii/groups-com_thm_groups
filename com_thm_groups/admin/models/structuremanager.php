@@ -321,7 +321,7 @@ class THMGroupsModelStructuremanager extends JModelList
                 {
                     $err = 1;
                 }
-                $i++;
+                $index++;
             }
         }
         if (!$err)
