@@ -41,13 +41,13 @@ class THMGroupsControllerMembers extends JControllerForm
     public function getUsersOfGroup()
     {
         $temp = '';
-        $id = JRequest::getVar('uid');
+        $id = JRequest::getInt('uid');
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query->select(" a.userid, a.value AS vorname, b.value AS nachname");
         $query->from("#__thm_groups_text AS a");
         $query->innerJoin("#__thm_groups_text AS b ON a.userid = b.userid");
-        $query->innerJoin("#__thm_groups_groups_map AS c ON (c.uid = a.userid and gid = " . $id . ")");
+        $query->innerJoin("#__thm_groups_groups_map AS c ON (c.uid = a.userid and gid = " . $db->quote($id) . ")");
         $query->where("a.publish = 1");
         $query->where("a.structid = 1");
         $query->where("b.structid = 2");
@@ -85,6 +85,8 @@ class THMGroupsControllerMembers extends JControllerForm
         $query->where("a.publish = 1");
         $query->where("a.structid = 1");
         $query->where("b.structid = 2");
+
+        // TODO LIKE query absichern
         $query->where("(a.value LIKE '" . $query_string . "%' OR a.value LIKE '%" . $query_string . "' OR b.value LIKE '%" . $query_string
                 . "' OR b.value LIKE '" . $query_string . "%')");
         $query->group("a.userid");
@@ -248,7 +250,7 @@ class THMGroupsControllerMembers extends JControllerForm
     {
         if (JRequest::getVar('id') != null)
         {
-            $id = JRequest::getVar('id');
+            $id = JRequest::getInt('id');
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
 
@@ -258,7 +260,7 @@ class THMGroupsControllerMembers extends JControllerForm
             $query->where("a.publish = 1");
             $query->where("a.structid = 1");
             $query->where("b.structid = 2");
-            $query->where("a.userid = " . $id);
+            $query->where("a.userid = " . $db->quote($id));
             $query->group("a.userid");
             $query->order("b.value LIMIT 10");
 

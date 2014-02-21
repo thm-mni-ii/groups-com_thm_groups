@@ -47,12 +47,12 @@ class THMGroupsControllerEditGroup extends JController
     {
         $model = $this->getModel('editgroup');
 
-        $itemid     = JRequest::getVar('Itemid');
+        $itemid     = JRequest::getInt('Itemid');
 
         /* $option     = JRequest::getVar('option');
         * $view       = JRequest::getVar('view');
         $layout     = JRequest::getVar('layout'); */
-        $gsgid      = JRequest::getVar('gsgid');
+        $gsgid      = JRequest::getInt('gsgid');
         $layout_back = JRequest::getVar('layout_back', /*0*/'LLLL');
         $view_back   = JRequest::getVar('view_back', /*0*/'VVVV');
 
@@ -85,12 +85,12 @@ class THMGroupsControllerEditGroup extends JController
     {
         $model = $this->getModel('editgroup');
 
-        $itemid     = JRequest::getVar('Itemid');
+        $itemid     = JRequest::getInt('Itemid');
 
         /* $option     = JRequest::getVar('option');
         * $view       = JRequest::getVar('view');
         $layout     = JRequest::getVar('layout'); */
-        $gsgid      = JRequest::getVar('gsgid');
+        $gsgid      = JRequest::getInt('gsgid');
         $layout_back = JRequest::getVar('layout_back', /*0*/'LLLL');
         $view_back   = JRequest::getVar('view_back', /*0*/'VVVV');
 
@@ -121,11 +121,11 @@ class THMGroupsControllerEditGroup extends JController
      */
     public function backToRefUrl()
     {
-        $gsgid      = JRequest::getVar('gsgid', 1);
+        $gsgid      = JRequest::getInt('gsgid', 1);
         $option_back = JRequest::getVar('option_back');
         $layout_back = JRequest::getVar('layout_back', 0);
         $view_back   = JRequest::getVar('view_back', 0);
-        $itemid_back = JRequest::getVar('Itemid', 0);
+        $itemid_back = JRequest::getInt('Itemid', 0);
 
         $msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
         $link = JRoute::_('index.php'

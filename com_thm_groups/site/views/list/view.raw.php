@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.2
+ * @version     v3.0.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -55,7 +55,7 @@ class THMGroupsViewList extends JView
      */
     public function getUserAlphabet()
     {
-        $gid = JRequest::getVar('gid');
+        $gid = JRequest::getInt('gid');
         $letter = JRequest::getVar('letter');
         $column = JRequest::getVar('column');
         $paramLinkTarget = JRequest::getVar('paramLinkTarget');

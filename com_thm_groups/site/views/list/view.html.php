@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.3
+ * @version     v3.2.4
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -43,7 +43,7 @@ class THMGroupsViewList extends JView
         $model = $this->getModel();
         $document = JFactory::getDocument();
         $document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/frontend.php');
-        $userid = JRequest::getVar('gsuid', 0);
+        $userid = JRequest::getInt('gsuid', 0);
 
         // Mainframe Parameter
         $params = $mainframe->getParams();
@@ -63,7 +63,7 @@ class THMGroupsViewList extends JView
             $query = $db->getQuery(true);
             $query->select('value');
             $query->from($db->qn('#__thm_groups_text'));
-            $query->where('userid = ' . $userid);
+            $query->where('userid = ' . $db->quote($userid));
             $query->where('structid = 1');
 
             $db->setQuery($query);

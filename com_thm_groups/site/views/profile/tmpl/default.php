@@ -262,7 +262,7 @@ function getTable($data)
     // Get header of table from DB
     $dbo = JFactory::getDbo();
     $query = $dbo->getQuery(true);
-    $query->select('value')->from('#__thm_groups_table_extra')->where('structid =' . $data->structid);
+    $query->select('value')->from('#__thm_groups_table_extra')->where('structid =' . $dbo->q($data->structid));
     $dbo->setQuery($query);
     $result = $dbo->loadRow();
 

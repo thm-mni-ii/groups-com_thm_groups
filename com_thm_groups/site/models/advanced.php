@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.4
+ * @version     v3.2.5
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -146,7 +146,7 @@ class THMGroupsModelAdvanced extends JModel
         $query = $this->db->getQuery(true);
         $query->select('distinct rid');
         $query->from('#__thm_groups_groups_map');
-        $query->where("gid=$gid");
+        $query->where("gid =" . $this->db->query($gid));
 
         $this->db->setQuery($query);
         $unsortedRoles = $this->db->loadObjectList();
@@ -175,8 +175,8 @@ class THMGroupsModelAdvanced extends JModel
 
         $query->select('rid');
         $query->from('#__thm_groups_groups_map');
-        $query->where('uid = ' . $user->id);
-        $query->where("gid = $groupid", 'AND');
+        $query->where('uid = ' . $this->db->quote($user->id));
+        $query->where("gid =" . $this->db->quote($groupid), 'AND');
 
         $this->db->setQuery($query);
         $userRoles = $this->db->loadObjectList();
@@ -264,11 +264,11 @@ class THMGroupsModelAdvanced extends JModel
             $query->from('#__thm_groups_groups_map' . ' as gm');
             $query->from('#__thm_groups_text' . ' as t');
             $query->from('#__thm_groups_additional_userdata' . ' as au');
-            $query->where("gm.gid = $groupid");
+            $query->where("gm.gid =" . $this->db->quote($groupid));
             $query->where('gm.rid != 2', 'AND');
             $query->where('gm.uid = t.userid', 'AND');
             $query->where('t.structid = 2', 'AND');
-            $query->where("gm.rid = $sortRole", 'AND');
+            $query->where("gm.rid =" . $this->db->quote($sortRole), 'AND');
             $query->where("gm.uid = au.userid", 'AND');
             $query->where("au.published = 1", 'AND');
             $query->order('t.value');
@@ -283,10 +283,10 @@ class THMGroupsModelAdvanced extends JModel
                     $query->select('structid, value, publish');
                     $query->from('#__thm_groups_' . strtolower($type->Type) . '  as a');
                     $query->from('#__thm_groups_groups_map' . ' as gm');
-                    $query->where('a.userid = ' . $member->uid);
+                    $query->where('a.userid = ' . $this->db->quote($member->uid));
                     $query->where('a.userid = gm.uid', 'AND');
-                    $query->where("gm.rid = $sortRole", 'AND');
-                    $query->where("gm.gid = $groupid", 'AND');
+                    $query->where("gm.rid =" . $this->db->quote($sortRole), 'AND');
+                    $query->where("gm.gid =" . $this->db->quote($groupid), 'AND');
 
                     $this->db->setQuery($query);
 
@@ -375,7 +375,7 @@ class THMGroupsModelAdvanced extends JModel
 
         $query->select('*');
         $query->from('#__thm_groups_' . strtolower($type) . '_extra');
-        $query->where("structid = $structid");
+        $query->where("structid =" . $this->db->quote($structid));
 
         $this->db->setQuery($query);
         $res = $this->db->loadObject();
@@ -406,7 +406,7 @@ class THMGroupsModelAdvanced extends JModel
         $query = $db->getQuery(true);
         $query->select('*');
         $query->from($db->qn('#__thm_groups_picture_extra'));
-        $query->where('structid = ' . $structid);
+        $query->where('structid = ' . $this->db->quote($structid));
         $db->setQuery($query);
         $res = $db->loadObject();
         if (isset($res->path))
@@ -600,7 +600,7 @@ class THMGroupsModelAdvanced extends JModel
                 $query = $this->db->getQuery(true);
                 $query->select('*');
                 $query->from('#__' . $dbTable);
-                $query->where('id = ' . $itemId);
+                $query->where('id = ' . $this->db->quote($itemId));
                 $this->db->setQuery($query);
                 $row = $this->db->loadAssoc();
             }
@@ -635,7 +635,7 @@ class THMGroupsModelAdvanced extends JModel
                 {
                     $query->set($key . ' = ' . $this->db->quote($value));
                 }
-                $query->where('id = ' . $itemId);
+                $query->where('id = ' . $this->db->quote($itemId));
                 $this->db->setQuery($query);
                 $this->db->execute();
             }
@@ -657,7 +657,7 @@ class THMGroupsModelAdvanced extends JModel
                     // Delete new item
                     $query = $this->db->getQuery(true);
                     $query->delete($this->db->getPrefix() . $dbTable);
-                    $query->where('id = ' . $itemId);
+                    $query->where('id = ' . $this->db->quote($itemId));
                     $this->db->setQuery($query);
                     $this->db->execute();
 

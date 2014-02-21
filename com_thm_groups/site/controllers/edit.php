@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.6
+ * @version     v3.2.7
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -77,13 +77,13 @@ class THMGroupsControllerEdit extends JController
      */
     public function save()
     {
-        $this->uid   = JRequest::getVar('userid', 0);
+        $this->uid   = JRequest::getVar('userid', 0, 'get', 'INTEGER');
         $this->uname = JRequest::getVar('name', 0);
-        $gsgid 		 = JRequest::getVar('gsgid', 1);
+        $gsgid 		 = JRequest::getVar('gsgid', 1, 'get', 'INTEGER');
         $option_back  = JRequest::getVar('option_back', 0);
         $layout_back  = JRequest::getVar('layout_back', 0);
         $view_back    = JRequest::getVar('view_back', 0);
-        $itemid_back  = JRequest::getVar('item_id', 0);
+        $itemid_back  = JRequest::getVar('item_id', 0, 'get', 'INTEGER');
 
         /*$this->assignRef('userid', $cid);
         $this->assignRef('structure', $structure);
@@ -202,13 +202,13 @@ class THMGroupsControllerEdit extends JController
      */
     public function backToRefUrl()
     {
-        $this->uid   = JRequest::getVar('userid', 0);
+        $this->uid   = JRequest::getVar('userid', 0, 'get', 'INTEGER');
         $this->uname = JRequest::getVar('name', 0);
-        $gsgid 		 = JRequest::getVar('gsgid', 1);
+        $gsgid 		 = JRequest::getVar('gsgid', 1, 'get', 'INTEGER');
         $option_back  = JRequest::getVar('option_back', 0);
         $layout_back  = JRequest::getVar('layout_back', 0);
         $view_back    = JRequest::getVar('view_back', 0);
-        $itemid_back  = JRequest::getVar('item_id', 0);
+        $itemid_back  = JRequest::getVar('item_id', 0, 'get', 'INTEGER');
 
         $msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
         $link =& JURI::getInstance('index.php'
@@ -234,9 +234,9 @@ class THMGroupsControllerEdit extends JController
      */
     public function apply()
     {
-        $this->uid 	 = JRequest::getVar('userid', 0);
+        $this->uid 	 = JRequest::getVar('userid', 0, 'get', 'INTEGER');
         $this->uname = JRequest::getVar('name', 0);
-        $gsgid 		 = JRequest::getVar('gsgid', 1);
+        $gsgid 		 = JRequest::getVar('gsgid', 1, 'get', 'INTEGER');
         $layout_back  = JRequest::getVar('layout_back', /*0*/'LLLL');
         $view_back 	 = JRequest::getVar('view_back', /*0*/'VVVV');
         $option_back  = JRequest::getVar('option_back', /*0*/'VVVV');

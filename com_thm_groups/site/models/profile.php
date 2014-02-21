@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.0.2
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -80,8 +80,8 @@ class THMGroupsModelProfile extends JModelForm
         $query = $this->db->getQuery(true);
         $query->select('rid');
         $query->from($this->db->qn('#__thm_groups_groups_map'));
-        $query->where('uid = ' . $user->id);
-        $query->where('gid = ' . $groupid);
+        $query->where('uid = ' . $this->db->quote($user->id));
+        $query->where('gid = ' . $this->db->quote($groupid));
 
         $this->db->setQuery($query);
         $userRoles = $this->db->loadObjectList();
@@ -116,7 +116,7 @@ class THMGroupsModelProfile extends JModelForm
             $query = $db->getQuery(true);
             $query->select('*');
             $query->from($db->qn('#__thm_groups_' . strtolower($type->Type)) . ' AS a');
-            $query->where('a.userid = ' . $cid);
+            $query->where('a.userid = ' . $this->db->quote($cid));
 
             $db->setQuery($query);
             if (!is_null($db->loadObjectList()))
@@ -196,7 +196,7 @@ class THMGroupsModelProfile extends JModelForm
         $query = $db->getQuery(true);
         $query->select('*');
         $query->from($db->qn('#__thm_groups_' . strtolower($type) . '_extra'));
-        $query->where('structid = ' . $structid);
+        $query->where('structid = ' . $this->db->quote($structid));
         $db->setQuery($query);
         $res = $db->loadObject();
         if (isset($res))
@@ -226,7 +226,7 @@ class THMGroupsModelProfile extends JModelForm
         $query = $db->getQuery(true);
         $query->select('*');
         $query->from($db->qn('#__thm_groups_picture_extra'));
-        $query->where('structid = ' . $structid);
+        $query->where('structid = ' . $this->db->quote($structid));
         $db->setQuery($query);
         $res = $db->loadObject();
         if (isset($res->path))
@@ -269,8 +269,8 @@ class THMGroupsModelProfile extends JModelForm
         $query = $db->getQuery(true);
         $query->select('rid');
         $query->from($db->qn('#__thm_groups_groups_map'));
-        $query->where('uid = ' . $id);
-        $query->where('gid = ' . $gid);
+        $query->where('uid = ' . $this->db->quote($id));
+        $query->where('gid = ' . $this->db->quote($gid));
         $db->setQuery($query);
         $roles			  = $db->loadObjectList();
         $this->_isModerator = false;
@@ -304,7 +304,7 @@ class THMGroupsModelProfile extends JModelForm
         $query = $db->getQuery(true);
         $query->select('link');
         $query->from($db->qn('#__menu'));
-        $query->where('id = ' . $itemid);
+        $query->where('id = ' . $this->db->quote($itemid));
         $db->setQuery($query);
         $item = $db->loadObject();
         $link = substr($item->link . "&Itemid=" . $itemid, 0, strlen($item->link . "&Itemid=" . $itemid));
@@ -328,7 +328,7 @@ class THMGroupsModelProfile extends JModelForm
         $query = $db->getQuery(true);
         $query->select('value');
         $query->from("#__thm_groups_picture_extra");
-        $query->where("`structid` = '" . $structid . "'");
+        $query->where("`structid` = '" . $this->db->quote($structid) . "'");
         $db->setQuery($query);
         $res = $db->loadObject();
         if (isset($res->value))

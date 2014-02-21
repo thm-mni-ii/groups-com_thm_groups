@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.2
+ * @version     v3.0.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -51,7 +51,7 @@ class THMGroupsViewGroups extends JView
         {
             $groups = $model->getGroups(0);
         }
-        $itemid = JRequest::getVar('Itemid', 0);
+        $itemid = JRequest::getInt('Itemid', 0);
         $this->assignRef('groups', $groups);
         $this->assignRef('itemid',  $itemid);
         $this->assignRef('canEdit',  $model->canEdit());

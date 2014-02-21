@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version     v3.4.3
+ * @version     v3.4.4
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -234,7 +234,7 @@ class THMGroupsModelArticle extends JModelAdmin
 
         $isFeaturedQuery->select('*')
         ->from('#__thm_quickpages_featured')
-        ->where("conid = $a_id");
+        ->where("conid =" . $db->quote($a_id));
         $db->setQuery((string) $isFeaturedQuery);
 
         try
@@ -290,7 +290,7 @@ class THMGroupsModelArticle extends JModelAdmin
         $deleteQuery = $db->getQuery(true);
 
         $deleteQuery->delete('#__thm_quickpages_featured')
-        ->where("conid = $a_id");
+        ->where("conid =" . $db->quote($a_id));
         $db->setQuery((string) $deleteQuery);
 
         try

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.6
+ * @version     v3.2.7
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -86,7 +86,7 @@ class THMGroupsModeledit extends JModelForm
             $query = $db->getQuery(true);
             $query->select('structid, value, publish');
             $query->from($db->qn('#__thm_groups_' . strtolower($type->Type)) . ' AS a');
-            $query->where('a.userid = ' . $cid);
+            $query->where('a.userid = ' . $db->quote($cid));
 
             $db->setQuery($query);
             if (!is_null($db->loadObjectList()))
@@ -200,8 +200,8 @@ class THMGroupsModeledit extends JModelForm
             $query = $db->getQuery(true);
             $query->select('structid');
             $query->from($db->qn('#__thm_groups_' . strtolower($structureItem->type)));
-            $query->where('userid = ' . $userid);
-            $query->where('structid = ' . $structureItem->id);
+            $query->where('userid = ' . $db->quote($userid));
+            $query->where('structid = ' . $db->quote($structureItem->id));
 
             $db->setQuery($query);
             $puffer = $db->loadObject();
@@ -226,8 +226,8 @@ class THMGroupsModeledit extends JModelForm
                      $query .= " publish='" . $publish . "'" . " WHERE userid=" . $userid . " AND structid=" . $structureItem->id;
                      */
                     $query->set("`publish` = '" . $publish . "'");
-                    $query->where('userid = ' . $userid);
-                    $query->where('structid = ' . $structureItem->id);
+                    $query->where('userid = ' . $db->quote($userid));
+                    $query->where('structid = ' . $db->quote($structureItem->id));
                 }
                 else
                 {
@@ -235,7 +235,7 @@ class THMGroupsModeledit extends JModelForm
                     $query = $db->getQuery(true);
                     $query->insert($db->qn('#__thm_groups_' . strtolower($structureItem->type)));
                     $query->set("`userid` = '" . $userid . "'");
-                    $query->set("`structid` = '" . $structureItem->id . "'");
+                    $query->set("`structid` = '" . $db->quote($structureItem->id) . "'");
                     $query->set("`value` = \"" . htmlspecialchars($field) . "\"");
                     $query->set("`publish` = '" . $publish . "'");
                 }
@@ -263,7 +263,7 @@ class THMGroupsModeledit extends JModelForm
             $qp_alias = strtolower($lastName) . "-" . strtolower(str_replace(" ", "-", $firstName)) . "-" . $userid;
             $query = $db->getQuery(true);
             $query->update("#__categories SET path='quickpages/" . $qp_alias . "', alias='" . $qp_alias . "'");
-            $query->where('id = ' . $cat_id->catid);
+            $query->where('id = ' . $db->quote($cat_id->catid));
 
 
 
@@ -273,11 +273,7 @@ class THMGroupsModeledit extends JModelForm
             // Category Name
             $query = $db->getQuery(true);
             $query->update("#__categories SET title='" . $lastName . ", " . $firstName . "'");
-            $query->where('id = ' . $cat_id->catid);
-
-
-
-
+            $query->where('id = ' . $db->quote($cat_id->catid));
             $db->setQuery($query);
             $db->query();
         }
@@ -306,8 +302,8 @@ class THMGroupsModeledit extends JModelForm
         $query = $db->getQuery(true);
         $query->update($db->qn('#__thm_groups_picture'));
         $query->set("`value` = '$extra'");
-        $query->where('userid = ' . $uid);
-        $query->where('structid = ' . $structid);
+        $query->where('userid = ' . $db->quote($uid));
+        $query->where('structid = ' . $db->quote($structid));
 
         $db->setQuery($query);
 
@@ -361,8 +357,8 @@ class THMGroupsModeledit extends JModelForm
         $query = $db->getQuery(true);
         $query->update($db->qn('#__thm_groups_picture'));
         $query->set("`value` = '" . $uid . "_" . $structid . ".jpg'");
-        $query->where('userid = ' . $uid);
-        $query->where('structid = ' . $structid);
+        $query->where('userid = ' . $db->quote($uid));
+        $query->where('structid = ' . $db->quote($structid));
         $db->setQuery($query);
 
         if ($db->query())
@@ -393,7 +389,7 @@ class THMGroupsModeledit extends JModelForm
         $query = $db->getQuery(true);
         $query->select('*');
         $query->from($db->qn('#__thm_groups_' . strtolower($type) . '_extra'));
-        $query->where('structid = ' . $structid);
+        $query->where('structid = ' . $db->quote($structid));
         $db->setQuery($query);
         $res = $db->loadObject();
         if (isset($res))
@@ -423,7 +419,7 @@ class THMGroupsModeledit extends JModelForm
         $query = $db->getQuery(true);
         $query->select('*');
         $query->from($db->qn('#__thm_groups_picture_extra'));
-        $query->where('structid = ' . $structid);
+        $query->where('structid = ' . $db->quote($structid));
         $db->setQuery($query);
         $res = $db->loadObject();
         if (isset($res->path))
@@ -457,8 +453,8 @@ class THMGroupsModeledit extends JModelForm
         $query = $db->getQuery(true);
         $query->select('value');
         $query->from($db->qn('#__thm_groups_table'));
-        $query->where('structid = ' . $structid);
-        $query->where('userid = ' . $uid);
+        $query->where('structid = ' . $db->quote($structid));
+        $query->where('userid = ' . $db->quote($uid));
 
         $db->setQuery($query);
         $res	= $db->loadObject();
@@ -474,7 +470,7 @@ class THMGroupsModeledit extends JModelForm
         $query = $db->getQuery(true);
         $query->select('value');
         $query->from($db->qn('#__thm_groups_table_extra'));
-        $query->where('structid = ' . $structid);
+        $query->where('structid = ' . $db->quote($structid));
         $db->setQuery($query);
 
         $resHead = $db->loadObject();
@@ -507,8 +503,8 @@ class THMGroupsModeledit extends JModelForm
             $query = $db->getQuery(true);
             $query->update($db->qn('#__thm_groups_table'));
             $query->set("`value` = '" . $jsonValue . "'");
-            $query->where('userid = ' . $uid);
-            $query->where('structid = ' . $structid);
+            $query->where('userid = ' . $db->quote($uid));
+            $query->where('structid = ' . $db->quote($structid));
         }
         else
         {
@@ -560,8 +556,8 @@ class THMGroupsModeledit extends JModelForm
         $query = $db->getQuery(true);
         $query->select('value');
         $query->from($db->qn('#__thm_groups_table'));
-        $query->where('structid = ' . $structid);
-        $query->where('userid = ' . $uid);
+        $query->where('structid = ' . $db->quote($structid));
+        $query->where('userid = ' . $db->quote($uid));
 
         $db->setQuery($query);
         $res	= $db->loadObject();
@@ -579,8 +575,8 @@ class THMGroupsModeledit extends JModelForm
         $query = $db->getQuery(true);
         $query->update($db->qn('#__thm_groups_table'));
         $query->set("`value` = '" . $jsonValue . "'");
-        $query->where('userid = ' . $uid);
-        $query->where('structid = ' . $structid);
+        $query->where('userid = ' . $db->quote($uid));
+        $query->where('structid = ' . $db->quote($structid));
         $db->setQuery($query);
 
         if (!$db->query())
@@ -620,8 +616,8 @@ class THMGroupsModeledit extends JModelForm
         $query = $db->getQuery(true);
         $query->select('value');
         $query->from($db->qn('#__thm_groups_table'));
-        $query->where('structid = ' . $structid);
-        $query->where('userid = ' . $uid);
+        $query->where('structid = ' . $db->quote($structid));
+        $query->where('userid = ' . $db->quote($uid));
 
         $db->setQuery($query);
         $res	= $db->loadObject();
@@ -637,7 +633,7 @@ class THMGroupsModeledit extends JModelForm
         $query = $db->getQuery(true);
         $query->select('value');
         $query->from($db->qn('#__thm_groups_table_extra'));
-        $query->where('structid = ' . $structid);
+        $query->where('structid = ' . $db->quote($structid));
 
         $db->setQuery($query);
         $resHead = $db->loadObject();
@@ -670,8 +666,8 @@ class THMGroupsModeledit extends JModelForm
         $query = $db->getQuery(true);
         $query->update($db->qn('#__thm_groups_table'));
         $query->set("`value` = '" . $jsonValue . "'");
-        $query->where('userid = ' . $uid);
-        $query->where('structid = ' . $structid);
+        $query->where('userid = ' . $db->quote($uid));
+        $query->where('structid = ' . $db->quote($structid));
 
         $db->setQuery($query);
         if (!$db->query())
@@ -722,8 +718,8 @@ class THMGroupsModeledit extends JModelForm
             $query = $db->getQuery(true);
             $query->select('rid');
             $query->from($db->qn('#__thm_groups_groups_map'));
-            $query->where('uid = ' . $id);
-            $query->where('gid = ' . $gid);
+            $query->where('uid = ' . $db->quote($id));
+            $query->where('gid = ' . $db->quote($gid));
 
             $db->setQuery($query);
             $roles = $db->loadObjectList();
@@ -767,7 +763,7 @@ class THMGroupsModeledit extends JModelForm
         $query = $db->getQuery(true);
         $query->select('link');
         $query->from($db->qn('#__menu'));
-        $query->where('id = ' . $itemid);
+        $query->where('id = ' . $db->quote($itemid));
 
         $db->setQuery($query);
         $item = $db->loadObject();

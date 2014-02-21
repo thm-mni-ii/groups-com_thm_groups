@@ -287,7 +287,7 @@ class THMGroupsViewEdit extends JView
         $document = JFactory::getDocument();
         $document->addStyleSheet("administrator/components/com_thm_groups/css/membermanager/icon.css");
 
-        $cid = JRequest::getVar('gsuid', 0);
+        $cid = JRequest::getVar('gsuid', 0, 'get', 'INTEGER');
 
         $name = JRequest::getVar('name', 0) . ', ';
         $firstname = "";

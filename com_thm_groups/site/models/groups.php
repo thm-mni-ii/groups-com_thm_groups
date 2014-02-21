@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.2
+ * @version     v3.0.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -54,7 +54,7 @@ class THMGroupsModelGroups extends JModel
         $innerQuery->select('COUNT(DISTINCT c2.id) AS level');
         $innerQuery->from($db->quoteName('#__usergroups') . ' AS a');
         $innerQuery->join('LEFT OUTER', $db->quoteName('#__usergroups') . ' AS c2 ON a.lft > c2.lft AND a.rgt < c2.rgt');
-        $innerQuery->where('a.id = ' . $rootgroup);
+        $innerQuery->where('a.id = ' . $db->quote($rootgroup));
         $innerQuery->group('a.id, a.lft, a.rgt, a.parent_id, a.title');
         $innerQuery->order('a.lft ASC');
 
@@ -130,7 +130,7 @@ class THMGroupsModelGroups extends JModel
         $query = $db->getQuery(true);
         $query->select('gid');
         $query->from($db->qn('#__thm_groups_groups_map'));
-        $query->where('uid = ' . $user->id);
+        $query->where('uid = ' . $db->quote($user->id));
         $query->where('rid = 2');
 
         $db->setQuery($query);

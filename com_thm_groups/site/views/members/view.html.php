@@ -33,9 +33,6 @@ class ThmGroupsViewMembers extends JViewLegacy
      */
     public function display($tpl = null)
     {
-
-
-            parent::display($tpl);
-
+        parent::display($tpl);
     }
 }
