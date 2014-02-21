@@ -11,9 +11,9 @@ class AllComThmGroupsSiteTests
     {
         $suite = new PHPUnit_Framework_TestSuite('Component THM Groups site Test');
 
-        $suite->addTestFile(__DIR__.'/THMGroupsModelAdvancedTest.php');
+        //$suite->addTestFile(__DIR__.'/THMGroupsModelAdvancedTest.php');
         $suite->addTestFile(__DIR__.'/THMGroupsModeleditTest.php');
-//         $suite->addTestFile(__DIR__.'/THMGroupsModelEditGroupTest.php');
+        //$suite->addTestFile(__DIR__.'/THMGroupsModelEditGroupTest.php');
         //$suite->addTestFile(__DIR__.'/THMGroupsModelGroupsTest.php');
         $suite->addTestFile(__DIR__.'/THMGroupsModelListTest.php');
         $suite->addTestFile(__DIR__.'/THMGroupsModelProfileTest.php');
