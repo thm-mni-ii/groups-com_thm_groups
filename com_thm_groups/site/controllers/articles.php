@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version     v3.4.4
+ * @version     v3.4.5
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -286,7 +286,7 @@ class THMGroupsControllerArticles extends JControllerAdmin
         return $model;
     }
 
-    /**
+     /**
      * (Un)Features articles
      *
      * @return void
@@ -302,11 +302,11 @@ class THMGroupsControllerArticles extends JControllerAdmin
 
         if ($model->featureArticle($a_id))
         {
-            JFactory::getApplication()->enqueueMessage('JLIB_APPLICATION_SUCCESS_ORDERING_SAVED', 'Message');
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_FEATURE_ARTIKEL'), 'Message');
         }
         else
         {
-            JFactory::getApplication()->enqueueMessage('JLIB_APPLICATION_SUCCESS_ORDERING_SAVED', 'Message');
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_UNFEATURE_ARTIKEL'), 'Message');
         }
 
         $extension = JRequest::getCmd('extension');
