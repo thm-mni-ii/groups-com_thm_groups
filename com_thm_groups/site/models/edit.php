@@ -159,7 +159,7 @@ class THMGroupsModeledit extends JModelForm
     {
         $db = JFactory::getDBO();
         $structure = $this->getStructure();
-        $userid	= JRequest::getVar('userid', 0, 'post', 'INTEGER');
+        $userid	= JRequest::getVar('userid', 0);
         $userid = intval($userid);
 
         $err	   = 0;
