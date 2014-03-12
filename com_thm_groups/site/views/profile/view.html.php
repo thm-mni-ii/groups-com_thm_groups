@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.0.1
+ * @version     v3.0.2
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
