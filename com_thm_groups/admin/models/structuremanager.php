@@ -389,7 +389,9 @@ class THMGroupsModelStructuremanager extends JModelList
                 'a.id, a.field, a.type, a.order'
             )
         );
-        $query->from('#__thm_groups_structure AS a');
+
+        // Where id != 3, username will not be shown
+        $query->from('#__thm_groups_structure AS a')->where('a.id != 3');
 
         // Add the list ordering clause.
         $orderCol	= $this->state->get('list.ordering');
