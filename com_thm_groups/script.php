@@ -47,41 +47,63 @@ $mainframe->initialise();
 class Com_THM_GroupsInstallerScript
 {
 
-    /**
-     * Deletes all files of component before install
+    /*
+     * Preflight runs before anything else and while the extracted files are in the uploaded temp folder.
      *
-     * @param   Object  $type    something
-     * @param   Object  $parent  something
+     * @param   $parent  is the class calling this method.
+     * @param   $type    is the type of change (install, update or discover_install, not uninstall).
      *
-     * @return void
+     * @return  if preflight returns false, Joomla will abort the update and undo everything already done.
      */
     public function preflight($type, $parent)
     {
-        $admin = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_thm_groups';
-        $site = JPATH_ROOT . DS . 'components' . DS . 'com_thm_groups';
+        // Installing component manifest file version
+        $this->release = $parent->get( "manifest" )->version;
 
-        if (is_dir($admin) && is_dir($site))
+        if ($type == 'update')
         {
-            self::deleteDir($admin);
-            self::deleteDir($site);
+            $oldRelease = $this->getParam('version');
+            $rel = $oldRelease . ' &rArr; ' . $this->release;
+
+            // For old versions before 3.4.3, deletes some unused files
+            if(version_compare($oldRelease, '3.4.3', 'le'))
+            {
+                $admin = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_thm_groups';
+                $site = JPATH_ROOT . DS . 'components' . DS . 'com_thm_groups';
+
+                if (is_dir($admin) && is_dir($site))
+                {
+                    self::deleteDir($admin);
+                    self::deleteDir($site);
+                }
+            }
+
+            // Abort if the component being installed is not newer than the currently installed version
+            if (version_compare($this->release, $oldRelease, 'le'))
+            {
+                Jerror::raiseWarning(null, JText::_('COM_THM_GROUPS_UPDATE_ERROR_VERSION') . $rel);
+                return false;
+            }
         }
+        else
+        {
+            $rel = $this->release;
+        }
+
+        echo '<h1 align="center"><strong>' . JText::_('COM_THM_GROUPS_PREFLIGHT_' . strtoupper($type)) . '<br/>' . $rel . '</strong></h1>';
+        echo '<br/><h3 align="center"><a href="http://www.google.de">Release notes</a></h3>';
     }
 
-    /**
-      * com_thm_groups install function
-      *
-      * @param   Object  $parent  JInstallerComponent
-      *
-      * @return void
-      */
+    /*
+     * Install runs after the database scripts are executed.
+     * If the extension is new, the install method is run.
+     *
+     * @param   $parent  is the class calling this method.
+     *
+     * @return  if install returns false, Joomla will abort the install and undo everything already done.
+     */
     public function install($parent)
     {
-        ?>
-        <h1 align="center">
-            <strong>&nbsp;THM Groups Installer</strong>
-        </h1>
-        <?php
-
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
         $query->select('*');
@@ -106,36 +128,32 @@ class Com_THM_GroupsInstallerScript
                 </p>";
             }
         }
-        $this->release = $parent->get("manifest")->version;
-
-        ?>
-        <p align="center">
-            <strong>&nbsp;Installation of version <?php echo $this->release; ?> successful!</strong>
-        </p>
-        <?php
     }
 
-    /**
-     * com_thm_groups update function
+    /*
+     * Update runs after the database scripts are executed.
+     * If the extension exists, then the update method is run.
      *
-     * @param   Object  $parent  JInstallerComponent
+     * @param   $parent  is the class calling this method.
      *
-     * @return void
+     * @return  if this returns false, Joomla will abort the update and undo everything already done.
      */
     public function update($parent)
     {
-        ?>
-        <h1 align="center">
-            <strong>&nbsp;THM Groups Updater</strong>
-        </h1>
-        <?php
 
-        $this->release = $parent->get("manifest")->version;
-        ?>
-        <p align="center">
-            <strong>&nbsp;Installation of version <?php echo $this->release; ?> successful!</strong>
-        </p>
-        <?php
+    }
+
+    /*
+     * Get a variable from the manifest file (actually, from the manifest cache).
+     *
+     * @param   String  $name  param what you need, for example version
+    */
+    function getParam($name)
+    {
+        $db = JFactory::getDbo();
+        $db->setQuery('SELECT manifest_cache FROM #__extensions WHERE name = "com_thm_groups"');
+        $manifest = json_decode($db->loadResult(), true);
+        return $manifest[$name];
     }
 
     /**
