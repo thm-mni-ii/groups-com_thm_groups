@@ -57,10 +57,12 @@ class Com_THM_GroupsInstallerScript
      */
     public function preflight($type, $parent)
     {
+        echo '<hr>';
         // Installing component manifest file version
-        $this->release = $parent->get( "manifest" )->version;
+        $this->release = $parent->get("manifest")->version;
+        $this->component = $parent->get("manifest")->name;
 
-        if ($type == 'update')
+        if ($type == 'update' && $this->component == "COM_THM_GROUPS")
         {
             $oldRelease = $this->getParam('version');
             $rel = $oldRelease . ' &rArr; ' . $this->release;
@@ -92,6 +94,7 @@ class Com_THM_GroupsInstallerScript
 
         echo '<h1 align="center"><strong>' . JText::_('COM_THM_GROUPS_PREFLIGHT_' . strtoupper($type)) . '<br/>' . $rel . '</strong></h1>';
         echo '<br/><h3 align="center"><a href="http://www.google.de">Release notes</a></h3>';
+        echo '<hr>';
     }
 
     /*
