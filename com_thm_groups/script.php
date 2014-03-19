@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.4.3
+ * @version     v3.4.4
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.general
@@ -18,23 +18,12 @@ if (!defined('_JEXEC'))
 {
     define('_JEXEC', 1);
 }
-if (!defined('JPATH_BASE'))
-{
-    define('JPATH_BASE', '../../../');
-}
 if (!defined('DS'))
 {
     define('DS', DIRECTORY_SEPARATOR);
 }
 
-require_once JPATH_BASE . DS . 'includes' . DS . 'defines.php';
-require_once JPATH_BASE . DS . 'includes' . DS . 'framework.php';
-
-require JPATH_ROOT . DS . "administrator" . DS . "components" . DS . "com_installer" . DS . "models" . DS . "manage.php";
-
-
-$mainframe = JFactory::getApplication('site');
-$mainframe->initialise();
+jimport("thm_core.log.THMChangelogColoriser");
 
 /**
  * ThmGroupsInstaller
@@ -83,8 +72,8 @@ class Com_THM_GroupsInstallerScript
             // Abort if the component being installed is not newer than the currently installed version
             if (version_compare($this->release, $oldRelease, 'le'))
             {
-                Jerror::raiseWarning(null, JText::_('COM_THM_GROUPS_UPDATE_ERROR_VERSION') . $rel);
-                return false;
+                JError::raiseNotice(null, 'You want to install an old version of THM Groups: ' . $rel . ' -
+                this will not effect your installed version of THM Groups');
             }
         }
         else
@@ -93,8 +82,6 @@ class Com_THM_GroupsInstallerScript
         }
 
         echo '<h1 align="center"><strong>' . JText::_('COM_THM_GROUPS_PREFLIGHT_' . strtoupper($type)) . '<br/>' . $rel . '</strong></h1>';
-        echo '<br/><h3 align="center"><a href="http://www.google.de">Release notes</a></h3>';
-        echo '<hr>';
     }
 
     /*
@@ -143,6 +130,75 @@ class Com_THM_GroupsInstallerScript
      */
     public function update($parent)
     {
+
+    }
+
+    /*
+     * Uninstall runs before any other action is taken (file removal or database processing).
+     *
+     * @param   $parent  is the class calling this method
+     *
+     * @return  nothing
+     */
+    function uninstall($parent)
+    {
+        //echo '<p>' . JText::sprintf('COM_THM_GROUPS_DEINSTALL', $this->release) . '</p>';
+    }
+
+    /*
+     * Postflight is run after the extension is registered in the database.
+     *
+     * @param   $parent  is the class calling this method.
+     * @param   $type    is the type of change (install, update or discover_install, not uninstall).
+     *
+     */
+    function postflight($type,$parent)
+    {
+
+        if($type == 'update' || $type == 'install')
+        {
+            $isLibraryEnabled = $this->checkExtension('lib_thm_core');
+            if($isLibraryEnabled != null && $isLibraryEnabled == 1)
+            {
+                $uri = JURI::root(true) . '/libraries/thm_core/log/THMChangelogColoriser.css';
+                echo "<link rel='stylesheet' type='text/css' href='{$uri}' />";
+                echo THMChangelogColoriser::colorise(dirname(__FILE__) . '/admin/CHANGELOG.php');
+            }
+            else
+            {
+                echo 'Changelog will not be shown, because the library lib_thm_core is not installed.';
+            }
+            echo '<hr>';
+        }
+    }
+
+    /**
+     * Checks if extension is installed
+     *
+     * @param   $name  is element in database of extension
+     *
+     * @return  mixed
+     */
+    function checkExtension($name)
+    {
+        $db = JFactory::getDbo();
+        $db->setQuery('SELECT enabled FROM #__extensions WHERE element ="' . $name . '"');
+        $result = $db->loadObject();
+        if($result != null)
+        {
+            if(property_exists($result, 'enabled'))
+            {
+                return $result->enabled;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        else
+        {
+            return null;
+        }
 
     }
 
