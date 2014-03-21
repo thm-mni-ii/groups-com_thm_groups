@@ -69,13 +69,6 @@ $groupOptions = $helper->getGroupSelectOptions();
     ?>
    </select>
    <?php
-   /*
-    echo '<div id="button_single_user" class="button">';
-   echo '<h3>';
-   echo JText::_("COM_THM_GROUPS_EDITORS_XTD_MEMBERS_SINGLE_PERSON");
-   echo '</h3>';
-   echo '</div>';
-   */
   }
   else
   {
@@ -94,6 +87,27 @@ $groupOptions = $helper->getGroupSelectOptions();
      </h3>
     </td>
    </tr>
+   <tr>
+   </tr>
+      <?php
+    if ($personOrGroup == "group")
+    {
+        echo '<tr>';
+        echo '<td>';
+        echo '<span class="hasTip"
+            title=' . JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_PLAIN_LIST_DESCRIPTION') . '>';
+        echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PLAIN_LIST');
+        echo '</span>';
+        echo '</td>';
+        echo '<td>';
+        echo '<input type="radio" name="plainList" id="plainListYes" value="1" />';
+        echo JText::_("JYES");
+        echo '<input type="radio" name="plainList" id="plainListNo" value="0" checked />';
+        echo JText::_("JNO");
+        echo '</td>';
+        echo '</tr>';
+    }
+      ?>
    <tr>
    </tr>
    <tr>
@@ -178,9 +192,9 @@ $groupOptions = $helper->getGroupSelectOptions();
      <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_WIDTH'); ?>
     </span>
     </td>
-    <td><a class="minus" href="#">&nbsp-&nbsp</a><input type="text"
+    <td><a class="minus" id="<?php echo $personOrGroup?>Minus" href="#">&nbsp-&nbsp</a><input type="text"
      value="200" id="<?php echo $personOrGroup?>DivWidth"
-     class="styled_number" /><a class="plus" href="#">&nbsp+&nbsp</a></td>
+     class="styled_number" /><a class="plus" id="<?php echo $personOrGroup?>Plus" href="#">&nbsp+&nbsp</a></td>
    </tr>
    <?php
    if ($personOrGroup == "group")
@@ -195,8 +209,8 @@ $groupOptions = $helper->getGroupSelectOptions();
 
     //     echo '<td><input type="number" id="group_column" min="1" max="5" class="styled_number"></td>';
 
-    echo '<td><a class="minus" href="#">&nbsp-&nbsp</a><input type="text" value="1" id="group_column" class="styled_number" />'
-          . '<a class="plus" href="#">&nbsp+&nbsp</a></td>';
+    echo '<td><a class="minus" id="' . $personOrGroup . 'MinusColumn" href="#">&nbsp-&nbsp</a><input type="text" value="1" id="group_column" class="styled_number" />'
+          . '<a class="plus" id="' . $personOrGroup . 'PlusColumn" href="#">&nbsp+&nbsp</a></td>';
     echo '</tr>';
    }
    else
@@ -211,7 +225,7 @@ $groupOptions = $helper->getGroupSelectOptions();
     </span>
     </td>
     <td><input type="checkbox" name="<?php echo $personOrGroup?>Link"
-     id="<?php echo $personOrGroup?>LinkName" value="0"> <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_LINK_NAME'); ?>
+     id="<?php echo $personOrGroup?>LinkName" value="2"> <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_LINK_NAME'); ?>
      &nbsp; <input type="checkbox"
      name="<?php echo $personOrGroup?>Link"
      id="<?php echo $personOrGroup?>LinkFirstName" value="1">

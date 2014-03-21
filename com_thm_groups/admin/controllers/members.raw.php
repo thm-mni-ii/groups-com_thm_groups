@@ -125,7 +125,7 @@ class THMGroupsControllerMembers extends JControllerForm
         if (strcmp($modus, 'list') != 0)
         {
 
-            list($keys, $mode, $id, $link, $param, $struct, $userlist) = explode(':', $attribut);
+            list($keys, $mode, $id, $link, $param, $struct, $userlist, $plainList) = explode(':', $attribut);
             $result = array();
 
             // Keys Bearbeitung
@@ -164,6 +164,15 @@ class THMGroupsControllerMembers extends JControllerForm
             $temp = explode(')', $temp[1]);
             $tempX = explode(',', $temp[0]);
             $result['userlist'] = $tempX;
+
+            // Plain List bearbeitung
+            $temp = explode('}', $plainList);
+            $temp1 = explode('(', $temp[0]);
+            $tempX = explode(')', $temp1[1]);
+
+            $temp = explode(',', $tempX[0]);
+
+            $result['plainList'] = $temp;
 
         }
         if ( strcmp($modus, 'list') == 0)
