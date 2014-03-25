@@ -1,7 +1,13 @@
 <?php die();?>
+THM Groups 3.4.10
+================================================================================
+# [MEDIUM] Bug fixes
+# [MEDIUM] Members plugin was changed, new functions were added
+
 THM Groups 3.4.9
 ================================================================================
-# [MEDIUM] Update script
+# [MEDIUM] Update script was changed
++ Changelog was added
 
 THM Groups 3.4.8
 ================================================================================
