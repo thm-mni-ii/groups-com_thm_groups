@@ -146,7 +146,7 @@ class THMGroupsModelAdvanced extends JModel
         $query = $this->db->getQuery(true);
         $query->select('distinct rid');
         $query->from('#__thm_groups_groups_map');
-        $query->where("gid =" . $this->db->query($gid));
+        $query->where("gid =" . $gid);
 
         $this->db->setQuery($query);
         $unsortedRoles = $this->db->loadObjectList();

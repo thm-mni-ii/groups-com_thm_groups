@@ -47,6 +47,7 @@ class Com_THM_GroupsInstallerScript
     public function preflight($type, $parent)
     {
         echo '<hr>';
+
         // Installing component manifest file version
         $this->release = $parent->get("manifest")->version;
         $this->component = $parent->get("manifest")->name;
@@ -57,7 +58,7 @@ class Com_THM_GroupsInstallerScript
             $rel = $oldRelease . ' &rArr; ' . $this->release;
 
             // For old versions before 3.4.3, deletes some unused files
-            if(version_compare($oldRelease, '3.4.3', 'le'))
+            if (version_compare($oldRelease, '3.4.3', 'le'))
             {
                 $admin = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_thm_groups';
                 $site = JPATH_ROOT . DS . 'components' . DS . 'com_thm_groups';
@@ -155,10 +156,10 @@ class Com_THM_GroupsInstallerScript
     function postflight($type,$parent)
     {
 
-        if($type == 'update' || $type == 'install')
+        if ($type == 'update' || $type == 'install')
         {
             $isLibraryEnabled = $this->checkExtension('lib_thm_core');
-            if($isLibraryEnabled != null && $isLibraryEnabled == 1)
+            if ($isLibraryEnabled != null && $isLibraryEnabled == 1)
             {
                 $uri = JURI::root(true) . '/libraries/thm_core/log/THMChangelogColoriser.css';
                 echo "<link rel='stylesheet' type='text/css' href='{$uri}' />";
@@ -184,9 +185,9 @@ class Com_THM_GroupsInstallerScript
         $db = JFactory::getDbo();
         $db->setQuery('SELECT enabled FROM #__extensions WHERE element ="' . $name . '"');
         $result = $db->loadObject();
-        if($result != null)
+        if ($result != null)
         {
-            if(property_exists($result, 'enabled'))
+            if (property_exists($result, 'enabled'))
             {
                 return $result->enabled;
             }

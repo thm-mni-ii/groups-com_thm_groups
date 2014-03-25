@@ -118,14 +118,13 @@ class THMGroupsControllerMembers extends JControllerForm
      */
     public function parseAttribut()
     {
-
         $attribut = JRequest::getVar('placeholder');
         $modus_temp = explode(':', $attribut);
         $modus = $modus_temp[1];
         if (strcmp($modus, 'list') != 0)
         {
 
-            list($keys, $mode, $id, $link, $param, $struct, $userlist, $plainList) = explode(':', $attribut);
+            list($keys, $mode, $id, $link, $param, $struct, $userlist, $plainList, $roles) = explode(':', $attribut);
             $result = array();
 
             // Keys Bearbeitung
@@ -166,13 +165,20 @@ class THMGroupsControllerMembers extends JControllerForm
             $result['userlist'] = $tempX;
 
             // Plain List bearbeitung
-            $temp = explode('}', $plainList);
+            $temp1 = explode('(', $plainList);
+            $tempX = explode(')', $temp1[1]);
+            $temp = explode(',', $tempX[0]);
+            $result['plainList'] = $temp;
+
+            // Roles bearbeitung
+
+            $temp = explode('}', $roles);
             $temp1 = explode('(', $temp[0]);
             $tempX = explode(')', $temp1[1]);
 
             $temp = explode(',', $tempX[0]);
 
-            $result['plainList'] = $temp;
+            $result['roles'] = $temp;
 
         }
         if ( strcmp($modus, 'list') == 0)

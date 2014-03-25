@@ -60,12 +60,12 @@ class JFormFieldRoleItemSelect extends JFormField
         $db->setQuery($menuquery);
         $menulist = $db->loadObject();
 
-        if(isset($menulist->params))
+        if (isset($menulist->params))
         {
             $paramsMenu = json_decode($menulist->params, true);
         }
 
-        if(isset($paramsMenu['selGroup']))
+        if (isset($paramsMenu['selGroup']))
         {
             $gid = $paramsMenu['selGroup'];
         }

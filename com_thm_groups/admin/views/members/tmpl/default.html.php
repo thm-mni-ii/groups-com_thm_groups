@@ -95,14 +95,32 @@ $groupOptions = $helper->getGroupSelectOptions();
         echo '<tr>';
         echo '<td>';
         echo '<span class="hasTip"
-            title=' . JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_PLAIN_LIST_DESCRIPTION') . '>';
+            title=' . JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PLAIN_LIST_DESCRIPTION') . '>';
         echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PLAIN_LIST');
         echo '</span>';
         echo '</td>';
         echo '<td>';
         echo '<input type="radio" name="plainList" id="plainListYes" value="1" />';
         echo JText::_("JYES");
+        echo '&nbsp';
         echo '<input type="radio" name="plainList" id="plainListNo" value="0" checked />';
+        echo JText::_("JNO");
+        echo '</td>';
+        echo '</tr>';
+
+        // Show roles
+        echo '<tr>';
+        echo '<td>';
+        echo '<span class="hasTip"
+            title=' . JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_SHOW_ROLES_DESCRIPTION') . '>';
+        echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_SHOW_ROLES');
+        echo '</span>';
+        echo '</td>';
+        echo '<td>';
+        echo '<input type="radio" name="groupRoles" id="groupRolesYes" value="1" disabled />';
+        echo JText::_("JYES");
+        echo '&nbsp';
+        echo '<input type="radio" name="groupRoles" id="groupRolesNo" value="0" checked />';
         echo JText::_("JNO");
         echo '</td>';
         echo '</tr>';
