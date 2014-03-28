@@ -689,11 +689,11 @@ function writeName($arrOrderAtt, $member, $arrshowStructure, $linkElement, $link
                                         trim($member->lastName) . '&gsgid=' . $groupid
                                 ) .
                                 '">';
-                                $string .= $member->posttitle . '.</a>';
+                                $string .= $member->posttitle . '</a>';
                             }
                             else
                             {
-                                $string .= $member->posttitle . '.';
+                                $string .= $member->posttitle;
                             }
                             $showTitle = 1;
                         }

@@ -130,7 +130,7 @@ class THMGroupsViewProfile extends JView
         if (isset($_GET))
         {
             $var = $_GET;
-            $attribut = " ";
+            $attribut = "";
             foreach ($var as $index => $value)
             {
                 $pos = strpos($index, '_back');
@@ -224,6 +224,7 @@ class THMGroupsViewProfile extends JView
             $this->form->bind($textField);
         }
 
+        $this->assignRef('backAttribute', $attribut);
         $itemid = JRequest::getVar('Itemid', 0);
         $this->assignRef('backRef', $backRef);
         $this->assignRef('items', $items);
