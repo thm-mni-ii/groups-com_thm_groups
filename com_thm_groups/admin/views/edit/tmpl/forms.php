@@ -117,7 +117,21 @@ JHTML::_('behavior.calendar');
                     ?>
                 </td>
                 <td align="center" width="110">
-                    <input type="checkbox" name="publish<?php echo str_replace(" ", "", $structureItem->field); ?>" value="on"
+                    <?php
+                        if ($structureItem->field === 'Mode')
+                        {
+                    ?>
+                            <input type="checkbox" name="publish<?php echo str_replace(" ", "", $structureItem->field); ?>" value="on" disabled
+                                <?php
+                                }
+                                else
+                                {
+                                ?>
+                            <input type="checkbox" name="publish<?php echo str_replace(" ", "", $structureItem->field); ?>" value="on"
+                                    <?php
+
+                                }
+                                ?>
                     <?php
                     if (is_string($publish))
                     {
