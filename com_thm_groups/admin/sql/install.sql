@@ -394,3 +394,22 @@ CREATE TABLE IF NOT EXISTS `#__thm_quickpages_map` (
   `catid` int(11) NOT NULL,
    PRIMARY KEY  (`id`, `id_kind`, `catid`)
 ) ENGINE = INNODB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+--
+-- Update 3.4.1
+--
+
+INSERT INTO `#__thm_groups_structure` (`id`, `field`, `type`, `order`) VALUES
+  (7, 'Posttitel', 'TEXT', 7);
+
+DELETE FROM `#__thm_groups_text` WHERE structid = ANY(SELECT structid FROM `#__thm_groups_textfield`);
+DELETE FROM `#__thm_groups_text_extra` WHERE structid = ANY(SELECT structid FROM `#__thm_groups_textfield`);
+
+--
+-- Update 3.4.3
+--
+
+CREATE TABLE IF NOT EXISTS `#__thm_quickpages_featured` (
+`conid` int NOT NULL,
+PRIMARY KEY (`conid`)
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
