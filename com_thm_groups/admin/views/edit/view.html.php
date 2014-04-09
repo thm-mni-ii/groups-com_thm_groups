@@ -245,22 +245,42 @@ class THMGroupsViewedit extends JView
         $model = $this->getModel();
         $extra = $model->getExtra($structid, 'MULTISELECT');
         $arrExtra = explode(';', $extra);
-        $output = "<select MULTIPLE size='" . (count($arrExtra)) . "' name='" . $name . "[]' id='$name' >";
-        foreach ($arrExtra as $extraValue)
+        if ($name === 'Mode')
         {
-            $tExtra = trim($extraValue);
-            $sel = "";
-            foreach ($arrValue as $val)
+            $output = "<select MULTIPLE size='" . (count($arrExtra)) . "' name='" . $name . "[]' id='$name' disabled>";
+            foreach ($arrExtra as $extraValue)
             {
-                if ($tExtra == $val)
+                $tExtra = trim($extraValue);
+                $sel = '';
+                if ($tExtra !== 'ACL')
                 {
-                    $sel = "selected";
+                    $sel = 'selected';
                 }
+
+                $output .= "<OPTION VALUE='$tExtra' $sel>$tExtra</option>";
             }
-            $output .= "<OPTION VALUE='$tExtra' $sel>$tExtra</option>";
+            $output .= "</SELECT>";
+            echo $output;
         }
-        $output .= "</SELECT>";
-        echo $output;
+        else
+        {
+            $output = "<select MULTIPLE size='" . (count($arrExtra)) . "' name='" . $name . "[]' id='$name' >";
+            foreach ($arrExtra as $extraValue)
+            {
+                $tExtra = trim($extraValue);
+                $sel = "";
+                foreach ($arrValue as $val)
+                {
+                    if ($tExtra == $val)
+                    {
+                        $sel = "selected";
+                    }
+                }
+                $output .= "<OPTION VALUE='$tExtra' $sel>$tExtra</option>";
+            }
+            $output .= "</SELECT>";
+            echo $output;
+        }
     }
 
 
