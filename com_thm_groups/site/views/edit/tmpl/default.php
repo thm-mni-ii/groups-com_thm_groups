@@ -123,7 +123,7 @@ else
             <?php
                 foreach ($this->structure as $structureItem)
                 {
-                    if ($structureItem->field != 'Username')
+                    if ($structureItem->field != 'Username' && $structureItem->field != 'Mode')
                     {
             ?>
             <tr>
