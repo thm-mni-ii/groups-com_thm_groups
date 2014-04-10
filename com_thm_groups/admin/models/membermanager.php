@@ -14,6 +14,7 @@
  */
 defined('_JEXEC') or die();
 jimport('joomla.application.component.modellist');
+jimport('thm_groups.data.lib_thm_groups_quickpages');
 
 /**
  * THMGroupsModelmembermanager class for component com_thm_groups
@@ -25,6 +26,17 @@ jimport('joomla.application.component.modellist');
  */
 class THMGroupsModelmembermanager extends JModelList
 {
+
+    /**
+     * Key character to identify the ID in the mapping table as user ID
+     */
+    const TABLE_USER_ID_KIND = 'U';
+
+    /**
+     * Name of request parameter for a user ID
+     */
+    const PROFILE_USER_ID_PARAM = 'gsuid';
+
     /**
      * @var    JObject  A cache for the available actions.
      * @since  1.6
@@ -817,6 +829,7 @@ class THMGroupsModelmembermanager extends JModelList
         if ($db->query())
         {
             $result = true;
+            $this->createQuickpageCategoryForUser($cid);
         }
         else
         {
@@ -824,6 +837,28 @@ class THMGroupsModelmembermanager extends JModelList
         }
 
         return $result;
+    }
+
+    /**
+     * Create quickpage category
+     *
+     * @access  public
+     * @return  void
+     */
+    public function createQuickpageCategoryForUser($cid)
+    {
+        foreach($cid as $id)
+        {
+            $profileData['Id'] = $id;
+            $profileData['IdKind'] = self::TABLE_USER_ID_KIND;
+            $profileData['ParamName'] = self::PROFILE_USER_ID_PARAM;
+
+            // Check if user's quickpage category exist and if not, create it
+            if (!THMLibThmQuickpages::existsQuickpageForProfile($profileData))
+            {
+                THMLibThmQuickpages::createQuickpageForProfile($profileData);
+            }
+        }
     }
 
     /**
