@@ -38,7 +38,7 @@ $userInfoAsObject = $model::getUserInfo($this->userid);
 $userInfoArray = $userInfoAsObject->profilInfos;
 $backAttribute = $this->backAttribute;
 
-$html = buildHtmlOutput($this->userid, $userInfoArray, $backLink);
+$html = buildHtmlOutput($this->userid, $userInfoArray, $backLink, $backAttribute);
 
 // Get css
 $mycss = getProfilCss();
@@ -54,15 +54,17 @@ echo $html;
 /**
  * Returns styled information about user
  *
- * @param   Integer  $userid    contains user id
+ * @param   Integer  $userid         contains user id
  *
- * @param   Array    $userData  user data
+ * @param   Array    $userData       user data
  *
- * @param   String   $backLink  back link
+ * @param   String   $backLink       back link
+ *
+ * @param   String   $backAttribute  back params
  *
  * @return information about user
  */
-function buildHtmlOutput($userid, $userData, $backLink)
+function buildHtmlOutput($userid, $userData, $backLink, $backAttribute)
 {
     // Class for title, first name, name, post title and portrait image
     $head = '<div class="thm_groups_contentheading">';
@@ -117,39 +119,39 @@ function buildHtmlOutput($userid, $userData, $backLink)
                 {
                     // Vorname
                     case "1" :
-                        $head .= '<div class="thm_groups_head_text" id="' . $struct[$data->structid] . '">';
-                        $head .= '<h1>' . $data->value . '&nbsp;</h1>';
-                        $head .= '</div>';
+                        $head .= '<span class="head_text" id="' . $struct[$data->structid] . '">';
+                        $head .= $data->value . '&nbsp;';
+                        $head .= '</span>';
                         break;
 
                     // Nachname
                     case "2" :
-                        $head .= '<div class="thm_groups_head_text" id="' . $struct[$data->structid] . '">';
-                        $head .= '<h1>' . $data->value . '&nbsp;</h1>';
-                        $head .= '</div>';
+                        $head .= '<span class="head_text" id="' . $struct[$data->structid] . '">';
+                        $head .= $data->value . '&nbsp;';
+                        $head .= '</span>';
                         break;
 
                     // Titel
                     case "5" :
-                        $head .= '<div class="thm_groups_head_text" id="' . $struct[$data->structid] . '">';
-                        $head .= '<h1>' . $data->value . '&nbsp;</h1>';
-                        $head .= '</div>';
+                        $head .= '<span class="head_text" id="' . $struct[$data->structid] . '">';
+                        $head .= $data->value . '&nbsp;';
+                        $head .= '</span>';
                         break;
 
                     // Posttitel
                     case "7" :
-                        $head .= '<div class="thm_groups_head_text" id="' . $struct[$data->structid] . '">';
-                        $head .= '<h1>' . $data->value . '&nbsp;</h1>';
-                        $head .= '</div>';
+                        $head .= '<span class="head_text" id="' . $struct[$data->structid] . '">';
+                        $head .= $data->value . '&nbsp;';
+                        $head .= '</span>';
                         break;
 
                     // EMail
                     case "4" :
-                        $body .= '<div class="thm_groups_field_container" id="' . $struct[$data->structid] . '_field">';
-                        $body .= '<div class="thm_groups_label" id="' . $struct[$data->structid] . '_label">';
-                        $body .= '<b>' . $struct[$data->structid] . ':</b>';
+                        $body .= '<div class="field_container" id="' . $struct[$data->structid] . '_field">';
+                        $body .= '<div class="label" id="' . $struct[$data->structid] . '_label">';
+                        $body .= $struct[$data->structid] . ':';
                         $body .= '</div>';
-                        $body .= '<div class="thm_groups_value" id="' . $struct[$data->structid] . '_value">';
+                        $body .= '<div class="value" id="' . $struct[$data->structid] . '_value">';
                         $body .= JHTML::_('email.cloak', $data->value, 1, $data->value, 0);
                         $body .= '</div>';
                         $body .= '</div>';
@@ -160,11 +162,11 @@ function buildHtmlOutput($userid, $userData, $backLink)
                             case "LINK" :
                                 if ($data->type == 'LINK' && trim($data->value) != "")
                                 {
-                                    $body .= '<div class="thm_groups_field_container" id="' . $struct[$data->structid] . '_field">';
-                                    $body .= '<div class="thm_groups_label" id="' . $struct[$data->structid] . '_label">';
-                                    $body .= '<b>' . $struct[$data->structid] . ':</b>';
+                                    $body .= '<div class="field_container" id="' . $struct[$data->structid] . '_field">';
+                                    $body .= '<div class="label" id="' . $struct[$data->structid] . '_label">';
+                                    $body .= $struct[$data->structid] . ':';
                                     $body .= '</div>';
-                                    $body .= '<div class="thm_groups_value" id="' . $struct[$data->structid] . '_value">';
+                                    $body .= '<div class="value" id="' . $struct[$data->structid] . '_value">';
                                     $body .= "<a href='" . htmlspecialchars_decode($data->value) . "'>"
                                              . htmlspecialchars_decode($data->value) . "</a>";
                                     $body .= '</div>';
@@ -189,11 +191,11 @@ function buildHtmlOutput($userid, $userData, $backLink)
                                 // All other pictures
                                 else
                                 {
-                                    $body .= '<div class="thm_groups_field_container" id="' . $struct[$data->structid] . '_field">';
-                                    $body .= '<div class="thm_groups_label" id="' . $struct[$data->structid] . '_label">';
-                                    $body .= '<b>' . $struct[$data->structid] . ':</b>';
+                                    $body .= '<div class="field_container" id="' . $struct[$data->structid] . '_field">';
+                                    $body .= '<div class="label" id="' . $struct[$data->structid] . '_label">';
+                                    $body .= $struct[$data->structid] . ':';
                                     $body .= '</div>';
-                                    $body .= '<div class="thm_groups_value" id="' . $struct[$data->structid] . '_value">';
+                                    $body .= '<div class="value" id="' . $struct[$data->structid] . '_value">';
                                     $image = JHTML::image("$path" . '/' . $data->value, 'Image', $attribs);
                                     $body .= $image;
                                     $body .= '</div>';
@@ -203,22 +205,22 @@ function buildHtmlOutput($userid, $userData, $backLink)
                                 break;
 
                             case "TABLE" :
-                                $body .= '<div class="thm_groups_field_container" id="' . $struct[$data->structid] . '_field">';
-                                $body .= '<div class="thm_groups_label" id="' . $struct[$data->structid] . '_label">';
-                                $body .= '<b>' . $struct[$data->structid] . ':</b>';
+                                $body .= '<div class="field_container" id="' . $struct[$data->structid] . '_field">';
+                                $body .= '<div class="label" id="' . $struct[$data->structid] . '_label">';
+                                $body .= $struct[$data->structid] . ':';
                                 $body .= '</div>';
-                                $body .= '<div class="thm_groups_table" id="' . $struct[$data->structid] . '_value">';
+                                $body .= '<div class="table" id="' . $struct[$data->structid] . '_value">';
                                 $body .= getTable($data);
                                 $body .= '</div>';
                                 $body .= '</div>';
                                 break;
 
                             default :
-                                $body .= '<div class="thm_groups_field_container" id="' . $struct[$data->structid] . '_field">';
-                                $body .= '<div class="thm_groups_label" id="' . $struct[$data->structid] . '_label">';
-                                $body .= '<b>' . $struct[$data->structid] . ':</b>';
+                                $body .= '<div class="field_container" id="' . $struct[$data->structid] . '_field">';
+                                $body .= '<div class="label" id="' . $struct[$data->structid] . '_label">';
+                                $body .= $struct[$data->structid] . ':';
                                 $body .= '</div>';
-                                $body .= '<div class="thm_groups_value" id="' . $struct[$data->structid] . '_value">';
+                                $body .= '<div class="value" id="' . $struct[$data->structid] . '_value">';
                                 $body .= nl2br(htmlspecialchars_decode($data->value));
                                 $body .= '</div>';
                                 $body .= '</div>';
@@ -232,18 +234,18 @@ function buildHtmlOutput($userid, $userData, $backLink)
 
     $head .= '</div>';
 
-
-    // Back button with javascript
     if (JComponentHelper::getParams('com_thm_groups')->get('backButtonForProfile') == 1)
     {
         if (empty($backAttribute))
         {
+
+            // Back button with javascript
             $body .= '<div><input type="button" style="margin-top:10px" value="'
                     . JText::_("COM_THM_GROUPS_BACK_BUTTON") . '" onclick="window.history.back()" /> </div>';
         }
         else
         {
-        // Back button with self generated link
+            // Back button with self generated link
             $body .= '<div><a href="' . $backLink . '"><input type="button" style="margin-top:10px" value="'
                     . JText::_("COM_THM_GROUPS_BACK_BUTTON") . '" /></div>';
         }
@@ -312,9 +314,10 @@ function getProfilCss()
                 width:inherit;
             }
 
-            .thm_groups_contentheading > div
+            .thm_groups_contentheading > span
             {
                 float:left;
+                font-size: 1.2em;
             }
 
             .thm_groups_contentheading img
@@ -334,28 +337,29 @@ function getProfilCss()
                 clear:both;
             }
 
-            .thm_groups_field_container
+            .thm_groups_contentbody > .field_container
             {
                 margin-top:20px;
             }
 
-            .thm_groups_field_container >div
+            .field_container > div
             {
                 float:left;
             }
 
-            .thm_groups_label
+            .field_container > .label
             {
                 width:90px;
+                font-weight: bold;
             }
 
-            .thm_groups_value
+            .field_container > .value
             {
                 margin-left:20px;
                 width:500px;
             }
 
-            .thm_groups_table
+            .field_container > .table
             {
                 margin-left: 20px;
             }
