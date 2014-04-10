@@ -842,6 +842,8 @@ class THMGroupsModelmembermanager extends JModelList
     /**
      * Create quickpage category
      *
+     * @param   $cid  Array  array with ids
+     *
      * @access  public
      * @return  void
      */
