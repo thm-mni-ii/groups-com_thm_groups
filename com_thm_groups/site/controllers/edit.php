@@ -202,13 +202,13 @@ class THMGroupsControllerEdit extends JController
      */
     public function backToRefUrl()
     {
-        $this->uid   = JRequest::getVar('userid', 0, 'get', 'INTEGER');
+        $this->uid   = JRequest::getVar('userid', 0);
         $this->uname = JRequest::getVar('name', 0);
-        $gsgid 		 = JRequest::getVar('gsgid', 1, 'get', 'INTEGER');
+        $gsgid 		 = JRequest::getVar('gsgid', 1);
         $option_back  = JRequest::getVar('option_back', 0);
         $layout_back  = JRequest::getVar('layout_back', 0);
         $view_back    = JRequest::getVar('view_back', 0);
-        $itemid_back  = JRequest::getVar('item_id', 0, 'get', 'INTEGER');
+        $itemid_back  = JRequest::getVar('item_id', 0);
 
         $msg = JText::_('COM_THM_GROUPS_OPERATION_CANCELLED');
         $link =& JURI::getInstance('index.php'
@@ -220,6 +220,7 @@ class THMGroupsControllerEdit extends JController
             . '&name=' . $this->uname
             . '&gsgid=' . $gsgid
         );
+
         $backRef = JRequest::getVar('backRef', 0);
         $uri =& JURI::getInstance(html_entity_decode($backRef));
         $backRef = $uri->toString();
