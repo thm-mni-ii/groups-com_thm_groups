@@ -127,6 +127,7 @@ class THMGroupsViewmembermanager extends JView
         {
             $groupFilters[] = $option;
         }
+
         $lists['groups'] = JHTML::_(
             'select.genericlist',
             $groupFilters,
@@ -134,8 +135,10 @@ class THMGroupsViewmembermanager extends JView
             'size="1" class="inputbox"',
             'value',
             'text',
-            $_POST['groupFilters']
+            $this->state->get('groupFilters'),
+            true
         );
+
 
         $rolesFilters = array();
         $rolesFilters[] = JHTML::_('select.option', 0, JText::_('COM_THM_GROUPS_ALL'));
@@ -150,7 +153,8 @@ class THMGroupsViewmembermanager extends JView
             'size="1" class="inputbox"',
             'value',
             'text',
-            $_POST['rolesFilters']
+            $this->state->get('rolesFilters'),
+            true
         );
         $checked = "checked='checked'";
         $grcheck = 1;
