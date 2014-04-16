@@ -257,7 +257,7 @@
                         break;
                 }
 
-                echo	"</div>";
+                echo    "</div>";
                 if ($memberitem['structwrap'] == true)
                 {
                     $wrap = true;
@@ -295,7 +295,10 @@
 
         if (($elementCounter % 2 == 0) && ($elementCounter == $lastIndex))
         {
-            echo '</div>';
+            if ($countOfColoumns == 2)
+            {
+                echo '</div>';
+            }
         }
 
         // Count Elements
