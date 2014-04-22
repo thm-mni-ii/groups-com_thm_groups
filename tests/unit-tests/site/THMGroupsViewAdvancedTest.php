@@ -25,6 +25,7 @@ class THMGroupsViewAdvancedTest extends PHPUnit_Framework_TestCase
 	}
 	
 	// test the make_table($data) function
+	/*
 	function testMake_table() {
 		$tableArr = array(
 						0 => array(
@@ -36,7 +37,8 @@ class THMGroupsViewAdvancedTest extends PHPUnit_Framework_TestCase
 		$result = $this->instance->make_table($tableJson);
 		$expected = "<table class='table'><tr><th>testkey1</th><th>testkey2</th></tr><tr><td>testvalue1</td><td>testvalue2</td></tr></table>";
 		$this->assertEquals($expected, $result);
-	}	
+	}
+	*/
 }
 
 ?>

@@ -29,7 +29,7 @@ class THMGroupsModelGroupsTest extends PHPUnit_Framework_TestCase
     public function testgetGroups()
     {
 
-        $result = $this->instance->getGroups();
+        $result = $this->instance->getGroups(0);
 
         $this->assertEquals($result[34]->id,"7");
         $this->assertEquals($result[34]->name,"Administrator");
