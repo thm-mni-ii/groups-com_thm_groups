@@ -28,7 +28,7 @@ jimport('joomla.filesystem.path');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewgroupmanager extends JView
+class THMGroupsViewgroupmanager extends JViewLegacy
 {
 
     protected $state;
@@ -51,7 +51,7 @@ class THMGroupsViewgroupmanager extends JView
 
         if ($user->authorise('core.admin'))
         {
-             JToolBarHelper::addNewX(
+             JToolBarHelper::addNew(
                     'groupmanager.addGroup',
                     'COM_THM_GROUPS_GROUPMANAGER_ADD'
             );
@@ -59,7 +59,7 @@ class THMGroupsViewgroupmanager extends JView
         if ($user->authorise('core.edit', 'com_users') && $user->authorise('core.manage', 'com_users'))
         {
 
-            JToolBarHelper::editListX('groupmanager.edit', 'COM_THM_GROUPS_GROUPMANAGER_EDIT');
+            JToolBarHelper::editList('groupmanager.edit', 'COM_THM_GROUPS_GROUPMANAGER_EDIT');
         }
         if ($user->authorise('core.admin'))
         {
