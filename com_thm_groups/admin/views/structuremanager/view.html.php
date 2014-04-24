@@ -24,7 +24,7 @@ jimport('joomla.filesystem.path');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewStructuremanager extends JView
+class THMGroupsViewStructuremanager extends JViewLegacy
 {
     protected $items;
 
