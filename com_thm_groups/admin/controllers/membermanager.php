@@ -23,7 +23,7 @@ jimport('joomla.application.component.controller');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsControllermembermanager extends JController
+class THMGroupsControllermembermanager extends JControllerLegacy
 {
 
     /**
