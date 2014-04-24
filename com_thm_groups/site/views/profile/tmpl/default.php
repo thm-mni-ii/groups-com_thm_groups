@@ -317,11 +317,12 @@ function getProfilCss()
             .thm_groups_contentheading > span
             {
                 float:left;
-                font-size: 1.2em;
+                font-size: 1.375em;
             }
 
             .thm_groups_contentheading img
             {
+                margin-top: 10px;
                 float:left;
                 clear:both;
             }

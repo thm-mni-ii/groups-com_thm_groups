@@ -658,7 +658,7 @@ function writeName($arrOrderAtt, $member, $arrshowStructure, $linkElement, $link
                             if ((array_search('1', $arrshowStructure) !== false
                              && ($run == 0 || ($run == 1 && $showTitle == 1 && $member->title != '')))
                              || ($run == 1 && $showTitle == 0 && $arrOrderAtt[0] == "1")
-                             || ($run == 1 && $arrshowStructure[count($arrshowStructure)-1]="3" && array_search('3', $arrshowStructure) !== false)
+                             || ($run == 1 && $arrshowStructure[count($arrshowStructure) -1 ] = "3" && array_search('3', $arrshowStructure) !== false)
                              || ($run == 2 && !empty($member->posttitle)))
                             {
                                 $string .= ',';

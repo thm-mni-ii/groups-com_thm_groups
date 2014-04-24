@@ -1,4 +1,12 @@
 <?php die();?>
+THM Groups 3.4.11
+================================================================================
+# [MEDIUM] Profile view, css was changed
+# [MEDIUM] Install script updated
+# [MEDIUM] Membermanager - filter logik fixed
+# [MEDIUM] Quickpages can be activated after user activating
+# [MEDIUM] Back button in profile view fixed
+
 THM Groups 3.4.10
 ================================================================================
 # [MEDIUM] Bug fixes

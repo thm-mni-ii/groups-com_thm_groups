@@ -323,6 +323,7 @@ class THMGroupsModelmembermanager extends JModelList
         }
         $query->innerJoin("#__thm_groups_groups_map as g on g.uid = f.userid" . $queryExtra);
         $query->order("$orderCol $orderDirn");
+
         return $query;
     }
 
@@ -849,7 +850,7 @@ class THMGroupsModelmembermanager extends JModelList
      */
     public function createQuickpageCategoryForUser($cid)
     {
-        foreach($cid as $id)
+        foreach ($cid as $id)
         {
             $profileData['Id'] = $id;
             $profileData['IdKind'] = self::TABLE_USER_ID_KIND;

@@ -17,7 +17,7 @@ defined('_JEXEC') or die;
 /**
  * ArticleHelper class for component com_thm_groups
  *
- * @category  Joomla.Component
+ * @category  Joomla.Component.General
  * @package   com_thm_groups
  * @link      www.mni.thm.de
  * @since     Class available since Release 3.0
@@ -28,6 +28,7 @@ class ArticleHelper
      * Returns state of article
      *
      * @param   Int  $a_id  article id
+     *
      * @return  boolean
      */
     public static function isArticleFeatured($a_id)
