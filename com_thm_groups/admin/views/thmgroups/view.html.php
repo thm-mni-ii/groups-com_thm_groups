@@ -24,7 +24,7 @@ jimport('joomla.html.pane');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewTHMGroups extends JView
+class THMGroupsViewTHMGroups extends JViewLegacy
 {
     /**
      * Method to get display
@@ -45,8 +45,7 @@ class THMGroupsViewTHMGroups extends JView
         $document = JFactory::getDocument();
         $document->addStyleSheet($this->baseurl . '/components/com_thm_groups/assets/css/thm_groups.css');
 
-        $pane = JPane::getInstance('sliders');
-        $this->pane = $pane;
+        JHtml::_('tabs.start');
 
         $application = JFactory::getApplication("administrator");
         $this->option = $application->scope;
