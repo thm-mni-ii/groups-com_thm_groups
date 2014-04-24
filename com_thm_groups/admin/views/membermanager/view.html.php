@@ -24,7 +24,7 @@ jimport('joomla.filesystem.path');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewmembermanager extends JView
+class THMGroupsViewmembermanager extends JViewLegacy
 {
     protected $state;
 
@@ -49,7 +49,7 @@ class THMGroupsViewmembermanager extends JView
             JToolBarHelper::custom(
                     'membermanager.setGroupsAndRoles',
                     'addassignment',
-                    JPATH_COMPONENT . DS . 'assets' . DS . 'images' . DS . 'icon-32-addassignment.png',
+                    JPATH_COMPONENT  . '/assets/images/icon-32-addassignment.png',
                     'COM_THM_GROUPS_MEMBERMANAGER_ADD',
                     true,
                     true
@@ -57,7 +57,7 @@ class THMGroupsViewmembermanager extends JView
             JToolBarHelper::custom(
                     'membermanager.delGroupsAndRoles',
                     'removeassignment',
-                    JPATH_COMPONENT . DS . 'assets' . DS . 'images' . DS . 'icon-32-removeassignment.png',
+                    JPATH_COMPONENT . 'assets/images/icon-32-removeassignment.png',
                     'COM_THM_GROUPS_MEMBERMANAGER_DELETE',
                     true,
                     true
@@ -74,7 +74,7 @@ class THMGroupsViewmembermanager extends JView
          || $user->authorise('core.edit.own', 'com_users'))
          && $user->authorise('core.manage', 'com_users'))
         {
-            JToolBarHelper::editListX('membermanager.edit', 'COM_THM_GROUPS_MEMBERMANAGER_EDIT');
+            JToolBarHelper::editList('membermanager.edit', 'COM_THM_GROUPS_MEMBERMANAGER_EDIT');
         }
         if ($user->authorise('core.delete', 'com_users') && $user->authorise('core.manage', 'com_users'))
         {
