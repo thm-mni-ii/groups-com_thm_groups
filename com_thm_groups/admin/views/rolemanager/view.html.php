@@ -24,7 +24,7 @@ jimport('joomla.filesystem.path');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewRolemanager extends JView
+class THMGroupsViewRolemanager extends JViewLegacy
 {
 
     protected $state;
@@ -44,12 +44,12 @@ class THMGroupsViewRolemanager extends JView
         $user = JFactory::getUser();
 
         JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_ROLEMANAGER'), 'rolemanager');
-        JToolBarHelper::addNewX(
+        JToolBarHelper::addNew(
             'rolemanager.addRole',
             'COM_THM_GROUPS_ROLEMANAGER_ADD',
             false
         );
-        JToolBarHelper::editListX('rolemanager.edit', 'COM_THM_GROUPS_ROLEMANAGER_EDIT');
+        JToolBarHelper::editList('rolemanager.edit', 'COM_THM_GROUPS_ROLEMANAGER_EDIT');
         JToolBarHelper::deleteList('COM_THM_GROUPS_REALLY_DELETE', 'rolemanager.remove', 'JTOOLBAR_DELETE');
         if ($user->authorise('core.admin', 'com_users'))
         {
