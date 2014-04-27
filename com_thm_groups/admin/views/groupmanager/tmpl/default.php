@@ -23,7 +23,7 @@ $user = JFactory::getUser();
 ?>
 <form action="index.php" method="post" name="adminForm">
 <div id="editcell">
-<table class="adminlist">
+<table class="table table-striped">
     <thead>
         <tr>
 <!--    	<th width="1" ><?php echo JHTML::_('grid.sort', 'Gruppen ID', 'id', $listDirn, $listOrder);?></th> -->
