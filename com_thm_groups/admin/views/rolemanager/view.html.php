@@ -38,9 +38,33 @@ class THMGroupsViewRolemanager extends JViewLegacy
      */
     public function display($tpl = null)
     {
-
         $document   = JFactory::getDocument();
         $document->addStyleSheet("components/com_thm_groups/assets/css/thm_groups.css");
+
+        $uri = JFactory::getURI();
+
+        $this->state = $this->get('State');
+
+        $items = $this->get('Items');
+        $pagination = $this->get('Pagination');
+
+        $this->assignRef('items', $items);
+        $this->assignRef('pagination', $pagination);
+        $stringvalue = $uri->toString();
+        $this->assignRef('request_url', $stringvalue);
+
+        $this->addToolbar();
+
+        parent::display($tpl);
+    }
+
+    /**
+     * Add Joomla ToolBar with add edit delete options.
+     *
+     * @return void
+     */
+    protected function addToolbar()
+    {
         $user = JFactory::getUser();
 
         JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_ROLEMANAGER'), 'rolemanager');
@@ -56,23 +80,5 @@ class THMGroupsViewRolemanager extends JViewLegacy
             JToolBarHelper::divider();
             JToolBarHelper::preferences('com_thm_groups');
         }
-
-        $uri = JFactory::getURI();
-
-        // $query = $uri->getQuery();
-
-        // $mainframe = Jfactory::getApplication('Administrator');
-
-        $this->state = $this->get('State');
-
-        $items = $this->get('Items');
-        $pagination = $this->get('Pagination');
-
-        $this->assignRef('items', $items);
-        $this->assignRef('pagination', $pagination);
-        $stringvalue = $uri->toString();
-        $this->assignRef('request_url', $stringvalue);
-
-        parent::display($tpl);
     }
 }
