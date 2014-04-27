@@ -25,7 +25,7 @@ jimport('joomla.filesystem.file');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsModelEditStructure extends JModel
+class THMGroupsModelEditStructure extends JModelLegacy
 {
 
     /**

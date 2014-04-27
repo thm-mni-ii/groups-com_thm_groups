@@ -26,7 +26,7 @@ jimport('joomla.application.component.model');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsModelAddStructure extends JModel
+class THMGroupsModelAddStructure extends JModelLegacy
 {
 
     /**

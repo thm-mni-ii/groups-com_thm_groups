@@ -21,7 +21,7 @@
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsModelEditRole extends JModel
+class THMGroupsModelEditRole extends JModelLegacy
 {
 
     /**
