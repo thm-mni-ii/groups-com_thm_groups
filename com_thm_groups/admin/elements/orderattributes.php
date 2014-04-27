@@ -42,8 +42,8 @@ class JFormFieldOrderAttributes extends JFormField
     public function getInput()
     {
         $orderSelect = "";
-        $scriptDir = JURI::root() . 'administrator' . DS . 'components' . DS . 'com_thm_groups' . DS . 'elements' . DS;
-        $image_path = JURI::root() . 'administrator' . DS . 'components' . DS . 'com_thm_groups' . DS . 'elements' . DS . 'images';
+        $scriptDir = JURI::root() . 'administrator/components/com_thm_groups/elements/';
+        $image_path = JURI::root() . 'administrator/components/com_thm_groups/elements/images';
 
         JHTML::script('orderattributes.js', $scriptDir, false);
 
