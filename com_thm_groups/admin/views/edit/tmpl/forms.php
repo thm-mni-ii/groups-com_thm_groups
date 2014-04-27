@@ -26,7 +26,7 @@ JHTML::_('behavior.calendar');
         document.adminForm.submit();
     }
 </script>
-    <form action="index.php" method="post" name="adminForm" enctype='multipart/form-data'>
+    <form action="index.php" method="post" name="adminForm" id="adminForm" enctype='multipart/form-data'>
     <div>
         <fieldset class="adminform">
         <legend>
