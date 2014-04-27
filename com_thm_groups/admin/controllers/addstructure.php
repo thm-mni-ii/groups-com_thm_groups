@@ -36,6 +36,8 @@ class THMGroupsControllerAddStructure extends JControllerForm
         parent::__construct();
         $this->registerTask('apply', 'apply');
         $this->registerTask('save2new', 'save2new');
+        $this->registerTask('save', 'save');
+        $this->registerTask('cancel', 'cancel');
     }
 
     /**
