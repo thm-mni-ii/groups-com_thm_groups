@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.2.0
+ * @version     v3.2.1
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -21,7 +21,7 @@
 defined('_JEXEC') or die( 'Restricted access' );
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
-require_once JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_thm_groups' . DS . 'models' . DS . 'membermanager.php';
+require_once JPATH_ADMINISTRATOR . '/components/com_thm_groups/models/membermanager.php';
 
 /**
  * JFormFieldAlphabetColor class for component com_thm_groups
