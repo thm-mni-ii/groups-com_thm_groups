@@ -20,6 +20,8 @@
 defined('_JEXEC') or die();
 jimport('joomla.application.component.modelform');
 
+if(!defined('DS')) define('DS', DIRECTORY_SEPARATOR);
+
 /**
  * THMGroupsModelAddGroup class for component com_thm_groups
  *
