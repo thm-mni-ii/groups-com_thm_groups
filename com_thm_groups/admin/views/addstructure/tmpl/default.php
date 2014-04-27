@@ -54,7 +54,7 @@ jstructadd.fn.getFieldExtras = function(){
 jstructadd(document).ready(function(){jstructadd.fn.getFieldExtras();});
 </script>
 
-<form action="index.php" method="post" name="adminForm">
+<form action="index.php" method="post" name="adminForm" id="adminForm">
 <div>
     <fieldset class="adminform">
         <legend>
