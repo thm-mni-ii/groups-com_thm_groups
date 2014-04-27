@@ -25,7 +25,7 @@ $saveOrder	= $listOrder == 'a.order';
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_thm_groups&view=structuremanager'); ?>" method="post" name="adminForm" id="adminForm">
-    <table class="adminlist">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th width="1%">
