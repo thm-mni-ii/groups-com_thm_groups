@@ -164,7 +164,7 @@ $user = JFactory::getUser();
         </tr>
     </table>
 <div id="editcell">
-<table class="adminlist">
+<table class="table table-striped">
     <thead>
         <tr>
             <th width="1"><?php echo JText::_('COM_THM_GROUPS_ID'); ?></th>
