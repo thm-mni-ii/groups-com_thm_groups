@@ -39,7 +39,7 @@ class JFormFieldRoleItemSelect extends JFormField
     public function getInput()
     {
         $db = JFactory::getDBO();
-        $scriptDir = str_replace(JPATH_SITE . DS, '', "administrator/components/com_thm_groups/elements/");
+        $scriptDir = str_replace(JPATH_SITE . '/', '', "administrator/components/com_thm_groups/elements/");
         $sortButtons = true;
 
         // Add script-code to the document head
