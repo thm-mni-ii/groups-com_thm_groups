@@ -16,7 +16,7 @@ defined('_JEXEC') or die('Restricted access');
 $listOrder	= $this->state->get('list.ordering');
 $listDirn	= $this->state->get('list.direction');
 ?>
-<form action="index.php" method="post" name="adminForm">
+<form action="index.php" method="post" name="adminForm" id="adminForm">
 <div id="editcell">
 <table class="table table-striped">
     <thead>
