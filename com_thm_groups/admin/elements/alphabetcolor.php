@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.4.3
+ * @version     v3.4.4
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -43,7 +43,7 @@ class JFormFieldAlphabetColor extends JFormField
 
     public function getInput()
     {
-        $scriptDir = str_replace(JPATH_SITE . DS, '', "administrator/components/com_thm_groups/elements/");
+        $scriptDir = str_replace(JPATH_SITE . '/', '', "administrator/components/com_thm_groups/elements/");
         $document = JFactory::getDocument();
         $document->addStyleSheet(JUri::root() . '/administrator/components/com_thm_groups/elements/mooRainbow.css');
 
