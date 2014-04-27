@@ -24,7 +24,7 @@ jimport('joomla.filesystem.path');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsVieweditStructure extends JView
+class THMGroupsVieweditStructure extends JViewLegacy
 {
     /**
      * Method to get display
