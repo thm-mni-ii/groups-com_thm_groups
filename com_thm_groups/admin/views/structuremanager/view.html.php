@@ -41,29 +41,39 @@ class THMGroupsViewStructuremanager extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        $document   = JFactory::getDocument();
+        $document = JFactory::getDocument();
         $document->addStyleSheet("components/com_thm_groups/assets/css/thm_groups.css");
+
+        $this->items        = $this->get('Items');
+        $this->pagination   = $this->get('Pagination');
+        $this->state        = $this->get('State');
+
+        $this->addToolbar();
+
+        parent::display($tpl);
+    }
+
+    /**
+     * Add Joomla ToolBar with add edit delete options.
+     *
+     * @return void
+     */
+    protected function addToolbar()
+    {
         $user = JFactory::getUser();
 
-        $this->items		= $this->get('Items');
-        $this->pagination	= $this->get('Pagination');
-        $this->state		= $this->get('State');
-
         JToolBarHelper::title(
-                JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_STRUCTUREMANAGER'), 'structuremanager');
-        JToolBarHelper::addNew(
-            'structuremanager.add',
-            'COM_THM_GROUPS_STRUCTURE_ADD',
-            false
+            JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_STRUCTUREMANAGER'), 'structuremanager'
         );
+
+        JToolBarHelper::addNew('structuremanager.add', 'COM_THM_GROUPS_STRUCTURE_ADD', false);
         JToolBarHelper::editList('structuremanager.edit', 'COM_THM_GROUPS_STRUCTURE_EDIT');
         JToolBarHelper::deleteList('COM_THM_GROUPS_STRUCTURE_REALLY_DELETE', 'structuremanager.remove', 'JTOOLBAR_DELETE');
+
         if ($user->authorise('core.admin', 'com_users'))
         {
             JToolBarHelper::divider();
             JToolBarHelper::preferences('com_thm_groups');
         }
-        parent::display($tpl);
-
     }
 }
