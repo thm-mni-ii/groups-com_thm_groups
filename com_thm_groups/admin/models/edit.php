@@ -19,6 +19,8 @@ defined('_JEXEC') or die();
 jimport('joomla.application.component.modelform');
 jimport('thm_groups.data.lib_thm_groups_quickpages');
 
+if(!defined('DS')) define('DS', DIRECTORY_SEPARATOR);
+
 /**
  * THMGroupsModeledit class for component com_thm_groups
  *
