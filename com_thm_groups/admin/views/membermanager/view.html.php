@@ -1,13 +1,14 @@
 <?php
 /**
- * @version     v3.4.3
+ * @version     v3.4.4
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsViewmembermanager
  * @description THMGroupsViewmembermanager file from com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
- * @authors     Niklas Simonis, <niklas.simonis@mni.thm.de>
+ * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -40,52 +41,10 @@ class THMGroupsViewmembermanager extends JViewLegacy
         // $SQLAL = new SQLAbstractionLayer;
         $document   = JFactory::getDocument();
         $document->addStyleSheet("components/com_thm_groups/assets/css/thm_groups.css");
-        $user = JFactory::getUser();
-        JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_MEMBERMANAGER'), 'membermanager');
-        if (($user->authorise('core.edit', 'com_users')
-         || $user->authorise('core.edit.own', 'com_users'))
-         && $user->authorise('core.manage', 'com_users'))
-        {
-            JToolBarHelper::custom(
-                    'membermanager.setGroupsAndRoles',
-                    'addassignment',
-                    JPATH_COMPONENT  . '/assets/images/icon-32-addassignment.png',
-                    'COM_THM_GROUPS_MEMBERMANAGER_ADD',
-                    true,
-                    true
-            );
-            JToolBarHelper::custom(
-                    'membermanager.delGroupsAndRoles',
-                    'removeassignment',
-                    JPATH_COMPONENT . 'assets/images/icon-32-removeassignment.png',
-                    'COM_THM_GROUPS_MEMBERMANAGER_DELETE',
-                    true,
-                    true
-            );
-            JToolBarHelper::divider();
-        }
-        if ($user->authorise('core.edit.state', 'com_users') && $user->authorise('core.manage', 'com_users'))
-        {
-            JToolBarHelper::publishList('membermanager.publish', 'COM_THM_GROUPS_MEMBERMANAGER_PUBLISH');
-            JToolBarHelper::unpublishList('membermanager.unpublish', 'COM_THM_GROUPS_MEMBERMANAGER_DISABLE');
-            JToolBarHelper::divider();
-        }
-        if (($user->authorise('core.edit', 'com_users')
-         || $user->authorise('core.edit.own', 'com_users'))
-         && $user->authorise('core.manage', 'com_users'))
-        {
-            JToolBarHelper::editList('membermanager.edit', 'COM_THM_GROUPS_MEMBERMANAGER_EDIT');
-        }
-        if ($user->authorise('core.delete', 'com_users') && $user->authorise('core.manage', 'com_users'))
-        {
-            JToolBarHelper::deleteList('Wirklich l&ouml;schen?', 'membermanager.delete', 'JTOOLBAR_DELETE');
-        }
-        if ($user->authorise('core.admin', 'com_users'))
-        {
-            JToolBarHelper::divider();
-            JToolBarHelper::preferences('com_thm_groups');
-        }
+
         $mainframe = Jfactory::getApplication('Administrator');
+
+        $this->addToolbar();
 
         $db = JFactory::getDBO();
         $this->state = $this->get('State');
@@ -181,5 +140,59 @@ class THMGroupsViewmembermanager extends JViewLegacy
         $this->assignRef('model', $model);
 
         parent::display($tpl);
+    }
+
+    /**
+     * Add Joomla ToolBar with add edit delete options.
+     *
+     * @return void
+     */
+    protected function addToolbar()
+    {
+        $user = JFactory::getUser();
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_MEMBERMANAGER'), 'membermanager');
+        if (($user->authorise('core.edit', 'com_users')
+         || $user->authorise('core.edit.own', 'com_users'))
+         && $user->authorise('core.manage', 'com_users'))
+        {
+            JToolBarHelper::custom(
+                'membermanager.setGroupsAndRoles',
+                'addassignment',
+                JPATH_COMPONENT . '/assets/images/icon-32-addassignment.png',
+                'COM_THM_GROUPS_MEMBERMANAGER_ADD',
+                true,
+                true
+            );
+            JToolBarHelper::custom(
+                'membermanager.delGroupsAndRoles',
+                'removeassignment',
+                JPATH_COMPONENT . 'assets/images/icon-32-removeassignment.png',
+                'COM_THM_GROUPS_MEMBERMANAGER_DELETE',
+                true,
+                true
+            );
+            JToolBarHelper::divider();
+        }
+        if ($user->authorise('core.edit.state', 'com_users') && $user->authorise('core.manage', 'com_users'))
+        {
+            JToolBarHelper::publishList('membermanager.publish', 'COM_THM_GROUPS_MEMBERMANAGER_PUBLISH');
+            JToolBarHelper::unpublishList('membermanager.unpublish', 'COM_THM_GROUPS_MEMBERMANAGER_DISABLE');
+            JToolBarHelper::divider();
+        }
+        if (($user->authorise('core.edit', 'com_users')
+         || $user->authorise('core.edit.own', 'com_users'))
+         && $user->authorise('core.manage', 'com_users'))
+        {
+            JToolBarHelper::editList('membermanager.edit', 'COM_THM_GROUPS_MEMBERMANAGER_EDIT');
+        }
+        if ($user->authorise('core.delete', 'com_users') && $user->authorise('core.manage', 'com_users'))
+        {
+            JToolBarHelper::deleteList('Wirklich l&ouml;schen?', 'membermanager.delete', 'JTOOLBAR_DELETE');
+        }
+        if ($user->authorise('core.admin', 'com_users'))
+        {
+            JToolBarHelper::divider();
+            JToolBarHelper::preferences('com_thm_groups');
+        }
     }
 }
