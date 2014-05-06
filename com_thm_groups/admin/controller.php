@@ -59,6 +59,11 @@ class THMGroupsController extends JControllerLegacy
             $vName == 'rolemanager'
         );
         JSubMenuHelper::addEntry(
+            JText::_('COM_THM_GROUPS_PROFILEMANAGER'),
+            'index.php?option=com_thm_groups&view=profilemanager',
+            $vName == 'profilemanager'
+        );
+        JSubMenuHelper::addEntry(
             JText::_('COM_THM_GROUPS_STRUCTUREMANAGER'),
             'index.php?option=com_thm_groups&view=structuremanager',
             $vName == 'structuremanager'
