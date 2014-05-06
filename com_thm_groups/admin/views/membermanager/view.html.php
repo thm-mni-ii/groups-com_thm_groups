@@ -44,7 +44,18 @@ class THMGroupsViewmembermanager extends JViewLegacy
 
         $mainframe = Jfactory::getApplication('Administrator');
 
+        $this->filterForm    = $this->get('FilterForm');
+        $this->activeFilters = $this->get('ActiveFilters');
+
+        // Check for errors.
+        if (count($errors = $this->get('Errors')))
+        {
+            JError::raiseError(500, implode("\n", $errors));
+            return false;
+        }
+
         $this->addToolbar();
+        $this->sidebar = JHtmlSidebar::render();
 
         $db = JFactory::getDBO();
         $this->state = $this->get('State');
@@ -138,6 +149,7 @@ class THMGroupsViewmembermanager extends JViewLegacy
         $this->assignRef('groupFilters', $_POST['groupFilters']);
         $this->assignRef('grcheckon', $grcheck);
         $this->assignRef('model', $model);
+        $this->filterForm    = $this->get('FilterForm');
 
         parent::display($tpl);
     }
