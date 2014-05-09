@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsControllerStatic_Types_Manager
- * @description THMGroupsControllerStatic_Types_Manager class from com_thm_groups
+ * @name        THMGroupsControllerStatic_Type_Manager
+ * @description THMGroupsControllerStatic_Type_Manager class from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -22,14 +22,14 @@ jimport('joomla.log.entry');
 
 
 /**
- * THMGroupsControllerStatic_Types_Manager class for component com_thm_groups
+ * THMGroupsControllerStatic_Type_Manager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsControllerStatic_Types_Manager extends JControllerForm
+class THMGroupsControllerStatic_Type_Manager extends JControllerForm
 {
     /**
      * constructor (registers additional tasks to methods)
