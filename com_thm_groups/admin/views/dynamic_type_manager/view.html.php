@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsViewStatic_Types_Manager
- * @description THMGroupsViewStatic_Types_Manager file from com_thm_groups
+ * @name        THMGroupsViewDynamic_Type_Manager
+ * @description THMGroupsViewDynamic_Type_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -19,14 +19,14 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
 
 /**
- * THMGroupsViewStatic_Types_Manager class for component com_thm_groups
+ * THMGroupsViewDynamic_Type_Manager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewStatic_Types_Manager extends JViewLegacy
+class THMGroupsViewDynamic_Type_Manager extends JViewLegacy
 {
     /**
      * Method to get display
@@ -67,8 +67,12 @@ class THMGroupsViewStatic_Types_Manager extends JViewLegacy
         $user = JFactory::getUser();
 
         JToolBarHelper::title(
-            JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_STATICTYPESMANAGER'), 'static_types_manager'
+            JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_DYNAMICTYPEMANAGER'), 'dynamic_type_manager'
         );
+
+        JToolBarHelper::addNew('dynamic_type_manager.add', 'COM_THM_GROUPS_DYNAMIC_TYPE_ADD', false);
+        JToolBarHelper::editList('dynamic_type_manager.edit', 'COM_THM_GROUPS_DYNAMIC_TYPE_EDIT');
+        JToolBarHelper::deleteList('COM_THM_GROUPS_PROFILE_REALLY_DELETE', 'dynamic_type_manager.remove', 'JTOOLBAR_DELETE');
 
         if ($user->authorise('core.admin', 'com_users'))
         {
