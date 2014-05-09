@@ -403,3 +403,23 @@ CREATE TABLE IF NOT EXISTS `#__thm_quickpages_featured` (
 `conid` int NOT NULL,
 PRIMARY KEY (`conid`)
 ) ENGINE = INNODB DEFAULT CHARSET=utf8;
+
+
+--
+-- UPDATE 3.4.5 auf Joomla 3
+--
+
+CREATE TABLE IF NOT EXISTS `#__thm_groups_static_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
+
+INSERT INTO `#__thm_groups_static_type` (`id`, `name`) VALUES
+  ('1', 'TEXT'),
+  ('2', 'TEXTFIELD'),
+  ('3', 'LINK'),
+  ('4', 'PICTURE'),
+  ('5', 'MULTISELECT'),
+  ('6', 'TABLE'),
+  ('7', 'TEMPLATE');
