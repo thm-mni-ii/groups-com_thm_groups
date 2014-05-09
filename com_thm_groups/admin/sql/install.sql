@@ -423,3 +423,22 @@ INSERT INTO `#__thm_groups_static_type` (`id`, `name`) VALUES
   ('5', 'MULTISELECT'),
   ('6', 'TABLE'),
   ('7', 'TEMPLATE');
+
+CREATE TABLE IF NOT EXISTS `#__thm_groups_dynamic_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `static_typeID` int (11),
+  `name` varchar (255) DEFAULT NULL,
+  `regex` varchar (255),
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (static_typeID) REFERENCES `#__thm_groups_static_type`(`id`)
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
+
+INSERT INTO `#__thm_groups_dynamic_type` (id, static_typeID, name, regex) VALUES
+  ('1', '1', 'Name', ''),
+  ('2', '1', 'Email', ''),
+  ('3', '3', 'Website', ''),
+  ('4', '4', 'Profile Foto', ''),
+  ('5', '5', 'Test Multiselect', ''),
+  ('6', '6', 'Test Table', ''),
+  ('7', '7', 'Test Template', ''),
+  ('8', '2', 'Test Text Field', '');
