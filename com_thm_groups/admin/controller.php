@@ -68,6 +68,11 @@ class THMGroupsController extends JControllerLegacy
             'index.php?option=com_thm_groups&view=structuremanager',
             $vName == 'structuremanager'
         );
+        JSubMenuHelper::addEntry(
+            JText::_('COM_THM_GROUPS_STATICTYPESMANAGER'),
+            'index.php?option=com_thm_groups&view=static_types_manager',
+            $vName == 'statictypesmanager'
+        );
 
         parent::display($cachable, $urlparams);
     }

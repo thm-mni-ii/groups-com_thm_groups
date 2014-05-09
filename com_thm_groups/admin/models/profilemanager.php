@@ -35,7 +35,6 @@ class THMGroupsModelProfilemanager extends JModelList
         // Create a new query object.
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
-        // Select some fields from the hello table
         $query
             ->select('id, name')
             ->from('#__users');

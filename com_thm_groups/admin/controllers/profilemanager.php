@@ -37,6 +37,8 @@ class THMGroupsControllerProfilemanager extends JControllerForm
     {
         parent::__construct();
         $this->registerTask('add', 'add');
+        $this->registerTask('edit', 'edit');
+        $this->registerTask('delete', 'delete');
     }
 
     /**
@@ -46,10 +48,6 @@ class THMGroupsControllerProfilemanager extends JControllerForm
      */
     function display($cachable = false, $urlparams = false)
     {
-        // set default view if not set
-        $input = JFactory::getApplication()->input;
-        $input->set('view', $input->getCmd('view', 'HelloWorlds'));
-
         // call parent behavior
         parent::display($cachable);
     }
