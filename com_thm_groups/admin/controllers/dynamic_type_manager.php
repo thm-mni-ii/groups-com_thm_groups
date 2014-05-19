@@ -29,7 +29,7 @@ jimport('joomla.log.entry');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsControllerDynamic_Types_Manager extends JControllerForm
+class THMGroupsControllerDynamic_Type_Manager extends JControllerLegacy
 {
     /**
      * constructor (registers additional tasks to methods)
@@ -49,5 +49,42 @@ class THMGroupsControllerDynamic_Types_Manager extends JControllerForm
     {
         // Call parent behavior
         parent::display($cachable);
+    }
+
+    public function add()
+    {
+        if (!JFactory::getUser()->authorise('core.admin'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
+
+        $this->setRedirect("index.php?option=com_thm_groups&view=dynamic_type_edit&id=0");
+    }
+
+    public function edit()
+    {
+        if (!JFactory::getUser()->authorise('core.admin'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
+
+        $this->input->set('view', 'dynamic_type_edit');
+        $this->input->set('hidemainmenu', 1);
+        parent::display();
+    }
+
+    public function remove()
+    {
+        $model = $this->getModel('dynamic_type_manager');
+
+        if ($model->remove())
+        {
+            $msg = JText::_('COM_THM_GROUPS_DATA_DELETED');
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_SAVE_DELETED');
+        }
+        $this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_manager', $msg);
     }
 }
