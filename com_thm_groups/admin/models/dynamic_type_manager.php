@@ -56,6 +56,27 @@ class THMGroupsModelDynamic_Type_Manager extends JModelList
             ->innerJoin('#__thm_groups_static_type AS static ON dynamic.static_typeID = static.id')
             ->from('#__thm_groups_dynamic_type AS dynamic');
         return $query;
+    }
 
+    public function remove()
+    {
+        $ids = JFactory::getApplication()->input->get('cid', array(), 'array');
+
+
+        $db = JFactory::getDbo();
+
+        $query = $db->getQuery(true);
+
+        $conditions = array(
+            $db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')',
+        );
+
+        $query->delete($db->quoteName('#__thm_groups_dynamic_type'));
+        $query->where($conditions);
+
+        $db->setQuery($query);
+
+
+        return $result = $db->execute();
     }
 }
