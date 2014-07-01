@@ -11,7 +11,10 @@ defined('_JEXEC') or die('Restricted Access');
             <?php echo $item->id; ?>
         </td>
         <td>
-            <?php echo $item->name; ?>
+            <?php
+                $link = JRoute::_('index.php?option=com_thm_groups&task=dynamic_type_manager.edit&cid[]=' . $item->id);
+                echo "<a href='$link'>" . $item->name . "</a>";
+            ?>
         </td>
         <td>
             <?php echo $item->static_type_name; ?>

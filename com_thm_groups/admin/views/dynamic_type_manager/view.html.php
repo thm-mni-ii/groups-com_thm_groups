@@ -40,6 +40,7 @@ class THMGroupsViewDynamic_Type_Manager extends JViewLegacy
         // Get data from the model
         $items = $this->get('Items');
         $pagination = $this->get('Pagination');
+        $state = $this->get('State');
 
         $this->addToolbar();
 
@@ -52,6 +53,9 @@ class THMGroupsViewDynamic_Type_Manager extends JViewLegacy
         // Assign data to the view
         $this->items = $items;
         $this->pagination = $pagination;
+        $this->state = $state;
+        $this->sortDirection = $state->get('list.direction');
+        $this->sortColumn = $state->get('list.ordering');
 
         // Display the template
         parent::display($tpl);
@@ -64,6 +68,7 @@ class THMGroupsViewDynamic_Type_Manager extends JViewLegacy
      */
     protected function addToolbar()
     {
+
         $user = JFactory::getUser();
 
         JToolBarHelper::title(
@@ -79,5 +84,6 @@ class THMGroupsViewDynamic_Type_Manager extends JViewLegacy
             JToolBarHelper::divider();
             JToolBarHelper::preferences('com_thm_groups');
         }
+
     }
 }

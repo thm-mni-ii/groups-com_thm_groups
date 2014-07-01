@@ -25,6 +25,18 @@ jimport('joomla.application.component.modellist');
 class THMGroupsModelDynamic_Type_Manager extends JModelList
 {
 
+    public function __construct($config = array())
+    {
+        $config['filter_fields'] = array(
+            'ID',
+            'Name',
+            'Static_Type_Name',
+            'Regular expression'
+        );
+
+        parent::__construct($config);
+    }
+
     /**
      * Method to build an SQL query to load the list data.
      *
@@ -32,22 +44,6 @@ class THMGroupsModelDynamic_Type_Manager extends JModelList
      */
     protected function getListQuery()
     {
-
-        // JLog Test
-        $options['format'] = '{DATE}\t{TIME}\t{LEVEL}\t{CODE}\t{MESSAGE}';
-        $options['text_file'] = 'com_thm_groups.log.php';
-        JLog::addLogger($options, JLog::ALL, array('com_thm_groups.log'));
-
-        JLog::add('Test it motherfucker!', JLog::INFO, 'com_thm_groups.log');
-        JLog::add(
-        // Entry
-            'Error while doing something',
-            // Priority (EMERGENCY|ALERT|CRITICAL|ERROR|WARNING|NOTICE|INFO|DEBUG|)
-            JLog::ERROR,
-            // Category
-            'com_thm_groups.log'
-        );
-
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
 
@@ -55,7 +51,31 @@ class THMGroupsModelDynamic_Type_Manager extends JModelList
             ->select('dynamic.id, dynamic.name, static.name as static_type_name, regex')
             ->innerJoin('#__thm_groups_static_type AS static ON dynamic.static_typeID = static.id')
             ->from('#__thm_groups_dynamic_type AS dynamic');
+
+        $query->order($db->escape($this->getState('list.ordering', 'dynamic.id')) . ' ' .
+            $db->escape($this->getState('list.direction')));
+
         return $query;
+    }
+
+    protected function populateState($ordering = null, $direction = null) {
+        // Initialise variables.
+        $app = JFactory::getApplication();
+
+        $order = $app->getUserStateFromRequest('com_thm_groups' . '.filter_order', 'filter_order', '');
+        $dir = $app->getUserStateFromRequest('com_thm_groups' . '.filter_order_Dir', 'filter_order_Dir', '');
+
+        $this->setState('list.ordering', $order);
+        $this->setState('list.direction', $dir);
+
+        if ($order == '')
+        {
+            parent::populateState("ID", "ASC");
+        }
+        else
+        {
+            parent::populateState($order, $dir);
+        }
     }
 
     public function remove()
