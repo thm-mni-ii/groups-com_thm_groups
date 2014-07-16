@@ -18,4 +18,7 @@ defined('_JEXEC') or die('Restricted Access');
     <th>
         <?php echo JHtml::_('grid.sort', 'Regular expression', 'regex', $this->sortDirection, $this->sortColumn); ?>
     </th>
+    <th>
+        <?php echo JText::_('Descfription'); ?>
+    </th>
 </tr>

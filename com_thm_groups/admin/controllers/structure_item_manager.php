@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsControllerDynamic_Types_Manager
- * @description THMGroupsControllerDynamic_Types_Manager class from com_thm_groups
+ * @name        THMGroupsControllerStructure_Type_Manager
+ * @description THMGroupsControllerStructure_Type_Manager class from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -20,14 +20,14 @@ jimport('joomla.application.component.controller');
 
 
 /**
- * THMGroupsControllerDynamic_Types_Manager class for component com_thm_groups
+ * THMGroupsControllerStructure_Type_Manager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 3.5
  */
-class THMGroupsControllerDynamic_Type_Manager extends JControllerLegacy
+class THMGroupsControllerStructure_Item_Manager extends JControllerLegacy
 {
     /**
      * constructor (registers additional tasks to methods)
@@ -56,7 +56,7 @@ class THMGroupsControllerDynamic_Type_Manager extends JControllerLegacy
             return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
         }
 
-        $this->setRedirect("index.php?option=com_thm_groups&view=dynamic_type_edit&id=0");
+        $this->setRedirect("index.php?option=com_thm_groups&view=structure_item_edit&id=0");
     }
 
     public function edit()
@@ -66,23 +66,23 @@ class THMGroupsControllerDynamic_Type_Manager extends JControllerLegacy
             return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
         }
 
-        $this->input->set('view', 'dynamic_type_edit');
+        $this->input->set('view', 'structure_item_edit');
         $this->input->set('hidemainmenu', 1);
         parent::display();
     }
 
     public function remove()
     {
-        $model = $this->getModel('dynamic_type_manager');
+        $model = $this->getModel('structure_item_manager');
 
         if ($model->remove())
         {
-                $msg = JText::_('COM_THM_GROUPS_DATA_DELETED');
-            }
-            else
-            {
+            $msg = JText::_('COM_THM_GROUPS_DATA_DELETED');
+        }
+        else
+        {
             $msg = JText::_('COM_THM_GROUPS_SAVE_DELETED');
         }
-        $this->setRedirect("index.php?option=com_thm_groups&view=dynamic_type_manager", $msg);
+        $this->setRedirect('index.php?option=com_thm_groups&view=structure_item_manager', $msg);
     }
 }

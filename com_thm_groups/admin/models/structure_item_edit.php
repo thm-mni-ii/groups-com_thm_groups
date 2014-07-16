@@ -3,7 +3,7 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        dynamic type model
+ * @name        structure item model
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -12,7 +12,6 @@
 
 defined('_JEXEC') or die;
 jimport('joomla.application.component.modeladmin');
-require_once JPATH_COMPONENT . '/assets/helpers/static_type_options_helper.php';
 
 /**
  * Class loads form data to edit an entry.
@@ -21,14 +20,15 @@ require_once JPATH_COMPONENT . '/assets/helpers/static_type_options_helper.php';
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
  */
-class THMGroupsModelDynamic_Type_Edit extends JModelAdmin
+class THMGroupsModelStructure_Item_Edit extends JModelAdmin
 {
+
     /**
      * returns one dynamic item
      *
      * @return mixed|stdClass
      */
-    public function getDynamicTypeItem()
+    public function getStructureItem()
     {
         $app = JFactory::getApplication();
         $cid = $app->input->get('cid', array(), 'array');
@@ -39,9 +39,8 @@ class THMGroupsModelDynamic_Type_Edit extends JModelAdmin
         {
             $db = JFactory::getDBO();
             $query = $db->getQuery(true);
-
             $query->select('*');
-            $query->from($db->qn('#__thm_groups_dynamic_type'));
+            $query->from($db->qn('#__thm_groups_structure_item'));
             $query->where('id = ' . (int) $id);
             $db->setQuery($query);
 
@@ -52,7 +51,7 @@ class THMGroupsModelDynamic_Type_Edit extends JModelAdmin
             // Bullshit part
             $temp = new stdClass;
             $temp->id = 0;
-            $temp->static_typeID = 0;
+            $temp->dynamic_typeID = 0;
             return $temp;
         }
     }
@@ -69,7 +68,7 @@ class THMGroupsModelDynamic_Type_Edit extends JModelAdmin
      */
     public function getForm($data = array(), $loadData = true)
     {
-        $form = $this->loadForm('com_thm_groups.dynamic_type_edit', 'dynamic_type_edit',
+        $form = $this->loadForm('com_thm_groups.structure_item_edit', 'structure_item_edit',
             array('control' => 'jform', 'load_data' => $loadData));
         if (empty($form))
         {
@@ -88,7 +87,7 @@ class THMGroupsModelDynamic_Type_Edit extends JModelAdmin
      *
      * @return  JTable|mixed
      */
-    public function getTable($type = 'Dynamic_Type', $prefix = 'Table', $config = array())
+    public function getTable($type = 'Structure_Item', $prefix = 'Table', $config = array())
     {
         return JTable::getInstance($type, $prefix, $config);
     }
@@ -98,13 +97,13 @@ class THMGroupsModelDynamic_Type_Edit extends JModelAdmin
      *
      * @return  Array
      */
-    public function getStaticTypes()
+    public function getDynamicTypes()
     {
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
         $query->select('id, name')
-            ->from('#__thm_groups_static_type');
+            ->from('#__thm_groups_dynamic_type');
         $db->setQuery($query);
         $db->execute();
 
@@ -118,13 +117,13 @@ class THMGroupsModelDynamic_Type_Edit extends JModelAdmin
      *
      * @return  select field
      */
-    public function getStaticTypesSelectField($static_typeID)
+    public function getDynamicTypesSelectField($dynamic_typeID)
     {
         $options = array();
 
-        $selected = $static_typeID;
+        $selected = $dynamic_typeID;
 
-        $arrayOfStaticTypes = $this->getStaticTypes();
+        $arrayOfStaticTypes = $this->getDynamicTypes();
 
         // Convert array to options
         foreach($arrayOfStaticTypes as $key => $value) :
@@ -139,7 +138,7 @@ class THMGroupsModelDynamic_Type_Edit extends JModelAdmin
 
         $selectFieldStaticTypes = JHtmlSelect::genericlist(
             $options,
-            'staticType',  // Name of select field
+            'dynamicType',  // Name of select field
             $settings,
             'value',       // Standard
             'text',        // variables
@@ -171,17 +170,17 @@ class THMGroupsModelDynamic_Type_Edit extends JModelAdmin
      */
     public function store()
     {
-        $options = THM_GroupsHelperOptions::getOptions();
         $dbo = JFactory::getDbo();
 
         $app = JFactory::getApplication();
         $data = $app->input->post->get('jform', array(), 'array');
-        $data['static_typeID'] = $app->input->post->get('staticType');
+
+        // dynamicType is a name of select field
+        $data['dynamic_typeID'] = $app->input->post->get('dynamicType');
 
         // Cast to int, because the type in DB is int
-        $data['static_typeID'] = (int) $data['static_typeID'];
+        $data['dynamic_typeID'] = (int) $data['dynamic_typeID'];
         $data['description'] = $dbo->escape($data['description']);
-        $data['options'] = $options[$data['static_typeID']];
 
         $dbo->transactionStart();
 

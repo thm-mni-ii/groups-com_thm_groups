@@ -12,15 +12,15 @@ defined('_JEXEC') or die('Restricted Access');
         </td>
         <td>
             <?php
-                $link = JRoute::_('index.php?option=com_thm_groups&view=dynamic_type_edit&cid[]=' . $item->id);
-                echo "<a href='$link'>" . $item->name . "</a>";
+            $link = JRoute::_('index.php?option=com_thm_groups&view=structure_item_edit&cid[]=' . $item->id);
+            echo "<a href='$link'>" . $item->name . "</a>";
             ?>
         </td>
         <td>
-            <?php echo $item->static_type_name; ?>
+            <?php echo $item->dynamic_type_name; ?>
         </td>
         <td>
-            <?php echo $item->regex; ?>
+            <?php echo $item->options; ?>
         </td>
         <td>
             <?php echo $item->description; ?>

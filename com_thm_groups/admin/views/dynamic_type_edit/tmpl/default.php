@@ -42,12 +42,17 @@ JHTML::_('behavior.tooltip');
                 <div class="controls">
                     <?php echo $this->selectFieldStaticTypes ?>
                 </div>
-                </li>
                 <div class="control-label">
                     <?php echo $this->form->getLabel('regex'); ?>
                 </div>
                 <div class="controls">
                     <?php echo $this->form->getInput('regex'); ?>
+                </div>
+                <div class="control-label">
+                    <?php echo $this->form->getLabel('description'); ?>
+                </div>
+                <div class="controls">
+                    <?php echo $this->form->getInput('description'); ?>
                 </div>
             </div>
         </fieldset>

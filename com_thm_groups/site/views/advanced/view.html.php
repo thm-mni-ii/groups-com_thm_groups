@@ -101,7 +101,7 @@ class THMGroupsViewAdvanced extends JView
         $truncateLongInfo = !$params->get('longInfoNotTruncated', false);
         $this->assignRef('truncateLongInfo', $truncateLongInfo);
 
-        // Load jQuery
+        // Load test
         $scriptDir = str_replace(JPATH_SITE . DS, '', "libraries/thm_groups/assets/js/");
         JHTML::script('jquery-1.9.1.min.js', $scriptDir, false);
 

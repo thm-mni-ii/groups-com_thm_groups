@@ -21,37 +21,37 @@ $doc->addStyleSheet(JURI::root(true) . "/libraries/thm_groups/assets/elements/ex
 ?>
 
 <script type="text/javascript">
-jstructadd = jQuery.noConflict();
+test = test.noConflict();
 
-jstructadd.fn.getFieldExtras = function(){
+test.fn.getFieldExtras = function(){
 
-    var field = jstructadd('#relation option:selected').text();
+    var field = test('#relation option:selected').text();
 
     //$('#jquery-select option:selected').text();
  if(field.length == null)
      return null;
-    jstructadd.ajax({
+    test.ajax({
         type: "POST",
         url: "index.php?option=com_thm_groups&controller=editstructure&task=addstructure.getFieldExtrasLabel&field="
             +field,
 
             success: function(response) {
-                jstructadd('#ajax-container').html(response);
+                test('#ajax-container').html(response);
         }
     });
 
-    jstructadd.ajax({
+    test.ajax({
         type: "POST",
         url: "index.php?option=com_thm_groups&controller=editstructure&task=addstructure.getFieldExtras&sid="
             +0+"&field="+field,
         datatype:"HTML",
         success: function(response)
         {
-            jstructadd('#ajax-container2').html(response);
+            test('#ajax-container2').html(response);
         }
     });
 }
-jstructadd(document).ready(function(){jstructadd.fn.getFieldExtras();});
+test(document).ready(function(){test.fn.getFieldExtras();});
 </script>
 
 <form action="index.php" method="post" name="adminForm" id="adminForm">
@@ -78,7 +78,7 @@ jstructadd(document).ready(function(){jstructadd.fn.getFieldExtras();});
                     </label>
                 </td>
                 <td>
-                    <select name="relation" id="relation" size="1" onchange='jstructadd.fn.getFieldExtras();'>
+                    <select name="relation" id="relation" size="1" onchange='test.fn.getFieldExtras();'>
                     <?php
                         foreach ($this->items as $item)
                         {

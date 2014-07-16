@@ -223,7 +223,7 @@ class THMGroupsModelAdvanced extends JModel
         $groupid           = $this->getGroupNumber();
         $params            = $this->getViewParams();
 
-        $sortedRoles       = $params->get('sortedgrouproles');
+        $sortedRoles       = $params->get('roleid');
         $types             = $this->getTypes();
         $puffer            = array();
         $result            = array();

@@ -10,5 +10,8 @@ defined('_JEXEC') or die('Restricted Access');
         <td>
             <?php echo $item->name; ?>
         </td>
+        <td>
+            <?php echo $item->description; ?>
+        </td>
     </tr>
 <?php endforeach; ?>

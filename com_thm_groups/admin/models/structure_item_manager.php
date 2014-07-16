@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsModelDynamic_Types_Manager
- * @description THMGroupsModelDynamic_Types_Manager file from com_thm_groups
+ * @name        THMGroupsModelStatic_Type_Manager
+ * @description THMGroupsModelStatic_Type_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -15,54 +15,24 @@ defined('_JEXEC') or die();
 jimport('joomla.application.component.modellist');
 
 /**
- * THMGroupsModelDynamic_Types_Manager class for component com_thm_groups
+ * THMGroupsModelStatic_Type_Manager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsModelDynamic_Type_Manager extends JModelList
+class THMGroupsModelStructure_Item_Manager extends JModelList
 {
-
-    /**
-     * checks dependencies with dstructure items
-     */
-    public function checkDependencies()
-    {
-        $ids = JFactory::getApplication()->input->get('cid', array(), 'array');
-        $dbo = JFactory::getDbo();
-        $badIds = array();
-
-        foreach($ids as $id)
-        {
-            $query = $dbo->getQuery(true);
-            $query
-                ->select('id')
-                ->from('#__thm_groups_structure_item')
-                ->where("dynamic_typeID = $id");
-            $dbo->setQuery($query);
-
-            if($dbo->loadObject() == null)
-            {
-                array_push($badIds, $id);
-            }
-        }
-        return $badIds;
-    }
-
-    public function getStructureItem()
-    {
-
-    }
 
     public function __construct($config = array())
     {
+
+        // If change here, change then in default_head
         $config['filter_fields'] = array(
             'ID',
             'Name',
-            'Static_Type_Name',
-            'Regular expression'
+            'Dynamic_Type_Name'
         );
 
         parent::__construct($config);
@@ -79,11 +49,11 @@ class THMGroupsModelDynamic_Type_Manager extends JModelList
         $query = $db->getQuery(true);
 
         $query
-            ->select('dynamic.id, dynamic.name, static.name as static_type_name, regex, dynamic.description')
-            ->innerJoin('#__thm_groups_static_type AS static ON dynamic.static_typeID = static.id')
-            ->from('#__thm_groups_dynamic_type AS dynamic');
+            ->select('structure.id, structure.name, dynamic.name as dynamic_type_name, structure.options, structure.description')
+            ->innerJoin('#__thm_groups_dynamic_type AS dynamic ON structure.dynamic_typeID = dynamic.id')
+            ->from('#__thm_groups_structure_item AS structure');
 
-        $query->order($db->escape($this->getState('list.ordering', 'dynamic.id')) . ' ' .
+        $query->order($db->escape($this->getState('list.ordering', 'structure.id')) . ' ' .
             $db->escape($this->getState('list.direction')));
 
         return $query;
@@ -118,6 +88,8 @@ class THMGroupsModelDynamic_Type_Manager extends JModelList
     public function remove()
     {
         $ids = JFactory::getApplication()->input->get('cid', array(), 'array');
+
+
         $db = JFactory::getDbo();
 
         $query = $db->getQuery(true);
@@ -126,20 +98,12 @@ class THMGroupsModelDynamic_Type_Manager extends JModelList
             $db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')',
         );
 
-        $query->delete($db->quoteName('#__thm_groups_dynamic_type'));
+        $query->delete($db->quoteName('#__thm_groups_structure_item'));
         $query->where($conditions);
 
         $db->setQuery($query);
-        $result = $db->execute();
 
-        // Joomla 3.x Error handling style
-        if ($db->getErrorNum())
-        {
-            JFactory::getApplication()->enqueueMessage($db->getErrorMsg(), 'error');
 
-            return false;
-        }
-
-        return $result;
+        return $result = $db->execute();
     }
 }

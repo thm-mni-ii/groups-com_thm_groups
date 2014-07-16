@@ -22,7 +22,7 @@ $doc->addStyleSheet(JURI::root(true) . "/libraries/thm_groups/assets/elements/ex
 
 <script type="text/javascript">
 
-jstruct = jQuery.noConflict();
+jstruct = test.noConflict();
 
 jstruct.fn.getFieldExtras = function(){
 

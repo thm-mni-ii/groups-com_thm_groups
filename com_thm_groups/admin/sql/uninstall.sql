@@ -19,5 +19,8 @@ DROP TABLE IF EXISTS `#__thm_groups_text_extra`,
 					 `#__thm_groups_date`,
 					 `#__thm_groups_conf`,
 					 `#__thm_groups_additional_userdata`,
-					 `#__thm_quickpages_map`;
+					 `#__thm_quickpages_map`,
+					 `#__thm_groups_static_type`,
+					 `#__thm_groups_dynamic_type`,
+					 `#__thm_groups_structure_item`;
 

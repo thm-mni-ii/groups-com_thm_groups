@@ -11,7 +11,7 @@ jimport('joomla.application.component.table');
  * @subpackage  com_thm_groups.admin
  * @link        www.mni.thm.de
  */
-class TableDynamic_Type extends JTable
+class TableStructure_Item extends JTable
 {
 
     /**
@@ -21,6 +21,6 @@ class TableDynamic_Type extends JTable
      */
     public function __construct(&$dbo)
     {
-        parent::__construct('#__thm_groups_dynamic_type', 'id', $dbo);
+        parent::__construct('#__thm_groups_structure_item', 'id', $dbo);
     }
 }

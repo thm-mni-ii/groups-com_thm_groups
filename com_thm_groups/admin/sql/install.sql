@@ -412,34 +412,57 @@ PRIMARY KEY (`conid`)
 CREATE TABLE IF NOT EXISTS `#__thm_groups_static_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
+  `description` text,
   PRIMARY KEY (`id`)
 ) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
-INSERT INTO `#__thm_groups_static_type` (`id`, `name`) VALUES
-  ('1', 'TEXT'),
-  ('2', 'TEXTFIELD'),
-  ('3', 'LINK'),
-  ('4', 'PICTURE'),
-  ('5', 'MULTISELECT'),
-  ('6', 'TABLE'),
-  ('7', 'TEMPLATE');
+INSERT INTO `#__thm_groups_static_type` (`id`, `name`, `description`) VALUES
+  (1, 'TEXT', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.'),
+  (2, 'TEXTFIELD', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.'),
+  (3, 'LINK', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.'),
+  (4, 'PICTURE', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.'),
+  (5, 'MULTISELECT', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.'),
+  (6, 'TABLE', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.'),
+  (7, 'TEMPLATE', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.');
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_dynamic_type` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar (255) DEFAULT NULL,
+  `id` int (11) NOT NULL AUTO_INCREMENT,
+  `name` varchar (255) DEFAULT NULL UNIQUE,
   `regex` varchar (255) DEFAULT NULL,
   `static_typeID` int (11) NOT NULL,
-  PRIMARY KEY (`id`, `static_typeID`),
-  FOREIGN KEY (static_typeID) REFERENCES `#__thm_groups_static_type`(`id`)
+  `description` text,
+  `options` text,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`static_typeID`) REFERENCES `#__thm_groups_static_type`(`id`)
 ) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 -- Testdaten
-INSERT INTO `#__thm_groups_dynamic_type` (id, static_typeID, name, regex) VALUES
-  ('1', '1', 'Name', ''),
-  ('2', '1', 'Email', ''),
-  ('3', '3', 'Website', ''),
-  ('4', '4', 'Profile Foto', ''),
-  ('5', '5', 'Test Multiselect', ''),
-  ('6', '6', 'Test Table', ''),
-  ('7', '7', 'Test Template', ''),
-  ('8', '2', 'Test Text Field', '');
+INSERT INTO `#__thm_groups_dynamic_type` (`id`, `static_typeID`, `name`, `regex`, `description`) VALUES
+  (1, 1, 'Name', '', 'Yolo Swaggins'),
+  (2, 1, 'Email', '', 'Yolo Swaggins'),
+  (3, 3, 'Website', '', 'Yolo Swaggins'),
+  (4, 4, 'Profile Foto', '', 'Yolo Swaggins'),
+  (5, 5, 'Test Multiselect', '', 'Yolo Swaggins'),
+  (6, 6, 'Test Table', '', 'Yolo Swaggins'),
+  (7, 7, 'Test Template', '', 'Yolo Swaggins'),
+  (8, 2, 'Test Text Field', '', 'Yolo Swaggins'),
+  (9, 3, 'URI', '', 'Yolo Swaggins');
+
+CREATE TABLE IF NOT EXISTS `#__thm_groups_structure_item` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar (255) DEFAULT NULL UNIQUE,
+  `dynamic_typeID` int(11) DEFAULT NULL,
+  `options` text,
+  `description` text,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`dynamic_typeID`) REFERENCES `#__thm_groups_dynamic_type`(`id`)
+) ENGINE = INNODB DEFAULT CHARSET=utf8;
+
+INSERT INTO `#__thm_groups_structure_item` (`id`, `name`, `dynamic_typeID`, `description`) VALUES
+  (1, 'Titel', 1, 'a'),
+  (2, 'Vorname', 1, 'b'),
+  (3, 'Nachname', 1, 'c'),
+  (4, 'Posttitel', 1, 'd'),
+  (5, 'Profilbild', 4, 'e'),
+  (6, 'Facebook', 9, 'f'),
+  (7, 'Email', 2, 'g');

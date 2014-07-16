@@ -32,27 +32,11 @@ class THMGroupsModelStatic_Type_Manager extends JModelList
      */
     protected function getListQuery()
     {
-
-        // JLog Test
-        $options['format'] = '{DATE}\t{TIME}\t{LEVEL}\t{CODE}\t{MESSAGE}';
-        $options['text_file'] = 'com_thm_groups.log.php';
-        JLog::addLogger($options, JLog::ALL, array('com_thm_groups.log'));
-
-        JLog::add('Test it motherfucker!', JLog::INFO, 'com_thm_groups.log');
-        JLog::add(
-        // Entry
-            'Error while doing something',
-            // Priority (EMERGENCY|ALERT|CRITICAL|ERROR|WARNING|NOTICE|INFO|DEBUG|)
-            JLog::ERROR,
-            // Category
-            'com_thm_groups.log'
-        );
-
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
 
         $query
-            ->select('id, name')
+            ->select('id, name, description')
             ->from('#__thm_groups_static_type');
         return $query;
 

@@ -9,4 +9,7 @@ defined('_JEXEC') or die('Restricted Access');
     <th>
         <?php echo JText::_('Name'); ?>
     </th>
+    <th>
+        <?php echo JText::_('Description'); ?>
+    </th>
 </tr>

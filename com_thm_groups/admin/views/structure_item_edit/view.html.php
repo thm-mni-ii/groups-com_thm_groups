@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsViewDynamic_Type_Edit
- * @description THMGroupsViewDynamic_Type_Edit file from com_thm_groups
+ * @name        THMGroupsViewStructure_Item_Edit
+ * @description THMGroupsViewStructure_Item_Edit file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -15,14 +15,14 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
 
 /**
- * THMGroupsViewAddStructure class for component com_thm_groups
+ * THMGroupsViewStructure_Item_Edit class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
+ * @since     Class available since Release 3.5
  */
-class THMGroupsViewDynamic_Type_Edit extends JViewLegacy
+class THMGroupsViewStructure_Item_Edit extends JViewLegacy
 {
     /**
      * Method to get display
@@ -38,13 +38,15 @@ class THMGroupsViewDynamic_Type_Edit extends JViewLegacy
             return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
         }
 
-        $model = $this->getModel('dynamic_type_edit');
+        $model = $this->getModel('structure_item_edit');
         $form = $this->get('Form');
-        $item = $this->get('DynamicTypeItem');
+        $item = $this->get('StructureItem');
 
         $this->form = $form;
         $this->item = $item;
-        $this->selectFieldStaticTypes = $model->getStaticTypesSelectField($this->item->static_typeID);
+
+        // TODO Change
+        $this->selectFieldDynamicTypes = $model->getDynamicTypesSelectField($this->item->dynamic_typeID);
 
         if (count($errors = $this->get('Errors')))
         {
@@ -65,9 +67,9 @@ class THMGroupsViewDynamic_Type_Edit extends JViewLegacy
 
         JToolBarHelper::title($title, 'test');
 
-        JToolBarHelper::apply('dynamic_type_edit.apply', 'JTOOLBAR_APPLY');
-        JToolBarHelper::save('dynamic_type_edit.save', 'JTOOLBAR_SAVE');
-        JToolBarHelper::custom('dynamic_type_edit.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-        JToolBarHelper::cancel('dynamic_type_edit.cancel', 'JTOOLBAR_CLOSE');
+        JToolBarHelper::apply('structure_item_edit.apply', 'JTOOLBAR_APPLY');
+        JToolBarHelper::save('structure_item_edit.save', 'JTOOLBAR_SAVE');
+        JToolBarHelper::custom('structure_item_edit.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+        JToolBarHelper::cancel('structure_item_edit.cancel', 'JTOOLBAR_CLOSE');
     }
 }
