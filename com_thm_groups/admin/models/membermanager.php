@@ -248,7 +248,7 @@ class THMGroupsModelmembermanager extends JModelList
      * @access  protected
      * @return	query
      */
-    protected function getListQuery()
+    protected function getListQuery2()
     {
         // Create a new query object.
         $orderCol	= $this->state->get('list.ordering');
@@ -325,6 +325,84 @@ class THMGroupsModelmembermanager extends JModelList
         $query->order("$orderCol $orderDirn");
 
         return $query;
+    }
+
+    // TODO rename this method
+    public function getPublishedAndInJoomla()
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query
+            ->select('*')
+            ->from('#__thm_groups_users');
+
+        $db->setQuery($query);
+
+        $result = $this->makeBlabla($db->loadObjectList());
+
+        return $result;
+    }
+
+    // TODO rename this method
+    public function makeBlabla($temp)
+    {
+        $newBla = array();
+
+        foreach($temp as $data)
+        {
+            $myObject = new StdClass();
+            $myObject->published = $data->published;
+            $myObject->injoomla = $data->in_joomla;
+            $newBla[$data->id] = $myObject;
+        }
+
+        return $newBla;
+    }
+
+    public function getMainUserInfo()
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query
+            ->select('ust.userID, st.name as type, ust.value')
+            ->from('#__thm_groups_users_structure_item AS ust')
+            ->join('INNER', '#__thm_groups_structure_item AS st ON ust.structure_itemID = st.id')
+            ->where('ust.structure_itemID IN (1,2,4,5) LIMIT 0, 50');
+
+        $db->setQuery($query);
+
+        $result = $this->makeCleanOutput($db->loadObjectList());
+
+        return $result;
+    }
+
+    public function makeCleanOutput($badData)
+    {
+        $beautifiedData = array();
+        foreach($badData as $data)
+        {
+            // Wenn das Objekt im Array schon vorhanden ist
+            if(array_key_exists($data->userID, $beautifiedData))
+            {
+                $userObject = $beautifiedData[$data->userID];
+                $newNamedAttribute = $data->type;
+                $userObject->$newNamedAttribute = $data->value;
+
+            }
+            // Wenn Objekt noch nict im Array
+            else
+            {
+                $newNamedAttribute = $data->type;
+                $userObject = new stdClass();
+                $userObject->$newNamedAttribute = $data->value;
+
+                $beautifiedData[$data->userID] = $userObject;
+            }
+        }
+
+        return $beautifiedData;
     }
 
     /**
@@ -479,6 +557,7 @@ class THMGroupsModelmembermanager extends JModelList
         return $selectOptions;
     }
 
+    // TODO
     /**
      * Gets list of all groups.
      *
@@ -559,6 +638,7 @@ class THMGroupsModelmembermanager extends JModelList
         return $db->loadObjectList();
     }
 
+    // TODO
     /**
      * Returns a UL list of user groups with check boxes
      *
@@ -636,6 +716,7 @@ class THMGroupsModelmembermanager extends JModelList
         return self::$actions;
     }
 
+    // TODO
     /**
      * Gets list of groups.
      *

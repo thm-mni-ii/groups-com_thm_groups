@@ -64,11 +64,12 @@ class THMGroupsViewmembermanager extends JViewLegacy
 
         $model = $this->getModel();
         $model->sync();
-        $items = $this->get('Items');
+        //$items = $this->get('Items');
+        $items = $this->get('MainUserInfo');
         $pagination = $this->get('Pagination');
 
-        $groupOptions = $model->getGroupSelectOptions();
-        $groups = $model->getGroups();
+        //$groupOptions = $model->getGroupSelectOptions();
+        //$groups = $model->getGroups();
         $roles = $model->getRoles();
 
         // Search filter
@@ -90,7 +91,7 @@ class THMGroupsViewmembermanager extends JViewLegacy
             $_POST['rolesFilters'] = null;
         }
 
-        $groupFilters = array();
+        /*$groupFilters = array();
         $groupFilters[] = JHTML::_('select.option', 0, JText::_('COM_THM_GROUPS_ALL'));
 
         foreach ($groupOptions as $option)
@@ -107,7 +108,7 @@ class THMGroupsViewmembermanager extends JViewLegacy
             'text',
             $this->state->get('groupFilters'),
             true
-        );
+        );*/
 
 
         $rolesFilters = array();
@@ -142,14 +143,15 @@ class THMGroupsViewmembermanager extends JViewLegacy
         $this->assignRef('items', $items);
         $this->assignRef('pagination', $pagination);
         $this->assignRef('lists', $lists);
-        $this->assignRef('groups', $groups);
-        $this->assignRef('groupOptions', $groupOptions);
+        //$this->assignRef('groups', $groups);
+        //$this->assignRef('groupOptions', $groupOptions);
         $this->assignRef('roles', $roles);
         $this->assignRef('rolesFilters', $_POST['rolesFilters']);
-        $this->assignRef('groupFilters', $_POST['groupFilters']);
+        //$this->assignRef('groupFilters', $_POST['groupFilters']);
         $this->assignRef('grcheckon', $grcheck);
         $this->assignRef('model', $model);
         $this->filterForm    = $this->get('FilterForm');
+        $this->publishedAndInJoomla = $this->get('PublishedAndInJoomla');
 
         parent::display($tpl);
     }

@@ -50,7 +50,7 @@ class THMGroupsController extends JControllerLegacy
         );
         JSubMenuHelper::addEntry(
             JText::_('COM_THM_GROUPS_GROUPMANAGER'),
-            'index.php?option=com_thm_groups&view=groupmanager',
+            'index.php?option=com_users&view=groups',
             $vName == 'groupmanager'
         );
         JSubMenuHelper::addEntry(

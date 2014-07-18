@@ -97,27 +97,29 @@ class THMGroupsModelGroupmanager extends JModelList
         $query .= "ORDER BY lft";
         */
 
+        /*
         $nestedQuery1 = $db->getQuery(true);
         $nestedQuery1->select('*');
         $nestedQuery1->from($db->qn('#__thm_groups_groups'));
         $nestedQuery1->order("$orderCol $orderDirn");
+        */
 
         $nestedQuery2 = $db->getQuery(true);
         $nestedQuery2->select('joo.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla');
         $nestedQuery2->from("#__usergroups AS joo");
-        $nestedQuery2->leftJoin("(" . $nestedQuery1 . ") AS thm ON joo.id = thm.id");
         $nestedQuery2->order("lft");
 
+        /*
         $nestedQuery3 = $db->getQuery(true);
         $nestedQuery3->select('*');
         $nestedQuery3->from($db->qn('#__thm_groups_groups'));
         $nestedQuery3->where("injoomla = 0");
         $nestedQuery3->order("$orderCol $orderDirn");
+        */
 
         $nestedQuery4 = $db->getQuery(true);
         $nestedQuery4->select('thm.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla');
         $nestedQuery4->from("#__usergroups AS joo");
-        $nestedQuery4->rightJoin("(" . $nestedQuery3 . ") AS thm ON joo.id = thm.id UNION $nestedQuery2");
 
         return $nestedQuery4->__toString();
     }
