@@ -14,14 +14,7 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted Access');
+jimport('thm_core.list.template');
+THM_CoreListTemplate::render($this);
 
-// load tooltip behavior
-JHtml::_('behavior.tooltip');
-?>
-<form action="<?php echo JRoute::_('index.php?option=com_thm_groups'); ?>" method="post" name="adminForm" id="adminForm">
-    <table class="table table-striped">
-        <thead><?php echo $this->loadTemplate('head');?></thead>
-        <tfoot><?php echo $this->loadTemplate('foot');?></tfoot>
-        <tbody><?php echo $this->loadTemplate('body');?></tbody>
-    </table>
-</form>
+

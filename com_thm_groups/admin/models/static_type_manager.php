@@ -26,6 +26,23 @@ class THMGroupsModelStatic_Type_Manager extends JModelList
 {
 
     /**
+     * sets variables and configuration data
+     *
+     * @param   array  $config  the configuration parameters
+     */
+    public function __construct($config = array())
+    {
+        if (empty($config['filter_fields']))
+        {
+            $config['filter_fields'] = array(
+                'id',
+                'name'
+            );
+        }
+        parent::__construct($config);
+    }
+
+    /**
      * Method to build an SQL query to load the list data.
      *
      * @return      string  An SQL query
@@ -38,7 +55,74 @@ class THMGroupsModelStatic_Type_Manager extends JModelList
         $query
             ->select('id, name, description')
             ->from('#__thm_groups_static_type');
-        return $query;
 
+        $search = $this->getState('filter.search');
+        if (!empty($search))
+        {
+            $query->where("(name LIKE '%" . implode("%' OR name LIKE '%", explode(' ', $search)) . "%')");
+        }
+
+        $orderCol = $this->state->get('list.ordering', 'id');
+        $orderDirn = $this->state->get('list.direction', 'asc');
+        $query->order($db->escape($orderCol . ' ' . $orderDirn));
+
+        return $query;
+    }
+
+    /**
+     * Function to feed the data in the table body correctly to the list view
+     *
+     * @return array consisting of items in the body
+     */
+    public function getItems()
+    {
+        $items = parent::getItems();
+        $return = array();
+        if (empty($items))
+        {
+            return $return;
+        }
+
+        $index = 0;
+        foreach ($items as $item)
+        {
+            $return[$index] = array();
+            $return[$index][0] = $item->id;
+            $return[$index][1] = $item->name;
+            $return[$index][2] = $item->description;
+            $index++;
+        }
+        return $return;
+    }
+
+    /**
+     * Function to get table headers
+     *
+     * @return array including headers
+     */
+    public function getHeaders()
+    {
+        $ordering = $this->state->get('list.ordering');
+        $direction = $this->state->get('list.direction');
+
+        $headers = array();
+        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'id', $direction, $ordering);
+        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 'name', $direction, $ordering);
+        $headers[] = JText::_('COM_THM_GROUPS_DESCRIPTION');
+
+        return $headers;
+    }
+
+    /**
+     * takes user filter parameters and adds them to the view state
+     *
+     * @param   string  $ordering   the filter parameter to be used  for ordering
+     * @param   string  $direction  the direction in which results are to be ordered
+     *
+     * @return void
+     */
+    protected function populateState($ordering = null, $direction = null)
+    {
+        parent::populateState("id", "ASC");
     }
 }

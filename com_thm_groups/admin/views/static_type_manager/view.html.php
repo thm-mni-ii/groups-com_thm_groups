@@ -17,6 +17,7 @@ defined('_JEXEC') or die('Restricted access');
 
 // import Joomla view library
 jimport('joomla.application.component.view');
+jimport('thm_core.list.view');
 
 /**
  * THMGroupsViewStatic_Type_Manager class for component com_thm_groups
@@ -37,23 +38,7 @@ class THMGroupsViewStatic_Type_Manager extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        // Get data from the model
-        $items = $this->get('Items');
-        $pagination = $this->get('Pagination');
-
-        $this->addToolbar();
-
-        // Check for errors.
-        if (count($errors = $this->get('Errors')))
-        {
-            JError::raiseError(500, implode('<br />', $errors));
-            return false;
-        }
-        // Assign data to the view
-        $this->items = $items;
-        $this->pagination = $pagination;
-
-        // Display the template
+        THM_CoreListView::display($this);
         parent::display($tpl);
     }
 
@@ -62,7 +47,7 @@ class THMGroupsViewStatic_Type_Manager extends JViewLegacy
      *
      * @return void
      */
-    protected function addToolbar()
+    public function addToolbar()
     {
         $user = JFactory::getUser();
 
