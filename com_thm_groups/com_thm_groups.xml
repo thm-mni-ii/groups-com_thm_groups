@@ -25,6 +25,13 @@
              <schemapath type="mysql">sql/updates/mysql</schemapath>
         </schemas>
     </update>
+
+    <!-- Media files -->
+    <media destination="com_thm_groups" folder="media">
+        <folder>helpers</folder>
+        <filename>index.html</filename>
+    </media>
+
     <files folder="site">
         <filename>index.html</filename>
         <filename>thm_groups.php</filename>
