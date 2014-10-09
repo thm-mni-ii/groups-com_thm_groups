@@ -411,9 +411,10 @@ PRIMARY KEY (`conid`)
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_static_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `description` text,
-  PRIMARY KEY (`id`)
+  `name` VARCHAR(255) NOT NULL,
+  `description` TEXT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC)
 ) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__thm_groups_static_type` (`id`, `name`, `description`) VALUES
@@ -427,16 +428,17 @@ INSERT INTO `#__thm_groups_static_type` (`id`, `name`, `description`) VALUES
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_dynamic_type` (
   `id` int (11) NOT NULL AUTO_INCREMENT,
-  `name` varchar (255) DEFAULT NULL UNIQUE,
-  `regex` varchar (255) DEFAULT NULL,
-  `static_typeID` int (11) NOT NULL,
-  `description` text,
-  `options` text,
+  `name` varchar (255) NOT NULL UNIQUE,
+  `regex` TEXT NULL,
+  `static_typeID` INT (11) NOT NULL,
+  `description` TEXT,
+  `options` TEXT,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`static_typeID`) REFERENCES `#__thm_groups_static_type`(`id`)
+  FOREIGN KEY (`static_typeID`) REFERENCES `#__thm_groups_static_type`(`id`),
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC)
 ) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
--- Testdaten
+-- TESTDATEN
 INSERT INTO `#__thm_groups_dynamic_type` (`id`, `static_typeID`, `name`, `regex`, `description`) VALUES
   (1, 1, 'Name', '', 'Yolo Swaggins'),
   (2, 1, 'Email', '', 'Yolo Swaggins'),
@@ -446,23 +448,54 @@ INSERT INTO `#__thm_groups_dynamic_type` (`id`, `static_typeID`, `name`, `regex`
   (6, 6, 'Test Table', '', 'Yolo Swaggins'),
   (7, 7, 'Test Template', '', 'Yolo Swaggins'),
   (8, 2, 'Test Text Field', '', 'Yolo Swaggins'),
-  (9, 3, 'URI', '', 'Yolo Swaggins');
+  (9, 3, 'URI', '', 'Yolo Swaggins'),
+  (10, 1, 'Bla', '', 'Yolo Swaggins');
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_structure_item` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar (255) DEFAULT NULL UNIQUE,
-  `dynamic_typeID` int(11) DEFAULT NULL,
-  `options` text,
-  `description` text,
+  `name` varchar (255) DEFAULT NOT NULL UNIQUE,
+  `dynamic_typeID` int(11) DEFAULT NOT NULL,
+  `options` TEXT NULL,
+  `description` TEXT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`dynamic_typeID`) REFERENCES `#__thm_groups_dynamic_type`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC)
 ) ENGINE = INNODB DEFAULT CHARSET=utf8;
 
 INSERT INTO `#__thm_groups_structure_item` (`id`, `name`, `dynamic_typeID`, `description`) VALUES
-  (1, 'Titel', 1, 'a'),
-  (2, 'Vorname', 1, 'b'),
-  (3, 'Nachname', 1, 'c'),
-  (4, 'Posttitel', 1, 'd'),
-  (5, 'Profilbild', 4, 'e'),
-  (6, 'Facebook', 9, 'f'),
-  (7, 'Email', 2, 'g');
+  (1, 'Vorname', 1, 'Lorem ipsum dolor sit amet'),
+  (2, 'Nachname', 1, 'Lorem ipsum dolor sit amet'),
+  (3, 'Username', 1, 'Lorem ipsum dolor sit amet'),
+  (4, 'Email', 1, 'Lorem ipsum dolor sit amet'),
+  (5, 'Titel', 1, 'Lorem ipsum dolor sit amet'),
+  (6, 'Mode', 2, 'Lorem ipsum dolor sit amet'),
+  (7, 'Posttitel', 3, 'Lorem ipsum dolor sit amet'),
+  (91, 'Website', 4, 'Lorem ipsum dolor sit amet'),
+  (92, 'Tel', 5, 'Lorem ipsum dolor sit amet'),
+  (93, 'Raum', 6, 'Lorem ipsum dolor sit amet'),
+  (94, 'Sprechzeiten', 7, 'Lorem ipsum dolor sit amet'),
+  (95, 'Shortinfo', 8, 'Lorem ipsum dolor sit amet'),
+  (96, 'Longinfo', 9, 'Lorem ipsum dolor sit amet'),
+  (97, 'Bild', 10, 'Lorem ipsum dolor sit amet'),
+  (98, 'Curriculum', 10, 'Lorem ipsum dolor sit amet'),
+  (99, 'Test', 9, 'Lorem ipsum dolor sit amet'),
+  (100, 'Ansprechpartner', 8, 'Lorem ipsum dolor sit amet'),
+  (101, 'Dezenten Kontaktenformular', 7, 'Lorem ipsum dolor sit amet');
+
+CREATE TABLE IF NOT EXISTS `jos_thm_groups_users_structure_item` (
+  `ID` INT(11) NOT NULL AUTO_INCREMENT,
+  `usersID` INT(11) NOT NULL,
+  `structure_itemID` INT(11) NOT NULL,
+  `value` TEXT NULL,
+  `published` TINYINT(1) NULL,
+  PRIMARY KEY (`ID`),
+  FOREIGN KEY (`usersID`) REFERENCES `#__thm_groups_users` (`id`)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  FOREIGN KEY (`structure_itemID`) REFERENCES `#__thm_structure_item` (`id`)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+) ENGINE = INNODB CHARSET=utf8;
+
