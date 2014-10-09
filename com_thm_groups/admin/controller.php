@@ -35,55 +35,6 @@ class THMGroupsController extends JControllerLegacy
      */
     public function display($cachable = false, $urlparams = false)
     {
-        $vName = JRequest::getWord('view', 'thmgroups');
-
-        JSubMenuHelper::addEntry(
-            JText::_('COM_THM_GROUPS_HOME'),
-            'index.php?option=com_thm_groups&view=thmgroups',
-            $vName == 'thmgroups'
-        );
-
-        JSubMenuHelper::addEntry(
-            JText::_('COM_THM_GROUPS_MEMBERMANAGER'),
-            'index.php?option=com_thm_groups&view=membermanager',
-            $vName == 'membermanager'
-        );
-        JSubMenuHelper::addEntry(
-            JText::_('COM_THM_GROUPS_GROUPMANAGER'),
-            'index.php?option=com_users&view=groups',
-            $vName == 'groupmanager'
-        );
-        JSubMenuHelper::addEntry(
-            JText::_('COM_THM_GROUPS_ROLEMANAGER'),
-            'index.php?option=com_thm_groups&view=rolemanager',
-            $vName == 'rolemanager'
-        );
-        JSubMenuHelper::addEntry(
-            JText::_('COM_THM_GROUPS_PROFILEMANAGER'),
-            'index.php?option=com_thm_groups&view=profilemanager',
-            $vName == 'profilemanager'
-        );
-        JSubMenuHelper::addEntry(
-            JText::_('COM_THM_GROUPS_STRUCTUREMANAGER'),
-            'index.php?option=com_thm_groups&view=structuremanager',
-            $vName == 'structuremanager'
-        );
-        JSubMenuHelper::addEntry(
-            JText::_('COM_THM_GROUPS_STRUCTURETYPEMANAGER'),
-            'index.php?option=com_thm_groups&view=structure_item_manager',
-            $vName == 'structure_item_manager'
-        );
-        JSubMenuHelper::addEntry(
-            JText::_('COM_THM_GROUPS_DYNAMICTYPEMANAGER'),
-            'index.php?option=com_thm_groups&view=dynamic_type_manager',
-            $vName == 'dynamic_type_manager'
-        );
-        JSubMenuHelper::addEntry(
-            JText::_('COM_THM_GROUPS_STATICTYPESMANAGER'),
-            'index.php?option=com_thm_groups&view=static_type_manager',
-            $vName == 'static_types_manager'
-        );
-
         parent::display($cachable, $urlparams);
     }
 }
