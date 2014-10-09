@@ -18,10 +18,10 @@
                 default="id ASC"
                 >
             <option value="">JGLOBAL_SORT_BY</option>
-            <option value="id ASC">COM_THM_GROUPS_ID_ASC</option>
-            <option value="id DESC">COM_THM_GROUPS_ID_DESC</option>
-            <option value="name ASC">COM_THM_GROUPS_NAME_ASC</option>
-            <option value="name DESC">COM_THM_GROUPS_NAME_DESC</option>
+            <option value="id ASC">COM_THM_GROUPS_STATIC_TYPE_MANAGER_SORT_BY_ID_ASC</option>
+            <option value="id DESC">COM_THM_GROUPS_STATIC_TYPE_MANAGER_SORT_BY_ID_DESC</option>
+            <option value="name ASC">COM_THM_GROUPS_STATIC_TYPE_MANAGER_SORT_BY_NAME_ASC</option>
+            <option value="name DESC">COM_THM_GROUPS_STATIC_TYPE_MANAGER_SORT_BY_NAME_DESC</option>
         </field>
         <field
                 name="limit"
