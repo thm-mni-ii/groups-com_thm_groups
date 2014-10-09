@@ -39,6 +39,7 @@ class THMGroupsModelStatic_Type_Manager extends JModelList
                 'name'
             );
         }
+
         parent::__construct($config);
     }
 
@@ -123,6 +124,17 @@ class THMGroupsModelStatic_Type_Manager extends JModelList
      */
     protected function populateState($ordering = null, $direction = null)
     {
+        $app = JFactory::getApplication();
+
+        // Adjust the context to support modal layouts.
+        if ($layout = $app->input->get('layout'))
+        {
+            $this->context .= '.' . $layout;
+        }
+
+        $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $this->setState('filter.search', $search);
+
         parent::populateState("id", "ASC");
     }
 }
