@@ -31,53 +31,53 @@ class THM_ComponentHelper
         $viewName = $view->get('name');
 
         // No submenu creation while editing a resource
-        if (!strpos($viewName, 'manager') AND $viewName == 'thm_groups')
+        if (!strpos($viewName, 'manager') AND $viewName == 'thmgroups')
         {
             return;
         }
 
-        JSubMenuHelper::addEntry(
+        JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_HOME'),
             'index.php?option=com_thm_groups&view=thmgroups',
             $viewName == 'thmgroups'
         );
 
-        JSubMenuHelper::addEntry(
+        JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_MEMBERMANAGER'),
             'index.php?option=com_thm_groups&view=membermanager',
             $viewName == 'membermanager'
         );
-        JSubMenuHelper::addEntry(
+        JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_GROUPMANAGER'),
             'index.php?option=com_users&view=groups',
             $viewName == 'groupmanager'
         );
-        JSubMenuHelper::addEntry(
+        JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_ROLEMANAGER'),
             'index.php?option=com_thm_groups&view=rolemanager',
             $viewName == 'rolemanager'
         );
-        JSubMenuHelper::addEntry(
+        JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_PROFILEMANAGER'),
             'index.php?option=com_thm_groups&view=profilemanager',
             $viewName == 'profilemanager'
         );
-        JSubMenuHelper::addEntry(
+        JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_STRUCTUREMANAGER'),
             'index.php?option=com_thm_groups&view=structuremanager',
             $viewName == 'structuremanager'
         );
-        JSubMenuHelper::addEntry(
+        JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_STRUCTURETYPEMANAGER'),
             'index.php?option=com_thm_groups&view=structure_item_manager',
             $viewName == 'structure_item_manager'
         );
-        JSubMenuHelper::addEntry(
+        JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_DYNAMICTYPEMANAGER'),
             'index.php?option=com_thm_groups&view=dynamic_type_manager',
             $viewName == 'dynamic_type_manager'
         );
-        JSubMenuHelper::addEntry(
+        JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_STATICTYPESMANAGER'),
             'index.php?option=com_thm_groups&view=static_type_manager',
             $viewName == 'static_types_manager'
