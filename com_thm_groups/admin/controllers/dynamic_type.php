@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsControllerDynamic_Type_Edit
- * @description THMGroupsControllerDynamic_Type_Edit class from com_thm_groups
+ * @name        THMGroupsControllerDynamic_Type
+ * @description THMGroupsControllerDynamic_Type class from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -20,14 +20,14 @@ jimport('joomla.application.component.controller');
 
 
 /**
- * THMGroupsControllerDynamic_Type_Manager_Edit class for component com_thm_groups
+ * THMGroupsControllerDynamic_Type_Manager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 3.5
  */
-class THMGroupsControllerDynamic_Type_Edit extends JControllerLegacy
+class THMGroupsControllerDynamic_Type extends JControllerLegacy
 {
     /**
      * constructor (registers additional tasks to methods)
@@ -39,19 +39,37 @@ class THMGroupsControllerDynamic_Type_Edit extends JControllerLegacy
     }
 
     /**
+     * Redirects to the dynamic_type_edit view for the creation of new element
+     *
+     * @return object
+     */
+    public function add()
+    {
+        if (!JFactory::getUser()->authorise('core.admin'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
+
+        $input = JFactory::getApplication()->input;
+        $input->set('view', 'dynamic_type_edit');
+        $input->set('id', '0');
+        parent::display();
+    }
+
+    /**
      * Apply - Save button
      *
      * @return void
      */
     public function apply()
     {
-        $model = $this->getModel('dynamic_type_edit');
+        $model = $this->getModel('dynamic_type');
 
-        $isValid = $model->validateForm();
-
+        //$isValid = $model->validateForm();
+        $isValid = true;
         if ($isValid)
         {
-            $success = $model->store();
+            $success = $model->save();
             if ($success)
             {
                 $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
@@ -71,11 +89,11 @@ class THMGroupsControllerDynamic_Type_Edit extends JControllerLegacy
     }
 
     /**
-     * Cancel
+     * Redirects to the category manager view without making any persistent changes
      *
      * @param   Integer  $key  contains the key
      *
-     * @return void
+     * @return  void
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -90,6 +108,43 @@ class THMGroupsControllerDynamic_Type_Edit extends JControllerLegacy
     }
 
     /**
+     * Deletes the selected category and redirects to the category manager
+     *
+     * @return void
+     */
+    public function delete()
+    {
+        $model = $this->getModel('dynamic_type');
+
+        if ($model->delete())
+        {
+            $msg = JText::_('COM_THM_GROUPS_DATA_DELETED');
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_SAVE_DELETED');
+        }
+        $this->setRedirect("index.php?option=com_thm_groups&view=dynamic_type_manager", $msg);
+    }
+
+    /**
+     * Redirects to the category_edit view for the editing of existing categories
+     *
+     * @return void
+     */
+    public function edit()
+    {
+        if (!JFactory::getUser()->authorise('core.admin'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
+
+        $this->input->set('view', 'dynamic_type_edit');
+        $this->input->set('hidemainmenu', 1);
+        parent::display();
+    }
+
+    /**
      * Save&Close button
      *
      * @param   Integer  $key     contain key
@@ -101,12 +156,13 @@ class THMGroupsControllerDynamic_Type_Edit extends JControllerLegacy
      */
     public function save($key = null, $urlVar = null)
     {
-        $model = $this->getModel('dynamic_type_edit');
-        $isValid = $model->validateForm();
+        $model = $this->getModel('dynamic_type');
+        //$isValid = $model->validateForm();
+        $isValid = true;
 
         if ($isValid)
         {
-            $success = $model->store();
+            $success = $model->save();
             if ($success)
             {
                 $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
@@ -132,13 +188,13 @@ class THMGroupsControllerDynamic_Type_Edit extends JControllerLegacy
      */
     public function save2new()
     {
-        $model = $this->getModel('dynamic_type_edit');
+        $model = $this->getModel('dynamic_type');
 
-        $isValid = $model->validateForm();
-
+        //$isValid = $model->validateForm();
+        $isValid = true;
         if ($isValid)
         {
-            $success = $model->store();
+            $success = $model->save();
             if ($success)
             {
                 $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');

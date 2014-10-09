@@ -26,7 +26,7 @@ class THMGroupsModelDynamic_Type_Manager extends JModelList
 {
 
     /**
-     * checks dependencies with dstructure items
+     * Checks dependencies with dynamic structure items
      */
     public function checkDependencies()
     {
@@ -34,7 +34,7 @@ class THMGroupsModelDynamic_Type_Manager extends JModelList
         $dbo = JFactory::getDbo();
         $badIds = array();
 
-        foreach($ids as $id)
+        foreach ($ids as $id)
         {
             $query = $dbo->getQuery(true);
             $query
@@ -43,7 +43,7 @@ class THMGroupsModelDynamic_Type_Manager extends JModelList
                 ->where("dynamic_typeID = $id");
             $dbo->setQuery($query);
 
-            if($dbo->loadObject() == null)
+            if ($dbo->loadObject() == null)
             {
                 array_push($badIds, $id);
             }
@@ -56,14 +56,21 @@ class THMGroupsModelDynamic_Type_Manager extends JModelList
 
     }
 
+    /**
+     * Constructor
+     *
+     * @param   array  $config  config array
+     */
     public function __construct($config = array())
     {
-        $config['filter_fields'] = array(
-            'ID',
-            'Name',
-            'Static_Type_Name',
-            'Regular expression'
-        );
+        if (empty($config['filter_fields']))
+        {
+            $config['filter_fields'] = array(
+                'dynamic.id',
+                'dynamic.name',
+                'static.name'
+            );
+        }
 
         parent::__construct($config);
     }
@@ -83,63 +90,101 @@ class THMGroupsModelDynamic_Type_Manager extends JModelList
             ->innerJoin('#__thm_groups_static_type AS static ON dynamic.static_typeID = static.id')
             ->from('#__thm_groups_dynamic_type AS dynamic');
 
-        $query->order($db->escape($this->getState('list.ordering', 'dynamic.id')) . ' ' .
-            $db->escape($this->getState('list.direction')));
+        $search = $this->getState('filter.search');
+        if (!empty($search))
+        {
+            $query->where("(dynamic.name LIKE '%" . implode("%' OR dynamic.name LIKE '%", explode(' ', $search)) . "%')");
+        }
+
+        $static = $this->getState('filter.static');
+        if (!empty($static) && $static != '*')
+        {
+            $query->where("dynamic.static_typeID = '$static'");
+        }
+
+        $orderCol = $this->state->get('list.ordering', 'dynamic.id');
+        $orderDirn = $this->state->get('list.direction', 'asc');
+
+        $query->order($db->escape($orderCol . ' ' . $orderDirn));
 
         return $query;
     }
 
     /**
+     * Function to feed the data in the table body correctly to the list view
+     *
+     * @return array consisting of items in the body
+     */
+    public function getItems()
+    {
+        $items = parent::getItems();
+        $return = array();
+        if (empty($items))
+        {
+            return $return;
+        }
+
+        $index = 0;
+        foreach ($items as $item)
+        {
+            $url = "index.php?option=com_thm_groups&view=dynamic_type_edit&cid[]=$item->id";
+            $return[$index] = array();
+
+            $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
+            $return[$index][1] = $item->id;
+            $return[$index][2] = JHtml::_('link', $url, $item->name);
+            $return[$index][3] = $item->static_type_name;
+            $return[$index][4] = $item->regex;
+            $return[$index][5] = $item->description;
+            $index++;
+        }
+        return $return;
+    }
+
+    /**
+     * Function to get table headers
+     *
+     * @return array including headers
+     */
+    public function getHeaders()
+    {
+        $ordering = $this->state->get('list.ordering');
+        $direction = $this->state->get('list.direction');
+
+        $headers = array();
+        $headers[] = JHtml::_('grid.checkall');
+        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'dynamic.id', $direction, $ordering);
+        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_DYNAMIC_TYPE_NAME'), 'dynamic.name', $direction, $ordering);
+        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_STATIC_TYPE_NAME'), 'static.name', $direction, $ordering);
+        $headers[] = JText::_('COM_THM_GROUPS_REGULAR_EXPRESSION');
+        $headers[] = JText::_('COM_THM_GROUPS_DESCRIPTION');
+
+        return $headers;
+    }
+
+    /**
      * populates State
      *
-     * @param null $ordering
-     * @param null $direction
+     * @param   null  $ordering
+     * @param   null  $direction
      */
-    protected function populateState($ordering = null, $direction = null) {
-        // Initialise variables.
+    protected function populateState($ordering = null, $direction = null)
+    {
         $app = JFactory::getApplication();
 
-        $order = $app->getUserStateFromRequest('com_thm_groups' . '.filter_order', 'filter_order', '');
-        $dir = $app->getUserStateFromRequest('com_thm_groups' . '.filter_order_Dir', 'filter_order_Dir', '');
-
-        $this->setState('list.ordering', $order);
-        $this->setState('list.direction', $dir);
-
-        if ($order == '')
+        // Adjust the context to support modal layouts.
+        if ($layout = $app->input->get('layout'))
         {
-            parent::populateState("ID", "ASC");
+            $this->context .= '.' . $layout;
         }
-        else
-        {
-            parent::populateState($order, $dir);
-        }
+
+        $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $this->setState('filter.search', $search);
+
+        $static = $app->getUserStateFromRequest($this->context . '.filter.static', 'filter_static');
+        $this->setState('filter.static', $static);
+
+        parent::populateState("dynamic.id", "ASC");
     }
 
-    public function remove()
-    {
-        $ids = JFactory::getApplication()->input->get('cid', array(), 'array');
-        $db = JFactory::getDbo();
-
-        $query = $db->getQuery(true);
-
-        $conditions = array(
-            $db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')',
-        );
-
-        $query->delete($db->quoteName('#__thm_groups_dynamic_type'));
-        $query->where($conditions);
-
-        $db->setQuery($query);
-        $result = $db->execute();
-
-        // Joomla 3.x Error handling style
-        if ($db->getErrorNum())
-        {
-            JFactory::getApplication()->enqueueMessage($db->getErrorMsg(), 'error');
-
-            return false;
-        }
-
-        return $result;
-    }
 }

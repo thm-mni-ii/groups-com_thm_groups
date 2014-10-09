@@ -69,8 +69,7 @@ class THMGroupsModelDynamic_Type_Edit extends JModelAdmin
      */
     public function getForm($data = array(), $loadData = true)
     {
-        $form = $this->loadForm('com_thm_groups.dynamic_type_edit', 'dynamic_type_edit',
-            array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm('com_thm_groups.dynamic_type_edit', 'dynamic_type_edit', array('control' => 'jform', 'load_data' => $loadData));
         if (empty($form))
         {
             return false;
@@ -114,7 +113,7 @@ class THMGroupsModelDynamic_Type_Edit extends JModelAdmin
     /**
      * Generate Select Field for static types
      *
-     * @param   Int  static_typeID  dynamic type id, check static_TypeID for current dynamic type
+     * @param   Int  $static_typeID  dynamic type id, check static_TypeID for current dynamic type
      *
      * @return  select field
      */
@@ -143,7 +142,7 @@ class THMGroupsModelDynamic_Type_Edit extends JModelAdmin
             $settings,
             'value',       // Standard
             'text',        // variables
-            $selected              // Selected
+            $selected      // Selected
         );
 
         return $selectFieldStaticTypes;
@@ -162,43 +161,6 @@ class THMGroupsModelDynamic_Type_Edit extends JModelAdmin
         // Input->get because id is in url
         $id = (empty($ids)) ? $app->input->get->get('id') : $ids[0];
         return $this->getItem($id);
-    }
-
-    /**
-     * saves the dynamic types
-     *
-     * @return bool true on success, otherwise false
-     */
-    public function store()
-    {
-        $options = THM_GroupsHelperOptions::getOptions();
-        $dbo = JFactory::getDbo();
-
-        $app = JFactory::getApplication();
-        $data = $app->input->post->get('jform', array(), 'array');
-        $data['static_typeID'] = $app->input->post->get('staticType');
-
-        // Cast to int, because the type in DB is int
-        $data['static_typeID'] = (int) $data['static_typeID'];
-        $data['description'] = $dbo->escape($data['description']);
-        $data['options'] = $options[$data['static_typeID']];
-
-        $dbo->transactionStart();
-
-        $dynamicType = $this->getTable();
-
-        $success = $dynamicType->save($data);
-
-        if (!$success)
-        {
-            $dbo->transactionRollback();
-            return false;
-        }
-        else
-        {
-            $dbo->transactionCommit();
-            return $dynamicType->id;
-        }
     }
 
     /**
