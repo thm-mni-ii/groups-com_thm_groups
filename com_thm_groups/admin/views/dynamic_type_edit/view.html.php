@@ -65,9 +65,9 @@ class THMGroupsViewDynamic_Type_Edit extends JViewLegacy
 
         JToolBarHelper::title($title, 'test');
 
-        JToolBarHelper::apply('dynamic_type_edit.apply', 'JTOOLBAR_APPLY');
-        JToolBarHelper::save('dynamic_type_edit.save', 'JTOOLBAR_SAVE');
-        JToolBarHelper::custom('dynamic_type_edit.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-        JToolBarHelper::cancel('dynamic_type_edit.cancel', 'JTOOLBAR_CLOSE');
+        JToolBarHelper::apply('dynamic_type.apply', 'JTOOLBAR_APPLY');
+        JToolBarHelper::save('dynamic_type.save', 'JTOOLBAR_SAVE');
+        JToolBarHelper::custom('dynamic_type.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+        JToolBarHelper::cancel('dynamic_type.cancel', 'JTOOLBAR_CLOSE');
     }
 }
