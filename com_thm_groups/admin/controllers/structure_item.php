@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsControllerStructure_Item_Edit
- * @description THMGroupsControllerStructure_Item_Edit class from com_thm_groups
+ * @name        THMGroupsControllerStructure_Type_Manager
+ * @description THMGroupsControllerStructure_Type_Manager class from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -20,14 +20,14 @@ jimport('joomla.application.component.controller');
 
 
 /**
- * THMGroupsControllerStructure_Item_Edit class for component com_thm_groups
+ * THMGroupsControllerStructure_Type class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 3.5
  */
-class THMGroupsControllerStructure_Item_Edit extends JControllerLegacy
+class THMGroupsControllerStructure_Item extends JControllerLegacy
 {
     /**
      * constructor (registers additional tasks to methods)
@@ -39,6 +39,27 @@ class THMGroupsControllerStructure_Item_Edit extends JControllerLegacy
     }
 
     /**
+     * display task
+     *
+     * @return void
+     */
+    function display($cachable = false, $urlparams = false)
+    {
+        // Call parent behavior
+        parent::display($cachable);
+    }
+
+    public function add()
+    {
+        if (!JFactory::getUser()->authorise('core.admin'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
+
+        $this->setRedirect("index.php?option=com_thm_groups&view=structure_item_edit&id=0");
+    }
+
+    /**
      * Apply - Save button
      *
      * @return void
@@ -47,11 +68,12 @@ class THMGroupsControllerStructure_Item_Edit extends JControllerLegacy
     {
         $model = $this->getModel('structure_item_edit');
 
-        $isValid = $model->validateForm();
+        //$isValid = $model->validateForm();
+        $isValid = true;
 
         if ($isValid)
         {
-            $success = $model->store();
+            $success = $model->save();
             if ($success)
             {
                 $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
@@ -68,6 +90,18 @@ class THMGroupsControllerStructure_Item_Edit extends JControllerLegacy
             $msg = JText::_('COM_THM_GROUPS_VALIDATION_ERROR');
             $this->setRedirect('index.php?option=com_thm_groups&view=structure_item_edit&cid[]=0', $msg, 'warning');
         }
+    }
+
+    public function edit()
+    {
+        if (!JFactory::getUser()->authorise('core.admin'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
+
+        $this->input->set('view', 'structure_item_edit');
+        $this->input->set('hidemainmenu', 1);
+        parent::display();
     }
 
     /**
@@ -102,11 +136,12 @@ class THMGroupsControllerStructure_Item_Edit extends JControllerLegacy
     public function save($key = null, $urlVar = null)
     {
         $model = $this->getModel('structure_item_edit');
-        $isValid = $model->validateForm();
+        //$isValid = $model->validateForm();
+        $isValid=true;
 
         if ($isValid)
         {
-            $success = $model->store();
+            $success = $model->save();
             if ($success)
             {
                 $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
@@ -134,11 +169,12 @@ class THMGroupsControllerStructure_Item_Edit extends JControllerLegacy
     {
         $model = $this->getModel('structure_item_edit');
 
-        $isValid = $model->validateForm();
+        //$isValid = $model->validateForm();
+        $isValid=true;
 
         if ($isValid)
         {
-            $success = $model->store();
+            $success = $model->save();
             if ($success)
             {
                 $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
@@ -157,6 +193,22 @@ class THMGroupsControllerStructure_Item_Edit extends JControllerLegacy
         }
     }
 
+
+    public function delete()
+    {
+        $model = $this->getModel('structure_item_manager');
+
+        if ($model->delete())
+        {
+            $msg = JText::_('COM_THM_GROUPS_DATA_DELETED');
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_SAVE_DELETED');
+        }
+        $this->setRedirect('index.php?option=com_thm_groups&view=structure_item_manager', $msg);
+    }
+
     /**
      * getFieldExtrasLabel
      *
@@ -169,52 +221,52 @@ class THMGroupsControllerStructure_Item_Edit extends JControllerLegacy
         $output = "";
 
         // TODO get static type of dynamic type
-/*
-        switch (strtoupper($field))
-        {
-            case "TEXT":
-            case "TEXT":
-                $output = "<span title='"
-                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT")
-                    . "'>"
-                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_SIZE")
-                    . ":</span>";
-                break;
-            case "TABLE":
-                $output = "<span title='"
-                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TABLE")
-                    . "'>"
-                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_FIELDS")
-                    . ":</span>";
-                break;
-            case "MULTISELECT":
-                $output = "<span title='"
-                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_MULTISELECT")
-                    . "'>"
-                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_FIELDS")
-                    . ":</span>";
-                break;
-            case "PICTURE":
-                $output = "<span title='"
-                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE")
-                    . "'>"
-                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT")
-                    . ":</span>";
-                $output .= "<br><br>";
-                $output .= "<span title='"
-                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE_PATH")
-                    . "'>"
-                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_PATH")
-                    . ":</span>";
-                break;
-            default :
-                $output = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_NO_PARAMS") . "...";
-                break;
-        }
+        /*
+                switch (strtoupper($field))
+                {
+                    case "TEXT":
+                    case "TEXT":
+                        $output = "<span title='"
+                            . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT")
+                            . "'>"
+                            . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_SIZE")
+                            . ":</span>";
+                        break;
+                    case "TABLE":
+                        $output = "<span title='"
+                            . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TABLE")
+                            . "'>"
+                            . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_FIELDS")
+                            . ":</span>";
+                        break;
+                    case "MULTISELECT":
+                        $output = "<span title='"
+                            . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_MULTISELECT")
+                            . "'>"
+                            . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_FIELDS")
+                            . ":</span>";
+                        break;
+                    case "PICTURE":
+                        $output = "<span title='"
+                            . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE")
+                            . "'>"
+                            . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT")
+                            . ":</span>";
+                        $output .= "<br><br>";
+                        $output .= "<span title='"
+                            . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE_PATH")
+                            . "'>"
+                            . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_PATH")
+                            . ":</span>";
+                        break;
+                    default :
+                        $output = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_NO_PARAMS") . "...";
+                        break;
+                }
 
-        echo $output;
-        $mainframe->close();
-*/
+                echo $output;
+                $mainframe->close();
+        */
     }
 
     /**

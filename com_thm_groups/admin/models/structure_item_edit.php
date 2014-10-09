@@ -164,43 +164,6 @@ class THMGroupsModelStructure_Item_Edit extends JModelAdmin
     }
 
     /**
-     * saves the dynamic types
-     *
-     * @return bool true on success, otherwise false
-     */
-    public function store()
-    {
-        $dbo = JFactory::getDbo();
-
-        $app = JFactory::getApplication();
-        $data = $app->input->post->get('jform', array(), 'array');
-
-        // dynamicType is a name of select field
-        $data['dynamic_typeID'] = $app->input->post->get('dynamicType');
-
-        // Cast to int, because the type in DB is int
-        $data['dynamic_typeID'] = (int) $data['dynamic_typeID'];
-        $data['description'] = $dbo->escape($data['description']);
-
-        $dbo->transactionStart();
-
-        $dynamicType = $this->getTable();
-
-        $success = $dynamicType->save($data);
-
-        if (!$success)
-        {
-            $dbo->transactionRollback();
-            return false;
-        }
-        else
-        {
-            $dbo->transactionCommit();
-            return $dynamicType->id;
-        }
-    }
-
-    /**
      * validates form
      *
      * @return bool

@@ -67,9 +67,9 @@ class THMGroupsViewStructure_Item_Edit extends JViewLegacy
 
         JToolBarHelper::title($title, 'test');
 
-        JToolBarHelper::apply('structure_item_edit.apply', 'JTOOLBAR_APPLY');
-        JToolBarHelper::save('structure_item_edit.save', 'JTOOLBAR_SAVE');
-        JToolBarHelper::custom('structure_item_edit.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-        JToolBarHelper::cancel('structure_item_edit.cancel', 'JTOOLBAR_CLOSE');
+        JToolBarHelper::apply('structure_item.apply', 'JTOOLBAR_APPLY');
+        JToolBarHelper::save('structure_item.save', 'JTOOLBAR_SAVE');
+        JToolBarHelper::custom('structure_item.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+        JToolBarHelper::cancel('structure_item.cancel', 'JTOOLBAR_CLOSE');
     }
 }

@@ -17,6 +17,7 @@ defined('_JEXEC') or die('Restricted access');
 
 // import Joomla view library
 jimport('joomla.application.component.view');
+jimport('thm_core.list.view');
 
 /**
  * THMGroupsViewStatic_Type_Manager class for component com_thm_groups
@@ -28,6 +29,13 @@ jimport('joomla.application.component.view');
  */
 class THMGroupsViewStructure_Item_Manager extends JViewLegacy
 {
+
+    public $items;
+
+    public $pagination;
+
+    public $state;
+
     /**
      * Method to get display
      *
@@ -37,27 +45,7 @@ class THMGroupsViewStructure_Item_Manager extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        // Get data from the model
-        $items = $this->get('Items');
-        $pagination = $this->get('Pagination');
-        $state = $this->get('State');
-
-        $this->addToolbar();
-
-        // Check for errors.
-        if (count($errors = $this->get('Errors')))
-        {
-            JError::raiseError(500, implode('<br />', $errors));
-            return false;
-        }
-        // Assign data to the view
-        $this->items = $items;
-        $this->pagination = $pagination;
-        $this->state = $state;
-        $this->sortDirection = $state->get('list.direction');
-        $this->sortColumn = $state->get('list.ordering');
-
-        // Display the template
+        THM_CoreListView::display($this);
         parent::display($tpl);
     }
 
@@ -66,7 +54,7 @@ class THMGroupsViewStructure_Item_Manager extends JViewLegacy
      *
      * @return void
      */
-    protected function addToolbar()
+    public function addToolbar()
     {
         $user = JFactory::getUser();
 
@@ -74,9 +62,9 @@ class THMGroupsViewStructure_Item_Manager extends JViewLegacy
             JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER'), 'dynamic_type_manager'
         );
 
-        JToolBarHelper::addNew('structure_item_manager.add', 'COM_THM_GROUPS_STRUCTURE_ITEM_ADD', false);
-        JToolBarHelper::editList('structure_item_manager.edit', 'COM_THM_GROUPS_STRUCTURE_ITEM_EDIT');
-        JToolBarHelper::deleteList('COM_THM_GROUPS_STRUCTURE_ITEM_REALLY_DELETE', 'structure_item_manager.remove', 'JTOOLBAR_DELETE');
+        JToolBarHelper::addNew('structure_item.add', 'COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_ADD', false);
+        JToolBarHelper::editList('structure_item.edit', 'COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_EDIT');
+        JToolBarHelper::deleteList('COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_REALLY_DELETE', 'structure_item.delete', 'JTOOLBAR_DELETE');
 
         if ($user->authorise('core.admin', 'com_users'))
         {

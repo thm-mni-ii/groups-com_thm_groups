@@ -30,9 +30,9 @@ class THMGroupsModelStructure_Item_Manager extends JModelList
 
         // If change here, change then in default_head
         $config['filter_fields'] = array(
-            'ID',
-            'Name',
-            'Dynamic_Type_Name'
+            'structure.id',
+            'structure.name',
+            'dynamic.name'
         );
 
         parent::__construct($config);
@@ -53,10 +53,76 @@ class THMGroupsModelStructure_Item_Manager extends JModelList
             ->innerJoin('#__thm_groups_dynamic_type AS dynamic ON structure.dynamic_typeID = dynamic.id')
             ->from('#__thm_groups_structure_item AS structure');
 
-        $query->order($db->escape($this->getState('list.ordering', 'structure.id')) . ' ' .
-            $db->escape($this->getState('list.direction')));
+        $search = $this->getState('filter.search');
+        if (!empty($search))
+        {
+            $query->where("(structure.name LIKE '%" . implode("%' OR structure.name LIKE '%", explode(' ', $search)) . "%')");
+        }
+
+        $dynamic = $this->getState('filter.dynamic');
+        if (!empty($dynamic) && $dynamic != '*')
+        {
+            $query->where("structure.dynamic_typeID = '$dynamic'");
+        }
+
+        $orderCol = $this->state->get('list.ordering', 'structure.id');
+        $orderDirn = $this->state->get('list.direction', 'asc');
+
+        $query->order($db->escape($orderCol . ' ' . $orderDirn));
 
         return $query;
+    }
+
+    /**
+     * Function to feed the data in the table body correctly to the list view
+     *
+     * @return array consisting of items in the body
+     */
+    public function getItems()
+    {
+        $items = parent::getItems();
+        $return = array();
+        if (empty($items))
+        {
+            return $return;
+        }
+
+        $index = 0;
+        foreach ($items as $item)
+        {
+            $url = "index.php?option=com_thm_groups&view=structure_item_edit&cid[]=$item->id";
+            $return[$index] = array();
+
+            $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
+            $return[$index][1] = $item->id;
+            $return[$index][2] = JHtml::_('link', $url, $item->name);
+            $return[$index][3] = $item->dynamic_type_name;
+            $return[$index][4] = $item->options;
+            $return[$index][5] = $item->description;
+            $index++;
+        }
+        return $return;
+    }
+
+    /**
+     * Function to get table headers
+     *
+     * @return array including headers
+     */
+    public function getHeaders()
+    {
+        $ordering = $this->state->get('list.ordering');
+        $direction = $this->state->get('list.direction');
+
+        $headers = array();
+        $headers[] = JHtml::_('grid.checkall');
+        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'structure.id', $direction, $ordering);
+        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_STRUCTURE_ITEM_NAME'), 'structure.name', $direction, $ordering);
+        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_DYNAMIC_TYPE_NAME'), 'dynamic.name', $direction, $ordering);
+        $headers[] = JText::_('COM_THM_GROUPS_STRUCTURE_ITEM_OPTIONS');
+        $headers[] = JText::_('COM_THM_GROUPS_DESCRIPTION');
+
+        return $headers;
     }
 
     /**
@@ -65,45 +131,21 @@ class THMGroupsModelStructure_Item_Manager extends JModelList
      * @param null $ordering
      * @param null $direction
      */
-    protected function populateState($ordering = null, $direction = null) {
-        // Initialise variables.
+    protected function populateState($ordering = null, $direction = null)
+    {
         $app = JFactory::getApplication();
 
-        $order = $app->getUserStateFromRequest('com_thm_groups' . '.filter_order', 'filter_order', '');
-        $dir = $app->getUserStateFromRequest('com_thm_groups' . '.filter_order_Dir', 'filter_order_Dir', '');
-
-        $this->setState('list.ordering', $order);
-        $this->setState('list.direction', $dir);
-
-        if ($order == '')
-        {
-            parent::populateState("ID", "ASC");
+        // Adjust the context to support modal layouts.
+        if ($layout = $app->input->get('layout')) {
+            $this->context .= '.' . $layout;
         }
-        else
-        {
-            parent::populateState($order, $dir);
-        }
-    }
 
-    public function remove()
-    {
-        $ids = JFactory::getApplication()->input->get('cid', array(), 'array');
+        $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $this->setState('filter.search', $search);
 
+        $static = $app->getUserStateFromRequest($this->context . '.filter.static', 'filter_static');
+        $this->setState('filter.dynamic', $static);
 
-        $db = JFactory::getDbo();
-
-        $query = $db->getQuery(true);
-
-        $conditions = array(
-            $db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')',
-        );
-
-        $query->delete($db->quoteName('#__thm_groups_structure_item'));
-        $query->where($conditions);
-
-        $db->setQuery($query);
-
-
-        return $result = $db->execute();
+        parent::populateState("structure.id", "ASC");
     }
 }
