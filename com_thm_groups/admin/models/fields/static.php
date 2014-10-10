@@ -3,7 +3,8 @@ defined('_JEXEC') or die('Restricted access');
 JFormHelper::loadFieldClass('list');
 jimport('joomla.form.formfield');
 
-class JFormFieldStatic extends JFormFieldList {
+class JFormFieldStatic extends JFormFieldList
+{
 
     protected $type = 'Static';
 
