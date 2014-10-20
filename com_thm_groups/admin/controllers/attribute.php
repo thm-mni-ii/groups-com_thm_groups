@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsControllerStructure_Type_Manager
- * @description THMGroupsControllerStructure_Type_Manager class from com_thm_groups
+ * @name        THMGroupsControllerAttribute
+ * @description THMGroupsControllerAttribute class from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -20,14 +20,14 @@ jimport('joomla.application.component.controller');
 
 
 /**
- * THMGroupsControllerStructure_Type class for component com_thm_groups
+ * THMGroupsControllerAttribute class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 3.5
  */
-class THMGroupsControllerStructure_Item extends JControllerLegacy
+class THMGroupsControllerAttribute extends JControllerLegacy
 {
     /**
      * constructor (registers additional tasks to methods)
@@ -56,7 +56,7 @@ class THMGroupsControllerStructure_Item extends JControllerLegacy
             return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
         }
 
-        $this->setRedirect("index.php?option=com_thm_groups&view=structure_item_edit&id=0");
+        $this->setRedirect("index.php?option=com_thm_groups&view=attribute_edit&id=0");
     }
 
     /**
@@ -66,7 +66,7 @@ class THMGroupsControllerStructure_Item extends JControllerLegacy
      */
     public function apply()
     {
-        $model = $this->getModel('structure_item_edit');
+        $model = $this->getModel('attribute_edit');
 
         //$isValid = $model->validateForm();
         $isValid = true;
@@ -77,18 +77,18 @@ class THMGroupsControllerStructure_Item extends JControllerLegacy
             if ($success)
             {
                 $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
-                $this->setRedirect('index.php?option=com_thm_groups&view=structure_item_edit&cid[]=' . $success, $msg);
+                $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=' . $success, $msg);
             }
             else
             {
                 $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-                $this->setRedirect('index.php?option=com_thm_groups&view=structure_item_edit&cid[]=0', $msg);
+                $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=0', $msg);
             }
         }
         else
         {
             $msg = JText::_('COM_THM_GROUPS_VALIDATION_ERROR');
-            $this->setRedirect('index.php?option=com_thm_groups&view=structure_item_edit&cid[]=0', $msg, 'warning');
+            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=0', $msg, 'warning');
         }
     }
 
@@ -99,7 +99,7 @@ class THMGroupsControllerStructure_Item extends JControllerLegacy
             return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
         }
 
-        $this->input->set('view', 'structure_item_edit');
+        $this->input->set('view', 'attribute_edit');
         $this->input->set('hidemainmenu', 1);
         parent::display();
     }
@@ -120,7 +120,7 @@ class THMGroupsControllerStructure_Item extends JControllerLegacy
             return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
         }
 
-        $this->setRedirect('index.php?option=com_thm_groups&view=structure_item_manager');
+        $this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager');
     }
 
     /**
@@ -135,7 +135,7 @@ class THMGroupsControllerStructure_Item extends JControllerLegacy
      */
     public function save($key = null, $urlVar = null)
     {
-        $model = $this->getModel('structure_item_edit');
+        $model = $this->getModel('attribute_edit');
         //$isValid = $model->validateForm();
         $isValid=true;
 
@@ -145,18 +145,18 @@ class THMGroupsControllerStructure_Item extends JControllerLegacy
             if ($success)
             {
                 $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
-                $this->setRedirect('index.php?option=com_thm_groups&view=structure_item_manager', $msg);
+                $this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager', $msg);
             }
             else
             {
                 $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-                $this->setRedirect('index.php?option=com_thm_groups&view=structure_item_manager' . $success, $msg);
+                $this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager' . $success, $msg);
             }
         }
         else
         {
             $msg = JText::_('COM_THM_GROUPS_VALIDATION_ERROR');
-            $this->setRedirect('index.php?option=com_thm_groups&view=structure_item_manager', $msg, 'warning');
+            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager', $msg, 'warning');
         }
     }
 
@@ -167,7 +167,7 @@ class THMGroupsControllerStructure_Item extends JControllerLegacy
      */
     public function save2new()
     {
-        $model = $this->getModel('structure_item_edit');
+        $model = $this->getModel('attribute_edit');
 
         //$isValid = $model->validateForm();
         $isValid=true;
@@ -178,25 +178,25 @@ class THMGroupsControllerStructure_Item extends JControllerLegacy
             if ($success)
             {
                 $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
-                $this->setRedirect('index.php?option=com_thm_groups&view=structure_item_edit&cid[]=0', $msg);
+                $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=0', $msg);
             }
             else
             {
                 $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-                $this->setRedirect('index.php?option=com_thm_groups&view=structure_item_edit&cid[]=0', $msg);
+                $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=0', $msg);
             }
         }
         else
         {
             $msg = JText::_('COM_THM_GROUPS_VALIDATION_ERROR');
-            $this->setRedirect('index.php?option=com_thm_groups&view=structure_item_edit&cid[]=0', $msg, 'warning');
+            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=0', $msg, 'warning');
         }
     }
 
 
     public function delete()
     {
-        $model = $this->getModel('structure_item_manager');
+        $model = $this->getModel('attribute_manager');
 
         if ($model->delete())
         {
@@ -206,7 +206,7 @@ class THMGroupsControllerStructure_Item extends JControllerLegacy
         {
             $msg = JText::_('COM_THM_GROUPS_SAVE_DELETED');
         }
-        $this->setRedirect('index.php?option=com_thm_groups&view=structure_item_manager', $msg);
+        $this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager', $msg);
     }
 
     /**
