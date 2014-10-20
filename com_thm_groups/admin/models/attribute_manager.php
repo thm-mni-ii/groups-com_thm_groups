@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsModelStatic_Item_Manager
- * @description THMGroupsModelStatic_Item_Manager file from com_thm_groups
+ * @name        THMGroupsModelAttribute_Manager
+ * @description THMGroupsModelAttribute_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -15,14 +15,14 @@ defined('_JEXEC') or die();
 jimport('joomla.application.component.modellist');
 
 /**
- * THMGroupsModelStatic_Item_Manager class for component com_thm_groups
+ * THMGroupsModelAttribute_Manager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsModelStructure_Item_Manager extends JModelList
+class THMGroupsModelAttribute_Manager extends JModelList
 {
 
     public function __construct($config = array())
@@ -30,8 +30,8 @@ class THMGroupsModelStructure_Item_Manager extends JModelList
 
         // If change here, change then in default_head
         $config['filter_fields'] = array(
-            'structure.id',
-            'structure.name',
+            'attribute.id',
+            'attribute.name',
             'dynamic.name'
         );
 
@@ -49,23 +49,23 @@ class THMGroupsModelStructure_Item_Manager extends JModelList
         $query = $db->getQuery(true);
 
         $query
-            ->select('structure.id, structure.name, dynamic.name as dynamic_type_name, structure.options, structure.description')
-            ->innerJoin('#__thm_groups_dynamic_type AS dynamic ON structure.dynamic_typeID = dynamic.id')
-            ->from('#__thm_groups_structure_item AS structure');
+            ->select('attribute.id, attribute.name, dynamic.name as dynamic_type_name, attribute.options, attribute.description')
+            ->innerJoin('#__thm_groups_dynamic_type AS dynamic ON attribute.dynamic_typeID = dynamic.id')
+            ->from('#__thm_groups_attributes AS attribute');
 
         $search = $this->getState('filter.search');
         if (!empty($search))
         {
-            $query->where("(structure.name LIKE '%" . implode("%' OR structure.name LIKE '%", explode(' ', $search)) . "%')");
+            $query->where("(attribute.name LIKE '%" . implode("%' OR attribute.name LIKE '%", explode(' ', $search)) . "%')");
         }
 
         $dynamic = $this->getState('filter.dynamic');
         if (!empty($dynamic) && $dynamic != '*')
         {
-            $query->where("structure.dynamic_typeID = '$dynamic'");
+            $query->where("attribute.dynamic_typeID = '$dynamic'");
         }
 
-        $orderCol = $this->state->get('list.ordering', 'structure.id');
+        $orderCol = $this->state->get('list.ordering', 'attribute.id');
         $orderDirn = $this->state->get('list.direction', 'asc');
 
         $query->order($db->escape($orderCol . ' ' . $orderDirn));
@@ -90,7 +90,7 @@ class THMGroupsModelStructure_Item_Manager extends JModelList
         $index = 0;
         foreach ($items as $item)
         {
-            $url = "index.php?option=com_thm_groups&view=structure_item_edit&cid[]=$item->id";
+            $url = "index.php?option=com_thm_groups&view=attribute_edit&cid[]=$item->id";
             $return[$index] = array();
 
             $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
@@ -116,10 +116,10 @@ class THMGroupsModelStructure_Item_Manager extends JModelList
 
         $headers = array();
         $headers[] = JHtml::_('grid.checkall');
-        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'structure.id', $direction, $ordering);
-        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_STRUCTURE_ITEM_NAME'), 'structure.name', $direction, $ordering);
+        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'attribute.id', $direction, $ordering);
+        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ATTRIBUTE_NAME'), 'attribute.name', $direction, $ordering);
         $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_DYNAMIC_TYPE_NAME'), 'dynamic.name', $direction, $ordering);
-        $headers[] = JText::_('COM_THM_GROUPS_STRUCTURE_ITEM_OPTIONS');
+        $headers[] = JText::_('COM_THM_GROUPS_ATTRIBUTE_OPTIONS');
         $headers[] = JText::_('COM_THM_GROUPS_DESCRIPTION');
 
         return $headers;
@@ -146,6 +146,6 @@ class THMGroupsModelStructure_Item_Manager extends JModelList
         $static = $app->getUserStateFromRequest($this->context . '.filter.static', 'filter_static');
         $this->setState('filter.dynamic', $static);
 
-        parent::populateState("structure.id", "ASC");
+        parent::populateState("attribute.id", "ASC");
     }
 }

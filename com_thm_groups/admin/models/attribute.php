@@ -3,7 +3,7 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        structure item model
+ * @name        attribute model
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -20,7 +20,7 @@ jimport('joomla.application.component.modeladmin');
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
  */
-class THMGroupsModelStructure_Item extends JModelLegacy
+class THMGroupsModelAttribute extends JModelLegacy
 {
     /**
      * saves the dynamic types
@@ -59,6 +59,11 @@ class THMGroupsModelStructure_Item extends JModelLegacy
         }
     }
 
+    /**
+     * Delete item
+     *
+     * @return mixed
+     */
     public function delete()
     {
         $ids = JFactory::getApplication()->input->get('cid', array(), 'array');
@@ -72,7 +77,7 @@ class THMGroupsModelStructure_Item extends JModelLegacy
             $db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')',
         );
 
-        $query->delete($db->quoteName('#__thm_groups_structure_item'));
+        $query->delete($db->quoteName('#__thm_groups_attributes'));
         $query->where($conditions);
 
         $db->setQuery($query);

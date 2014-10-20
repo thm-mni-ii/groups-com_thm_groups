@@ -3,7 +3,7 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        structure item edit
+ * @name        attribute edit
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -20,7 +20,7 @@ jimport('joomla.application.component.modeladmin');
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
  */
-class THMGroupsModelStructure_Item_Edit extends JModelAdmin
+class THMGroupsModelAttribute_Edit extends JModelAdmin
 {
 
     /**
@@ -40,7 +40,7 @@ class THMGroupsModelStructure_Item_Edit extends JModelAdmin
             $db = JFactory::getDBO();
             $query = $db->getQuery(true);
             $query->select('*');
-            $query->from($db->qn('#__thm_groups_structure_item'));
+            $query->from($db->qn('#__thm_groups_attributes'));
             $query->where('id = ' . (int) $id);
             $db->setQuery($query);
 
@@ -68,7 +68,7 @@ class THMGroupsModelStructure_Item_Edit extends JModelAdmin
      */
     public function getForm($data = array(), $loadData = true)
     {
-        $form = $this->loadForm('com_thm_groups.structure_item_edit', 'structure_item_edit',
+        $form = $this->loadForm('com_thm_groups.attribute_edit', 'attribute_edit',
             array('control' => 'jform', 'load_data' => $loadData));
         if (empty($form))
         {
