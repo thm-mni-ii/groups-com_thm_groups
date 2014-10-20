@@ -12,7 +12,7 @@
  * @link        www.mni.thm.de
  */
 defined('_JEXEC') or die();
-jimport('joomla.application.component.modellist');
+jimport('thm_core.list.model');
 
 /**
  * THMGroupsModelUser_Manager class for component com_thm_groups
@@ -22,8 +22,14 @@ jimport('joomla.application.component.modellist');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsModelUser_Manager extends JModelList
+class THMGroupsModelUser_Manager extends THM_CoreModelList
 {
+
+    protected $defaultOrdering = "ust.userID";
+
+    protected $defaultDirection = "ASC";
+
+    protected $defaultLimit = "20";
 
     /**
      * Constructor
@@ -35,7 +41,7 @@ class THMGroupsModelUser_Manager extends JModelList
         if (empty($config['filter_fields']))
         {
             $config['filter_fields'] = array(
-                // TODO add filters
+                'ust.userID'
             );
         }
 
@@ -52,34 +58,97 @@ class THMGroupsModelUser_Manager extends JModelList
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
-        // TODO make custom filter for ordering by userID
         // TODO make custom filter for published/unpublished users
-
         // TODO make filter of title, first name, second name, posttitle and email in php
 
         $query
-            ->select('id')
-            ->from('#__users')
-            ->where('')
-            ->order('');
+            ->select('DISTINCT ust.userID')
+            ->from('#__thm_groups_users_structure_item AS ust');
 
-        $search = $this->getState('filter.search');
-        if (!empty($search))
+
+        $orderCol = $this->state->get('list.ordering', $this->defaultOrdering);
+        $orderDirn = $this->state->get('list.direction', $this->defaultDirection);
+        if ($orderCol == 'ust.userID')
         {
-            $query->where('');
+            $query->order($db->escape($orderCol . ' ' . $orderDirn));
         }
 
         return $query;
     }
 
-    public function save()
-    {
-        // TODO save object in database; update with foreach for each attribute
-    }
-
+    /**
+     * Synchronisation
+     *
+     * @return void
+     */
     public function sync()
     {
-        // TODO synchronization function, if user what??
+        // TODO synchronisation function, if user what??
+    }
+
+    public function sortByAttribute($userIDs)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query
+            ->select('ust.userID, st.id as attributeID, st.name as attributeName, ust.value')
+            ->from('#__thm_groups_users_structure_item as ust')
+            ->innerJoin('#__thm_groups_structure_item AS st ON ust.structure_itemID = st.id')
+            ->where("ust.userID IN ( $userIDs )");
+
+        // Sort by attribute
+        $orderCol = $this->state->get('list.ordering', $this->defaultOrdering);
+        $orderDirn = $this->state->get('list.direction', $this->defaultDirection);
+        if ($orderCol != 'ust.userID' && !empty($orderCol))
+        {
+            $attributeID = 2;
+            switch ($orderCol)
+            {
+                case 'title':
+                    break;
+                case 'firstName':
+                    $attributeID = 1;
+                    break;
+                case 'surname':
+                    $attributeID = 2;
+                    break;
+                case 'email':
+                    $attributeID = 3;
+                    break;
+                case 'published':
+                    break;
+                case 'groupsAndRoles':
+                    break;
+            }
+            $query->where("ust.structure_itemID = '$attributeID'");
+        }
+
+
+        $query->order('ust.value ' . $orderDirn);
+
+        $db->setQuery($query);
+        return $db->loadObjectList();
+    }
+
+    /**
+     * Siehe Heft Punkt 4
+     *
+     * @param $userIDs
+     * @return mixed
+     */
+    public function getAllInfoForUsers($userIDs)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query
+            ->select('ust.userID, st.name as attribute, ust.value, ust.published')
+            ->from('#__thm_groups_users_structure_item AS ust')
+            ->innerJoin('#__thm_groups_structure_item AS st ON ust.structure_itemID = st.id')
+            ->where("ust.userID IN ( $userIDs )")
+            ->order('ust.structure_itemID');
+        $db->setQuery($query);
+        return $db->loadObjectList();
     }
 
     /**
@@ -89,29 +158,70 @@ class THMGroupsModelUser_Manager extends JModelList
      */
     public function getItems()
     {
+        // GetItems returns only sorted userIDs
         $items = parent::getItems();
-        var_dump($this->getAllUsersOfGroupByGroupId(2));
-        die;
 
-        // TODO change items below
+        // Temp is an array for userIDs
+        $temp = array();
+
+        // This is a string with IDs for IN clause for SQL query
+        $userIDs = '';
+
+        // Prepare user IDs for query
+        foreach ($items as $item)
+        {
+            $temp[] = $item->userID;
+        }
+        $userIDs = implode(',', $temp);
+
+        // Get all user attributes sorted by filter
+        $sortedAttributes = $this->sortByAttribute($userIDs);
+
+        // Clear array with IDs
+        unset($temp);
+
+        // Prepare user IDs for query
+        foreach ($sortedAttributes as $item)
+        {
+            $temp[] = $item->userID;
+        }
+        $userIDs = '';
+        $userIDs = implode(',', $temp);
+
+        // Array with sorted users and their attributes
+        $result = array();
+
+        $dirtyData = $this->getAllInfoForUsers($userIDs);
+        $userData = $this->makeCleanOutput($dirtyData);
+
+        foreach ($sortedAttributes as $attribute)
+        {
+            $result[$attribute->userID]['attributes'] = $userData[$attribute->userID];
+        }
+
+        var_dump($this->getUserGroupsAndRolesByUserId(62));die;
+        var_dump($result);die;
+
         $return = array();
-        if (empty($items))
+        if (empty($result))
         {
             return $return;
         }
 
         $index = 0;
-        foreach ($items as $item)
+        foreach ($result as $key => $item)
         {
-            $url = "index.php?option=com_thm_groups&view=dynamic_type_edit&cid[]=$item->id";
+            $url = "index.php?option=com_thm_groups&view=user_edit&cid[]=$key";
             $return[$index] = array();
 
-            $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
-            $return[$index][1] = $item->id;
-            $return[$index][2] = JHtml::_('link', $url, $item->name);
-            $return[$index][3] = $item->static_type_name;
-            $return[$index][4] = $item->regex;
-            $return[$index][5] = $item->description;
+            $return[$index][0] = JHtml::_('grid.id', $index, $key);
+            $return[$index][1] = $key;
+            $return[$index][2] = 'Title';
+            $return[$index][3] = !empty($item->Vorname) ? JHtml::_('link', $url, $item->Vorname) : '';
+            $return[$index][4] = !empty($item->Nachname) ? $item->Nachname : '';
+            $return[$index][5] = !empty($item->Email) ? $item->Email : '';
+            $return[$index][6] = 'Published';
+            $return[$index][7] = 'Groups & Roles';
             $index++;
         }
         return $return;
@@ -130,13 +240,39 @@ class THMGroupsModelUser_Manager extends JModelList
         // TODO change headers
         $headers = array();
         $headers[] = JHtml::_('grid.checkall');
-        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'dynamic.id', $direction, $ordering);
-        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_DYNAMIC_TYPE_NAME'), 'dynamic.name', $direction, $ordering);
-        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_STATIC_TYPE_NAME'), 'static.name', $direction, $ordering);
-        $headers[] = JText::_('COM_THM_GROUPS_REGULAR_EXPRESSION');
-        $headers[] = JText::_('COM_THM_GROUPS_DESCRIPTION');
+        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'ust.userID', $direction, $ordering);
+        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_TITLE'), 'title', $direction, $ordering);
+        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_FIRST_NAME'), 'firstName', $direction, $ordering);
+        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_SURNAME'), 'surname', $direction, $ordering);
+        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_EMAIL'), 'email', $direction, $ordering);
+        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_USER_PUBLISHED'), 'published', $direction, $ordering);
+        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_GROUPS_AND_ROLES'), 'groupsAndRoles', $direction, $ordering);
 
         return $headers;
+    }
+
+    /**
+     * Return groups with roles of a user by ID
+     *
+     * @param   Int  $userID  user ID
+     *
+     * @return  Associative array with IDs
+     */
+    public function getUserGroupsAndRolesByUserId($userID)
+    {
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+
+        $query
+            ->select('groups.title AS groupname, groups.id as groupid, roles.name AS rolename, roles.id AS roleid')
+            ->from("#__usergroups AS groups")
+            ->leftJoin("#__thm_groups_mappings AS maps ON groups.id = maps.usergroupsID")
+            ->leftJoin("#__thm_groups_roles AS roles ON maps.rolesID = roles.id")
+            ->where("maps.usersID = $userID")
+            ->where("maps.usergroupsID > 1");
+
+        $db->setQuery($query);
+        return $db->loadObjectList();
     }
 
     /**
@@ -148,7 +284,6 @@ class THMGroupsModelUser_Manager extends JModelList
      */
     public function makeCleanOutput($badData)
     {
-        // TODO do we really need this function?
         $beautifiedData = array();
         foreach ($badData as $data)
         {
@@ -204,6 +339,7 @@ class THMGroupsModelUser_Manager extends JModelList
      */
     public function getUserAttributesWithValuesByUserId($userID)
     {
+        // TODO published elements
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
@@ -222,6 +358,7 @@ class THMGroupsModelUser_Manager extends JModelList
             ->from('#__thm_groups_users_structure_item AS ust')
             ->innerJoin('#__thm_groups_structure_item AS st ON ust.structure_itemID = st.id')
             ->where("ust.structure_itemID IN ( $attributesString )")
+            // TODO add dynamic type
             ->where("ust.userID IN ( $userID )")
             ->order('ust.userID')
             ->order('ust.structure_itemID');
