@@ -27,7 +27,7 @@ jimport('thm_core.list.view');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewDynamic_Type_Manager extends JViewLegacy
+class THMGroupsViewDynamic_Type_Manager extends THM_CoreViewList
 {
 
     public $items;
@@ -45,7 +45,6 @@ class THMGroupsViewDynamic_Type_Manager extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        THM_CoreListView::display($this);
         parent::display($tpl);
     }
 
@@ -54,7 +53,7 @@ class THMGroupsViewDynamic_Type_Manager extends JViewLegacy
      *
      * @return void
      */
-    public function addToolbar()
+    protected function addToolbar()
     {
         $user = JFactory::getUser();
 

@@ -15,6 +15,6 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted Access');
 jimport('thm_core.list.template');
-THM_CoreListTemplate::render($this);
+THM_CoreTemplateList::render($this);
 
 

@@ -199,8 +199,8 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
             $result[$attribute->userID]['attributes'] = $userData[$attribute->userID];
         }
 
-        var_dump($this->getUserGroupsAndRolesByUserId(62));die;
-        var_dump($result);die;
+        //var_dump($this->getUserGroupsAndRolesByUserId(62));die;
+        //var_dump($result);die;
 
         $return = array();
         if (empty($result))

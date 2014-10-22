@@ -9,22 +9,11 @@
         />
         <field
                 name="dynamic"
-                type="list"
+                type="dynamic"
                 label="COM_THM_GROUPS_STATIC_FILTER"
                 description="COM_THM_GROUPS_STATIC_FILTER_DESC"
                 onchange="this.form.submit();"
-                >
-            <option value="*">COM_THM_GROUPS_STATIC_FILTER_ALL</option>
-            <option value="1">COM_THM_GROUPS_STATIC_FILTER_TEXT</option>
-            <option value="2">COM_THM_GROUPS_STATIC_FILTER_TEXTFIELD</option>
-            <option value="3">COM_THM_GROUPS_STATIC_FILTER_LINK</option>
-            <option value="4">COM_THM_GROUPS_STATIC_FILTER_PICTURE</option>
-            <option value="5">COM_THM_GROUPS_STATIC_FILTER_MULTISELECT</option>
-            <option value="6">COM_THM_GROUPS_STATIC_FILTER_TABLE</option>
-            <option value="7">COM_THM_GROUPS_STATIC_FILTER_NUMBER</option>
-            <option value="8">COM_THM_GROUPS_STATIC_FILTER_DATE</option>
-            <option value="9">COM_THM_GROUPS_STATIC_FILTER_TEMPLATE</option>
-        </field>
+                />
     </fields>
 
     <fields name="list">

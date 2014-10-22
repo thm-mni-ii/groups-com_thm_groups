@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsViewStructure_Item_Manager
- * @description THMGroupsViewStructure_Item_Manager file from com_thm_groups
+ * @name        THMGroupsViewUser_Manager
+ * @description THMGroupsViewUser_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -13,6 +13,6 @@
  */
 
 // No direct access to this file
-defined('_JEXEC') or die('Restricted Access');
+defined('_JEXEC') or die();
 jimport('thm_core.list.template');
-THM_CoreListTemplate::render($this);
+THM_CoreTemplateList::render($this);

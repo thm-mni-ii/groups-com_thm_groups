@@ -8,12 +8,12 @@
                 hint="JSEARCH_FILTER"
         />
         <field
-                name="static"
-                type="static"
+                name="dynamic"
+                type="dynamic"
                 label="COM_THM_GROUPS_STATIC_FILTER"
                 description="COM_THM_GROUPS_STATIC_FILTER_DESC"
                 onchange="this.form.submit();"
-        />
+                />
     </fields>
 
     <fields name="list">
@@ -26,12 +26,12 @@
                 default="dynamic.id ASC"
                 >
             <option value="">JGLOBAL_SORT_BY</option>
-            <option value="dynamic.id ASC">COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER_SORT_BY_ID_ASC</option>
-            <option value="dynamic.id DESC">COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER_SORT_BY_ID_DESC</option>
-            <option value="dynamic.name ASC">COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER_SORT_BY_DYNAMIC_TYPE_ASC</option>
-            <option value="dynamic.name DESC">COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER_SORT_BY_DYNAMIC_TYPE_DESC</option>
-            <option value="static.name ASC">COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER_SORT_BY_STATIC_TYPE_ASC</option>
-            <option value="static.name DESC">COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER_SORT_BY_STATIC_TYPE_DESC</option>
+            <option value="structure.id ASC">COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_SORT_BY_ID_ASC</option>
+            <option value="structure.id DESC">COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_SORT_BY_ID_DESC</option>
+            <option value="structure.name ASC">COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_SORT_BY_NAME_ASC</option>
+            <option value="structure.name DESC">COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_SORT_BY_NAME_DESC</option>
+            <option value="dynamic.name ASC">COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_SORT_BY_DYNAMIC_TYPE_ASC</option>
+            <option value="dynamic.name DESC">COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_SORT_BY_DYNAMIC_TYPE_DESC</option>
 
         </field>
         <field
