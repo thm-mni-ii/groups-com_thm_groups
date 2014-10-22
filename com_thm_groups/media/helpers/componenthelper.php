@@ -44,8 +44,8 @@ class THM_ComponentHelper
 
         JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_MEMBERMANAGER'),
-            'index.php?option=com_thm_groups&view=membermanager',
-            $viewName == 'membermanager'
+            'index.php?option=com_thm_groups&view=user_manager',
+            $viewName == 'user_manager'
         );
         JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_GROUPMANAGER'),
@@ -60,25 +60,20 @@ class THM_ComponentHelper
         JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_PROFILEMANAGER'),
             'index.php?option=com_thm_groups&view=profilemanager',
-            $viewName == 'profilemanager'
+            $viewName == 'profile_manager'
         );
         JHtmlSidebar::addEntry(
-            JText::_('COM_THM_GROUPS_STRUCTUREMANAGER'),
-            'index.php?option=com_thm_groups&view=structuremanager',
-            $viewName == 'structuremanager'
-        );
-        JHtmlSidebar::addEntry(
-            JText::_('COM_THM_GROUPS_STRUCTURETYPEMANAGER'),
-            'index.php?option=com_thm_groups&view=structure_item_manager',
+            JText::_('COM_THM_GROUPS_ATTRIBUTE_MANAGER'),
+            'index.php?option=com_thm_groups&view=attribute_manager',
             $viewName == 'structure_item_manager'
         );
         JHtmlSidebar::addEntry(
-            JText::_('COM_THM_GROUPS_DYNAMICTYPEMANAGER'),
+            JText::_('COM_THM_GROUPS_DYNAMIC TYPE MANAGER'),
             'index.php?option=com_thm_groups&view=dynamic_type_manager',
             $viewName == 'dynamic_type_manager'
         );
         JHtmlSidebar::addEntry(
-            JText::_('COM_THM_GROUPS_STATICTYPESMANAGER'),
+            JText::_('COM_THM_GROUPS_STATIC_TYPE_MANAGER'),
             'index.php?option=com_thm_groups&view=static_type_manager',
             $viewName == 'static_types_manager'
         );

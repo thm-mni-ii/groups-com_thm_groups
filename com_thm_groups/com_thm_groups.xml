@@ -3,11 +3,12 @@
     <name>COM_THM_GROUPS</name>
     <creationDate>March 2010</creationDate>
     <author>Dennis Priefer</author>
+    <author>Ilja Michajlow</author>
     <authorEmail>dennis.priefer@mni.thm.de</authorEmail>
     <authorUrl>http://www.fh-giessen.de</authorUrl>
     <copyright>TH Mittelhessen</copyright>
     <license>GNU/GPL Version 2</license>
-    <version>3.4.10</version>
+    <version>3.5.0</version>
     <description></description>
     <scriptfile>script.php</scriptfile>
     <install>
@@ -52,16 +53,14 @@
     </languages>
 
     <administration>
-        <menu img="components/com_thm_groups/assets/images/logo_16x16.png">COM_THM_GROUPS</menu>
         <submenu>
-            <menu alias="Member Manager" link="option=com_thm_groups&amp;view=membermanager" view="membermanager" img="components/com_thm_groups/assets/images/membermanager_16x16.png"
-                alt="THM-Groups/Member Manager">COM_THM_GROUPS_MEMBERMANAGER</menu>
-            <menu link="option=com_thm_groups&amp;view=groupmanager" view="groupmanager" img="components/com_thm_groups/assets/images/groupmanager_16x16.png"
-                alt="THM-Groups/Group Manager">COM_THM_GROUPS_GROUPMANAGER</menu>
-            <menu link="option=com_thm_groups&amp;view=rolemanager" view="rolemanager" img="components/com_thm_groups/assets/images/rolemanager_16x16.png"
-                alt="THM-Groups/Role Manager">COM_THM_GROUPS_ROLEMANAGER</menu>
-            <menu link="option=com_thm_groups&amp;view=structuremanager" view="structuremanager" img="components/com_thm_groups/assets/images/structuremanager_16x16.png"
-                alt="THM-Groups/Structuremanager">COM_THM_GROUPS_STRUCTUREMANAGER</menu>
+            <menu alias="Member Manager" link="option=com_thm_groups&amp;view=user_manager" view="user_manager" alt="THM-Groups/Member Manager">COM_THM_GROUPS_MEMBERMANAGER</menu>
+            <menu link="option=com_thm_groups&amp;view=groupmanager" view="groupmanager" alt="THM-Groups/Group Manager">COM_THM_GROUPS_GROUPMANAGER</menu>
+            <menu link="option=com_thm_groups&amp;view=rolemanager" view="rolemanager" alt="THM-Groups/Role Manager">COM_THM_GROUPS_ROLEMANAGER</menu>
+            <menu link="option=com_thm_groups&amp;view=profile_manager" view="profile_manager" alt="THM-Groups/Profile manager">COM_THM_GROUPS_PROFILE_MANAGER</menu>
+            <menu link="option=com_thm_groups&amp;view=attribute_manager" view="attribute_manager" alt="THM-Groups/Attribute manager">COM_THM_GROUPS_ATTRIBUTE_MANAGER</menu>
+            <menu link="option=com_thm_groups&amp;view=dynamic_type_manager" view="dynamic_type_manager" alt="THM-Groups/Dynamic Type manager">COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER</menu>
+            <menu link="option=com_thm_groups&amp;view=static_type_manager" view="static_type_manager" alt="THM-Groups/Static Type manager">COM_THM_GROUPS_STATIC_TYPE_MANAGER</menu>
         </submenu>
 
         <files folder="admin">
