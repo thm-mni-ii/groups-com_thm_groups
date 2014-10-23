@@ -77,7 +77,7 @@ class THMGroupsModelAttribute extends JModelLegacy
             $db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')',
         );
 
-        $query->delete($db->quoteName('#__thm_groups_attributes'));
+        $query->delete($db->quoteName('#__thm_groups_attribute'));
         $query->where($conditions);
 
         $db->setQuery($query);

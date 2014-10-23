@@ -51,7 +51,7 @@ class THMGroupsModelAttribute_Manager extends JModelList
         $query
             ->select('attribute.id, attribute.name, dynamic.name as dynamic_type_name, attribute.options, attribute.description')
             ->innerJoin('#__thm_groups_dynamic_type AS dynamic ON attribute.dynamic_typeID = dynamic.id')
-            ->from('#__thm_groups_attributes AS attribute');
+            ->from('#__thm_groups_attribute AS attribute');
 
         $search = $this->getState('filter.search');
         if (!empty($search))

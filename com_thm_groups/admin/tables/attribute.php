@@ -4,14 +4,14 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.table');
 
 /**
- * Class representing the monitors table.
+ * Class representing the attributes table.
  *
  * @category    Joomla.Component.Admin
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
  * @link        www.mni.thm.de
  */
-class TableStructure_Item extends JTable
+class TableAttribute extends JTable
 {
 
     /**
@@ -21,6 +21,6 @@ class TableStructure_Item extends JTable
      */
     public function __construct(&$dbo)
     {
-        parent::__construct('#__thm_groups_structure_item', 'id', $dbo);
+        parent::__construct('#__thm_groups_attribute', 'id', $dbo);
     }
 }

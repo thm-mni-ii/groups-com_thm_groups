@@ -40,7 +40,7 @@ class THMGroupsModelAttribute_Edit extends JModelAdmin
             $db = JFactory::getDBO();
             $query = $db->getQuery(true);
             $query->select('*');
-            $query->from($db->qn('#__thm_groups_attributes'));
+            $query->from($db->qn('#__thm_groups_attribute'));
             $query->where('id = ' . (int) $id);
             $db->setQuery($query);
 
@@ -87,7 +87,7 @@ class THMGroupsModelAttribute_Edit extends JModelAdmin
      *
      * @return  JTable|mixed
      */
-    public function getTable($type = 'Structure_Item', $prefix = 'Table', $config = array())
+    public function getTable($type = 'Attribute', $prefix = 'Table', $config = array())
     {
         return JTable::getInstance($type, $prefix, $config);
     }
