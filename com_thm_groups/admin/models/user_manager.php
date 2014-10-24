@@ -63,7 +63,7 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
 
         $query
             ->select('DISTINCT ust.userID')
-            ->from('#__thm_groups_users_structure_item AS ust');
+            ->from('#__thm_groups_users_attribute AS ust');
 
 
         $orderCol = $this->state->get('list.ordering', $this->defaultOrdering);
@@ -93,8 +93,8 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
 
         $query
             ->select('ust.userID, st.id as attributeID, st.name as attributeName, ust.value')
-            ->from('#__thm_groups_users_structure_item as ust')
-            ->innerJoin('#__thm_groups_structure_item AS st ON ust.structure_itemID = st.id')
+            ->from('#__thm_groups_users_attribute as ust')
+            ->innerJoin('#__thm_groups_attribute AS st ON ust.attributeID = st.id')
             ->where("ust.userID IN ( $userIDs )");
 
         // Sort by attribute
@@ -121,7 +121,7 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
                 case 'groupsAndRoles':
                     break;
             }
-            $query->where("ust.structure_itemID = '$attributeID'");
+            $query->where("ust.attributeID = '$attributeID'");
         }
 
 
@@ -143,10 +143,10 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
         $query = $db->getQuery(true);
         $query
             ->select('ust.userID, st.name as attribute, ust.value, ust.published')
-            ->from('#__thm_groups_users_structure_item AS ust')
-            ->innerJoin('#__thm_groups_structure_item AS st ON ust.structure_itemID = st.id')
+            ->from('#__thm_groups_users_attribute AS ust')
+            ->innerJoin('#__thm_groups_attribute AS st ON ust.attributeID = st.id')
             ->where("ust.userID IN ( $userIDs )")
-            ->order('ust.structure_itemID');
+            ->order('ust.attributeID');
         $db->setQuery($query);
         return $db->loadObjectList();
     }
@@ -323,7 +323,7 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
 
         $query
             ->select('*')
-            ->from('#__thm_groups_structure_item');
+            ->from('#__thm_groups_attribute');
 
         $db->setQuery($query);
 
@@ -355,13 +355,13 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
 
         $query
             ->select('ust.userID, st.name as attribute, ust.value, ust.published')
-            ->from('#__thm_groups_users_structure_item AS ust')
-            ->innerJoin('#__thm_groups_structure_item AS st ON ust.structure_itemID = st.id')
-            ->where("ust.structure_itemID IN ( $attributesString )")
+            ->from('#__thm_groups_users_attribute AS ust')
+            ->innerJoin('#__thm_groups_attribute AS st ON ust.attributeID = st.id')
+            ->where("ust.attributeID IN ( $attributesString )")
             // TODO add dynamic type
             ->where("ust.userID IN ( $userID )")
             ->order('ust.userID')
-            ->order('ust.structure_itemID');
+            ->order('ust.attributeID');
 
         $db->setQuery($query);
 

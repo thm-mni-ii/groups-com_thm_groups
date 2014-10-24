@@ -58,7 +58,7 @@ class THMGroupsViewDynamic_Type_Manager extends THM_CoreViewList
         $user = JFactory::getUser();
 
         JToolBarHelper::title(
-            JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_DYNAMICTYPEMANAGER'), 'dynamic_type_manager'
+            JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER'), 'dynamic_type_manager'
         );
 
         JToolBarHelper::addNew('dynamic_type.add', 'COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER_ADD', false);

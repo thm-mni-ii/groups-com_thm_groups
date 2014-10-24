@@ -104,7 +104,7 @@ class Com_THM_GroupsInstallerScript
         $rows = $db->loadObjectlist();
 
         // Sync Groups to database
-        foreach ($rows as $row)
+/*        foreach ($rows as $row)
         {
             $query = $db->getQuery(true);
             $query->insert("#__thm_groups_groups (id, name, info, picture, mode, injoomla)");
@@ -118,7 +118,7 @@ class Com_THM_GroupsInstallerScript
                 <strong>&nbsp;" . $row->title . " Group added to database!</strong>
                 </p>";
             }
-        }
+        }*/
     }
 
     /*

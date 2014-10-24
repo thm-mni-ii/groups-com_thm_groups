@@ -67,7 +67,7 @@ class THMGroupsViewRolemanager extends JViewLegacy
     {
         $user = JFactory::getUser();
 
-        JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_ROLEMANAGER'), 'rolemanager');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_ROLE_MANAGER'), 'rolemanager');
         JToolBarHelper::addNew(
             'rolemanager.addRole',
             'COM_THM_GROUPS_ROLEMANAGER_ADD',

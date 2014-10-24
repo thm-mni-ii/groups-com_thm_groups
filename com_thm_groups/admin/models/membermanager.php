@@ -367,9 +367,9 @@ class THMGroupsModelmembermanager extends JModelList
 
         $query
             ->select('ust.userID, st.name as type, ust.value')
-            ->from('#__thm_groups_users_structure_item AS ust')
-            ->join('INNER', '#__thm_groups_structure_item AS st ON ust.structure_itemID = st.id')
-            ->where('ust.structure_itemID IN (1,2,4,5) LIMIT 0, 50');
+            ->from('#__thm_groups_users_attribute AS ust')
+            ->join('INNER', '#__thm_groups_attribute AS st ON ust.attributeID = st.id')
+            ->where('ust.attributeID IN (1,2,4,5) LIMIT 0, 50');
 
         $db->setQuery($query);
 

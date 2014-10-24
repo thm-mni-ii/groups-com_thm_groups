@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsControllerProfilemanager
- * @description THMGroupsControllerProfilemanager class from com_thm_groups
+ * @name        THMGroupsControllerProfile_Manager
+ * @description THMGroupsControllerProfile_Manager class from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -20,14 +20,14 @@ jimport('joomla.application.component.controller');
 
 
 /**
- * THMGroupsControllerProfilemanager class for component com_thm_groups
+ * THMGroupsControllerProfile_Manager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsControllerProfilemanager extends JControllerForm
+class THMGroupsControllerProfile_Manager extends JControllerForm
 {
     /**
       * constructor (registers additional tasks to methods)

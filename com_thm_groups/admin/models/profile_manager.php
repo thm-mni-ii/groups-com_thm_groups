@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsModelProfilemanager
- * @description THMGroupsModelProfilemanager file from com_thm_groups
+ * @name        THMGroupsModelProfile_Manager
+ * @description THMGroupsModelProfile_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -15,14 +15,14 @@ defined('_JEXEC') or die();
 jimport('joomla.application.component.modellist');
 
 /**
- * THMGroupsModelProfilemanager class for component com_thm_groups
+ * THMGroupsModelProfile_Manager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsModelProfilemanager extends JModelList
+class THMGroupsModelProfile_Manager extends JModelList
 {
 
     /**

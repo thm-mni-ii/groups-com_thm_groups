@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsViewProfilemanager
- * @description THMGroupsViewProfilemanager file from com_thm_groups
+ * @name        THMGroupsViewProfile_Manager
+ * @description THMGroupsViewProfile_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -19,14 +19,14 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
 
 /**
- * THMGroupsViewProfilemanager class for component com_thm_groups
+ * THMGroupsViewProfile_Manager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewProfilemanager extends JViewLegacy
+class THMGroupsViewProfile_Manager extends JViewLegacy
 {
     /**
      * Method to get display
@@ -67,12 +67,12 @@ class THMGroupsViewProfilemanager extends JViewLegacy
         $user = JFactory::getUser();
 
         JToolBarHelper::title(
-            JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_PROFILEMANAGER'), 'profilemanager'
+            JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_PROFILE_MANAGER'), 'profile_manager'
         );
 
-        JToolBarHelper::addNew('profilemanager.add', 'COM_THM_GROUPS_PROFILE_ADD', false);
-        JToolBarHelper::editList('profilemanager.edit', 'COM_THM_GROUPS_PROFILE_EDIT');
-        JToolBarHelper::deleteList('COM_THM_GROUPS_PROFILE_REALLY_DELETE', 'profilemanager.remove', 'JTOOLBAR_DELETE');
+        JToolBarHelper::addNew('profile_manager.add', 'COM_THM_GROUPS_PROFILE_MANAGER_ADD', false);
+        JToolBarHelper::editList('profile_manager.edit', 'COM_THM_GROUPS_PROFILE_MANAGER_EDIT');
+        JToolBarHelper::deleteList('COM_THM_GROUPS_PROFILE_MANAGER_REALLY_DELETE', 'profile_manager.remove', 'JTOOLBAR_DELETE');
 
         if ($user->authorise('core.admin', 'com_users'))
         {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<extension type="component" client="administrator" version="3.0" method="upgrade">
+<extension method="upgrade" type="component" version="2.5">
     <name>COM_THM_GROUPS</name>
     <creationDate>March 2010</creationDate>
     <author>Dennis Priefer</author>
@@ -9,7 +9,6 @@
     <copyright>TH Mittelhessen</copyright>
     <license>GNU/GPL Version 2</license>
     <version>3.5.0</version>
-    <description></description>
     <scriptfile>script.php</scriptfile>
     <install>
         <sql>
@@ -27,24 +26,22 @@
         </schemas>
     </update>
 
-    <!-- Media files -->
-    <media destination="com_thm_groups" folder="media">
-        <folder>helpers</folder>
+    <media folder="media" destination="com_thm_groups">
         <filename>index.html</filename>
+        <folder>helpers</folder>
     </media>
 
     <files folder="site">
-        <filename>index.html</filename>
-        <filename>thm_groups.php</filename>
-        <filename>controller.php</filename>
-        <filename>router.php</filename>
-
-        <folder>css</folder>
-        <folder>img</folder>
-        <folder>views</folder>
-        <folder>models</folder>
         <folder>controllers</folder>
+        <folder>css</folder>
         <folder>helper</folder>
+        <folder>img</folder>
+        <folder>models</folder>
+        <folder>views</folder>
+        <filename>controller.php</filename>
+        <filename>index.html</filename>
+        <filename>router.php</filename>
+        <filename>thm_groups.php</filename>
     </files>
 
     <languages>
@@ -53,14 +50,56 @@
     </languages>
 
     <administration>
+        <menu>COM_THM_GROUPS</menu>
         <submenu>
-            <menu alias="Member Manager" link="option=com_thm_groups&amp;view=user_manager" view="user_manager" alt="THM-Groups/Member Manager">COM_THM_GROUPS_MEMBERMANAGER</menu>
-            <menu link="option=com_thm_groups&amp;view=groupmanager" view="groupmanager" alt="THM-Groups/Group Manager">COM_THM_GROUPS_GROUPMANAGER</menu>
-            <menu link="option=com_thm_groups&amp;view=rolemanager" view="rolemanager" alt="THM-Groups/Role Manager">COM_THM_GROUPS_ROLEMANAGER</menu>
-            <menu link="option=com_thm_groups&amp;view=profile_manager" view="profile_manager" alt="THM-Groups/Profile manager">COM_THM_GROUPS_PROFILE_MANAGER</menu>
-            <menu link="option=com_thm_groups&amp;view=attribute_manager" view="attribute_manager" alt="THM-Groups/Attribute manager">COM_THM_GROUPS_ATTRIBUTE_MANAGER</menu>
-            <menu link="option=com_thm_groups&amp;view=dynamic_type_manager" view="dynamic_type_manager" alt="THM-Groups/Dynamic Type manager">COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER</menu>
-            <menu link="option=com_thm_groups&amp;view=static_type_manager" view="static_type_manager" alt="THM-Groups/Static Type manager">COM_THM_GROUPS_STATIC_TYPE_MANAGER</menu>
+            <menu
+                    alias="User Manager"
+                    link="option=com_thm_groups&amp;view=user_manager"
+                    view="user_manager"
+                    alt="THM-Groups/Member Manager"
+                    >COM_THM_GROUPS_MEMBER_MANAGER</menu>
+
+            <menu
+                    alias="Group Manager"
+                    link="option=com_thm_groups&amp;view=groupmanager"
+                    view="groupmanager"
+                    alt="THM-Groups/Group Manager"
+                    >COM_THM_GROUPS_GROUP_MANAGER</menu>
+
+            <menu
+                    alias="Role Manager"
+                    link="option=com_thm_groups&amp;view=rolemanager"
+                    view="rolemanager"
+                    alt="THM-Groups/Role Manager"
+                    >COM_THM_GROUPS_ROLE_MANAGER</menu>
+
+            <menu
+                    alias="Profile Manager"
+                    link="option=com_thm_groups&amp;view=profile_manager"
+                    view="profile_manager"
+                    alt="THM-Groups/Profile manager"
+                    >COM_THM_GROUPS_PROFILE_MANAGER</menu>
+
+            <menu
+                    alias="Attribute Manager"
+                    link="option=com_thm_groups&amp;view=attribute_manager"
+                    view="attribute_manager"
+                    alt="THM-Groups/Attribute manager"
+                    >COM_THM_GROUPS_ATTRIBUTE_MANAGER</menu>
+
+            <menu
+                    alias="Dynamic Type Manager"
+                    link="option=com_thm_groups&amp;view=dynamic_type_manager"
+                    view="dynamic_type_manager"
+                    alt="THM-Groups/Dynamic Type manager"
+                    >COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER</menu>
+
+            <menu
+                    alias="Static Type Manager"
+                    link="option=com_thm_groups&amp;view=static_type_manager"
+                    view="static_type_manager"
+                    alt="THM-Groups/Static Type manager"
+                    >COM_THM_GROUPS_STATIC_TYPE_MANAGER</menu>
         </submenu>
 
         <files folder="admin">
@@ -70,14 +109,13 @@
             <filename>access.xml</filename>
             <filename>config.xml</filename>
             <filename>CHANGELOG.php</filename>
-
-            <folder>controllers</folder>
             <folder>assets</folder>
+            <folder>controllers</folder>
             <folder>elements</folder>
             <folder>models</folder>
+            <folder>sql</folder>
             <folder>tables</folder>
             <folder>views</folder>
-            <folder>sql</folder>
         </files>
 
         <languages>

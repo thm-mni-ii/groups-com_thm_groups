@@ -39,7 +39,7 @@ class THMGroupsModelDynamic_Type_Manager extends JModelList
             $query = $dbo->getQuery(true);
             $query
                 ->select('id')
-                ->from('#__thm_groups_structure_item')
+                ->from('#__thm_groups_attribute')
                 ->where("dynamic_typeID = $id");
             $dbo->setQuery($query);
 
