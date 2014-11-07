@@ -70,7 +70,7 @@ class THMGroupsViewRolemanager extends JViewLegacy
         JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_ROLE_MANAGER'), 'rolemanager');
         JToolBarHelper::addNew(
             'rolemanager.addRole',
-            'COM_THM_GROUPS_ROLEMANAGER_ADD',
+            'COM_THM_GROUPS_ROLE_MANAGER_ADD',
             false
         );
         JToolBarHelper::editList('rolemanager.edit', 'COM_THM_GROUPS_ROLEMANAGER_EDIT');

@@ -12,7 +12,7 @@
  * @link        www.mni.thm.de
  */
 defined('_JEXEC') or die();
-jimport('joomla.application.component.modellist');
+jimport('thm_core.list.model');
 
 /**
  * THMGroupsModelStatic_Type_Manager class for component com_thm_groups
@@ -22,7 +22,7 @@ jimport('joomla.application.component.modellist');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsModelStatic_Type_Manager extends JModelList
+class THMGroupsModelStatic_Type_Manager extends THM_CoreModelList
 {
 
     /**

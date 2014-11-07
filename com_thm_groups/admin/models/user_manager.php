@@ -25,7 +25,7 @@ jimport('thm_core.list.model');
 class THMGroupsModelUser_Manager extends THM_CoreModelList
 {
 
-    protected $defaultOrdering = "ust.userID";
+    protected $defaultOrdering = "ust.usersID";
 
     protected $defaultDirection = "ASC";
 
@@ -62,28 +62,18 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
         // TODO make filter of title, first name, second name, posttitle and email in php
 
         $query
-            ->select('DISTINCT ust.userID')
+            ->select('DISTINCT ust.usersID')
             ->from('#__thm_groups_users_attribute AS ust');
 
 
         $orderCol = $this->state->get('list.ordering', $this->defaultOrdering);
         $orderDirn = $this->state->get('list.direction', $this->defaultDirection);
-        if ($orderCol == 'ust.userID')
+        if ($orderCol == 'ust.usersID')
         {
             $query->order($db->escape($orderCol . ' ' . $orderDirn));
         }
 
         return $query;
-    }
-
-    /**
-     * Synchronisation
-     *
-     * @return void
-     */
-    public function sync()
-    {
-        // TODO synchronisation function, if user what??
     }
 
     public function sortByAttribute($userIDs)
@@ -92,20 +82,22 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
         $query = $db->getQuery(true);
 
         $query
-            ->select('ust.userID, st.id as attributeID, st.name as attributeName, ust.value')
+            ->select('ust.usersID, st.id as attributeID, st.name as attributeName, ust.value')
             ->from('#__thm_groups_users_attribute as ust')
             ->innerJoin('#__thm_groups_attribute AS st ON ust.attributeID = st.id')
-            ->where("ust.userID IN ( $userIDs )");
+            ->where("ust.usersID IN ( $userIDs )");
 
         // Sort by attribute
         $orderCol = $this->state->get('list.ordering', $this->defaultOrdering);
         $orderDirn = $this->state->get('list.direction', $this->defaultDirection);
-        if ($orderCol != 'ust.userID' && !empty($orderCol))
+
+        // If it is not a filtering by user ID, then check available filters
+        if ($orderCol != 'ust.usersID' && !empty($orderCol))
         {
-            $attributeID = 2;
             switch ($orderCol)
             {
                 case 'title':
+                    $attributeID = 5;
                     break;
                 case 'firstName':
                     $attributeID = 1;
@@ -116,16 +108,26 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
                 case 'email':
                     $attributeID = 3;
                     break;
+                // TODO make filtering
                 case 'published':
                     break;
+                // TODO make filtering
                 case 'groupsAndRoles':
+                    break;
+                default:
+                    $attributeID = 2;
                     break;
             }
             $query->where("ust.attributeID = '$attributeID'");
+            $query->order('ust.value ' . $orderDirn);
+        } else {
+            $query->order($orderCol . ' ' . $orderDirn);
         }
 
 
-        $query->order('ust.value ' . $orderDirn);
+        echo '<pre>';
+        echo $query;
+        echo '</pre>';
 
         $db->setQuery($query);
         return $db->loadObjectList();
@@ -142,10 +144,10 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query
-            ->select('ust.userID, st.name as attribute, ust.value, ust.published')
+            ->select('ust.usersID, st.name as attribute, ust.value, ust.published')
             ->from('#__thm_groups_users_attribute AS ust')
             ->innerJoin('#__thm_groups_attribute AS st ON ust.attributeID = st.id')
-            ->where("ust.userID IN ( $userIDs )")
+            ->where("ust.usersID IN ( $userIDs )")
             ->order('ust.attributeID');
         $db->setQuery($query);
         return $db->loadObjectList();
@@ -170,7 +172,7 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
         // Prepare user IDs for query
         foreach ($items as $item)
         {
-            $temp[] = $item->userID;
+            $temp[] = $item->usersID;
         }
         $userIDs = implode(',', $temp);
 
@@ -183,7 +185,7 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
         // Prepare user IDs for query
         foreach ($sortedAttributes as $item)
         {
-            $temp[] = $item->userID;
+            $temp[] = $item->usersID;
         }
         $userIDs = '';
         $userIDs = implode(',', $temp);
@@ -196,7 +198,7 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
 
         foreach ($sortedAttributes as $attribute)
         {
-            $result[$attribute->userID]['attributes'] = $userData[$attribute->userID];
+            $result[$attribute->usersID]['attributes'] = $userData[$attribute->usersID];
         }
 
         //var_dump($this->getUserGroupsAndRolesByUserId(62));die;
@@ -211,15 +213,16 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
         $index = 0;
         foreach ($result as $key => $item)
         {
+            $attributes = $item['attributes'];
             $url = "index.php?option=com_thm_groups&view=user_edit&cid[]=$key";
             $return[$index] = array();
 
             $return[$index][0] = JHtml::_('grid.id', $index, $key);
             $return[$index][1] = $key;
-            $return[$index][2] = 'Title';
-            $return[$index][3] = !empty($item->Vorname) ? JHtml::_('link', $url, $item->Vorname) : '';
-            $return[$index][4] = !empty($item->Nachname) ? $item->Nachname : '';
-            $return[$index][5] = !empty($item->Email) ? $item->Email : '';
+            $return[$index][2] = !empty($attributes->Titel) ? $attributes->Titel : '';
+            $return[$index][3] = !empty($attributes->Vorname) ? JHtml::_('link', $url, $attributes->Vorname) : '';
+            $return[$index][4] = !empty($attributes->Nachname) ? $attributes->Nachname : '';
+            $return[$index][5] = !empty($attributes->Email) ? $attributes->Email : '';
             $return[$index][6] = 'Published';
             $return[$index][7] = 'Groups & Roles';
             $index++;
@@ -240,7 +243,7 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
         // TODO change headers
         $headers = array();
         $headers[] = JHtml::_('grid.checkall');
-        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'ust.userID', $direction, $ordering);
+        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'ust.usersID', $direction, $ordering);
         $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_TITLE'), 'title', $direction, $ordering);
         $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_FIRST_NAME'), 'firstName', $direction, $ordering);
         $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_SURNAME'), 'surname', $direction, $ordering);
@@ -288,9 +291,9 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
         foreach ($badData as $data)
         {
             // Wenn das Objekt im Array schon vorhanden ist
-            if (array_key_exists($data->userID, $beautifiedData))
+            if (array_key_exists($data->usersID, $beautifiedData))
             {
-                $userObject = $beautifiedData[$data->userID];
+                $userObject = $beautifiedData[$data->usersID];
                 $newNamedAttribute = $data->attribute;
                 $userObject->$newNamedAttribute = $data->value;
 
@@ -302,7 +305,7 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
                 $userObject = new stdClass;
                 $userObject->$newNamedAttribute = $data->value;
 
-                $beautifiedData[$data->userID] = $userObject;
+                $beautifiedData[$data->usersID] = $userObject;
             }
         }
 
@@ -354,13 +357,13 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
         $attributesString = implode(',', $temp);
 
         $query
-            ->select('ust.userID, st.name as attribute, ust.value, ust.published')
+            ->select('ust.usersID, st.name as attribute, ust.value, ust.published')
             ->from('#__thm_groups_users_attribute AS ust')
             ->innerJoin('#__thm_groups_attribute AS st ON ust.attributeID = st.id')
             ->where("ust.attributeID IN ( $attributesString )")
             // TODO add dynamic type
-            ->where("ust.userID IN ( $userID )")
-            ->order('ust.userID')
+            ->where("ust.usersID IN ( $userID )")
+            ->order('ust.usersID')
             ->order('ust.attributeID');
 
         $db->setQuery($query);
