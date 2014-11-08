@@ -21,7 +21,10 @@ ENGINE = InnoDB;
 
 INSERT INTO `#__thm_groups_users` (`id`, `published`, `injoomla`) VALUES
   (1, 1, 0),
-  (2, 1, 0);
+  (2, 1, 0),
+  (3, 1, 0),
+  (4, 1, 0),
+  (5, 1, 0);
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_users_categories` (
   `ID` INT(11) NOT NULL AUTO_INCREMENT,
@@ -146,12 +149,30 @@ INSERT INTO `#__thm_groups_users_attribute` (`ID`, `usersID`, `attributeID`, `va
   (4, 1, 4, 'max.mustermann@mni.thm.de', 1),
   (5, 1, 5, 'Mr.', 1),
   (6, 1, 7, 'Bc.S', 1),
-  (7, 1, 1, 'Sabine', 1),
-  (8, 1, 2, 'Musterfrau', 1),
-  (9, 1, 3, 'test_user2', 1),
-  (10, 1, 4, 'sabine.musterfrau@mni.thm.de', 1),
-  (11, 1, 5, 'Ms.', 1),
-  (12, 1, 7, 'Bc.S', 1);
+  (7, 2, 1, 'Sabine', 1),
+  (8, 2, 2, 'Musterfrau', 1),
+  (9, 2, 3, 'test_user2', 1),
+  (10, 2, 4, 'sabine.musterfrau@mni.thm.de', 1),
+  (11, 2, 5, 'Ms.', 1),
+  (12, 2, 7, 'Bc.S', 1),
+  (13, 3, 1, 'Ilja', 1),
+  (14, 3, 2, 'Michajlow', 1),
+  (15, 3, 3, 'test_user3', 1),
+  (16, 3, 4, 'ilja.michajlow@mni.thm.de', 1),
+  (17, 3, 5, 'Mr', 1),
+  (18, 3, 7, 'Bc.S.', 1),
+  (19, 4, 1, 'Yolo', 1),
+  (20, 4, 2, 'Swaggins', 1),
+  (21, 4, 3, 'test_user4', 1),
+  (22, 4, 4, 'yolo.swaggins@mni.thm.de', 1),
+  (23, 4, 5, 'Mr', 1),
+  (24, 4, 7, 'Star', 1),
+  (25, 5, 1, 'Amy', 1),
+  (26, 5, 2, 'Pond', 1),
+  (27, 5, 3, 'test_user5', 1),
+  (28, 5, 4, 'amy.pond@doctor.who.com', 1),
+  (29, 5, 5, 'Ms', 1),
+  (30, 5, 7, 'Begleiterin vom Doktor Who', 1);
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_roles` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,

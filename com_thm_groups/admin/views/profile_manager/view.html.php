@@ -16,7 +16,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 // import Joomla view library
-jimport('joomla.application.component.view');
+jimport('thm_core.list.view');
 
 /**
  * THMGroupsViewProfile_Manager class for component com_thm_groups
@@ -26,7 +26,7 @@ jimport('joomla.application.component.view');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewProfile_Manager extends JViewLegacy
+class THMGroupsViewProfile_Manager extends THM_CoreViewList
 {
     /**
      * Method to get display

@@ -17,7 +17,7 @@
  * @category  Joomla.Component.Admin
  * @package   thm_organizer
  */
-class THM_ComponentHelper
+class THM_GroupsHelperComponent
 {
     /**
      * Configure the Linkbar.
@@ -31,7 +31,7 @@ class THM_ComponentHelper
         $viewName = $view->get('name');
 
         // No submenu creation while editing a resource
-        if (!strpos($viewName, 'manager') AND $viewName == 'thmgroups')
+        if (!strpos($viewName, 'manager'))
         {
             return;
         }
