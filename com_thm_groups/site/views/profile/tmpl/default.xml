@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+    <layout title="THM Groups - Profile View">
+        <message>
+            <![CDATA[COM_THM_GROUPS_PROFILE_VIEW_DESC]]>
+        </message>
+    </layout>
+</metadata>

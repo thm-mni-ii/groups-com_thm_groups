@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+    <layout title="THM-Groups - Group View">
+        <message>
+            <![CDATA[COM_THM_GROUPS_GROUP_VIEW_DESC]]>
+        </message>
+    </layout>
+    <fields name="params">
+        <fieldset name="basic">
+            <field
+                addfieldpath="/administrator/components/com_thm_groups/elements/"
+                name="rootGroup"
+                type="groupitemselect"
+                label="COM_THM_GROUPS_GROUPS_ROOTGROUP"
+                description="COM_THM_GROUPS_GROUPS_ROOTGROUP_DESC"
+            />
+            <field
+                addfieldpath="/administrator/components/com_thm_groups/elements/"
+                name="cutLongtext"
+                type="radio"
+                default="yes"
+                label="COM_THM_GROUPS_GROUPS_CUT_LONGTEXT"
+                description="COM_THM_GROUPS_GROUPS_CUT_LONGTEXT_DESC" >
+                <option value="yes">JYES</option>
+                <option value="no">JNO</option>
+            </field>
+            <field
+                addfieldpath="/administrator/components/com_thm_groups/elements/"
+                name="showPicture"
+                type="radio"
+                default="no"
+                label="COM_THM_GROUPS_GROUPS_SHOW_PICTURE"
+                description="COM_THM_GROUPS_GROUPS_SHOW_PICTURE_DESC" >
+                <option value="yes">JYES</option>
+                <option value="yesnodef">COM_THM_GROUPS_GROUPS_SHOW_PICTURE_YESNODEF</option>
+                <option value="no">JNO</option>
+            </field>
+        </fieldset>
+    </fields>
+</metadata>

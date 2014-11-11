@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+    <layout title="THM-Groups - List View">
+        <message>
+            <![CDATA[COM_THM_GROUPS_LIST_VIEW_DESC]]>
+        </message>
+    </layout>
+    <fields name="params">
+        <fieldset name="basic">
+            <field
+                addfieldpath="/administrator/components/com_thm_groups/elements/"
+                name="selGroup"
+                type="groupitemselect"
+                label="COM_THM_GROUPS_SELECT_GROUP_LABEL"
+                description="COM_THM_GROUPS_SELECT_GROUP_DESC"
+            />
+            <field
+                name="showAll"
+                type="radio"
+                label="COM_THM_GROUPS_LIST_VIEW_PARAM_SHOW_ALL_LABEL"
+                default="1"
+                description="COM_THM_GROUPS_LIST_VIEW_PARAM_SHOW_ALL_DESCRIPTION">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field
+                name="linkTarget"
+                type="radio"
+                label="COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_TARGET_LABEL"
+                default="profile"
+                description="COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_TARGET_DESCRIPTION">
+                <option value="module">COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_TARGET_LABEL_MODULE</option>
+                <option value="profile">COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_TARGET_LABEL_PROFILE</option>
+            </field>
+            <field
+                name="columnCount"
+                type="input"
+                label="COM_THM_GROUPS_LIST_VIEW_PARAM_COLUMNCOUNT_LABEL"
+                default="1"
+                description="COM_THM_GROUPS_LIST_VIEW_PARAM_COLUMNCOUNT_DESCRIPTION">
+            </field>
+            <field
+                addfieldpath="/administrator/components/com_thm_groups/elements/"
+                name="orderingAttributes"
+                type="orderattributes"
+                label="COM_THM_GROUPS_ORDERING_ATTIBUTES_LABEL"
+                description="COM_THM_GROUPS_ORDERING_ATTIBUTES_DESC">
+            </field>
+            <field
+                name="showstructure"
+                type="checkboxes"
+                label="COM_THM_GROUPS_LIST_VIEW_PARAM_SHOW_STRUCTURE"
+                multiple="true"
+                required="true"
+                description="COM_THM_GROUPS_LIST_VIEW_PARAM_SHOW_STRUCTURE_DESCRIPTION">
+                <option value="0">COM_THM_GROUPS_TITLE</option>
+                <option value="1">COM_THM_GROUPS_VORNAME</option>
+                <option value="2">COM_THM_GROUPS_NACHNAME</option>
+                <option value="3">COM_THM_GROUPS_LIST_VIEW_PARAM_POSTTITLE</option>
+            </field>
+            <field
+                name="showLinks"
+                type="checkboxes"
+                label="COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_LABEL"
+                multiple="true"
+                required="true"
+                description="COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_DESCRIPTION">
+                <option value="0">COM_THM_GROUPS_TITLE</option>
+                <option value="1">COM_THM_GROUPS_VORNAME</option>
+                <option value="2">COM_THM_GROUPS_NACHNAME</option>
+                <option value="3">COM_THM_GROUPS_LIST_VIEW_PARAM_POSTTITLE</option>
+            </field>
+        </fieldset>
+        <fieldset name="advanced">
+                    <field
+                name="spacer1"
+                type="spacer"
+                label="COM_THM_GROUPS_STANDARD_ALPHABET_CHAR"
+            />
+            <field
+                addfieldpath="/administrator/components/com_thm_groups/elements/"
+                name="alphabet_exists_color"
+                id="alphabet_exists_color"
+                type="alphabetColor"
+                label="COM_THM_GROUPS_BACKGROUND_COLOR"
+                description="COM_THM_GROUPS_BACKGROUND_COLOR_DESC"
+                default="#4A5C66"
+            />
+            <field
+                addfieldpath="/administrator/components/com_thm_groups/elements/"
+                name="alphabet_exists_font_color"
+                id="alphabet_exists_font_color"
+                type="alphabetColor"
+                label="COM_THM_GROUPS_FONT_COLOR"
+                description="COM_THM_GROUPS_FONT_COLOR_DESC"
+                default="#ffffff"
+            />
+            <field
+                name="spacer2"
+                type="spacer"
+                label="COM_THM_GROUPS_STANDARD_ALPHABET_CHAR"
+            />
+            <field
+                addfieldpath="/administrator/components/com_thm_groups/elements/"
+                name="alphabet_inactive_color"
+                type="alphabetColor"
+                label="COM_THM_GROUPS_BACKGROUND_COLOR"
+                description="COM_THM_GROUPS_BACKGROUND_COLOR_DESC"
+                default="#4A5C66"
+            />
+            <field
+                addfieldpath="/administrator/components/com_thm_groups/elements/"
+                name="alphabet_inactive_font_color"
+                type="alphabetColor"
+                label="COM_THM_GROUPS_FONT_COLOR"
+                description="COM_THM_GROUPS_FONT_COLOR_DESC"
+                default="#ffffff"
+            />
+            <field
+                name="spacer3"
+                type="spacer"
+                label="COM_THM_GROUPS_ACTIV_ALPHABET_CHAR"
+            />
+            <field
+                addfieldpath="/administrator/components/com_thm_groups/elements/"
+                name="alphabet_active_color"
+                type="alphabetColor"
+                label="COM_THM_GROUPS_BACKGROUND_COLOR"
+                description="COM_THM_GROUPS_BACKGROUND_COLOR_DESC"
+                default="#4A5C66"
+            />
+            <field
+                addfieldpath="/administrator/components/com_thm_groups/elements/"
+                name="alphabet_active_font_color"
+                type="alphabetColor"
+                label="COM_THM_GROUPS_FONT_COLOR"
+                description="COM_THM_GROUPS_FONT_COLOR_DESC"
+                default="#ffffff"
+            />
+            <field
+                name="spacer4"
+                type="spacer"
+                label="COM_THM_GROUPS_SPACINGS_ELEMENT"
+            />
+            <field
+                name="lineSpacing"
+                type="text"
+                label="COM_THM_GROUPS_LINE_SPACING_LABEL"
+                default="1"
+                description="COM_THM_GROUPS_LINE_SPACING_DESC"
+            />
+            <field
+                name="zSpacing"
+                type="text"
+                label="COM_THM_GROUPS_Z_SPACING_LABEL"
+                default="1"
+                description="COM_THM_GROUPS_Z_SPACING_DESC"
+            />
+        </fieldset>
+    </fields>
+</metadata>
