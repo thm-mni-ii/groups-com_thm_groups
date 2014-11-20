@@ -22,8 +22,12 @@ jimport('thm_core.list.model');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsModelDynamic_Type_Manager extends THM_CoreModelList
+class THM_GroupsModelDynamic_Type_Manager extends THM_CoreModelList
 {
+
+    protected $defaultOrdering = 'dynamic.id';
+
+    protected $defaultDirection = 'ASC';
 
     /**
      * Checks dependencies with dynamic structure items
@@ -103,10 +107,7 @@ class THMGroupsModelDynamic_Type_Manager extends THM_CoreModelList
             $query->where("dynamic.static_typeID = '$static'");
         }
 
-        $orderCol = $this->state->get('list.ordering', 'dynamic.id');
-        $orderDirn = $this->state->get('list.direction', 'asc');
-
-        $query->order($db->escape($orderCol . ' ' . $orderDirn));
+        $this->setOrdering($query);
 
         return $query;
     }
@@ -153,39 +154,13 @@ class THMGroupsModelDynamic_Type_Manager extends THM_CoreModelList
         $direction = $this->state->get('list.direction');
 
         $headers = array();
-        $headers[] = JHtml::_('grid.checkall');
-        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'dynamic.id', $direction, $ordering);
-        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_DYNAMIC_TYPE_NAME'), 'dynamic.name', $direction, $ordering);
-        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_STATIC_TYPE_NAME'), 'static.name', $direction, $ordering);
-        $headers[] = JText::_('COM_THM_GROUPS_REGULAR_EXPRESSION');
-        $headers[] = JText::_('COM_THM_GROUPS_DESCRIPTION');
+        $headers['checkbox'] = '';
+        $headers['id'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'dynamic.id', $direction, $ordering);
+        $headers['dynamic'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_DYNAMIC_TYPE_NAME', 'dynamic.name', $direction, $ordering);
+        $headers['static'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_STATIC_TYPE_NAME', 'static.name', $direction, $ordering);
+        $headers['regularExpression'] = JText::_('COM_THM_GROUPS_REGULAR_EXPRESSION');
+        $headers['description'] = JText::_('COM_THM_GROUPS_DESCRIPTION');
 
         return $headers;
     }
-
-    /**
-     * populates State
-     *
-     * @param   null  $ordering
-     * @param   null  $direction
-     */
-    protected function populateState($ordering = null, $direction = null)
-    {
-        $app = JFactory::getApplication();
-
-        // Adjust the context to support modal layouts.
-        if ($layout = $app->input->get('layout'))
-        {
-            $this->context .= '.' . $layout;
-        }
-
-        $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
-        $this->setState('filter.search', $search);
-
-        $static = $app->getUserStateFromRequest($this->context . '.filter.static', 'filter_static');
-        $this->setState('filter.static', $static);
-
-        parent::populateState("dynamic.id", "ASC");
-    }
-
 }

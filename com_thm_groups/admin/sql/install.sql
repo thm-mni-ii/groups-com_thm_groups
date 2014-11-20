@@ -212,12 +212,17 @@ INSERT INTO `#__thm_groups_mappings` (`ID`, `usersID`, `usergroupsID`, `rolesID`
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NULL,
-  `order` INT NULL,
+  `position` INT(11) NOT NULL UNIQUE,
+  `options` TEXT,
+  `type`  VARCHAR(10),
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-INSERT INTO `#__thm_groups_profile` (`id`, `name`, `order`) VALUES
-  (1, 'Standard', 1);
+INSERT INTO `#__thm_groups_profile` (`id`, `name`, `position`, `options`, `type`) VALUES
+  (1, 'Standard', 1, '', 'old'),
+  (2, 'Mitarbeiter', 2, '', 'old'),
+  (3, 'Professor', 3, '', 'old'),
+  (4, 'Dozent', 4, '', 'old');
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_usergroups` (
   `ID` INT(11) NOT NULL AUTO_INCREMENT,
@@ -228,21 +233,6 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_usergroups` (
   ON UPDATE CASCADE
   ON DELETE CASCADE,
   FOREIGN KEY (`usergroupsID`) REFERENCES `#__usergroups` (`id`)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE)
-ENGINE = InnoDB;
-
-CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attribute` (
-  `ID` INT(11) NOT NULL AUTO_INCREMENT,
-  `profileID` INT(11) NOT NULL,
-  `attributeID` INT(11) NOT NULL,
-  `order` INT(3) NULL,
-  `options` TEXT NULL,
-  PRIMARY KEY (`ID`),
-    FOREIGN KEY (`profileID`) REFERENCES `#__thm_groups_profile` (`id`)
-  ON UPDATE CASCADE
-  ON DELETE CASCADE,
-  FOREIGN KEY (`attributeID`) REFERENCES `#__thm_groups_attribute` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE)
 ENGINE = InnoDB;

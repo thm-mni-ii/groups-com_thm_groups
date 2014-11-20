@@ -21,7 +21,7 @@ require_once JPATH_COMPONENT . '/assets/helpers/static_type_options_helper.php';
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
  */
-class THMGroupsModelDynamic_Type_Edit extends JModelAdmin
+class THM_GroupsModelDynamic_Type_Edit extends JModelAdmin
 {
     /**
      * returns one dynamic item

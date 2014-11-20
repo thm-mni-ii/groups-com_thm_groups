@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsViewAttribute_Manager
- * @description THMGroupsViewAttribute_Manager file from com_thm_groups
+ * @name        THM_GroupsViewAttribute_Manager
+ * @description THM_GroupsViewAttribute_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -19,14 +19,14 @@ defined('_JEXEC') or die('Restricted access');
 jimport('thm_core.list.view');
 
 /**
- * THMGroupsViewAttribute_Manager class for component com_thm_groups
+ * THM_GroupsViewAttribute_Manager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewAttribute_Manager extends THM_CoreViewList
+class THM_GroupsViewAttribute_Manager extends THM_CoreViewList
 {
 
     public $items;

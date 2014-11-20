@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsViewDynamic_Type_Edit
- * @description THMGroupsViewDynamic_Type_Edit file from com_thm_groups
+ * @name        THM_GroupsViewDynamic_Type_Edit
+ * @description THM_GroupsViewDynamic_Type_Edit file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -15,14 +15,14 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
 
 /**
- * THMGroupsViewAddStructure class for component com_thm_groups
+ * THM_GroupsViewDynamic_Type_Edit class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewDynamic_Type_Edit extends JViewLegacy
+class THM_GroupsViewDynamic_Type_Edit extends JViewLegacy
 {
     /**
      * Method to get display

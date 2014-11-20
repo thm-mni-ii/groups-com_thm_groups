@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsModelProfile_Manager
- * @description THMGroupsModelProfile_Manager file from com_thm_groups
+ * @name        THM_GroupsModelProfile_Manager
+ * @description THM_GroupsModelProfile_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -22,8 +22,26 @@ jimport('thm_core.list.model');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsModelProfile_Manager extends THM_CoreModelList
+class THM_GroupsModelProfile_Manager extends THM_CoreModelList
 {
+
+    protected $defaultOrdering = 'id';
+
+    protected $defaultDirection = 'ASC';
+
+    public function __construct($config = array())
+    {
+
+        // If change here, change then in default_head
+        $config['filter_fields'] = array(
+            'id',
+            'name',
+            'position',
+            'type'
+        );
+
+        parent::__construct($config);
+    }
 
     /**
      * Method to build an SQL query to load the list data.
@@ -32,13 +50,66 @@ class THMGroupsModelProfile_Manager extends THM_CoreModelList
      */
     protected function getListQuery()
     {
-        // Create a new query object.
-        $db = JFactory::getDBO();
+        $db = JFactory::getDbo();
         $query = $db->getQuery(true);
+
         $query
-            ->select('id, name')
-            ->from('#__users');
+            ->select('id, name, position, options, type')
+            ->from('#__thm_groups_profile');
+
+        $this->setSearchFilter($query, array('name'));
+        $this->setOrdering($query);
+
+        echo "<pre>";
+        echo $query;
+        echo "</pre>";
 
         return $query;
+
+    }
+
+    /**
+     * Function to feed the data in the table body correctly to the list view
+     *
+     * @return array consisting of items in the body
+     */
+    public function getItems()
+    {
+        $items = parent::getItems();
+
+        $index = 0;
+        foreach ($items as $key => $item)
+        {
+            $url = "index.php?option=com_thm_groups&view=profile_edit&id=$item->id";
+            $return[$index] = array();
+
+            $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
+            $return[$index][1] = $item->id;
+            $return[$index][2] = !empty($item->name) ? JHtml::_('link', $url, $item->name) : '';
+            $return[$index][4] = !empty($item->position) ? $item->position : '';
+            $return[$index][5] = !empty($item->type) ? $item->type : '';
+            $index++;
+        }
+        return $return;
+    }
+
+    /**
+     * Function to get table headers
+     *
+     * @return array including headers
+     */
+    public function getHeaders()
+    {
+        $ordering = $this->state->get('list.ordering');
+        $direction = $this->state->get('list.direction');
+
+        $headers = array();
+        $headers['checkbox'] = '';
+        $headers['id'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'id', $direction, $ordering);
+        $headers['name'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_PROFILE_MANAGER_NAME'), 'name', $direction, $ordering);
+        $headers['position'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_PROFILE_MANAGER_POSITION'), 'position', $direction, $ordering);
+        $headers['type'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_PROFILE_MANAGER_TYPE'), 'type', $direction, $ordering);
+
+        return $headers;
     }
 }

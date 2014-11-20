@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsModelUser_Manager
- * @description THMGroupsModelUser_Manager file from com_thm_groups
+ * @name        THM_GroupsModelUser_Manager
+ * @description THM_GroupsModelUser_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -15,17 +15,17 @@ defined('_JEXEC') or die();
 jimport('thm_core.list.model');
 
 /**
- * THMGroupsModelUser_Manager class for component com_thm_groups
+ * THM_GroupsModelUser_Manager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsModelUser_Manager extends THM_CoreModelList
+class THM_GroupsModelUser_Manager extends THM_CoreModelList
 {
 
-    protected $defaultOrdering = "ust.usersID";
+    protected $defaultOrdering = "userID";
 
     protected $defaultDirection = "ASC";
 
@@ -41,7 +41,7 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
         if (empty($config['filter_fields']))
         {
             $config['filter_fields'] = array(
-                'ust.userID'
+
             );
         }
 
@@ -58,20 +58,32 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
-        // TODO make custom filter for published/unpublished users
-        // TODO make filter of title, first name, second name, posttitle and email in php
-
         $query
-            ->select('DISTINCT ust.usersID')
-            ->from('#__thm_groups_users_attribute AS ust');
+            ->select('DISTINCT a1.usersID as userID')
+            ->select('a1.value as firstName')
+            ->select('a2.value as surname')
+            ->select('a3.value as title')
+            ->select('a4.value as email')
+            ->select('a5.published')
+            ->from('#__thm_groups_users_attribute AS a1')
+            ->innerJoin('#__thm_groups_users_attribute AS a2 ON a1.usersID = a2.usersID')
+            ->innerJoin('#__thm_groups_users_attribute AS a3 ON a1.usersID = a3.usersID')
+            ->innerJoin('#__thm_groups_users_attribute AS a4 ON a1.usersID = a4.usersID')
+            ->innerJoin('#__thm_groups_users AS a5 ON a1.usersID = a5.id')
+            ->leftJoin("#__thm_groups_mappings AS a6 ON a6.usersID = a1.usersID")
+            ->where('a1.attributeID = 1')  // first name
+            ->where('a2.attributeID = 2')  // surname
+            ->where('a3.attributeID = 5')  // title
+            ->where('a4.attributeID = 4'); // email
 
+        $this->setSearchFilter($query, array('a1.value', 'a2.value'));
+        $this->setIDFilter($query, 'a5.published', array('published'));
 
-        $orderCol = $this->state->get('list.ordering', $this->defaultOrdering);
-        $orderDirn = $this->state->get('list.direction', $this->defaultDirection);
-        if ($orderCol == 'ust.usersID')
-        {
-            $query->order($db->escape($orderCol . ' ' . $orderDirn));
-        }
+        $this->setOrdering($query);
+
+        echo "<pre>";
+        echo $query;
+        echo "</pre>";
 
         return $query;
     }
@@ -163,7 +175,7 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
         // GetItems returns only sorted userIDs
         $items = parent::getItems();
 
-        // Temp is an array for userIDs
+        /*// Temp is an array for userIDs
         $temp = array();
 
         // This is a string with IDs for IN clause for SQL query
@@ -199,31 +211,24 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
         foreach ($sortedAttributes as $attribute)
         {
             $result[$attribute->usersID]['attributes'] = $userData[$attribute->usersID];
-        }
+        }*/
 
         //var_dump($this->getUserGroupsAndRolesByUserId(62));die;
         //var_dump($result);die;
 
-        $return = array();
-        if (empty($result))
-        {
-            return $return;
-        }
-
         $index = 0;
-        foreach ($result as $key => $item)
+        foreach ($items as $key => $item)
         {
-            $attributes = $item['attributes'];
-            $url = "index.php?option=com_thm_groups&view=user_edit&cid[]=$key";
+            $url = "index.php?option=com_thm_groups&view=user_edit&cid[]=$item->userID";
             $return[$index] = array();
 
-            $return[$index][0] = JHtml::_('grid.id', $index, $key);
-            $return[$index][1] = $key;
-            $return[$index][2] = !empty($attributes->Titel) ? $attributes->Titel : '';
-            $return[$index][3] = !empty($attributes->Vorname) ? JHtml::_('link', $url, $attributes->Vorname) : '';
-            $return[$index][4] = !empty($attributes->Nachname) ? $attributes->Nachname : '';
-            $return[$index][5] = !empty($attributes->Email) ? $attributes->Email : '';
-            $return[$index][6] = 'Published';
+            $return[$index][0] = JHtml::_('grid.id', $index, $item->userID);
+            $return[$index][1] = $item->userID;
+            $return[$index][2] = !empty($item->title) ? $item->title : '';
+            $return[$index][3] = !empty($item->firstName) ? JHtml::_('link', $url, $item->firstName) : '';
+            $return[$index][4] = !empty($item->surname) ? $item->surname : '';
+            $return[$index][5] = !empty($item->email) ? $item->email : '';
+            $return[$index][6] = $this->getToggle($item->userID, $item->published, 'user', '');
             $return[$index][7] = 'Groups & Roles';
             $index++;
         }
@@ -240,15 +245,16 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
         $ordering = $this->state->get('list.ordering');
         $direction = $this->state->get('list.direction');
 
-        // TODO change headers
+        // TODO FILTER GROUP & ROLE, PUBLISHED
+
         $headers = array();
-        $headers[] = JHtml::_('grid.checkall');
-        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'ust.usersID', $direction, $ordering);
-        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_TITLE'), 'title', $direction, $ordering);
-        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_FIRST_NAME'), 'firstName', $direction, $ordering);
-        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_SURNAME'), 'surname', $direction, $ordering);
-        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_EMAIL'), 'email', $direction, $ordering);
-        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_USER_PUBLISHED'), 'published', $direction, $ordering);
+        $headers['checkbox'] = '';
+        $headers['id'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'userID', $direction, $ordering);
+        $headers['title'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_TITLE'), 'title', $direction, $ordering);
+        $headers['firstName'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_FIRST_NAME'), 'firstName', $direction, $ordering);
+        $headers['surname'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_SURNAME'), 'surname', $direction, $ordering);
+        $headers['email'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_EMAIL'), 'email', $direction, $ordering);
+        $headers['published'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_USER_PUBLISHED'), 'published', $direction, $ordering);
         $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_GROUPS_AND_ROLES'), 'groupsAndRoles', $direction, $ordering);
 
         return $headers;

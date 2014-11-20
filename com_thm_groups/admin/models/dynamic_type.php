@@ -21,7 +21,7 @@ require_once JPATH_COMPONENT . '/assets/helpers/static_type_options_helper.php';
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
  */
-class THMGroupsModelDynamic_Type extends JModelLegacy
+class THM_GroupsModelDynamic_Type extends JModelLegacy
 {
     /**
      * Save element of dynamic types

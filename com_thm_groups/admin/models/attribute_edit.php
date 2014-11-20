@@ -20,7 +20,7 @@ jimport('joomla.application.component.modeladmin');
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
  */
-class THMGroupsModelAttribute_Edit extends JModelAdmin
+class THM_GroupsModelAttribute_Edit extends JModelAdmin
 {
 
     /**

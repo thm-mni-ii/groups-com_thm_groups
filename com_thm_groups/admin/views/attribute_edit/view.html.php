@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsViewStructure_Item_Edit
- * @description THMGroupsViewStructure_Item_Edit file from com_thm_groups
+ * @name        THM_GroupsViewAttribute_Edit
+ * @description THM_GroupsViewAttribute_Edit file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -15,14 +15,14 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
 
 /**
- * THMGroupsViewStructure_Item_Edit class for component com_thm_groups
+ * THM_GroupsViewAttribute_Edit class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 3.5
  */
-class THMGroupsViewStructure_Item_Edit extends JViewLegacy
+class THM_GroupsViewAttribute_Edit extends JViewLegacy
 {
     /**
      * Method to get display

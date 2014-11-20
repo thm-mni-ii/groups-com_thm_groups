@@ -26,7 +26,7 @@ jimport('thm_core.list.view');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewUser_Manager extends THM_CoreViewList
+class THM_GroupsViewUser_Manager extends THM_CoreViewList
 {
 
     public $items;
@@ -55,14 +55,14 @@ class THMGroupsViewUser_Manager extends THM_CoreViewList
     protected function addToolbar()
     {
         $user = JFactory::getUser();
-        JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_MEMBERMANAGER'), 'membermanager');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_USER_MANAGER'), 'membermanager');
         if (($user->authorise('core.edit', 'com_users') || $user->authorise('core.edit.own', 'com_users')) && $user->authorise('core.manage', 'com_users'))
         {
             JToolBarHelper::custom(
                 'user.setGroupsAndRoles',
                 'addassignment',
                 JPATH_COMPONENT . '/assets/images/icon-32-addassignment.png',
-                'COM_THM_GROUPS_MEMBERMANAGER_ADD',
+                'COM_THM_GROUPS_USER_MANAGER_ADD',
                 true,
                 true
             );
@@ -70,7 +70,7 @@ class THMGroupsViewUser_Manager extends THM_CoreViewList
                 'user.delGroupsAndRoles',
                 'removeassignment',
                 JPATH_COMPONENT . 'assets/images/icon-32-removeassignment.png',
-                'COM_THM_GROUPS_MEMBERMANAGER_DELETE',
+                'COM_THM_GROUPS_USER_MANAGER_DELETE',
                 true,
                 true
             );
@@ -78,13 +78,13 @@ class THMGroupsViewUser_Manager extends THM_CoreViewList
         }
         if ($user->authorise('core.edit.state', 'com_users') && $user->authorise('core.manage', 'com_users'))
         {
-            JToolBarHelper::publishList('user.publish', 'COM_THM_GROUPS_MEMBERMANAGER_PUBLISH');
-            JToolBarHelper::unpublishList('user.unpublish', 'COM_THM_GROUPS_MEMBERMANAGER_DISABLE');
+            JToolBarHelper::publishList('user.publish', 'COM_THM_GROUPS_USER_MANAGER_PUBLISH');
+            JToolBarHelper::unpublishList('user.unpublish', 'COM_THM_GROUPS_USER_MANAGER_DISABLE');
             JToolBarHelper::divider();
         }
         if (($user->authorise('core.edit', 'com_users') || $user->authorise('core.edit.own', 'com_users')) && $user->authorise('core.manage', 'com_users'))
         {
-            JToolBarHelper::editList('user.edit', 'COM_THM_GROUPS_MEMBERMANAGER_EDIT');
+            JToolBarHelper::editList('user.edit', 'COM_THM_GROUPS_USER_MANAGER_EDIT');
         }
         if ($user->authorise('core.delete', 'com_users') && $user->authorise('core.manage', 'com_users'))
         {

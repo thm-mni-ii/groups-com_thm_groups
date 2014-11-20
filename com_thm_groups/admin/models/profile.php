@@ -3,7 +3,7 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        attribute model
+ * @name        profile model
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -20,7 +20,7 @@ jimport('joomla.application.component.modeladmin');
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
  */
-class THM_GroupsModelAttribute extends JModelLegacy
+class THM_GroupsModelProfile extends JModelLegacy
 {
     /**
      * saves the dynamic types
@@ -29,33 +29,24 @@ class THM_GroupsModelAttribute extends JModelLegacy
      */
     public function save()
     {
-        $dbo = JFactory::getDbo();
+        $db = JFactory::getDbo();
+        $db->transactionStart();
 
-        $app = JFactory::getApplication();
-        $data = $app->input->post->get('jform', array(), 'array');
+        $data = JFactory::getApplication()->input->post->get('jform', array(), 'array');
+        $data['position'] = $this->getLastPosition() + 1;
 
-        // dynamicType is a name of select field
-        $data['dynamic_typeID'] = $app->input->post->get('dynamicType');
+        $profile = JTable::getInstance('Profile', 'Table');
 
-        // Cast to int, because the type in DB is int
-        $data['dynamic_typeID'] = (int) $data['dynamic_typeID'];
-        $data['description'] = $dbo->escape($data['description']);
-
-        $dbo->transactionStart();
-
-        $dynamicType = $this->getTable();
-
-        $success = $dynamicType->save($data);
-
+        $success = $profile->save($data);
         if (!$success)
         {
-            $dbo->transactionRollback();
+            $db->transactionRollback();
             return false;
         }
         else
         {
-            $dbo->transactionCommit();
-            return $dynamicType->id;
+            $db->transactionCommit();
+            return $profile->id;
         }
     }
 
@@ -76,11 +67,26 @@ class THM_GroupsModelAttribute extends JModelLegacy
             $db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')',
         );
 
-        $query->delete($db->quoteName('#__thm_groups_attribute'));
+        $query->delete($db->quoteName('#__thm_groups_profile'));
         $query->where($conditions);
 
         $db->setQuery($query);
 
         return $result = $db->execute();
+    }
+
+    public function getLastPosition()
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query
+            ->select('MAX(position) as position')
+            ->from('#__thm_groups_profile');
+
+        $db->setQuery($query);
+        $lastPosition = $db->loadObject();
+
+        return $lastPosition->position;
     }
 }

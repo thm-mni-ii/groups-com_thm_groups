@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsModelAttribute_Manager
- * @description THMGroupsModelAttribute_Manager file from com_thm_groups
+ * @name        THM_GroupsModelAttribute_Manager
+ * @description THM_GroupsModelAttribute_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -15,15 +15,19 @@ defined('_JEXEC') or die();
 jimport('thm_core.list.model');
 
 /**
- * THMGroupsModelAttribute_Manager class for component com_thm_groups
+ * THM_GroupsModelAttribute_Manager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsModelAttribute_Manager extends THM_CoreModelList
+class THM_GroupsModelAttribute_Manager extends THM_CoreModelList
 {
+
+    protected $defaultOrdering = 'attribute.id';
+
+    protected $defaultDirection = 'ASC';
 
     public function __construct($config = array())
     {
@@ -49,9 +53,14 @@ class THMGroupsModelAttribute_Manager extends THM_CoreModelList
         $query = $db->getQuery(true);
 
         $query
-            ->select('attribute.id, attribute.name, dynamic.name as dynamic_type_name, attribute.options, attribute.description')
-            ->innerJoin('#__thm_groups_dynamic_type AS dynamic ON attribute.dynamic_typeID = dynamic.id')
-            ->from('#__thm_groups_attribute AS attribute');
+            ->select('attribute.id')
+            ->select('attribute.name')
+            ->select('dynamic.name as dynamic_type_name')
+            ->select('attribute.options')
+            ->select('attribute.description')
+            ->from('#__thm_groups_attribute AS attribute')
+            ->innerJoin('#__thm_groups_dynamic_type AS dynamic ON attribute.dynamic_typeID = dynamic.id');
+
 
         $search = $this->getState('filter.search');
         if (!empty($search))
@@ -65,10 +74,7 @@ class THMGroupsModelAttribute_Manager extends THM_CoreModelList
             $query->where("attribute.dynamic_typeID = '$dynamic'");
         }
 
-        $orderCol = $this->state->get('list.ordering', 'attribute.id');
-        $orderDirn = $this->state->get('list.direction', 'asc');
-
-        $query->order($db->escape($orderCol . ' ' . $orderDirn));
+        $this->setOrdering($query);
 
         return $query;
     }
@@ -115,12 +121,12 @@ class THMGroupsModelAttribute_Manager extends THM_CoreModelList
         $direction = $this->state->get('list.direction');
 
         $headers = array();
-        $headers[] = JHtml::_('grid.checkall');
-        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'attribute.id', $direction, $ordering);
-        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ATTRIBUTE_NAME'), 'attribute.name', $direction, $ordering);
-        $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_DYNAMIC_TYPE_NAME'), 'dynamic.name', $direction, $ordering);
-        $headers[] = JText::_('COM_THM_GROUPS_ATTRIBUTE_OPTIONS');
-        $headers[] = JText::_('COM_THM_GROUPS_DESCRIPTION');
+        $headers['checkbox'] = '';
+        $headers['id'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'attribute.id', $direction, $ordering);
+        $headers['attribute'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ATTRIBUTE_NAME', 'attribute.name', $direction, $ordering);
+        $headers['dynamic'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_DYNAMIC_TYPE_NAME', 'dynamic.name', $direction, $ordering);
+        $headers['regularExpression'] = JText::_('COM_THM_GROUPS_ATTRIBUTE_OPTIONS');
+        $headers['description'] = JText::_('COM_THM_GROUPS_DESCRIPTION');
 
         return $headers;
     }

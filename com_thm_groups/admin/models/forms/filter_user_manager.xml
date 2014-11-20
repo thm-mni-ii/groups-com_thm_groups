@@ -7,33 +7,44 @@
                 label="COM_THM_ORGANIZER_FILTER_SEARCH_DESC"
                 hint="JSEARCH_FILTER"
         />
+
         <field
-                name="dynamic"
-                type="dynamic"
-                label="COM_THM_GROUPS_STATIC_FILTER"
-                description="COM_THM_GROUPS_STATIC_FILTER_DESC"
+                name="published"
+                type="list"
+                label="COM_THM_GROUPS_PUBLISHED"
                 onchange="this.form.submit();"
-                />
+                >
+            <option value="">COM_THM_GROUPS_ALL</option>
+            <option value="1">COM_THM_GROUPS_PUBLISHED</option>
+            <option value="0">COM_THM_GROUPS_UNPUBLISHED</option>
+        </field>
+
     </fields>
 
     <fields name="list">
         <field
                 name="fullordering"
                 type="list"
-                label="COM_CONTENT_LIST_FULL_ORDERING"
-                description="COM_CONTENT_LIST_FULL_ORDERING_DESC"
+                label="COM_THM_GROUPS_USER_MANAGER_LIST_FULL_ORDERING"
+                description="COM_THM_GROUPS_USER_MANAGER_LIST_FULL_ORDERING_DESCRIPTION"
                 onchange="this.form.submit();"
-                default="dynamic.id ASC"
+                default="userID ASC"
                 >
             <option value="">JGLOBAL_SORT_BY</option>
-            <option value="structure.id ASC">COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_SORT_BY_ID_ASC</option>
-            <option value="structure.id DESC">COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_SORT_BY_ID_DESC</option>
-            <option value="structure.name ASC">COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_SORT_BY_NAME_ASC</option>
-            <option value="structure.name DESC">COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_SORT_BY_NAME_DESC</option>
-            <option value="dynamic.name ASC">COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_SORT_BY_DYNAMIC_TYPE_ASC</option>
-            <option value="dynamic.name DESC">COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_SORT_BY_DYNAMIC_TYPE_DESC</option>
-
+            <option value="userID ASC">COM_THM_GROUPS_USER_MANAGER_SORT_BY_ID_ASC</option>
+            <option value="userID DESC">COM_THM_GROUPS_USER_MANAGER_SORT_BY_ID_DESC</option>
+            <option value="title ASC">COM_THM_GROUPS_USER_MANAGER_SORT_BY_TITLE_ASC</option>
+            <option value="title DESC">COM_THM_GROUPS_USER_MANAGER_SORT_BY_TITLE_DESC</option>
+            <option value="firstName ASC">COM_THM_GROUPS_USER_MANAGER_SORT_BY_FIRST_NAME_ASC</option>
+            <option value="firstName DESC">COM_THM_GROUPS_USER_MANAGER_SORT_BY_FIRST_NAME_DESC</option>
+            <option value="surname ASC">COM_THM_GROUPS_USER_MANAGER_SORT_BY_SURNAME_ASC</option>
+            <option value="surname DESC">COM_THM_GROUPS_USER_MANAGER_SORT_BY_SURNAME_DESC</option>
+            <option value="email ASC">COM_THM_GROUPS_USER_MANAGER_SORT_BY_EMAIL_ASC</option>
+            <option value="email DESC">COM_THM_GROUPS_USER_MANAGER_SORT_BY_EMAIL_DESC</option>
+            <option value="published ASC">COM_THM_GROUPS_USER_MANAGER_SORT_BY_PUBLISHED_ASC</option>
+            <option value="published DESC">COM_THM_GROUPS_USER_MANAGER_SORT_BY_PUBLISHED_DESC</option>
         </field>
+
         <field
                 name="limit"
                 type="limitbox"

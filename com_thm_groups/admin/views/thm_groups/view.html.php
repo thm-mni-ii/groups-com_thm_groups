@@ -24,7 +24,7 @@ jimport('joomla.html.pane');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewTHMGroups extends JViewLegacy
+class THM_GroupsViewTHM_Groups extends JViewLegacy
 {
     /**
      * Method to get display
