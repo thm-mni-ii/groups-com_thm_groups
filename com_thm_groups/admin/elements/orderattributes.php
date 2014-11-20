@@ -41,11 +41,15 @@ class JFormFieldOrderAttributes extends JFormField
 
     public function getInput()
     {
-        $orderSelect = "";
+        $orderSelect = '<div id="orderattr">';
         $scriptDir = JURI::root() . 'administrator/components/com_thm_groups/elements/';
         $image_path = JURI::root() . 'administrator/components/com_thm_groups/elements/images';
+        JHtml::_('jquery.framework', true, true);
+        JHtml::_('jquery.ui');
+        JHtml::_('jquery.ui', array('sortable'));
 
-        JHTML::script('orderattributes.js', $scriptDir, false);
+        JHTML::script($scriptDir . 'orderattributes.js');
+        JHtml::stylesheet($scriptDir . 'orderattributes.css');
 
         $tagname = $this->name;
 
@@ -59,7 +63,11 @@ class JFormFieldOrderAttributes extends JFormField
             array_push($arrOrderAtt, 4);
         }
 
-        $orderSelect .= '<select size="5" id="paramsattr" class="selGroup" name="' . $tagname . '" style="display:block">';
+        $orderSelect .= '<div id="nodroppable"  value="1" ><span>' . JText::_('LIB_THM_GROUPS_TITLE')
+                     . '</span></div>';
+
+        $orderSelect .= '<ul id="paramsattr" class="listContent" name="' . $tagname . '">';
+
 
         // If the order Attributes param is used
         if ($orderAtt)
@@ -68,49 +76,38 @@ class JFormFieldOrderAttributes extends JFormField
             {
                 switch ($value)
                 {
-                    case 1:
-                    case 4:
-                        $orderSelect .= '<option value="' . $value . '" disabled="disabled">';
+                    case 2:
+                        $orderSelect .= '<li id="item"  class="listItem" value="' . $value . '" >';
                         break;
-                    default:
-                        $orderSelect .= '<option value="' . $value . '">';
+                    case 3:
+                        $orderSelect .= '<li id="item"  class="listItem" value="' . $value . '" >';
                         break;
+
                 }
 
                 switch ($value)
                 {
-                    case 1: $orderSelect .= JText::_('LIB_THM_GROUPS_TITLE');
-                        break;
                     case 2: $orderSelect .= JText::_('LIB_THM_GROUPS_VORNAME');
                         break;
                     case 3: $orderSelect .= JText::_('LIB_THM_GROUPS_NACHNAME');
                         break;
-                    case 4: $orderSelect .= JText::_('LIB_THM_GROUPS_POST_TITLE');
-                        break;
                 }
-                $orderSelect .= '</option>';
+                $orderSelect .= '</li>';
             }
         }
         else
         {
             // Initialize the selectbox if no params are saved
-            $orderSelect .= '<option value="1" disabled="disabled">' . JText::_('LIB_THM_GROUPS_TITLE') . '</option>';
-            $orderSelect .= '<option value="3">' . JText::_('LIB_THM_GROUPS_NACHNAME') . '</option>';
-            $orderSelect .= '<option value="2">' . JText::_('LIB_THM_GROUPS_VORNAME') . '</option>';
-            $orderSelect .= '<option value="4" disabled="disabled">' . JText::_('LIB_THM_GROUPS_POST_TITLE') . '</option>';
-            $orderAtt = "1,3,2,4";
+            $orderSelect .= '<li value="3" id="item"  class="listItem" >' . JText::_('LIB_THM_GROUPS_NACHNAME')
+                         . '</li>';
+            $orderSelect .= '<li value="2" id="item"  class="listItem">' . JText::_('LIB_THM_GROUPS_VORNAME')
+                         . '</li>';
+            $orderAtt = '1,2,3,4';
         }
-
-        $orderSelect .= '</select>';
-        $orderSelect .= '<a onclick="attrup()" id="sortup">';
-        $orderSelect .= '<img src="' . $image_path . '/uparrow.png" title="';
-        $orderSelect .= JText::_('COM_THM_GROUPS_ROLE_UP') . '" />';
-        $orderSelect .= '</a><br />';
-        $orderSelect .= '<a onclick="attrdown()" id="sortdown">';
-        $orderSelect .= '<img src="' . $image_path . '/downarrow.png" title="';
-        $orderSelect .= JText::_('COM_THM_GROUPS_ROLE_DOWN') . '" />';
-        $orderSelect .= '</a>';
-        $orderSelect .= '<input type="hidden" name="' . $tagname . '" id="jform_params_orderingAttributes" value="' . $orderAtt . '" />';
+        $orderSelect .= '</ul>';
+        $orderSelect .= '<div  value="4" id="nodroppable"  ><span>' . JText::_('LIB_THM_GROUPS_POST_TITLE')
+                    . '</span></div></div>';
+        $orderSelect .= '<input type="hidden" id="resultOrder" value= "' . $orderAtt . '" name="' . $tagname . '"/>';
         return $orderSelect;
     }
 }
