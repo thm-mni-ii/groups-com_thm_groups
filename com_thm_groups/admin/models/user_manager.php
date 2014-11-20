@@ -80,7 +80,6 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
     {
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
-
         $query
             ->select('ust.usersID, st.id as attributeID, st.name as attributeName, ust.value')
             ->from('#__thm_groups_users_attribute as ust')
@@ -126,6 +125,7 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
 
 
         echo '<pre>';
+
         echo $query;
         echo '</pre>';
 
@@ -137,6 +137,7 @@ class THMGroupsModelUser_Manager extends THM_CoreModelList
      * Siehe Heft Punkt 4
      *
      * @param $userIDs
+     *
      * @return mixed
      */
     public function getAllInfoForUsers($userIDs)
