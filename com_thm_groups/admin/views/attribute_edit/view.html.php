@@ -38,7 +38,7 @@ class THM_GroupsViewAttribute_Edit extends JViewLegacy
             return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
         }
 
-        $model = $this->getModel('structure_item_edit');
+        $model = $this->getModel('attribute_edit');
         $form = $this->get('Form');
         $item = $this->get('StructureItem');
 
