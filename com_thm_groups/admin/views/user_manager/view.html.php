@@ -88,7 +88,7 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
         }
         if ($user->authorise('core.delete', 'com_users') && $user->authorise('core.manage', 'com_users'))
         {
-            JToolBarHelper::deleteList('Wirklich l&ouml;schen?', 'user.delete', 'JTOOLBAR_DELETE');
+            JToolBarHelper::deleteList('COM_THM_GROUPS_USER_MANAGER_REALLY_DELETE', 'user.delete', 'JTOOLBAR_DELETE');
         }
         if ($user->authorise('core.admin', 'com_users'))
         {
