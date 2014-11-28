@@ -105,7 +105,6 @@ class THM_GroupsModelUser extends JModelLegacy
         $input = JFactory::getApplication()->input;
 
         // Get array of ids if divers users selected
-        //$cid = JRequest::getVar('cid', array(), 'post', 'array');
         $cid = $input->post->get('cid', array(), 'array');
 
         // If array is empty, the toggle button was clicked
@@ -116,7 +115,6 @@ class THM_GroupsModelUser extends JModelLegacy
         else
         {
             JArrayHelper::toInteger($cid);
-
             $id = implode(',', $cid);
         }
 
@@ -145,9 +143,6 @@ class THM_GroupsModelUser extends JModelLegacy
             ->set("published = '$value'")
             ->where("id IN ( $id )");
 
-        echo "<pre>";
-        echo $query;
-        echo "</pre>";
 
         $db->setQuery((string) $query);
 

@@ -74,10 +74,13 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
             ->where('a1.attributeID = 1')  // first name
             ->where('a2.attributeID = 2')  // surname
             ->where('a3.attributeID = 5')  // title
-            ->where('a4.attributeID = 4'); // email
+            ->where('a4.attributeID = 4');  // email
 
         $this->setSearchFilter($query, array('a1.value', 'a2.value'));
-        $this->setIDFilter($query, 'a5.published', array('published'));
+
+        $this->setIDFilter($query, 'a5.published', array('filter.published'));
+        $this->setIDFilter($query, 'a6.usergroupsID', array('list.groupID'));
+        $this->setIDFilter($query, 'a6.rolesID', array('list.roleID'));
 
         $this->setOrdering($query);
 
@@ -176,6 +179,8 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
         // GetItems returns only sorted userIDs
         $items = parent::getItems();
 
+        // TODO check if there are no users
+
         /*// Temp is an array for userIDs
         $temp = array();
 
@@ -214,7 +219,6 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
             $result[$attribute->usersID]['attributes'] = $userData[$attribute->usersID];
         }*/
 
-        //var_dump($this->getUserGroupsAndRolesByUserId(62));die;
         //var_dump($result);die;
 
         $index = 0;
@@ -230,7 +234,18 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
             $return[$index][4] = !empty($item->surname) ? $item->surname : '';
             $return[$index][5] = !empty($item->email) ? $item->email : '';
             $return[$index][6] = $this->getToggle($item->userID, $item->published, 'user', '');
-            $return[$index][7] = 'Groups & Roles';
+            $test = $this->getUserGroupsAndRolesByUserId($item->userID);
+            $temp = "";
+            $grouproles = "";
+            foreach ($test as $x)
+            {
+                $temp .= !empty($x) ? '<b>' . $x->gname . '</b> : ' . $x->rname . ';<br> ' : ' ';
+                $grouproles .= "<a href='javascript:delAllGroupRoles(" . $item->userID . ", " . $x->gid . ");' class='hasTooltip' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": " . $x->gname .
+                    "::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES') . ".'>
+                                                    <img src='components/com_thm_groups/assets/images/removeassignment.png' width='16px'/></a><strong>$x->gname</strong> : " . $x->rname . '<br>';
+            }
+            $return[$index][7] = $grouproles;
+
             $index++;
         }
         return $return;
@@ -274,12 +289,12 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
         $query = $db->getQuery(true);
 
         $query
-            ->select('groups.title AS groupname, groups.id as groupid, roles.name AS rolename, roles.id AS roleid')
-            ->from("#__usergroups AS groups")
-            ->leftJoin("#__thm_groups_mappings AS maps ON groups.id = maps.usergroupsID")
-            ->leftJoin("#__thm_groups_roles AS roles ON maps.rolesID = roles.id")
-            ->where("maps.usersID = $userID")
-            ->where("maps.usergroupsID > 1");
+            ->select('groups.id as gid, groups.title AS gname, GROUP_CONCAT(DISTINCT roles.id ORDER BY roles.name SEPARATOR ", ") AS rid, GROUP_CONCAT(DISTINCT roles.name ORDER BY roles.name SEPARATOR ", ") AS rname')
+            ->from('#__usergroups AS groups')
+            ->leftJoin('#__thm_groups_mappings AS maps ON groups.id = maps.usergroupsID')
+            ->leftJoin('#__thm_groups_roles AS roles ON maps.rolesID = roles.id')
+            ->where("maps.usersID = $userID AND maps.usergroupsID > 1")
+            ->group('gid');
 
         $db->setQuery($query);
         return $db->loadObjectList();

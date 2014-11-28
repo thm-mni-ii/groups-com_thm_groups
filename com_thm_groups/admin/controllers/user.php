@@ -17,7 +17,10 @@ defined('_JEXEC') or die('Restricted access');
 
 // import Joomla controller library
 jimport('joomla.application.component.controller');
+jimport('joomla.application.component.model');
 
+// For delete operation
+JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_users/models', 'UsersModel');
 
 /**
  * THM_GroupsControllerUser class for component com_thm_groups
@@ -29,6 +32,27 @@ jimport('joomla.application.component.controller');
  */
 class THM_GroupsControllerUser extends JControllerLegacy
 {
+
+    public function delete()
+    {
+        $model = JModelLegacy::getInstance('User', 'UsersModel', array('ignore_request' => true));
+        $input = JFactory::getApplication()->input;
+        $cid = $input->post->get('cid', array(), 'array');
+
+        $success = $model->delete($cid);
+
+        if ($success)
+        {
+            $msg = JText::_('COM_THM_GROUPS_MESSAGE_DELETE_SUCCESS');
+            $type = 'message';
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_MESSAGE_DELETE_FAIL');
+            $type = 'error';
+        }
+        $this->setRedirect("index.php?option=com_thm_groups&view=user_manager", $msg, $type);
+    }
 
     public function publish()
     {
