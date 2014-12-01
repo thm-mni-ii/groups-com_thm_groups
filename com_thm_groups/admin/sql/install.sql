@@ -236,3 +236,18 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_usergroups` (
     ON UPDATE CASCADE
     ON DELETE CASCADE)
 ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attribute` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `profileID` int(11) NOT NULL,
+  `attributeID` int(11) NOT NULL,
+  `order` int(3) DEFAULT NULL,
+  `params` text,
+  PRIMARY KEY (`ID`),
+  FOREIGN KEY (`profileID`) REFERENCES `#__thm_groups_profile` (`id`)
+   ON DELETE CASCADE
+   ON UPDATE CASCADE,
+ FOREIGN KEY (`attributeID`) REFERENCES `#__thm_groups_attribute` (`id`)
+ ON DELETE CASCADE
+ ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
