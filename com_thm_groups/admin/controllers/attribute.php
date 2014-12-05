@@ -7,6 +7,7 @@
  * @name        THMGroupsControllerAttribute
  * @description THMGroupsControllerAttribute class from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -15,7 +16,7 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-// import Joomla controller library
+// Import Joomla controller library
 jimport('joomla.application.component.controller');
 
 
@@ -30,7 +31,7 @@ jimport('joomla.application.component.controller');
 class THM_GroupsControllerAttribute extends JControllerLegacy
 {
     /**
-     * constructor (registers additional tasks to methods)
+     * Constructor (registers additional tasks to methods)
      *
      */
     public function __construct()
@@ -39,7 +40,10 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
     }
 
     /**
-     * display task
+     * Display task
+     *
+     * @param   boolean  $cachable   ?
+     * @param   boolean  $urlparams  the urlparams
      *
      * @return void
      */
@@ -49,6 +53,11 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
         parent::display($cachable);
     }
 
+    /**
+     * Adding
+     *
+     * @return mixed
+     */
     public function add()
     {
         if (!JFactory::getUser()->authorise('core.admin'))
@@ -66,14 +75,15 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
      */
     public function apply()
     {
-        $model = $this->getModel('attribute_edit');
+        $model = $this->getModel('attribute');
 
-        //$isValid = $model->validateForm();
+        // $isValid = $model->validateForm();
         $isValid = true;
 
         if ($isValid)
         {
             $success = $model->save();
+
             if ($success)
             {
                 $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
@@ -82,7 +92,8 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
             else
             {
                 $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-                $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=0', $msg);
+               // $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=0', $msg);
+
             }
         }
         else
@@ -92,6 +103,11 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
         }
     }
 
+    /**
+     * Edit
+     *
+     * @return void
+     */
     public function edit()
     {
         if (!JFactory::getUser()->authorise('core.admin'))
@@ -135,9 +151,9 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
      */
     public function save($key = null, $urlVar = null)
     {
-        $model = $this->getModel('attribute_edit');
+        $model = $this->getModel('attribute');
         //$isValid = $model->validateForm();
-        $isValid=true;
+        $isValid = true;
 
         if ($isValid)
         {
@@ -161,16 +177,17 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
     }
 
     /**
-     * Save2new
+     * Saves the selected attribute and redirects to a new page
+     * to create a new attribute
      *
      * @return void
      */
     public function save2new()
     {
-        $model = $this->getModel('attribute_edit');
+        $model = $this->getModel('attribute');
 
         //$isValid = $model->validateForm();
-        $isValid=true;
+        $isValid = true;
 
         if ($isValid)
         {
@@ -194,6 +211,11 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
     }
 
 
+    /**
+     * Deletes the selected attribute from the database
+     *
+     * @return void
+     */
     public function delete()
     {
         $model = $this->getModel('attribute_manager');
@@ -209,45 +231,48 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
         $this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager', $msg);
     }
 
+
     /**
-     * getFieldExtrasLabel
+     * Gets labels for additional fields of dynamic type
      *
      * @return void
      */
     public function getFieldExtrasLabel()
     {
         $mainframe = Jfactory::getApplication();
-        $dynamicTypeID = JRequest::getVar('dynamicTypeID');
-        $output = "";
+        $dynTypeId = $mainframe->input->get('dynTypeId');
+        $model = $this->getModel('attribute_edit');
 
-        // TODO get static type of dynamic type
-        /*
-                switch (strtoupper($field))
+        $dynType = $model->getDynamicType($dynTypeId);
+        $staticType = $model->getStaticType($dynType->static_typeID);
+
+        $output = "---- " . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAMS") . " ---- <br/>";
+
+                switch (strtoupper($staticType->name))
                 {
                     case "TEXT":
-                    case "TEXT":
-                        $output = "<span title='"
+                        $output .= "<span title='"
                             . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT")
                             . "'>"
                             . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_SIZE")
                             . ":</span>";
                         break;
                     case "TABLE":
-                        $output = "<span title='"
+                        $output .= "<span title='"
                             . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TABLE")
                             . "'>"
                             . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_FIELDS")
                             . ":</span>";
                         break;
                     case "MULTISELECT":
-                        $output = "<span title='"
+                        $output .= "<span title='"
                             . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_MULTISELECT")
                             . "'>"
                             . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_FIELDS")
                             . ":</span>";
                         break;
                     case "PICTURE":
-                        $output = "<span title='"
+                        $output .= "<span title='"
                             . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE")
                             . "'>"
                             . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT")
@@ -260,81 +285,175 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
                             . ":</span>";
                         break;
                     default :
-                        $output = JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_NO_PARAMS") . "...";
+                        $output .= JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_NO_PARAMS") . "...";
                         break;
                 }
+        echo $output;
+        $mainframe->close();
 
-                echo $output;
-                $mainframe->close();
-        */
     }
 
     /**
-     * getFieldExtras
+     * Gets additional fields of dynamic type
+     * Loads values of additonal fields from the specific dynamic type
+     * when options of selected attribute are not set in database.
      *
      * @return void
      */
     public function getFieldExtras()
     {
         $mainframe = Jfactory::getApplication();
-        $field = JRequest::getVar('field');
-        $output = "";
+        $dynTypeId = $mainframe->input->get('dynTypeId');
+        $model = $this->getModel('attribute_edit');
+        $dynType = $model->getDynamicType($dynTypeId);
 
-        // $output =  "COM_THM_GROUPS_STRUCTURE_EXTRA_PARAMS: <br />";
-        switch (strtoupper($field))
+        // Get options from dynamicType
+        $options = json_decode($dynType->options);
+
+        $staticType = $model->getStaticType($dynType->static_typeID);
+
+        // Get options from attribute if set/else attOpt is null
+        $attOpt = json_decode($mainframe->input->getHtml('attOpt'));
+
+        // Building input fields for form
+        $output = "";
+        switch (strtoupper($staticType->name))
         {
             case "TEXT":
                 $output .= "<input "
                     . "class='inputbox' "
-                    . "type='text' name='" . $field . "_extra' "
-                    . "id='" . $field . "_extra' "
+                    . "type='text' name='" . $staticType->name . "_length' "
+                    . "id='" . $staticType->name . "_length' "
                     . "size='40'"
-                    . "value='"
-                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TEXT")
-                    . "' title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT") . "' "
+                    . "value='";
+                    if (((($attOpt == null) || ($attOpt == ""))&&(($options != null)&&($options->length != ""))))
+                    {
+                        $output .= $options->length;
+                    }
+                    elseif (($attOpt != null) && ($attOpt->length != ""))
+                    {
+                        $output .= $attOpt->length;
+                    }
+                    else
+                    {
+                        $output .= JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TEXT");
+                    }
+                    $output .= "' title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT") . "' "
                     . "/>";
                 break;
             case "TABLE":
                 $output .= "<textarea "
                     . "rows='5' "
-                    . "name='" . $field . "_extra' "
-                    . "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TABLE") . "'>"
-                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TABLE")
-                    . "</textarea>";
+                    . "name='" . $staticType->name . "_columns' "
+                    . "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TABLE") . "'>";
+                    if (((($attOpt == null) || ($attOpt == "")) && (($options != null)&&($options->columns != ""))))
+                    {
+                        $output .= $options->columns;
+                    }
+                    elseif (($attOpt != null) && ($attOpt->columns != ""))
+                    {
+                        $output .= $attOpt->columns;
+                    }
+                    else
+                    {
+                        $output .= JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TABLE");
+                    }
+                    $output .= "</textarea>";
                 break;
             case "MULTISELECT":
                 $output .= "<textarea "
                     . "rows='5' "
-                    . "name='" . $field . "_extra'"
-                    . "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_MULTISELECT") . "'>"
-                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_MULTISELECT")
-                    . "</textarea>";
+                    . "name='" . $staticType->name . "_options'"
+                    . "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_MULTISELECT") . "'>";
+                    if (((($attOpt == null) || ($attOpt == "")) && (($options != null) && ($options->options != ""))))
+                    {
+                        $output .= $options->options;
+                    }
+                    elseif (($attOpt != null) && ($attOpt->options != ""))
+                    {
+                        $output .= $attOpt->options;
+                    }
+                    else
+                    {
+                        $output .= JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_MULTISELECT");
+                    }
+                    $output .= "</textarea>";
+                break;
+            case "TEXTFIELD":
+                $output .= "<input "
+                    . "class='inputbox' "
+                    . "type='text' name='" . $staticType->name . "_length' "
+                    . "id='" . $staticType->name . "_length' "
+                    . "size='40'";
+                    if (((($attOpt == null) || ($attOpt == "")) && (($options != null) && ($options->length != ""))))
+                    {
+                        $output .= "value='" . $options->length . "' ";
+                    }
+                    elseif (($attOpt != null) && ($attOpt->length != ""))
+                    {
+                        $output .= "value='" . $attOpt->length . "' ";
+                    }
+                    else
+                    {
+                        $output .= JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TEXTFIELD");
+                    }
+                    $output .= "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT") . "' "
+                    . "/>";
                 break;
             case "PICTURE":
                 $output .= "<input "
                     . "class='inputbox' "
-                    . "type='text' name='" . $field . "_extra' "
-                    . "id='" . $field . "_extra' "
+                    . "type='text' name='" . $staticType->name . "_name' "
+                    . "id='" . $staticType->name . "_name' "
                     . "size='40'"
-                    . "value='"
-                    . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_PICTURE")
-                    . "' title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE") . "' "
+                    . "value='";
+                    if (((($attOpt == null) || ($attOpt == "")) && (($options != null) && ($options->filename != ""))))
+                    {
+                        $output .= $options->filename;
+                    }
+                    elseif (($attOpt != null) && ($attOpt->filename != ""))
+                    {
+                        $output .= $attOpt->filename;
+                    }
+                    else
+                    {
+                        $output .= JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_PICTURE");
+                    }
+                    $output .= "' title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE") . "' "
                     . "/>";
                 $output .= "<br><br>";
                 $output .= "<input "
                     . "class='inputbox' "
-                    . "type='text' name='" . $field . "_extra_path' "
-                    . "id='" . $field . "_extra_path' "
+                    . "type='text' name='" . $staticType->name . "_path' "
+                    . "id='" . $staticType->name . "_path' "
                     . "size='40'"
-                    . "value='images/' "
-                    . "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE_PATH") . "' "
-                    . "/>";
+                    . "value='";
+                    if (((($attOpt == null) || ($attOpt == "")) && (($options != null) && ($options->path != ""))))
+                    {
+                        $output .= $options->path;
+                    }
+                    elseif
+                    (($attOpt != null) && ($attOpt->path != ""))
+                    {
+                        $output .= $attOpt->path;
+                    }
+                    else
+                    {
+                        $output .= "nopath";
+                    }
+                    $output .= "' />";
 
-                $mein = new JFormFieldExplorer;
-                $output .= $mein->explorerHTML($field . "_extra_path", "images");
+                //$mein = new JFormFieldExplorer;
+                //$output .= $mein->explorerHTML($field . "_extra_path", "images");
                 break;
         }
+
+        // Save static type to get it in model/attribute.php/save()
+        $output .= "<input type='hidden' id='sType' name='sType' value='" . $staticType->id . "'/>";
+
+        // Prints input fields
         echo $output;
+
         $mainframe->close();
     }
 }

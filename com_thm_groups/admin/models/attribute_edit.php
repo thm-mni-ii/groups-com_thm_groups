@@ -5,6 +5,7 @@
  * @subpackage  com_thm_groups.admin
  * @name        attribute edit
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -24,7 +25,28 @@ class THM_GroupsModelAttribute_Edit extends JModelAdmin
 {
 
     /**
-     * returns one dynamic item
+     * Gets the static type from DB returns it as object
+     *
+     * @param   integer  $staticTid  ID of desired static type
+     *
+     * @return mixed
+     */
+    public function  getStaticType($staticTid)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query->select('*')
+              ->from('#__thm_groups_static_type')
+              ->where('id = ' . (int) $staticTid);
+
+        $db->setQuery($query);
+
+        return $db->loadObject();
+    }
+
+    /**
+     * returns one attribute item or an dummy object
      *
      * @return mixed|stdClass
      */
@@ -35,23 +57,26 @@ class THM_GroupsModelAttribute_Edit extends JModelAdmin
         $id = (empty($cid)) ? $app->input->get->get('id') : $cid[0];
 
         // TODO Ilja, Delete this bullshit! Comment from Ilja :)
+        // Gets all from attribute and the options from dynamic type
         if ($id != 0)
         {
             $db = JFactory::getDBO();
             $query = $db->getQuery(true);
-            $query->select('*');
-            $query->from($db->qn('#__thm_groups_attribute'));
-            $query->where('id = ' . (int) $id);
+            $query->select(array('#__thm_groups_attribute.*', '#__thm_groups_dynamic_type.options AS dynoptions'));
+            $query->from($db->qn(array('#__thm_groups_attribute','#__thm_groups_dynamic_type')));
+            $query->where('#__thm_groups_attribute.id = '
+                . (int) $id . ' AND #__thm_groups_attribute.dynamic_typeID = #__thm_groups_dynamic_type.id ');
             $db->setQuery($query);
 
             return $db->loadObject();
         }
         else
         {
-            // Bullshit part
+            // Bullshit part / used in controller /
             $temp = new stdClass;
             $temp->id = 0;
             $temp->dynamic_typeID = 0;
+            $temp->options = null;
             return $temp;
         }
     }
@@ -69,7 +94,8 @@ class THM_GroupsModelAttribute_Edit extends JModelAdmin
     public function getForm($data = array(), $loadData = true)
     {
         $form = $this->loadForm('com_thm_groups.attribute_edit', 'attribute_edit',
-            array('control' => 'jform', 'load_data' => $loadData));
+            array('control' => 'jform', 'load_data' => $loadData)
+        );
         if (empty($form))
         {
             return false;
@@ -79,7 +105,7 @@ class THM_GroupsModelAttribute_Edit extends JModelAdmin
     }
 
     /**
-     * returns table object
+     * Returns table object
      *
      * @param   string  $type    type
      * @param   string  $prefix  prefix
@@ -93,7 +119,7 @@ class THM_GroupsModelAttribute_Edit extends JModelAdmin
     }
 
     /**
-     * returns a list of static types
+     * Returns a list of dynamic types
      *
      * @return  Array
      */
@@ -108,6 +134,26 @@ class THM_GroupsModelAttribute_Edit extends JModelAdmin
         $db->execute();
 
         return $db->loadAssocList();
+    }
+
+    /**
+     * Returns a single dynamicType object
+     *
+     * @param   integer  $id  ID of dynamic type
+     *
+     * @return  Object
+     */
+    public function  getDynamicType($id)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query->select('*')
+              ->from('#__thm_groups_dynamic_type')
+              ->where('id = ' . (int) $id);
+        $db->setQuery($query);
+        $db->execute();
+        return $db->loadObject();
     }
 
     /**
@@ -126,23 +172,26 @@ class THM_GroupsModelAttribute_Edit extends JModelAdmin
         $arrayOfStaticTypes = $this->getDynamicTypes();
 
         // Convert array to options
-        foreach($arrayOfStaticTypes as $key => $value) :
+        foreach ($arrayOfStaticTypes as $key => $value) :
             $options[] = JHTML::_('select.option', $value['id'], $value['name']);
         endforeach;
 
+        // 'onchange' => js-function that's executed when selection on selectfield has made
         $settings = array(
-            'id' => 'staticTypesField',
-            'option.key' => 'value',
-            'option.value' => 'text'
+            'id'            => 'staticTypesField',
+            'option.key'    => 'value',
+            'option.value'  => 'text',
+            'onchange'      => 'jQf.fn.getFieldExtras()'
         );
 
+        // Generates selectfields:
         $selectFieldStaticTypes = JHtmlSelect::genericlist(
             $options,
-            'dynamicType',  // Name of select field
-            $settings,
+            'dynamicType', // Name of select field
+            $settings,     // array of settings
             'value',       // Standard
             'text',        // variables
-            $selected              // Selected
+            $selected      // Selected
         );
 
         return $selectFieldStaticTypes;

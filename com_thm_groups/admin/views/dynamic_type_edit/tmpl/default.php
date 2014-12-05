@@ -13,8 +13,46 @@
  */
 defined('_JEXEC') or die ('Restricted access');
 JHTML::_('behavior.tooltip');
+
+$scriptDir = "libraries/thm_groups/assets/js/";
+JHTML::script('jquery-1.9.1.min.js', $scriptDir);
+$doc = JFactory::getDocument();
+$doc->addStyleSheet(JURI::root(true) . "/libraries/thm_groups/assets/elements/explorer.css");
+
 ?>
-<form action='index.php?option=com_thm_groups' method="post" name="adminForm" id="adminForm">
+
+<script>
+
+    function getTypeOptions(){
+        var selectedOption = document.getElementById('staticType').options[document.getElementById('staticType').selectedIndex].text;
+        var selectedID = document.getElementById('staticType').options[document.getElementById('staticType').selectedIndex].value;
+
+        if(selectedID != <?php echo $this->item->static_typeID; ?>){
+            var isActType = false;
+        }else{
+            var isActType = true;
+        }
+
+        jQuery.ajax({
+            type: "POST",
+            url: "index.php?option=com_thm_groups&controller=dynamic_type_edit&task=dynamic_type_edit.getTypeOptions&cid=" + <?php echo $this->item->id; ?> + "&selected=" + selectedOption +
+                 "&isActType=" + isActType +"",
+            datatype: "HTML"
+        })
+            .success(function( response ) {
+                document.getElementById("ajax-container").innerHTML = response;
+            });
+
+    }
+
+    jQuery(document).ready(function(){
+        getTypeOptions();
+    });
+
+</script >
+
+<!--<form action='index.php?option=com_thm_groups' method="post" name="adminForm" id="adminForm" accept-charset="UTF-8">-->
+<form action='index.php?option=com_thm_groups' method="post" name="adminForm" id="adminForm" accept-charset="UTF-8">
     <div class="width-60 fltlft">
         <fieldset class="adminform">
             <legend><?php echo 'TEST LEGEND'; ?></legend>
@@ -29,6 +67,7 @@ JHTML::_('behavior.tooltip');
                     <?php /*endforeach; */ ?>
                 </div>
             </div>-->
+
             <div class="control-label">
                 <div class="control-label">
                     <?php echo $this->form->getLabel('name'); ?>
@@ -54,6 +93,8 @@ JHTML::_('behavior.tooltip');
                 <div class="controls">
                     <?php echo $this->form->getInput('description'); ?>
                 </div>
+                <span id="ajax-container">
+                </span>
             </div>
         </fieldset>
 
