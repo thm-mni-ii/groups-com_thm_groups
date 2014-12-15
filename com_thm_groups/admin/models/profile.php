@@ -52,6 +52,8 @@ class THM_GroupsModelProfile extends JModelLegacy
         {
             $db->transactionCommit();
 
+            $profilID = ($profilID == 0)? $profile->id: $profilID;
+
             $deletequery = $db->getQuery(true);
             $putquery = $db->getQuery(true);
             $deletequery->delete('#__thm_groups_profile_attribute')

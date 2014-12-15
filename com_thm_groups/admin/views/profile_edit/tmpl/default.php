@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
 
 $attribute = $this->model->getNoSelectAttribute($this->profilid);
 $allatributeofprofil = $this->model->getAllAttribute($this->profilid)[0]->json;
-$allatributeofprofilJson = json_decode($allatributeofprofil);
+$allatributeofprofilJson = (json_decode($allatributeofprofil))? json_decode($allatributeofprofil):[];
 JHtml::_('jquery.framework', true, true);
 JHtml::_('jquery.ui');
 JHtml::_('jquery.ui', array('sortable'));
