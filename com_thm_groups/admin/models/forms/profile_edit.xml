@@ -19,8 +19,13 @@
                 onchange="this.form.submit();"
                 default="old"
                 >
+
             <option value="old">OLD</option>
             <option value="new">NEW</option>
         </field>
+        <field name="profile_attribute"
+               type="hidden"
+
+             />
     </fieldset>
 </form>

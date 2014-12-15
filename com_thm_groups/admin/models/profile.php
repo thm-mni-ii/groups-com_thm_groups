@@ -31,23 +31,58 @@ class THM_GroupsModelProfile extends JModelLegacy
     {
         $db = JFactory::getDbo();
         $db->transactionStart();
-
+        $result = false;
         $data = JFactory::getApplication()->input->post->get('jform', array(), 'array');
+
         $data['position'] = $this->getLastPosition() + 1;
+        $attributeList = JFactory::getApplication()->input->post->get('attributeList', '', 'string');
+        $profilID = intval($data['id']);
+        $attributeJSON = json_decode($attributeList);
 
         $profile = JTable::getInstance('Profile', 'Table');
 
         $success = $profile->save($data);
+
         if (!$success)
         {
             $db->transactionRollback();
-            return false;
+            $result = false;
         }
         else
         {
             $db->transactionCommit();
+
+            $deletequery = $db->getQuery(true);
+            $putquery = $db->getQuery(true);
+            $deletequery->delete('#__thm_groups_profile_attribute')
+                        ->where('profileID =' . $profilID);
+            $columnTable = array('profileID', 'attributeID', 'order', 'params');
+
+            $putquery->insert('#__thm_groups_profile_attribute');
+            $putquery->columns($db->quoteName($columnTable));
+              foreach ($attributeJSON as $index => $value )
+              {
+                    $params = $db->quote(json_encode($value->params));
+                  $columsValue = array($profilID, intval($index), intval($value->order), $params);
+                  $putquery->values(implode(',', $columsValue));
+              }
+
+            $db->setQuery($deletequery);
+            $success = $db->execute();
+            if (!$success)
+            {
+                return false;
+            }
+            $db->setQuery($putquery);
+          $success = $db->execute();
+            if (!$success)
+            {
+                return false;
+            }
+
             return $profile->id;
         }
+
     }
 
     /**

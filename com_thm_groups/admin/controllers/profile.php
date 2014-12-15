@@ -68,12 +68,12 @@ class THM_GroupsControllerProfile extends JControllerLegacy
         if ($success)
         {
             $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
-            $this->setRedirect('index.php?option=com_thm_groups&view=profile_edit&cid[]=' . $success, $msg);
+            $this->setRedirect('index.php?option=com_thm_groups&view=profile_edit&id=' . $success, $msg);
         }
         else
         {
             $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-            $this->setRedirect('index.php?option=com_thm_groups&view=profile_edit&cid[]=0', $msg);
+            $this->setRedirect('index.php?option=com_thm_groups&view=profile_edit&id=0', $msg);
         }
     }
 
@@ -172,12 +172,12 @@ class THM_GroupsControllerProfile extends JControllerLegacy
         if ($success)
         {
             $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
-            $this->setRedirect('index.php?option=com_thm_groups&view=profile_edit&cid[]=0', $msg);
+            $this->setRedirect('index.php?option=com_thm_groups&view=profile_edit&id=0', $msg);
         }
         else
         {
             $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-            $this->setRedirect('index.php?option=com_thm_groups&view=profile_edit&cid[]=0', $msg);
+            $this->setRedirect('index.php?option=com_thm_groups&view=profile_edit&id=0', $msg);
         }
     }
 

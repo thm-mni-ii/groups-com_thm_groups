@@ -12,8 +12,9 @@
 
 defined('_JEXEC') or die;
 
-$attribute = $this->model->getAllAttribute($this->profilid);
-$allatributeofprofil = $this->model->getAllAttributeParams($this->profilid);
+$attribute = $this->model->getNoSelectAttribute($this->profilid);
+$allatributeofprofil = $this->model->getAllAttribute($this->profilid)[0]->json;
+$allatributeofprofilJson = json_decode($allatributeofprofil);
 JHtml::_('jquery.framework', true, true);
 JHtml::_('jquery.ui');
 JHtml::_('jquery.ui', array('sortable'));
@@ -25,56 +26,82 @@ JHTML::stylesheet(JURI::root() . 'media/jui/css/sortablelist.css');
 
 <script type="text/javascript">
     jQuery.noConflict();
-    /**Joomla.submitbutton = function(task)
+   /** Joomla.submitbutton = function(task)
     {
         if (task == 'profile.cancel' || document.formvalidator.isValid(document.getElementById('item-form')))
         {
             Joomla.submitform(task, document.getElementById('item-form'));
         }
     }**/
+
+    jQuery(document).ready(function (){
+        var sortableList = new jQuery.JSortableList('#attributeTable tbody','','' , '','','');
+    });
 function actualAttributTable(){
     jQuery(document).ready(function (){
-        var sortableList = new jQuery.JSortableList('#attributeList tbody','','' , '','','');
+        var sortableList = new jQuery.JSortableList('#attributeTable tbody','','' , '','','');
     });
     }
-    var chooses1;
-   /** jQuery (function ($){
-        $(document).ready(function (){
-            $("#attribute").chosen("destroy");
-            chooses1=  $("#attribute").chosen();
-           // $("#attribute").trigger("chosen:updated");
-        });
-    });**/
 
-    function putAttibuteInTable(){
-       jQuery("#attribute option:selected").each(function(){
-           var attribute = jQuery(this).val().split(":");
-           var idatt = attribute[0];
-           var name =  attribute[1];
-           var pathdelete = "<?php echo JURI::root() . "administrator/components/com_thm_groups/assets/images/trash.png";?>";
-           var trAttr="<tr id='trattr_"+idatt+"'>";
-           var iconAttr = "<td class='order nowrap center hidden-phone' style='width: 31px;'> "+
-               "<span class='sortable-handler' style='cursor: move;'><i class='icon-menu'></i>"+
-               "</span></td><td id='name'>" + name + "</td>";
-           var tdattr="<td id='labeltd'>" +
-               "<input type='checkbox' id='label'/></td><td id='wraptd'>" +
-               "<input type='checkbox' id='wrap'/></td><td style='cursor:pointer' onclick='deleteAttr("+idatt+")'>" +
-               "<img src= '"+pathdelete+"'  width=15 height=10 alt='X'/></td></tr>";
-            jQuery('#attributeList  tbody').append(trAttr + iconAttr + tdattr);
-           jQuery(this).remove();
+    function saveProfileAttribute(){
+        var attributeArray = {};
+        jQuery('#attributeTable tbody tr').each(function(){
+            var index = jQuery(this).index();
+            var attrID = jQuery(this).attr('id').split('_')[1];
+            var labelval = jQuery(this).find('#label').prop( "checked" );
+            var wrapval = jQuery(this).find('#wrap').prop( "checked" );
+            var params={label:labelval,wrap:wrapval};
+            var attributeItem={params:params,order:index};
+             attributeArray[attrID]= attributeItem;
+
         });
+        var attributeJSON= JSON.stringify(attributeArray);
+        jQuery('#attributeList').val(attributeJSON);
+
+    }
+
+    function putSelectAttributeInTable(){
+       jQuery("#attributeSelect option:selected").each(function(){
+           putAttributeInTable(jQuery(this).attr('id'),jQuery(this).val());
+       });
         actualAttributTable();
-       refreshChoosen('attribute');
-       //jQuery("#attribute").trigger("liszt:updated");
+       refreshChoosen('attributeSelect');
+        saveProfileAttribute()
     }
 
     function deleteAttr(id){
         var attrTR = jQuery('#trattr_' + id);
         var name = attrTR.children('#name').text();
-        jQuery('<option/>',{id : 'attr_'+ id , value: id+':'+name, text: name}).appendTo('#attribute');
-        refreshChoosen('attribute');
+        jQuery('<option/>',{id : 'attr_'+ id , value: id+':'+name, text: name}).appendTo('#attributeSelect');
+        refreshChoosen('attributeSelect');
         attrTR.remove();
+        saveProfileAttribute()
 
+    }
+    function putAttributeInTable(id,value){
+        var attribute = value.split(":");
+        var idatt = attribute[0];
+        var name =  attribute[1];
+        var pathdelete = "<?php echo JURI::root() . "administrator/components/com_thm_groups/assets/images/trash.png";?>";
+        var trAttr="<tr id='trattr_"+idatt+"'>";
+        var iconAttr = "<td class='order nowrap center hidden-phone' style='width: 31px;'> "+
+            "<span class='sortable-handler' style='cursor: move;'><i class='icon-menu'></i>"+
+            "</span></td><td id='name'>" + name + "</td>";
+        var tdattr="<td id='labeltd'>" +
+            "<input type='checkbox' id='label'/></td><td id='wraptd'>" +
+            "<input type='checkbox' id='wrap'/></td><td style='cursor:pointer' onclick='deleteAttr("+idatt+")'>" +
+            "<img src= '"+pathdelete+"'  width=15 height=10 alt='X'/></td></tr>";
+        jQuery('#attributeTable  tbody').append(trAttr + iconAttr + tdattr);
+        jQuery('#'+id).remove();
+    }
+
+    function putAllAttributeIntable(){
+        jQuery('#attributeSelect option').each(function(){
+            putAttributeInTable(jQuery(this).attr('id'),jQuery(this).val());
+        });
+        actualAttributTable();
+        refreshChoosen('attributeSelect');
+        saveProfileAttribute()
     }
 
 
@@ -83,8 +110,10 @@ function actualAttributTable(){
       enctype="multipart/form-data"
       method="post"
       name="adminForm"
-      id="item-form"
-      class="form-horizontal">
+      id="adminForm"
+      class="form-horizontal"
+      onsubmit="saveProfileAttribute()"
+    >
     <div class="form-horizontal">
         <div class="span3">
             <fieldset class="form-vertical">
@@ -97,13 +126,13 @@ function actualAttributTable(){
         <div class="span3">
             <div class="form-inline" role="form">
                 <div class="form-group">
-                <h4> <?php echo JText::_('COM_THM_GROUPS_PROFILE_SELECT_ATTRIBUTE'); ?></h4>
-                <button type="button" width="20%" onclick="putAllAttribute()"class="btn btn-info">
+                 <p><?php echo JText::_('COM_THM_GROUPS_PROFILE_SELECT_ATTRIBUTE'); ?></p>
+                <button type="button" width="10%" onclick="putAllAttributeIntable()"class="btn btn-info">
                     <?php echo JText::_('COM_THM_GROUPS_PROFILE_PUT_ALL')?>
                 </button>
-                </div>
+                </div><br />
                 <div  class="form-group" >
-                <select id="attribute"  multiple class="form-control">
+                <select id="attributeSelect"  multiple class="form-control">
               <?php foreach ($attribute as $id => $value)
                     {
               ?>
@@ -115,29 +144,52 @@ function actualAttributTable(){
                  </select>
 
                 <img src="<?php echo JURI::root() . "administrator/components/com_thm_groups/assets/images/green_add_plus.png";?>"
-                    class="img-responsive img-circle" width="30" style="cursor:pointer" alt="add" onclick="putAttibuteInTable()">
+                    class="img-responsive img-circle" width="30" style="cursor:pointer" alt="add" onclick="putSelectAttributeInTable()">
             </div>
 
         </div>
          </div>
         <div class="span3">
-            <table id="attributeList" class="table table-striped" style="position: relative;">
+            <table id="attributeTable" class="table table-striped" style="position: relative;">
                 <thead>
                 <tr> <th width="1%" class="nowrap center hidden-phone">
                     </th><th><?php echo  JText::_('COM_THM_GROUPS_PROFILE_ATTRIBUTE_NAME');?></th>
                     <th><?php echo JText::_('COM_THM_GROUPS_PROFILE_ATTRIBUTE_SHOW_LABEL');?></th>
                     <th><?php echo  JText::_('COM_THM_GROUPS_PROFILE_ATTRIBUTE_IS_WRAP');?></th>
                     <th><?php echo JText::_('COM_THM_GROUPS_PROFILE_ATTRIBUTE_DELETE');?>
-                        <button type="button" onclick="deleteAllAttribute()" width="20%" class="btn btn-danger">
-                            <?php echo JText::_('COM_THM_GROUPS_PROFILE_DELETE_ALL');?>
-                        </button></th></tr>
+                      </th></tr>
                 </thead>
-                <tbody class="ui-sortable">
+                <tbody class="ui-sortable" >
+                <?php foreach ($allatributeofprofilJson as $index => $attrParams)
+                 {?>
+                <tr id="trattr_<?php echo $index; ?>">
+                <td class="order nowrap center hidden-phone" style="width: 31px;">
+                <span class="sortable-handler" style="cursor: move;"><i class="icon-menu"></i></span>
+                </td><td id="name"><?php echo $attrParams->name;?></td>
+                    <td id="labeltd">
+                     <input type='checkbox' id='label' <?php
+                        if ($attrParams->param->label)
+                        {
+                            echo "checked='true'";
+                        }
+                            ?>"/></td>
+                    <td id="wraptd">
+                     <input type="checkbox" id="wrap"  <?php
+                        if ($attrParams->param->wrap)
+                        {
+                            echo "checked=true";
+                        }
+                        ?>"/></td>
+                    <td style='cursor:pointer' onclick="deleteAttr(<?php echo $index;?>)">
+                      <img src= "<?php echo JURI::root() . "administrator/components/com_thm_groups/assets/images/trash.png";?>"
+                           width=15 height=10 alt='X'/></td></tr>
+               <?php }?>
                 </tbody>
             </table>
         </div>
     </div>
-    <?php echo $this->form->getInput('id'); ?>
+    <input type="hidden" id="attributeList" name="attributeList" value="<?php echo $allatributeofprofil;?>"/>
+    <?php echo $this->form->renderField('id'); ?>
     <?php echo JHtml::_('form.token'); ?>
     <input type="hidden" name="task" value="" />
 </form>
