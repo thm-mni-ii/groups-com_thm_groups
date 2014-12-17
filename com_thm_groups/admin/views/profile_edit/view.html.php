@@ -43,7 +43,7 @@ class THM_GroupsViewProfile_Edit extends THM_CoreViewEdit
         $user = JFactory::getUser();
 
         // Get user ids
-        $this->profilid = JRequest::getVar('profilid', 0);
+        $this->profilid = intval(JRequest::getVar('id'));
 
         $this->model = $this->getModel();
 

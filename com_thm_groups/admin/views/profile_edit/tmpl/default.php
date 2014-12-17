@@ -12,8 +12,9 @@
 
 defined('_JEXEC') or die;
 
-$attribute = $this->model->getAllAttribute($this->profilid);
-$allatributeofprofil = $this->model->getAllAttributeParams($this->profilid);
+$attribute = $this->model->getNoSelectAttribute($this->profilid);
+$allatributeofprofil = $this->model->getAllAttribute($this->profilid)[0]->json;
+$allatributeofprofilJson = (json_decode($allatributeofprofil))? json_decode($allatributeofprofil):[];
 JHtml::_('jquery.framework', true, true);
 JHtml::_('jquery.ui');
 JHtml::_('jquery.ui', array('sortable'));
@@ -25,7 +26,7 @@ JHTML::stylesheet(JURI::root() . 'media/jui/css/sortablelist.css');
 
 <script type="text/javascript">
     jQuery.noConflict();
-    /**Joomla.submitbutton = function(task)
+   /** Joomla.submitbutton = function(task)
     {
         if (task == 'profile.cancel' || document.formvalidator.isValid(document.getElementById('item-form')))
         {
@@ -33,25 +34,86 @@ JHTML::stylesheet(JURI::root() . 'media/jui/css/sortablelist.css');
         }
     }**/
 
-    (function ($){
-        $(document).ready(function (){
-            var sortableList = new $.JSortableList('#attributeList tbody','','' , '','','');
-        });
-    })(jQuery);
+    jQuery(document).ready(function (){
+        var sortableList = new jQuery.JSortableList('#attributeTable tbody','','' , '','','');
+    });
+function actualAttributTable(){
+    jQuery(document).ready(function (){
+        var sortableList = new jQuery.JSortableList('#attributeTable tbody','','' , '','','');
+    });
+    }
 
-    (function ($){
-        $(document).ready(function (){
+    function saveProfileAttribute(){
+        var attributeArray = {};
+        jQuery('#attributeTable tbody tr').each(function(){
+            var index = jQuery(this).index();
+            var attrID = jQuery(this).attr('id').split('_')[1];
+            var labelval = jQuery(this).find('#label').prop( "checked" );
+            var wrapval = jQuery(this).find('#wrap').prop( "checked" );
+            var params={label:labelval,wrap:wrapval};
+            var attributeItem={params:params,order:index};
+             attributeArray[attrID]= attributeItem;
 
-            $('#attributeList > tbody  > tr').each(function() { });
         });
-    })(jQuery);
+        var attributeJSON= JSON.stringify(attributeArray);
+        jQuery('#attributeList').val(attributeJSON);
+
+    }
+
+    function putSelectAttributeInTable(){
+       jQuery("#attributeSelect option:selected").each(function(){
+           putAttributeInTable(jQuery(this).attr('id'),jQuery(this).val());
+       });
+        actualAttributTable();
+       refreshChoosen('attributeSelect');
+        saveProfileAttribute()
+    }
+
+    function deleteAttr(id){
+        var attrTR = jQuery('#trattr_' + id);
+        var name = attrTR.children('#name').text();
+        jQuery('<option/>',{id : 'attr_'+ id , value: id+':'+name, text: name}).appendTo('#attributeSelect');
+        refreshChoosen('attributeSelect');
+        attrTR.remove();
+        saveProfileAttribute()
+
+    }
+    function putAttributeInTable(id,value){
+        var attribute = value.split(":");
+        var idatt = attribute[0];
+        var name =  attribute[1];
+        var pathdelete = "<?php echo JURI::root() . "administrator/components/com_thm_groups/assets/images/trash.png";?>";
+        var trAttr="<tr id='trattr_"+idatt+"'>";
+        var iconAttr = "<td class='order nowrap center hidden-phone' style='width: 31px;'> "+
+            "<span class='sortable-handler' style='cursor: move;'><i class='icon-menu'></i>"+
+            "</span></td><td id='name'>" + name + "</td>";
+        var tdattr="<td id='labeltd'>" +
+            "<input type='checkbox' id='label'/></td><td id='wraptd'>" +
+            "<input type='checkbox' id='wrap'/></td><td style='cursor:pointer' onclick='deleteAttr("+idatt+")'>" +
+            "<img src= '"+pathdelete+"'  width=15 height=10 alt='X'/></td></tr>";
+        jQuery('#attributeTable  tbody').append(trAttr + iconAttr + tdattr);
+        jQuery('#'+id).remove();
+    }
+
+    function putAllAttributeIntable(){
+        jQuery('#attributeSelect option').each(function(){
+            putAttributeInTable(jQuery(this).attr('id'),jQuery(this).val());
+        });
+        actualAttributTable();
+        refreshChoosen('attributeSelect');
+        saveProfileAttribute()
+    }
+
+
 </script>
 <form action="index.php?option=com_thm_groups"
       enctype="multipart/form-data"
       method="post"
       name="adminForm"
-      id="item-form"
-      class="form-horizontal">
+      id="adminForm"
+      class="form-horizontal"
+      onsubmit="saveProfileAttribute()"
+    >
     <div class="form-horizontal">
         <div class="span3">
             <fieldset class="form-vertical">
@@ -60,40 +122,74 @@ JHTML::stylesheet(JURI::root() . 'media/jui/css/sortablelist.css');
                 echo $this->form->renderField('type');
                 ?>
             </fieldset>
-
+        </div>
+        <div class="span3">
             <div class="form-inline" role="form">
                 <div class="form-group">
-                <h4> Select a Attribute </h4>
-                </div>
+                 <p><?php echo JText::_('COM_THM_GROUPS_PROFILE_SELECT_ATTRIBUTE'); ?></p>
+                <button type="button" width="10%" onclick="putAllAttributeIntable()"class="btn btn-info">
+                    <?php echo JText::_('COM_THM_GROUPS_PROFILE_PUT_ALL')?>
+                </button>
+                </div><br />
                 <div  class="form-group" >
-                <select id="attribute" class="form-control">
+                <select id="attributeSelect"  multiple class="form-control">
               <?php foreach ($attribute as $id => $value)
                     {
               ?>
                     <option title="<?php echo $value->description?>"
-                            id="<?php echo $value->id;?>"
+                            id="attr_<?php echo $value->id;?>"
                             value="<?php echo $value->id . ':' . $value->name;?>" >
                         <?php echo $value->name;?></option>
                <?php }?>
                  </select>
 
                 <img src="<?php echo JURI::root() . "administrator/components/com_thm_groups/assets/images/green_add_plus.png";?>"
-                    class="img-responsive img-circle" style="width: 2.5em" alt="add" onclick="putAttibuteInTable()">
+                    class="img-responsive img-circle" width="30" style="cursor:pointer" alt="add" onclick="putSelectAttributeInTable()">
             </div>
-            </div>
+
         </div>
+         </div>
         <div class="span3">
-            <table id="attributeList" class="table table-striped" style="position: relative;">
+            <table id="attributeTable" class="table table-striped" style="position: relative;">
                 <thead>
                 <tr> <th width="1%" class="nowrap center hidden-phone">
-                    </th><th>Name</th><th></th><th>Show</th><th>Wrap</th><th>Delete</th></tr>
+                    </th><th><?php echo  JText::_('COM_THM_GROUPS_PROFILE_ATTRIBUTE_NAME');?></th>
+                    <th><?php echo JText::_('COM_THM_GROUPS_PROFILE_ATTRIBUTE_SHOW_LABEL');?></th>
+                    <th><?php echo  JText::_('COM_THM_GROUPS_PROFILE_ATTRIBUTE_IS_WRAP');?></th>
+                    <th><?php echo JText::_('COM_THM_GROUPS_PROFILE_ATTRIBUTE_DELETE');?>
+                      </th></tr>
                 </thead>
-                <tbody class="ui-sortable">
+                <tbody class="ui-sortable" >
+                <?php foreach ($allatributeofprofilJson as $index => $attrParams)
+                 {?>
+                <tr id="trattr_<?php echo $index; ?>">
+                <td class="order nowrap center hidden-phone" style="width: 31px;">
+                <span class="sortable-handler" style="cursor: move;"><i class="icon-menu"></i></span>
+                </td><td id="name"><?php echo $attrParams->name;?></td>
+                    <td id="labeltd">
+                     <input type='checkbox' id='label' <?php
+                        if ($attrParams->param->label)
+                        {
+                            echo "checked='true'";
+                        }
+                            ?>"/></td>
+                    <td id="wraptd">
+                     <input type="checkbox" id="wrap"  <?php
+                        if ($attrParams->param->wrap)
+                        {
+                            echo "checked=true";
+                        }
+                        ?>"/></td>
+                    <td style='cursor:pointer' onclick="deleteAttr(<?php echo $index;?>)">
+                      <img src= "<?php echo JURI::root() . "administrator/components/com_thm_groups/assets/images/trash.png";?>"
+                           width=15 height=10 alt='X'/></td></tr>
+               <?php }?>
                 </tbody>
             </table>
         </div>
     </div>
-    <?php echo $this->form->getInput('id'); ?>
+    <input type="hidden" id="attributeList" name="attributeList" value="<?php echo $allatributeofprofil;?>"/>
+    <?php echo $this->form->renderField('id'); ?>
     <?php echo JHtml::_('form.token'); ?>
     <input type="hidden" name="task" value="" />
 </form>

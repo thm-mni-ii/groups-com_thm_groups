@@ -54,7 +54,7 @@ class THM_GroupsModelProfile_Manager extends THM_CoreModelList
         $query = $db->getQuery(true);
 
         $query
-            ->select('id, name, position, options, type')
+            ->select('id, name, position, type')
             ->from('#__thm_groups_profile');
 
         $this->setSearchFilter($query, array('name'));
