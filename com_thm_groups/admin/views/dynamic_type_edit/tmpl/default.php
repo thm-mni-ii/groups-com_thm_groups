@@ -15,13 +15,65 @@ defined('_JEXEC') or die ('Restricted access');
 JHTML::_('behavior.tooltip');
 
 $scriptDir = "libraries/thm_groups/assets/js/";
-JHTML::script('jquery-1.9.1.min.js', $scriptDir);
+$componentDir = "/administrator/components/com_thm_groups";
+
+// Script include changed in 3.x
+JHTML::_('script', Juri::root() . $scriptDir . 'jquery-1.9.1.min.js');
+JHTML::_('script', Juri::root() . $componentDir . '/assets/js/jquery.easing.js');
+JHTML::_('script', Juri::root() . $componentDir . '/assets/js/jqueryFileTree.js');
+JHTML::_('script', Juri::root() . $componentDir . '/assets/js/jquery-ui-1.9.2.custom.js');
 $doc = JFactory::getDocument();
 $doc->addStyleSheet(JURI::root(true) . "/libraries/thm_groups/assets/elements/explorer.css");
-
+$doc->addStyleSheet(JURI::root(true) . $componentDir . "/assets/css/jqueryFileTree.css");
 ?>
 
 <script>
+
+    function showFTree(){
+        var jRoot = '<?php
+                        $rep = JPATH_ROOT;
+                        $path = str_replace(array('\\'), array('/'), $rep);
+                        echo $path . '/images/';
+                        ?>';
+
+        document.getElementById('fileBrowser').style.visibility = 'visible';
+
+        jQuery(function(){
+            jQuery('#fileBrowser').draggable();
+        });
+
+        jQuery('#fileBrowserInnerContent').fileTree({root: jRoot, script:'<?php echo Juri::root(),
+        $componentDir,"/elements/jqueryFileTree.php"; ?>'}, function(file){
+            getFile(file);
+        }, function(dire){
+            getDir(dire);
+        });
+    }
+
+    function hideFTree(){
+        document.getElementById('fileBrowser').style.visibility = 'hidden';
+    }
+
+    function getFile(file){
+        var fileName = /[^/]*$/.exec(file)[0];
+        //var fileNameSize = fileName.length;
+
+        //TODO optimize selection for allowed picture formats
+        if (((fileName.match('.jpg')||fileName.match('.png'))||fileName.match('gif'))||fileName.match('jpeg')){
+            document.getElementById('PICTURE_name').value = fileName;
+        }
+        else
+        {
+            document.getElementById('PICTURE_name').value = 'anonym.jpg';
+        }
+
+        //document.getElementById('PICTURE_path').value = file.substr(0,(file.length - fileNameSize));
+    }
+
+    function getDir(dire){
+        document.getElementById('PICTURE_path').value = dire;
+        document.getElementById('PICTURE_name').value = 'anonym.jpg';
+    }
 
     function getTypeOptions(){
         var selectedOption = document.getElementById('staticType').options[document.getElementById('staticType').selectedIndex].text;
@@ -35,7 +87,8 @@ $doc->addStyleSheet(JURI::root(true) . "/libraries/thm_groups/assets/elements/ex
 
         jQuery.ajax({
             type: "POST",
-            url: "index.php?option=com_thm_groups&controller=dynamic_type_edit&task=dynamic_type_edit.getTypeOptions&cid=" + <?php echo $this->item->id; ?> + "&selected=" + selectedOption +
+            url: "index.php?option=com_thm_groups&controller=dynamic_type_edit&task=dynamic_type_edit.getTypeOptions&cid="
+            + <?php echo $this->item->id; ?> + "&selected=" + selectedOption +
                  "&isActType=" + isActType +"",
             datatype: "HTML"
         })
