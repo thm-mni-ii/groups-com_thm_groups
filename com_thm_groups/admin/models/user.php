@@ -33,63 +33,19 @@ class THM_GroupsModelUser extends JModelLegacy
      */
     const PROFILE_USER_ID_PARAM = 'gsuid';
 
-    /**
-     * Delete user
-     *
-     * @return bool true on success, otherwise false
-     */
-    public function delete()
+    public function deleteRoleInGroupByUser()
     {
-        $categoryIDs = JFactory::getApplication()->input->get('cid', array(), 'array');
-        if (count($categoryIDs))
-        {
-            $dbo = $this->getDbo();
-            $dbo->transactionStart();
 
-            // Remove events / event resources / content dependent upon this category
-            $query = $dbo->getQuery(true);
-            $query->select("DISTINCT (id)");
-            $query->from("#__thm_organizer_events");
-            $query->where("categoryID IN ( '" . implode("', '", $categoryIDs) . "' )");
-            $dbo->setQuery((string) $query);
+    }
 
-            try
-            {
-                $eventIDs = $dbo->loadColumn();
-            }
-            catch (runtimeException $e)
-            {
-                throw new Exception(JText::_("COM_THM_ORGANIZER_DATABASE_EXCEPTION"), 500);
-            }
+    public function deleteAllRolesInGroupByUser()
+    {
+        $input = JFactory::getApplication()->input;
 
-            if (count($eventIDs))
-            {
-                $eventsModel = new THM_OrganizerModelEvent;
-                foreach ($eventIDs as $eventID)
-                {
-                    $success = $eventsModel->delete($eventID);
-                    if (!$success)
-                    {
-                        $dbo->transactionRollback();
-                        return false;
-                    }
-                }
-            }
+        // Get array of ids if divers users selected
+        $uid = $input->getInt('u_id', 0);
+        var_dump($uid);die;
 
-            $category = JTable::getInstance('categories', 'thm_organizerTable');
-            foreach ($categoryIDs as $categoryID)
-            {
-                $success = $category->delete($categoryID);
-                if (!$success)
-                {
-                    $dbo->transactionRollback();
-                    return false;
-                }
-            }
-            $dbo->transactionCommit();
-            return true;
-        }
-        return true;
     }
 
     /**

@@ -53,5 +53,10 @@
                 description="COM_CONTENT_LIST_LIMIT_DESC"
                 onchange="this.form.submit();"
                 />
+
+        <field name="u_id" type="hidden" default="" />
+    </fields>
+    <fields name="test">
+
     </fields>
 </form>

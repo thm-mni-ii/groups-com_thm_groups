@@ -44,6 +44,8 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
      */
     public function display($tpl = null)
     {
+        $document = JFactory::getDocument();
+        $document->addScript(JURI::root(true) . '/administrator/components/com_thm_groups/assets/js/deleteGroupsAndRoles.js');
         parent::display($tpl);
     }
 
@@ -81,15 +83,10 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
         {
             JToolBarHelper::editList('user.edit', 'COM_THM_GROUPS_USER_MANAGER_EDIT');
         }
-        if ($user->authorise('core.edit.state', 'com_users') && $user->authorise('core.manage', 'com_users'))
-        {
+        if ($user->authorise('core.edit.state', 'com_users') && $user->authorise('core.manage', 'com_users')) {
             JToolBarHelper::publishList('user.publish', 'COM_THM_GROUPS_USER_MANAGER_PUBLISH');
             JToolBarHelper::unpublishList('user.unpublish', 'COM_THM_GROUPS_USER_MANAGER_DISABLE');
             JToolBarHelper::divider();
-        }
-        if ($user->authorise('core.delete', 'com_users') && $user->authorise('core.manage', 'com_users'))
-        {
-            JToolBarHelper::deleteList('COM_THM_GROUPS_USER_MANAGER_REALLY_DELETE', 'user.delete', 'JTOOLBAR_DELETE');
         }
         if ($user->authorise('core.delete', 'com_users') && $user->authorise('core.manage', 'com_users'))
         {

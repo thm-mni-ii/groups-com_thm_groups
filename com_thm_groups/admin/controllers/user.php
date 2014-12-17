@@ -33,27 +33,6 @@ JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_users/models',
 class THM_GroupsControllerUser extends JControllerLegacy
 {
 
-    public function delete()
-    {
-        $model = JModelLegacy::getInstance('User', 'UsersModel', array('ignore_request' => true));
-        $input = JFactory::getApplication()->input;
-        $cid = $input->post->get('cid', array(), 'array');
-
-        $success = $model->delete($cid);
-
-        if ($success)
-        {
-            $msg = JText::_('COM_THM_GROUPS_MESSAGE_DELETE_SUCCESS');
-            $type = 'message';
-        }
-        else
-        {
-            $msg = JText::_('COM_THM_GROUPS_MESSAGE_DELETE_FAIL');
-            $type = 'error';
-        }
-        $this->setRedirect("index.php?option=com_thm_groups&view=user_manager", $msg, $type);
-    }
-
     public function publish()
     {
         $model = $this->getModel('user');
@@ -116,5 +95,39 @@ class THM_GroupsControllerUser extends JControllerLegacy
 
         // TODO function need cid
         $model->createQuickpageCategoryForUser('');
+    }
+
+    public function deleteRoleInGroupByUser()
+    {
+        $model = $this->getModel('user');
+        $success = $model->deleteRoleInGroupByUser();
+        if ($success)
+        {
+            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
+            $type = 'message';
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
+            $type = 'error';
+        }
+        $this->setRedirect("index.php?option=com_thm_groups&view=user_manager", $msg, $type);
+    }
+
+    public function deleteAllRolesInGroupByUser()
+    {
+        $model = $this->getModel('user');
+        $success = $model->deleteAllRolesInGroupByUser();
+        if ($success)
+        {
+            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
+            $type = 'message';
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
+            $type = 'error';
+        }
+        $this->setRedirect("index.php?option=com_thm_groups&view=user_manager", $msg, $type);
     }
 }
