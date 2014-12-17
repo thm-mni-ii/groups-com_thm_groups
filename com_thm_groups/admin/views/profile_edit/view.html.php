@@ -24,6 +24,11 @@ jimport('thm_core.edit.view');
  */
 class THM_GroupsViewProfile_Edit extends THM_CoreViewEdit
 {
+
+    public $model;
+
+    public $profilid;
+
     /**
      * loads model data into view context
      *
@@ -33,6 +38,15 @@ class THM_GroupsViewProfile_Edit extends THM_CoreViewEdit
      */
     public function display($tpl = null)
     {
+
+        $app = JFactory::getApplication();
+        $user = JFactory::getUser();
+
+        // Get user ids
+        $this->profilid = intval(JRequest::getVar('id'));
+
+        $this->model = $this->getModel();
+
         parent::display($tpl);
     }
 

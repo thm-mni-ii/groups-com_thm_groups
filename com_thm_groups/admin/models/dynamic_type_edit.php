@@ -23,6 +23,7 @@ require_once JPATH_COMPONENT . '/assets/helpers/static_type_options_helper.php';
  */
 class THM_GroupsModelDynamic_Type_Edit extends JModelAdmin
 {
+
     /**
      * returns one dynamic item
      *
@@ -130,10 +131,12 @@ class THM_GroupsModelDynamic_Type_Edit extends JModelAdmin
             $options[] = JHTML::_('select.option', $value['id'], $value['name']);
         endforeach;
 
+        // Aditional HTML attributes for <select> tag
         $settings = array(
             'id' => 'staticTypesField',
             'option.key' => 'value',
-            'option.value' => 'text'
+            'option.value' => 'text',
+            'onchange' => 'getTypeOptions();'
         );
 
         $selectFieldStaticTypes = JHtmlSelect::genericlist(
