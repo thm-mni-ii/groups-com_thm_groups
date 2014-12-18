@@ -44,6 +44,8 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
      */
     public function display($tpl = null)
     {
+        $document = JFactory::getDocument();
+        $document->addScript(JURI::root(true) . '/administrator/components/com_thm_groups/assets/js/deleteGroupsAndRoles.js');
         parent::display($tpl);
     }
 
@@ -58,38 +60,49 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
         JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_USER_MANAGER'), 'membermanager');
         if (($user->authorise('core.edit', 'com_users') || $user->authorise('core.edit.own', 'com_users')) && $user->authorise('core.manage', 'com_users'))
         {
-            JToolBarHelper::custom(
+            /*JToolBarHelper::custom(
                 'user.setGroupsAndRoles',
                 'addassignment',
-                JPATH_COMPONENT . '/assets/images/icon-32-addassignment.png',
+                JPATH_COMPONENT_ADMINISTRATOR . '/assets/images/icon-32-addassignment.png',
                 'COM_THM_GROUPS_USER_MANAGER_ADD',
                 true,
                 true
             );
             JToolBarHelper::custom(
                 'user.delGroupsAndRoles',
-                'removeassignment',
-                JPATH_COMPONENT . 'assets/images/icon-32-removeassignment.png',
+                JPATH_COMPONENT_ADMINISTRATOR . '/assets/images/icon-32-removeassignment.png',
+                '',
                 'COM_THM_GROUPS_USER_MANAGER_DELETE',
-                true,
                 true
             );
-            JToolBarHelper::divider();
-        }
-        if ($user->authorise('core.edit.state', 'com_users') && $user->authorise('core.manage', 'com_users'))
-        {
-            JToolBarHelper::publishList('user.publish', 'COM_THM_GROUPS_USER_MANAGER_PUBLISH');
-            JToolBarHelper::unpublishList('user.unpublish', 'COM_THM_GROUPS_USER_MANAGER_DISABLE');
-            JToolBarHelper::divider();
+            JToolBarHelper::divider();*/
+
+
         }
         if (($user->authorise('core.edit', 'com_users') || $user->authorise('core.edit.own', 'com_users')) && $user->authorise('core.manage', 'com_users'))
         {
             JToolBarHelper::editList('user.edit', 'COM_THM_GROUPS_USER_MANAGER_EDIT');
         }
+        if ($user->authorise('core.edit.state', 'com_users') && $user->authorise('core.manage', 'com_users')) {
+            JToolBarHelper::publishList('user.publish', 'COM_THM_GROUPS_USER_MANAGER_PUBLISH');
+            JToolBarHelper::unpublishList('user.unpublish', 'COM_THM_GROUPS_USER_MANAGER_DISABLE');
+            JToolBarHelper::divider();
+        }
         if ($user->authorise('core.delete', 'com_users') && $user->authorise('core.manage', 'com_users'))
         {
-            JToolBarHelper::deleteList('Wirklich l&ouml;schen?', 'user.delete', 'JTOOLBAR_DELETE');
+            // TODO change
+            $image = 'new';
+            $title = JText::_('COM_THM_GROUPS_ADD_GROUPS_AND_ROLES');
+            $link = 'index.php?option=com_thm_organizer&amp;view=user_select&amp;tmpl=component';
+            $height = '600';
+            $width = '900';
+            $top = 0;
+            $left = 0;
+            $onClose = 'window.location.reload();';
+            $bar = JToolBar::getInstance('toolbar');
+            $bar->appendButton('Popup', $image, $title, $link, $width, $height, $top, $left, $onClose);
         }
+
         if ($user->authorise('core.admin', 'com_users'))
         {
             JToolBarHelper::divider();
