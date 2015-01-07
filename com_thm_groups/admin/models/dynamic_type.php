@@ -55,9 +55,13 @@ class THM_GroupsModelDynamic_Type extends JModelLegacy
                  * but chars like ": ; ..." would be lost
                  */
                 $options['1'] = '{ "length" : "' . $app->input->getHtml('TEXT_length') . '" }';
+                $data['regex'] = $app->input->getHtml('jform_regex_select');
                 break;
             case "2":
                 $options['2'] = '{ "length" : "' . $app->input->getHtml('TEXTFIELD_length') . '" }';
+                break;
+            case "3":
+                $data['regex'] = $app->input->getHtml('jform_regex_select');
                 break;
             case "4":
                 $dynamicType = $app->input->get('dynID');

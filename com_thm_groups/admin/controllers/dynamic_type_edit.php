@@ -40,6 +40,28 @@ class THM_GroupsControllerDynamic_Type_Edit extends JControllerLegacy
     }
 
     /**
+     * Reloads the regex options when a static type is chosen in the
+     * edit view
+     *
+     * @return void
+     */
+    public function reloadTypeRegexOptions()
+    {
+        $mainframe = Jfactory::getApplication();
+        $selected = $mainframe->input->get('selectedID');
+        $model = $this->getModel('dynamic_type_edit');
+
+        $regexOptions = $model->getRegexOptions($selected);
+
+        if ($regexOptions != null)
+        {
+            echo $regexOptions;
+        }
+
+        $mainframe->close();
+    }
+
+    /**
      * Generates output for inputfields of additonal values for
      * the dynamic type, based on its static type
      *
@@ -99,7 +121,6 @@ class THM_GroupsControllerDynamic_Type_Edit extends JControllerLegacy
                     else
                     {
 
-                        // TODO: language constant for default value:
                         $output .= "value='255' ";
                     }
                     $output .= "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT") . "' "
