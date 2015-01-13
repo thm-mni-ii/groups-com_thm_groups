@@ -4,7 +4,7 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.table');
 
 /**
- * Class representing the monitors table.
+ * Class representing the dynamic types table.
  *
  * @category    Joomla.Component.Admin
  * @package     thm_groups

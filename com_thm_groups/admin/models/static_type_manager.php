@@ -22,8 +22,11 @@ jimport('thm_core.list.model');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsModelStatic_Type_Manager extends THM_CoreModelList
+class THM_GroupsModelStatic_Type_Manager extends THM_CoreModelList
 {
+    protected $defaultOrdering = 'id';
+
+    protected $defaultDirection = 'ASC';
 
     /**
      * sets variables and configuration data
@@ -63,9 +66,11 @@ class THMGroupsModelStatic_Type_Manager extends THM_CoreModelList
             $query->where("(name LIKE '%" . implode("%' OR name LIKE '%", explode(' ', $search)) . "%')");
         }
 
-        $orderCol = $this->state->get('list.ordering', 'id');
-        $orderDirn = $this->state->get('list.direction', 'asc');
-        $query->order($db->escape($orderCol . ' ' . $orderDirn));
+        $this->setOrdering($query);
+
+        echo "<pre>";
+        echo $query;
+        echo "</pre>";
 
         return $query;
     }

@@ -125,11 +125,7 @@
             <language tag="de-DE">language/de-DE/de-DE.com_thm_groups.sys.ini</language>
         </languages>
     </administration>
-<!--
-    <dependencies>
-        <dependency type="plugin" minversion="1.0.0">plg_thm_groups_sync</dependency>
-    </dependencies>
--->
+
     <updateservers>
         <server type="extension" priority="1" name="THM Groups Component">https://jenkins.mni.thm.de/jenkins/job/J.THM.Releases/lastSuccessfulBuild/artifact/updates/com_thm_groups.xml</server>
     </updateservers>

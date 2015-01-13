@@ -27,7 +27,7 @@ jimport('joomla.application.component.controller');
  * @link      www.mni.thm.de
  * @since     Class available since Release 3.5
  */
-class THMGroupsControllerDynamic_Type extends JControllerLegacy
+class THM_GroupsControllerDynamic_Type extends JControllerLegacy
 {
     /**
      * constructor (registers additional tasks to methods)

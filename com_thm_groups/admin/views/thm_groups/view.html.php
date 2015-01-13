@@ -24,7 +24,7 @@ jimport('joomla.html.pane');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewTHMGroups extends JViewLegacy
+class THM_GroupsViewTHM_Groups extends JViewLegacy
 {
     /**
      * Method to get display
@@ -80,13 +80,13 @@ class THMGroupsViewTHMGroups extends JViewLegacy
         $views['membermanager'] = array();
         $views['membermanager']['title'] = JText::_('COM_THM_GROUPS_MEMBERMANAGER');
         $views['membermanager']['tooltip'] = JText::_('COM_THM_GROUPS_MEMBERMANAGER') . '::' . JText::_('COM_THM_GROUPS_MEMBERMANAGER_DESC');
-        $views['membermanager']['url'] = "index.php?option=com_thm_groups&view=membermanager";
+        $views['membermanager']['url'] = "index.php?option=com_thm_groups&view=user_manager";
         $views['membermanager']['image'] = "administrator/components/com_thm_groups/assets/images/membermanager_48x48.png";
 
         $views['groupmanager'] = array();
         $views['groupmanager']['title'] = JText::_('COM_THM_GROUPS_GROUPMANAGER');
         $views['groupmanager']['tooltip'] = JText::_('COM_THM_GROUPS_GROUPMANAGER') . '::' . JText::_('COM_THM_GROUPS_GROUPMANAGER_DESC');
-        $views['groupmanager']['url'] = "index.php?option=com_thm_groups&view=groupmanager";
+        $views['groupmanager']['url'] = "index.php?option=com_users&view=groups";
         $views['groupmanager']['image'] = "administrator/components/com_thm_groups/assets/images/groupmanager_48x48.png";
 
         $views['rolemanager'] = array();

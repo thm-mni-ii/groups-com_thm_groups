@@ -20,6 +20,6 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.controller');
 
 
-$controller = JControllerLegacy::getInstance('thmgroups');
+$controller = JControllerLegacy::getInstance('thm_groups');
 $controller->execute(JRequest::getCmd('task'));
 $controller->redirect();

@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsViewProfile_Manager
- * @description THMGroupsViewProfile_Manager file from com_thm_groups
+ * @name        THM_GroupsViewProfile_Manager
+ * @description THM_GroupsViewProfile_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -19,15 +19,21 @@ defined('_JEXEC') or die('Restricted access');
 jimport('thm_core.list.view');
 
 /**
- * THMGroupsViewProfile_Manager class for component com_thm_groups
+ * THM_GroupsViewProfile_Manager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewProfile_Manager extends THM_CoreViewList
+class THM_GroupsViewProfile_Manager extends THM_CoreViewList
 {
+    public $items;
+
+    public $pagination;
+
+    public $state;
+
     /**
      * Method to get display
      *
@@ -37,23 +43,6 @@ class THMGroupsViewProfile_Manager extends THM_CoreViewList
      */
     public function display($tpl = null)
     {
-        // Get data from the model
-        $items = $this->get('Items');
-        $pagination = $this->get('Pagination');
-
-        $this->addToolbar();
-
-        // Check for errors.
-        if (count($errors = $this->get('Errors')))
-        {
-            JError::raiseError(500, implode('<br />', $errors));
-            return false;
-        }
-        // Assign data to the view
-        $this->items = $items;
-        $this->pagination = $pagination;
-
-        // Display the template
         parent::display($tpl);
     }
 
@@ -70,9 +59,9 @@ class THMGroupsViewProfile_Manager extends THM_CoreViewList
             JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_PROFILE_MANAGER'), 'profile_manager'
         );
 
-        JToolBarHelper::addNew('profile_manager.add', 'COM_THM_GROUPS_PROFILE_MANAGER_ADD', false);
-        JToolBarHelper::editList('profile_manager.edit', 'COM_THM_GROUPS_PROFILE_MANAGER_EDIT');
-        JToolBarHelper::deleteList('COM_THM_GROUPS_PROFILE_MANAGER_REALLY_DELETE', 'profile_manager.remove', 'JTOOLBAR_DELETE');
+        JToolBarHelper::addNew('profile.add', 'COM_THM_GROUPS_PROFILE_MANAGER_ADD', false);
+        JToolBarHelper::editList('profile.edit', 'COM_THM_GROUPS_PROFILE_MANAGER_EDIT');
+        JToolBarHelper::deleteList('COM_THM_GROUPS_PROFILE_MANAGER_REALLY_DELETE', 'profile.delete', 'JTOOLBAR_DELETE');
 
         if ($user->authorise('core.admin', 'com_users'))
         {

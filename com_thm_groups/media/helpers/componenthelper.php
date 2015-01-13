@@ -43,7 +43,7 @@ class THM_GroupsHelperComponent
         );
 
         JHtmlSidebar::addEntry(
-            JText::_('COM_THM_GROUPS_MEMBER_MANAGER'),
+            JText::_('COM_THM_GROUPS_USER_MANAGER'),
             'index.php?option=com_thm_groups&view=user_manager',
             $viewName == 'user_manager'
         );
@@ -59,7 +59,7 @@ class THM_GroupsHelperComponent
         );
         JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_PROFILE_MANAGER'),
-            'index.php?option=com_thm_groups&view=profilemanager',
+            'index.php?option=com_thm_groups&view=profile_manager',
             $viewName == 'profile_manager'
         );
         JHtmlSidebar::addEntry(

@@ -18,6 +18,7 @@
 defined('_JEXEC') or die( 'Restricted access' );
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
+jimport('thm_groups.data.lib_thm_groups_user');
 $lang = JFactory::getLanguage();
 $lang->load('lib_thm_groups', JPATH_SITE);
 
@@ -41,11 +42,13 @@ class JFormFieldStructureselect extends JFormField
      */
     public function getInput()
     {
+
         $scriptDir = JURI::root() . 'administrator' . DS . 'components' . DS . 'com_thm_groups' . DS . 'elements' . DS;
         JHTML::script('structureselect.js', $scriptDir, false);
 
         $html = array();
         $class = $this->element['class'] ? ' class="checkboxes ' . (string) $this->element['class'] . '" ': ' class="checkboxes"';
+
         $html[] = '<fieldset id="' . $this->name . '"' . $class . '>';
 
         $selected = $this->value;

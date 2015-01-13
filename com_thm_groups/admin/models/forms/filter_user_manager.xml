@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fields name="filter">
+    <fields name="filter"  addfieldpath="/libraries/thm_core/fields">
         <field
                 name="search"
                 type="text"
@@ -8,32 +8,42 @@
                 hint="JSEARCH_FILTER"
         />
         <field
-                name="dynamic"
-                type="dynamic"
-                label="COM_THM_GROUPS_STATIC_FILTER"
-                description="COM_THM_GROUPS_STATIC_FILTER_DESC"
+                name="checkbox"
+                type="checkall" />
+        <field
+                name="published"
+                type="list"
+                label="COM_THM_GROUPS_PUBLISHED"
                 onchange="this.form.submit();"
-                />
+                >
+            <option value="">COM_THM_GROUPS_ALL</option>
+            <option value="1">COM_THM_GROUPS_PUBLISHED</option>
+            <option value="0">COM_THM_GROUPS_UNPUBLISHED</option>
+        </field>
+
     </fields>
 
     <fields name="list">
         <field
-                name="fullordering"
-                type="list"
-                label="COM_CONTENT_LIST_FULL_ORDERING"
-                description="COM_CONTENT_LIST_FULL_ORDERING_DESC"
+                name="groupID"
+                type="usergroup"
+                label="COM_THM_GROUPS_GROUPS_FILTER"
                 onchange="this.form.submit();"
-                default="dynamic.id ASC"
                 >
             <option value="">JGLOBAL_SORT_BY</option>
-            <option value="structure.id ASC">COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_SORT_BY_ID_ASC</option>
-            <option value="structure.id DESC">COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_SORT_BY_ID_DESC</option>
-            <option value="structure.name ASC">COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_SORT_BY_NAME_ASC</option>
-            <option value="structure.name DESC">COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_SORT_BY_NAME_DESC</option>
-            <option value="dynamic.name ASC">COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_SORT_BY_DYNAMIC_TYPE_ASC</option>
-            <option value="dynamic.name DESC">COM_THM_GROUPS_STRUCTURE_ITEM_MANAGER_SORT_BY_DYNAMIC_TYPE_DESC</option>
-
         </field>
+        <field
+                name="roleID"
+                type="genericlist"
+                valueColumn="id"
+                textColumn="name"
+                table="thm_groups_roles"
+                label="COM_THM_GROUPS_ROLES_FILTER"
+                onchange="this.form.submit();"
+                >
+            <option value="">SHOW ALL ROLES</option>
+        </field>
+
         <field
                 name="limit"
                 type="limitbox"
@@ -43,5 +53,10 @@
                 description="COM_CONTENT_LIST_LIMIT_DESC"
                 onchange="this.form.submit();"
                 />
+
+        <field name="u_id" type="hidden" default="" />
+    </fields>
+    <fields name="test">
+
     </fields>
 </form>
