@@ -13,6 +13,3 @@ DROP TABLE IF EXISTS
             `#__thm_groups_profile`,
             `#__thm_groups_profile_attribute`;
 
-DELETE FROM `#__users`
-WHERE id IN (1,2,3,4,5);
-

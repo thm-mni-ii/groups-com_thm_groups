@@ -26,10 +26,8 @@ class JFormFieldStatic extends JFormFieldList
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
-        $query
-            ->select('id, name')
+        $query->select('id, name')
             ->from('#__thm_groups_static_type');
-
         $db->setQuery($query);
         $db->execute();
 

@@ -306,7 +306,6 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
         $dynTypeId = $mainframe->input->get('dynTypeId');
         $model = $this->getModel('attribute_edit');
         $dynType = $model->getDynamicType($dynTypeId);
-        $attrID = $mainframe->input->get('cid');
 
         // Get options from dynamicType
         $options = json_decode($dynType->options);
@@ -443,17 +442,9 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
                         $output .= "nopath";
                     }
                     $output .= "' />";
-                $output .= "<input type='hidden' name='attrID' id='attrID' value='" . $attrID . "'></input>";
-                $output .= "<br/><button type='button' class='btn btn-small' onclick='showFTree()'>Browse</button>";
 
-                // Draggable explorer for folder and file-selections:
-                $output .= "<div id='fileBrowser' class='ui-widget-content'>"
-                    . "<div id='fileBrowserInnerHeader' class='page-title'>Choose a Path"
-                    . "<button type='button' class='btn btn-small' style='float: right !important; margin-top: 5px !important;' "
-                    . "onclick='hideFTree()'>Close</button>"
-                    . "</div>"
-                    . "<div id='fileBrowserInner'>"
-                    . "<div id='fileBrowserInnerContent'></div></div></div>";
+                //$mein = new JFormFieldExplorer;
+                //$output .= $mein->explorerHTML($field . "_extra_path", "images");
                 break;
         }
 

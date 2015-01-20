@@ -91,7 +91,7 @@ if ($view == "articles")
     // Show quickpage control or redirect
     if ($userHasEnabledQuickpage OR $groupsHaveEnabledQuickpage)
     {
-        $controller = JController::getInstance('thmgroups');
+        $controller = JControllerLegacy::getInstance('thmgroups');
 
         $controller->execute(JRequest::getCmd('task'));
 
@@ -100,7 +100,7 @@ if ($view == "articles")
 }
 else
 {
-        $controller = Jcontroller::getInstance('thmgroups');
+        $controller = JControllerLegacy::getInstance('thmgroups');
 
         $controller->execute(JRequest::getCmd('task'));
 

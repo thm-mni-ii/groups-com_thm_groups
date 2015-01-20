@@ -40,28 +40,6 @@ class THM_GroupsControllerDynamic_Type_Edit extends JControllerLegacy
     }
 
     /**
-     * Reloads the regex options when a static type is chosen in the
-     * edit view
-     *
-     * @return void
-     */
-    public function reloadTypeRegexOptions()
-    {
-        $mainframe = Jfactory::getApplication();
-        $selected = $mainframe->input->get('selectedID');
-        $model = $this->getModel('dynamic_type_edit');
-
-        $regexOptions = $model->getRegexOptions($selected);
-
-        if ($regexOptions != null)
-        {
-            echo $regexOptions;
-        }
-
-        $mainframe->close();
-    }
-
-    /**
      * Generates output for inputfields of additonal values for
      * the dynamic type, based on its static type
      *
@@ -120,8 +98,7 @@ class THM_GroupsControllerDynamic_Type_Edit extends JControllerLegacy
                     }
                     else
                     {
-
-                        $output .= "value='255' ";
+                        $output .= "value='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TEXT") . "' ";
                     }
                     $output .= "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT") . "' "
                     . "/>";
@@ -199,17 +176,10 @@ class THM_GroupsControllerDynamic_Type_Edit extends JControllerLegacy
                     }
                     $output .= "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE_PATH") . "' "
                     . "/>";
-                    $output .= "<input type='hidden' name='dynID' id='dynID' value='" . $dynAttribute->id . "'></input>";
-                $output .= "<br/><button type='button' class='btn btn-small' onclick='showFTree()'>Browse</button>";
 
-                // Draggable explorer for folder and file-selections:
-                $output .= "<div id='fileBrowser' class='ui-widget-content'>"
-                    . "<div id='fileBrowserInnerHeader' class='page-title'>Choose a Path"
-                    . "<button type='button' class='btn btn-small' style='float: right !important; margin-top: 5px !important;' "
-                    . "onclick='hideFTree()'>Close</button>"
-                    . "</div>"
-                    . "<div id='fileBrowserInner'>"
-                    . "<div id='fileBrowserInnerContent'></div></div></div>";
+                // TODO dosent work
+                $mein = new JFormFieldExplorer;
+                $output .= $mein->explorerHTML($selected . "_path", "images");
                 break;
         }
         echo $output;

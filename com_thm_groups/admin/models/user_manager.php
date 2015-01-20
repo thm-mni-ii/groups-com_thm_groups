@@ -74,13 +74,10 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
             ->where('a1.attributeID = 1')  // first name
             ->where('a2.attributeID = 2')  // surname
             ->where('a3.attributeID = 5')  // title
-            ->where('a4.attributeID = 4');  // email
+            ->where('a4.attributeID = 4'); // email
 
         $this->setSearchFilter($query, array('a1.value', 'a2.value'));
-
-        $this->setIDFilter($query, 'a5.published', array('filter.published'));
-        $this->setIDFilter($query, 'a6.usergroupsID', array('list.groupID'));
-        $this->setIDFilter($query, 'a6.rolesID', array('list.roleID'));
+        $this->setIDFilter($query, 'a5.published', array('published'));
 
         $this->setOrdering($query);
 
@@ -176,9 +173,8 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
      */
     public function getItems()
     {
+        // GetItems returns only sorted userIDs
         $items = parent::getItems();
-
-        // TODO check if there are no users
 
         /*// Temp is an array for userIDs
         $temp = array();
@@ -218,10 +214,10 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
             $result[$attribute->usersID]['attributes'] = $userData[$attribute->usersID];
         }*/
 
+        //var_dump($this->getUserGroupsAndRolesByUserId(62));die;
         //var_dump($result);die;
 
         $index = 0;
-        var_dump(count($items));
         foreach ($items as $key => $item)
         {
             $url = "index.php?option=com_thm_groups&view=user_edit&cid[]=$item->userID";
@@ -234,92 +230,10 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
             $return[$index][4] = !empty($item->surname) ? $item->surname : '';
             $return[$index][5] = !empty($item->email) ? $item->email : '';
             $return[$index][6] = $this->getToggle($item->userID, $item->published, 'user', '');
-            $return[$index][7] = $this->generateGroupsAndRoles($item->userID);
-
+            $return[$index][7] = 'Groups & Roles';
             $index++;
         }
         return $return;
-    }
-
-    public function generateGroupsAndRoles($userID)
-    {
-        $groupsAndRoles = $this->getUserGroupsAndRolesByUserId($userID);
-        $user = JFactory::getUser();
-        $result = "";
-        $imageURL = JHtml::image(JURI::root() . 'administrator/components/com_thm_groups/assets/images/removeassignment.png', '', 'width=16px');
-
-        // TODO add check if user SuperAdmin
-
-        foreach ($groupsAndRoles as $item)
-        {
-            $roles = explode(', ', $item->rname);
-            $rolesID = explode(', ', $item->rid);
-            $groupRoles = array();
-
-            // If there is only one role in group, don't show delete icon
-            if (count($roles) == 1)
-            {
-                $groupRoles[] = $roles[0];
-            }
-            else
-            {
-                // If there are many roles, show delete icon
-                foreach ($roles as $i => $value)
-                {
-                    // Allow to edit groups only for authorised users
-                    if (($user->authorise('core.edit', 'com_users') || ($user->get('id') == $userID))
-                        && $user->authorise('core.manage', 'com_users'))
-                    {
-                        if ($user->authorise('core.edit.own', 'com_users') && !((!$user->authorise('core.admin'))
-                                && JAccess::check($userID, 'core.admin')))
-                        {
-                            $groupRoles[] = "<a href='javascript:deleteRoleInGroupByUser(" . $userID . ", " . $item->gid . ", " .
-                                $rolesID[$i] . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": "
-                                . $item->gname . " - " . JText::_('COM_THM_GROUPS_ROLE')
-                                . ": " . $value . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE')
-                                . ".' class='hasTooltip'>"
-                                . $imageURL
-                                . "</a>"
-                                . "$value";
-                        }
-                    }
-                    else
-                    {
-                        $groupRoles[] = $value;
-                    }
-
-                }
-            }
-
-            // Don't show Public and Registered groups
-            if (!($item->gname == "Public" || $item->gname == "Registered"))
-            {
-                // Allow to edit groups only for authorised users
-                if (($user->authorise('core.edit', 'com_users') || ($user->get('id') == $userID))
-                    && $user->authorise('core.manage', 'com_users'))
-                {
-                    if ($user->authorise('core.edit.own', 'com_users') && !((!$user->authorise('core.admin'))
-                            && JAccess::check($userID, 'core.admin'))
-                    ){
-                        // Show groups with roles
-                        $result .= "<a href='javascript:deleteAllRolesInGroupByUser(" . $userID . ", " . $item->gid . ");' class='hasTooltip'"
-                            . "title='" . JText::_('COM_THM_GROUPS_GROUP')
-                            . ": "
-                            . $item->gname
-                            . "::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES')
-                            . ".'>"
-                            . $imageURL
-                            . "</a>"
-                            . "<strong>$item->gname</strong>"
-                            . " : "
-                            . implode(', ', $groupRoles)
-                            . '<br>';
-                    }
-                }
-            }
-        }
-
-        return $result;
     }
 
     /**
@@ -331,6 +245,8 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
     {
         $ordering = $this->state->get('list.ordering');
         $direction = $this->state->get('list.direction');
+
+        // TODO FILTER GROUP & ROLE, PUBLISHED
 
         $headers = array();
         $headers['checkbox'] = '';
@@ -358,15 +274,12 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
         $query = $db->getQuery(true);
 
         $query
-            ->select('groups.id as gid')
-            ->select('groups.title AS gname')
-            ->select('GROUP_CONCAT(DISTINCT roles.id ORDER BY roles.name SEPARATOR ", ") AS rid')
-            ->select('GROUP_CONCAT(DISTINCT roles.name ORDER BY roles.name SEPARATOR ", ") AS rname')
-            ->from('#__usergroups AS groups')
-            ->leftJoin('#__thm_groups_mappings AS maps ON groups.id = maps.usergroupsID')
-            ->leftJoin('#__thm_groups_roles AS roles ON maps.rolesID = roles.id')
-            ->where("maps.usersID = $userID AND maps.usergroupsID > 1")
-            ->group('gid');
+            ->select('groups.title AS groupname, groups.id as groupid, roles.name AS rolename, roles.id AS roleid')
+            ->from("#__usergroups AS groups")
+            ->leftJoin("#__thm_groups_mappings AS maps ON groups.id = maps.usergroupsID")
+            ->leftJoin("#__thm_groups_roles AS roles ON maps.rolesID = roles.id")
+            ->where("maps.usersID = $userID")
+            ->where("maps.usergroupsID > 1");
 
         $db->setQuery($query);
         return $db->loadObjectList();

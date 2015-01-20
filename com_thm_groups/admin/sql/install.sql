@@ -12,28 +12,18 @@ DROP TABLE IF EXISTS
 `#__thm_groups_profile`,
 `#__thm_groups_profile_attribute`;
 
-INSERT INTO `#__users` (`id`, `name`, `username`, `email`) VALUES
-  (1, 'Max Mustermann', 'test_user1', 'max.mustermann@mni.thm.de'),
-  (2, 'Sabine Musterfrau', 'test_user2', 'sabine.musterfrau@mni.thm.de'),
-  (3, 'Ilja Michajlow', 'test_user3', 'ilja.michajlow@mni.thm.de'),
-  (4, 'Yolo Swaggins', 'test_user4', 'yolo.swaggins@mni.thm.de'),
-  (5, 'Amy Pond', 'test_user5', 'amy.pond@doctor.who.com');
-
 CREATE TABLE IF NOT EXISTS `#__thm_groups_users` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `published` TINYINT(1) NULL,
   `injoomla` TINYINT(1) NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`id`) REFERENCES `#__users` (`id`)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE)
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 INSERT INTO `#__thm_groups_users` (`id`, `published`, `injoomla`) VALUES
   (1, 1, 0),
   (2, 1, 0),
-  (3, 0, 0),
-  (4, 0, 0),
+  (3, 1, 0),
+  (4, 1, 0),
   (5, 1, 0);
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_users_categories` (
@@ -46,10 +36,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_users_categories` (
   ON DELETE CASCADE,
   FOREIGN KEY (`categoriesID`) REFERENCES `#__categories` (`id`)
   ON UPDATE CASCADE
-  ON DELETE CASCADE,
-  FOREIGN KEY (`usersID`) REFERENCES `#__users` (`id`)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE)
+  ON DELETE CASCADE)
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_users_content` (
@@ -62,9 +49,6 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_users_content` (
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   FOREIGN KEY (`contentID`) REFERENCES `#__content` (`id`)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  FOREIGN KEY (`usersID`) REFERENCES `#__users` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE)
 ENGINE = InnoDB;
@@ -150,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_users_attribute` (
   `value` TEXT NULL,
   `published` TINYINT(1) NULL,
   PRIMARY KEY (`ID`),
-  FOREIGN KEY (`usersID`) REFERENCES `#__users` (`id`)
+  FOREIGN KEY (`usersID`) REFERENCES `#__thm_groups_users` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   FOREIGN KEY (`attributeID`) REFERENCES `#__thm_groups_attribute` (`id`)
@@ -216,48 +200,29 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_mappings` (
     ON DELETE CASCADE,
   FOREIGN KEY (`rolesID`) REFERENCES `#__thm_groups_roles` (`id`)
     ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  FOREIGN KEY (`usersID`) REFERENCES `#__users` (`id`)
-    ON UPDATE CASCADE
     ON DELETE CASCADE)
 ENGINE = InnoDB;
 
 INSERT INTO `#__thm_groups_mappings` (`ID`, `usersID`, `usergroupsID`, `rolesID`) VALUES
-  (1, 1, 3, 1),
+  (1, 1, 1, 1),
   (2, 1, 2, 1),
   (3, 2, 1, 2),
-  (4, 2, 5, 2),
-  (5, 3, 3, 1),
-  (6, 3, 4, 2),
-  (7, 1, 3, 2);
+  (4, 2, 2, 2);
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NULL,
-  `order` INT(11) NOT NULL UNIQUE,
+  `position` INT(11) NOT NULL UNIQUE,
+  `options` TEXT,
+  `type`  VARCHAR(10),
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-INSERT INTO `#__thm_groups_profile` (`id`, `name`, `order`) VALUES
-  (1, 'Standard', 1),
-  (2, 'Mitarbeiter', 2),
-  (3, 'Professor', 3),
-  (4, 'Dozent', 4);
-
-CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attribute` (
-  `ID` INT(11) NOT NULL AUTO_INCREMENT,
-  `profileID` INT(11) NOT NULL,
-  `attributeID` INT(11) NOT NULL,
-  `order` INT(3) NULL,
-  `params` TEXT NULL,
-  PRIMARY KEY (`ID`),
-    FOREIGN KEY (`profileID`) REFERENCES `#__thm_groups_profile` (`id`)
-  ON UPDATE CASCADE
-  ON DELETE CASCADE,
-  FOREIGN KEY (`attributeID`) REFERENCES `#__thm_groups_attribute` (`id`)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE)
-ENGINE = InnoDB;
+INSERT INTO `#__thm_groups_profile` (`id`, `name`, `position`, `options`, `type`) VALUES
+  (1, 'Standard', 1, '', 'old'),
+  (2, 'Mitarbeiter', 2, '', 'old'),
+  (3, 'Professor', 3, '', 'old'),
+  (4, 'Dozent', 4, '', 'old');
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_usergroups` (
   `ID` INT(11) NOT NULL AUTO_INCREMENT,

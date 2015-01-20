@@ -40,13 +40,11 @@ class THM_GroupsViewDynamic_Type_Edit extends JViewLegacy
 
         $model = $this->getModel('dynamic_type_edit');
         $form = $this->get('Form');
-
         $item = $this->get('DynamicTypeItem');
 
         $this->form = $form;
         $this->item = $item;
         $this->selectFieldStaticTypes = $model->getStaticTypesSelectField($this->item->static_typeID);
-        $this->regexOptions = $model->getRegexOptions($this->item->static_typeID);
 
         if (count($errors = $this->get('Errors')))
         {
@@ -59,11 +57,6 @@ class THM_GroupsViewDynamic_Type_Edit extends JViewLegacy
         parent::display($tpl);
     }
 
-    /**
-     * Adds the toolbar to the view
-     *
-     * @return void
-     */
     public function addToolbar()
     {
         JFactory::getApplication()->input->set('hidemainmenu', true);

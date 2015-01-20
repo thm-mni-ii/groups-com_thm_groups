@@ -20,6 +20,7 @@
                required="true" />-->
         <field name="regex"
                type="text"
+               class="input-xxlarge input-large-text"
                label="Regex"
                description="TEST"
                required="false" />
