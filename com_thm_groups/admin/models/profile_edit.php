@@ -1,12 +1,10 @@
 <?php
 /**
- * @version     v3.2.6
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsModelProfile_Edit
- * @description Edit Data of a Profile
- * @author      Dieudonne Timma, <dieudonne.timma.meyatchie@mni.thm.de>
+ * @name        dynamic type model
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de

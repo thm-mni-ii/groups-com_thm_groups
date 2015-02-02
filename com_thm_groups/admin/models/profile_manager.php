@@ -36,8 +36,7 @@ class THM_GroupsModelProfile_Manager extends THM_CoreModelList
         $config['filter_fields'] = array(
             'id',
             'name',
-            'position',
-            'type'
+            'order'
         );
 
         parent::__construct($config);
@@ -54,11 +53,16 @@ class THM_GroupsModelProfile_Manager extends THM_CoreModelList
         $query = $db->getQuery(true);
 
         $query
-            ->select('id, name, position, type')
-            ->from('#__thm_groups_profile');
+            ->select('id, name, a.order')
+            ->from('#__thm_groups_profile as a');
 
         $this->setSearchFilter($query, array('name'));
         $this->setOrdering($query);
+
+        echo "<pre>";
+        echo $query;
+        echo "</pre>";
+
         return $query;
 
     }
@@ -81,8 +85,7 @@ class THM_GroupsModelProfile_Manager extends THM_CoreModelList
             $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
             $return[$index][1] = $item->id;
             $return[$index][2] = !empty($item->name) ? JHtml::_('link', $url, $item->name) : '';
-            $return[$index][4] = !empty($item->position) ? $item->position : '';
-            $return[$index][5] = !empty($item->type) ? $item->type : '';
+            $return[$index][4] = !empty($item->order) ? $item->order : '';
             $index++;
         }
         return $return;
@@ -102,8 +105,7 @@ class THM_GroupsModelProfile_Manager extends THM_CoreModelList
         $headers['checkbox'] = '';
         $headers['id'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'id', $direction, $ordering);
         $headers['name'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_PROFILE_MANAGER_NAME'), 'name', $direction, $ordering);
-        $headers['position'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_PROFILE_MANAGER_POSITION'), 'position', $direction, $ordering);
-        $headers['type'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_PROFILE_MANAGER_TYPE'), 'type', $direction, $ordering);
+        $headers['order'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_PROFILE_MANAGER_POSITION'), 'a.order', $direction, $ordering);
 
         return $headers;
     }

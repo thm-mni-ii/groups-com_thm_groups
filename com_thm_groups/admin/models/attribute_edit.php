@@ -159,7 +159,7 @@ class THM_GroupsModelAttribute_Edit extends JModelAdmin
     /**
      * Generate Select Field for static types
      *
-     * @param   Int  static_typeID  dynamic type id, check static_TypeID for current dynamic type
+     * @param   Int  $dynamic_typeID  dynamic type id, check static_TypeID for current dynamic type
      *
      * @return  select field
      */

@@ -29,6 +29,11 @@ class THM_GroupsModelAttribute_Manager extends THM_CoreModelList
 
     protected $defaultDirection = 'ASC';
 
+    /**
+     * Constructor
+     *
+     * @param   array  $config  The config
+     */
     public function __construct($config = array())
     {
 
@@ -134,15 +139,18 @@ class THM_GroupsModelAttribute_Manager extends THM_CoreModelList
     /**
      * populates State
      *
-     * @param null $ordering
-     * @param null $direction
+     * @param   null  $ordering   ?
+     * @param   null  $direction  ?
+     *
+     * @return void
      */
     protected function populateState($ordering = null, $direction = null)
     {
         $app = JFactory::getApplication();
 
         // Adjust the context to support modal layouts.
-        if ($layout = $app->input->get('layout')) {
+        if ($layout = $app->input->get('layout'))
+        {
             $this->context .= '.' . $layout;
         }
 
@@ -153,5 +161,100 @@ class THM_GroupsModelAttribute_Manager extends THM_CoreModelList
         $this->setState('filter.dynamic', $static);
 
         parent::populateState("attribute.id", "ASC");
+    }
+
+    /**
+     * Deletes pictures from folder
+     *
+     * @param   Object  $attribute  Object of attribute
+     *
+     * @return  boolean
+     */
+    private function deletePictures($attribute)
+    {
+        // Get all Pictures from attribute
+        $dbo = JFactory::getDbo();
+
+        $usersAttributeQuery = $dbo->getQuery(true);
+        $usersAttributeQuery->select($dbo->qn(array('ID', 'value', 'attributeID')))
+            ->from($dbo->qn('#__thm_groups_users_attribute'))
+            ->where($dbo->qn('attributeID') . ' = ' . $attribute->id . '');
+        $dbo->setQuery($usersAttributeQuery);
+        $pictures = $dbo->loadObjectList();
+
+        // Get path
+        $path = json_decode($attribute->options)->path;
+
+        // Delete files
+        if (($path != null) || ($path != false))
+        {
+            foreach (scandir($path) as $folderPic)
+            {
+                foreach ($pictures as $pic)
+                {
+                    $picName = $pic->value;
+
+                    if ($folderPic == $picName)
+                    {
+                        unlink($path . $folderPic);
+                    }
+
+                }
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /**
+     * Deletes attribute from database and removes all related
+     * entries from users_attribute
+     *
+     * @return bool
+     */
+    public function delete()
+    {
+        $jinput = JFactory::getApplication()->input;
+        $postVariables = $jinput->post->getArray(array());
+        $attributeID = $postVariables['cid'][0];
+
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+
+        // Remove related pictures from folder:
+        $query->select('*')
+              ->from($dbo->qn('#__thm_groups_attribute'))
+              ->where('id = ' . (int) $attributeID);
+        $dbo->setQuery($query);
+        $attribute = $dbo->loadObject();
+
+        if ($this->deletePictures($attribute))
+        {
+            // Delete attribute from database:
+            $query = $dbo->getQuery(true);
+
+            $query->delete($dbo->qn('#__thm_groups_attribute'))
+                ->where($dbo->qn('id') . ' = ' . $attributeID);
+
+            $dbo->setQuery($query);
+
+            $result = $dbo->execute();
+
+            if (!$result)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return false;
+        }
     }
 }
