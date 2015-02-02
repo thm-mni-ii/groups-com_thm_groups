@@ -56,12 +56,12 @@ class THM_GroupsViewRole_Manager extends THM_CoreViewList
 
         JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_ROLE_MANAGER'), 'role_manager');
         JToolBarHelper::addNew(
-            'role_manager.addRole',
+            'role.add',
             'COM_THM_GROUPS_ROLE_MANAGER_ADD',
             false
         );
-        JToolBarHelper::editList('role_manager.edit', 'COM_THM_GROUPS_ROLEMANAGER_EDIT');
-        JToolBarHelper::deleteList('COM_THM_GROUPS_REALLY_DELETE', 'role_manager.remove', 'JTOOLBAR_DELETE');
+        JToolBarHelper::editList('role.edit', 'COM_THM_GROUPS_ROLEMANAGER_EDIT');
+        JToolBarHelper::deleteList('COM_THM_GROUPS_REALLY_DELETE', 'role.delete', 'JTOOLBAR_DELETE');
         if ($user->authorise('core.admin', 'com_users'))
         {
             JToolBarHelper::divider();

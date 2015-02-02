@@ -71,7 +71,7 @@ class THM_GroupsModelRole_Manager extends THM_CoreModelList
         $index = 0;
         foreach ($items as $item)
         {
-            $url = "index.php?option=com_thm_groups&view=role_edit&cid[]=$item->id";
+            $url = "index.php?option=com_thm_groups&view=role_edit&id=$item->id";
             $return[$index] = array();
 
             $return[$index][0] = JHtml::_('grid.id', $index, $item->id);

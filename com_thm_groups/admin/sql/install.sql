@@ -199,7 +199,15 @@ ENGINE = InnoDB AUTO_INCREMENT=5;
 
 INSERT INTO `#__thm_groups_roles` (`id`, `name`) VALUES
   (1, 'Mitglied'),
-  (2, 'Moderator');
+  (2, 'Moderator'),
+  (3, 'Role1'),
+  (4, 'Role2'),
+  (5, 'Role3'),
+  (6, 'Role4'),
+  (7, 'Role5'),
+  (8, 'Role6'),
+  (9, 'Role7'),
+  (10, 'Role8');
 
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_mappings` (
