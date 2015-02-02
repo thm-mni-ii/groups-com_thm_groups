@@ -1,0 +1,131 @@
+<?php
+/**
+ * @category    Joomla component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.admin
+ * @name        dynamic type model
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
+ * @copyright   2014 TH Mittelhessen
+ * @license     GNU GPL v.2
+ * @link        www.mni.thm.de
+ */
+
+defined('_JEXEC') or die;
+jimport('thm_core.list.model');
+
+/**
+ * Class loads form data to edit an entry.
+ *
+ * @category    Joomla.Component.Admin
+ * @package     thm_groups
+ * @subpackage  com_thm_groups.admin
+ */
+class THM_GroupsModelRole_Manager extends THM_CoreModelList
+{
+    protected $defaultOrdering = 'r.id';
+
+    protected $defaultDirection = 'ASC';
+
+    /**
+     * Method to build an SQL query to load the list data.
+     *
+     * @return      string  An SQL query
+     */
+    protected function getListQuery()
+    {
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+
+        $query
+            ->select('r.id')
+            ->select('r.name')
+            ->from('#__thm_groups_roles AS r');
+
+
+        $search = $this->getState('filter.search');
+        if (!empty($search))
+        {
+            $query->where("(r.name LIKE '%" . implode("%' OR r.name LIKE '%", explode(' ', $search)) . "%')");
+        }
+
+        $this->setOrdering($query);
+
+        return $query;
+    }
+
+    /**
+     * Function to feed the data in the table body correctly to the list view
+     *
+     * @return array consisting of items in the body
+     */
+    public function getItems()
+    {
+        $items = parent::getItems();
+        $return = array();
+        if (empty($items))
+        {
+            return $return;
+        }
+
+        $index = 0;
+        foreach ($items as $item)
+        {
+            $url = "index.php?option=com_thm_groups&view=role_edit&cid[]=$item->id";
+            $return[$index] = array();
+
+            $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
+            $return[$index][1] = $item->id;
+            $return[$index][2] = JHtml::_('link', $url, $item->name);
+            $index++;
+        }
+        return $return;
+    }
+
+    /**
+     * Function to get table headers
+     *
+     * @return array including headers
+     */
+    public function getHeaders()
+    {
+        $ordering = $this->state->get('list.ordering');
+        $direction = $this->state->get('list.direction');
+
+        $headers = array();
+        $headers['checkbox'] = '';
+        $headers['id'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'r.id', $direction, $ordering);
+        $headers['name'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ROLE_NAME', 'r.name', $direction, $ordering);
+
+        return $headers;
+    }
+
+    /**
+     * populates State
+     *
+     * @param   null  $ordering   ?
+     * @param   null  $direction  ?
+     *
+     * @return void
+     */
+    protected function populateState($ordering = null, $direction = null)
+    {
+        $app = JFactory::getApplication();
+
+        // Adjust the context to support modal layouts.
+        if ($layout = $app->input->get('layout'))
+        {
+            $this->context .= '.' . $layout;
+        }
+
+        $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $this->setState('filter.search', $search);
+
+        parent::populateState("r.id", "ASC");
+    }
+
+    public function getHiddenFields()
+    {
+
+    }
+}
