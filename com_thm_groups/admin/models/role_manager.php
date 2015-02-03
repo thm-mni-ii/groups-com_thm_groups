@@ -77,6 +77,7 @@ class THM_GroupsModelRole_Manager extends THM_CoreModelList
             $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
             $return[$index][1] = $item->id;
             $return[$index][2] = JHtml::_('link', $url, $item->name);
+            $return[$index][3] = $this->getGroups($item->id);
             $index++;
         }
         return $return;
@@ -95,7 +96,8 @@ class THM_GroupsModelRole_Manager extends THM_CoreModelList
         $headers = array();
         $headers['checkbox'] = '';
         $headers['id'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'r.id', $direction, $ordering);
-        $headers['name'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ROLE_NAME', 'r.name', $direction, $ordering);
+        $headers['name'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ROLE_NAME'), 'r.name', $direction, $ordering);
+        $headers['groups'] = 'Groups';
 
         return $headers;
     }
@@ -127,5 +129,32 @@ class THM_GroupsModelRole_Manager extends THM_CoreModelList
     public function getHiddenFields()
     {
 
+    }
+
+    public function getGroups($gid)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query
+            ->select('ug.title')
+            ->from('#__usergroups AS ug')
+            ->innerJoin('#__thm_groups_usergroups_roles AS ugr ON ug.id = ugr.usergroupsID')
+            ->where("ugr.rolesID = $gid")
+            ->order('ug.title ASC');
+
+        $db->setQuery($query);
+        $groups = $db->loadObjectList();
+
+        $return = array();
+        if(!empty($groups))
+        {
+            foreach($groups as $group)
+            {
+                $return[] = $group->title;
+            }
+        }
+
+        return implode(', ', $return);
     }
 }

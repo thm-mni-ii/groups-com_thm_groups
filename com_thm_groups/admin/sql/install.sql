@@ -3,7 +3,8 @@ DROP TABLE IF EXISTS
 `#__thm_groups_users_content`,
 `#__thm_groups_users_categories`,
 `#__thm_groups_profile_usergroups`,
-`#__thm_groups_mappings`,
+`#__thm_groups_usergroups_roles`,
+`#__thm_groups_users_usergroups_roles`,
 `#__thm_groups_users`,
 `#__thm_groups_static_type`,
 `#__thm_groups_dynamic_type`,
@@ -209,20 +210,37 @@ INSERT INTO `#__thm_groups_roles` (`id`, `name`) VALUES
   (9, 'Role7'),
   (10, 'Role8');
 
+CREATE TABLE IF NOT EXISTS `#__thm_groups_usergroups_roles` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `usergroupsID` int(11) UNSIGNED NOT NULL,
+  `rolesID` int(11) NOT NULL,
+  PRIMARY KEY (`ID`),
+  FOREIGN KEY (`usergroupsID`) REFERENCES `#__usergroups` (`id`)
+   ON DELETE CASCADE
+   ON UPDATE CASCADE,
+ FOREIGN KEY (`rolesID`) REFERENCES `#__thm_groups_roles` (`id`)
+ ON DELETE CASCADE
+ ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
-CREATE TABLE IF NOT EXISTS `#__thm_groups_mappings` (
+INSERT INTO `#__thm_groups_usergroups_roles` (`ID`, `usergroupsID`, `rolesID`) VALUES
+  (1, 3, 1),
+  (2, 2, 1),
+  (3, 1, 2),
+  (4, 5, 2),
+  (5, 4, 1),
+  (6, 4, 2),
+  (7, 3, 2);
+
+CREATE TABLE IF NOT EXISTS `#__thm_groups_users_usergroups_roles` (
   `ID` INT(11) NOT NULL AUTO_INCREMENT,
   `usersID` INT(11) NOT NULL,
-  `usergroupsID` INT(11) UNSIGNED NOT NULL,
-  `rolesID` INT(11) NOT NULL,
+  `usergroups_rolesID` INT(11) NOT NULL,
   PRIMARY KEY (`ID`),
   FOREIGN KEY (`usersID`) REFERENCES `#__thm_groups_users` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  FOREIGN KEY (`usergroupsID`) REFERENCES `#__usergroups` (`id`)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  FOREIGN KEY (`rolesID`) REFERENCES `#__thm_groups_roles` (`id`)
+  FOREIGN KEY (`usergroups_rolesID`) REFERENCES `#__thm_groups_usergroups_roles` (`ID`)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   FOREIGN KEY (`usersID`) REFERENCES `#__users` (`id`)
@@ -230,14 +248,14 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_mappings` (
     ON DELETE CASCADE)
 ENGINE = InnoDB;
 
-INSERT INTO `#__thm_groups_mappings` (`ID`, `usersID`, `usergroupsID`, `rolesID`) VALUES
-  (1, 1, 3, 1),
-  (2, 1, 2, 1),
-  (3, 2, 1, 2),
-  (4, 2, 5, 2),
-  (5, 3, 3, 1),
-  (6, 3, 4, 2),
-  (7, 1, 3, 2);
+INSERT INTO `#__thm_groups_users_usergroups_roles` (`ID`, `usersID`, `usergroups_rolesID`) VALUES
+  (1, 1, 1),
+  (2, 1, 2),
+  (3, 2, 3),
+  (4, 2, 4),
+  (5, 3, 5),
+  (6, 3, 6),
+  (7, 1, 7);
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -279,6 +297,21 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_usergroups` (
     ON UPDATE CASCADE
     ON DELETE CASCADE)
 ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attribute` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `profileID` int(11) NOT NULL,
+  `attributeID` int(11) NOT NULL,
+  `order` int(11) DEFAULT NULL,
+  `params` text,
+  PRIMARY KEY (`ID`),
+  FOREIGN KEY (`profileID`) REFERENCES `#__thm_groups_profile` (`id`)
+   ON DELETE CASCADE
+   ON UPDATE CASCADE,
+ FOREIGN KEY (`attributeID`) REFERENCES `#__thm_groups_attribute` (`id`)
+ ON DELETE CASCADE
+ ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attribute` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,

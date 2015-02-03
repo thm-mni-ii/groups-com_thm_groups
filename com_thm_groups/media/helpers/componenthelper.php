@@ -38,8 +38,8 @@ class THM_GroupsHelperComponent
 
         JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_HOME'),
-            'index.php?option=com_thm_groups&view=thmgroups',
-            $viewName == 'thmgroups'
+            'index.php?option=com_thm_groups&view=thm_groups',
+            $viewName == 'thm_groups'
         );
 
         JHtmlSidebar::addEntry(
@@ -49,13 +49,13 @@ class THM_GroupsHelperComponent
         );
         JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_GROUP_MANAGER'),
-            'index.php?option=com_users&view=groups',
-            $viewName == 'groupmanager'
+            'index.php?option=com_thm_groups&view=group_manager',
+            $viewName == 'group_manager'
         );
         JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_ROLE_MANAGER'),
-            'index.php?option=com_thm_groups&view=rolemanager',
-            $viewName == 'rolemanager'
+            'index.php?option=com_thm_groups&view=role_manager',
+            $viewName == 'role_manager'
         );
         JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_PROFILE_MANAGER'),

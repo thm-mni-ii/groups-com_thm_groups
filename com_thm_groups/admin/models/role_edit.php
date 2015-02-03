@@ -32,7 +32,4 @@ class THM_GroupsModelRole_Edit extends THM_CoreModelEdit
     {
         parent::__construct($config);
     }
-
-
-
 }

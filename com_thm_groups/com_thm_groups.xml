@@ -61,15 +61,15 @@
 
             <menu
                     alias="Group Manager"
-                    link="option=com_thm_groups&amp;view=groupmanager"
-                    view="groupmanager"
+                    link="option=com_thm_groups&amp;view=group_manager"
+                    view="group_manager"
                     alt="THM-Groups/Group Manager"
                     >COM_THM_GROUPS_GROUP_MANAGER</menu>
 
             <menu
                     alias="Role Manager"
-                    link="option=com_thm_groups&amp;view=rolemanager"
-                    view="rolemanager"
+                    link="option=com_thm_groups&amp;view=role_manager"
+                    view="role_manager"
                     alt="THM-Groups/Role Manager"
                     >COM_THM_GROUPS_ROLE_MANAGER</menu>
 

@@ -33,6 +33,8 @@ class THM_GroupsViewRole_Manager extends THM_CoreViewList
 
     public $state;
 
+    public $batch;
+
     /**
      * Method to get display
      *
@@ -42,6 +44,7 @@ class THM_GroupsViewRole_Manager extends THM_CoreViewList
      */
     public function display($tpl = null)
     {
+        $this->batch = JPATH_COMPONENT_ADMINISTRATOR . '/views/role_manager/tmpl/default_batch.php';
         parent::display($tpl);
     }
 
@@ -54,14 +57,31 @@ class THM_GroupsViewRole_Manager extends THM_CoreViewList
     {
         $user = JFactory::getUser();
 
+        // Get the toolbar object instance
+        $bar = JToolBar::getInstance('toolbar');
+
         JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_ROLE_MANAGER'), 'role_manager');
         JToolBarHelper::addNew(
             'role.add',
             'COM_THM_GROUPS_ROLE_MANAGER_ADD',
             false
         );
-        JToolBarHelper::editList('role.edit', 'COM_THM_GROUPS_ROLEMANAGER_EDIT');
+        JToolBarHelper::editList('role.edit', 'COM_THM_GROUPS_ROLE_MANAGER_EDIT');
         JToolBarHelper::deleteList('COM_THM_GROUPS_REALLY_DELETE', 'role.delete', 'JTOOLBAR_DELETE');
+
+        // Add a batch button
+        if ($user->authorise('core.create', 'com_users') && $user->authorise('core.edit', 'com_users') && $user->authorise('core.edit.state', 'com_users'))
+        {
+            JHtml::_('bootstrap.modal', 'collapseModal');
+            $title = JText::_('COM_THM_GROUPS_ROLE_MANAGER_BATCH');
+
+            // Instantiate a new JLayoutFile instance and render the batch button
+            $layout = new JLayoutFile('joomla.toolbar.batch');
+
+            $dhtml = $layout->render(array('title' => $title));
+            $bar->appendButton('Custom', $dhtml, 'batch');
+        }
+
         if ($user->authorise('core.admin', 'com_users'))
         {
             JToolBarHelper::divider();
