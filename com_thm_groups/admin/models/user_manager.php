@@ -13,6 +13,7 @@
  */
 defined('_JEXEC') or die();
 jimport('thm_core.list.model');
+jimport('thm_groups.data.lib_thm_groups_user');
 
 /**
  * THM_GroupsModelUser_Manager class for component com_thm_groups
@@ -224,7 +225,8 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
         var_dump(count($items));
         foreach ($items as $key => $item)
         {
-            $url = "index.php?option=com_thm_groups&view=user_edit&cid[]=$item->userID";
+            // Changed from cid to id
+            $url = "index.php?option=com_thm_groups&view=user_edit&id=$item->userID";
             $return[$index] = array();
 
             $return[$index][0] = JHtml::_('grid.id', $index, $item->userID);

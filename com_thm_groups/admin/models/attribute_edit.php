@@ -181,7 +181,8 @@ class THM_GroupsModelAttribute_Edit extends JModelAdmin
             'id'            => 'staticTypesField',
             'option.key'    => 'value',
             'option.value'  => 'text',
-            'onchange'      => 'jQf.fn.getFieldExtras()'
+            'onchange'      => 'jQf.fn.getFieldExtras()',
+            'list.select'   => $selected
         );
 
         // Generates selectfields:
@@ -191,7 +192,7 @@ class THM_GroupsModelAttribute_Edit extends JModelAdmin
             $settings,     // array of settings
             'value',       // Standard
             'text',        // variables
-            $selected      // Selected
+            $selected      // Selected Index //do not delete
         );
 
         return $selectFieldStaticTypes;

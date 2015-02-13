@@ -15,12 +15,11 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-// import Joomla controller library
 jimport('joomla.application.component.controller');
 jimport('joomla.application.component.model');
 
 // For delete operation
-JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_users/models', 'UsersModel');
+JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_users/models', 'UsersModel');
 
 /**
  * THM_GroupsControllerUser class for component com_thm_groups
@@ -37,13 +36,10 @@ class THM_GroupsControllerUser extends JControllerLegacy
     {
         $model = $this->getModel('user');
         $success = $model->toggle('publish');
-        if ($success)
-        {
+        if ($success) {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
             $type = 'message';
-        }
-        else
-        {
+        } else {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
             $type = 'error';
         }
@@ -54,13 +50,10 @@ class THM_GroupsControllerUser extends JControllerLegacy
     {
         $model = $this->getModel('user');
         $success = $model->toggle('unpublish');
-        if ($success)
-        {
+        if ($success) {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
             $type = 'message';
-        }
-        else
-        {
+        } else {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
             $type = 'error';
         }
@@ -76,13 +69,10 @@ class THM_GroupsControllerUser extends JControllerLegacy
     {
         $model = $this->getModel('user');
         $success = $model->toggle();
-        if ($success)
-        {
+        if ($success) {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
             $type = 'message';
-        }
-        else
-        {
+        } else {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
             $type = 'error';
         }
@@ -101,13 +91,10 @@ class THM_GroupsControllerUser extends JControllerLegacy
     {
         $model = $this->getModel('user');
         $success = $model->deleteRoleInGroupByUser();
-        if ($success)
-        {
+        if ($success) {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
             $type = 'message';
-        }
-        else
-        {
+        } else {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
             $type = 'error';
         }
@@ -118,16 +105,61 @@ class THM_GroupsControllerUser extends JControllerLegacy
     {
         $model = $this->getModel('user');
         $success = $model->deleteAllRolesInGroupByUser();
-        if ($success)
-        {
+        if ($success) {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
             $type = 'message';
-        }
-        else
-        {
+        } else {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
             $type = 'error';
         }
         $this->setRedirect("index.php?option=com_thm_groups&view=user_manager", $msg, $type);
+    }
+
+    public function apply()
+    {
+        $model = $this->getModel('user_edit');
+
+        //Formvalidation is done in View via js
+        $success = $model->save();
+        if ($success)
+        {
+            $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+            $this->setRedirect('index.php?option=com_thm_groups&view=user_edit&id=' . $success, $msg);
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+            //todo: fails:
+            $this->setRedirect('index.php?option=com_thm_groups&view=user_edit&id=0', $msg);
+        }
+    }
+
+    public function save()
+    {
+        $model = $this->getModel('user_edit');
+
+        //Formvalidation is done in View via js
+        $success = $model->save();
+        if ($success)
+        {
+            $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+            $this->setRedirect('index.php?option=com_thm_groups&view=user_manager', $msg);
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+            //todo: fails:
+            $this->setRedirect('index.php?option=com_thm_groups&view=user_manager', $msg);
+        }
+    }
+
+    public function cancel($key = null)
+    {
+        if (!JFactory::getUser()->authorise('core.admin'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
+
+        $this->setRedirect('index.php?option=com_thm_groups&view=user_manager');
     }
 }

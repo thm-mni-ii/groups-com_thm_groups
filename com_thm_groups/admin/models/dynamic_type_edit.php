@@ -96,17 +96,30 @@ class THM_GroupsModelDynamic_Type_Edit extends JModelAdmin
     }
 
     /**
-     * returns a list of static types
+     * returns a list of static types, when $reduce is true reduced set of
+     * options will be selected.
+     *
+     * @param   boolean  $reduce  Reduced options?
      *
      * @return  Array
      */
-    public function getStaticTypes()
+    public function getStaticTypes($reduce)
     {
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
-        $query->select('id, name')
-            ->from('#__thm_groups_static_type');
+        if ($reduce == 'true')
+        {
+            $query->select('id, name')
+                ->from('#__thm_groups_static_type')
+                ->where('name= "TEXT" OR name= "TEXTFIELD"');
+        }
+        else
+        {
+            $query->select('id, name')
+                ->from('#__thm_groups_static_type');
+        }
+
         $db->setQuery($query);
         $db->execute();
 
@@ -126,16 +139,18 @@ class THM_GroupsModelDynamic_Type_Edit extends JModelAdmin
 
         if ($name == 'TEXT')
         {
+            // The '\\\' -parts before an '\' are inserted because of string to regexobject conversion in javascript
             array_push(
                 $regexOptions,
                 JHtml::_('select.option', 'Other', 'Other'),
-                JHtml::_('select.option', '/[a-zA-Z]*/', 'Only letters'),
-                JHtml::_('select.option', '/^[0-9]*$/', 'Only numbers'),
-                JHtml::_('select.option', '/^[0-9a-zA-Z]+$/', 'Letters and numbers'),
-                JHtml::_('select.option', '/^[0-9]{4,5}$/', 'PLZ'),
-                JHtml::_('select.option', '/^(\+49 )?(\([0-9]{1,5}\)|[0-9]{0,5}|\(0\)[0-9]{3,4})(\/| )?([0-9]+\ ?)*(\ \+[0-9]{1,3})?$/', 'Phone'),
-                JHtml::_('select.option', '/([0-9a-zA-Z])@(\w+)\.(\w+)/', 'E-Mail'),
-                JHtml::_('select.option', '/^[A-E]{1}([0-9]{2}\.|\.)[0-9]{1,2}\.([0-9]{2}[a-z]{0,1})$/', 'Room')
+                JHtml::_('select.option', '^([a-zA-ZäöüÄÖÜ])*$', 'Only letters'),
+                JHtml::_('select.option', '^[0-9]*$', 'Only numbers'),
+                JHtml::_('select.option', '^[0-9a-zA-ZäöüÄÖÜ]+$', 'Letters and numbers'),
+                JHtml::_('select.option', '^[0-9]{4,5}$', 'PLZ'),
+                JHtml::_('select.option', '^(\\\\+49 )?(\\\\([0-9]{1,5}\\\\)|[0-9]{0,5}|\\\\(0\\\\)[0-9]{3,4})(\\\\/| )?([0-9]+\\\\ ?)*(\\\\ \\\\+[0-9]{1,3})?$', 'Phone'),
+                JHtml::_('select.option', '^([0-9a-zA-Z\\\\.]+)@(([\\\\w]|\\\\.\\\\w)+)\\\\.(\\\\w+)$', 'E-Mail'),
+                JHtml::_('select.option', '^[A-E]{1}([0-9]{2}\\\\.|\\\\.)[0-9]{1,2}\\\\.([0-9]{2}[a-z]{0,1})$', 'Room'),
+                JHtml::_('select.option', '^(\\\\w+\\\\.?)+$', 'Title')
             );
             return $regexOptions;
         }
@@ -144,8 +159,8 @@ class THM_GroupsModelDynamic_Type_Edit extends JModelAdmin
             array_push(
                 $regexOptions,
                 JHtml::_('select.option', 'Other', 'Other'),
-                JHtml::_('select.option', '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/', 'URL'),
-                JHtml::_('select.option', '/(http|ftp|https:\/\/){0,1}[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?/', 'Hyperlink with special chars')
+                JHtml::_('select.option', '^(https?:\\\\/\\\\/)?([\\\\da-z\\\\.-]+)\\\\.([a-z\\\\.]{2,6})([\\\\/\\\\w \\\\.-]*)*\\\\/?$', 'URL'),
+                JHtml::_('select.option', '(http|ftp|https:\\\\/\\\\/){0,1}[\\\\w\\\\-_]+(\\\\.[\\\\w\\\\-_]+)+([\\\\w\\\\-\\\\.,@?^=%&amp;:/~\\\\+#]*[\\\\w\\\\-\\\\@?^=%&amp;/~\\\\+#])?', 'Hyperlink with special chars')
                 );
             return $regexOptions;
         }
@@ -165,16 +180,8 @@ class THM_GroupsModelDynamic_Type_Edit extends JModelAdmin
     public function getRegexOptions($static_typeID)
     {
         $selected = $static_typeID;
-        $dbo = JFactory::getDbo();
-        $query = $dbo->getQuery(true);
 
-        $query->select('id, name')
-            ->from('#__thm_groups_static_type')
-            ->where('id = ' . (int) $static_typeID);
-        $dbo->setQuery($query);
-        $dbo->execute();
-
-        $staticType = $dbo->loadObject();
+        $staticType = $this->getStaticType($selected);
 
         /** TODO: When user clicks on +new
          * in dynamic type manager an error
@@ -231,7 +238,25 @@ class THM_GroupsModelDynamic_Type_Edit extends JModelAdmin
 
         $selected = $static_typeID;
 
-        $arrayOfStaticTypes = $this->getStaticTypes();
+        // Check if it is not a new type
+        if ($selected != 0)
+        {
+            $type = $this->getStaticType($selected);
+
+            // When type is TEXT or TEXTFIELD limited options are available
+            if (($type->name == 'TEXT') || ($type->name == 'TEXTFIELD'))
+            {
+                $arrayOfStaticTypes = $this->getStaticTypes('true');
+            }
+            else
+            {
+                $arrayOfStaticTypes = $this->getStaticTypes('false');
+            }
+        }
+        else
+        {
+            $arrayOfStaticTypes = $this->getStaticTypes('false');
+        }
 
         // Convert array to options
         foreach($arrayOfStaticTypes as $key => $value) :
@@ -290,5 +315,28 @@ class THM_GroupsModelDynamic_Type_Edit extends JModelAdmin
         }
 
         return true;
+    }
+
+    /**
+     * Returns a static type based on $static_typeID
+     *
+     * @param   Integer  $static_typeID  ID
+     *
+     * @return mixed
+     */
+    public function  getStaticType($static_typeID)
+    {
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+
+        $query->select('id, name')
+            ->from('#__thm_groups_static_type')
+            ->where('id = ' . (int) $static_typeID);
+        $dbo->setQuery($query);
+        $dbo->execute();
+
+        $staticType = $dbo->loadObject();
+
+        return $staticType;
     }
 }

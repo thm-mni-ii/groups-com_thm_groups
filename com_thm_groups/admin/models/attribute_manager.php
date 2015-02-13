@@ -193,7 +193,7 @@ class THM_GroupsModelAttribute_Manager extends THM_CoreModelList
                 foreach ($pictures as $pic)
                 {
                     $picName = $pic->value;
-
+                    var_dump($picName, $folderPic);
                     if ($folderPic == $picName)
                     {
                         unlink($path . $folderPic);

@@ -50,11 +50,16 @@ $doc->addStyleSheet(JURI::root(true) . $componentDir . "/assets/css/jqueryFileTr
     }
 
     function showFTree(){
+
+        //var xroot = '<?php echo JURI::root() . 'images/'; ?>';
+
+
         var jRoot = '<?php
                         $rep = JPATH_ROOT;
                         $path = str_replace(array('\\'), array('/'), $rep);
                         echo $path . '/images/';
                         ?>';
+        //alert(jRoot);
 
         document.getElementById('fileBrowser').style.visibility = 'visible';
 
@@ -62,7 +67,7 @@ $doc->addStyleSheet(JURI::root(true) . $componentDir . "/assets/css/jqueryFileTr
             jQuery('#fileBrowser').draggable();
         });
 
-        jQuery('#fileBrowserInnerContent').fileTree({root: jRoot, script:'<?php echo Juri::root(),
+        jQuery('#fileBrowserInnerContent').fileTree({root:jRoot, script:'<?php echo Juri::root(),
         $componentDir,"/elements/jqueryFileTree.php"; ?>'}, function(file){
             getFile(file);
         }, function(dire){
@@ -99,25 +104,27 @@ $doc->addStyleSheet(JURI::root(true) . $componentDir . "/assets/css/jqueryFileTr
         var selectedOption = document.getElementById('staticType').options[document.getElementById('staticType').selectedIndex].text;
         var selectedID = document.getElementById('staticType').options[document.getElementById('staticType').selectedIndex].value;
 
-        if(selectedID != <?php echo $this->item->static_typeID; ?>){
+        if(selectedID != <?php echo $this->item->static_typeID; ?>)
+        {
             var isActType = false;
-        }else{
+        }
+        else
+        {
             var isActType = true;
         }
 
         jQuery.ajax({
             type: "POST",
             url: "index.php?option=com_thm_groups&controller=dynamic_type_edit&task=dynamic_type_edit.getTypeOptions&cid="
-            + <?php echo $this->item->id; ?> + "&selected=" + selectedOption +
-                 "&isActType=" + isActType +"",
+            + <?php echo $this->item->id; ?> +"&selected=" + selectedOption +
+            "&isActType=" + isActType + "",
             datatype: "HTML"
         })
-            .success(function( response ) {
+            .success(function (response) {
                 document.getElementById("ajax-container").innerHTML = response;
             });
 
         reloadTypeRegexOptions(selectedID, isActType);
-
     }
 
     function reloadTypeRegexOptions(selectedID, isActType){
@@ -188,7 +195,6 @@ $doc->addStyleSheet(JURI::root(true) . $componentDir . "/assets/css/jqueryFileTr
                             }
                         ?>
                     </span>
-
                 </div>
                 <div class="control-label">
                     <?php echo $this->form->getLabel('description'); ?>
