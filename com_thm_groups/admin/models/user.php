@@ -51,17 +51,20 @@ class THM_GroupsModelUser extends JModelLegacy
     /**
      * Toggles the user
      *
-     * @param   String  $attribute  publish/unpublish
+     * @param   String  $action  publish/unpublish
      *
      * @return  boolean  true on success, otherwise false
      */
-    public function toggle($attribute)
+    public function toggle($action = null)
     {
         $db = JFactory::getDBO();
         $input = JFactory::getApplication()->input;
 
         // Get array of ids if divers users selected
         $cid = $input->post->get('cid', array(), 'array');
+
+        // A string with type of column in table
+        $attribute = $input->get('attribute', '', 'string');
 
         // If array is empty, the toggle button was clicked
         if (empty($cid))
@@ -79,7 +82,8 @@ class THM_GroupsModelUser extends JModelLegacy
             return false;
         }
 
-        switch ($attribute)
+        // will used if buttons (Publish/Unpublish user) in toolbar clicked
+        switch ($action)
         {
             case 'publish':
                 $value = 1;
@@ -96,9 +100,20 @@ class THM_GroupsModelUser extends JModelLegacy
 
         $query
             ->update('#__thm_groups_users')
-            ->set("published = '$value'")
             ->where("id IN ( $id )");
 
+        switch($attribute) {
+            case 'canEdit':
+                $query->set("canEdit = '$value'");
+                break;
+            case 'qpPublished':
+                $query->set("qpPublished = '$value'");
+                break;
+            case 'published':
+            default:
+                $query->set("published = '$value'");
+                break;
+        }
 
         $db->setQuery((string) $query);
 

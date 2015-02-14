@@ -17,6 +17,9 @@ defined('_JEXEC') or die();
 
 // import Joomla view library
 jimport('thm_core.list.view');
+JHtml::_('jquery.framework');
+
+require_once JPATH_COMPONENT . '/assets/helpers/group_manager_helper.php';
 
 /**
  * THMGroupsViewUserManager class for component com_thm_groups
@@ -35,6 +38,10 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
 
     public $state;
 
+    public $batch;
+
+    public $groups;
+
     /**
      * Method to get display
      *
@@ -44,8 +51,17 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
      */
     public function display($tpl = null)
     {
+
+        // set batch template path
+        $this->batch = JPATH_COMPONENT_ADMINISTRATOR . '/views/user_manager/tmpl/default_batch.php';
+
+        $this->groups = THM_GroupsHelperGroup_Manager::getGroups();
+
         $document = JFactory::getDocument();
         $document->addScript(JURI::root(true) . '/administrator/components/com_thm_groups/assets/js/deleteGroupsAndRoles.js');
+        $document->addScript(JURI::root(true) . '/administrator/components/com_thm_groups/assets/js/lib/jquery.chained.remote.js');
+        $document->addScript(JURI::root(true) . '/administrator/components/com_thm_groups/assets/js/user_manager.js');
+
         parent::display($tpl);
     }
 
@@ -58,27 +74,6 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
     {
         $user = JFactory::getUser();
         JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_USER_MANAGER'), 'membermanager');
-        if (($user->authorise('core.edit', 'com_users') || $user->authorise('core.edit.own', 'com_users')) && $user->authorise('core.manage', 'com_users'))
-        {
-            /*JToolBarHelper::custom(
-                'user.setGroupsAndRoles',
-                'addassignment',
-                JPATH_COMPONENT_ADMINISTRATOR . '/assets/images/icon-32-addassignment.png',
-                'COM_THM_GROUPS_USER_MANAGER_ADD',
-                true,
-                true
-            );
-            JToolBarHelper::custom(
-                'user.delGroupsAndRoles',
-                JPATH_COMPONENT_ADMINISTRATOR . '/assets/images/icon-32-removeassignment.png',
-                '',
-                'COM_THM_GROUPS_USER_MANAGER_DELETE',
-                true
-            );
-            JToolBarHelper::divider();*/
-
-
-        }
         if (($user->authorise('core.edit', 'com_users') || $user->authorise('core.edit.own', 'com_users')) && $user->authorise('core.manage', 'com_users'))
         {
             JToolBarHelper::editList('user.edit', 'COM_THM_GROUPS_USER_MANAGER_EDIT');
@@ -101,6 +96,20 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
             $onClose = 'window.location.reload();';
             $bar = JToolBar::getInstance('toolbar');
             $bar->appendButton('Popup', $image, $title, $link, $width, $height, $top, $left, $onClose);
+        }
+
+        // Add a batch button
+        if ($user->authorise('core.create', 'com_users') && $user->authorise('core.edit', 'com_users') && $user->authorise('core.edit.state', 'com_users'))
+        {
+            JHtml::_('bootstrap.modal', 'myModal');
+            $title = JText::_('COM_THM_GROUPS_GROUP_MANAGER_BATCH');
+
+            // Instantiate a new JLayoutFile instance and render the batch button
+
+
+            $dhtml = "<button data-toggle='modal' data-target='#collapseModal' class='btn btn-small'><i class='icon-edit' title='$title'></i> $title</button>";
+
+            $bar->appendButton('Custom', $dhtml, 'batch');
         }
 
         if ($user->authorise('core.admin', 'com_users'))
