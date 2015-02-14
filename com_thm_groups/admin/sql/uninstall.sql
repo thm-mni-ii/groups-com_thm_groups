@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS
             `#__thm_groups_usergroups_roles`,
             `#__thm_groups_users_usergroups_roles`,
             `#__thm_groups_users`,
+            `#__thm_groups_users_usergroups_moderator`,
             `#__thm_groups_static_type`,
             `#__thm_groups_dynamic_type`,
             `#__thm_groups_attriubte`,

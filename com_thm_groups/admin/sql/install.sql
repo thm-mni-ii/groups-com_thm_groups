@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS
 `#__thm_groups_usergroups_roles`,
 `#__thm_groups_users_usergroups_roles`,
 `#__thm_groups_users`,
+`#__thm_groups_users_usergroups_moderator`,
 `#__thm_groups_static_type`,
 `#__thm_groups_dynamic_type`,
 `#__thm_groups_attriubte`,
@@ -24,18 +25,40 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_users` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `published` TINYINT(1) NULL,
   `injoomla` TINYINT(1) NULL,
+  `canEdit` TINYINT(1) NULL,
+  `qpPublished` TINYINT(1) NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`id`) REFERENCES `#__users` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE)
 ENGINE = InnoDB;
 
-INSERT INTO `#__thm_groups_users` (`id`, `published`, `injoomla`) VALUES
-  (1, 1, 0),
-  (2, 1, 0),
-  (3, 0, 0),
-  (4, 0, 0),
-  (5, 1, 0);
+INSERT INTO `#__thm_groups_users` (`id`, `published`, `injoomla`, `canEdit`, `qpPublished`) VALUES
+  (1, 1, 0, 1, 1),
+  (2, 1, 0, 1, 0),
+  (3, 0, 0, 1, 1),
+  (4, 0, 0, 0, 0),
+  (5, 1, 0, 0, 1);
+
+CREATE TABLE IF NOT EXISTS `#__thm_groups_users_usergroups_moderator` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `usersID` INT(11) NULL,
+  `usergroupsID` INT(11) UNSIGNED NULL,
+  PRIMARY KEY (`id`, `usersID`, `usergroupsID`),
+  FOREIGN KEY (`usersID`) REFERENCES `#__thm_groups_users` (`id`)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  FOREIGN KEY (`usergroupsID`) REFERENCES `#__usergroups` (`id`)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE)
+ENGINE = InnoDB;
+
+INSERT INTO `#__thm_groups_users_usergroups_moderator` (`id`, `usersID`, `usergroupsID`) VALUES
+  (1, 1, 1),
+  (2, 2, 2),
+  (3, 3, 3),
+  (4, 4, 4),
+  (5, 5, 5);
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_users_categories` (
   `ID` INT(11) NOT NULL AUTO_INCREMENT,
@@ -230,7 +253,9 @@ INSERT INTO `#__thm_groups_usergroups_roles` (`ID`, `usergroupsID`, `rolesID`) V
   (4, 5, 2),
   (5, 4, 1),
   (6, 4, 2),
-  (7, 3, 2);
+  (7, 3, 2),
+  (8, 10, 10),
+  (9, 10, 9);
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_users_usergroups_roles` (
   `ID` INT(11) NOT NULL AUTO_INCREMENT,
@@ -255,7 +280,9 @@ INSERT INTO `#__thm_groups_users_usergroups_roles` (`ID`, `usersID`, `usergroups
   (4, 2, 4),
   (5, 3, 5),
   (6, 3, 6),
-  (7, 1, 7);
+  (7, 1, 7),
+  (8, 1, 8),
+  (9, 4, 9);
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
