@@ -230,14 +230,14 @@ THM_CoreTemplateAdvanced::render($this);
      **/
     function reloadContent(option)
     {
-        jQuery.ajax({
+        jQf.ajax({
             type: "POST",
             url: "index.php?option=com_thm_groups&controller=user_edit&task=user_edit.getUserContent&cid="
-            + <?php echo $this->item ?> + "&tab=" + option +"",
+            + <?php echo $this->item->id ?> + "&tab=" + option +"",
             datatype: "HTML"
 
         }).success(function (response){
-            jQuery("#" + option).append(response);
+            jQf("#" + option).append(response);
         });
     }
 

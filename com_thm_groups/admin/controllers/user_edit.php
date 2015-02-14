@@ -334,9 +334,11 @@ class THM_GroupsControllerUser_Edit extends JControllerLegacy
                         }
                         else
                         {
+                            $options = json_decode($item->options);
+                            $required = empty($options->required) ? "" : $options->required;
                             $output .= "<input id='jform_" . $name . "' style='float:left !important;' type='text'"
                                 . "onchange='validateInput(\"" . $item->regex . "\", \"jform_" . $name . "\""
-                                . ", \"" . json_decode($item->options)->required . "\")'"
+                                . ", \"" . $required . "\")'"
                                 . "value='" . $item->value . "' name='jform[" . $name . "]'"
                                 . "/>";
                         }

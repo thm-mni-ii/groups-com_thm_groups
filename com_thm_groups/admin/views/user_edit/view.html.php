@@ -50,7 +50,7 @@ class THM_GroupsViewUser_Edit extends THM_CoreViewEdit
      */
     protected function addToolBar()
     {
-        $isNew = ($this->item == 0);
+        $isNew = ($this->item->id == 0);
         $title = $isNew ? JText::_('x') : JText::_('User');
         JToolbarHelper::title($title, 'title');
         JToolbarHelper::apply('user.apply', $isNew ? 'x' : 'Save');
