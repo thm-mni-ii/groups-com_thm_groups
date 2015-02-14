@@ -7,7 +7,7 @@
  * @name        THMGroupsViewRole_Manager
  * @description THMGroupsViewRole_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2015 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
@@ -45,6 +45,10 @@ class THM_GroupsViewRole_Manager extends THM_CoreViewList
     public function display($tpl = null)
     {
         $this->batch = JPATH_COMPONENT_ADMINISTRATOR . '/views/role_manager/tmpl/default_batch.php';
+
+        $document = JFactory::getDocument();
+        $document->addScript(JURI::root(true) . '/administrator/components/com_thm_groups/assets/js/role_manager.js');
+
         parent::display($tpl);
     }
 
@@ -66,7 +70,7 @@ class THM_GroupsViewRole_Manager extends THM_CoreViewList
             'COM_THM_GROUPS_ROLE_MANAGER_ADD',
             false
         );
-        JToolBarHelper::editList('role.edit', 'COM_THM_GROUPS_ROLE_MANAGER_EDIT');
+        JToolBarHelper::editList('role.editRole', 'COM_THM_GROUPS_ROLE_MANAGER_EDIT');
         JToolBarHelper::deleteList('COM_THM_GROUPS_REALLY_DELETE', 'role.delete', 'JTOOLBAR_DELETE');
 
         // Add a batch button

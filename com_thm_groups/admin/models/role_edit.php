@@ -32,4 +32,19 @@ class THM_GroupsModelRole_Edit extends THM_CoreModelEdit
     {
         parent::__construct($config);
     }
+
+    /**
+     * Method to load the form data
+     *
+     * @return  Object
+     */
+    protected function loadFormData()
+    {
+        $app = JFactory::getApplication();
+        $ids = $app->input->get('cid', array(), 'array');
+
+        // Input->get because id is in url
+        $id = (empty($ids)) ? $app->input->get->get('id') : $ids[0];
+        return $this->getItem($id);
+    }
 }

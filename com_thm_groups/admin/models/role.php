@@ -62,6 +62,39 @@ class THM_GroupsModelRole extends JModelLegacy
     }
 
     /**
+     * Deletes a group from a role
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function deleteGroup()
+    {
+        $input = JFactory::getApplication()->input;
+
+        $roleID = $input->getInt('r_id');
+        $groupID = $input->getInt('g_id');
+
+        $query = $this->_db->getQuery(true);
+        $query
+            ->delete('#__thm_groups_usergroups_roles')
+            ->where("rolesID = '$roleID'")
+            ->where("usergroupsID = '$groupID'");
+        $this->_db->setQuery((string)$query);
+
+        try
+        {
+            $this->_db->execute();
+        }
+        catch (Exception $exc)
+        {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Method to perform batch operations on an item or a set of items.
      *
      * @return  boolean  Returns true on success, false on failure.
@@ -100,10 +133,6 @@ class THM_GroupsModelRole extends JModelLegacy
 
         $done = false;
 
-//        var_dump($action);
-//        var_dump($gid);
-//        var_dump($pks);
-
         if (!empty($gid))
         {
             $cmd = $action[0];
@@ -132,9 +161,9 @@ class THM_GroupsModelRole extends JModelLegacy
     /**
      * Perform batch operations
      *
-     * @param   array    $group_ids  The group ID which assignments are being edited
-     * @param   array    $role_ids  An array of user IDs on which to operate
-     * @param   string   $action    The action to perform
+     * @param   array    $group_ids  The group IDs which assignments are being edited
+     * @param   array    $role_ids   An array of role IDs on which to operate
+     * @param   string   $action     The action to perform
      *
      * @return  boolean  True on success, false on failure
      *
@@ -254,7 +283,6 @@ class THM_GroupsModelRole extends JModelLegacy
                     }
                 }
 
-
                 // If we have no roles to process, throw an error to notify the user
                 if (!$groups) {
                     $this->setError(JText::_('COM_THM_GROUPS_ERROR_NO_ADDITIONS'));
@@ -269,7 +297,6 @@ class THM_GroupsModelRole extends JModelLegacy
                 try {
                     $db->execute();
                 } catch (RuntimeException $e) {
-                    var_dump("HERE");
                     $this->setError($e->getMessage());
 
                     return false;

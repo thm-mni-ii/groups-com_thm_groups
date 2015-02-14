@@ -1,10 +1,15 @@
 <?php
 /**
- * @package     Joomla.Administrator
- * @subpackage  com_users
- *
- * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @version     v3.5.0
+ * @category    Joomla component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.admin
+ * @name        THM_GroupsViewRole_Manager
+ * @description THM_GroupsViewRole_Manager file from com_thm_groups
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @copyright   2015 TH Mittelhessen
+ * @license     GNU GPL v.2
+ * @link        www.mni.thm.de
  */
 
 defined('_JEXEC') or die;
@@ -33,7 +38,7 @@ JHtml::_('formbehavior.chosen', 'select');
 			<div id="batch-choose-action" class="combo controls">
 				<div class="control-group">
 					<select name="batch_id[]" id="batch-group-id" multiple>
-						<option value=""><?php echo JText::_('JSELECT') ?></option>
+						<option value="" disabled><?php echo JText::_('JSELECT') ?></option>
 						<?php echo JHtml::_('select.options', JHtml::_('user.groups')); ?>
 					</select>
 				</div>

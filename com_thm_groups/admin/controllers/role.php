@@ -7,7 +7,7 @@
  * @name        THM_GroupsControllerRole
  * @description THM_GroupsControllerRole class from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @copyright   2015 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
@@ -75,6 +75,27 @@ class THM_GroupsControllerRole extends JControllerForm
             $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
             $this->setRedirect('index.php?option=com_thm_groups&view=role_edit&id=0', $msg);
         }
+    }
+
+    /**
+     * Trash icon for group
+     *
+     * @return void
+     */
+    public function deleteGroup()
+    {
+        $model = $this->getModel('role');
+        $success = $model->deleteGroup();
+        if ($success)
+        {
+            $msg = JText::_('COM_THM_GROUPS_ROLE_MANAGER_GROUP_DELETED');
+            $type = 'message';
+        }
+        else
+        {
+            $this->setMessage(JText::sprintf('COM_THM_GROUPS_SAVE_ERROR', $model->getError()), 'warning');
+        }
+        $this->setRedirect("index.php?option=com_thm_groups&view=role_manager", $msg, $type);
     }
 
     /**

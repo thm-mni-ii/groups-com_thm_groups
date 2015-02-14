@@ -23,7 +23,7 @@ jimport('thm_core.list.model');
  */
 class THM_GroupsModelRole_Manager extends THM_CoreModelList
 {
-    protected $defaultOrdering = 'r.id';
+    protected $defaultOrdering = 'a.id';
 
     protected $defaultDirection = 'ASC';
 
@@ -38,17 +38,13 @@ class THM_GroupsModelRole_Manager extends THM_CoreModelList
         $query = $db->getQuery(true);
 
         $query
-            ->select('r.id')
-            ->select('r.name')
-            ->from('#__thm_groups_roles AS r');
+            ->select('a.id, a.name')
+            ->from('#__thm_groups_roles AS a')
+            ->leftJoin('#__thm_groups_usergroups_roles AS b ON a.id = b.rolesID')
+            ->group('a.id');
 
-
-        $search = $this->getState('filter.search');
-        if (!empty($search))
-        {
-            $query->where("(r.name LIKE '%" . implode("%' OR r.name LIKE '%", explode(' ', $search)) . "%')");
-        }
-
+        $this->setSearchFilter($query, array('a.name'));
+        $this->setIDFilter($query, 'b.usergroupsID', array('groups'));
         $this->setOrdering($query);
 
         return $query;
@@ -123,24 +119,26 @@ class THM_GroupsModelRole_Manager extends THM_CoreModelList
         $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
-        parent::populateState("r.id", "ASC");
+        parent::populateState("a.id", "ASC");
     }
 
-    public function getHiddenFields()
-    {
-
-    }
-
-    public function getGroups($gid)
+    /**
+     * Returns all group of a role
+     *
+     * @param   Int  $rid  An id of the role
+     *
+     * @return  string     A string with all group comma separated
+     */
+    public function getGroups($rid)
     {
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
         $query
-            ->select('ug.title')
+            ->select('ug.id, ug.title')
             ->from('#__usergroups AS ug')
             ->innerJoin('#__thm_groups_usergroups_roles AS ugr ON ug.id = ugr.usergroupsID')
-            ->where("ugr.rolesID = $gid")
+            ->where("ugr.rolesID = $rid")
             ->order('ug.title ASC');
 
         $db->setQuery($query);
@@ -151,10 +149,28 @@ class THM_GroupsModelRole_Manager extends THM_CoreModelList
         {
             foreach($groups as $group)
             {
-                $return[] = $group->title;
+                // delete button
+                $deleteIcon = '<span class="icon-trash"></span>';
+                $deleteBtn = "<a href='javascript:deleteGroup(" . $rid . "," . $group->id . ")'>" . $deleteIcon . "</a>";
+
+                // link to edit view of a group
+                $url = JRoute::_('index.php?option=com_users&task=group.edit&id=' . $group->id);
+
+                $return[] = "<a href=$url>" . $group->title . "</a> " . $deleteBtn;
             }
         }
 
-        return implode(', ', $return);
+        return implode(',<br /> ', $return);
+    }
+
+    public function getHiddenFields()
+    {
+        $fields = array();
+
+        // hidden fields for deletion of one group at once
+        $fields[] = '<input type="hidden" name="g_id" value="">';
+        $fields[] = '<input type="hidden" name="r_id" value="">';
+
+        return $fields;
     }
 }
