@@ -306,6 +306,7 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
         $dynTypeId = $mainframe->input->get('dynTypeId');
         $model = $this->getModel('attribute_edit');
         $dynType = $model->getDynamicType($dynTypeId);
+
         $attrID = $mainframe->input->get('cid');
 
         // Get options from dynamicType

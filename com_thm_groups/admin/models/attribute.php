@@ -39,6 +39,8 @@ class THM_GroupsModelAttribute extends JModelLegacy
         $app = JFactory::getApplication();
         $data = $app->input->post->get('jform', array(), 'array');
 
+        $required = (isset($data['required']) ? 'true' : 'false');
+
         // DynamicType usw. is a name of select field
         $data['dynamic_typeID'] = (int) $app->input->post->get('dynamicType');
         $data['static_typeID'] = (int) $app->input->post->get('sType');
@@ -48,10 +50,10 @@ class THM_GroupsModelAttribute extends JModelLegacy
         switch ($data['static_typeID'])
         {
             case "1":
-                $options['1'] = '{ "length" : "' . $app->input->getHtml('TEXT_length') . '" }';
+                $options['1'] = '{ "length" : "' . $app->input->getHtml('TEXT_length') . '", "required" : "' . $required . '" }';
                 break;
             case "2":
-                $options['2'] = '{ "length" : "' . $app->input->getHtml('TEXTFIELD_length') . '" }';
+                $options['2'] = '{ "length" : "' . $app->input->getHtml('TEXTFIELD_length') . '", "required" : "' . $required . '" }';
                 break;
             case "4":
                 $attrID = $app->input->get('attrID');
@@ -71,13 +73,13 @@ class THM_GroupsModelAttribute extends JModelLegacy
                         $this->movePictures($inputPath, $path, $attrID, $data['dynamic_typeID']);
                     }
                 }
-                $options['4'] = '{ "filename" : "' . $inputName . '", "path" : "' . $inputPath . '" }';
+                $options['4'] = '{ "filename" : "' . $inputName . '", "path" : "' . $inputPath . '", "required" : "' . $required . '" }';
                 break;
             case "5":
-                $options['5'] = '{ "options" : "' . $app->input->getHtml('MULTISELECT_options') . '" }';
+                $options['5'] = '{ "options" : "' . $app->input->getHtml('MULTISELECT_options') . '", "required" : "' . $required . '" }';
                 break;
             case "6":
-                $options['6'] = '{ "columns" : "' . $app->input->getHtml('TABLE_columns') . '" }';
+                $options['6'] = '{ "columns" : "' . $app->input->getHtml('TABLE_columns') . '", "required" : "' . $required . '" }';
                 break;
         }
         $data['options'] = $options[$data['static_typeID']];

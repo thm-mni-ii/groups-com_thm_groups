@@ -45,8 +45,10 @@ class THM_GroupsViewDynamic_Type_Edit extends JViewLegacy
 
         $this->form = $form;
         $this->item = $item;
+        //$this->sType = $model->getStaticType($this->item->static_typeID);
         $this->selectFieldStaticTypes = $model->getStaticTypesSelectField($this->item->static_typeID);
         $this->regexOptions = $model->getRegexOptions($this->item->static_typeID);
+
 
         if (count($errors = $this->get('Errors')))
         {

@@ -141,6 +141,15 @@ $doc->addStyleSheet(JURI::root(true) . $componentDir . "/assets/css/jqueryFileTr
                 <div class="controls">
                     <?php echo $this->selectFieldDynamicTypes ?>
                 </div>
+                <div class="controls">
+                    <br/>
+                    <div class="checkbox">
+                        <label>
+                            <input name="jform[required]" id="required" default="0" type="checkbox"/>required
+                        </label>
+                    </div>
+                    <br/>
+                </div>
                 <div class="control-label">
                     <?php echo $this->form->getLabel('description'); ?>
                 </div>

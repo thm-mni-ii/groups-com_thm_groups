@@ -18,7 +18,11 @@
 
 $_POST['dir'] = urldecode($_POST['dir']);
 
+//var_dump($_POST['dir']);
+
+
 if( file_exists( $_POST['dir']) ) {
+
 	$files = scandir( $_POST['dir']);
 	natcasesort($files);
 	if( count($files) > 2 ) { /* The 2 accounts for . and .. */
