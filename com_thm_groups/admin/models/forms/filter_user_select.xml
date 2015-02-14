@@ -4,16 +4,9 @@
         <field
                 name="search"
                 type="text"
-                label="COM_THM_GROUPS_FILTER_SEARCH_DESC"
+                label="COM_THM_ORGANIZER_FILTER_SEARCH_DESC"
                 hint="JSEARCH_FILTER"
-        />
-        <field addfieldpath="/administrator/com_thm_groups/models/fields"
-                name="groups"
-                type="group"
-                label="COM_THM_GROUPS_GROUPS_FILTER"
-                onchange="this.form.submit();"
-                >
-        </field>
+                />
     </fields>
     <fields name="list">
         <field
@@ -24,6 +17,14 @@
                 label="COM_CONTENT_LIST_LIMIT"
                 description="COM_CONTENT_LIST_LIMIT_DESC"
                 onchange="this.form.submit();"
+                />
+        <field
+                type="hidden"
+                name="group_ids"
+                />
+        <field
+                type="hidden"
+                name="action"
                 />
     </fields>
 </form>

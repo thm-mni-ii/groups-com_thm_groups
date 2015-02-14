@@ -20,28 +20,43 @@
             <option value="1">COM_THM_GROUPS_PUBLISHED</option>
             <option value="0">COM_THM_GROUPS_UNPUBLISHED</option>
         </field>
+        <field
+                name="canEdit"
+                type="list"
+                label="COM_THM_GROUPS_PUBLISHED"
+                onchange="this.form.submit();"
+                >
+            <option value="">JALL</option>
+            <option value="1">COM_THM_GROUPS_CAN_EDIT</option>
+            <option value="0">COM_THM_GROUPS_CANT_EDIT</option>
+        </field>
+        <field
+                name="qpPublished"
+                type="list"
+                label="COM_THM_GROUPS_PUBLISHED"
+                onchange="this.form.submit();"
+                >
+            <option value="">JALL</option>
+            <option value="1">COM_THM_GROUPS_QP_PUBLISHED</option>
+            <option value="0">COM_THM_GROUPS_QP_UNPUBLISHED</option>
+        </field>
 
     </fields>
 
     <fields name="list">
-        <field
+        <field addfieldpath="/administrator/com_thm_groups/models/fields"
                 name="groupID"
-                type="usergroup"
+                type="UserManagerGroup"
                 label="COM_THM_GROUPS_GROUPS_FILTER"
                 onchange="this.form.submit();"
                 >
-            <option value="">JGLOBAL_SORT_BY</option>
         </field>
-        <field
+        <field addfieldpath="/administrator/com_thm_groups/models/fields"
                 name="roleID"
-                type="genericlist"
-                valueColumn="id"
-                textColumn="name"
-                table="thm_groups_roles"
+                type="UserManagerRole"
                 label="COM_THM_GROUPS_ROLES_FILTER"
                 onchange="this.form.submit();"
                 >
-            <option value="">SHOW ALL ROLES</option>
         </field>
 
         <field
@@ -55,8 +70,5 @@
                 />
 
         <field name="u_id" type="hidden" default="" />
-    </fields>
-    <fields name="test">
-
     </fields>
 </form>
