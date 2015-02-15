@@ -69,7 +69,8 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
             ->innerJoin('#__thm_groups_users_attribute AS a2 ON a1.usersID = a2.usersID')
             ->innerJoin('#__thm_groups_users_attribute AS a4 ON a1.usersID = a4.usersID')
             ->innerJoin('#__thm_groups_users AS a5 ON a1.usersID = a5.id')
-            ->leftJoin('#__thm_groups_users_usergroups_roles AS a6 ON a6.usersID = a1.usersID')
+            ->innerJoin('#__thm_groups_users_usergroups_roles AS a7 ON a7.usersID = a1.usersID')
+            ->leftJoin('#__thm_groups_usergroups_roles AS a6 ON a6.ID = a7.usergroups_rolesID')
             ->where('a1.attributeID = 1')  // first name
             ->where('a2.attributeID = 2')  // surname
             ->where('a4.attributeID = 4');  // email
@@ -79,14 +80,31 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
         $this->setIDFilter($query, 'a5.published', array('published'));
         $this->setIDFilter($query, 'a5.canEdit', array('canEdit'));
         $this->setIDFilter($query, 'a5.qpPublished', array('qpPublished'));
-        $this->setIDFilter($query, 'a6.usergroupsID', array('list.groupID'));
-        $this->setIDFilter($query, 'a6.rolesID', array('list.roleID'));
+
+        $app = JFactory::getApplication();
+        $list = $app->input->get('list', array(), 'array');
+        //var_dump($list);
+
+        if(isset($list['groupID']) && !empty($list['groupID']))
+        {
+            $groupID = (int) $list['groupID'];
+            $query->where("a6.usergroupsID = $groupID");
+        }
+
+        /*if(isset($list['roleID']) && !empty($list['roleID']))
+        {
+            $roleID = (int) $list['roleID'];
+            $query->where("a6.rolesID = $roleID");
+        }*/
+
+        //$this->setIDFilter($query, 'a6.usergroupsID', array('list.groupID'));
+        //$this->setIDFilter($query, 'a6.rolesID', array('list.roleID'));
 
         $this->setOrdering($query);
 
-        echo "<pre>";
+/*        echo "<pre>";
         echo $query;
-        echo "</pre>";
+        echo "</pre>";*/
 
         return $query;
     }

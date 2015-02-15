@@ -59,9 +59,9 @@ class THM_GroupsModelProfile_Manager extends THM_CoreModelList
         $this->setSearchFilter($query, array('name'));
         $this->setOrdering($query);
 
-        echo "<pre>";
+/*        echo "<pre>";
         echo $query;
-        echo "</pre>";
+        echo "</pre>";*/
 
         return $query;
 

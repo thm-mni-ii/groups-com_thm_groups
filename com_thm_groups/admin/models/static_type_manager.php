@@ -68,9 +68,9 @@ class THM_GroupsModelStatic_Type_Manager extends THM_CoreModelList
 
         $this->setOrdering($query);
 
-        echo "<pre>";
+        /*echo "<pre>";
         echo $query;
-        echo "</pre>";
+        echo "</pre>";*/
 
         return $query;
     }

@@ -108,8 +108,7 @@ class THM_GroupsModelAttribute_Manager extends THM_CoreModelList
             $return[$index][1] = $item->id;
             $return[$index][2] = JHtml::_('link', $url, $item->name);
             $return[$index][3] = $item->dynamic_type_name;
-            $return[$index][4] = $item->options;
-            $return[$index][5] = $item->description;
+            $return[$index][4] = $item->description;
             $index++;
         }
         return $return;
@@ -130,7 +129,6 @@ class THM_GroupsModelAttribute_Manager extends THM_CoreModelList
         $headers['id'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'attribute.id', $direction, $ordering);
         $headers['attribute'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ATTRIBUTE_NAME', 'attribute.name', $direction, $ordering);
         $headers['dynamic'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_DYNAMIC_TYPE_NAME', 'dynamic.name', $direction, $ordering);
-        $headers['regularExpression'] = JText::_('COM_THM_GROUPS_ATTRIBUTE_OPTIONS');
         $headers['description'] = JText::_('COM_THM_GROUPS_DESCRIPTION');
 
         return $headers;

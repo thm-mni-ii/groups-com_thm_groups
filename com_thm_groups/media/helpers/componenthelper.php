@@ -80,4 +80,16 @@ class THM_GroupsHelperComponent
 
         $view->sidebar = JHtmlSidebar::render();
     }
+
+    /**
+     * Set variables for user actions.
+     *
+     * @param   object  &$view  the view context calling the function
+     *
+     * @return void
+     */
+    public static function addActions(&$view)
+    {
+        return;
+    }
 }

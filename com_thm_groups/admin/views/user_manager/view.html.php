@@ -83,7 +83,7 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
             JToolBarHelper::unpublishList('user.unpublish', 'COM_THM_GROUPS_USER_MANAGER_DISABLE');
             JToolBarHelper::divider();
         }
-        if ($user->authorise('core.delete', 'com_users') && $user->authorise('core.manage', 'com_users'))
+        /*if ($user->authorise('core.delete', 'com_users') && $user->authorise('core.manage', 'com_users'))
         {
             // TODO change
             $image = 'new';
@@ -96,11 +96,12 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
             $onClose = 'window.location.reload();';
             $bar = JToolBar::getInstance('toolbar');
             $bar->appendButton('Popup', $image, $title, $link, $width, $height, $top, $left, $onClose);
-        }
+        }*/
 
         // Add a batch button
         if ($user->authorise('core.create', 'com_users') && $user->authorise('core.edit', 'com_users') && $user->authorise('core.edit.state', 'com_users'))
         {
+            $bar = JToolBar::getInstance('toolbar');
             JHtml::_('bootstrap.modal', 'myModal');
             $title = JText::_('COM_THM_GROUPS_GROUP_MANAGER_BATCH');
 

@@ -25,7 +25,6 @@ class JFormFieldUserManagerRole extends JFormFieldList
     {
         $jinput = JFactory::getApplication()->input;
 
-        // array with action command
         $list = $jinput->post->get('list', array(), 'array');
         if(!empty($list['groupID']))
         {
@@ -39,7 +38,6 @@ class JFormFieldUserManagerRole extends JFormFieldList
         $nestedQuery
             ->select('id')
             ->from('#__thm_groups_users');
-
 
         $query
             ->select('r.id, r.name')
