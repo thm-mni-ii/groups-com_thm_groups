@@ -12,6 +12,8 @@
 
 defined('_JEXEC') or die;
 jimport('joomla.application.component.modeladmin');
+require_once JPATH_COMPONENT . '/assets/helpers/database_compare_helper.php';
+require_once JPATH_BASE . '/components/com_users/models/group.php';
 
 /**
  * Class loads form data to edit an entry.
@@ -167,7 +169,8 @@ class THM_GroupsModelGroup extends JModelLegacy
                 }
             }
 
-            $this->filterInsertValues($insertValues, $dataFromDB);
+            // filter values before insert
+            THM_GroupsHelperDatabase_Compare::filterInsertValues($insertValues, $dataFromDB);
 
             // Build the values clause for the assignment query.
             $query->clear();
@@ -201,35 +204,6 @@ class THM_GroupsModelGroup extends JModelLegacy
             }
         }
         return true;
-    }
-
-    /**
-     *
-     * Filters insert values before save
-     * Compare two arrays and delete repeating elements
-     * This algorithm sucks, i don't like it, but it's because of php -> comment form Ilja
-     *
-     * @param   Array  $insertValues  An array with values to save
-     * @param   Array  $valuesFromDB  An array with values from DB
-     *
-     * @return  void
-     */
-    public function filterInsertValues(&$insertValues, $valuesFromDB)
-    {
-        foreach($valuesFromDB as $key => $value)
-        {
-            if(array_key_exists($key, $insertValues))
-            {
-                foreach($value as $data)
-                {
-                    $idx = array_search($data, $insertValues[$key]);
-                    if(!is_bool($idx))
-                    {
-                        unset($insertValues[$key][$idx]);
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -298,20 +272,6 @@ class THM_GroupsModelGroup extends JModelLegacy
         return true;
     }
 
-    /**
-     * saves the group
-     *
-     * @return bool true on success, otherwise false
-     */
-    public function save()
-    {
-        $data = JFactory::getApplication()->input->get('jform', array(), 'array');
-
-        $table = JTable::getInstance('roles', 'thm_groupsTable');
-        // TODO return new id, because of bug by apply, it shows the first element from table
-        return $table->save($data);
-    }
-
     // TODO delete group from joomla table
     /**
      * Delete item
@@ -322,20 +282,9 @@ class THM_GroupsModelGroup extends JModelLegacy
     {
         $ids = JFactory::getApplication()->input->get('cid', array(), 'array');
 
-        $db = JFactory::getDbo();
+        $model = new UsersModelGroup;
 
-        $query = $db->getQuery(true);
-
-        $conditions = array(
-            $db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')',
-        );
-
-        $query->delete($db->quoteName('#__thm_groups_roles'));
-        $query->where($conditions);
-
-        $db->setQuery($query);
-
-        return $result = $db->execute();
+        return $model->delete($ids);
     }
 
     /**
@@ -501,7 +450,8 @@ class THM_GroupsModelGroup extends JModelLegacy
                 }
             }
 
-            $this->filterInsertValues($insertValues, $dataFromDB);
+            // filter values before insert
+            THM_GroupsHelperDatabase_Compare::filterInsertValues($insertValues, $dataFromDB);
 
             // prepare insert values
             if(!empty($insertValues)) {

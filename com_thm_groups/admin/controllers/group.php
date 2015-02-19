@@ -205,6 +205,7 @@ class THM_GroupsControllerGroup extends JControllerForm
             $msg = JText::_('COM_THM_GROUPS_SAVE_DELETED');
         }
         $this->setRedirect("index.php?option=com_thm_groups&view=group_manager", $msg);
+
     }
 
     /**
