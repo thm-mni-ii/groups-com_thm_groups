@@ -34,7 +34,7 @@ class THM_GroupsModelProfile extends JModelLegacy
         $result = false;
         $data = JFactory::getApplication()->input->post->get('jform', array(), 'array');
 
-        $data['position'] = $this->getLastPosition() + 1;
+        $data['order'] = $this->getLastPosition() + 1;
         $attributeList = JFactory::getApplication()->input->post->get('attributeList', '', 'string');
         $profilID = intval($data['id']);
         $attributeJSON = json_decode($attributeList);
@@ -42,6 +42,7 @@ class THM_GroupsModelProfile extends JModelLegacy
         $profile = JTable::getInstance('Profile', 'Table');
 
         $success = $profile->save($data);
+
 
         if (!$success)
         {
@@ -118,12 +119,12 @@ class THM_GroupsModelProfile extends JModelLegacy
         $query = $db->getQuery(true);
 
         $query
-            ->select('MAX(position) as position')
+            ->select(" MAX(`order`)  as 'order'")
             ->from('#__thm_groups_profile');
 
         $db->setQuery($query);
         $lastPosition = $db->loadObject();
 
-        return $lastPosition->position;
+        return $lastPosition->order;
     }
 }
