@@ -60,6 +60,27 @@ class THM_GroupsModelDynamic_Type_Edit extends JModelAdmin
     }
 
     /**
+     * @param $selected
+     * @param $isActType
+     * @return mixed
+     */
+    public function getFieldOptions($selected, $isActType)
+    {
+        $dynAttribute = $this->getDynamicTypeItem();
+
+        JFormHelper::addFieldPath(JPATH_COMPONENT . '/models/fields');
+
+        $dynFields = JFormHelper::loadFieldType('DynField', false);
+        $options = array(
+            "selected"  => $selected,
+            "isActType" => $isActType,
+            "dynAttribute" => $dynAttribute
+        );
+        $dynFields->__set('options', $options );
+        return $dynFields->getInput();
+    }
+
+    /**
      * Method to get the form
      *
      * @param   Array    $data      Data         (default: Array)
@@ -295,6 +316,7 @@ class THM_GroupsModelDynamic_Type_Edit extends JModelAdmin
 
         // Input->get because id is in url
         $id = (empty($ids)) ? $app->input->get->get('id') : $ids[0];
+
         return $this->getItem($id);
     }
 

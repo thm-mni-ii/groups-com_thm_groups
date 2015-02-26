@@ -63,173 +63,29 @@ class THM_GroupsControllerDynamic_Type_Edit extends JControllerLegacy
 
     /**
      * Generates output for inputfields of additonal values for
-     * the dynamic type, based on its static type
+     * the dynamic type, based on its static type accessed via ajax request.
      *
      * @throws Exception
      * @return void
      */
     public function getTypeOptions()
     {
-        $mainframe = Jfactory::getApplication();
-
-        $model = $this->getModel('dynamic_type_edit');
-        $dynAttribute = $model->getDynamicTypeItem();
-
-        // Gets all static types:
-        // $types = $model->getStaticTypes();
-
-        // Actual selected static type from form:
-        $selected = $mainframe->input->get('selected');
-        $isActType = $mainframe->input->get('isActType');
-
-        echo '--- ' . JText::_('COM_THM_GROUPS_STRUCTURE_EXTRA_PARAMS') . ' ---',"<br/><br/>";
-
-        // Generate inputfields for aditional values based on selected static type
-        $output = "";
-        switch (strtoupper($selected))
+        try
         {
-            case "TEXT":
-                $output .= "<label for='" . $selected . "_length'>Length</label>";
-                $output .= "<input "
-                    . "class='inputbox' "
-                    . "type='text' name='" . $selected . "_length' "
-                    . "id='" . $selected . "_extra' "
-                    . "size='40'";
-                    if ((($dynAttribute->id != 0)&&($isActType == "true"))&&($dynAttribute->options != null))
-                    {
-                        // Values of options are saved as json in database, get it like:
-                        $output .= "value='" . json_decode($dynAttribute->options)->length . "' ";
-                    }
-                    else
-                    {
-                        $output .= "value='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TEXT") . "' ";
-                    }
-                    $output .= "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT") . "' "
-                        . "/>";
-                break;
-            case "TEXTFIELD":
-                $output .= "<label for='" . $selected . "_length'>Length</label>";
-                $output .= "<input "
-                    . "class='inputbox' "
-                    . "type='text' name='" . $selected . "_length' "
-                    . "id='" . $selected . "_extra' "
-                    . "size='40'";
-                    if ((($dynAttribute->id != 0)&&($isActType == "true"))&&($dynAttribute->options != null))
-                    {
-                        $output .= "value='" . json_decode($dynAttribute->options)->length . "' ";
-                    }
-                    else
-                    {
+            $app = Jfactory::getApplication();
+            $selected = $app->input->get('selected');
+            $isActType = $app->input->get('isActType');
 
-                        $output .= "value='255' ";
-                    }
-                    $output .= "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TEXT") . "' "
-                    . "/>";
-                break;
-            case "TABLE":
-                $output .= "<label for='" . $selected . "_columns'>Columns</label>";
-                $output .= "<textarea "
-                    . "rows='5' "
-                    . "id='" . $selected . "_extra' "
-                    . "name='" . $selected . "_columns' "
-                    . "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_TABLE") . "' "
-                    . ">";
-                     if ((($dynAttribute->id != 0)&&($isActType == "true"))&&($dynAttribute->options != null))
-                     {
-                         $output .= "" . json_decode($dynAttribute->options)->columns . "";
-                     }
-                     else
-                     {
-                         $output .= "" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_TABLE") . "";
-                     }
+            $result = $this->getModel('dynamic_type_edit')->getFieldOptions($selected, $isActType);
 
-                    $output .= "</textarea>";
-                break;
-            case "MULTISELECT":
-                $output .= "<label for='" . $selected . "_options'>Options</label>";
-                $output .= "<textarea "
-                    . "rows='5' "
-                    . "id='" . $selected . "_extra' "
-                    . "name='" . $selected . "_options' "
-                    . "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_MULTISELECT") . "'>";
-                     if ((($dynAttribute->id != 0)&&($isActType == "true"))&&($dynAttribute->options != null))
-                     {
-                         // TODO find a way to avoid backspaces => causes error, only strings like 'field1;fieldn;" working
-                         $output .= "" . json_decode($dynAttribute->options)->options . "";
-                     }
-                     else
-                     {
-                         // TODO default string causes error
-                         $output .= "Field1;Field2;";
-                     }
-                    $output .= "</textarea>";
-
-                break;
-            case "PICTURE":
-                $output .= "<label for='" . $selected . "_name'>Imagename</label>";
-                $output .= "<input "
-                    . "class='inputbox' "
-                    . "type='text' name='" . $selected . "_name' "
-                    . "id='" . $selected . "_name' "
-                    . "size='40'";
-                    if ((($dynAttribute->id != 0)&&($isActType == "true"))&&($dynAttribute->options != null))
-                    {
-                        $output .= "value='" . json_decode($dynAttribute->options)->filename . "' ";
-                    }
-                    else
-                    {
-                        $output .= "value='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_PARAM_DEFAULT_PICTURE") . "' ";
-                    }
-                    $output .= "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE") . "' "
-                    . "/>";
-                $output .= "<br><br>";
-                $output .= "<label for='" . $selected . "_path'>Path</label>";
-                $output .= "<input "
-                    . "class='inputbox' "
-                    . "type='text' name='" . $selected . "_path' "
-                    . "id='" . $selected . "_path' "
-                    . "size='40'";
-                    if ((($dynAttribute->id != 0)&&($isActType == "true"))&&($dynAttribute->options != null))
-                    {
-                        $output .= "value='" . json_decode($dynAttribute->options)->path . "' ";
-                    }
-                    else
-                    {
-                        $output .= "value='nopath' ";
-                    }
-                    $output .= "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE_PATH") . "' "
-                    . "/>";
-                    $output .= "<input type='hidden' name='dynID' id='dynID' value='" . $dynAttribute->id . "'></input>";
-                $output .= "<br/><button type='button' class='btn btn-small' onclick='showFTree()'>Browse</button>";
-
-                // Draggable explorer for folder and file-selections:
-                $output .= "<div id='fileBrowser' class='ui-widget-content'>"
-                    . "<div id='fileBrowserInnerHeader' class='page-title'>Choose a Path"
-                    . "<button type='button' class='btn btn-small' style='float: right !important; margin-top: 5px !important;' "
-                    . "onclick='hideFTree()'>Close</button>"
-                    . "</div>"
-                    . "<div id='fileBrowserInner'>"
-                    . "<div id='fileBrowserInnerContent'></div></div></div>";
-                break;
+            //echo json_encode($result, JSON_UNESCAPED_UNICODE);
+            //echo new JResponseJson($result);
+            echo $result;
         }
-        echo $output;
-
-
-        $mainframe->close();
+        catch(Exception $e)
+        {
+            //echo new JResponseJson($e);
+            echo $e;
+        }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
