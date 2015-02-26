@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fieldset name="details">
+    <fieldset name="details"
+            addfieldpath="/administrator/components/com_thm_groups/models/fields">
         <field name="id"
                type="hidden"
                required="true" />
@@ -29,5 +30,8 @@
                rows="10"
                cols="5"
                required="false" />
+        <field name="additional"
+               type="DynField"
+               label="Additional fields"/>
     </fieldset>
 </form>

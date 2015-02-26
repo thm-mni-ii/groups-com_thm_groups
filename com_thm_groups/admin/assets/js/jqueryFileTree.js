@@ -30,6 +30,53 @@
 // This plugin is dual-licensed under the GNU General Public License and the MIT License and
 // is copyright 2008 A Beautiful Site, LLC. 
 //
+
+// Customized code starts here:
+function showFTree(){
+
+    var jRoot = document.getElementById('path').value;
+
+    document.getElementById('fileBrowser').style.visibility = 'visible';
+
+    jQuery(function(){
+        jQuery('#fileBrowser').draggable();
+    });
+
+    jQuery('#fileBrowserInnerContent').fileTree({root:jRoot, script:document.getElementById('fpath').value},
+        function(file){
+            getFile(file);
+        }, function(dire){
+            getDir(dire);
+        });
+}
+
+function hideFTree(){
+    document.getElementById('fileBrowser').style.visibility = 'hidden';
+}
+
+function getFile(file){
+    var fileName = /[^/]*$/.exec(file)[0];
+    //var fileNameSize = fileName.length;
+
+    //TODO optimize selection for allowed picture formats
+    if (((fileName.match('.jpg')||fileName.match('.png'))||fileName.match('gif'))||fileName.match('jpeg')){
+        document.getElementById('PICTURE_name').value = fileName;
+    }
+    else
+    {
+        document.getElementById('PICTURE_name').value = 'anonym.jpg';
+    }
+
+    //document.getElementById('PICTURE_path').value = file.substr(0,(file.length - fileNameSize));
+}
+
+function getDir(dire){
+    document.getElementById('PICTURE_path').value = dire;
+    document.getElementById('PICTURE_name').value = 'anonym.jpg';
+}
+
+// Customized code ends here.
+
 if(jQuery) (function($){
 	
 	$.extend($.fn, {

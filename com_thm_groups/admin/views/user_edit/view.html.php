@@ -15,7 +15,7 @@
 // No direct access to this file
 defined('_JEXEC') or die();
 
-// import Joomla view library
+// Import Joomla view library
 jimport('thm_core.edit.view');
 
 /**
@@ -29,17 +29,37 @@ jimport('thm_core.edit.view');
 class THM_GroupsViewUser_Edit extends THM_CoreViewEdit
 {
     public $item = null;
+    public $userContent = null;
 
     /**
      * Method to get display
      *
-     * @param   Object $tpl template  (default: null)
+     * @param   Object  $tpl  template (default: null)
      *
      * @return  void
      */
     public function display($tpl = null)
     {
         $this->item = JFactory::getApplication()->input->get('id');
+        $componentDir = "/administrator/components/com_thm_groups";
+
+        JHtml::_('jquery.framework');
+        JHtml::_('behavior.framework', true);
+        JHtml::_('behavior.formvalidation');
+        JHtml::_('formbehavior.chosen', 'select');
+        JHtml::_('script', JUri::root() . $componentDir . '/assets/js/tabReload.js');
+        JHtml::_('script', JUri::root() . $componentDir . '/assets/js/cropbox.js');
+        JHtml::_('script', JUri::root() . $componentDir . '/assets/js/inputValidation.js');
+
+        $doc = JFactory::getDocument();
+        $doc -> addStyleSheet(JURI::root(true) . $componentDir . '/assets/css/cropbox.css');
+        $doc -> addStyleSheet(JURI::root(true) . $componentDir . '/assets/css/edit.css');
+        $doc -> addStyleSheet(JUri::root() . "libraries/thm_core/fonts/iconfont.css");
+        $doc -> addScript(JUri::root() . "libraries/thm_core/js/formbehaviorChosenHelper.js");
+
+        $this->userContent = $this->get('Content');
+        //$this->addToolBar();
+
         parent::display($tpl);
     }
 
@@ -50,11 +70,14 @@ class THM_GroupsViewUser_Edit extends THM_CoreViewEdit
      */
     protected function addToolBar()
     {
-        $isNew = ($this->item == 0);
-        $title = $isNew ? JText::_('x') : JText::_('User');
-        JToolbarHelper::title($title, 'title');
-        JToolbarHelper::apply('user.apply', $isNew ? 'x' : 'Save');
-        JToolbarHelper::save('user.save');
-        JToolbarHelper::cancel('user.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
+        JFactory::getApplication()->input->set('hidemainmenu', true);
+
+        $title = $this->item == 0 ? 'New' : 'Edit';
+
+        JToolBarHelper::title($title, 'title');
+
+        JToolBarHelper::apply('user.apply', 'JTOOLBAR_APPLY');
+        JToolBarHelper::save('user.save', 'JTOOLBAR_SAVE');
+        JToolBarHelper::cancel('user.cancel', 'JTOOLBAR_CLOSE');
     }
 }

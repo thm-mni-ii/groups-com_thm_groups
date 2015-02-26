@@ -72,7 +72,7 @@ class THM_GroupsModelAttribute_Edit extends JModelAdmin
         }
         else
         {
-            // Bullshit part / used in controller /
+            // Bullshit part
             $temp = new stdClass;
             $temp->id = 0;
             $temp->dynamic_typeID = 0;
@@ -143,7 +143,7 @@ class THM_GroupsModelAttribute_Edit extends JModelAdmin
      *
      * @return  Object
      */
-    public function  getDynamicType($id)
+    public function getDynamicType($id)
     {
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
@@ -154,6 +154,32 @@ class THM_GroupsModelAttribute_Edit extends JModelAdmin
         $db->setQuery($query);
         $db->execute();
         return $db->loadObject();
+    }
+
+    /**
+     * @param $dynTypeID
+     * @param $attrID
+     * @param $attOpt
+     * @return mixed
+     */
+    public function getFieldExtras($dynTypeID, $attrID, $attOpt)
+    {
+        $dynType = $this->getDynamicType($dynTypeID);
+        $staticType = $this->getStaticType($dynType->static_typeID);
+        $dynOptions = json_decode($dynType->options);
+        $attOpt = json_decode($attOpt);
+
+        JFormHelper::addFieldPath(JPATH_COMPONENT . '/models/fields');
+
+        $attributeFields = JFormHelper::loadFieldType('AttributeField', false);
+        $options = array(
+            "staticType"  => $staticType,
+            "attOpt"      => $attOpt,
+            "dynOptions"  => $dynOptions,
+            "attrID"      => $attrID
+        );
+        $attributeFields->__set('options', $options );
+        return $attributeFields->getInput();
     }
 
     /**

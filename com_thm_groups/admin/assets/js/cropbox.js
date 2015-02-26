@@ -2,6 +2,119 @@
  * Created by ezgoing on 14/9/2014.
  */
 'use strict';
+
+/**
+ * Binds a imageCropper to the given elements of the bootstrap modal
+ * created in the user_edit controller function getUserContent.
+ *
+ * @return null
+ **/
+function bindImageCropper(element, attrID, uID)
+{
+    var options =
+        {
+            imageBox: '#' + element + '_imageBox',
+            thumbBox: '#' + element + '_thumbBox',
+            spinner:  '#' + element + '_spinner',
+            imgSrc: 'avatar.png'
+        }
+        ,cropper = new cropbox(options)
+        ,filename = null
+        ;
+
+    document.querySelector('#jform_' + element).addEventListener('change', function(){
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+            options.imgSrc = e.target.result;
+            cropper = new cropbox(options);
+        }
+
+        reader.readAsDataURL(this.files[0]);
+
+        var file = this.files[0];
+        filename = file.name;
+
+        this.files = [];
+    });
+
+    document.querySelector('#' + element + '_saveChanges').addEventListener('click', function(){
+        var blob = cropper.getBlob();
+
+        var fd = new FormData();
+        fd.append('fname', 'test.pic');
+        fd.append('data', blob);
+
+        jQf.ajax({
+            type: "POST",
+            url: "index.php?option=com_thm_groups&controller=user_edit&task=user_edit.saveCropped&tmpl=component&id="
+            + uID + "&element=" + element + "&attrID=" + attrID +"&filename="
+            + filename + "",
+            data: fd,
+            processData: false,
+            contentType: false
+            }).success(function(response) {
+                document.getElementById(element + "_IMG").innerHTML = response;
+
+                var buttons = document.getElementsByClassName('btn-small');
+                for (var i=0;i<buttons.length;i++) {
+                    if (buttons[i].innerHTML.indexOf('Close') == 37) {
+                        buttons[i].disabled = true;
+                    }
+                }
+                document.getElementById(element + "_del").disabled = true;
+                document.getElementById(element + "_del").style.backgroundImage = 'none';
+                document.getElementById(element + "_upload").disabled = true;
+                document.getElementById(element + "_upload").style.backgroundImage = 'none';
+
+                var result = document.getElementById(element + "_result");
+                result.innerHTML = 'Picture successfully uploaded!';
+                result.style.visibility = 'visible';
+
+                jQuery("#jform_" + element + "_message").append("</br><div class='text-error'>Please save picture to proceed!</div>");
+                });
+            });
+
+            document.querySelector('#'+ element + '_switch').addEventListener('click', function(){
+                var box = document.getElementById(element + '_thumbBox');
+
+                // Get old values:
+                var style = window.getComputedStyle(box);
+                var height = style.getPropertyValue('height');
+                var width = style.getPropertyValue('width');
+
+                // Set new values:
+                box.style.height = width;
+                box.style.width = height;
+                });
+
+            document.querySelector('#'+ element + '_btnCrop').addEventListener('click', function(){
+                var img = cropper.getDataURL();
+                document.querySelector('#' + element + '_cropped').innerHTML = '';
+                document.querySelector('#' + element + '_cropped').innerHTML = '<img src="'+img+'">';
+                });
+            document.querySelector('#'+ element + '_btnZoomIn').addEventListener('click', function(){
+                cropper.zoomIn();
+                });
+            document.querySelector('#'+ element + '_btnZoomOut').addEventListener('click', function(){
+                cropper.zoomOut();
+                });
+            }
+
+function deletePic(name, attributeID, userID) {
+    jQf.ajax({
+        type: "POST",
+        url: "index.php?option=com_thm_groups&controller=user_edit&task=user_edit.deletePicture&tmpl=component&id="
+        + userID + "&attrID=" + attributeID + "",
+        datatype: "HTML"
+    }).success(function (response) {
+        if (response == 'true')
+        {
+            document.getElementById(name + "_IMG").innerHTML = '';
+        }
+    });
+}
+
 var cropbox = function(options){
     var el = document.querySelector(options.imageBox),
     obj =
