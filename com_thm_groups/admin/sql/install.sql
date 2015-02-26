@@ -283,7 +283,7 @@ INSERT INTO `#__thm_groups_users_usergroups_roles` (`ID`, `usersID`, `usergroups
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NULL,
-  `order` INT(11) NOT NULL UNIQUE,
+  `order` INT(11) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
