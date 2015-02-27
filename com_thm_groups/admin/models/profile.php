@@ -34,15 +34,17 @@ class THM_GroupsModelProfile extends JModelLegacy
         $result = false;
         $data = JFactory::getApplication()->input->post->get('jform', array(), 'array');
 
-        $data['order'] = $this->getLastPosition() + 1;
+
         $attributeList = JFactory::getApplication()->input->post->get('attributeList', '', 'string');
         $profilID = intval($data['id']);
         $attributeJSON = json_decode($attributeList);
-
+        if($profilID == 0)
+        {
+            $data['order'] = $this->getLastPosition()+1;
+        }
         $profile = JTable::getInstance('Profile', 'Table');
 
         $success = $profile->save($data);
-
 
         if (!$success)
         {
@@ -51,38 +53,37 @@ class THM_GroupsModelProfile extends JModelLegacy
         }
         else
         {
-            $db->transactionCommit();
 
-            $profilID = ($profilID == 0)? $profile->id: $profilID;
-
-            $deletequery = $db->getQuery(true);
-            $putquery = $db->getQuery(true);
-            $deletequery->delete('#__thm_groups_profile_attribute')
-                        ->where('profileID =' . $profilID);
-            $columnTable = array('profileID', 'attributeID', 'order', 'params');
-
-            $putquery->insert('#__thm_groups_profile_attribute');
-            $putquery->columns($db->quoteName($columnTable));
-              foreach ($attributeJSON as $index => $value )
-              {
-                    $params = $db->quote(json_encode($value->params));
-                  $columsValue = array($profilID, intval($index), intval($value->order), $params);
-                  $putquery->values(implode(',', $columsValue));
-              }
-
-            $db->setQuery($deletequery);
-            $success = $db->execute();
-            if (!$success)
+            if (isset($attributeJSON))
             {
-                return false;
-            }
-            $db->setQuery($putquery);
-          $success = $db->execute();
-            if (!$success)
-            {
-                return false;
-            }
+                $db->transactionCommit();
 
+                $profilID = ($profilID == 0)? $profile->id: $profilID;
+                $putquery = $db->getQuery(true);
+
+                    $deletequery = $db->getQuery(true);
+                    $deletequery->delete('#__thm_groups_profile_attribute')
+                                ->where('profileID =' . $profilID);
+                    $columnTable = array('profileID', 'attributeID', 'order', 'params');
+                    $db->setQuery($deletequery);
+                    $success = $db->execute();
+
+                $putquery->insert('#__thm_groups_profile_attribute');
+                $putquery->columns($db->quoteName($columnTable));
+                  foreach ($attributeJSON as $index => $value )
+                  {
+                        $params = $db->quote(json_encode($value->params));
+                      $columsValue = array($profilID, intval($index), intval($value->order), $params);
+                      $putquery->values(implode(',', $columsValue));
+                  }
+
+                $db->setQuery($putquery);
+                $success = $db->execute();
+                if (!$success)
+                {
+                    return false;
+                }
+            }
             return $profile->id;
         }
 
@@ -112,7 +113,11 @@ class THM_GroupsModelProfile extends JModelLegacy
 
         return $result = $db->execute();
     }
-
+    /**
+     * get Max  Position
+     *
+     * @return Integer
+     */
     public function getLastPosition()
     {
         $db = JFactory::getDbo();
@@ -126,5 +131,17 @@ class THM_GroupsModelProfile extends JModelLegacy
         $lastPosition = $db->loadObject();
 
         return $lastPosition->order;
+    }
+
+    /**
+     * get all Attribute Of a Profile
+     *
+     * @param  Int  $profileID  a profile ID
+     *
+     * @return mixed
+     */
+    public function getProfileAttributes($profileID)
+    {
+
     }
 }

@@ -92,4 +92,17 @@ class THM_GroupsHelperComponent
     {
         return;
     }
+
+    /**
+     * Checks access for edit views
+     *
+     * @param   object  &$model  the model checking permissions
+     * @param   int     $itemID  the id if the resource to be edited (empty for new entries)
+     *
+     * @return  bool  true if the user can access the edit view, otherwise false
+     */
+    public static function allowEdit(&$model, $itemID = 0)
+    {
+        return true;
+    }
 }
