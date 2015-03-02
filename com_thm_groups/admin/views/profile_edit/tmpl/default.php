@@ -26,14 +26,6 @@ JHTML::stylesheet(JURI::root() . 'media/jui/css/sortablelist.css');
 
 <script type="text/javascript">
     jQuery.noConflict();
-   /** Joomla.submitbutton = function(task)
-    {
-        if (task == 'profile.cancel' || document.formvalidator.isValid(document.getElementById('item-form')))
-        {
-            Joomla.submitform(task, document.getElementById('item-form'));
-        }
-    }**/
-
     jQuery(document).ready(function (){
         var sortableList = new jQuery.JSortableList('#attributeTable tbody','','' , '','','');
     });
