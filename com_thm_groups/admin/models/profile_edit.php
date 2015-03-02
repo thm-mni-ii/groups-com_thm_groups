@@ -106,7 +106,7 @@ class THM_GroupsModelProfile_Edit extends THM_CoreModelEdit
     {
         $db = JFactory::getDBO();
         $setParam = $db->getQuery(true);
-        $setParam = 'SET group_concat_max_len = 100000;';
+        $setParam = 'SET group_concat_max_len = 1000000000;';
         $db->setQuery($setParam);
         $db->execute();
         $jsonquery = $db->getQuery(true);
@@ -126,7 +126,6 @@ class THM_GroupsModelProfile_Edit extends THM_CoreModelEdit
             ',\"param\":',IF(attrParam IS NULL or attrParam = '', ' ', attrParam), '',
             '}'), '}') as json ")
             ->from('(' . $query . ')as result');
-
         $db->setQuery($jsonquery);
         return $db->loadObjectList();
     }
