@@ -55,10 +55,17 @@ jq(document).ready(function() {
             gr.addRoleToGroup(g_id, value);
         });
 
-        updateView(gr);
+        updateView();
+        updateHiddenField();
         console.log(gr.toString());
     });
 });
+
+function updateHiddenField()
+{
+    var data = gr.getData();
+    jq('#batch-data').val(encodeURIComponent(JSON.stringify(data)));
+}
 
 /**
  * Update div with groups and roles
@@ -82,6 +89,8 @@ function updateView()
 
         jq('#group-roles-id').append(roles.join(', '));
         //jq(roles.join(', ')).appendTo('#group-roles-id').fadeIn('slow');
+
+        updateHiddenField();
     });
 }
 

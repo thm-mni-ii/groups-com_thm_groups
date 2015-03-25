@@ -53,11 +53,14 @@ JHtml::_('formbehavior.chosen', 'select');
 			</div>
 			<div class="control-group">
 				<button type="button" class="btn btn-success" id="batch-add-btn">
-					<?php echo JText::_('JADD'); ?>
+					<?php echo JText::_('JSELECT'); ?>
 				</button>
 			</div>
 			<div class="control-group">
 				<div id="group-roles-id"></div>
+			</div>
+			<div class="control-group radio">
+				<?php echo JHtml::_('select.radiolist', $options, 'batch_action', '', 'value', 'text', 'add') ?>
 			</div>
 		</div>
 	</div>
@@ -69,5 +72,6 @@ JHtml::_('formbehavior.chosen', 'select');
 			<?php echo JText::_('JGLOBAL_BATCH_PROCESS'); ?>
 		</button>
 	</div>
+	<input type="hidden" name="batch-data" id="batch-data" value="">
 </div>
 

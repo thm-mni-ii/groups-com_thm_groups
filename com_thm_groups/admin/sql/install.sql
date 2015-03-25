@@ -163,7 +163,7 @@ INSERT INTO `#__thm_groups_attribute` (`id`, `name`, `dynamic_typeID`, `descript
   (94, 'Sprechzeiten', 7, 'Lorem ipsum dolor sit amet'),
   (95, 'Shortinfo', 8, 'Lorem ipsum dolor sit amet'),
   (96, 'Longinfo', 9, 'Lorem ipsum dolor sit amet'),
-  (97, 'Bild', 10, 'Lorem ipsum dolor sit amet'),
+  (97, 'Bild', 4, 'Lorem ipsum dolor sit amet'),
   (98, 'Curriculum', 10, 'Lorem ipsum dolor sit amet'),
   (99, 'Test', 9, 'Lorem ipsum dolor sit amet');
 
@@ -212,7 +212,8 @@ INSERT INTO `#__thm_groups_users_attribute` (`ID`, `usersID`, `attributeID`, `va
   (27, 5, 3, 'test_user5', 1),
   (28, 5, 4, 'amy.pond@doctor.who.com', 1),
   (29, 5, 5, 'Ms', 1),
-  (30, 5, 7, 'Begleiterin vom Doktor Who', 1);
+  (30, 5, 7, 'Begleiterin vom Doktor Who', 1),
+  (31, 5, 97, '', 1);
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_roles` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -312,6 +313,21 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attribute` (
     ON DELETE CASCADE)
 ENGINE = InnoDB;
 
+INSERT INTO `#__thm_groups_profile_attribute` (`ID`, `profileID`, `attributeID`, `order`, `params`) VALUES
+  (1, 1, 1, 2, '{ "show" : false, "wrap" : false}'),
+  (2, 1, 2, 1, '{ "show" : false, "wrap" : false}'),
+  (3, 1, 3, 3, '{ "show" : true, "wrap" : true}'),
+  (4, 1, 4, 4, '{ "show" : false, "wrap" : true}'),
+  (5, 1, 5, 0, '{ "show" : false, "wrap" : true}'),
+  (6, 1, 6, 7, '{ "show" : true, "wrap" : true}'),
+  (7, 1, 7, 8, '{ "show" : true, "wrap" : true}'),
+  (8, 1, 97, 6, '{ "show" : false, "wrap" : true}'),
+  (10, 1, 91, 5, '{ "show" : false, "wrap" : false}'),
+  (11, 1, 92, 10, '{ "show" : true, "wrap" : true }'),
+  (12, 2, 5, 2, '{ "show" : false, "wrap" : true}'),
+  (13, 2, 93, 2, '{ "show" : false, "wrap" : true}'),
+  (14, 2, 3, 1, '{"show" : true , "wrap" : false}');
+
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_usergroups` (
   `ID` INT(11) NOT NULL AUTO_INCREMENT,
   `profileID` INT(11) NOT NULL,
@@ -324,33 +340,3 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_usergroups` (
     ON UPDATE CASCADE
     ON DELETE CASCADE)
 ENGINE = InnoDB;
-
-CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attribute` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `profileID` int(11) NOT NULL,
-  `attributeID` int(11) NOT NULL,
-  `order` int(11) DEFAULT NULL,
-  `params` text,
-  PRIMARY KEY (`ID`),
-  FOREIGN KEY (`profileID`) REFERENCES `#__thm_groups_profile` (`id`)
-   ON DELETE CASCADE
-   ON UPDATE CASCADE,
- FOREIGN KEY (`attributeID`) REFERENCES `#__thm_groups_attribute` (`id`)
- ON DELETE CASCADE
- ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
-CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attribute` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `profileID` int(11) NOT NULL,
-  `attributeID` int(11) NOT NULL,
-  `order` int(11) DEFAULT NULL,
-  `params` text,
-  PRIMARY KEY (`ID`),
-  FOREIGN KEY (`profileID`) REFERENCES `#__thm_groups_profile` (`id`)
-   ON DELETE CASCADE
-   ON UPDATE CASCADE,
- FOREIGN KEY (`attributeID`) REFERENCES `#__thm_groups_attribute` (`id`)
- ON DELETE CASCADE
- ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

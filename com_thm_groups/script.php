@@ -82,7 +82,7 @@ class Com_THM_GroupsInstallerScript
             $rel = $this->release;
         }
 
-        echo '<h1 align="center"><strong>' . JText::_('COM_THM_GROUPS_PREFLIGHT_' . strtoupper($type)) . '<br/>' . $rel . '</strong></h1>';
+        echo '<h1 align="center"><strong>THM Groups ' . strtoupper($type) . '<br/>' . $rel . '</strong></h1>';
     }
 
     /*

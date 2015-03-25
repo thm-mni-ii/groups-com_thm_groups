@@ -25,7 +25,7 @@ jimport('joomla.application.component.view');
  * @package   thm_groups
  * @since     v0.1.0
  */
-class THMGroupsViewQuickpage extends JViewLegacy
+class THM_GroupsViewQuickpage extends JViewLegacy
 {
     /**
      * Display

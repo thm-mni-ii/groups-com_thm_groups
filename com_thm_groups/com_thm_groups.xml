@@ -101,6 +101,13 @@
                     view="static_type_manager"
                     alt="THM-Groups/Static Type manager"
                     >COM_THM_GROUPS_STATIC_TYPE_MANAGER</menu>
+
+            <menu
+                    alias="Plugin Manager"
+                    link="option=com_thm_groups&amp;view=plugin_manager"
+                    view="plugin_manager"
+                    alt="THM-Groups/Plugin Manager"
+                    >COM_THM_GROUPS_PLUGIN_MANAGER</menu>
         </submenu>
 
         <files folder="admin">

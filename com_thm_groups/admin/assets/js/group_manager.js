@@ -19,6 +19,13 @@ function confirmMsg(){
     }
 }
 
+var jq = jQuery.noConflict();
+jq(document).ready(function() {
+   jq('#toolbar-new').on('click', function(){
+      confirmMsg();
+   });
+});
+
 
 
 

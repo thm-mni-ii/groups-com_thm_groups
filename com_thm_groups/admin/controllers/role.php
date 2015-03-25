@@ -27,7 +27,7 @@ jimport('joomla.application.component.controller');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THM_GroupsControllerRole extends JControllerForm
+class THM_GroupsControllerRole extends JControllerLegacy
 {
     /**
      * constructor (registers additional tasks to methods)
@@ -45,15 +45,7 @@ class THM_GroupsControllerRole extends JControllerForm
      */
     public function add()
     {
-        if (!JFactory::getUser()->authorise('core.admin'))
-        {
-            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
-        }
-
-        $input = JFactory::getApplication()->input;
-        $input->set('view', 'role_edit');
-        $input->set('id', '0');
-        parent::display();
+        $this->setRedirect("index.php?option=com_thm_groups&view=role_edit");
     }
 
     /**
@@ -73,7 +65,7 @@ class THM_GroupsControllerRole extends JControllerForm
         else
         {
             $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-            $this->setRedirect('index.php?option=com_thm_groups&view=role_edit&id=0', $msg);
+            $this->setRedirect('index.php?option=com_thm_groups&view=role_edit', $msg);
         }
     }
 
@@ -173,14 +165,17 @@ class THM_GroupsControllerRole extends JControllerForm
      */
     public function editRole()
     {
-        if (!JFactory::getUser()->authorise('core.admin'))
-        {
-            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
-        }
+        $cid = $this->input->post->get('cid', array(), 'array');
 
-        $this->input->set('view', 'role_edit');
-        $this->input->set('hidemainmenu', 1);
-        parent::display();
+        // Only edit the first id in the list
+        if (count($cid) > 0)
+        {
+            $this->setRedirect(JRoute::_("index.php?option=com_thm_groups&view=role_edit&id=$cid[0]", false));
+        }
+        else
+        {
+            $this->setRedirect("index.php?option=com_thm_groups&view=role_edit");
+        }
     }
 
     /**
@@ -222,12 +217,12 @@ class THM_GroupsControllerRole extends JControllerForm
         if ($success)
         {
             $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
-            $this->setRedirect('index.php?option=com_thm_groups&view=role_edit&id=0', $msg);
+            $this->setRedirect(Jroute::_('index.php?option=com_thm_groups&view=role_edit', false), $msg);
         }
         else
         {
             $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-            $this->setRedirect('index.php?option=com_thm_groups&view=role_edit&id=0', $msg);
+            $this->setRedirect('index.php?option=com_thm_groups&view=role_edit', $msg);
         }
     }
 }

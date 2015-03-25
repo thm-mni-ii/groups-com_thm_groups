@@ -69,7 +69,7 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
             ->innerJoin('#__thm_groups_users_attribute AS a2 ON a1.usersID = a2.usersID')
             ->innerJoin('#__thm_groups_users_attribute AS a4 ON a1.usersID = a4.usersID')
             ->innerJoin('#__thm_groups_users AS a5 ON a1.usersID = a5.id')
-            ->innerJoin('#__thm_groups_users_usergroups_roles AS a7 ON a7.usersID = a1.usersID')
+            ->leftJoin('#__thm_groups_users_usergroups_roles AS a7 ON a7.usersID = a1.usersID')
             ->leftJoin('#__thm_groups_usergroups_roles AS a6 ON a6.ID = a7.usergroups_rolesID')
             ->where('a1.attributeID = 1')  // first name
             ->where('a2.attributeID = 2')  // surname

@@ -75,7 +75,12 @@ class THM_GroupsHelperComponent
         JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_STATIC_TYPE_MANAGER'),
             'index.php?option=com_thm_groups&view=static_type_manager',
-            $viewName == 'static_types_manager'
+            $viewName == 'static_type_manager'
+        );
+        JHtmlSidebar::addEntry(
+            JText::_('COM_THM_GROUPS_PLUGIN_MANAGER'),
+            'index.php?option=com_thm_groups&view=plugin_manager',
+            $viewName == 'plugin_manager'
         );
 
         $view->sidebar = JHtmlSidebar::render();

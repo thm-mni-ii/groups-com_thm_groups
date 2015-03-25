@@ -32,6 +32,35 @@ JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_users/models
 class THM_GroupsControllerUser extends JControllerLegacy
 {
 
+    /**
+     * Method to run batch operations.
+     *
+     * @param   object   $model  The model.
+     *
+     * @return  boolean  True on success, false on failure
+     *
+     * @since   2.5
+     */
+    public function batch($model = null)
+    {
+        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+        // Set the model
+        $model = $this->getModel('user', '', array());
+
+        // Preset the redirect
+        $this->setRedirect(JRoute::_('index.php?option=com_thm_groups&view=user_manager', false));
+
+        if ($model->batch())
+        {
+            $this->setMessage(JText::_('JLIB_APPLICATION_SUCCESS_BATCH'));
+        }
+        else
+        {
+            $this->setMessage(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_FAILED', $model->getError()), 'warning');
+        }
+    }
+
     public function publish()
     {
         $model = $this->getModel('user');
@@ -162,4 +191,22 @@ class THM_GroupsControllerUser extends JControllerLegacy
 
         $this->setRedirect('index.php?option=com_thm_groups&view=user_manager');
     }
+
+    /**
+     * Redirects to the category_edit view for the editing of existing categories
+     *
+     * @return void
+     */
+    public function edit()
+    {
+        if (!JFactory::getUser()->authorise('core.admin'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
+
+        $this->input->set('view', 'user_edit');
+        $this->input->set('hidemainmenu', 1);
+        parent::display();
+    }
+
 }

@@ -12,6 +12,7 @@
 
 defined('_JEXEC') or die;
 jimport('joomla.application.component.modeladmin');
+require_once JPATH_COMPONENT . '/assets/helpers/database_compare_helper.php';
 
 /**
  * Class loads form data to edit an entry.
@@ -32,8 +33,9 @@ class THM_GroupsModelRole extends JModelLegacy
         $data = JFactory::getApplication()->input->get('jform', array(), 'array');
 
         $table = JTable::getInstance('roles', 'thm_groupsTable');
-        // TODO return new id, because of bug by apply, it shows the first element from table
-        return $table->save($data);
+        $table->save($data);
+
+        return $table->id;
     }
 
     /**
@@ -257,19 +259,8 @@ class THM_GroupsModelRole extends JModelLegacy
                 }
             }
 
-            // Compare two arrays and delete repeating elements
-            // This algorithm is sucks, i don't like it, but it's because of php -> comment form Ilja
-            foreach($dataFromDB as $key => $value)
-            {
-                if(array_key_exists($key, $insertValues))
-                {
-                    foreach($value as $data)
-                    {
-                        $idx = array_search($data, $insertValues[$key]);
-                        unset($insertValues[$key][$idx]);
-                    }
-                }
-            }
+            // filter values before insert
+            THM_GroupsHelperDatabase_Compare::filterInsertValues($insertValues, $dataFromDB);
 
             // prepare insert values
             if(!empty($insertValues)) {

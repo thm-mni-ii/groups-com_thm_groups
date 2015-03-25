@@ -69,9 +69,9 @@ class THM_GroupsModelPlugin_Manager extends THM_CoreModelList
         $this->setIDFilter($query, 'access', array('access'));
         $this->setOrdering($query);
         
-        echo "<pre>";
+/*        echo "<pre>";
         echo $query;
-        echo "</pre>";
+        echo "</pre>";*/
 
         return $query;
     }
