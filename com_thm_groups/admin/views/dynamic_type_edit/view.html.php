@@ -40,15 +40,16 @@ class THM_GroupsViewDynamic_Type_Edit extends JViewLegacy
 
         $model = $this->getModel('dynamic_type_edit');
         $form = $this->get('Form');
-
+        $rep = JPATH_ROOT;
         $item = $this->get('DynamicTypeItem');
 
         $this->form = $form;
         $this->item = $item;
-        //$this->sType = $model->getStaticType($this->item->static_typeID);
+        $this->path = str_replace(array('\\'), array('/'), $rep) ."/images/";
+        $this->fileTreePath = Juri::root() . "/administrator/components/com_thm_groups/elements/jqueryFileTree.php";
+
         $this->selectFieldStaticTypes = $model->getStaticTypesSelectField($this->item->static_typeID);
         $this->regexOptions = $model->getRegexOptions($this->item->static_typeID);
-
 
         if (count($errors = $this->get('Errors')))
         {

@@ -39,11 +39,12 @@ class THM_GroupsViewProfile_Edit extends THM_CoreViewEdit
     public function display($tpl = null)
     {
 
-        $app = JFactory::getApplication();
+        $app = JFactory::getApplication()->input;
         $user = JFactory::getUser();
 
         // Get user ids
-        $this->profilid = intval(JRequest::getVar('id'));
+        $this->profilid = intval($app->get('id'));
+
 
         $this->model = $this->getModel();
 
@@ -52,7 +53,8 @@ class THM_GroupsViewProfile_Edit extends THM_CoreViewEdit
 
     protected function addToolbar()
     {
-        $title = $this->form->getValue('id') == 0 ? 'New' : 'Edit';
+        $app = JFactory::getApplication();
+        $title = intval($app->get('id')) == 0 ? 'New' : 'Edit';
 
         JToolBarHelper::title($title, 'test');
 

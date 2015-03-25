@@ -76,19 +76,52 @@ class THM_GroupsModelProfile_Manager extends THM_CoreModelList
     {
         $items = parent::getItems();
 
-        $index = 0;
+        $index = 1;
+        $return['attributes'] = array('class' => 'ui-sortable');
         foreach ($items as $key => $item)
         {
             $url = "index.php?option=com_thm_groups&view=profile_edit&id=$item->id";
             $return[$index] = array();
+            //table row attribute
 
-            $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
-            $return[$index][1] = $item->id;
-            $return[$index][2] = !empty($item->name) ? JHtml::_('link', $url, $item->name) : '';
-            $return[$index][4] = !empty($item->order) ? $item->order : '';
+            $return[$index]['attributes'] = array( 'class' => 'order nowrap center hidden-phone', 'id' => $item->id);
+            $return[$index]['ordering']['attributes'] = array( 'class'=>"order nowrap center hidden-phone", 'style'=>"width: 40px;");
+            $return[$index]['ordering']['value'] = "<span class='sortable-handler' style='cursor: move;'><i class='icon-menu'></i></span>";
+            $return[$index]['checkbox'] = JHtml::_('grid.id', $index, $item->id);
+            $return[$index]['id'] = $item->id;
+            $return[$index]['name'] = !empty($item->name) ? JHtml::_('link', $url, $item->name) : '';
+            $return[$index]['order']["attributes"] = array("id" => "position_" . $item->id);
+            $return[$index]['order']["value"] = !empty($item->order) ? $item->order : '';
             $index++;
         }
         return $return;
+    }
+    /**
+     * Function to save the new Order of the Profile
+     *
+     * @param  Array  $profiles_ID  content the ID in the new Ordering
+     * @return array including headers
+     */
+    public function saveOrdering($profiles_ID){
+        $db = JFactory::getDbo();
+        $query =  $db->getQuery(true);
+
+        $statement = 'Update #__thm_groups_profile Set `order` = CASE';
+        foreach ( $profiles_ID  as $order=>$profileID){
+         $statement .= ' WHEN id = ' . intval($profileID) . ' THEN ' . (intval($order)+1);
+        }
+        $statement .= ' ELSE ' . 0 . ' END Where id IN(' . implode(',', $profiles_ID) . ')';
+        $db->setQuery($statement);
+        $response = $db->execute();
+
+        if($response)
+        {
+            $query =  $db->getQuery(true);
+            $query->select('`id`, `order`')->from('#__thm_groups_profile');
+            $db->setQuery($query);
+            return $db->loadObjectList();
+        }
+        return False;
     }
 
     /**
@@ -102,6 +135,8 @@ class THM_GroupsModelProfile_Manager extends THM_CoreModelList
         $direction = $this->state->get('list.direction');
 
         $headers = array();
+       $headers['ordering'] =  JHtml::_('searchtools.sort', '', 'a.order', $direction, $ordering , null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2');
+       // $headers['ordering'] = '';
         $headers['checkbox'] = '';
         $headers['id'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'id', $direction, $ordering);
         $headers['name'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_PROFILE_MANAGER_NAME'), 'name', $direction, $ordering);

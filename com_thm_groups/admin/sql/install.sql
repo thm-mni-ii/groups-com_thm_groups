@@ -1,18 +1,20 @@
 DROP TABLE IF EXISTS
-`#__thm_groups_users_attribute`,
+`#__thm_groups_users`,
 `#__thm_groups_users_content`,
 `#__thm_groups_users_categories`,
 `#__thm_groups_profile_usergroups`,
 `#__thm_groups_usergroups_roles`,
 `#__thm_groups_users_usergroups_roles`,
-`#__thm_groups_users`,
 `#__thm_groups_users_usergroups_moderator`,
 `#__thm_groups_static_type`,
 `#__thm_groups_dynamic_type`,
 `#__thm_groups_attriubte`,
+`#__thm_groups_users_attribute`,
 `#__thm_groups_roles`,
 `#__thm_groups_profile`,
 `#__thm_groups_profile_attribute`;
+
+
 
 INSERT INTO `#__users` (`id`, `name`, `username`, `email`) VALUES
   (1, 'Max Mustermann', 'test_user1', 'max.mustermann@mni.thm.de'),
@@ -254,18 +256,13 @@ INSERT INTO `#__thm_groups_usergroups_roles` (`ID`, `usergroupsID`, `rolesID`) V
   (4, 5, 2),
   (5, 4, 1),
   (6, 4, 2),
-  (7, 3, 2),
-  (8, 10, 10),
-  (9, 10, 9);
+  (7, 3, 2);
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_users_usergroups_roles` (
   `ID` INT(11) NOT NULL AUTO_INCREMENT,
   `usersID` INT(11) NOT NULL,
   `usergroups_rolesID` INT(11) NOT NULL,
   PRIMARY KEY (`ID`),
-  FOREIGN KEY (`usersID`) REFERENCES `#__thm_groups_users` (`id`)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
   FOREIGN KEY (`usergroups_rolesID`) REFERENCES `#__thm_groups_usergroups_roles` (`ID`)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
@@ -281,14 +278,13 @@ INSERT INTO `#__thm_groups_users_usergroups_roles` (`ID`, `usersID`, `usergroups
   (4, 2, 4),
   (5, 3, 5),
   (6, 3, 6),
-  (7, 1, 7),
-  (8, 1, 8),
-  (9, 4, 9);
+  (7, 1, 7);
+
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NULL,
-  `order` INT(11) NOT NULL UNIQUE,
+  `order` INT(11) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 

@@ -30,5 +30,8 @@
                rows="10"
                cols="5"
                required="false" />
+        <field name="additional"
+               type="AttributeField"
+               label="Additional fields"/>
     </fieldset>
 </form>

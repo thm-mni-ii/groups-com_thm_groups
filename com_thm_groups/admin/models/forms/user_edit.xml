@@ -4,7 +4,6 @@
 
         <field name="id"
                type="hidden"/>
-
     </fieldset>
     <fieldset name="groups" label="Groups">
 

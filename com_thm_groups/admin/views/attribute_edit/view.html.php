@@ -41,12 +41,13 @@ class THM_GroupsViewAttribute_Edit extends JViewLegacy
 
         $model = $this->getModel('attribute_edit');
         $form = $this->get('Form');
-
-        // Getting the selected attributeitem/ ['StructureItem' means 'AttributeItem']
         $item = $this->get('StructureItem');
+        $rep = JPATH_ROOT;
 
         $this->form = $form;
         $this->item = $item;
+        $this->path = str_replace(array('\\'), array('/'), $rep) ."/images/";
+        $this->fileTreePath = Juri::root() . "/administrator/components/com_thm_groups/elements/jqueryFileTree.php";
 
         // Get select fields for dynamic attributes
         $this->selectFieldDynamicTypes = $model->getDynamicTypesSelectField($this->item->dynamic_typeID);

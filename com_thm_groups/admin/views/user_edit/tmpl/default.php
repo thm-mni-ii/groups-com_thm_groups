@@ -1,344 +1,251 @@
 <?php
 /**
+ * @version     v1.0.0
  * @category    Joomla component
- * @package     THM_Organizer
- * @subpackage  com_thm_organizer.site
- * @name        view pool edit template
- * @author      James Antrim, <james.antrim@mni.thm.de>
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.admin
+ * @name        THMGroupsViewUser_Edit
+ * @description THMGroupsViewUser_Edit file from com_thm_groups
+ * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
 defined('_JEXEC') or die;
-$componentDir = "/administrator/components/com_thm_groups";
-$scriptDir = $componentDir . "/assets/js/";
-
-$doc = JFactory::getDocument();
-
-JHtml::_('jquery.framework');
-JHtml::_('bootstrap.framework');
-JHtml::_('script', JUri::root() . $componentDir . '/assets/js/cropbox.js');
-$doc->addStyleSheet(JURI::root(true) . $componentDir . '/assets/css/cropbox.css');
 
 jimport('thm_core.edit.advancedtemplate');
-THM_CoreTemplateAdvanced::render($this);
+//THM_CoreTemplateAdvanced::render($this);
 ?>
+<script>jQf = jQuery.noConflict();</script>
 
-<script>
-    jQf = jQuery.noConflict();
+    <form action="index.php?option=com_thm_groups"
+      enctype="multipart/form-data"
+      method="post"
+      name="adminForm"
+      id="adminForm"
+      class="form-horizontal">
 
-    /**
-     * Reloads content depending on selected tab in view.
-     *
-     * @return null
-     **/
-    function checkSelectedTab(target)
-    {
-        var option = target.toString();
-        option = option.substring(option.indexOf('#') + 1);
-        var div = document.getElementById(option);
-        while(div.firstChild){
-            div.removeChild(div.firstChild);
-        }
-        reloadContent(option);
-    }
+        <div class="form-horizontal">
+            <ul id="myTabsTabs" class="nav nav-tabs">
+                <li class="active">
+                    <a data-toggle="tab" href="#user">
+                        Userdata
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#groups">
+                        Groups
+                    </a>
+                </li>
+            </ul>
+            <div id="myTabContent" class="tab-content">
+                <div id="user" class="tab-pane active">
 
-    function addGroup()
-    {
-        var selGroupId = document.getElementById('jformNewGroup').options[document.getElementById('jformNewGroup').selectedIndex].value;
-        var selGroupName = document.getElementById('jformNewGroup').options[document.getElementById('jformNewGroup').selectedIndex].text;
-        var hasGroup = checkGroup(selGroupId, selGroupName);
+                    <div id="user_header">
+                        <div id='header_left'></div>
+                        <div id='header_right'>Published</div>
+                    </div>
+                    <?php
+                    foreach ($this->userContent as $item) :
+                        $name = str_replace(' ', '_', $item->attribute);
+                    ?>
+                        <div class='control-group'>
+                            <div class='control-label'>
+                                <label id='jform_<?php echo $name; ?>-lbl'
+                                       class=''
+                                       for='jform_<?php echo $name; ?>'
+                                       aria-invalid='false'><?php echo $item->attribute; ?>
+                                </label>
+                            </div>
+                            <div id='jform_<?php echo $name; ?>_box' class='controls'>
+                            <?php if ($item->name == 'TEXTFIELD') :
+                                $output = "<textarea id='jform_" . $name . "'"
+                                    . "style='float:left !important;'"
+                                    . "type='text'"
+                                    . "name='jform[" . $name . "]'>" . $item->value . "</textarea>";
+                                echo $output;
+                                ?>
+                            <?php elseif ($item->name == 'PICTURE') :
+                                $pData      = json_decode($item->options);
+                                $position   = strpos($pData->path, 'images/');
+                                $path       = substr($pData->path, $position);
+                            ?>
+                                <span id='<?php echo $name; ?>_IMG'>
+                                    <img  src='<?php echo JURI::root() . $path . $item->value; ?>' class='edit_img'/>
+                                </span>
 
-        if (hasGroup == "true")
-        {
-            alert("User is allready in this group");
-        }
-        else
-        {
-            jQuery("#groups").append(hasGroup);
+                                <!-- Create bootstrap modal output -->
+                                <br/>
+                                <button
+                                    type='button'
+                                    id='<?php echo $name; ?>_upload'
+                                    onclick='bindImageCropper("<?php echo $name; ?>", "<?php echo $item->attributeID; ?>"
+                                            , "<?php echo $item->usersID; ?>")'
+                                    class='btn btn-success'
+                                    style='float: left;'
+                                    data-toggle='modal'
+                                    data-target='#<?php echo $name; ?>_Modal'>Change Picture
+                                </button>
 
-        }
-    }
+                                <div
+                                    class='modal fade modalFade'
+                                    id='<?php echo $name; ?>_Modal'
+                                    tabindex='-1'
+                                    role='dialog'
+                                    aria-labelledby='myModalLabel'
+                                    aria-hidden='true'>
 
-    /**
-     * Adds SelectFields to new_xy-Group div
-     **/
-    function addRole(groupName, groupId, btnId)
-    {
-        var roleContainer = "new_" + groupName;
-        var parentDiv = document.getElementById(roleContainer);
-        var rolesDiv = document.getElementById('roles_' + groupName);
-        var rolesSaved = rolesDiv.getElementsByClassName('controls').length;
-        var fields = (parentDiv.getElementsByTagName('div').length);
+                                    <div class='modal-dialog'>
 
-        jQuery.ajax({
-            type: "POST",
-            url: "index.php?option=com_thm_groups&controller=user_edit&task=user_edit.addRole&cid="
-            + <?php echo $this->item ?> + "&groupId=" + groupId + "&groupName=" + groupName +""
-            +"&btnId=" + btnId + "&roleContainer=" + roleContainer + ""
-            +"&counter=" + fields + "&rolesSaved=" + rolesSaved + "",
-            async: false,
-            datatype: "HTML"
-        }).success(function (response){
-            if (response != "false")
-            {
-                jQuery("#" + roleContainer).prepend(response);
-            }
-            else
-            {
-                alert("Maximum amount of roles selected");
-            }
-        });
+                                        <div class='modal-content'>
 
-    }
+                                            <div class='modal-header'>
+                                                <button type='button' class='close' data-dismiss='modal'
+                                                        aria-label='Close'>
+                                                    <span aria-hidden='true'>&times;</span>
+                                                </button>
+                                                <h4 class='modal-title' id='myModalLabel'>Picture upload</h4>
+                                            </div>
 
-    /**
-     * Not implemented, should save all roles.
-     *
-     * @param   Integer  groupId  Id of group
-     * @param   String   div      Div container
-     **/
-    function saveRoles(groupId, div)
-    {
-    }
+                                            <div id='<?php echo $name; ?>_Modal_Body' class='modal-body modalPicture'>
 
-    function checkGroup(groupId, selGroupName)
-    {
-        var res = null;
-        jQuery.ajax({
-            type: "POST",
-            url: "index.php?option=com_thm_groups&controller=user_edit&task=user_edit.checkGroup&cid="
-            + <?php echo $this->item ?> + "&groupId=" + groupId + "&groupName=" + selGroupName +"",
-            async: false,
-            datatype: "HTML"
-        }).success(function (response){
-            //document.getElementById("groups").innerHTML = response;
-            res = response;
-        });
+                                                <div id='<?php echo $name; ?>_leftContent' class='leftContent'>
+                                                    <div class='previewContainer'>
+                                                        <div id='<?php echo $name; ?>_imageBox' class='imageBox'>
+                                                            <div id='<?php echo $name; ?>_thumbBox' class='thumbBox'>
+                                                            </div>
+                                                            <div
+                                                                id='<?php echo $name; ?>_spinner'
+                                                                class='spinner'
+                                                                style='display: none'>Loading...
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
-        return res;
-    }
+                                                <div id='<?php echo $name; ?>_rightContent' class='rightContent'>
+                                                    <div
+                                                        id='<?php echo $name; ?>_cropped'
+                                                        class='cropped'
+                                                        style='min-height: 220px; min-width: 170px;
+                                                            float: right !important;'>
+                                                    </div>
+                                                    <div id='<?php echo $name; ?>_cropped_controls'
+                                                         class='cropped_controls'>
+                                                        <span><hr/><br/><b>Select dimensions</b></span><br/><br/>
+                                                        <button
+                                                            type='button'
+                                                            id='<?php echo $name; ?>_switch'
+                                                            class='btn btn-default'
+                                                            value='switch mode'>Switch mode
+                                                        </button>
+                                                        <span> Normal mode</span>
+                                                        <br/><br/>
+                                                        <div id='<?php echo $name; ?>_result'
+                                                             class="alert alert-success"
+                                                             style="visibility: hidden;"></div>
+                                                    </div>
+                                                </div>
 
-    function checkRole()
-    {
+                                            </div>
+                                            <div class='modal-footer'>
+                                                <div class='action'>
+                                                    <input
+                                                        id='jform_<?php echo $name; ?>'
+                                                        type='file'
+                                                        class='file'
+                                                        name='jform1[Picture][<?php echo $item->attributeID; ?>]'
+                                                        style='float:left; width: 112px'/>
+                                                    <input
+                                                        class='btn btn-primary'
+                                                        type='button'
+                                                        id='<?php echo $name; ?>_btnCrop'
+                                                        value='Crop'
+                                                        style='float: left; margin-left: 5px !important;
+                                                               width: 50px !important;'/>
+                                                    <input
+                                                        class='btn btn-success'
+                                                        type='button'
+                                                        id='<?php echo $name; ?>_btnZoomIn'
+                                                        value='+'
+                                                        style='float: left; margin-left: 5px !important;'/>
+                                                    <input
+                                                        class='btn btn-danger'
+                                                        type='button'
+                                                        id='<?php echo $name; ?>_btnZoomOut'
+                                                        value='-'
+                                                        style='float: left;'/>
+                                                </div>
+                                                <button type='button' class='btn btn-default' data-dismiss='modal'>
+                                                    Close
+                                                </button>
+                                                <button
+                                                    id='<?php echo $name; ?>_saveChanges'
+                                                    type='button'
+                                                    class='savePic btn btn-primary'>Upload
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-    }
+                                <button id='<?php echo $name; ?>_del' class='btn btn-danger'
+                                        style='margin-left: 10px !important;
+                                            width: 95px !important;
+                                            float: left;'
+                                        onclick='deletePic("<?php echo $name; ?>", "<?php echo $item->attributeID; ?>"
+                                            , "<?php echo $item->usersID; ?>")'
+                                        type='button'>
+                                    <span class='icon-delete'></span> Delete
+                                </button>
+                                <br/>
 
-    /**
-     * Adds a new group and first role in that group.
-     *
-     * @param  String   div         Div container
-     * @param  Integer  groupId     Id of Group in database
-     * @param  Integer  selFieldId  Id of select field
-     *
-     * @return null
-     **/
-    function addGroupAndRole(div, groupId, selFieldId)
-    {
-        var selRoleId = document.getElementById(selFieldId).options[document.getElementById(selFieldId).selectedIndex].value;
-        var selRoleName = document.getElementById(selFieldId).options[document.getElementById(selFieldId).selectedIndex].text;
-        var res = null;
-        //TODO SAVE STUFF INTO DATABASE WHEN ROLE WAS ADDED, change button to delete and add new green add btn
+                                <?php else : ?>
 
-        jQuery.ajax({
-            type: "POST",
-            url: "index.php?option=com_thm_groups&controller=user_edit&task=user_edit.addGroupAndRole&cid="
-            + <?php echo $this->item ?> + "&groupId=" + groupId + "&roleId=" + selRoleId + "&roleName="
-            + selRoleName + "",
-            async: false,
-            datatype: "HTML"
+                                <input id='jform_<?php echo $name; ?>'
+                                       style='float:left !important;'
+                                       type='text'
+                                       data=''
+                                       data-req='<?php echo json_decode($item->options)->required; ?>'
+                                       onchange='validateInput("<?php echo $item->regex; ?>",
+                                           "jform_<?php echo $name; ?>")'
+                                       value='<?php echo $item->value; ?>'
+                                       name='jform[<?php echo $name; ?>]'
+                                    />
 
-        }).success(function (response){
-            res = response;
-        });
+                            <?php endif; ?>
 
-        if (res == "true")
-        {
-            window.location.hash = "groups";
-            location.reload(true);
-        }
-        else
-        {
-            alert("failure to add group/role");
-        }
-    }
+                                <div id='jform_<?php echo $name; ?>_icon'
+                                     style='margin: 5px; width: 10px; color: red; float: left !important;'>
+                                </div>
+                                <div>
+                                    <input type='checkbox' name='jform[<?php echo $name; ?>_published]'
+                                           style='margin-left: 100px;' id='jform_<?php echo $name; ?>_published'
+                                    <?php
+                                        if ($item->published == 1)
+                                        {
+                                            echo "checked='checked'/>";
+                                        }
+                                        else
+                                        {
+                                            echo "></input>";
+                                        }
+                                    ?>
 
-    /**
-     * Validates the user input of all input fields that belongs to dynamicType text or text field.
-     * Regex are saved in the specific dynamicType in the database.
-     * Required is saved in Json object inside the 'options' field in dynamicType entry.
-     *
-     * @return null
-     **/
-    function validateInput(regex, inputField, required)
-    {
-        var input = document.getElementById(inputField).value;
-        var regexObj = new RegExp(regex);
-        var valid = regexObj.test(input);
-        var proceed = null;
-
-        //Todo: check all required fields are set to valid when save is active
-        if (valid)
-        {
-            if (required == 'true')
-            {
-                var buttons = document.getElementsByClassName('btn-small');
-
-                for (var i=0;i<buttons.length;i++)
-                {
-                    buttons[i].disabled = false;
-                }
-            }
-
-            document.getElementById(inputField).style.cssText = "border-color: green !important; float: left !important;";
-            document.getElementById(inputField + "_icon").innerHTML = "<span class='icon-publish'/>";
-            jQuery("#" + inputField + "_message").empty();
-
-        }
-        else
-        {
-            if (required == 'true')
-            {
-
-                var buttons = document.getElementsByClassName('btn-small');
-
-                for (var i=0;i<buttons.length;i++)
-                {
-                    buttons[i].disabled = true;
-                }
-            }
-
-            document.getElementById(inputField).style.cssText = "border-color: red !important; float: left !important;";
-            document.getElementById(inputField + "_icon").innerHTML = "<span class='icon-cancel'/>";
-            jQuery("#" + inputField + "_message").append("</br></br><div class='text-error'>Entered value ist invalid!</div>");
-        }
-    }
-
-    /**
-     * Replaces escape sequences
-     *
-     * @return   String  str  Relaced String
-     **/
-    function escapeRegExp(str) {
-        return str.replace("\\", "\\\\");
-    }
-
-    /**
-     * Reloads user content depending on selected tab
-     *
-     * @return null
-     **/
-    function reloadContent(option)
-    {
-        jQf.ajax({
-            type: "POST",
-            url: "index.php?option=com_thm_groups&controller=user_edit&task=user_edit.getUserContent&cid="
-            + <?php echo $this->item->id ?> + "&tab=" + option +"",
-            datatype: "HTML"
-
-        }).success(function (response){
-            jQf("#" + option).append(response);
-        });
-    }
-
-    /**
-     * Binds a imageCropper to the given elements of the bootstrap modal
-     * created in the user_edit controller function getUserContent.
-     *
-     * @return null
-     **/
-    function bindImageCropper(element, attrID)
-    {
-        var options =
-        {
-            imageBox: '#' + element + '_imageBox',
-            thumbBox: '#' + element + '_thumbBox',
-            spinner:  '#' + element + '_spinner',
-            imgSrc: 'avatar.png'
-        }
-            ,cropper = new cropbox(options)
-            ,filename = null
-        ;
-
-        document.querySelector('#jform_' + element).addEventListener('change', function(){
-            var reader = new FileReader();
-
-            reader.onload = function(e) {
-                options.imgSrc = e.target.result;
-                cropper = new cropbox(options);
-            }
-
-            reader.readAsDataURL(this.files[0]);
-
-            var file = this.files[0];
-            filename = file.name;
-
-            this.files = [];
-        });
-
-        document.querySelector('#' + element + '_saveChanges').addEventListener('click', function(){
-            var blob = cropper.getBlob();
-
-            var fd = new FormData();
-            fd.append('fname', 'test.pic');
-            fd.append('data', blob);
-
-            jQf.ajax({
-                type: "POST",
-                url: "index.php?option=com_thm_groups&controller=user_edit&task=user_edit.saveCropped&id="
-                + <?php echo $this->item; ?> + "&element=" + element + "&attrID=" + attrID +"&filename="
-                + filename + "",
-                data: fd,
-                processData: false,
-                contentType: false
-            }).success(function(response) {
-                //console.log(data);
-                //document.getElementById("info").innerHTML = response;
-                document.getElementById(element + "_IMG").innerHTML = response;
-            });
-        });
-
-        document.querySelector('#'+ element + '_switch').addEventListener('click', function(){
-            var box = document.getElementById(element + '_thumbBox');
-
-            // Get old values:
-            var style = window.getComputedStyle(box);
-            var height = style.getPropertyValue('height');
-            var width = style.getPropertyValue('width');
-
-            // Set new values:
-            box.style.height = width;
-            box.style.width = height;
-        });
-
-        document.querySelector('#'+ element + '_btnCrop').addEventListener('click', function(){
-            var img = cropper.getDataURL();
-            document.querySelector('#' + element + '_cropped').innerHTML = '';
-            document.querySelector('#' + element + '_cropped').innerHTML = '<img src="'+img+'">';
-        });
-        document.querySelector('#'+ element + '_btnZoomIn').addEventListener('click', function(){
-            cropper.zoomIn();
-        });
-        document.querySelector('#'+ element + '_btnZoomOut').addEventListener('click', function(){
-            cropper.zoomOut();
-        });
-    }
-
-    jQf(document).ready(function(){
-
-        // Load stuff once
-        reloadContent("user");
-        reloadContent("groups");
-
-        if (window.location.hash != "#groups")
-        {
-            jQf('#myTabTabs a[href="#user"]').tab('show');
-        }
-        else
-        {
-            jQf('#myTabTabs a[href="#groups"]').tab('show');
-            window.location.hash = "";
-        }
-    });
-
-</script>
+                                </div>
+                                <div id='jform_<?php echo $name; ?>_message'/>
+                            </div>
+                            <div id='info'>
+                            </div></div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <div id="groups" class="tab-pane">
+                    Group data here...
+                </div>
+            </div>
+        </div>
+        <input type='hidden' id='jform_userID' name='jform[userID]' value='<?php echo $this->item; ?>'/>
+        </div>
+        <input type="hidden" name="task" value="" />
+    </form>
