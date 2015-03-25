@@ -47,6 +47,21 @@ class THM_GroupsModelQp_Settings extends JModelAdmin
         return $form;
     }
 
+    /**
+     * Method to load the form data
+     *
+     * @return  Object
+     */
+    protected function loadFormData()
+    {
+        $params = JComponentHelper::getParams('com_thm_groups');
+        $item = new stdClass();
+        $item->qp_status = $params->get('qp_status');
+        $item->qp_root_category = $params->get('qp_root_category');
+
+        return $item;
+    }
+
     public function save($data)
     {
         $qp_status = $data['qp_status'];
