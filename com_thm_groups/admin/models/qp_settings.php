@@ -54,46 +54,39 @@ class THM_GroupsModelQp_Settings extends JModelAdmin
      */
     protected function loadFormData()
     {
-        $params = JComponentHelper::getParams('com_thm_groups');
-        $item = new stdClass();
-        $item->qp_status = $params->get('qp_status');
-        $item->qp_root_category = $params->get('qp_root_category');
+
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery();
+
+        $query
+            ->select('qp_enabled, qp_root_category')
+            ->from('#__thm_groups_quickpages_settings');
+        $dbo->setQuery($query);
+
+        $item = $dbo->loadObject();
 
         return $item;
     }
 
     public function save($data)
     {
-        $qp_status = $data['qp_status'];
+        $qp_enabled = $data['qp_enabled'];
         $qp_root_category = $data['qp_root_category'];
 
-        return($this->setNewComponentParams($qp_status, $qp_root_category));
+        return($this->setNewComponentParams($qp_enabled, $qp_root_category));
     }
 
-    function setNewComponentParams($qp_status, $qp_root_category)
+    function setNewComponentParams($qp_enabled, $qp_root_category)
     {
-
-        $this->cleanCache('_system');
-
-        $componentName = 'com_thm_groups';
-
-        // To access the extensions table we need the id of the component
-        $componentId = JComponentHelper::getComponent('com_thm_groups')->id;
-        assert($componentId != 0); // make sure that no error will cause the creation of a new entry in the extenions table
-
-        // set the new value using set()
-        $params = JComponentHelper::getParams('com_thm_groups');
-        $params->set('qp_status', $qp_status);
-        $params->set('qp_root_category', $qp_root_category);
 
         // Get a new database query instance
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
 
         // Build the query
-        $query->update('#__extensions AS a');
-        $query->set('a.params = ' . $db->quote((string)$params));
-        $query->where("a.element = '$componentName'");
+        $query->update('#__thm_groups_quickpages_settings AS a');
+        $query->set('a.qp_enabled = ' . $db->quote((string)$qp_enabled));
+        $query->set('a.qp_root_category = ' . $db->quote((string)$qp_root_category));
 
         // Execute the query
         $db->setQuery($query);

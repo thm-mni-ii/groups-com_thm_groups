@@ -2,14 +2,14 @@
 <form>
     <fieldset name="category">
         <field
-                name="qp_status"
+                name="qp_enabled"
                 type="radio"
                 default="0"
                 class="btn-group btn-group-yesno"
                 label="COM_THM_GROUPS_QP_STATUS"
                 description="COM_THM_GROUPS_QP_STATUS_DESCRIPTION">
-            <option value="1">JON</option>
-            <option value="0">JOFF</option>
+            <option value="1" class="test">JON</option>
+            <option value="0" class="test">JOFF</option>
         </field>
 
         <field name="qp_root_category"
