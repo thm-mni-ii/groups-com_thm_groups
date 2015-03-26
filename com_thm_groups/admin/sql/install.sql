@@ -12,7 +12,8 @@ DROP TABLE IF EXISTS
 `#__thm_groups_users_attribute`,
 `#__thm_groups_roles`,
 `#__thm_groups_profile`,
-`#__thm_groups_profile_attribute`;
+`#__thm_groups_profile_attribute`,
+`#__thm_groups_quickpages_settings`;
 
 
 
@@ -280,7 +281,6 @@ INSERT INTO `#__thm_groups_users_usergroups_roles` (`ID`, `usersID`, `usergroups
   (6, 3, 6),
   (7, 1, 7);
 
-
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NULL,
@@ -335,4 +335,10 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_usergroups` (
   FOREIGN KEY (`usergroupsID`) REFERENCES `#__usergroups` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `#__thm_groups_quickpages_settings` (
+  `qp_enabled` TINYINT(1) NOT NULL,
+  `qp_root_category` INT(11) NOT NULL
+)
 ENGINE = InnoDB;
