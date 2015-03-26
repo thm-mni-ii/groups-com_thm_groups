@@ -27,7 +27,7 @@ JHTML::_('behavior.framework', true);
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
 */
-class THMGroupsViewAdvanced extends JView
+class THMGroupsViewAdvanced extends JViewLegacy
 {
 
     /**

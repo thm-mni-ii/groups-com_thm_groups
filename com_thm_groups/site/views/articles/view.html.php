@@ -24,7 +24,7 @@ require_once JPATH_COMPONENT . DS . 'models' . DS . 'article.php';
  * @package   thm_groups
  * @since     v0.1.0
  */
-class THMGroupsViewArticles extends JView
+class THMGroupsViewArticles extends JViewLegacy
 {
     protected $items;
 

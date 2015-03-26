@@ -28,7 +28,7 @@ jimport('joomla.filesystem.path');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewEditgroup extends JView
+class THMGroupsViewEditgroup extends JViewLegacy
 {
 
     protected $form;

@@ -28,7 +28,7 @@ jimport('joomla.application.component.view');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewGroups extends JView
+class THMGroupsViewGroups extends JViewLegacy
 {
     /**
      * Method to get display

@@ -32,7 +32,7 @@ jimport('thm_groups.data.lib_thm_groups_user');
  * @link        www.mni.thm.de
  * @since       Class available since Release 2.0
  */
-class THMGroupsViewProfile extends JView
+class THMGroupsViewProfile extends JViewLegacy
 {
 
     protected $form;

@@ -16,7 +16,8 @@
 defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.controller');
 
-$view = JRequest::getCmd('view');
+$app = JFactory::getApplication()->input;
+$view = $app->get('view');
 
 if ($view == "articles")
 {
@@ -91,18 +92,18 @@ if ($view == "articles")
     // Show quickpage control or redirect
     if ($userHasEnabledQuickpage OR $groupsHaveEnabledQuickpage)
     {
-        $controller = JController::getInstance('thmgroups');
+        $controller = JControllerLegacy::getInstance('thmgroups');
 
-        $controller->execute(JRequest::getCmd('task'));
+        $controller->execute(('task'));
 
         $controller->redirect();
     }
 }
 else
 {
-        $controller = Jcontroller::getInstance('thmgroups');
+        $controller = JControllerLegacy::getInstance('thmgroups');
 
-        $controller->execute(JRequest::getCmd('task'));
+        $controller->execute($app->get('task'));
 
         $controller->redirect();
 }

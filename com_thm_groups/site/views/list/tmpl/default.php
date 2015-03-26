@@ -59,6 +59,7 @@ function getListAll($params, $pagetitle, $gid)
         $groupid = $gid;
         $paramLinkTarget = $params['linkTarget'];
         $rows = THMLibThmGroups::getUserCount($groupid);
+         $app = JFactory::getApplication()->input;
 
         $numColumns = $params['columnCount'];
         $orderAttr = $params['orderingAttributes'];
@@ -86,7 +87,7 @@ function getListAll($params, $pagetitle, $gid)
 
         $allLastNames = THMLibThmGroups::getFirstletter($groupid);
 
-        $itemid = JRequest::getVar('Itemid', 0);
+        $itemid = $app->get('Itemid', 0);
         $abc = array(
                 'A',
                 'B',
@@ -281,10 +282,10 @@ function getListAlphabet($params, $pagetitle, $gid)
         $groupid = $gid;
 
         $retString = "";
+        $app = JFactory::getApplication()->input;
 
 
-
-        $shownLetter = JRequest::getVar('letter');
+        $shownLetter = $app->get('letter');
         $paramLinkTarget = $params['linkTarget'];
 
 
@@ -382,7 +383,7 @@ function getListAlphabet($params, $pagetitle, $gid)
                 $showStructureString .= $showStructureTemp . ",";
             }
         }
-        $itemid = JRequest::getVar('Itemid');
+        $itemid = $app->get('Itemid');
 
         $attribut = THMLibThmGroups::getUrl(array("name", "gsuid", "gsgid", "letter", "groupid"));
 
@@ -461,12 +462,12 @@ function getUserForLetter($gid, $column, $letter, $paramLinkTarget, $orderAttr, 
         $numColumns = $column;
 
         $groupid = $gid;
-
+        $app = JFactory::getApplication()->input;
         $pagetitle = JFactory::getDocument()->get("title");
 
 
         $linkTarget = "";
-        $itemid = JRequest::getVar('Itemid');
+        $itemid = $app->get('Itemid');
 
 
 
