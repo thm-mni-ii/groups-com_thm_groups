@@ -4,6 +4,8 @@ DROP TABLE IF EXISTS
             `#__thm_groups_attribute`,
             `#__thm_groups_users_attribute`,
             `#__thm_groups_profile_usergroups`,
+            `#__thm_groups_users_categories`,
+            `#__thm_groups_users_content`,
             `#__thm_groups_usergroups_roles`,
             `#__thm_groups_users_usergroups_roles`,
             `#__thm_groups_users`,

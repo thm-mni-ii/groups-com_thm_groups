@@ -23,7 +23,7 @@ jimport('thm_groups.data.lib_thm_groups_user');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THM_GroupsModelUser_Manager extends THM_CoreModelList
+class THM_GroupsModelArticles_Test extends THM_CoreModelList
 {
 
     protected $defaultOrdering = "userID";
@@ -75,7 +75,18 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
             ->where('a2.attributeID = 2')   // surname
             ->where('a4.attributeID = 4');  // email
 
-        $this->setSearchFilter($query, array('a1.value', 'a2.value'));
+        $query
+            ->select('a.id, a.title, a.alias, a.checked_out, a.checked_out_time, a.catid, a.state, a.access, a.created, a.created_by, a.ordering, a.featured, a.language, a.hits, a.publish_up, a.publish_down,l.title AS language_title,uc.name AS editor,ag.title AS access_level,c.title AS category_title,ua.name AS author_name')
+            ->from('#__content AS a')
+            ->leftJoin('#__languages AS l ON l.lang_code = a.language')
+            ->leftJoin('#__users AS uc ON uc.id=a.checked_out')
+            ->leftJoin('#__viewlevels AS ag ON ag.id = a.access')
+            ->leftJoin('#__categories AS c ON c.id = a.catid')
+            ->leftJoin('#__users AS ua ON ua.id = a.created_by')
+            ->leftJoin('#__thm_groups_users_categories AS qc ON qc.categoriesID = a.catid');
+
+
+        $this->setSearchFilter($query, array('a1.title', 'a1.alias'));
 
         $this->setIDFilter($query, 'a5.published', array('published'));
         $this->setIDFilter($query, 'a5.canEdit', array('canEdit'));
@@ -142,94 +153,6 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
     }
 
     /**
-     * Generates an output with groups and roles of an user
-     *
-     * @param   Int  $userID  An user id
-     *
-     * @return  string
-     */
-    public function generateGroupsAndRoles($userID)
-    {
-        $groupsAndRoles = $this->getUserGroupsAndRolesByUserId($userID);
-        $user = JFactory::getUser();
-        $result = "";
-        $imageURL = JHtml::image(JURI::root() . 'administrator/components/com_thm_groups/assets/images/removeassignment.png', '', 'width=16px');
-
-        // TODO add check if user SuperAdmin
-
-        foreach ($groupsAndRoles as $item)
-        {
-            $roles = explode(', ', $item->rname);
-            $rolesID = explode(', ', $item->rid);
-            $groupRoles = array();
-
-            // If there is only one role in group, don't show delete icon
-            if (count($roles) == 1)
-            {
-                $groupRoles[] = $roles[0];
-            }
-            else
-            {
-                // If there are many roles, show delete icon
-                foreach ($roles as $i => $value)
-                {
-                    // Allow to edit groups only for authorised users
-                    if (($user->authorise('core.edit', 'com_users') || ($user->get('id') == $userID))
-                        && $user->authorise('core.manage', 'com_users'))
-                    {
-                        if ($user->authorise('core.edit.own', 'com_users') && !((!$user->authorise('core.admin'))
-                                && JAccess::check($userID, 'core.admin')))
-                        {
-                            $groupRoles[] = "<a href='javascript:deleteRoleInGroupByUser(" . $userID . ", " . $item->gid . ", " .
-                                $rolesID[$i] . ");' title='" . JText::_('COM_THM_GROUPS_GROUP') . ": "
-                                . $item->gname . " - " . JText::_('COM_THM_GROUPS_ROLE')
-                                . ": " . $value . "::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE')
-                                . ".' class='hasTooltip'>"
-                                . $imageURL
-                                . "</a>"
-                                . "$value";
-                        }
-                    }
-                    else
-                    {
-                        $groupRoles[] = $value;
-                    }
-
-                }
-            }
-
-            // Don't show Public and Registered groups
-            if (!($item->gname == "Public" || $item->gname == "Registered"))
-            {
-                // Allow to edit groups only for authorised users
-                if (($user->authorise('core.edit', 'com_users') || ($user->get('id') == $userID))
-                    && $user->authorise('core.manage', 'com_users'))
-                {
-                    if ($user->authorise('core.edit.own', 'com_users') && !((!$user->authorise('core.admin'))
-                            && JAccess::check($userID, 'core.admin'))
-                    ){
-                        // Show groups with roles
-                        $result .= "<a href='javascript:deleteAllRolesInGroupByUser(" . $userID . ", " . $item->gid . ");' class='hasTooltip'"
-                            . "title='" . JText::_('COM_THM_GROUPS_GROUP')
-                            . ": "
-                            . $item->gname
-                            . "::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES')
-                            . ".'>"
-                            . $imageURL
-                            . "</a>"
-                            . "<strong>$item->gname</strong>"
-                            . " : "
-                            . implode(', ', $groupRoles)
-                            . '<br>';
-                    }
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    /**
      * Function to get table headers
      *
      * @return array including headers
@@ -251,33 +174,5 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
         $headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_USER_MANAGER_GROUPS_AND_ROLES'), 'groupsAndRoles', $direction, $ordering);
 
         return $headers;
-    }
-
-    /**
-     * Return groups with roles of a user by ID
-     *
-     * @param   Int  $userID  user ID
-     *
-     * @return  Associative array with IDs
-     */
-    public function getUserGroupsAndRolesByUserId($userID)
-    {
-        $db = JFactory::getDBO();
-        $query = $db->getQuery(true);
-
-        $query
-            ->select('groups.id as gid')
-            ->select('groups.title AS gname')
-            ->select('GROUP_CONCAT(DISTINCT roles.id ORDER BY roles.name SEPARATOR ", ") AS rid')
-            ->select('GROUP_CONCAT(DISTINCT roles.name ORDER BY roles.name SEPARATOR ", ") AS rname')
-            ->from('#__thm_groups_users_usergroups_roles AS a')
-            ->leftJoin('#__thm_groups_usergroups_roles AS b ON a.usergroups_rolesID = b.id')
-            ->leftJoin('#__usergroups AS groups ON b.usergroupsID = groups.id')
-            ->leftJoin('#__thm_groups_roles AS roles ON b.rolesID = roles.id')
-            ->where("a.usersID = $userID AND b.usergroupsID > 1")
-            ->group('gid');
-
-        $db->setQuery($query);
-        return $db->loadObjectList();
     }
 }

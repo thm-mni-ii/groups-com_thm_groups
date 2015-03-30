@@ -12,6 +12,7 @@
 
 defined('_JEXEC') or die;
 jimport('joomla.application.component.modeladmin');
+jimport('thm_groups.data.lib_thm_groups_quickpages');
 
 /**
  * Class loads form data to edit an entry.
@@ -108,6 +109,7 @@ class THM_GroupsModelUser extends JModelLegacy
                 break;
             case 'qpPublished':
                 $query->set("qpPublished = '$value'");
+                $this->createQuickpageCategoryForUser(array($id));
                 break;
             case 'published':
             default:
@@ -149,6 +151,7 @@ class THM_GroupsModelUser extends JModelLegacy
             {
                 THMLibThmQuickpages::createQuickpageForProfile($profileData);
             }
+
         }
     }
 }

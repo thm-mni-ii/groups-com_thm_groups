@@ -24,7 +24,7 @@ include_once 'libraries/thm_groups/data/lib_thm_groups.php';
 
 $helperObject = new ArticleHelper;
 
-JHtml::addIncludePath(JPATH_COMPONENT . DS . 'helper' . DS . 'html');
+JHtml::addIncludePath(JPATH_COMPONENT . '/helper/html');
 JHtml::_('behavior.tooltip');
 
 $user		= JFactory::getUser();
@@ -59,7 +59,7 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
                 <?php
 
                 // Array with first name and name
-                $name = split(",", $this->categories[0]->title);
+                $name = explode(",", $this->categories[0]->title);
 
                 // Makes link
                 $attribut = THMLibThmGroups::getUrl(array("name", "gsuid", "gsgid"));
@@ -79,6 +79,20 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
 
             </b>
          </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Filters</div>
+            <div class="panel-body">
+                <?php $filters = $this->filterForm->getGroup('filter');
+                foreach ($filters as $fieldName => $field)
+                {
+                    echo '<div class="js-stools-field-filter">';
+                    echo $field->input;
+                    echo '</div>';
+                }
+                ?>
+            </div>
+        </div>
+
          <div style ="inline:block; float:left; align:text-bottom; margin-left: 10px;">
             <select name="filter_published"  onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('COM_THM_QUICKPAGES_SELECT_PUBLISHED');?></option>
@@ -90,7 +104,6 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
                         $this->state->get('filter.published'), true
                         );?>
             </select>
-
         </div>
         <div class="qp_filter_search">
             <label class="qp_filter_label" for="filter_search"><?php echo JText::_('COM_THM_QUICKPAGES_FILTER_LABEL'); ?></label>
@@ -102,7 +115,30 @@ $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
 
             <button type="submit" class="qp_button"><?php echo JText::_('COM_THM_QUICKPAGES_FILTER_SUBMIT'); ?></button>
         </div>
+
     </fieldset>
+    <button type="button" href="index.php?option=com_thm_groups&view=qp_categories&tmpl=component" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+        Launch demo modal
+    </button>
+    <?php echo $this->getToolbar(); ?>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="qp_clear"> </div>
 
     <table class="qp_mainlist">

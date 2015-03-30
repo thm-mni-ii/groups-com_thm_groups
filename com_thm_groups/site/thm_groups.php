@@ -59,12 +59,6 @@ if ($view == "articles")
         {
             THMLibThmQuickpages::createQuickpageForProfile($profileData);
         }
-
-        // Check if user's repository category exist and if not, create it
-        if (!THMLibThmQuickpages::existsRepositoryForProfile($profileData))
-        {
-            THMLibThmQuickpages::createRepositoryForProfile($profileData);
-        }
     }
 
 
@@ -80,12 +74,6 @@ if ($view == "articles")
             if (!THMLibThmQuickpages::existsQuickpageForProfile($profileData))
             {
                 THMLibThmQuickpages::createQuickpageForProfile($profileData);
-            }
-
-            // Check if user's repository category exist and if not, create it
-            if (!THMLibThmQuickpages::existsRepositoryForProfile($profileData))
-            {
-                THMLibThmQuickpages::createRepositoryForProfile($profileData);
             }
         }
     }

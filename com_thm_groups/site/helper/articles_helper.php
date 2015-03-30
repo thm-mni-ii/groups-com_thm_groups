@@ -36,9 +36,10 @@ class ArticleHelper
         $db = JFactory::getDbo();
         $isFeaturedQuery = $db->getQuery(true);
 
-        $isFeaturedQuery->select('*')
-        ->from('#__thm_quickpages_featured')
-        ->where("conid =" . $db->quote($a_id));
+        $isFeaturedQuery
+            ->select('*')
+            ->from('#__thm_groups_users_content')
+            ->where('contentID = ' . $db->quote($a_id));
         $db->setQuery((string) $isFeaturedQuery);
 
         try

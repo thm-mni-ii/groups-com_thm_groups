@@ -19,7 +19,7 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
 require_once JPATH_COMPONENT . '/../com_content/helpers/route.php';
 require_once JPATH_COMPONENT . '/../com_content/helpers/query.php';
-require_once JPATH_COMPONENT . '/../com_content' . DS . 'models' . DS . 'article.php';
+require_once JPATH_COMPONENT . '/../com_content/models/article.php';
 
 jimport('joomla.application.component.helper');
 /**
@@ -54,14 +54,33 @@ class THMGroupsViewSinglearticle extends JViewLegacy
         // Initialise variables.
         $app		= JFactory::getApplication();
         $user		= JFactory::getUser();
-        $gsuid      = JRequest::getVar('gsuid', 0);
-        $name		= JRequest::getVar('name', 0);
-        $old_option = JRequest::getVar('back_option', 0);
-        $old_view   = JRequest::getVar('back_view', 0);
-        $old_layout = JRequest::getVar('back_layout', 0);
-        $old_gsgid  = JRequest::getVar('back_gsgid', 0);
-        $start  = JRequest::getVar('start');
-        $showall  = JRequest::getVar('showall');
+
+        $input = JFactory::getApplication()->input;
+
+        //$gsuid      = JRequest::getVar('gsuid', 0);
+        $gsuid      = $input->get('gsuid', 0, 'INT');
+
+        //$name		= JRequest::getVar('name', 0);
+        $name       = $input->get('name', '', 'STRING');
+
+        //$old_option = JRequest::getVar('back_option', 0);
+        $old_option = $input->get('back_option', 'com_thm_groups', 'STRING');
+
+        //$old_view   = JRequest::getVar('back_view', 0);
+        $old_view   =$input->get('back_view', 'articles', 'STRING');
+
+        //$old_layout = JRequest::getVar('back_layout', 0);
+        $old_layout = $input->get('back_layout', '', 'STRING');
+
+        //$old_gsgid  = JRequest::getVar('back_gsgid', 0);
+        $old_gsgid = $input->get('back_gsgid', 0, 'INT');
+
+        //$start  = JRequest::getVar('start');
+        $start = $input->get('start', 0);
+
+        //$showall  = JRequest::getVar('showall');
+        $showall =$input->get('showall', 0);
+
         $uri = JFactory::getURI();
         $dispatcher	= JDispatcher::getInstance();
 
@@ -73,13 +92,16 @@ class THMGroupsViewSinglearticle extends JViewLegacy
 
 
         $pathway->addItem($this->getUsername($gsuid), $backURL);
-        $parts = explode(":", JRequest::getVar('id', ''));
+        $parts = explode(":", $input->get('id', '', 'STRING'));
+
         $pathway->addItem($parts[1]);
 
         $pagetitle = $parts[1];
 
-        $this->item		= $this->get('Item');
-        $this->print	= JRequest::getBool('print');
+        $this->item = $this->get('Item');
+
+        //$this->print	= JRequest::getBool('print');
+        $this->print    = $input->get('print', false, 'BOOL');
         $this->state	= $this->get('State');
         $this->user		= $user;
         if (JRequest::getVar('return') != null)
@@ -480,29 +502,19 @@ class THMGroupsViewSinglearticle extends JViewLegacy
     {
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
-        $query->select('structid, value');
-        $query->from("#__thm_groups_text AS a");
-        $query->where("a.userid = " . $uid);
+
+        $query
+            ->select('a.value AS name, b.value AS surname')
+            ->from('#__thm_groups_users_attribute AS a')
+            ->innerJoin('#__thm_groups_users_attribute AS b ON b.usersID = a.usersID')
+            ->where('a.usersID = ' . $uid)
+            ->where('a.attributeID = 1')
+            ->where('b.attributeID = 2');
         $db->setQuery($query);
-        $userdata = $db->loadObjectList();
-        $name = "";
-        foreach ($userdata as $data)
-        {
-            if ($data->structid == 1)
-            {
-                $name = $name . $data->value;
-            }
-            else
-            {
-            }
-            if ($data->structid == 2)
-            {
-                $name = $data->value . ', ' . $name;
-            }
-            else
-            {
-            }
-        }
+        $result = $db->loadObject();
+
+        $name = $result->surname . ', ' . $result->name;
+
         return $name;
     }
 }

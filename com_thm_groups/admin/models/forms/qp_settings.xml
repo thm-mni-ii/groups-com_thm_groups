@@ -17,5 +17,15 @@
                label="COM_THM_GROUPS_SELECT_QP_ROOT_CATEGORY"
                description="COM_THM_GROUPS_SELECT_QP_ROOT_CATEGORY_DESCRIPTION"
                extension="com_content"/>
+
+        <field name="qp_move_subcategories"
+               type="radio"
+               default="0"
+               class="btn-group btn-group-yesno"
+               label="COM_THM_GROUPS_QP_MOVE_SUBCATEGORIES"
+               description="COM_THM_GROUPS_QP_MOVE_SUBCATEGORIE_DESCRIPTION">
+            <option value="1" class="test">JYES</option>
+            <option value="0" class="test">JNO</option>
+        </field>
     </fieldset>
 </form>

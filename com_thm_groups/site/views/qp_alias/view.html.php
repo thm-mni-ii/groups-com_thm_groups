@@ -22,7 +22,7 @@ JHtml::_('jquery.framework');
  * @subpackage  com_thm_groups.admin
  * @link        www.mni.thm.de
  */
-class THM_GroupsViewQP_Settings extends JViewLegacy
+class THMGroupsViewQP_Alias extends JViewLegacy
 {
 
     /**
@@ -36,23 +36,15 @@ class THM_GroupsViewQP_Settings extends JViewLegacy
     public function display($tpl = null)
     {
         $this->form = $this->get('Form');
-        $this->addToolBar();
-
-        $document = JFactory::getDocument();
-        $document->addScript(JURI::root(true) . '/administrator/components/com_thm_groups/assets/js/qp_settings.js');
 
         parent::display($tpl);
     }
 
-    /**
-     * creates a joomla administrative tool bar
-     *
-     * @return void
-     */
-    protected function addToolBar()
-    {
-        JToolbarHelper::title(JText::_('COM_THM_GROUPS_USER_SELECT_VIEW_TITLE'), 'test');
+    function getToolbar() {
+        jimport('cms.html.toolbar');
+        $bar = new JToolBar( 'toolbar' );
+        $bar->appendButton( 'Standard', 'apply', 'Save', 'qp_categories.apply', false );
 
-        JToolbarHelper::apply('qp_settings.apply', 'COM_THM_GROUPS_APPLY');
+        return $bar->render();
     }
 }

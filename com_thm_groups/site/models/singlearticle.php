@@ -65,7 +65,7 @@ class THMGroupsModelSinglearticle extends JModelItem
      *
      * @return	mixed	Menu item data object on success, false on failure.
      */
-    public function &getItem($pk = null)
+    public function getItem($pk = null)
     {
         // Initialise variables.
         $pk = (!empty($pk)) ? $pk : (int) $this->getState('article.id');
@@ -81,15 +81,15 @@ class THMGroupsModelSinglearticle extends JModelItem
                 $query = $db->getQuery(true);
 
                 $query->select($this->getState(
-                    'item.select', 'a.id, a.asset_id, a.title, a.alias, a.title_alias, a.introtext, a.fulltext, ' .
+                    'item.select', 'a.id, a.asset_id, a.title, a.alias, a.introtext, a.fulltext, ' .
                     // If badcats is not null, this means that the article is inside an unpublished category
                     // In this case, the state is set to 0 to indicate Unpublished (even if the article state is Published)
                     'CASE WHEN badcats.id is null THEN a.state ELSE 0 END AS state, ' .
-                    'a.mask, a.catid, a.created, a.created_by, a.created_by_alias, ' .
+                    'a.catid, a.created, a.created_by, a.created_by_alias, ' .
                 // use created if modified is 0
                 'CASE WHEN a.modified = 0 THEN a.created ELSE a.modified END as modified, ' .
                     'a.modified_by, a.checked_out, a.checked_out_time, a.publish_up, a.publish_down, ' .
-                    'a.images, a.urls, a.attribs, a.version, a.parentid, a.ordering, ' .
+                    'a.images, a.urls, a.attribs, a.version, a.ordering, ' .
                     'a.metakey, a.metadesc, a.access, a.hits, a.metadata, a.featured, a.language, a.xreference'
                     )
                 );

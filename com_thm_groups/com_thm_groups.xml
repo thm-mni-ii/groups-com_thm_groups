@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension method="upgrade" type="component" version="2.5">
     <name>COM_THM_GROUPS</name>
-    <creationDate>March 2010</creationDate>
-    <author>Dennis Priefer</author>
-    <author>Ilja Michajlow</author>
-    <authorEmail>dennis.priefer@mni.thm.de</authorEmail>
+    <creationDate>28-03-2015</creationDate>
+    <author>THM iCampus</author>
     <authorUrl>http://www.fh-giessen.de</authorUrl>
     <copyright>TH Mittelhessen</copyright>
     <license>GNU/GPL Version 2</license>

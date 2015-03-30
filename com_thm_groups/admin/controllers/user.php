@@ -13,13 +13,10 @@
  */
 
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die();
 
 jimport('joomla.application.component.controller');
 jimport('joomla.application.component.model');
-
-// For delete operation
-JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_users/models', 'UsersModel');
 
 /**
  * THM_GroupsControllerUser class for component com_thm_groups
@@ -108,14 +105,6 @@ class THM_GroupsControllerUser extends JControllerLegacy
         $this->setRedirect("index.php?option=com_thm_groups&view=user_manager", $msg, $type);
     }
 
-    public function createQuickpageForUser()
-    {
-        $model = $this->getModel('user');
-
-        // TODO function need cid
-        $model->createQuickpageCategoryForUser('');
-    }
-
     public function deleteRoleInGroupByUser()
     {
         $model = $this->getModel('user');
@@ -148,7 +137,6 @@ class THM_GroupsControllerUser extends JControllerLegacy
     {
         $model = $this->getModel('user_edit');
 
-        //Formvalidation is done in View via js
         $success = $model->save();
         if ($success)
         {
@@ -167,7 +155,6 @@ class THM_GroupsControllerUser extends JControllerLegacy
     {
         $model = $this->getModel('user_edit');
 
-        //Formvalidation is done in View via js
         $success = $model->save();
         if ($success)
         {

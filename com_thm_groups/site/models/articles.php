@@ -103,9 +103,6 @@ class THMGroupsModelArticles extends JModelList
         {
             $this->_profileIdentData = THMLibThmQuickpages::getPageProfileDataByUserSession();
         }
-        else
-        {
-        }
     }
 
 
@@ -266,18 +263,18 @@ class THMGroupsModelArticles extends JModelList
         /* $query->join('LEFT', '#__user_usergroup_map AS uag ON uag.user_id = ua.id'); */
 
         // Join over the groups of the current users.
-        $query->join('LEFT', THMLibThmQuickpages::TABLE_NAME_THM_GROUPS_GROUPS_MAP . ' AS cug ON cug.uid = ' . (int) $this->_currUser->get('id'));
+        //$query->join('LEFT', THMLibThmQuickpages::TABLE_NAME_THM_GROUPS_GROUPS_MAP . ' AS cug ON cug.uid = ' . (int) $this->_currUser->get('id'));
 
         // Join over the quickpage categories.
-        $query->join('LEFT', THMLibThmQuickpages::TABLE_NAME . ' AS qc ON qc.catid = a.catid');
+        $query->join('LEFT', '#__thm_groups_users_categories' . ' AS qc ON qc.categoriesID = a.catid');
 
         // Filter own articles or quickpage articles
         $whereClause = '( ';
         $whereClause .= 'a.created_by = ' . ((int) $this->_currUser->get('id')) . ' ';
         $whereClause .= 'OR qc.id = ' . ((int) $this->_currUser->get('id'));
-        $whereClause .= ' AND qc.id_kind = ' . $db->quote(THMLibThmQuickpages::TABLE_USER_ID_KIND) . ' ';
-        $whereClause .= 'OR qc.id = cug.gid';
-        $whereClause .= ' AND qc.id_kind = ' . $db->quote(THMLibThmQuickpages::TABLE_GROUP_ID_KIND) . ' ';
+        //$whereClause .= ' AND qc.id_kind = ' . $db->quote(THMLibThmQuickpages::TABLE_USER_ID_KIND) . ' ';
+        //$whereClause .= 'OR qc.id = cug.gid';
+        //$whereClause .= ' AND qc.id_kind = ' . $db->quote(THMLibThmQuickpages::TABLE_GROUP_ID_KIND) . ' ';
         $whereClause .= ') ';
         $query->where($whereClause);
         $query->where('c.extension = \'com_content\'');
@@ -298,11 +295,9 @@ class THMGroupsModelArticles extends JModelList
         {
             $query->where('(a.state = 0 OR a.state = 1)');
         }
-        else
-        {
-        }
 
         // Filter by a single or group of categories.
+        // TODO make filter by categories
         $categoryId = $this->getState('filter.category_id');
         if (is_numeric($categoryId))
         {
@@ -314,9 +309,6 @@ class THMGroupsModelArticles extends JModelList
             $categoryId = implode(',', $categoryId);
             $query->where('a.catid IN (' . $categoryId . ')');
         }
-        else
-        {
-        }
 
         /* // Filter by author
         $authorId = $this->getState('filter.author_id');
@@ -325,6 +317,7 @@ class THMGroupsModelArticles extends JModelList
             $type = $this->getState('filter.author_id.include', true) ? '= ' : '<>';
             $query->where('a.created_by '.$type.(int) $authorId);
         } */
+
 
         // Filter by search in title.
         $search = $this->getState('filter.search');
@@ -341,7 +334,7 @@ class THMGroupsModelArticles extends JModelList
             }
             else
             {
-                $search = $db->Quote('%' . $db->getEscaped($search, true) . '%');
+                $search = $db->Quote('%' . $search . '%');
                 $query->where('(a.title LIKE ' . $search . ' OR a.alias LIKE ' . $search . ')');
             }
         }
@@ -357,13 +350,17 @@ class THMGroupsModelArticles extends JModelList
         if ($orderCol == 'a.ordering' || $orderCol == 'category_title')
         {
             $orderCol = 'category_title ' . $orderDirn . ', a.ordering';
+            $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
         }
-        $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
+
 
         // Group by content id to distinct selected rows
         $query->group('a.id');
 
         /* echo nl2br(str_replace('#__','jos_',$query)); */
+        echo '<pre>';
+        print_r($query->__toString());
+        echo '</pre>';
         return $query;
     }
 
@@ -377,12 +374,12 @@ class THMGroupsModelArticles extends JModelList
         // Create a new query object.
         $db = $this->getDbo();
         $query = $db->getQuery(true);
-        $cat_id  = THMLibThmQuickpages::getuserCategory($this->_currUser->get('id'));
+        $cat_id  = THMLibThmQuickpages::getUserQuickpageCategory($this->_currUser->get('id'));
         $query->select("*");
         $query->from("#__categories");
-        $query->where("id =" . $cat_id->catid);
+        $query->where("id =" . $cat_id->categoriesID);
         $db->setQuery($query);
-        $db->query();
+        $db->execute();
         return $db->loadObjectList();
     }
 

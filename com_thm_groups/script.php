@@ -95,30 +95,20 @@ class Com_THM_GroupsInstallerScript
      */
     public function install($parent)
     {
-        $db = JFactory::getDBO();
-        $query = $db->getQuery(true);
-        $query->select('*');
-        $query->from($db->qn('#__usergroups'));
+        $db = JFactory::getDbo();
+
+        // Copy users from joomla
+        $query = '
+          INSERT INTO `#__thm_groups_users`
+              SELECT
+                `id` AS "id",
+                1        AS "published",
+                1        AS "injoomla",
+                1        AS "canEdit",
+                0        AS "qpPublished"
+              FROM `#__users`;';
         $db->setQuery($query);
-        $db->query();
-        $rows = $db->loadObjectlist();
-
-        // Sync Groups to database
-/*        foreach ($rows as $row)
-        {
-            $query = $db->getQuery(true);
-            $query->insert("#__thm_groups_groups (id, name, info, picture, mode, injoomla)");
-            $query->values("$row->id , '" . $row->title . "' , ' ' , ' ' , ' ' , 1");
-            $db->setQuery($query);
-
-            if ($db->query())
-            {
-                echo "
-                <p align=\"left\">
-                <strong>&nbsp;" . $row->title . " Group added to database!</strong>
-                </p>";
-            }
-        }*/
+        $db->execute();
     }
 
     /*

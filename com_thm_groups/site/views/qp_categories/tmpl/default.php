@@ -12,7 +12,7 @@
 
 defined("_JEXEC") or die;
 
-class QuickpageSettingsTemplateModal
+class QuickpageCategoriesTemplateModal
 {
 
     /**
@@ -27,39 +27,21 @@ class QuickpageSettingsTemplateModal
         ?>
         <form action="index.php?" id="adminForm"  method="post" name="adminForm" xmlns="http://www.w3.org/1999/html">
             <div id="j-main-container">
+
                 <?php echo $view->form->renderFieldset('category'); ?>
                 <div class="clr"> </div>
-
                 <input type="hidden" name="task" value="" />
                 <input type="hidden" name="option" value="<?php echo JFactory::getApplication()->input->get('option'); ?>" />
                 <input type="hidden" name="view" value="<?php echo $view->get('name'); ?>" />
                 <input type="hidden" name="tmpl" value="component" />
                 <?php echo JHtml::_('form.token');?>
-
-            </div>
-            <div class="modal-footer">
-                <?php self::renderButtons(); ?>
+                <?php echo $view->getToolbar(); ?>
             </div>
         </form>
     <?php
     }
-
-    /**
-     * Renders any buttons appended by the view
-     *
-     * @return  void
-     */
-    public static function renderButtons()
-    {
-        $toolbar = JToolbar::getInstance();
-        $buttons = $toolbar->getItems();
-        foreach ($buttons as $button)
-        {
-            echo $toolbar->renderButton($button);
-        }
-    }
 }
 
-QuickpageSettingsTemplateModal::render($this);
+QuickpageCategoriesTemplateModal::render($this);
 
 

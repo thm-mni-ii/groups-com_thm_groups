@@ -25,7 +25,7 @@ jimport('joomla.application.component.controlleradmin');
  * @package   thm_groups
  * @since     v0.1.0
  */
-class THMGroupsControllerArticles extends JControllerAdmin
+class THMGroupsControllerArticles extends JControllerLegacy
 {
     /**
      * Constructor.
@@ -294,6 +294,9 @@ class THMGroupsControllerArticles extends JControllerAdmin
     public function featureArticle()
     {
 
+        echo '<pre>';
+        print_r("TEST");
+        echo '</pre>';
         // Get the model.
         $model = $this->getModel();
 
@@ -302,10 +305,16 @@ class THMGroupsControllerArticles extends JControllerAdmin
 
         if ($model->featureArticle($a_id))
         {
+            echo '<pre>';
+            print_r("YES");
+            echo '</pre>';
             JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_FEATURE_ARTIKEL'), 'Message');
         }
         else
         {
+            echo '<pre>';
+            print_r("NO");
+            echo '</pre>';die;
             JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_UNFEATURE_ARTIKEL'), 'Message');
         }
 

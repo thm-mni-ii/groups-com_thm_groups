@@ -6,14 +6,6 @@
         description="COM_THM_GROUPS_GENERAL_SETTINGS_DESCRIPTION">
 
         <field
-            name="content_category"
-            type="category"
-            label="COM_THM_GROUPS_GENERAL_SETTINGS_QP_ROOT_CATEGORY"
-            description="COM_THM_GROUPS_GENERAL_SETTINGS_QP_ROOT_CATEGORY_DESCRIPTION"
-            extension="com_content"
-        />
-
-        <field
             name="editownprofile"
             type="checkbox"
             value="1"

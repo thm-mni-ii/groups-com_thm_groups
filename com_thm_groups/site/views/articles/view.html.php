@@ -15,7 +15,9 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
-require_once JPATH_COMPONENT . DS . 'models' . DS . 'article.php';
+require_once JPATH_COMPONENT  . '/models/article.php';
+JHtml::_('bootstrap.framework');
+JHtml::_('jquery.framework');
 
 /**
  * View class for a list of articles.
@@ -51,6 +53,8 @@ class THMGroupsViewArticles extends JViewLegacy
         /* $this->authors		= $this->get('Authors'); */
         $this->categories	= $this->get('Categories');
         $this->profileIdentData	= $this->get('ProfileIdentData');
+        $this->filterForm = $this->get('FilterForm');
+        $this->activeFilters = $this->get('ActiveFilters');
 
         // Check for errors.
         if (count($errors = $this->get('Errors')))
@@ -64,6 +68,37 @@ class THMGroupsViewArticles extends JViewLegacy
         $document->addStyleSheet(JURI::base(true) . '/components/com_thm_groups/css/quickpage.css');
 
         parent::display($tpl);
+    }
+
+    function getToolbar() {
+        jimport('cms.html.toolbar');
+        $bar = new JToolBar( 'toolbar' );
+
+        // Add category to user root quickpage category
+        $image = 'cog';
+        $title = JText::_('COM_THM_GROUPS_QUICKPAGES_ADD_CATEGORY');
+        $link = 'index.php?option=com_thm_groups&amp;view=qp_categories&amp;tmpl=component';
+        $height = '600';
+        $width = '900';
+        $top = 0;
+        $left = 0;
+        $onClose = 'window.location.reload();';
+        $bar->appendButton('Popup', $image, $title, $link, $width, $height, $top, $left, $onClose);
+
+        // Add other category as alias
+        $image1 = 'edit';
+        $title1 = JText::_('COM_THM_GROUPS_QUICKPAGES_ADD_ALIAS');
+        $link1 = 'index.php?option=com_thm_groups&amp;view=qp_alias&amp;tmpl=component';
+        $height1 = '600';
+        $width1 = '900';
+        $top1 = 0;
+        $left1 = 0;
+        $onClose1 = 'window.location.reload();';
+
+        $bar->appendButton('Popup', $image1, $title1, $link1, $width1, $height1, $top1, $left1, $onClose1);
+
+        // Generate the html and return
+        return $bar->render();
     }
 
 

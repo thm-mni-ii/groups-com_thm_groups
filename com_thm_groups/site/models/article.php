@@ -17,7 +17,7 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modeladmin');
 
-require_once JPATH_COMPONENT . DS . 'helper' . DS . 'content.php';
+require_once JPATH_COMPONENT . '/helper/content.php';
 
 /**
  * Item Model for an Article.
@@ -206,6 +206,9 @@ class THMGroupsModelArticle extends JModelAdmin
      */
     public static function featureArticle($a_id)
     {
+        echo '<pre>';
+        print_r("FEATURE");
+        echo '</pre>';die;
        $isArticleFeatured = self::isArticleFeatured($a_id);
 
        if ($isArticleFeatured == null)
@@ -232,9 +235,10 @@ class THMGroupsModelArticle extends JModelAdmin
         $db = JFactory::getDbo();
         $isFeaturedQuery = $db->getQuery(true);
 
-        $isFeaturedQuery->select('*')
-        ->from('#__thm_quickpages_featured')
-        ->where("conid =" . $db->quote($a_id));
+        $isFeaturedQuery
+            ->select('*')
+            ->from('#__thm_groups_users_content')
+            ->where('contentID = ' . $db->quote($a_id));
         $db->setQuery((string) $isFeaturedQuery);
 
         try
@@ -262,13 +266,15 @@ class THMGroupsModelArticle extends JModelAdmin
         $db = JFactory::getDbo();
         $insertQuery = $db->getQuery(true);
 
-        $insertQuery->insert('#__thm_quickpages_featured', 'conid')
-        ->values($a_id);
+        $insertQuery
+            ->insert('#__thm_groups_users_content')
+            ->set('featured = 1')
+            ->where('contentID = ' . (int) $a_id);
         $db->setQuery((string) $insertQuery);
 
         try
         {
-            $db->query();
+            $db->execute();
         }
         catch (Exception $exception)
         {
@@ -289,13 +295,16 @@ class THMGroupsModelArticle extends JModelAdmin
         $db = JFactory::getDbo();
         $deleteQuery = $db->getQuery(true);
 
-        $deleteQuery->delete('#__thm_quickpages_featured')
-        ->where("conid =" . $db->quote($a_id));
+
+        $deleteQuery
+            ->delete('#__thm_groups_users_content')
+            ->where('contentID = ' . (int) $a_id);
+
         $db->setQuery((string) $deleteQuery);
 
         try
         {
-            $db->query();
+            $db->execute();
         }
         catch (Exception $exception)
         {
