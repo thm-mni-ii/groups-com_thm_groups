@@ -26,12 +26,12 @@
                required="false" />
         <field name="description"
                type="textarea"
-               label="Description"
+               label="COM_THM_GROUPS_DESCRIPTION"
                rows="10"
                cols="5"
                required="false" />
         <field name="additional"
                type="DynField"
-               label="Additional fields"/>
+               label="COM_THM_GROUPS_ADDITIONAL"/>
     </fieldset>
 </form>

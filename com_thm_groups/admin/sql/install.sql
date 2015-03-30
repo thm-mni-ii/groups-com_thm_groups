@@ -15,8 +15,6 @@ DROP TABLE IF EXISTS
 `#__thm_groups_profile_attribute`,
 `#__thm_groups_quickpages_settings`;
 
-
-
 INSERT INTO `#__users` (`id`, `name`, `username`, `email`) VALUES
   (1, 'Max Mustermann', 'test_user1', 'max.mustermann@mni.thm.de'),
   (2, 'Sabine Musterfrau', 'test_user2', 'sabine.musterfrau@mni.thm.de'),

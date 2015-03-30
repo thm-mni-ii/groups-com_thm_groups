@@ -29,12 +29,12 @@ jimport('thm_core.edit.advancedtemplate');
             <ul id="myTabsTabs" class="nav nav-tabs">
                 <li class="active">
                     <a data-toggle="tab" href="#user">
-                        Userdata
+                        <?php echo JText::_('COM_THM_GROUPS_USERDATA'); ?>
                     </a>
                 </li>
                 <li>
                     <a data-toggle="tab" href="#groups">
-                        Groups
+                        <?php echo JText::_('COM_THM_GROUPS_GROUPS'); ?>
                     </a>
                 </li>
             </ul>
@@ -43,7 +43,7 @@ jimport('thm_core.edit.advancedtemplate');
 
                     <div id="user_header">
                         <div id='header_left'></div>
-                        <div id='header_right'>Published</div>
+                        <div id='header_right'><?php echo JText::_('COM_THM_QUICKPAGES_PUBLISHED'); ?></div>
                     </div>
                     <?php
                     foreach ($this->userContent as $item) :
@@ -84,7 +84,7 @@ jimport('thm_core.edit.advancedtemplate');
                                     class='btn btn-success'
                                     style='float: left;'
                                     data-toggle='modal'
-                                    data-target='#<?php echo $name; ?>_Modal'>Change Picture
+                                    data-target='#<?php echo $name; ?>_Modal'><?php echo JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_CHANGE'); ?>
                                 </button>
 
                                 <div
@@ -104,7 +104,7 @@ jimport('thm_core.edit.advancedtemplate');
                                                         aria-label='Close'>
                                                     <span aria-hidden='true'>&times;</span>
                                                 </button>
-                                                <h4 class='modal-title' id='myModalLabel'>Picture upload</h4>
+                                                <h4 class='modal-title' id='myModalLabel'><?php echo JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_UPLOAD'); ?></h4>
                                             </div>
 
                                             <div id='<?php echo $name; ?>_Modal_Body' class='modal-body modalPicture'>
@@ -117,7 +117,7 @@ jimport('thm_core.edit.advancedtemplate');
                                                             <div
                                                                 id='<?php echo $name; ?>_spinner'
                                                                 class='spinner'
-                                                                style='display: none'>Loading...
+                                                                style='display: none'><?php echo JText::_('COM_THM_GROUPS_LOAD'); ?>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -132,14 +132,14 @@ jimport('thm_core.edit.advancedtemplate');
                                                     </div>
                                                     <div id='<?php echo $name; ?>_cropped_controls'
                                                          class='cropped_controls'>
-                                                        <span><hr/><br/><b>Select dimensions</b></span><br/><br/>
+                                                        <span><hr/><br/><b><?php echo JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_SELECT_DIM'); ?></b></span><br/><br/>
                                                         <button
                                                             type='button'
                                                             id='<?php echo $name; ?>_switch'
                                                             class='btn btn-default'
-                                                            value='switch mode'>Switch mode
+                                                            value='switch mode'><?php echo JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_SWITCH'); ?>
                                                         </button>
-                                                        <span> Normal mode</span>
+                                                        <span><?php echo JText::_('COM_THM_GROUPS_NORMALMODE'); ?></span>
                                                         <br/><br/>
                                                         <div id='<?php echo $name; ?>_result'
                                                              class="alert alert-success"
@@ -177,12 +177,12 @@ jimport('thm_core.edit.advancedtemplate');
                                                         style='float: left;'/>
                                                 </div>
                                                 <button type='button' class='btn btn-default' data-dismiss='modal'>
-                                                    Close
+                                                    <?php echo JText::_('COM_THM_GROUPS_CLOSE'); ?>
                                                 </button>
                                                 <button
                                                     id='<?php echo $name; ?>_saveChanges'
                                                     type='button'
-                                                    class='savePic btn btn-primary'>Upload
+                                                    class='savePic btn btn-primary'><?php echo JText::_('COM_THM_GROUPS_UPLOAD'); ?>
                                                 </button>
                                             </div>
                                         </div>
@@ -196,7 +196,7 @@ jimport('thm_core.edit.advancedtemplate');
                                         onclick='deletePic("<?php echo $name; ?>", "<?php echo $item->attributeID; ?>"
                                             , "<?php echo $item->usersID; ?>")'
                                         type='button'>
-                                    <span class='icon-delete'></span> Delete
+                                    <span class='icon-delete'></span><?php echo JText::_('COM_THM_QUICKPAGES_TRASH'); ?>
                                 </button>
                                 <br/>
 

@@ -85,12 +85,16 @@ $doc->addStyleSheet(JURI::root(true) . $componentDir . "/assets/css/jqueryFileTr
                     <div class="checkbox">
                         <label>
                             <input name="jform[required]" id="required"
-                            <?php if (json_decode($this->item->options)->required == 'true')
+                            <?php
+                            if ($this->item->options != null)
                             {
-                                echo 'checked';
+                                if (json_decode($this->item->options)->required == 'true')
+                                {
+                                    echo 'checked';
+                                }
                             }
                             ?>
-                                   type="checkbox"/>required
+                                   type="checkbox"/><?php echo JText::_('COM_THM_GROUPS_REQUIRED'); ?>
                         </label>
                     </div>
                     <br/>

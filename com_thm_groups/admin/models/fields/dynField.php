@@ -149,13 +149,16 @@ class JFormFieldDynField extends JFormField {
                     $fields .= "title='" . JText::_("COM_THM_GROUPS_STRUCTURE_EXTRA_TOOLTIP_PICTURE_PATH") . "' "
                         . "/>";
                     $fields .= "<input type='hidden' name='dynID' id='dynID' value='" . $dynAttribute->id . "'></input>";
-                    $fields .= "<br/><button type='button' class='btn btn-small' onclick='showFTree()'>Browse</button>";
+                    $fields .= "<br/><button type='button' class='btn btn-small' onclick='showFTree()'>"
+                            . JText::_('COM_THM_GROUPS_BROWSE')
+                            . "</button>";
 
                     // Draggable explorer for folder and file-selections:
                     $fields .= "<div id='fileBrowser' class='ui-widget-content'>"
-                        . "<div id='fileBrowserInnerHeader' class='page-title'>Choose a Path"
+                        . "<div id='fileBrowserInnerHeader' class='page-title'>"
+                        . JText::_('COM_THM_GROUPS_CHOOSE_PATH')
                         . "<button type='button' class='btn btn-small' style='float: right !important; margin-top: 5px !important;' "
-                        . "onclick='hideFTree()'>Close</button>"
+                        . "onclick='hideFTree()'>" . JText::_('COM_THM_GROUPS_CLOSE') . "</button>"
                         . "</div>"
                         . "<div id='fileBrowserInner'>"
                         . "<div id='fileBrowserInnerContent'></div></div></div>";

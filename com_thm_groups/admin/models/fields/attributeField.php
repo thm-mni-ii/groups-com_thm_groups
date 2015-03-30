@@ -166,13 +166,17 @@ class JFormFieldAttributeField extends JFormField {
                     }
                     $fields .= "' />";
                     $fields .= "<input type='hidden' name='attrID' id='attrID' value='" . $attrID . "'></input>";
-                    $fields .= "<br/><button type='button' class='btn btn-small' onclick='showFTree()'>Browse</button>";
+                    $fields .= "<br/><button type='button' class='btn btn-small' onclick='showFTree()'>"
+                            . JText::_('COM_THM_GROUPS_BROWSE')
+                            . "</button>";
+
 
                     // Draggable explorer for folder and file-selections:
                     $fields .= "<div id='fileBrowser' class='ui-widget-content'>"
-                        . "<div id='fileBrowserInnerHeader' class='page-title'>Choose a Path"
+                        . "<div id='fileBrowserInnerHeader' class='page-title'>"
+                        . JText::_('COM_THM_GROUPS_CHOOSE_PATH')
                         . "<button type='button' class='btn btn-small' style='float: right !important; margin-top: 5px !important;' "
-                        . "onclick='hideFTree()'>Close</button>"
+                        . "onclick='hideFTree()'>" . JText::_('COM_THM_GROUPS_CLOSE') . "</button>"
                         . "</div>"
                         . "<div id='fileBrowserInner'>"
                         . "<div id='fileBrowserInnerContent'></div></div></div>";

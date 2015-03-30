@@ -55,6 +55,8 @@ class THM_GroupsModelAttribute extends JModelLegacy
             case "2":
                 $options['2'] = '{ "length" : "' . $app->input->getHtml('TEXTFIELD_length') . '", "required" : "' . $required . '" }';
                 break;
+            case "3":
+                $options['3'] = '{ "required" : "' . $required . '" }';
             case "4":
                 $attrID = $app->input->get('attrID');
                 $inputPath   = $app->input->getHtml('PICTURE_path');
@@ -81,6 +83,8 @@ class THM_GroupsModelAttribute extends JModelLegacy
             case "6":
                 $options['6'] = '{ "columns" : "' . $app->input->getHtml('TABLE_columns') . '", "required" : "' . $required . '" }';
                 break;
+            case "7":
+                $options['7'] = '{ "required" : "' . $required . '" }';
         }
         $data['options'] = $options[$data['static_typeID']];
         $dbo->transactionStart();
