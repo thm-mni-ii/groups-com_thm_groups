@@ -44,7 +44,7 @@ class THM_GroupsModelRole_Manager extends THM_CoreModelList
             ->group('a.id');
 
         $this->setSearchFilter($query, array('a.name'));
-        $this->setIDFilter($query, 'b.usergroupsID', array('groups'));
+        $this->setIDFilter($query, 'b.usergroupsID', array('filter.groups'));
         $this->setOrdering($query);
 
         return $query;
@@ -145,15 +145,15 @@ class THM_GroupsModelRole_Manager extends THM_CoreModelList
         $groups = $db->loadObjectList();
 
         $return = array();
-        if(!empty($groups))
+        if (!empty($groups))
         {
-            foreach($groups as $group)
+            foreach ($groups as $group)
             {
-                // delete button
+                // Delete button
                 $deleteIcon = '<span class="icon-trash"></span>';
                 $deleteBtn = "<a href='javascript:deleteGroup(" . $rid . "," . $group->id . ")'>" . $deleteIcon . "</a>";
 
-                // link to edit view of a group
+                // Link to edit view of a group
                 $url = JRoute::_('index.php?option=com_users&task=group.edit&id=' . $group->id);
 
                 $return[] = "<a href=$url>" . $group->title . "</a> " . $deleteBtn;
@@ -163,11 +163,16 @@ class THM_GroupsModelRole_Manager extends THM_CoreModelList
         return implode(',<br /> ', $return);
     }
 
+    /**
+     * Returns hidden fields for page
+     *
+     * @return array
+     */
     public function getHiddenFields()
     {
         $fields = array();
 
-        // hidden fields for deletion of one group at once
+        // Hidden fields for deletion of one group at once
         $fields[] = '<input type="hidden" name="g_id" value="">';
         $fields[] = '<input type="hidden" name="r_id" value="">';
 
