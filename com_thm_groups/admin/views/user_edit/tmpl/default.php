@@ -65,6 +65,21 @@ jimport('thm_core.edit.advancedtemplate');
                                     . "name='jform[" . $name . "]'>" . $item->value . "</textarea>";
                                 echo $output;
                                 ?>
+                            <?php elseif ($item->name == 'MULTISELECT') :
+                                $output = "<select multiple class='form-control' id='jform_" . $name . "'"
+                                    . "name='jform[" . $name . "[]]'>"
+                                    . "style='float:left !important;'";
+                                $fields     = explode(';', json_decode($item->options)->options);
+                                foreach ($fields as $field)
+                                {
+                                    $output .= "<option>" . $field . "</option>";
+                                }
+                                $output .= "</select>";
+                                echo $output;
+                            ?>
+                            <?php elseif ($item->name == 'TABLE') :
+
+                            ?>
                             <?php elseif ($item->name == 'PICTURE') :
                                 $pData      = json_decode($item->options);
                                 $position   = strpos($pData->path, 'images/');

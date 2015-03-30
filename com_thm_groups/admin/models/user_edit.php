@@ -275,6 +275,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                 }
                 catch (Exception $e)
                 {
+                    echo "fuck it damn";
                     echo $e->getMessage();
                 }
             }

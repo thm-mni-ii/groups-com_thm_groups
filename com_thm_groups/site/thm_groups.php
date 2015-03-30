@@ -16,8 +16,10 @@
 defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.controller');
 
-$app = JFactory::getApplication()->input;
-$view = $app->get('view');
+$view = JRequest::getCmd('view');
+$input = JFactory::getApplication()->input;
+$task = $input->getCmd('task');
+$contr = $input->getCmd('controller');
 
 if ($view == "articles")
 {
@@ -94,7 +96,7 @@ if ($view == "articles")
     {
         $controller = JControllerLegacy::getInstance('thmgroups');
 
-        $controller->execute(('task'));
+        $controller->execute(JRequest::getCmd('task'));
 
         $controller->redirect();
     }
@@ -103,7 +105,7 @@ else
 {
         $controller = JControllerLegacy::getInstance('thmgroups');
 
-        $controller->execute($app->get('task'));
+        $controller->execute(JRequest::getCmd('task'));
 
         $controller->redirect();
 }

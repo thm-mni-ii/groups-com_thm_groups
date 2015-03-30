@@ -47,7 +47,7 @@ class THM_GroupsViewUser_Edit extends THM_CoreViewEdit
         JHtml::_('behavior.framework', true);
         JHtml::_('behavior.formvalidation');
         JHtml::_('formbehavior.chosen', 'select');
-        JHtml::_('script', JUri::root() . $componentDir . '/assets/js/tabReload.js');
+        //JHtml::_('script', JUri::root() . $componentDir . '/assets/js/tabReload.js');
         JHtml::_('script', JUri::root() . $componentDir . '/assets/js/cropbox.js');
         JHtml::_('script', JUri::root() . $componentDir . '/assets/js/inputValidation.js');
 
