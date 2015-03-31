@@ -50,6 +50,7 @@ class THM_GroupsViewUser_Edit extends THM_CoreViewEdit
         //JHtml::_('script', JUri::root() . $componentDir . '/assets/js/tabReload.js');
         JHtml::_('script', JUri::root() . $componentDir . '/assets/js/cropbox.js');
         JHtml::_('script', JUri::root() . $componentDir . '/assets/js/inputValidation.js');
+        JHtml::_('script', JUri::root() . $componentDir . '/assets/js/user_edit.js');
 
         $doc = JFactory::getDocument();
         $doc -> addStyleSheet(JURI::root(true) . $componentDir . '/assets/css/cropbox.css');
@@ -58,6 +59,8 @@ class THM_GroupsViewUser_Edit extends THM_CoreViewEdit
         $doc -> addScript(JUri::root() . "libraries/thm_core/js/formbehaviorChosenHelper.js");
 
         $this->userContent = $this->get('Content');
+        //var_dump($this->userContent);
+        //die();
         //$this->addToolBar();
 
         parent::display($tpl);

@@ -1,29 +1,39 @@
 <?php
 /**
+ * @version     v3.2.7
  * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        dynamic type model
- * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @subpackage  com_thm_groups.site
+ * @name		THMGroupsModeledit
+ * @description THMGroupsModeledit file from com_thm_groups
+ * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
+ * @author      Markus Kaiser,  <markus.kaiser@mni.thm.de>
+ * @author      Daniel Bellof,  <daniel.bellof@mni.thm.de>
+ * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
+ * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
+ * @author      Peter May,      <peter.may@mni.thm.de>
+ * @author      Tobias Schmitt, <tobias.schmitt@mni.thm.de>
+ * @author      Alexander Boll, <alexander.boll@mni.thm.de>
+ * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
-
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
+jimport('joomla.application.component.modelform');
+jimport('thm_groups.data.lib_thm_groups_quickpages');
 jimport('thm_core.edit.model');
 jimport('thm_groups.data.lib_thm_groups_user');
 jimport('joomla.filesystem.file');
 
 /**
- * Class loads form data to edit an entry.
+ * THMGroupsModeledit class for component com_thm_groups
  *
- * @category    Joomla.Component.Admin
- * @package     thm_groups
- * @subpackage  com_thm_groups.admin
+ * @category  Joomla.Component.Site
+ * @package   thm_groups
+ * @link      www.mni.thm.de
+ * @since     Class available since Release 2.0
  */
-class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
+class THMGroupsModelUser_Edit extends THM_CoreModelEdit
 {
     /**
      * Constructor.
@@ -49,13 +59,13 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         $id = (empty($ids)) ? $app->input->get->get('id') : $ids[0];
         $item = $this->getItem($id);
 
-       /* $content = $this->getContent($id);
-        // add data
-        foreach ($content as $field)
-        {
-            $attrName = $field->attribute;
-            $item->$attrName = $field->value;
-        }*/
+        /* $content = $this->getContent($id);
+         // add data
+         foreach ($content as $field)
+         {
+             $attrName = $field->attribute;
+             $item->$attrName = $field->value;
+         }*/
 
         return $item;
     }
@@ -69,7 +79,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
      */
     public function getContent()
     {
-        $userId = JFactory::getApplication()->input->get('id');
+        $userId = JFactory::getApplication()->input->get('gsuid');
 
         if ($userId == null)
         {
@@ -217,26 +227,12 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         }
     }
 
-    private function getJsonTable($uid, $attrid)
-    {
-        $dbo = JFactory::getDbo();
-        $query = $dbo->getQuery(true);
-        $query
-            ->select('*')
-            ->from('#__thm_groups_users_attribute AS ust')
-            ->where("ust.usersID = ( $uid) and ust.attributeID = ( $attrid)");
-        $dbo->setQuery($query);
-
-        return $dbo->loadObjectList();
-    }
-
     /**
      * @param $formData
      * @param $content
      * @param $userID
      */
-    private function saveValues($formData, $content, $userID)
-    {
+    private function saveValues($formData, $content, $userID){
         $dbo = JFactory::getDbo();
         // Save new values in #__thm_groups_users_attribute
         foreach ($content as $attr)
@@ -539,4 +535,5 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
 
         return $path = str_replace('/', '\\', $path);
     }
+
 }

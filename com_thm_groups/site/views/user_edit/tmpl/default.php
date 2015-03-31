@@ -1,32 +1,62 @@
 <?php
 /**
- * @version     v1.0.0
+ * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THMGroupsViewUser_Edit
- * @description THMGroupsViewUser_Edit file from com_thm_groups
- * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @subpackage  com_thm_groups.site
+ * @name        THMGroupsViewEdit
+ * @description THMGroupsViewEdit file from com_thm_groups
+ * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
+ * @author      Markus Kaiser,  <markus.kaiser@mni.thm.de>
+ * @author      Daniel Bellof,  <daniel.bellof@mni.thm.de>
+ * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
+ * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
+ * @author      Alexander Boll, <alexander.boll@mni.thm.de>
+ * @author      Peter May,      <peter.may@mni.thm.de>
+ * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
-defined('_JEXEC') or die;
-
-jimport('thm_core.edit.advancedtemplate');
-//THM_CoreTemplateAdvanced::render($this);
+defined('_JEXEC') or die('Restricted access');
+$user = JFactory::getUser();
 $session = JFactory::getSession();
-?>
-<script>jQf = jQuery.noConflict();</script>
-
-    <form action="index.php?option=com_thm_groups"
-      enctype="multipart/form-data"
-      method="post"
-      name="adminForm"
-      id="adminForm"
-      class="form-horizontal">
+// old TODO this variablen müssen noch angepasst werden, Welche id hat Moderator?????:
+// (!( (int) $user->id > 0)) || (empty($this->userid)) || $user->id != $this->item && !$this->is_mod
+if (!( $user->id > 0) || (empty($this->item)) || $user->id != $this->item)
+{
+    //var_dump($user, $this->is_mod, $this->item, $user->authorise('com.edit.own', 'com_content'));
+    //die();
+    $mainframe = Jfactory::getApplication();
+    $itemid = JRequest :: getVar('Itemid', 0);
+    $view = JRequest :: getVar('view', 'list');
+    $msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_NO_RIGHTS_TO_EDIT_USER');
+    //$link = JRoute :: _('index.php?option=com_thm_groups&Itemid=' . $itemid);
+    $link = JRoute :: _('index.php');
+    $mainframe->Redirect($link, $msg);
+}
+else
+{
+    JHTML::_('behavior.modal', 'a.modal-button');
+    JHTML::_('behavior.calendar');
+    ?>
+    <script>jQf = jQuery.noConflict();</script>
+    <form action="index.php"
+          enctype="multipart/form-data"
+          method="post"
+          name="adminForm"
+          id="adminForm"
+          class="form-horizontal">
 
         <div class="form-horizontal">
+
+            <div class="form-actions">
+                <button type="submit" class="btn "><?php echo JText::_('JSUBMIT');?></button>
+                <a class="btn" href="<?php echo JRoute::_('');?>" title="<?php echo JText::_('JCANCEL');?>"><?php echo JText::_('JCANCEL');?></a>
+                <input type="hidden" name="option" value="com_thm_groups" />
+                <input type="hidden" name="task" value="user.save"/>
+                <?php echo JHtml::_('form.token');?>
+            </div>
+
             <ul id="myTabsTabs" class="nav nav-tabs">
                 <li class="active">
                     <a data-toggle="tab" href="#user">
@@ -48,17 +78,17 @@ $session = JFactory::getSession();
                     </div>
                     <?php
                     foreach ($this->userContent as $item) :
-                        $name = str_replace(' ', '_', $item->attribute);
+                    $name = str_replace(' ', '_', $item->attribute);
                     ?>
-                        <div class='control-group'>
-                            <div class='control-label'>
-                                <label id='jform_<?php echo $name; ?>-lbl'
-                                       class=''
-                                       for='jform_<?php echo $name; ?>'
-                                       aria-invalid='false'><?php echo $item->attribute; ?>
-                                </label>
-                            </div>
-                            <div id='jform_<?php echo $name; ?>_box' class='controls'>
+                    <div class='control-group'>
+                        <div class='control-label'>
+                            <label id='jform_<?php echo $name; ?>-lbl'
+                                   class=''
+                                   for='jform_<?php echo $name; ?>'
+                                   aria-invalid='false'><?php echo $item->attribute; ?>
+                            </label>
+                        </div>
+                        <div id='jform_<?php echo $name; ?>_box' class='controls'>
                             <?php if ($item->name == 'TEXTFIELD') :
                                 $output = "<textarea id='jform_" . $name . "'"
                                     . "style='float:left !important;'"
@@ -66,7 +96,7 @@ $session = JFactory::getSession();
                                     . "name='jform[" . $name . "]'>" . $item->value . "</textarea>";
                                 echo $output;
                                 ?>
-                            <?php elseif ($item->name == 'MULTISELECT') :
+                                <?php elseif ($item->name == 'MULTISELECT') :
                                 $output = "<select multiple class='form-control' id='jform_" . $name . "'"
                                     . "name='jform[" . $name . "[]]'>"
                                     . "style='float:left !important; margin-left: 0px !important;'";
@@ -111,7 +141,7 @@ $session = JFactory::getSession();
                                             . "</td>";
                                     }
                                     $output .= "<td><button type='button' class='btn btn-small' onclick='delRow(this)'>"
-                                            . "del</button></td>";
+                                        . "del</button></td>";
                                     $output .= "</tr>";
                                     $rowCount ++;
                                 }
@@ -132,8 +162,8 @@ $session = JFactory::getSession();
                                 }
 
 
-                                $output .= "<button type='button' class='btn btn-success'
-                                        . onclick=\"Joomla.submitbutton('user.apply')\" >Add to Table</button>";
+                                $output .= "<button type='submit' class='btn btn-success'"
+                                        . ">Add to Table</button>";
 
                                 /*
                                 $output .= "<button type='button' class='btn btn-success'
@@ -150,7 +180,7 @@ $session = JFactory::getSession();
                                 $pData      = json_decode($item->options);
                                 $position   = strpos($pData->path, 'images/');
                                 $path       = substr($pData->path, $position);
-                            ?>
+                                ?>
                                 <span id='<?php echo $name; ?>_IMG'>
                                     <img  src='<?php echo JURI::root() . $path . $item->value; ?>' class='edit_img'/>
                                 </span>
@@ -161,7 +191,7 @@ $session = JFactory::getSession();
                                     type='button'
                                     id='<?php echo $name; ?>_upload'
                                     onclick='bindImageCropper("<?php echo $name; ?>", "<?php echo $item->attributeID; ?>"
-                                            , "<?php echo $item->usersID; ?>")'
+                                        , "<?php echo $item->usersID; ?>")'
                                     class='btn btn-success'
                                     style='float: left;'
                                     data-toggle='modal'
@@ -281,7 +311,7 @@ $session = JFactory::getSession();
                                 </button>
                                 <br/>
 
-                                <?php else : ?>
+                            <?php else : ?>
 
                                 <input id='jform_<?php echo $name; ?>'
                                        style='float:left !important;'
@@ -296,37 +326,40 @@ $session = JFactory::getSession();
 
                             <?php endif; ?>
 
-                                <div id='jform_<?php echo $name; ?>_icon'
-                                     style='margin: 5px; width: 10px; color: red; float: left !important;'>
-                                </div>
-                                <div>
-                                    <input type='checkbox' name='jform[<?php echo $name; ?>_published]'
-                                           style='margin-left: 100px;' id='jform_<?php echo $name; ?>_published'
-                                    <?php
-                                        if ($item->published == 1)
-                                        {
-                                            echo "checked='checked'/>";
-                                        }
-                                        else
-                                        {
-                                            echo "></input>";
-                                        }
-                                    ?>
-
-                                </div>
-                                <div id='jform_<?php echo $name; ?>_message'/>
+                            <div id='jform_<?php echo $name; ?>_icon'
+                                 style='margin: 5px; width: 10px; color: red; float: left !important;'>
                             </div>
-                            <div id='info'>
-                            </div></div>
+                            <div>
+                                <input type='checkbox' name='jform[<?php echo $name; ?>_published]'
+                                       style='margin-left: 100px;' id='jform_<?php echo $name; ?>_published'
+                                <?php
+                                if ($item->published == 1)
+                                {
+                                    echo "checked='checked'/>";
+                                }
+                                else
+                                {
+                                    echo "></input>";
+                                }
+                                ?>
+
+                            </div>
+                            <div id='jform_<?php echo $name; ?>_message'/>
                         </div>
-                    <?php endforeach; ?>
+                        <div id='info'>
+                        </div></div>
                 </div>
-                <div id="groups" class="tab-pane">
-                    Group data here...
-                </div>
+                <?php endforeach; ?>
             </div>
+            <div id="groups" class="tab-pane">
+                Group data here...
+            </div>
+        </div>
         </div>
         <input type='hidden' id='jform_userID' name='jform[userID]' value='<?php echo $this->item; ?>'/>
         </div>
-        <input type="hidden" name="task" value="" />
-    </form>
+
+    </div>
+</form>
+<?php
+}

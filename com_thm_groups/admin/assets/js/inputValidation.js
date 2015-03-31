@@ -31,6 +31,7 @@ function validateAll()
     }
 }
 
+
 function disable()
 {
     var buttons = document.getElementsByClassName('btn-small');
