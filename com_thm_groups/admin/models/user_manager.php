@@ -91,20 +91,16 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
             $query->where("a6.usergroupsID = $groupID");
         }
 
-        /*if(isset($list['roleID']) && !empty($list['roleID']))
+        if (isset($list['roleID']) && !empty($list['roleID']))
         {
             $roleID = (int) $list['roleID'];
             $query->where("a6.rolesID = $roleID");
-        }*/
+        }
 
-        //$this->setIDFilter($query, 'a6.usergroupsID', array('list.groupID'));
-        //$this->setIDFilter($query, 'a6.rolesID', array('list.roleID'));
+        $this->setIDFilter($query, 'a6.usergroupsID', array('list.groupID'));
+        $this->setIDFilter($query, 'a6.rolesID', array('list.roleID'));
 
         $this->setOrdering($query);
-
-/*        echo "<pre>";
-        echo $query;
-        echo "</pre>";*/
 
         return $query;
     }

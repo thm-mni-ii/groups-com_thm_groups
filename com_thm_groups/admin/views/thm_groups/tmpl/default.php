@@ -26,18 +26,12 @@ $logoURL = 'administrator/components/com_thm_groups/assets/images/THM_Groups_Log
 <?php foreach ($this->views as $view)
 {
 ?>
-    <div class="thm_groups_main_submenu" >
-        <div class="thm_groups_main_linkdiv" >
-            <div class="icon">
-                <a href='<?php echo $view['url']; ?>'
-                   class='hasTip' title='<?php echo $view['tooltip']; ?>' >
-<?php
-    echo JHTML::_('image', $view['image'], $view['title'], array( 'class' => 'thm_groups_main_image'));
-?>
-                    <span><?php echo $view['title']; ?></span>
-                </a>
-            </div>
-        </div>
+    <div class="icon">
+        <a href='<?php echo $view['url']; ?>'
+           class='hasTip' title='<?php echo $view['tooltip']; ?>' >
+            <span><?php echo $view['title']; ?></span>
+        </a>
+        <br />
     </div>
 <?php
 }

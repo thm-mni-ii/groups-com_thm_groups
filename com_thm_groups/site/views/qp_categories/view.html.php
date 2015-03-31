@@ -35,6 +35,8 @@ class THM_GroupsViewQP_Categories extends JViewLegacy
      */
     public function display($tpl = null)
     {
+        $user = JFactory::getUser();
+
         $this->form = $this->get('Form');
 
         parent::display($tpl);

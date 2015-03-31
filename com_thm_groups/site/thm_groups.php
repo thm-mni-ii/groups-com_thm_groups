@@ -71,6 +71,18 @@ if ($view == "articles_test")
         $controller->redirect();
     }
 }
+elseif($view == 'qp_categories')
+{
+    $user = JFactory::getUser();
+    if ($user->authorise('core.create', 'com_content.category'))
+    {
+        $controller = JControllerLegacy::getInstance('thm_groups');
+
+        $controller->execute(JRequest::getCmd('task'));
+
+        $controller->redirect();
+    }
+}
 else
 {
         $controller = JControllerLegacy::getInstance('thm_groups');

@@ -77,29 +77,45 @@ class THM_GroupsViewTHM_Groups extends JViewLegacy
     {
         $views = array();
 
-        $views['membermanager'] = array();
-        $views['membermanager']['title'] = JText::_('COM_THM_GROUPS_MEMBERMANAGER');
-        $views['membermanager']['tooltip'] = JText::_('COM_THM_GROUPS_MEMBERMANAGER') . '::' . JText::_('COM_THM_GROUPS_MEMBERMANAGER_DESC');
-        $views['membermanager']['url'] = "index.php?option=com_thm_groups&view=user_manager";
-        $views['membermanager']['image'] = "administrator/components/com_thm_groups/assets/images/membermanager_48x48.png";
+        $views['user_manager'] = array();
+        $views['user_manager']['title'] = JText::_('COM_THM_GROUPS_USER_MANAGER');
+        $views['user_manager']['tooltip'] = JText::_('COM_THM_GROUPS_USER_MANAGER') . '::' . JText::_('COM_THM_GROUPS_USER_MANAGER_DESC');
+        $views['user_manager']['url'] = "index.php?option=com_thm_groups&view=user_manager";
 
-        $views['groupmanager'] = array();
-        $views['groupmanager']['title'] = JText::_('COM_THM_GROUPS_GROUPMANAGER');
-        $views['groupmanager']['tooltip'] = JText::_('COM_THM_GROUPS_GROUPMANAGER') . '::' . JText::_('COM_THM_GROUPS_GROUPMANAGER_DESC');
-        $views['groupmanager']['url'] = "index.php?option=com_users&view=groups";
-        $views['groupmanager']['image'] = "administrator/components/com_thm_groups/assets/images/groupmanager_48x48.png";
+        $views['group_manager'] = array();
+        $views['group_manager']['title'] = JText::_('COM_THM_GROUPS_GROUP_MANAGER');
+        $views['group_manager']['tooltip'] = JText::_('COM_THM_GROUPS_GROUP_MANAGER') . '::' . JText::_('COM_THM_GROUPS_GROUP_MANAGER_DESC');
+        $views['group_manager']['url'] = "index.php?option=com_users&view=group_manager";
 
-        $views['rolemanager'] = array();
-        $views['rolemanager']['title'] = JText::_('COM_THM_GROUPS_ROLEMANAGER');
-        $views['rolemanager']['tooltip'] = JText::_('COM_THM_GROUPS_ROLEMANAGER') . '::' . JText::_('COM_THM_GROUPS_ROLEMANAGER_DESC');
-        $views['rolemanager']['url'] = "index.php?option=com_thm_groups&view=rolemanager";
-        $views['rolemanager']['image'] = "administrator/components/com_thm_groups/assets/images/rolemanager_48x48.png";
+        $views['role_manager'] = array();
+        $views['role_manager']['title'] = JText::_('COM_THM_GROUPS_ROLE_MANAGER');
+        $views['role_manager']['tooltip'] = JText::_('COM_THM_GROUPS_ROLE_MANAGER') . '::' . JText::_('COM_THM_GROUPS_ROLE_MANAGER_DESC');
+        $views['role_manager']['url'] = "index.php?option=com_thm_groups&view=role_manager";
 
-        $views['structuremanager'] = array();
-        $views['structuremanager']['title'] = JText::_('COM_THM_GROUPS_STRUCTUREMANAGER');
-        $views['structuremanager']['tooltip'] = JText::_('COM_THM_GROUPS_STRUCTUREMANAGER') . '::' . JText::_('COM_THM_GROUPS_STRUCTUREMANAGER_DESC');
-        $views['structuremanager']['url'] = "index.php?option=com_thm_groups&view=structuremanager";
-        $views['structuremanager']['image'] = "administrator/components/com_thm_groups/assets/images/structuremanager_48x48.png";
+        $views['profile_manager'] = array();
+        $views['profile_manager']['title'] = JText::_('COM_THM_GROUPS_PROFILE_MANAGER');
+        $views['profile_manager']['tooltip'] = JText::_('COM_THM_GROUPS_PROFILE_MANAGER') . '::' . JText::_('COM_THM_GROUPS_PROFILE_MANAGER_DESC');
+        $views['profile_manager']['url'] = "index.php?option=com_thm_groups&view=profile_manager";
+
+        $views['attribute_manager'] = array();
+        $views['attribute_manager']['title'] = JText::_('COM_THM_GROUPS_ATTRIBUTE_MANAGER');
+        $views['attribute_manager']['tooltip'] = JText::_('COM_THM_GROUPS_ATTRIBUTE_MANAGER') . '::' . JText::_('COM_THM_GROUPS_ATTRIBUTE_MANAGER_DESC');
+        $views['attribute_manager']['url'] = "index.php?option=com_thm_groups&view=attribute_manager";
+
+        $views['dynamic_type_manager'] = array();
+        $views['dynamic_type_manager']['title'] = JText::_('COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER');
+        $views['dynamic_type_manager']['tooltip'] = JText::_('COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER') . '::' . JText::_('COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER_DESC');
+        $views['dynamic_type_manager']['url'] = "index.php?option=com_thm_groups&view=dynamic_type_manager";
+
+        $views['static_type_manager'] = array();
+        $views['static_type_manager']['title'] = JText::_('COM_THM_GROUPS_STATIC_TYPE_MANAGER');
+        $views['static_type_manager']['tooltip'] = JText::_('COM_THM_GROUPS_STATIC_TYPE_MANAGER') . '::' . JText::_('COM_THM_GROUPS_STATIC_TYPE_MANAGER_DESC');
+        $views['static_type_manager']['url'] = "index.php?option=com_thm_groups&view=static_type_manager";
+
+        $views['plugin_manager'] = array();
+        $views['plugin_manager']['title'] = JText::_('COM_THM_GROUPS_PLUGIN_MANAGER');
+        $views['plugin_manager']['tooltip'] = JText::_('COM_THM_GROUPS_PLUGIN_MANAGER') . '::' . JText::_('COM_THM_GROUPS_PLUGIN_MANAGER_DESC');
+        $views['plugin_manager']['url'] = "index.php?option=com_thm_groups&view=plugin_manager";
 
         $this->views = $views;
     }

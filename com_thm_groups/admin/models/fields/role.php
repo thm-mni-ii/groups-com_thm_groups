@@ -59,9 +59,10 @@ class JFormFieldRole extends JFormFieldList
 
             // Convert array to options
             $options[] = JHTML::_('select.option', '', JText::_('JALL'));
-            foreach ($arrayOfRoles as $key => $value) :
+            foreach ($arrayOfRoles as $key => $value)
+            {
                 $options[] = JHTML::_('select.option', $value['id'], $value['name']);
-            endforeach;
+            }
 
             static::$options[$hash] = array_merge(static::$options[$hash], $options);
         }

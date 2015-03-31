@@ -26,7 +26,7 @@ class JFormFieldUserManagerRole extends JFormFieldList
         $jinput = JFactory::getApplication()->input;
 
         $list = $jinput->post->get('list', array(), 'array');
-        if(!empty($list['groupID']))
+        if (!empty($list['groupID']))
         {
             $groupID = $list['groupID'];
         }
@@ -44,7 +44,7 @@ class JFormFieldUserManagerRole extends JFormFieldList
             ->from('#__thm_groups_roles AS r')
             ->innerJoin('#__thm_groups_usergroups_roles AS a ON r.id = a.rolesID')
             ->innerJoin('#__thm_groups_users_usergroups_roles AS b ON a.id = b.usergroups_rolesID')
-            ->where('b.usersID IN (' . $nestedQuery .')')
+            ->where('b.usersID IN (' . $nestedQuery . ')')
             ->group('r.id')
             ->order('r.name ASC');
 
@@ -80,10 +80,10 @@ class JFormFieldUserManagerRole extends JFormFieldList
 
             // Convert array to options
             $options[] = JHTML::_('select.option', '', JText::_('COM_THM_GROUPS_USER_MANAGER_SHOW_ALL_ROLES'));
-            foreach ($arrayOfRoles as $key => $value) :
+            foreach ($arrayOfRoles as $key => $value)
+            {
                 $options[] = JHTML::_('select.option', $value['id'], $value['name']);
-            endforeach;
-
+            }
             static::$options[$hash] = array_merge(static::$options[$hash], $options);
         }
 
