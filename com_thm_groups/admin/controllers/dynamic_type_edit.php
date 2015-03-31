@@ -78,13 +78,10 @@ class THM_GroupsControllerDynamic_Type_Edit extends JControllerLegacy
 
             $result = $this->getModel('dynamic_type_edit')->getFieldOptions($selected, $isActType);
 
-            //echo json_encode($result, JSON_UNESCAPED_UNICODE);
-            //echo new JResponseJson($result);
             echo $result;
         }
         catch(Exception $e)
         {
-            //echo new JResponseJson($e);
             echo $e;
         }
     }

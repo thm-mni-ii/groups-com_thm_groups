@@ -24,7 +24,7 @@ jimport('joomla.application.component.controllerform');
  * @package   thm_groups
  * @since     v0.1.0
  */
-class THMGroupsControllerSinglearticle extends JControllerForm
+class THM_GroupsControllerSinglearticle extends JControllerForm
 {
 /**
      * @since	1.6

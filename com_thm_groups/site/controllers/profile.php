@@ -25,7 +25,7 @@ jimport('joomla.application.component.controller');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.1
  */
-class THMGroupsControllerProfile extends JControllerLegacy
+class THM_GroupsControllerProfile extends JControllerLegacy
 {
     /**
      *  Constructor (registers additional tasks to methods)

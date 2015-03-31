@@ -29,7 +29,7 @@ jimport('joomla.application.component.helper');
  * @package   thm_groups
  * @since     v0.1.0
  */
-class THMGroupsViewSinglearticle extends JViewLegacy
+class THM_GroupsViewSinglearticle extends JViewLegacy
 {
 
     protected $item;

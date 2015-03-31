@@ -53,7 +53,7 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
     public function display($tpl = null)
     {
 
-        // set batch template path
+        // Set batch template path
         $this->batch = JPATH_COMPONENT_ADMINISTRATOR . '/views/user_manager/tmpl/default_batch.php';
 
         $this->groups = THM_GroupsHelperGroup_Manager::getGroups();
@@ -79,7 +79,8 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
         {
             JToolBarHelper::editList('user.edit', 'COM_THM_GROUPS_USER_MANAGER_EDIT');
         }
-        if ($user->authorise('core.edit.state', 'com_users') && $user->authorise('core.manage', 'com_users')) {
+        if ($user->authorise('core.edit.state', 'com_users') && $user->authorise('core.manage', 'com_users'))
+        {
             JToolBarHelper::publishList('user.publish', 'COM_THM_GROUPS_USER_MANAGER_PUBLISH');
             JToolBarHelper::unpublishList('user.unpublish', 'COM_THM_GROUPS_USER_MANAGER_DISABLE');
             JToolBarHelper::divider();
@@ -93,7 +94,6 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
             $title = JText::_('COM_THM_GROUPS_GROUP_MANAGER_BATCH');
 
             // Instantiate a new JLayoutFile instance and render the batch button
-
 
             $dhtml = "<button data-toggle='modal' data-target='#collapseModal' class='btn btn-small'><i class='icon-edit' title='$title'></i> $title</button>";
 

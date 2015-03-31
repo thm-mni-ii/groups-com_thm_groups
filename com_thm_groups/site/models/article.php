@@ -26,7 +26,7 @@ require_once JPATH_COMPONENT . '/helper/content.php';
  * @package   thm_groups
  * @since     v0.1.0
  */
-class THMGroupsModelArticle extends JModelAdmin
+class THM_GroupsModelArticle extends JModelAdmin
 {
     /**
      * @var		string	The prefix to use with controller messages.
@@ -74,8 +74,8 @@ class THMGroupsModelArticle extends JModelAdmin
     {
         $user = JFactory::getUser();
 
-        $canEdit	= $user->authorise('core.edit',		'com_content.article.' . $record->id);
-        $canEditOwn	= $user->authorise('core.edit.own',	'com_content.article.' . $record->id) && $record->created_by == $user->id;
+        $canEdit    = $user->authorise('core.edit',		'com_content.article.' . $record->id);
+        $canEditOwn = $user->authorise('core.edit.own',	'com_content.article.' . $record->id) && $record->created_by == $user->id;
 
         return ($canEdit || $canEditOwn);
     }
@@ -128,7 +128,7 @@ class THMGroupsModelArticle extends JModelAdmin
     /**
      * Returns a Table object, always creating it.
      *
-     * @param   type    $type    The table type to instantiate
+     * @param   string  $type    The table type to instantiate
      * @param   string  $prefix  A prefix for the table class name. Optional.
      * @param   array   $config  Configuration array for model. Optional.
      *
@@ -198,89 +198,182 @@ class THMGroupsModelArticle extends JModelAdmin
     }
 
     /**
-     * Saves or deletes entrys from db
+     * Toggles the article
      *
-     * @param   Int  $a_id  id of article
+     * @param   String  $action  publish/unpublish
      *
-     * @return  mixed
+     * @return  boolean  true on success, otherwise false
      */
-    public static function featureArticle($a_id)
+    public function toggle($action = null)
     {
-        echo '<pre>';
-        print_r("FEATURE");
-        echo '</pre>';die;
-       $isArticleFeatured = self::isArticleFeatured($a_id);
+        $input = JFactory::getApplication()->input;
 
-       if ($isArticleFeatured == null)
-       {
-            self::insertArticleId($a_id);
-            return true;
-       }
-       else
-       {
-            self::deleteArticleId($a_id);
+        // Get array of ids if divers users selected
+        $cid = $input->post->get('cid', array(), 'array');
+
+        // A string with type of column in table
+        $attribute = $input->get('attribute', '', 'string');
+
+        // If array is empty, the toggle button was clicked
+        if (empty($cid))
+        {
+            $id = $input->getInt('id', 0);
+        }
+        else
+        {
+            JArrayHelper::toInteger($cid);
+            $id = implode(',', $cid);
+        }
+
+        if (empty($id))
+        {
             return false;
-       }
+        }
+
+        switch ($action)
+        {
+            default:
+                $value = $input->getInt('value', 1)? 0 : 1;
+                break;
+        }
+
+        if (!$this->isEntryExistsInDatabase($id))
+        {
+            return $this->createDatabaseEntry($id, $attribute, $value);
+        }
+        else
+        {
+            return $this->updateDatabaseEntry($id, $attribute, $value);
+        }
     }
 
     /**
-     * Returns article state
+     * Creates a database entry, which will be used for quickpages modules
      *
-     * @param   Int  $a_id  article id
+     * @param   int     $id         An article id
+     * @param   string  $attribute  An attribute to save
+     * @param   int     $value      A value to save for attribute
      *
-     * @return StdObject
+     * @return bool
+     *
+     * @throws Exception
      */
-    public static function isArticleFeatured($a_id)
+    public function createDatabaseEntry($id, $attribute, $value)
     {
         $db = JFactory::getDbo();
-        $isFeaturedQuery = $db->getQuery(true);
+        $query = $db->getQuery(true);
+        $uid = JFactory::getUser()->id;
+        $values = array($uid, $id, $this->getValue($type = 'featured', $attribute, $value),
+            $this->getValue($type = 'published', $attribute, $value));
 
-        $isFeaturedQuery
+        $query
+            ->insert('#__thm_groups_users_content')
+            ->columns(array('usersID', 'contentID', 'featured', 'published'))
+            ->values(implode(',', $values));
+
+        $db->setQuery($query);
+
+        try
+        {
+            return (bool) $db->execute();
+        }
+        catch (Exception $exc)
+        {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            return false;
+        }
+    }
+
+    /**
+     * Returns either the value or default value 0 for attribute
+     *
+     * @param   string  $type       A type of an attribute to save
+     * @param   string  $attribute  An attribute name
+     * @param   int     $value      A value to return
+     *
+     * @return int
+     */
+    public function getValue($type, $attribute, $value)
+    {
+        if ($type === $attribute)
+        {
+            return $value;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    /**
+     * Updates the values of an article
+     *
+     * @param   int     $id         An article id
+     * @param   string  $attribute  An attribute to update
+     * @param   int     $value      A new value to update
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function updateDatabaseEntry($id, $attribute, $value)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query
+            ->update('#__thm_groups_users_content')
+            ->where("contentID IN ( $id )");
+
+        switch ($attribute)
+        {
+            case 'featured':
+                $query->set("featured = '$value'");
+                break;
+            case 'published':
+                $query->set("published = '$value'");
+                break;
+        }
+
+        $db->setQuery((string) $query);
+
+        try
+        {
+            return (bool) $db->execute();
+        }
+        catch (Exception $exc)
+        {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            return false;
+        }
+    }
+
+    /**
+     * Checks if an article were previously featured or published for modules
+     *
+     * @param   int  $id  An id of an article
+     *
+     * @return bool true|false
+     */
+    public function isEntryExistsInDatabase($id)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query
             ->select('*')
             ->from('#__thm_groups_users_content')
-            ->where('contentID = ' . $db->quote($a_id));
-        $db->setQuery((string) $isFeaturedQuery);
+            ->where('contentID = ' . (int) $id);
+        $db->setQuery($query);
 
-        try
+        $result = $db->loadObject();
+
+        if (empty($result) || $result == null)
         {
-            $result = $db->loadObject();
-        }
-        catch (Exception $exception)
-        {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
             return false;
         }
 
-        return $result;
-    }
-
-    /**
-     * Features article in DB
-     *
-     * @param   Int  $a_id  article id
-     *
-     * @return void
-     */
-    public static function insertArticleId($a_id)
-    {
-        $db = JFactory::getDbo();
-        $insertQuery = $db->getQuery(true);
-
-        $insertQuery
-            ->insert('#__thm_groups_users_content')
-            ->set('featured = 1')
-            ->where('contentID = ' . (int) $a_id);
-        $db->setQuery((string) $insertQuery);
-
-        try
-        {
-            $db->execute();
-        }
-        catch (Exception $exception)
-        {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-            return false;
-        }
+        return true;
     }
 
     /**

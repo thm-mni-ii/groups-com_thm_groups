@@ -14,8 +14,6 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-
-// import Joomla controller library
 jimport('joomla.application.component.controller');
 
 
@@ -93,7 +91,7 @@ class THM_GroupsControllerRole extends JControllerLegacy
     /**
      * Method to run batch operations.
      *
-     * @param   object   $model  The model.
+     * @param   object  $model  The model.
      *
      * @return  boolean  True on success, false on failure
      *

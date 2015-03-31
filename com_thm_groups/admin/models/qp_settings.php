@@ -146,7 +146,7 @@ class THM_GroupsModelQp_Settings extends JModelAdmin
         $db->setQuery($query);
         $success = $db->execute();
 
-        if($success)
+        if ($success)
         {
             return true;
         }

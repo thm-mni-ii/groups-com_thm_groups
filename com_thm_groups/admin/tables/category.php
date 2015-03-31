@@ -1,9 +1,9 @@
 <?php
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_thm_groups
  *
- * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
+ * @copyright   2015 TH Mittelhessen
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 

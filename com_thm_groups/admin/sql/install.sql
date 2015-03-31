@@ -15,14 +15,6 @@ DROP TABLE IF EXISTS
 `#__thm_groups_profile_attribute`,
 `#__thm_groups_quickpages_settings`;
 
-
-INSERT INTO `#__users` (`id`, `name`, `username`, `email`) VALUES
-  (1, 'Max Mustermann', 'test_user1', 'max.mustermann@mni.thm.de'),
-  (2, 'Sabine Musterfrau', 'test_user2', 'sabine.musterfrau@mni.thm.de'),
-  (3, 'Ilja Michajlow', 'test_user3', 'ilja.michajlow@mni.thm.de'),
-  (4, 'Yolo Swaggins', 'test_user4', 'yolo.swaggins@mni.thm.de'),
-  (5, 'Amy Pond', 'test_user5', 'amy.pond@doctor.who.com');
-
 CREATE TABLE IF NOT EXISTS `#__thm_groups_users` (
   `id`          INT(11)    NOT NULL AUTO_INCREMENT,
   `published`   TINYINT(1) NULL,
@@ -35,16 +27,6 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_users` (
     ON DELETE CASCADE
 )
   ENGINE = InnoDB;
-
-# Copy users from joomla
-INSERT INTO `#__thm_groups_users`
-  SELECT
-    `id` AS "id",
-    1        AS "published",
-    1        AS "injoomla",
-    1        AS "canEdit",
-    0        AS "qpPublished"
-  FROM `#__users`;
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_users_categories` (
   `ID`           INT(11) NOT NULL AUTO_INCREMENT,
@@ -65,6 +47,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_users_content` (
   `usersID`   INT(11)          NOT NULL,
   `contentID` INT(11) UNSIGNED NOT NULL,
   `featured`  TINYINT(1)       NULL,
+  `published` TINYINT(1)       NULL,
   PRIMARY KEY (`ID`),
   FOREIGN KEY (`usersID`) REFERENCES `#__thm_groups_users` (`id`)
     ON UPDATE CASCADE
@@ -177,39 +160,6 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_users_attribute` (
 )
   ENGINE = InnoDB;
 
-INSERT INTO `#__thm_groups_users_attribute` (`ID`, `usersID`, `attributeID`, `value`, `published`) VALUES
-  (1, 1, 1, 'Max', 1),
-  (2, 1, 2, 'Mustermann', 1),
-  (3, 1, 3, 'test_user1', 1),
-  (4, 1, 4, 'max.mustermann@mni.thm.de', 1),
-  (5, 1, 5, 'Mr.', 1),
-  (6, 1, 7, 'Bc.S', 1),
-  (7, 2, 1, 'Sabine', 1),
-  (8, 2, 2, 'Musterfrau', 1),
-  (9, 2, 3, 'test_user2', 1),
-  (10, 2, 4, 'sabine.musterfrau@mni.thm.de', 1),
-  (11, 2, 5, 'Ms.', 1),
-  (12, 2, 7, 'Bc.S', 1),
-  (13, 3, 1, 'Ilja', 1),
-  (14, 3, 2, 'Michajlow', 1),
-  (15, 3, 3, 'test_user3', 1),
-  (16, 3, 4, 'ilja.michajlow@mni.thm.de', 1),
-  (17, 3, 5, 'Mr', 1),
-  (18, 3, 7, 'Bc.S.', 1),
-  (19, 4, 1, 'Yolo', 1),
-  (20, 4, 2, 'Swaggins', 1),
-  (21, 4, 3, 'test_user4', 1),
-  (22, 4, 4, 'yolo.swaggins@mni.thm.de', 1),
-  (23, 4, 5, 'Mr', 1),
-  (24, 4, 7, 'Star', 1),
-  (25, 5, 1, 'Amy', 1),
-  (26, 5, 2, 'Pond', 1),
-  (27, 5, 3, 'test_user5', 1),
-  (28, 5, 4, 'amy.pond@doctor.who.com', 1),
-  (29, 5, 5, 'Ms', 1),
-  (30, 5, 7, 'Begleiterin vom Doktor Who', 1),
-  (31, 5, 97, '', 1);
-
 CREATE TABLE IF NOT EXISTS `#__thm_groups_roles` (
   `id`   INT(11)      NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NULL,
@@ -243,18 +193,9 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_usergroups_roles` (
     ON DELETE CASCADE
     ON UPDATE CASCADE
 )
-  ENGINE =InnoDB
-  DEFAULT CHARSET =utf8
-  AUTO_INCREMENT =1;
-
-INSERT INTO `#__thm_groups_usergroups_roles` (`ID`, `usergroupsID`, `rolesID`) VALUES
-  (1, 3, 1),
-  (2, 2, 1),
-  (3, 1, 2),
-  (4, 5, 2),
-  (5, 4, 1),
-  (6, 4, 2),
-  (7, 3, 2);
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  AUTO_INCREMENT = 1;
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_users_usergroups_roles` (
   `ID`                 INT(11) NOT NULL AUTO_INCREMENT,
@@ -269,15 +210,6 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_users_usergroups_roles` (
     ON DELETE CASCADE
 )
   ENGINE = InnoDB;
-
-INSERT INTO `#__thm_groups_users_usergroups_roles` (`ID`, `usersID`, `usergroups_rolesID`) VALUES
-  (1, 1, 1),
-  (2, 1, 2),
-  (3, 2, 3),
-  (4, 2, 4),
-  (5, 3, 5),
-  (6, 3, 6),
-  (7, 1, 7);
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile` (
   `id`    INT(11)      NOT NULL AUTO_INCREMENT,
@@ -357,11 +289,4 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_users_usergroups_moderator` (
     ON DELETE CASCADE
 )
   ENGINE = InnoDB;
-
-# INSERT INTO `#__thm_groups_users_usergroups_moderator` (`id`, `usersID`, `usergroupsID`) VALUES
-#   (1, 1, 1),
-#   (2, 2, 2),
-#   (3, 3, 3),
-#   (4, 4, 4),
-#   (5, 5, 5);
 

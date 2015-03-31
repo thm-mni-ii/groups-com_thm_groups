@@ -16,8 +16,6 @@
 // No direct access.
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controlleradmin');
-
 /**
  * Articles list controller class.
  *
@@ -25,7 +23,7 @@ jimport('joomla.application.component.controlleradmin');
  * @package   thm_groups
  * @since     v0.1.0
  */
-class THMGroupsControllerArticles extends JControllerLegacy
+class THM_GroupsControllerArticles extends JControllerLegacy
 {
     /**
      * Constructor.
@@ -42,14 +40,21 @@ class THMGroupsControllerArticles extends JControllerLegacy
         {
             $this->view_list = 'featured';
         }
+
+
         parent::__construct($config);
 
-        $this->registerTask('saveorder', 'saveorder');
-        $this->registerTask('orderup', 'reorder');
-        $this->registerTask('orderdown', 'reorder');
+        $this->view_list = 'articles_test';
 
-        /* $this->registerTask('unfeatured',	'featured'); */
-        /* $this->registerTask('untrash',	'trash'); */
+        // Value = 0
+        $this->registerTask('unpublish', 'publish');
+
+        // Value = 2
+        $this->registerTask('archive', 'publish');
+
+        // Value = -2
+        $this->registerTask('trash', 'publish');
+
     }
 
     /**
@@ -114,6 +119,13 @@ class THMGroupsControllerArticles extends JControllerLegacy
         $this->setRedirect(JRoute::_('index.php?option=' . 'com_thm_groups' . '&view=' . $this->view_list . $extensionURL, false));
     }
 
+    public function trash()
+    {
+        echo '<pre>';
+        print_r("TRASH");
+        echo '</pre>';die;
+    }
+
     /**
      * Removes an item.
      *
@@ -123,6 +135,10 @@ class THMGroupsControllerArticles extends JControllerLegacy
      */
     public function delete()
     {
+
+        echo '<pre>';
+        print_r("DELETE FUNCTION");
+        echo '</pre>';die;
         var_dump("bla");
         exit;
 
@@ -279,48 +295,11 @@ class THMGroupsControllerArticles extends JControllerLegacy
      *
      * @return	JModel
      */
-    public function getModel($name = 'Article', $prefix = 'THMGroupsModel', $config = array('ignore_request' => true))
+    public function getModel($name = 'Article', $prefix = 'THM_GroupsModel', $config = array('ignore_request' => true))
     {
         $model = parent::getModel($name, $prefix, $config);
 
         return $model;
-    }
-
-     /**
-     * (Un)Features articles
-     *
-     * @return void
-     */
-    public function featureArticle()
-    {
-
-        echo '<pre>';
-        print_r("TEST");
-        echo '</pre>';
-        // Get the model.
-        $model = $this->getModel();
-
-        // Get items to remove from the request.
-        $a_id = JRequest::getVar('a_id', null, '', 'int');
-
-        if ($model->featureArticle($a_id))
-        {
-            echo '<pre>';
-            print_r("YES");
-            echo '</pre>';
-            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_FEATURE_ARTIKEL'), 'Message');
-        }
-        else
-        {
-            echo '<pre>';
-            print_r("NO");
-            echo '</pre>';die;
-            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_UNFEATURE_ARTIKEL'), 'Message');
-        }
-
-        $extension = JRequest::getCmd('extension');
-        $extensionURL = ($extension) ? '&extension=' . JRequest::getCmd('extension') : '';
-        $this->setRedirect(JRoute::_('index.php?option=' . 'com_thm_groups' . '&view=' . $this->view_list . $extensionURL, false));
     }
 }
 

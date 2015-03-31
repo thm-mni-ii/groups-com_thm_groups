@@ -14,8 +14,6 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-
-// import Joomla controller library
 jimport('joomla.application.component.controller');
 
 
@@ -74,7 +72,6 @@ class THM_GroupsControllerQp_Settings extends JControllerLegacy
      */
     public function save($key = null, $urlVar = null)
     {
-        var_dump("SAVE");die;
         $model = $this->getModel('qp_settings');
         $success = $model->save();
         if ($success)
@@ -89,7 +86,7 @@ class THM_GroupsControllerQp_Settings extends JControllerLegacy
         }
     }
 
-    // todo model name ändern
+    // TODO change model name
     /**
      * Redirects to the category manager view without making any persistent changes
      *
@@ -101,7 +98,6 @@ class THM_GroupsControllerQp_Settings extends JControllerLegacy
      */
     public function cancel($key = null)
     {
-        var_dump("CANCEL");die;
         if (!JFactory::getUser()->authorise('core.admin'))
         {
             return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));

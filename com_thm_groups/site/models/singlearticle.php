@@ -19,7 +19,7 @@ jimport('joomla.application.component.modelitem');
  * @subpackage	com_content
  * @since 1.5
  */
-class THMGroupsModelSinglearticle extends JModelItem
+class THM_GroupsModelSinglearticle extends JModelItem
 {
     /**
      * Model context string.

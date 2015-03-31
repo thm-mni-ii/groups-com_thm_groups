@@ -77,15 +77,15 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
 
         $this->setSearchFilter($query, array('a1.value', 'a2.value'));
 
-        $this->setIDFilter($query, 'a5.published', array('published'));
-        $this->setIDFilter($query, 'a5.canEdit', array('canEdit'));
-        $this->setIDFilter($query, 'a5.qpPublished', array('qpPublished'));
+        $this->setIDFilter($query, 'a5.published', array('filter.published'));
+        $this->setIDFilter($query, 'a5.canEdit', array('filter.canEdit'));
+        $this->setIDFilter($query, 'a5.qpPublished', array('filter.qpPublished'));
 
         $app = JFactory::getApplication();
         $list = $app->input->get('list', array(), 'array');
         //var_dump($list);
 
-        if(isset($list['groupID']) && !empty($list['groupID']))
+        if (isset($list['groupID']) && !empty($list['groupID']))
         {
             $groupID = (int) $list['groupID'];
             $query->where("a6.usergroupsID = $groupID");

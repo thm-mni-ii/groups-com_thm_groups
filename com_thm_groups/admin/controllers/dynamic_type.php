@@ -14,8 +14,6 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-
-// import Joomla controller library
 jimport('joomla.application.component.controller');
 
 
@@ -65,26 +63,16 @@ class THM_GroupsControllerDynamic_Type extends JControllerLegacy
     {
         $model = $this->getModel('dynamic_type');
 
-        //$isValid = $model->validateForm();
-        $isValid = true;
-        if ($isValid)
+        $success = $model->save();
+        if ($success)
         {
-            $success = $model->save();
-            if ($success)
-            {
-                $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
-                $this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_edit&cid[]=' . $success, $msg);
-            }
-            else
-            {
-                $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-                $this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_edit&cid[]=0', $msg);
-            }
+            $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+            $this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_edit&cid[]=' . $success, $msg);
         }
         else
         {
-            $msg = JText::_('COM_THM_GROUPS_VALIDATION_ERROR');
-            $this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_edit&cid[]=0', $msg, 'warning');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+            $this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_edit&cid[]=0', $msg);
         }
     }
 

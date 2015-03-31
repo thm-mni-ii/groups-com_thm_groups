@@ -59,9 +59,6 @@ class THM_GroupsViewUser_Edit extends THM_CoreViewEdit
         $doc -> addScript(JUri::root() . "libraries/thm_core/js/formbehaviorChosenHelper.js");
 
         $this->userContent = $this->get('Content');
-        //var_dump($this->userContent);
-        //die();
-        //$this->addToolBar();
 
         parent::display($tpl);
     }
@@ -75,7 +72,7 @@ class THM_GroupsViewUser_Edit extends THM_CoreViewEdit
     {
         JFactory::getApplication()->input->set('hidemainmenu', true);
 
-        $title = $this->item == 0 ? 'New' : 'Edit';
+        $title = $this->item->id == 0 ? 'New' : 'Edit';
 
         JToolBarHelper::title($title, 'title');
 

@@ -31,7 +31,6 @@ jimport('joomla.application.component.controller');
  */
 class THM_GroupsControllerPlugin extends JControllerLegacy
 {
-	
 	/**
 	 * Constructor
 	 */
@@ -70,7 +69,7 @@ class THM_GroupsControllerPlugin extends JControllerLegacy
 		$success = $model->enable();
 		$msg = '';
 		
-		if($success)
+		if ($success)
 		{
 			$msg = JText::_('COM_THM_GROUPS_DATA_ENABLED');
 			$this->setRedirect('index.php?option=com_thm_groups&view=plugin_manager', $msg);
@@ -93,12 +92,12 @@ class THM_GroupsControllerPlugin extends JControllerLegacy
 		$success = $model->disable();
 		$msg = '';
 		
-		if ($success) 
+		if ($success)
 		{
 			$msg = JText::_('COM_THM_GROUPS_DATA_DISABLED');
 			$this->setRedirect('index.php?option=com_thm_groups&view=plugin_manager', $msg);
 		} 
-		else 
+		else
 		{
 			$msg = JText::_ ('COM_THM_GROUPS_DISABLED_ERROR');
 			$this->setRedirect('index.php?option=com_thm_groups&view=plugin_manager' . $success, $msg);

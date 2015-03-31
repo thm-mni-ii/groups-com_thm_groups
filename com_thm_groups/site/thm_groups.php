@@ -21,7 +21,7 @@ $input = JFactory::getApplication()->input;
 $task = $input->getCmd('task');
 $contr = $input->getCmd('controller');
 
-if ($view == "articles")
+if ($view == "articles_test")
 {
     jimport('thm_groups.data.lib_thm_groups_quickpages');
 
@@ -60,24 +60,6 @@ if ($view == "articles")
             THMLibThmQuickpages::createQuickpageForProfile($profileData);
         }
     }
-
-
-    // Check if the user's groups have Quickpages enabled
-    foreach ($userGroups as $groupID)
-    {
-
-        if (THMLibThmQuickpages::isQuickpageEnabledForGroup($groupID))
-        {
-            $profileData = THMLibThmQuickpages::getPageProfileDataByGroup($groupID);
-
-            // Check if group's quickpage category exist and if not, create it
-            if (!THMLibThmQuickpages::existsQuickpageForProfile($profileData))
-            {
-                THMLibThmQuickpages::createQuickpageForProfile($profileData);
-            }
-        }
-    }
-
 
     // Show quickpage control or redirect
     if ($userHasEnabledQuickpage OR $groupsHaveEnabledQuickpage)

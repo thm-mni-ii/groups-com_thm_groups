@@ -14,10 +14,7 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-
-// import Joomla controller library
 jimport('joomla.application.component.controller');
-
 
 /**
  * THM_GroupsControllerGroup class for component com_thm_groups
@@ -142,7 +139,7 @@ class THM_GroupsControllerGroup extends JControllerForm
     /**
      * Method to run batch operations.
      *
-     * @param   object   $model  The model.
+     * @param   object  $model  The model.
      *
      * @return  boolean  True on success, false on failure
      *

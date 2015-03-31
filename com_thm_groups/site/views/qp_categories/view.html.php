@@ -22,7 +22,7 @@ JHtml::_('jquery.framework');
  * @subpackage  com_thm_groups.admin
  * @link        www.mni.thm.de
  */
-class THMGroupsViewQP_Categories extends JViewLegacy
+class THM_GroupsViewQP_Categories extends JViewLegacy
 {
 
     /**

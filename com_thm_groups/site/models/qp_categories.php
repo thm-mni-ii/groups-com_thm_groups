@@ -22,7 +22,7 @@ jimport('thm_groups.data.lib_thm_groups_quickpages');
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
  */
-class THMGroupsModelQp_Categories extends JModelForm
+class THM_GroupsModelQp_Categories extends JModelForm
 {
 
     /**

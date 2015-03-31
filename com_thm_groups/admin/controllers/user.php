@@ -32,7 +32,7 @@ class THM_GroupsControllerUser extends JControllerLegacy
     /**
      * Method to run batch operations.
      *
-     * @param   object   $model  The model.
+     * @param   object  $model  The model.
      *
      * @return  boolean  True on success, false on failure
      *
@@ -58,28 +58,40 @@ class THM_GroupsControllerUser extends JControllerLegacy
         }
     }
 
+    /**
+     * Publish user
+     */
     public function publish()
     {
         $model = $this->getModel('user');
         $success = $model->toggle('publish');
-        if ($success) {
+        if ($success)
+        {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
             $type = 'message';
-        } else {
+        }
+        else
+        {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
             $type = 'error';
         }
         $this->setRedirect("index.php?option=com_thm_groups&view=user_manager", $msg, $type);
     }
 
+    /**
+     * Unpublish user
+     */
     public function unpublish()
     {
         $model = $this->getModel('user');
         $success = $model->toggle('unpublish');
-        if ($success) {
+        if ($success)
+        {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
             $type = 'message';
-        } else {
+        }
+        else
+        {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
             $type = 'error';
         }
@@ -95,30 +107,42 @@ class THM_GroupsControllerUser extends JControllerLegacy
     {
         $model = $this->getModel('user');
         $success = $model->toggle();
-        if ($success) {
+        if ($success)
+        {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
             $type = 'message';
-        } else {
+        }
+        else
+        {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
             $type = 'error';
         }
         $this->setRedirect("index.php?option=com_thm_groups&view=user_manager", $msg, $type);
     }
 
+    /**
+     * Deletes a role of a user by user id
+     */
     public function deleteRoleInGroupByUser()
     {
         $model = $this->getModel('user');
         $success = $model->deleteRoleInGroupByUser();
-        if ($success) {
+        if ($success)
+        {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
             $type = 'message';
-        } else {
+        }
+        else
+        {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
             $type = 'error';
         }
         $this->setRedirect("index.php?option=com_thm_groups&view=user_manager", $msg, $type);
     }
 
+    /**
+     * Deletes all roles in a group by a user id
+     */
     public function deleteAllRolesInGroupByUser()
     {
         $model = $this->getModel('user');

@@ -282,7 +282,6 @@ $session = JFactory::getSession();
                                 <br/>
 
                                 <?php else : ?>
-
                                 <input id='jform_<?php echo $name; ?>'
                                        style='float:left !important;'
                                        type='text'

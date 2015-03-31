@@ -47,7 +47,7 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
      *
      * @return void
      */
-    function display($cachable = false, $urlparams = false)
+    public function display($cachable = false, $urlparams = false)
     {
         // Call parent behavior
         parent::display($cachable);
@@ -92,6 +92,7 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
             else
             {
                 $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+
                // $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=0', $msg);
 
             }

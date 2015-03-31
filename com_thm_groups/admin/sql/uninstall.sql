@@ -18,6 +18,4 @@ DROP TABLE IF EXISTS
             `#__thm_groups_profile_attribute`,
             `#__thm_groups_quickpages_settings`;
 
-DELETE FROM `#__users`
-WHERE id IN (1,2,3,4,5);
 
