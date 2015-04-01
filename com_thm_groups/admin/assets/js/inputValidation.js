@@ -87,10 +87,14 @@ function validateInput(regex, inputField)
     }
     else
     {
+        document.getElementById(inputField + "_message").innerHTML="";
         field.setAttribute('data', 'invalid');
-        field.style.cssText = "border-color: red !important; float: left !important;";
-        document.getElementById(inputField + "_icon").innerHTML = "<span class='icon-cancel'/>";
-        jQuery("#" + inputField + "_message").append("</br></br><div class='text-error'>Entered value ist invalid!</div>");
+        if (field.getAttribute('data-req') != 'false')
+        {
+            field.style.cssText = "border-color: red !important; float: left !important;";
+            document.getElementById(inputField + "_icon").innerHTML = "<span class='icon-cancel'/>";
+            jQuery("#" + inputField + "_message").append("</br></br><div class='text-error'>Entered value ist invalid!</div>");
+        }
     }
     disable();
 }

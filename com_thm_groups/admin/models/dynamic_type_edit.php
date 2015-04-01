@@ -163,8 +163,8 @@ class THM_GroupsModelDynamic_Type_Edit extends JModelAdmin
             // The '\\\' -parts before an '\' are inserted because of string to regexobject conversion in javascript
             array_push(
                 $regexOptions,
-                JHtml::_('select.option', 'Other', 'Other'),
-                JHtml::_('select.option', '^([a-zA-ZäöüÄÖÜ])*$', 'Only letters'),
+                JHtml::_('select.option', '', 'Other'),
+                JHtml::_('select.option', '^([a-zA-ZäöüÄÖÜ])*[a-zA-ZäöüÄÖÜ]$', 'Only letters'),
                 JHtml::_('select.option', '^[0-9]*$', 'Only numbers'),
                 JHtml::_('select.option', '^[0-9a-zA-ZäöüÄÖÜ]+$', 'Letters and numbers'),
                 JHtml::_('select.option', '^[0-9]{4,5}$', 'PLZ'),
