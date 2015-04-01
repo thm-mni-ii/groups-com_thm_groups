@@ -55,11 +55,9 @@ class THM_GroupsModelGroup_Manager extends THM_CoreModelList
 
 
         $this->setSearchFilter($query, array('a.title'));
-        $this->setIDFilter($query, 'd.rolesID', array('roles'));
-        $this->setIDFilter($query, 'e.usersID', array('moderators'));
+        $this->setIDFilter($query, 'd.rolesID', array('filter.roles'));
+        $this->setIDFilter($query, 'e.usersID', array('filter.moderators'));
         $this->setOrdering($query);
-
-        //echo nl2br(str_replace('#__','jos_',$query));
 
         return $query;
     }
@@ -123,9 +121,6 @@ class THM_GroupsModelGroup_Manager extends THM_CoreModelList
         foreach ($items as &$item)
         {
             $url = JRoute::_('index.php?option=com_users&task=group.edit&id=' . $item->id);
-
-            // link to thm_groups component
-            //$url = "index.php?option=com_thm_groups&view=group_edit&id=$item->id";
 
             $return[$index][0] = JHtml::_('grid.id', $index, $item->id, false);
             $return[$index][1] = $item->id;
@@ -197,7 +192,7 @@ class THM_GroupsModelGroup_Manager extends THM_CoreModelList
         $query = $db->getQuery(true);
 
         $query
-            ->select('a.id, a.name')
+            ->select('DISTINCT(a.id), a.name')
             ->from('#__thm_groups_roles AS a ')
             ->innerJoin('#__thm_groups_usergroups_roles AS b ON a.id = b.rolesID')
             ->where("b.usergroupsID = $gid")
@@ -207,11 +202,10 @@ class THM_GroupsModelGroup_Manager extends THM_CoreModelList
         $roles = $db->loadObjectList();
 
         $return = array();
-        if(!empty($roles))
+        if (!empty($roles))
         {
-            foreach($roles as $role)
+            foreach ($roles as $role)
             {
-                // delete button
                 $deleteIcon = '<span class="icon-trash"></span>';
                 $deleteBtn = "<a href='javascript:deleteRole(" . $gid . "," . $role->id . ")'>" . $deleteIcon . "</a>";
 
@@ -245,15 +239,15 @@ class THM_GroupsModelGroup_Manager extends THM_CoreModelList
         $moderators = $db->loadObjectList();
 
         $return = array();
-        if(!empty($moderators))
+        if (!empty($moderators))
         {
-            foreach($moderators as $moderator)
+            foreach ($moderators as $moderator)
             {
-                // delete button
+                // Delete button
                 $deleteIcon = '<span class="icon-trash"></span>';
                 $deleteBtn = "<a href='javascript:deleteModerator(" . $gid . "," . $moderator->id . ")'>" . $deleteIcon . "</a>";
 
-                // link to edit view of user
+                // Link to edit view of user
                 $url = "index.php?option=com_thm_groups&view=user_edit&cid[]=$moderator->id";
 
                 $return[] = "<a href=$url>" . $moderator->name . "</a> " . $deleteBtn;
@@ -263,11 +257,16 @@ class THM_GroupsModelGroup_Manager extends THM_CoreModelList
         return implode(',<br/>', $return);
     }
 
+    /**
+     * Returns custom hidden fields for page
+     *
+     * @return array
+     */
     public function getHiddenFields()
     {
         $fields = array();
 
-        // hidden fields for deletion of one moderator or role at once
+        // Hidden fields for deletion of one moderator or role at once
         $fields[] = '<input type="hidden" name="g_id" value="">';
         $fields[] = '<input type="hidden" name="u_id" value="">';
         $fields[] = '<input type="hidden" name="r_id" value="">';

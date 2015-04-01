@@ -135,7 +135,7 @@ class THM_GroupsModelRole_Manager extends THM_CoreModelList
         $query = $db->getQuery(true);
 
         $query
-            ->select('ug.id, ug.title')
+            ->select('DISTINCT(ug.id), ug.title')
             ->from('#__usergroups AS ug')
             ->innerJoin('#__thm_groups_usergroups_roles AS ugr ON ug.id = ugr.usergroupsID')
             ->where("ugr.rolesID = $rid")
