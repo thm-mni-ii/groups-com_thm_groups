@@ -3,10 +3,10 @@ defined('_JEXEC') or die('Restricted access');
 JFormHelper::loadFieldClass('list');
 jimport('joomla.form.formfield');
 
-class JFormFieldRole extends JFormFieldList
+class JFormFieldProfile extends JFormFieldList
 {
 
-    protected $type = 'Role';
+    protected $type = 'Profile';
 
     /**
      * Cached array of the category items.
@@ -17,25 +17,33 @@ class JFormFieldRole extends JFormFieldList
     protected static $options = array();
 
     /**
-     * returns a list of roles
+     * returns a list of profiles
      *
      * @return  Array
      */
-    public function getRolesFromDB()
+    public function getProfilesFromDB()
     {
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
         $query
             ->select('a.id, a.name')
-            ->from('#__thm_groups_roles AS a')
-            ->innerJoin('#__thm_groups_usergroups_roles AS b ON a.id = b.rolesID')
+            ->from('#__thm_groups_profile AS a')
+            ->innerJoin('#__thm_groups_profile_usergroups AS b ON b.profileID = a.id')
             ->group('a.name');
 
         $db->setQuery($query);
-        $db->execute();
+        try
+        {
+            $return = $db->loadObjectList();
+        }
+        catch (Exception $e)
+        {
+            JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+            return false;
+        }
 
-        return $db->loadAssocList();
+        return $return;
     }
 
     /**
@@ -55,13 +63,13 @@ class JFormFieldRole extends JFormFieldList
             static::$options[$hash] = parent::getOptions();
             $options = array();
 
-            $arrayOfRoles = $this->getRolesFromDB();
+            $arrayOfProfiles = $this->getProfilesFromDB();
 
             // Convert array to options
             $options[] = JHTML::_('select.option', '', JText::_('JALL'));
-            foreach ($arrayOfRoles as $key => $value)
+            foreach ($arrayOfProfiles as $key => $value)
             {
-                $options[] = JHTML::_('select.option', $value['id'], $value['name']);
+                $options[] = JHTML::_('select.option', $value->id, $value->name);
             }
 
             static::$options[$hash] = array_merge(static::$options[$hash], $options);

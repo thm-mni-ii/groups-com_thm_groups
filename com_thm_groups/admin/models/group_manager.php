@@ -51,12 +51,14 @@ class THM_GroupsModelGroup_Manager extends THM_CoreModelList
             ->join('LEFT OUTER', $db->quoteName('#__usergroups') . ' AS c2 ON a.lft > c2.lft AND a.rgt < c2.rgt')
             ->leftJoin('#__thm_groups_usergroups_roles AS d ON d.usergroupsID = a.id')
             ->leftJoin('#__thm_groups_users_usergroups_moderator AS e ON e.usergroupsID = a.id')
+            ->leftJoin('#__thm_groups_profile_usergroups AS f ON f.usergroupsID = a.id')
             ->group('a.id, a.lft, a.rgt, a.parent_id, a.title');
 
 
         $this->setSearchFilter($query, array('a.title'));
         $this->setIDFilter($query, 'd.rolesID', array('filter.roles'));
         $this->setIDFilter($query, 'e.usersID', array('filter.moderators'));
+        $this->setIDFilter($query, 'f.profileID', array('filter.profile'));
         $this->setOrdering($query);
 
         return $query;
@@ -124,10 +126,12 @@ class THM_GroupsModelGroup_Manager extends THM_CoreModelList
 
             $return[$index][0] = JHtml::_('grid.id', $index, $item->id, false);
             $return[$index][1] = $item->id;
-            $return[$index][2] = str_repeat('<span class="gi">|&mdash;</span>', $item->level) . ' <span onclick="confirmMsg();">' . JHtml::_('link', $url, $item->title) . '</span>';
+            $return[$index][2] = str_repeat('<span class="gi">|&mdash;</span>', $item->level)
+                . ' <span onclick="confirmMsg();">' . JHtml::_('link', $url, $item->title) . '</span>';
             $return[$index][3] = $this->getModerators($item->id);
             $return[$index][4] = $this->getRoles($item->id);
-            $return[$index][5] = $item->user_count ? $item->user_count : '';
+            $return[$index][5] = $this->getProfiles($item->id);
+            $return[$index][6] = $item->user_count ? $item->user_count : '';
 
             $index++;
         }
@@ -148,9 +152,10 @@ class THM_GroupsModelGroup_Manager extends THM_CoreModelList
         $headers['checkbox'] = '';
         $headers['id'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'a.id', $direction, $ordering);
         $headers['name'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ROLE_NAME'), 'a.title', $direction, $ordering);
-        $headers['moderators'] = 'Moderator';
-        $headers['roles'] = 'Roles';
-        $headers['users_count'] = 'Users in group';
+        $headers['moderators'] = JText::_('COM_THM_GROUPS_GROUP_MANAGER_MODERATOR');
+        $headers['roles'] = JText::_('COM_THM_GROUPS_GROUP_MANAGER_ROLES');
+        $headers['profile'] = JText::_('COM_THM_GROUPS_GROUP_MANAGER_PROFILE');
+        $headers['users_count'] = JText::_('COM_THM_GROUPS_GROUP_MANAGER_MEMBERS_IN_GROUP');
 
         return $headers;
     }
@@ -255,6 +260,48 @@ class THM_GroupsModelGroup_Manager extends THM_CoreModelList
         }
 
         return implode(',<br/>', $return);
+    }
+
+    /**
+     * Returns a profile of a group
+     *
+     * @param   int  $gid  An id of a group
+     *
+     * @return array|bool|string
+     *
+     * @throws Exception
+     */
+    public function getProfiles($gid)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query
+            ->select('b.id, b.name')
+            ->from('#__thm_groups_profile_usergroups AS a')
+            ->innerJoin('#__thm_groups_profile AS b ON b.id = a.profileID')
+            ->where("a.usergroupsID = $gid");
+
+        $db->setQuery($query);
+
+        try
+        {
+            $profile = $db->loadObject();
+        }
+        catch (Exception $e)
+        {
+            JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+            return false;
+        }
+
+        $return = '';
+        if (!empty($profile))
+        {
+            $url = "index.php?option=com_thm_groups&view=profile_edit&cid[]=$profile->id";
+            $return = "<a href=$url>" . $profile->name . "</a>";
+        }
+
+        return $return;
     }
 
     /**

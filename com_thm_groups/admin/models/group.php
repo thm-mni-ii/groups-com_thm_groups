@@ -536,6 +536,7 @@ class THM_GroupsModelGroup extends JModelLegacy
         // Sanitize group ids.
         $pks = array_unique($cid);
         JArrayHelper::toInteger($pks);
+        JArrayHelper::toInteger($pid);
 
         // Remove any values of zero.
         if (array_search(0, $pks, true))
@@ -546,6 +547,13 @@ class THM_GroupsModelGroup extends JModelLegacy
         if (empty($pks))
         {
             JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'error');
+            return false;
+        }
+
+        // There is no selected profile
+        if (0 === $pid[0])
+        {
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_GROUP_MANAGER_NO_PROFILE_SELECTED'), 'error');
             return false;
         }
 

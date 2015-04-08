@@ -86,6 +86,20 @@ class THM_GroupsViewGroup_Manager extends THM_CoreViewList
         );
         JToolBarHelper::deleteList('COM_THM_GROUPS_REALLY_DELETE', 'group.delete', 'JTOOLBAR_DELETE');
 
+        if ($user->authorise('core.delete', 'com_users') && $user->authorise('core.manage', 'com_users'))
+        {
+            $image = 'edit';
+            $title = JText::_('COM_THM_GROUPS_EDIT_MODERATOR');
+            $link = 'index.php?option=com_thm_groups&amp;view=user_select&amp;tmpl=component';
+            $height = '600';
+            $width = '900';
+            $top = 0;
+            $left = 0;
+            $onClose = 'window.location.reload();';
+            $bar = JToolBar::getInstance('toolbar');
+            $bar->appendButton('Popup', $image, $title, $link, $width, $height, $top, $left, $onClose);
+        }
+
         if ($user->authorise('core.create', 'com_users') && $user->authorise('core.edit', 'com_users') && $user->authorise('core.edit.state', 'com_users'))
         {
             JHtml::_('bootstrap.modal', 'myModal');
@@ -103,22 +117,9 @@ class THM_GroupsViewGroup_Manager extends THM_CoreViewList
             $title = JText::_('COM_THM_GROUPS_GROUP_MANAGER_ASSIGN_PROFILE');
 
             // TODO change name for data-target to a meaningful name
-            $dhtml = "<button data-toggle='modal' data-target='#myModal' class='btn btn-small'><i class='icon-checkbox-partial' title='test'></i>$title</button>";
+            $dhtml = "<button data-toggle='modal' data-target='#myModal' class='btn btn-small'><i class='icon-edit' title='test'></i> $title</button>";
 
             $bar->appendButton('Custom', $dhtml, 'batch');
-        }
-        if ($user->authorise('core.delete', 'com_users') && $user->authorise('core.manage', 'com_users'))
-        {
-            $image = 'edit';
-            $title = JText::_('COM_THM_GROUPS_EDIT_MODERATOR');
-            $link = 'index.php?option=com_thm_groups&amp;view=user_select&amp;tmpl=component';
-            $height = '600';
-            $width = '900';
-            $top = 0;
-            $left = 0;
-            $onClose = 'window.location.reload();';
-            $bar = JToolBar::getInstance('toolbar');
-            $bar->appendButton('Popup', $image, $title, $link, $width, $height, $top, $left, $onClose);
         }
 
         if ($user->authorise('core.admin', 'com_users'))
