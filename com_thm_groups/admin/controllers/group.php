@@ -137,14 +137,14 @@ class THM_GroupsControllerGroup extends JControllerForm
     }
 
     /**
-     * Method to run batch operations.
-     *
-     * @param   object  $model  The model.
-     *
-     * @return  boolean  True on success, false on failure
-     *
-     * @since   2.5
-     */
+ * Method to run batch operations.
+ *
+ * @param   object  $model  The model.
+ *
+ * @return  boolean  True on success, false on failure
+ *
+ * @since   2.5
+ */
     public function batch($model = null)
     {
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
@@ -156,6 +156,35 @@ class THM_GroupsControllerGroup extends JControllerForm
         $this->setRedirect(JRoute::_('index.php?option=com_thm_groups&view=group_manager' . $this->getRedirectToListAppend(), false));
 
         if ($model->batch())
+        {
+            $this->setMessage(JText::_('JLIB_APPLICATION_SUCCESS_BATCH'));
+        }
+        else
+        {
+            $this->setMessage(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_FAILED', $model->getError()), 'warning');
+        }
+    }
+
+    /**
+     * Method to run batch operations.
+     *
+     * @param   object  $model  The model.
+     *
+     * @return  boolean  True on success, false on failure
+     *
+     * @since   2.5
+     */
+    public function batchProfile($model = null)
+    {
+        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+        // Set the model
+        $model = $this->getModel('group', '', array());
+
+        // Preset the redirect
+        $this->setRedirect(JRoute::_('index.php?option=com_thm_groups&view=group_manager' . $this->getRedirectToListAppend(), false));
+
+        if ($model->batchProfile())
         {
             $this->setMessage(JText::_('JLIB_APPLICATION_SUCCESS_BATCH'));
         }
