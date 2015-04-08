@@ -125,7 +125,10 @@ class THM_GroupsModelGroup extends JModelLegacy
                 break;
         }
 
-        // Remove the moderators from the group if requested.
+        /*
+         * TODO make own method for deletion -> better for understanding
+         * Remove the moderators from the group if requested.
+         */
         if (isset($doDelete))
         {
             // Remove moderators from the groups
@@ -146,7 +149,11 @@ class THM_GroupsModelGroup extends JModelLegacy
             }
         }
 
-        // Add the moderators to group if requested
+
+        /*
+         * TODO make own method for assigning -> better for understanding
+         * Add the moderators to group if requested
+         */
         if (isset($doAssign))
         {
             // First, we need to check if the user is already assigned to a group
@@ -217,7 +224,8 @@ class THM_GroupsModelGroup extends JModelLegacy
     }
 
     /**
-     * Deletes a moderator from a group
+     * Deletes a moderator from a group by clicking on
+     * delete icon near moderator name
      *
      * @return bool
      *
@@ -251,7 +259,8 @@ class THM_GroupsModelGroup extends JModelLegacy
     }
 
     /**
-     * Deletes a role from a group
+     * Deletes a role from a group by clicking on
+     * delete icon near role name
      *
      * @return bool
      *
@@ -301,6 +310,7 @@ class THM_GroupsModelGroup extends JModelLegacy
 
     /**
      * Method to perform batch operations on an item or a set of items.
+     * TODO make generic function which handle all types of batch operations
      *
      * @return  boolean  Returns true on success, false on failure.
      *
@@ -497,6 +507,244 @@ class THM_GroupsModelGroup extends JModelLegacy
                 {
                     JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
                     return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Perform batch operation for profile
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function batchProfile()
+    {
+        $jinput = JFactory::getApplication()->input;
+
+        // Array with action command
+        $action = $jinput->post->get('batch_action', array(), 'array');
+
+        // Array of profile ids
+        $pid = $jinput->post->get('batch_id', array(), 'array');
+
+        // Array of group ids
+        $cid  = $jinput->post->get('cid', array(), 'array');
+
+        // Sanitize group ids.
+        $pks = array_unique($cid);
+        JArrayHelper::toInteger($pks);
+
+        // Remove any values of zero.
+        if (array_search(0, $pks, true))
+        {
+            unset($pks[array_search(0, $pks, true)]);
+        }
+
+        if (empty($pks))
+        {
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'error');
+            return false;
+        }
+
+        $done = false;
+
+        if (!empty($pid))
+        {
+            $cmd = $action[0];
+
+            if (!$this->processProfile($pid[0], $pks, $cmd))
+            {
+                return false;
+            }
+
+            $done = true;
+        }
+
+        if (!$done)
+        {
+            JFactory::getApplication()->enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'), 'error');
+            return false;
+        }
+
+        // Clear the cache
+        $this->cleanCache();
+
+        return true;
+    }
+
+    /**
+     * Saves or deletes a single profile from groups
+     * TODO The name of function can be confusing and it must be changed later
+     *
+     * @param   int     $profile_id  An id of a profile
+     * @param   array   $group_ids   An array with group ids
+     * @param   string  $action      An action to perform
+     *
+     * @return bool
+     */
+    public function processProfile($profile_id, $group_ids, $action)
+    {
+        // Get the DB object
+        $db = $this->getDbo();
+
+        JArrayHelper::toInteger($group_ids);
+        $profile_id = (int) $profile_id;
+
+        switch ($action)
+        {
+            // Remove profile from a selected group
+            case 'del':
+                $doDelete = 'profile';
+                break;
+
+            // Add groups to a selected role
+            case 'add':
+            default:
+                $doAssign = true;
+                break;
+        }
+
+        // Remove profile from the group if requested.
+        if (isset($doDelete))
+        {
+            $query = $db->getQuery(true);
+
+            // Remove profile from the groups
+            $query
+                ->delete('#__thm_groups_profile_usergroups')
+                ->where('usergroupsID' . ' IN (' . implode(',', $group_ids) . ')');
+
+            // Only remove roles from selected group
+            if ($doDelete == 'profile')
+            {
+                $query->where("profileID = $profile_id");
+            }
+
+            $db->setQuery($query);
+
+            try
+            {
+                $db->execute();
+            }
+            catch (Exception $e)
+            {
+                JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+                return false;
+            }
+        }
+
+        // Assign the profile to the groups if requested.
+        if (isset($doAssign))
+        {
+            $query = $db->getQuery(true);
+
+            // First, we need to check if the profile is already assigned to a group
+            $query
+                ->select('usergroupsID, profileID')
+                ->from($db->quoteName('#__thm_groups_profile_usergroups'))
+                ->where($db->quoteName('usergroupsID') . ' IN (' . implode(',', $group_ids) . ')')
+                ->order('usergroupsID');
+
+            $db->setQuery($query);
+            try
+            {
+                $groups_profile = $db->loadObjectList();
+            }
+            catch (Exception $e)
+            {
+                JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+                return false;
+            }
+
+            // There are no previously saved group-profile mappings
+            if (empty($groups_profile))
+            {
+                $query = $db->getQuery(true);
+
+                $query
+                    ->insert('#__thm_groups_profile_usergroups')
+                    ->columns(array('usergroupsID', 'profileID'));
+
+                foreach ($group_ids as $gid)
+                {
+                    $query->values("$gid, $profile_id");
+                }
+
+                $db->setQuery($query);
+                try
+                {
+                    $db->execute();
+                }
+                catch (RuntimeException $e)
+                {
+                    JFactory::getApplication()->enqueueMessage(
+                        JText::sprintf(JText::_('COM_THM_GROUPS_GROUP_MANAGER_ERROR_GROUP_PROFILE_MAPPING_SAVE'), $e->getMessage()), 'error');
+                    return false;
+                }
+            }
+            else
+            {
+                $dataFromDB = array();
+
+                // Prepare data from db to compare later
+                foreach ($groups_profile as $group_profile)
+                {
+                    $dataFromDB[$group_profile->usergroupsID][] = (int) $group_profile->profileID;
+                }
+
+                foreach ($group_ids as $gid)
+                {
+                    // It groups already exist in database, make update of groups
+                    if (array_key_exists($gid, $dataFromDB))
+                    {
+                        $query = $db->getQuery(true);
+                        $query
+                            ->update('#__thm_groups_profile_usergroups')
+                            ->set("profileID = $profile_id")
+                            ->where("usergroupsID = $gid");
+
+                        $db->setQuery($query);
+                        try
+                        {
+                            $db->execute();
+                        }
+                        catch (Exception $e)
+                        {
+                            JFactory::getApplication()->enqueueMessage(
+                                JText::sprintf(
+                                    JText::_('COM_THM_GROUPS_GROUP_MANAGER_ERROR_GROUP_PROFILE_MAPPING_UPDATE'),
+                                    $e->getMessage()
+                                ), 'error'
+                            );
+                            return false;
+                        }
+                    }
+                    // If group-profile mapping does not exist in database, make insert
+                    else
+                    {
+                        $query = $db->getQuery(true);
+                        $query
+                            ->insert('#__thm_groups_profile_usergroups')
+                            ->columns(array('usergroupsID', 'profileID'))
+                            ->values("$gid, $profile_id");
+                        $db->setQuery($query);
+                        try
+                        {
+                            $db->execute();
+                        }
+                        catch (Exception $e)
+                        {
+                            JFactory::getApplication()->enqueueMessage(
+                                JText::sprintf(
+                                    JText::_('COM_THM_GROUPS_GROUP_MANAGER_ERROR_GROUP_PROFILE_MAPPING_INSERT'),
+                                    $e->getMessage()
+                                ), 'error');
+                            return false;
+                        }
+                    }
                 }
             }
         }

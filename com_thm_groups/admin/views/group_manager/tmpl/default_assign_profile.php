@@ -52,7 +52,7 @@ JHtml::_('formbehavior.chosen', 'select');
 		<button class="btn" type="button" onclick="document.id('batch-profile-id').value=''" data-dismiss="modal">
 			<?php echo JText::_('JCANCEL'); ?>
 		</button>
-		<button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('group.batch');">
+		<button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('group.batchProfile');">
 			<?php echo JText::_('JGLOBAL_BATCH_PROCESS'); ?>
 		</button>
 	</div>

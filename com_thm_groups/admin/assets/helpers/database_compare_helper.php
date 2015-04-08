@@ -19,26 +19,25 @@
 class THM_GroupsHelperDatabase_Compare
 {
     /**
-     *
      * Filters insert values before save
      * Compare two arrays and delete repeating elements
-     * This algorithm sucks, i don't like it, but it's because of php -> comment form Ilja
+     * This algorithm sucks -> comment form Ilja
      *
-     * @param   Array  $insertValues  An array with values to save
-     * @param   Array  $valuesFromDB  An array with values from DB
+     * @param   Array  &$insertValues  An array with values to save
+     * @param   Array  $valuesFromDB   An array with values from DB
      *
      * @return  void
      */
     public static function filterInsertValues(&$insertValues, $valuesFromDB)
     {
-        foreach($valuesFromDB as $key => $value)
+        foreach ($valuesFromDB as $key => $value)
         {
-            if(array_key_exists($key, $insertValues))
+            if (array_key_exists($key, $insertValues))
             {
-                foreach($value as $data)
+                foreach ($value as $data)
                 {
                     $idx = array_search($data, $insertValues[$key]);
-                    if(!is_bool($idx))
+                    if (!is_bool($idx))
                     {
                         unset($insertValues[$key][$idx]);
                     }
