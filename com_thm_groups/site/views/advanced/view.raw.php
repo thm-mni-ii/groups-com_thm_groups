@@ -27,7 +27,7 @@ JHTML::_('behavior.framework', true);
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
 */
-class THMGroupsViewAdvanced extends JViewLegacy
+class THM_GroupsViewAdvanced extends JViewLegacy
 {
 
     /**
@@ -41,7 +41,9 @@ class THMGroupsViewAdvanced extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        $task = JRequest::getVar('task');
+        $app  = JFactory::getApplication()->input;
+
+        $task = $app->get('task');
         $this->$task();
     }
 
@@ -53,7 +55,8 @@ class THMGroupsViewAdvanced extends JViewLegacy
      */
     public function notify()
     {
-        $itemId = JRequest::getVar('Itemid', false, 'post');
+        $app  = JFactory::getApplication()->input;
+        $itemId = $app->get('Itemid', false, 'post');
 
         // Notify Preview Observer
         $model = $this->getmodel('advanced');

@@ -27,7 +27,7 @@ jimport('joomla.application.component.modelform');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
 */
-class THMGroupsModelProfile extends JModelForm
+class THM_GroupsModelProfile extends JModelForm
 {
     protected $db;
 

@@ -30,11 +30,11 @@
     $members = $this->data;
     $User = JFactory::getUser();
 
-    $struct = array();
+    /*$struct = array();
     foreach ($this->structure as $structItem)
     {
         $struct[$structItem->id] = $structItem->field;
-    }
+    }*/
 
     $countOfColoumns = $this->view + 1;
     $elementCounter = 0;
@@ -85,24 +85,30 @@
         foreach ($member as $memberhead)
         {
             // Daten fuer den HEAD in Variablen speichern
-            switch ($memberhead['structid'])
+            switch ($memberhead->structid)
             {
                 case "1":
-                    $firstName = $memberhead['value'];
-                    $wrapFirstName = $memberhead['structwrap'];
+                    $firstName = $memberhead->value;
+                    $wrapFirstName = $memberhead->structwrap;
                     break;
                 case "2":
-                    $lastName = $memberhead['value'];
+                    $lastName = $memberhead->value;
                     break;
                 case "5":
-                    $title = $memberhead['value'];
-                    $wrapTitle = $memberhead['structwrap'];
+                    $title = $memberhead->value;
+                    $wrapTitle = $memberhead->structwrap;
                     break;
                 default:
-                    if ($memberhead['type'] == "PICTURE" && $picture == null && $memberhead['publish'])
+                    if ($memberhead->type == "PICTURE" && $picture == null && $memberhead->publish)
                     {
-                        $picture = $memberhead['value'];
-                        $picpath = $memberhead['picpath'];
+                        $picture = $memberhead->value;
+                        if(isset($memberhead->options)) {
+                            $picpath = $memberhead->options;
+                        }
+                        else
+                        {
+                            $picpath = $memberhead->dynOptions;
+                        }
                     }
                     break;
             }
@@ -161,9 +167,9 @@
             $attribs['title'] = 'bearbeiten';
 
             // Daten fuer die EditForm
-            $option = JRequest :: getVar('option', 0);
-            $layout = JRequest :: getVar('layout', 0);
-            $view = JRequest :: getVar('view', 0);
+            $option = $this->app->getString('option');
+            $layout = $this->app->getString('layout');
+            $view = $this->app->getString('view');
             $path = "index.php?option=com_thm_groups&view=edit&layout=default&Itemid=";
             $gspart = '&gsgid=' . $this->gsgid . '&option_back=';
             $trim = "&name=" . trim($lastName);
@@ -182,9 +188,9 @@
         echo "<div>";
         foreach ($member as $memberitem)
         {
-            if ($memberitem['value'] != "" && $memberitem['publish'])
+            if ($memberitem->value != "" && $memberitem->publish)
             {
-                if ($wrap == true && $memberitem['structwrap'] == true)
+                if ($wrap == true && $memberitem->structwrap == true)
                 {
                     echo "<div class='gs_advlist_longinfo thm_groups_profile_container_line'>";
                 }
@@ -194,13 +200,13 @@
                 }
                 // Attributnamen anzeigen
 
-                if ($memberitem['structname'] == true)
+                if ($memberitem->structname == true)
                 {
-                    echo '<span class="thm_groups_profile_container_line_label">' . JText::_($struct[$memberitem['structid']]) . ": " . '</span>';
+                    echo '<span class="thm_groups_profile_container_line_label">' . JText::_($memberitem->name) . ": " . '</span>';
                 }
 
                 // Attribut anzeigen
-                switch ($memberitem['structid'])
+                switch ($memberitem->structid)
                 {
                     // Reihenfolge ist von ORDER in Datenbank abhaengig. somit ist hier die Reihenfolge egal
                     case "1":
@@ -213,24 +219,24 @@
                         break;
                     case "4":
                         // EMail
-                        echo JHTML :: _('email.cloak', $memberitem['value']);
+                        echo JHTML :: _('email.cloak', $memberitem->value);
                         break;
                     default:
-                        switch ($memberitem['type'])
+                        switch ($memberitem->type)
                         {
                             case "LINK":
-                                echo "<a href='" . htmlspecialchars_decode($memberitem['value']) . "'>"
-                                        . htmlspecialchars_decode($memberitem['value']) . "</a>";
+                                echo "<a href='" . htmlspecialchars_decode($memberitem->value) . "'>"
+                                        . htmlspecialchars_decode($memberitem->value) . "</a>";
                                         break;
                             case "PICTURE":
                                 // TODO
                                 break;
                             case "TABLE":
-                                echo $this->make_table($memberitem['value']);
+                                echo $this->make_table($memberitem->value);
                                 break;
                             case "TEXTFIELD":
                                 // Long Info
-                                $text = JString::trim(htmlspecialchars_decode($memberitem['value']));
+                                $text = JString::trim(htmlspecialchars_decode($memberitem->value));
                                 if (!empty($text))
                                 {
                                     if (stripos($text, '<li>') === false)
@@ -251,14 +257,14 @@
                                 }
                                 break;
                             default:
-                                echo nl2br(htmlspecialchars_decode($memberitem['value']));
+                                echo nl2br(htmlspecialchars_decode($memberitem->value));
                                 break;
                         }
                         break;
                 }
 
                 echo    "</div>";
-                if ($memberitem['structwrap'] == true)
+                if ($memberitem->structwrap == true)
                 {
                     $wrap = true;
                 }

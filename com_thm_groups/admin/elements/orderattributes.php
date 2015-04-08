@@ -43,7 +43,6 @@ class JFormFieldOrderAttributes extends JFormField
     {
         $orderSelect = '<div id="orderattr">';
         $scriptDir = JURI::root() . 'administrator/components/com_thm_groups/elements/';
-        $image_path = JURI::root() . 'administrator/components/com_thm_groups/elements/images';
         JHtml::_('jquery.framework', true, true);
         JHtml::_('jquery.ui');
         JHtml::_('jquery.ui', array('sortable'));

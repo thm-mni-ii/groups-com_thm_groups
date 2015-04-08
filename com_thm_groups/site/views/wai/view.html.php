@@ -25,7 +25,7 @@ defined('_JEXEC') or die;
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class ThmGroupsViewWai extends JViewLegacy
+class Thm_GroupsViewWai extends JViewLegacy
 {
     /**
      * Method to get display

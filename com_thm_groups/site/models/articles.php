@@ -25,7 +25,7 @@ jimport('thm_groups.data.lib_thm_groups_quickpages');
  * @package   thm_groups
  * @since     v0.1.0
  */
-class THMGroupsModelArticles extends JModelList
+class THM_GroupsModelArticles extends JModelList
 {
 
     private $_currUser;

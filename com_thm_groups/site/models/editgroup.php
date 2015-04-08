@@ -27,7 +27,7 @@ jimport('joomla.application.component.modelform');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsModelEditGroup extends JModelForm
+class THM_GroupsModelEditGroup extends JModelForm
 {
     /**
      * Constructor

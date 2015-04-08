@@ -31,7 +31,7 @@ jimport('thm_groups.data.lib_thm_groups');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewAdvanced extends JViewLegacy
+class THM_GroupsViewAdvanced extends JViewLegacy
 {
     /**
      * Method to get display
@@ -43,13 +43,13 @@ class THMGroupsViewAdvanced extends JViewLegacy
     public function display($tpl = null)
     {
         $mainframe = Jfactory::getApplication();
-
+        $app  = JFactory::getApplication()->input;
         // $layout = $this->getLayout();
         $model = $this->getmodel('advanced');
 
         // Mainframe Parameter
         $params = $mainframe->getParams();
-        $userid = JRequest::getVar('gsuid', 0);
+        $userid = $app->get('gsuid', 0);
         $pagetitle = $params->get('page_title');
         $showpagetitle = $params->get('show_page_heading');
         if ($showpagetitle)
@@ -66,44 +66,44 @@ class THMGroupsViewAdvanced extends JViewLegacy
             $db = JFactory::getDBO();
             $query = $db->getQuery(true);
             $query->select('value');
-            $query->from($db->qn('#__thm_groups_text'));
-            $query->where('userid = ' . $userid);
-            $query->where('structid = 1');
+            $query->from($db->qn('#__thm_groups_users_attribute'));
+            $query->where('usersID = ' . $userid);
+            $query->where('attributeID = 1');
 
             $db->setQuery($query);
             $firstname = $db->loadObjectList();
-            $name = JRequest::getVar('name', '') . ', ' . $firstname[0]->value;
+            $name = $app->get('name', '') . ', ' . $firstname[0]->value;
             $pathway->addItem($name, '');
         }
         else
         {
         }
-        $this->assignRef('title', $title);
-        $itemId = JRequest::getVar('Itemid', 0, 'get');
+        $this->title = $title;
+        $this->app = $app;
+        $itemId = $app->get('Itemid', 0, 'get');
         $viewparams = $model->getViewParams();
-        $this->assignRef('params', $viewparams);
+        $this->params =  $viewparams;
         $groupnumber = $model->getGroupNumber();
-        $this->assignRef('gsgid', $groupnumber);
-        $this->assignRef('itemid', $itemId);
+        $this->gsgid = $groupnumber;
+        $this->itemid = $itemId;
         $canEdit = $model->canEdit();
-        $this->assignRef('canEdit', $canEdit);
+        $this->canEdit = $canEdit;
         $tempdata = $model->getData();
-        $this->assignRef('data', $tempdata);
+        $this->data = $tempdata;
         $gettable = $model->getDataTable();
-        $this->assignRef('dataTable', $gettable);
-        $getStructur = $model->getStructure();
-        $this->assignRef('structure', $getStructur);
+        $this->dataTable = $gettable;
+      /*  $getStructur = $model->getStructure();
+        $this->structure = $getStructur;*/
         $advancedView = $model->getAdvancedView();
 
-        $this->assignRef('view', $advancedView);
+        $this->view = $advancedView;
 
         // Long Info Truncate
         $truncateLongInfo = !$params->get('longInfoNotTruncated', false);
-        $this->assignRef('truncateLongInfo', $truncateLongInfo);
+        $this->truncateLongInfo = $truncateLongInfo;
 
         // Load test
-        $scriptDir = str_replace(JPATH_SITE . DS, '', "libraries/thm_groups/assets/js/");
-        JHTML::script('jquery-1.9.1.min.js', $scriptDir, false);
+        $scriptDir = str_replace(JPATH_SITE, '', "/libraries/thm_groups/assets/js/");
 
         // Load Dynamic CSS
         $mycss = $this->getCssView($params, $advancedView);
@@ -111,7 +111,7 @@ class THMGroupsViewAdvanced extends JViewLegacy
         $document->addStyleDeclaration($mycss);
 
         // Notify Preview Observer
-        $token = JRequest::getVar('notifytoken', false);
+        $token = $app->get('notifytoken', false);
         if (!empty($token))
         {
             $model->notifyPreviewObserver($itemId, $token);

@@ -23,7 +23,7 @@ jimport('joomla.application.component.controller');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.1
  */
-class THMGroupsControllerEditGroup extends JControllerLegacy
+class THM_GroupsControllerEditGroup extends JControllerLegacy
 {
     /**
      *  Constructor (registers additional tasks to methods)

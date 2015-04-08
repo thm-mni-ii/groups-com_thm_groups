@@ -26,7 +26,7 @@ JHtml::_('jquery.framework');
  * @package   thm_groups
  * @since     v0.1.0
  */
-class THMGroupsViewArticles extends JViewLegacy
+class THM_GroupsViewArticles extends JViewLegacy
 {
     protected $items;
 

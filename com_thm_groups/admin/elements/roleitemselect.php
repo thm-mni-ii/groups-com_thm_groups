@@ -39,118 +39,108 @@ class JFormFieldRoleItemSelect extends JFormField
     public function getInput()
     {
         $db = JFactory::getDBO();
-        $scriptDir = str_replace(JPATH_SITE . '/', '', "administrator/components/com_thm_groups/elements/");
-        $sortButtons = true;
+        $scriptDir = JURI::root() . 'administrator/components/com_thm_groups/elements/';
+        JHtml::_('jquery.framework', true, true);
+        JHtml::_('jquery.ui');
+        JHtml::_('jquery.ui', array('sortable'));
 
+        JHTML::script($scriptDir . 'roleitemselect.js');
+        JHtml::stylesheet($scriptDir . 'orderattributes.css');
+        $sortButtons = true;
+        $app  = JFactory::getApplication()->input;
         // Add script-code to the document head
-        JHTML::script('roleitemselect.js', $scriptDir, false);
-        $id = JRequest::getVar('cid');
+       ;
+      //  JHTML::script('roleitemselect.js', $scriptDir, false);
+        $id = $app->get('cid');
         if (isset($id))
         {
             $id = $id[0];
         }
         else
         {
-            $id = JRequest::getVar('id');
+            $id = $app->get('id');
         }
-        $menuquery = $db->getQuery(true);
-        $menuquery->select("params");
-        $menuquery->from('#__menu');
-        $menuquery->where('id=' . $id);
-        $db->setQuery($menuquery);
-        $menulist = $db->loadObject();
-
-        if (isset($menulist->params))
+        if(isset($id))
         {
-            $paramsMenu = json_decode($menulist->params, true);
-        }
+            $menuquery = $db->getQuery(true);
+            $menuquery->select("params");
+            $menuquery->from('#__menu');
+            $menuquery->where('id=' . $id);
+            $db->setQuery($menuquery);
+            $menulist = $db->loadObject();
 
-        if (isset($paramsMenu['selGroup']))
-        {
-            $gid = $paramsMenu['selGroup'];
-        }
-        $arrParamRoles = explode(",", $this->value);
-
-        // Var_dump($this->value);
-        if (isset($gid))
-        {
-            $querynewRole = $db->getQuery(true);
-
-            $querynewRole->select("rid");
-            $querynewRole->from("#__thm_groups_groups_map");
-            $querynewRole->where("gid =" . $gid);
-            $db->setQuery($querynewRole);
-            $newroleList = $db->loadObjectList();
-
-            foreach ($newroleList as $newrole)
+            if (isset($menulist->params))
             {
-                $isdrin = false;
-                foreach ($arrParamRoles as $altrole)
+                $paramsMenu = json_decode($menulist->params, true);
+            }
+
+            if (isset($paramsMenu['selGroup']))
+            {
+                $gid = $paramsMenu['selGroup'];
+            }
+            $arrParamRoles = explode(",", $this->value);
+
+          if (isset($gid))
+            {
+
+                    $querynewRole = $db->getQuery(true);
+
+                    $querynewRole->select("distinct A.rolesID as rid, B.name")
+                                ->from("#__thm_groups_usergroups_roles AS A")
+                                ->leftJoin("#__thm_groups_roles AS B ON A.rolesID = B.id")
+                                ->where("A.usergroupsID = " . $gid)
+                                ->where("A.rolesID NOT IN (" . implode(",", $arrParamRoles) . ")");
+
+                    $db->setQuery($querynewRole);
+                    $newroleList = $db->loadObjectList();
+
+
+                foreach ($newroleList as $newrole)
                 {
-                    if ($newrole->rid == $altrole)
+
+                        array_push($arrParamRoles, $newrole->rid);
+                }
+
+
+
+                $queryRoles = $db->getQuery(true);
+
+                $queryRoles->select("distinct A.rolesID as rid, B.name");
+                $queryRoles->from("#__thm_groups_usergroups_roles AS A");
+                $queryRoles->leftJoin("#__thm_groups_roles AS B ON A.rolesID = B.id");
+                $queryRoles->where("A.usergroupsID =" . $gid);
+                $queryRoles->where("B.id IN (" . implode(",", $arrParamRoles) . ")");
+                $db->setQuery($queryRoles);
+
+                $listR = $db->loadObjectList();
+
+
+                $html = '<ul id="paramsattr" class="listContent" name="' . $this->name . '">';
+
+
+                foreach ($arrParamRoles as $sortedRole)
+                {
+
+                    foreach ($listR as $roleRow)
                     {
-                        $isdrin = true;
+                        if ($roleRow->rid == $sortedRole)
+                        {
+                            $html .=  '<li id="item"  class="listItem" value="' . $roleRow->rid . '" >' .
+                                $roleRow->name . '</li>';
+                        }
 
                     }
+
                 }
-                if ($isdrin == false)
-                {
-                    array_push($arrParamRoles, $newrole->rid);
-                }
+                $html .= '</ul>';
+
+                $html .= '<input type="hidden" name="' . $this->name . '" id="sortedgrouproles" value="' . $this->value . '" />';
+
+                return $html;
             }
         }
 
-        // Var_dump($arrParamRoles);
+            return "<p style='color: #e78f08'><strong >COM_THM_GROUPS_ROLE_WARNING</strong></p>";
 
-        $queryRoles = $db->getQuery(true);
-
-        $queryRoles->select('distinct id, name');
-        $queryRoles->from("#__thm_groups_roles");
-        $queryRoles->order("id");
-        $db->setQuery($queryRoles);
-        $listR = $db->loadObjectList();
-
-
-        $html = '<select name="' . $this->name . '" size="5" id="paramsroleid" class = "selGroup" style="display:block"">';
-
-        foreach ($arrParamRoles as $sortedRole)
-        {
-
-                foreach ($listR as $roleRow)
-                {
-                    if ($roleRow->id == $sortedRole)
-                    {
-                        $html .= '<option value=' . $roleRow->id . ' >' . $roleRow->name . ' </option>';
-                    }
-
-                }
-
-        }
-        $html .= '</select>';
-        if ($sortButtons)
-        {
-            $html .= '<a onclick="roleup()" id="sortup">';
-            $html .= '<img src="../administrator/components/com_thm_groups/assets/images/uparrow.png" title="';
-            $html .= JText::_('COM_THM_GROUPS_ROLE_UP') . '" />';
-            $html .= '</a><br />';
-            $html .= '<a onclick="roledown()" id="sortdown">';
-            $html .= '<img src="../administrator/components/com_thm_groups/assets/images/downarrow.png" title="';
-            $html .= JText::_('COM_THM_GROUPS_ROLE_DOWN') . '" />';
-            $html .= '</a>';
-        }
-        else
-        {
-            $html .= '<a onclick="roleup()" id="sortup" style="visibility:hidden">';
-            $html .= '<img src="../administrator/components/com_thm_groups/assets/images/uparrow.png" title="';
-            $html .= JText::_('COM_THM_GROUPS_ROLE_UP') . '" />';
-            $html .= '</a><br />';
-            $html .= '<a onclick="roledown()" id="sortdown" style="visibility:hidden">';
-            $html .= '<img src="../administrator/components/com_thm_groups/assets/images/downarrow.png" title="';
-            $html .= JText::_('COM_THM_GROUPS_ROLE_DOWN') . '" />';
-            $html .= '</a>';
-        }
-        $html .= '<input type="hidden" name="' . $this->name . '" id="sortedgrouproles" value="' . $this->value . '" />';
-
-        return $html;
     }
 }

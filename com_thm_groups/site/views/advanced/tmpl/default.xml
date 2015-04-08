@@ -8,9 +8,8 @@
     <fields name="params">
         <fieldset name="basic">
             <field
-                addfieldpath="/administrator/components/com_thm_groups/elements/"
                 name="selGroup"
-                type="groupitemselect"
+                type="usergroup"
                 label="COM_THM_GROUPS_SELECT_GROUP_LABEL"
                 description="COM_THM_GROUPS_SELECT_GROUP_DESC"
             />
@@ -21,13 +20,6 @@
                 default="1"
                 label="COM_THM_GROUPS_SELECT_ROLE_LABEL"
                 description="COM_THM_GROUPS_SELECT_ROLE_DESC"
-            />
-            <field
-                addfieldpath="/administrator/components/com_thm_groups/elements/"
-                name="struct"
-                type="structureselect"
-                label="COM_THM_GROUPS_STRUCTURE_LABEL"
-                description="COM_THM_GROUPS_STRUCTURE_DESC"
             />
             <field
                 name="linkTarget"
@@ -271,7 +263,7 @@
             <field
                 addfieldpath="/administrator/components/com_thm_groups/elements/"
                 name="vorschau"
-                type="previewbutton"
+                type="hidden"
                 label="COM_THM_GROUPS_PROFILE_CONTAINER_PREVIEW"
             />
         </fieldset>

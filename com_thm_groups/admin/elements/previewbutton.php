@@ -44,7 +44,7 @@ class JFormFieldPreviewButton extends JFormField
 
         // Add script-code to the document head
         $document = JFactory::getDocument();
-        $document->addScript($library_path . '/assets/js/jquery-1.9.1.min.js');
+       // $document->addScript($library_path . '/assets/js/jquery-1.9.1.min.js');
         $document->addScript($elements_path . '/previewbutton.js');
 
         return '<input type="button" id="thm_groups_adv_view_preview_button" value="' . JText::_('COM_THM_GROUPS_PROFILE_CONTAINER_PREVIEW')

@@ -29,7 +29,7 @@ JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_users/models
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsControllerUser extends JControllerLegacy
+class THM_GroupsControllerUser extends JControllerLegacy
 {
 
     /**

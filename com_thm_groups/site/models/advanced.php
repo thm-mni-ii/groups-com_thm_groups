@@ -18,6 +18,8 @@
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
+jimport('thm_groups.data.lib_thm_groups');
+jimport('thm_groups.data.lib_thm_groups_user');
 jimport('joomla.filesystem.path');
 
 /**
@@ -30,7 +32,7 @@ jimport('joomla.filesystem.path');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsModelAdvanced extends JModelLegacy
+class THM_GroupsModelAdvanced extends JModelLegacy
 {
 
     /**
@@ -143,22 +145,8 @@ class THMGroupsModelAdvanced extends JModelLegacy
      */
     public function getUnsortedRoles($gid)
     {
-        $query = $this->db->getQuery(true);
-        $query->select('distinct rid');
-        $query->from('#__thm_groups_groups_map');
-        $query->where("gid =" . $this->db->q($gid));
 
-        $this->db->setQuery($query);
-        $unsortedRoles = $this->db->loadObjectList();
-        $arrUnsortedRoles = array ();
-        if (isset ($unsortedRoles))
-        {
-            foreach ($unsortedRoles as $role)
-            {
-                $arrUnsortedRoles[] = $role->rid;
-            }
-        }
-        return $arrUnsortedRoles;
+        return THMLibThmGroups::getRoles($gid);
     }
 
     /**
@@ -173,10 +161,11 @@ class THMGroupsModelAdvanced extends JModelLegacy
         $user    = JFactory::getUser();
         $query   = $this->db->getQuery(true);
 
-        $query->select('rid');
-        $query->from('#__thm_groups_groups_map');
-        $query->where('uid = ' . $this->db->quote($user->id));
-        $query->where("gid =" . $this->db->quote($groupid), 'AND');
+        $query->select('rolesID as rid');
+        $query->from('#__thm_groups_usergroups_roles AS groups');
+        $query->leftJoin('#__thm_groups_users_usergroups_roles AS users ON users.usergroups_rolesID = groups.id');
+        $query->where('users.usersID = ' . $this->db->quote($user->id));
+        $query->where("groups.usergroupsID =" . $this->db->quote($groupid), 'AND');
 
         $this->db->setQuery($query);
         $userRoles = $this->db->loadObjectList();
@@ -197,24 +186,24 @@ class THMGroupsModelAdvanced extends JModelLegacy
      */
     public function getTypes()
     {
-        $nestedQuery = $this->db->getQuery(true);
-        $query       = $this->db->getQuery(true);
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
 
-        $nestedQuery->select('a.type');
-        $nestedQuery->from('#__thm_groups_structure' . ' as a');
-        $nestedQuery->order('a.order');
+        $query->select('C.name AS type')
+            ->from('#__thm_groups_attribute AS A')
+            ->leftJoin('#__thm_groups_dynamic_type AS B ON A.dynamic_typeID = B.id')
+            ->leftJoin('#__thm_groups_static_type AS C ON  B.static_typeID = C.id')
+            ->order('A.id');
 
-        $query->select('Type');
-        $query->from('#__thm_groups_relationtable');
-        $query->where('Type in (' . $nestedQuery . ')');
+        $db->setQuery($query);
 
-        $this->db->setQuery($query);
-        return $this->db->loadObjectList();
+        return $db->loadObjectList();
     }
 
     /**
      * Returns array with every group members and related attribute. The group is predefined as view parameter
      *
+     * TODO when all Group have a Profil, put them here
      * @return  array  array with group members and related user attributes
      */
     public function getData()
@@ -242,104 +231,20 @@ class THMGroupsModelAdvanced extends JModelLegacy
             $arrSortedRoles = explode(",", $sortedRoles);
         }
 
-        if (isset ($paramStructSelect))
+        $userList = THMLibThmGroups::getMitglieder($groupid, $arrSortedRoles);
+
+        foreach($userList as $roleID=>$users)
         {
-            foreach ($paramStructSelect as $item)
+            foreach($users as $useritem)
             {
-                $tempItem              = array();
-                $tempItem['id']        = substr($item, 0, strlen($item) - 2);
-                $tempItem['showName']  = substr($item, -2, 1) == "1" ? true : false;
-                $tempItem['wrapAfter'] = substr($item, -1, 1) == "1" ? true : false;
-                $showStructure[]       = $tempItem;
-            }
-        }
-        else
-        {
-        }
-        $query = $this->db->getQuery(true);
-        foreach ($arrSortedRoles as $sortRole)
-        {
-            $query->clear();
-            $query->select('distinct gm.uid, t.value');
-            $query->from('#__thm_groups_groups_map' . ' as gm');
-            $query->from('#__thm_groups_text' . ' as t');
-            $query->from('#__thm_groups_additional_userdata' . ' as au');
-            $query->where("gm.gid =" . $this->db->quote($groupid));
-            $query->where('gm.rid != 2', 'AND');
-            $query->where('gm.uid = t.userid', 'AND');
-            $query->where('t.structid = 2', 'AND');
-            $query->where("gm.rid =" . $this->db->quote($sortRole), 'AND');
-            $query->where("gm.uid = au.userid", 'AND');
-            $query->where("au.published = 1", 'AND');
-            $query->order('t.value');
-            $this->db->setQuery($query);
-            $groupMember = $this->db->loadObjectList();
+                //ToDo Updating when the Group are a profile
+                $userData = THMLibThmGroupsUser::getUserInfo($useritem);
 
-            foreach ($groupMember as $member)
-            {
-                foreach ($types as $type)
-                {
-                    $query->clear();
-                    $query->select('structid, value, publish');
-                    $query->from('#__thm_groups_' . strtolower($type->Type) . '  as a');
-                    $query->from('#__thm_groups_groups_map' . ' as gm');
-                    $query->where('a.userid = ' . $this->db->quote($member->uid));
-                    $query->where('a.userid = gm.uid', 'AND');
-                    $query->where("gm.rid =" . $this->db->quote($sortRole), 'AND');
-                    $query->where("gm.gid =" . $this->db->quote($groupid), 'AND');
+                $data[$useritem] = $userData;
+             }
 
-                    $this->db->setQuery($query);
-
-                    $puffer                 = $this->db->loadObjectList();
-                    $result[$member->uid][] = $puffer;
-                }
-
-                if (!in_array($member->uid, $usedUser))
-                {
-                    $sortedMember[$member->uid] = $result[$member->uid];
-                    $usedUser[]                 = $member->uid;
-                }
-                else
-                {
-                }
-            }
         }
-        $structure = $this->getStructure();
-        foreach ($sortedMember as $key => $memberdata)
-        {
-            $data[$key] = array();
-            foreach ($structure as $structureItem)
-            {
-                foreach ($memberdata as $type)
-                {
-                    foreach ($type as $struct)
-                    {
-                        foreach ($showStructure as $selection)
-                        {
-                            if ($struct->structid == $selection['id'] && $struct->structid == $structureItem->id)
-                            {
-                                $puffer['structid']   = $struct->structid;
-                                $puffer['structname'] = $selection['showName'];
-                                $puffer['structwrap'] = $selection['wrapAfter'];
-                                $puffer['type']       = $structureItem->type;
-                                $puffer['publish']	  = $struct->publish;
-                                if ($struct->value == "" && $structureItem->type == "PICTURE")
-                                {
-                                    $puffer['value'] = $this->getExtra($struct->structid, $structureItem->type);
-                                    $puffer['picpath'] = $this->getPicPath($struct->structid);
-                                }
-                                else
-                                {
-                                    $puffer['value'] = $struct->value;
-                                    $puffer['picpath'] = $this->getPicPath($struct->structid);
-                                }
-                                array_push($data[$key], $puffer);
-                            }
-                        }
-                    }
-                }
-            }
-        }
+
 
         return $data;
     }
