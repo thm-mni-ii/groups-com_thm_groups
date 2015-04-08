@@ -25,7 +25,7 @@ jimport('joomla.application.component.controller');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsControllerUser_Edit extends JControllerLegacy
+class THM_GroupsControllerUser_Edit extends JControllerLegacy
 {
     public $uid = null;
 

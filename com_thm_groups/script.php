@@ -23,6 +23,7 @@ if (!defined('DS'))
     define('DS', DIRECTORY_SEPARATOR);
 }
 
+require_once 'install.php';
 jimport("thm_core.log.THMChangelogColoriser");
 
 /**
@@ -95,20 +96,14 @@ class Com_THM_GroupsInstallerScript
      */
     public function install($parent)
     {
-        $db = JFactory::getDbo();
 
-        // Copy users from joomla
-        $query = '
-          INSERT INTO `#__thm_groups_users`
-              SELECT
-                `id` AS "id",
-                1        AS "published",
-                1        AS "injoomla",
-                1        AS "canEdit",
-                0        AS "qpPublished"
-              FROM `#__users`;';
-        $db->setQuery($query);
-        $db->execute();
+        if (THM_Groups_Install_Script::install())
+        {
+            return true;
+        }
+
+        JFactory::getApplication()->enqueueMessage('script', 'error');
+        return false;
     }
 
     /*
@@ -131,7 +126,7 @@ class Com_THM_GroupsInstallerScript
      *
      * @return  nothing
      */
-    function uninstall($parent)
+    public function uninstall($parent)
     {
         //echo '<p>' . JText::sprintf('COM_THM_GROUPS_DEINSTALL', $this->release) . '</p>';
     }
@@ -143,7 +138,7 @@ class Com_THM_GroupsInstallerScript
      * @param   $type    is the type of change (install, update or discover_install, not uninstall).
      *
      */
-    function postflight($type,$parent)
+    public function postflight($type,$parent)
     {
 
         if ($type == 'update' || $type == 'install')
@@ -170,7 +165,7 @@ class Com_THM_GroupsInstallerScript
      *
      * @return  mixed
      */
-    function checkExtension($name)
+    public function checkExtension($name)
     {
         $db = JFactory::getDbo();
         $db->setQuery('SELECT enabled FROM #__extensions WHERE element ="' . $name . '"');
@@ -198,7 +193,7 @@ class Com_THM_GroupsInstallerScript
      *
      * @param   String  $name  param what you need, for example version
     */
-    function getParam($name)
+    public function getParam($name)
     {
         $db = JFactory::getDbo();
         $db->setQuery('SELECT manifest_cache FROM #__extensions WHERE name = "com_thm_groups"');

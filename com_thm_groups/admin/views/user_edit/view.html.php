@@ -80,4 +80,19 @@ class THM_GroupsViewUser_Edit extends THM_CoreViewEdit
         JToolBarHelper::save('user.save', 'JTOOLBAR_SAVE');
         JToolBarHelper::cancel('user.cancel', 'JTOOLBAR_CLOSE');
     }
+
+    protected function modifyDocument()
+    {
+        JHtml::_('bootstrap.tooltip');
+        JHtml::_('behavior.framework', true);
+        JHtml::_('behavior.formvalidation');
+        JHtml::_('formbehavior.chosen', 'select');
+
+        $option = JFactory::getApplication()->input->get('option');
+        $document = Jfactory::getDocument();
+        $document -> addStyleSheet($this->baseurl . "../../libraries/thm_core/fonts/iconfont.css");
+        $document -> addStyleSheet($this->baseurl . "../../media/$option/css/backend.css");
+        $document -> addScript($this->baseurl . "../../libraries/thm_core/js/formbehaviorChosenHelper.js");
+        $document -> addScript($this->baseurl . "../../libraries/thm_core/js/validators.js");
+    }
 }

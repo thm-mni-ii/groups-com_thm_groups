@@ -16,8 +16,6 @@
 jimport('joomla.application.component.view');
 jimport('thm_groups.view.lib_thm_groups_listview');
 
-JHTML::_('behavior.mootools');
-JHTML::_('behavior.framework', true);
 
 /**
  * THMGroupsViewExtensions class for component com_thm_groups
@@ -27,7 +25,7 @@ JHTML::_('behavior.framework', true);
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
 */
-class THMGroupsViewList extends JViewLegacy
+class THM_GroupsViewList extends JViewLegacy
 {
 
     /**
@@ -43,7 +41,8 @@ class THMGroupsViewList extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        $task = JRequest::getVar('task');
+        $app = JFactory::getApplication()->input;
+        $task = $app->get('task');
         $this->$task();
     }
 
@@ -55,15 +54,17 @@ class THMGroupsViewList extends JViewLegacy
      */
     public function getUserAlphabet()
     {
-        $gid = JRequest::getInt('gid');
-        $letter = JRequest::getVar('letter');
-        $column = JRequest::getVar('column');
-        $paramLinkTarget = JRequest::getVar('paramLinkTarget');
-        $orderAttr = JRequest::getVar('orderAttr');
-        $showstructure = JRequest::getVar('showStructure');
+        $app = JFactory::getApplication()->input;
+        $gid = $app->get('gid');
+        $letter = $app->getString('letter');
+        $column = $app->getString('column');
+        $paramLinkTarget = $app->getString('paramLinkTarget');
+        $orderAttr = $app->getString('orderAttr');
+        $showstructure = $app->getString('showStructure');
         $arrshowstructure = explode(",", $showstructure);
-        $linkElement = explode(",", JRequest::getVar('linkElement'));
-        $oldattribut = JRequest::getVar('oldattribut');
+        $linkElement = explode(",", $app->getString('linkElement'));
+        $oldattribut = $app->getString('oldattribut');
+
 
         echo THMLibThmListview::getUserForLetter($gid, $column, $letter, $paramLinkTarget, $orderAttr, $arrshowstructure, $linkElement, $oldattribut);
     }

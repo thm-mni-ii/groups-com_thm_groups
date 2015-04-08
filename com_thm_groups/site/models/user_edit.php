@@ -33,7 +33,7 @@ jimport('joomla.filesystem.file');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsModelUser_Edit extends THM_CoreModelEdit
+class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
 {
     /**
      * Constructor.

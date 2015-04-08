@@ -54,7 +54,7 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
     {
 
         // Set batch template path
-        $this->batch = JPATH_COMPONENT_ADMINISTRATOR . '/views/user_manager/tmpl/default_batch.php';
+        $this->batch = array('batch' => JPATH_COMPONENT_ADMINISTRATOR . '/views/user_manager/tmpl/default_batch.php');
 
         $this->groups = THM_GroupsHelperGroup_Manager::getGroups();
 

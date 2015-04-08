@@ -19,6 +19,7 @@
  * @link        www.mni.thm.de
  */
 jimport('thm_groups.data.lib_thm_groups');
+jimport('thm_groups.data.lib_thm_groups_user');
 jimport('joomla.application.component.view');
 /**
  * THMGroupsViewList class for component com_thm_groups
@@ -28,7 +29,7 @@ jimport('joomla.application.component.view');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THMGroupsViewList extends JViewLegacy
+class THM_GroupsViewList extends JViewLegacy
 {
     /**
      * Method to get display
@@ -40,40 +41,42 @@ class THMGroupsViewList extends JViewLegacy
     public function display($tpl = null)
     {
         $mainframe = Jfactory::getApplication();
+        $app = JFactory::getApplication()->input;
         $model = $this->getModel();
         $document = JFactory::getDocument();
         $document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/frontend.php');
-        $userid = JRequest::getInt('gsuid', 0);
+        $userid = $app->get('gsuid', 0);
 
         // Mainframe Parameter
         $params = $mainframe->getParams();
         $pagetitle = $params->get('page_title');
         $showpagetitle = $params->get('show_page_heading');
-        $this->assignRef('model', $model);
+        $this->model = $model;
         if ($showpagetitle)
         {
-            $this->assignRef('title', $pagetitle);
+            $this->title = $pagetitle;
         }
-        $this->assignRef('titleForLink', $pagetitle);
-        $this->assignRef('params', $params);
+        $this->titleForLink = $pagetitle;
+        $this->params = $params;
         $pathway = $mainframe->getPathway();
         if ($userid)
         {
             $db = JFactory::getDBO();
             $query = $db->getQuery(true);
             $query->select('value');
-            $query->from($db->qn('#__thm_groups_text'));
-            $query->where('userid = ' . $db->quote($userid));
-            $query->where('structid = 1');
+            $query->from($db->qn('#__thm_groups_users_attribute'));
+            $query->where('usersID = ' . $db->quote($userid));
+            $query->where('attributeID = 1');
 
             $db->setQuery($query);
             $firstname = $db->loadObjectList();
-            $name = JRequest::getVar('name', '') . ', ' . $firstname[0]->value;
+            $name = $app->get('name', '') . ', ' . $firstname[0]->value;
             $pathway->addItem($name, '');
         }
         else
         {
         }
+
         parent::display($tpl);
     }
 }

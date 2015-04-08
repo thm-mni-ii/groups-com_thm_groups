@@ -115,6 +115,7 @@
             <filename>access.xml</filename>
             <filename>config.xml</filename>
             <filename>CHANGELOG.php</filename>
+            <filename>install.php</filename>
             <folder>assets</folder>
             <folder>controllers</folder>
             <folder>elements</folder>

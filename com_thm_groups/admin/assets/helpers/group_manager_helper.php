@@ -19,7 +19,7 @@
 class THM_GroupsHelperGroup_Manager
 {
     /**
-     * Return all existing roles
+     * Return all existing roles as select field
      *
      * @return  array  An array of options for drop-down list
      */
@@ -31,7 +31,16 @@ class THM_GroupsHelperGroup_Manager
             ->from($db->quoteName('#__thm_groups_roles'))
             ->order('id');
         $db->setQuery($query);
-        $options = $db->loadObjectList();
+
+        try
+        {
+            $options = $db->loadObjectList();
+        }
+        catch (Exception $exc)
+        {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            return false;
+        }
 
         for ($i = 0, $n = count($options); $i < $n; $i++)
         {
@@ -41,6 +50,11 @@ class THM_GroupsHelperGroup_Manager
         return $roles;
     }
 
+    /**
+     * Return all existing groups as select field
+     *
+     * @return array
+     */
     public static function getGroups()
     {
         $db = JFactory::getDbo();
@@ -56,15 +70,22 @@ class THM_GroupsHelperGroup_Manager
             ->from('#__usergroups AS g')
             ->innerJoin('#__thm_groups_usergroups_roles AS a ON g.id = a.usergroupsID')
             ->innerJoin('#__thm_groups_users_usergroups_roles AS b ON a.id = b.usergroups_rolesID')
-            ->where('b.usersID IN (' . $nestedQuery .')')
+            ->where('b.usersID IN (' . $nestedQuery . ')')
             ->where('g.id NOT IN  (1,2)')
             ->group('g.id')
             ->order('g.title ASC');
 
         $db->setQuery($query);
-        $db->execute();
 
-        $options = $db->loadObjectList();
+        try
+        {
+            $options = $db->loadObjectList();
+        }
+        catch (Exception $exc)
+        {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            return false;
+        }
 
         for ($i = 0, $n = count($options); $i < $n; $i++)
         {
@@ -72,6 +93,39 @@ class THM_GroupsHelperGroup_Manager
         }
 
         return $groups;
+    }
 
+    /**
+     * Return all existing profiles as select field
+     *
+     * @return array
+     */
+    public static function getProfiles()
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query
+            ->select('id, name')
+            ->from('#__thm_groups_profile');
+
+        $db->setQuery($query);
+
+        try
+        {
+            $options = $db->loadObjectList();
+        }
+        catch (Exception $exc)
+        {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            return false;
+        }
+
+        foreach ($options as $key => $option)
+        {
+            $profiles[] = JHtml::_('select.option', $option->id, $option->name);
+        }
+
+        return $profiles;
     }
 }

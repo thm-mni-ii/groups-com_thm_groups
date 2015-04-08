@@ -77,16 +77,18 @@ class THM_GroupsModelProfile_Edit extends THM_CoreModelEdit
     {
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
-        if($profilID ==0)
+        if ($profilID == 0)
         {
             $query->select("A.id,A.name, A.description")
                 ->from("#__thm_groups_attribute as A ");
 
-        }else{
-        $query->select("A.id,A.name, A.description")
-            ->from("#__thm_groups_attribute as A ")
-             ->where(" a.id not in (select attributeID from #__thm_groups_profile_attribute as N where profileID =" . $profilID
-                . " order by N.order)");
+        }
+        else
+        {
+            $query->select("A.id,A.name, A.description")
+                ->from("#__thm_groups_attribute as A ")
+                ->where(" a.id not in (select attributeID from #__thm_groups_profile_attribute as N where profileID =" . $profilID
+                    . " order by N.order)");
 
         }
         $db->setQuery($query);

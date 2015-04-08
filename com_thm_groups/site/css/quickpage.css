@@ -1,3 +1,6 @@
+.chzn-container {
+    width: 130px !important; /* or any value that fits your needs */
+}
 
 button {
     margin-top: 4px;

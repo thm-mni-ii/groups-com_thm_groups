@@ -64,8 +64,9 @@ function getListAll($params, $pagetitle, $gid)
         $numColumns = $params['columnCount'];
         $orderAttr = $params['orderingAttributes'];
         $showStructure = $params['showstructure'];
-        $linkElement = $params['showLinks'];
-        $arrOrderAtt;
+        $linkElement = $params['showLinks'];;
+
+        $arrOrderAtt = array();
         if ($orderAttr)
         {
             $arrOrderAtt = explode(",", $orderAttr);
@@ -86,6 +87,8 @@ function getListAll($params, $pagetitle, $gid)
         }
 
         $allLastNames = THMLibThmGroups::getFirstletter($groupid);
+
+
 
         $itemid = $app->get('Itemid', 0);
         $abc = array(
@@ -154,7 +157,6 @@ function getListAll($params, $pagetitle, $gid)
         $stop = 0;
         $remeberNextTime = 0;
         $allCount = 0;
-
 
         // Durchgehen aller Buchstaben des Alphabets
         for ($i = 0; $i < count($abc); $i++)
@@ -259,7 +261,6 @@ function getListAll($params, $pagetitle, $gid)
       }
         }
 // 	    echo $result .'</div>';
-// 	    die;
 
       return $result . '</div>';
 }
@@ -275,9 +276,9 @@ function getListAll($params, $pagetitle, $gid)
  */
 function getListAlphabet($params, $pagetitle, $gid)
 {
-    $scriptDir = str_replace(JPATH_SITE . DS, '', "libraries/thm_groups/assets/js/");
-        JHTML::script('jquery-1.9.1.min.js', $scriptDir, false);
-        JHTML::script('getUserOfLetter.js', $scriptDir, false);
+    $scriptDir = JUri::root() . "libraries/thm_groups/assets/js/";
+
+        JHTML::script($scriptDir . 'getUserOfLetter.js');
 
         $groupid = $gid;
 
@@ -405,11 +406,11 @@ function getListAlphabet($params, $pagetitle, $gid)
             {
                 if ($char == $shownLetter)
                 {
-            $retString .= '<a class="thm_groups_active" id="' . $idvalue . '" onclick ="jquer(this).lib_thm_groups_alphabet()" >' . $char . "</a>";
+            $retString .= '<a class="thm_groups_active" id="' . $idvalue . '" onclick ="jQuery(this).lib_thm_groups_alphabet()" >' . $char . "</a>";
                 }
                 else
                 {
-                    $retString .= '<a id="' . $idvalue . '"  onclick ="jquer(this).lib_thm_groups_alphabet()">' . $char . "</a>";
+                    $retString .= '<a id="' . $idvalue . '"  onclick ="jQuery(this).lib_thm_groups_alphabet()">' . $char . "</a>";
                 }
             }
             else
@@ -463,7 +464,7 @@ function getUserForLetter($gid, $column, $letter, $paramLinkTarget, $orderAttr, 
 
         $groupid = $gid;
         $app = JFactory::getApplication()->input;
-        $pagetitle = JFactory::getDocument()->get("title");
+        $pagetitle = $app->get("title");
 
 
         $linkTarget = "";
@@ -578,103 +579,79 @@ function getUserForLetter($gid, $column, $letter, $paramLinkTarget, $orderAttr, 
  */
 function writeName($arrOrderAtt, $member, $arrshowStructure, $linkElement, $linkTarget, $groupid)
 {
-    $string = "";
-        $showTitle = 0;
+
+
 
         // Wenn der Paramter orderingAttributes gestzt ist soll entsprechend die Parameter geordnet werden ansonten default Sortierung
         if (count($arrOrderAtt) != 0 && !empty($arrshowStructure))
         {
 
             $run = 0;
+            $result = array();
+            $title="";
+            $postTitle="";
             foreach ($arrOrderAtt as $val)
             {
                 switch ($val)
                 {
                     case '1':
-                        if ( array_search('0', $arrshowStructure) !== null && array_search('0', $arrshowStructure) !== false)
-                        {
-                            if (!empty($linkElement) && array_search('0', $linkElement) !== null && array_search('0', $linkElement) !== false)
-                            {
-                                $string .= '<a href="' . JRoute::_(
-                                                          $linkTarget . '&gsuid=' . $member->id . '&name=' .
-                                                          trim($member->lastName) . '&gsgid=' . $groupid
-                                                           ) .
-                                '">';
-                                $string .= $member->title . '</a>&nbsp';
+                        if (!empty($member->title)) {
+                            if (array_search('0', $arrshowStructure) !== null && array_search('0', $arrshowStructure) !== false) {
+                                if (!empty($linkElement) && array_search('0', $linkElement) !== null && array_search('0', $linkElement) !== false) {
+                                    $title .= '<a href="' . JRoute::_(
+                                            $linkTarget . '&gsuid=' . $member->id . '&name=' .
+                                            trim($member->lastName) . '&gsgid=' . $groupid
+                                        ) .
+                                        '">';
+                                    $title .= $member->title . '</a>&nbsp';
+
+                                }
+                                else {
+                                    $title .= $member->title . ' ';
+
+                                }
+                                $run++;
                             }
-                            else
-                            {
-                                $string .= $member->title . ' ';
-                            }
-                            $showTitle = 1;
-                            $run++;
                         }
                     break;
 
                     case '2':
-                        if (array_search('1', $arrshowStructure) !== null && array_search('1', $arrshowStructure) !== false)
-                        {
-                            if (!empty($linkElement) && array_search('1', $linkElement) !== null && array_search('1', $linkElement) !== false)
-                            {
-                                 $string .= '<a href="' . JRoute::_(
-                                                                     $linkTarget . '&gsuid=' . $member->id
-                                                                     . '&name=' . trim($member->lastName) . '&gsgid=' . $groupid
-                                                                    ) . '">';
-                            }
+                        if (!empty($member->firstName)) {
+                            if (array_search('1', $arrshowStructure) !== null && array_search('1', $arrshowStructure) !== false) {
+                                if (!empty($linkElement) && array_search('1', $linkElement) !== null && array_search('1', $linkElement) !== false) {
 
-                            $string .= trim($member->firstName);
-                            if (($run == 0  && array_search('2', $arrshowStructure) !== false)
-                             || ($run == 1 && $showTitle == 1 && $arrOrderAtt[2] == 1)
-                             || ($run == 2 && $member->posttitle))
-                            {
-                                $string .= ',';
-                            }
+                                    $result [] = '<a href="' . JRoute::_(
+                                            $linkTarget . '&gsuid=' . $member->id
+                                            . '&name=' . trim($member->lastName) . '&gsgid=' . $groupid
+                                        ) . '">' . trim($member->firstName) . '</a>&nbsp';
+                                }
+                                else
+                                {
 
-                            if (!empty($linkElement) && array_search('1', $linkElement) !== null
-                             && array_search('1', $linkElement) !== false)
-                            {
-                                $string .= '</a>&nbsp';
+                                    $result [] = trim($member->firstName) . '&nbsp';
+                                }
+                                $run++;
                             }
-                            else
-                            {
-                                $string .= '&nbsp';
-                            }
-                            $run++;
                         }
                     break;
 
                     case '3':
-                        if (array_search('2', $arrshowStructure) !== null && array_search('2', $arrshowStructure) !== false)
-                        {
-                            if (!empty($linkElement) && array_search('2', $linkElement) !== false && array_search('2', $linkElement) !== null)
-                            {
-                                   $string .= '<a href="' . JRoute::_(
-                                                            $linkTarget . '&gsuid=' . $member->id . '&name=' .
-                                                            trim($member->lastName) . '&gsgid=' . $groupid
-                                   )
-                                   . '">';
-                            }
+                        if (!empty($member->lastName)) {
+                            if (array_search('2', $arrshowStructure) !== null && array_search('2', $arrshowStructure) !== false) {
+                                if (!empty($linkElement) && array_search('2', $linkElement) !== false && array_search('2', $linkElement) !== null) {
 
-                            $string .= trim($member->lastName);
-                            if ((array_search('1', $arrshowStructure) !== false
-                             && ($run == 0 || ($run == 1 && $showTitle == 1 && $member->title != '')))
-                             || ($run == 1 && $showTitle == 0 && $arrOrderAtt[0] == "1")
-                             || ($run == 1 && $arrshowStructure[count($arrshowStructure) -1 ] = "3" && array_search('3', $arrshowStructure) !== false)
-                             || ($run == 2 && !empty($member->posttitle)))
-                            {
-                                $string .= ',';
+                                    $result [] = '<a href="' . JRoute::_(
+                                            $linkTarget . '&gsuid=' . $member->id . '&name=' .
+                                            trim($member->lastName) . '&gsgid=' . $groupid
+                                        )
+                                        . '">' . trim($member->lastName) . '</a>&nbsp';
+                                }
+                                else
+                                {
+                                    $result [] = trim($member->lastName) . '&nbsp';
+                                }
+                                $run++;
                             }
-
-
-                            if (!empty($linkElement) && array_search('2', $linkElement) !== false && array_search('2', $linkElement) !== null)
-                            {
-                                $string .= '</a>&nbsp';
-                            }
-                            else
-                            {
-                                $string .= '&nbsp';
-                            }
-                            $run++;
                         }
                     break;
 
@@ -685,18 +662,18 @@ function writeName($arrOrderAtt, $member, $arrshowStructure, $linkElement, $link
                         {
                             if (!empty($linkElement) && array_search('3', $linkElement) !== null && array_search('3', $linkElement) !== false)
                             {
-                                $string .= '<a href="' . JRoute::_(
+                                $postTitle .= '<a href="' . JRoute::_(
                                         $linkTarget . '&gsuid=' . $member->id . '&name=' .
                                         trim($member->lastName) . '&gsgid=' . $groupid
                                 ) .
                                 '">';
-                                $string .= $member->posttitle . '</a>';
+                                $postTitle .= $member->posttitle . '</a>';
                             }
                             else
                             {
-                                $string .= $member->posttitle;
+                                $postTitle .= $member->posttitle;
+
                             }
-                            $showTitle = 1;
                         }
                         }
                     break;
@@ -709,8 +686,20 @@ function writeName($arrOrderAtt, $member, $arrshowStructure, $linkElement, $link
         {
 
         }
+            $showTitle  = array_search(0, $arrshowStructure);
+            $showPtitle = array_search(3, $arrshowStructure);
 
-        return $string . "</br>";
+           if($showTitle)
+          unset($arrshowStructure[$showTitle]);
+
+           if($showPtitle)
+          unset($arrOrderAtt[$showPtitle]);
+
+         if(sizeof($arrOrderAtt)==1|| array_search(3, $arrOrderAtt) > array_search(2, $arrOrderAtt))
+             return $title . implode("",$result) . " ". $postTitle . "</br>";
+
+
+        return $title . implode(",",$result) . " ". $postTitle . "</br>";
 }
 
 /**
@@ -786,11 +775,12 @@ $showpagetitle = $params->get('show_page_heading');
 
 if ($showpagetitle)
 {
-    $this->assignRef('title', $pagetitle);
+    $this->title = $pagetitle;
 }
 
 if ($showall == 1)
 {
+
     echo getListAll($paramsArray, $pagetitle, $model->getGroupNumber());
 }
 else
