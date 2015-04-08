@@ -226,7 +226,8 @@ class THM_GroupsControllerGroup extends JControllerForm
         // Input->get because id is in url
         $id = (empty($ids)) ? $app->input->get->getInt('id') : $ids[0];
 
-        if(!empty($id)){
+        if (!empty($id))
+        {
             $url = JRoute::_("index.php?option=com_users&view=group&layout=edit&id=$id", false);
             $this->setRedirect($url);
         }

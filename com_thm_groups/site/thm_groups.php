@@ -28,6 +28,7 @@ if ($view == "articles_test")
     // Get user object
     $currUser = JFactory::getUser();
 
+    $quickpageGlobalEnabled = THMLibThmQuickpages::isQuickpageEnabled();
 
     // Check if the user has Quickpage enabled
     $userHasEnabledQuickpage = THMLibThmQuickpages::isQuickpageEnabledForUser($currUser->id);
@@ -44,7 +45,7 @@ if ($view == "articles_test")
     }
 
     // Access check.
-    if (!$userHasEnabledQuickpage && !$groupsHaveEnabledQuickpage)
+    if (!$userHasEnabledQuickpage || !$quickpageGlobalEnabled )
     {
         return JError::raiseWarning(404, JText::_('COM_THM_QUICKPAGES_NOT_ENABLED'));
     }
@@ -81,6 +82,10 @@ elseif($view == 'qp_categories')
         $controller->execute(JRequest::getCmd('task'));
 
         $controller->redirect();
+    }
+    else
+    {
+        return JError::raiseWarning(404, JText::_("COM_THM_QUICKPAGES_NO_RIGHTS_TO_CREATE_CATEGORY"));
     }
 }
 else

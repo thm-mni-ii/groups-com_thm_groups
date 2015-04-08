@@ -39,6 +39,8 @@ class THM_GroupsViewGroup_Manager extends THM_CoreViewList
 
     public $roles;
 
+    public $profiles;
+
     /**
      * Method to get display
      *
@@ -48,11 +50,15 @@ class THM_GroupsViewGroup_Manager extends THM_CoreViewList
      */
     public function display($tpl = null)
     {
-        // set batch template path
-        $this->batch = JPATH_COMPONENT_ADMINISTRATOR . '/views/group_manager/tmpl/default_batch.php';
+        // Set batch template path
+        $this->batch = array(
+            'batch' => JPATH_COMPONENT_ADMINISTRATOR . '/views/group_manager/tmpl/default_batch.php',
+            'assign_profile' => JPATH_COMPONENT_ADMINISTRATOR . '/views/group_manager/tmpl/default_assign_profile.php'
+        );
 
-        // get all roles from DB
+        // Get all roles from DB
         $this->roles = THM_GroupsHelperGroup_Manager::getRoles();
+        $this->profiles = THM_GroupsHelperGroup_Manager::getProfiles();
 
         $document = JFactory::getDocument();
         $document->addScript(JURI::root(true) . '/administrator/components/com_thm_groups/assets/js/group_manager.js');
@@ -80,33 +86,27 @@ class THM_GroupsViewGroup_Manager extends THM_CoreViewList
         );
         JToolBarHelper::deleteList('COM_THM_GROUPS_REALLY_DELETE', 'group.delete', 'JTOOLBAR_DELETE');
 
-        // Add a batch button
         if ($user->authorise('core.create', 'com_users') && $user->authorise('core.edit', 'com_users') && $user->authorise('core.edit.state', 'com_users'))
         {
             JHtml::_('bootstrap.modal', 'myModal');
             $title = JText::_('COM_THM_GROUPS_GROUP_MANAGER_BATCH');
 
-            // Instantiate a new JLayoutFile instance and render the batch button
-
-
+            // TODO change name for data-target to a meaningful name
             $dhtml = "<button data-toggle='modal' data-target='#collapseModal' class='btn btn-small'><i class='icon-edit' title='$title'></i> $title</button>";
 
             $bar->appendButton('Custom', $dhtml, 'batch');
         }
 
-        /*// Add a batch button
         if ($user->authorise('core.create', 'com_users') && $user->authorise('core.edit', 'com_users') && $user->authorise('core.edit.state', 'com_users'))
         {
             JHtml::_('bootstrap.modal', 'myModal');
-            $title = JText::_('COM_THM_GROUPS_GROUP_MANAGER_BATCH');
+            $title = JText::_('COM_THM_GROUPS_GROUP_MANAGER_ASSIGN_PROFILE');
 
-            // Instantiate a new JLayoutFile instance and render the batch button
-
-
-            $dhtml = '<button data-toggle="modal" data-target="#myModal" class="btn btn-small"><i class="icon-checkbox-partial" title="test"></i>test</button>';
+            // TODO change name for data-target to a meaningful name
+            $dhtml = "<button data-toggle='modal' data-target='#myModal' class='btn btn-small'><i class='icon-checkbox-partial' title='test'></i>$title</button>";
 
             $bar->appendButton('Custom', $dhtml, 'batch');
-        }*/
+        }
         if ($user->authorise('core.delete', 'com_users') && $user->authorise('core.manage', 'com_users'))
         {
             $image = 'edit';

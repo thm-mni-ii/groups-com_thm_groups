@@ -56,6 +56,7 @@ class JFormFieldOrderAttributes extends JFormField
         // Get params of menu for the ordering of the attributes
         $orderAtt = trim($this->value);
 
+
         // Generate the Selectbox
         $arrOrderAtt = explode(",", $orderAtt);
         if (count($arrOrderAtt) < 4)

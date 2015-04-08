@@ -69,20 +69,13 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_static_type` (
   DEFAULT CHARSET =utf8;
 
 INSERT INTO `#__thm_groups_static_type` (`id`, `name`, `description`) VALUES
-  (1, 'TEXT',
-   'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.'),
-  (2, 'TEXTFIELD',
-   'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.'),
-  (3, 'LINK',
-   'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.'),
-  (4, 'PICTURE',
-   'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.'),
-  (5, 'MULTISELECT',
-   'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.'),
-  (6, 'TABLE',
-   'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.'),
-  (7, 'TEMPLATE',
-   'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.');
+  (1, 'TEXT', 'Text description'),
+  (2, 'TEXTFIELD', 'Textfield description'),
+  (3, 'LINK', 'Link description'),
+  (4, 'PICTURE', 'Picture description'),
+  (5, 'MULTISELECT', 'Multiselect description'),
+  (6, 'TABLE', 'Table description'),
+  (7, 'TEMPLATE', 'Template description');
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_dynamic_type` (
   `id`            INT(11)      NOT NULL AUTO_INCREMENT,
@@ -99,17 +92,11 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_dynamic_type` (
 )
   ENGINE = InnoDB;
 
-INSERT INTO `#__thm_groups_dynamic_type` (`id`, `static_typeID`, `name`, `regex`, `description`) VALUES
-  (1, 1, 'Name', '', 'Yolo Swaggins'),
-  (2, 1, 'Email', '', 'Yolo Swaggins'),
-  (3, 3, 'Website', '', 'Yolo Swaggins'),
-  (4, 4, 'Profile Foto', '', 'Yolo Swaggins'),
-  (5, 5, 'Test Multiselect', '', 'Yolo Swaggins'),
-  (6, 6, 'Test Table', '', 'Yolo Swaggins'),
-  (7, 7, 'Test Template', '', 'Yolo Swaggins'),
-  (8, 2, 'Test Text Field', '', 'Yolo Swaggins'),
-  (9, 3, 'URI', '', 'Yolo Swaggins'),
-  (10, 1, 'Bla', '', 'Yolo Swaggins');
+INSERT INTO `#__thm_groups_dynamic_type` (`id`, `static_typeID`, `name`, `regex`, `options`) VALUES
+  (1, 1, 'Name', '^[0-9a-zA-ZäöüÄÖÜ]+$', '{ "length" : "40" }'),
+  (2, 1, 'Email', '^([0-9a-zA-Z\\\\.]+)@(([\\\\w]|\\\\.\\\\w)+)\\\\.(\\\\w+)$', '{ "length" : "40" }'),
+  (3, 3, 'Website', '(http|ftp|https:\\\\/\\\\/){0,1}[\\\\w\\\\-_]+(\\\\.[\\\\w\\\\-_]+)+([\\\\w\\\\-\\\\.,@?^=%&amp;:/~\\\\+#]*[\\\\w\\\\-\\\\@?^=%&amp;/~\\\\+#])?', '{}'),
+  (4, 6, 'Table', '', '{ "columns" : "Spalte1;Spalte2;", "required" : "true" }');
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_attribute` (
   `id`             INT(11)      NOT NULL AUTO_INCREMENT,
@@ -126,23 +113,15 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_attribute` (
   ENGINE = InnoDB
   AUTO_INCREMENT =100;
 
-INSERT INTO `#__thm_groups_attribute` (`id`, `name`, `dynamic_typeID`, `description`) VALUES
-  (1, 'Vorname', 1, 'Lorem ipsum dolor sit amet'),
-  (2, 'Nachname', 1, 'Lorem ipsum dolor sit amet'),
-  (3, 'Username', 1, 'Lorem ipsum dolor sit amet'),
-  (4, 'Email', 1, 'Lorem ipsum dolor sit amet'),
-  (5, 'Titel', 1, 'Lorem ipsum dolor sit amet'),
-  (6, 'Mode', 2, 'Lorem ipsum dolor sit amet'),
-  (7, 'Posttitel', 3, 'Lorem ipsum dolor sit amet'),
-  (91, 'Website', 4, 'Lorem ipsum dolor sit amet'),
-  (92, 'Tel', 5, 'Lorem ipsum dolor sit amet'),
-  (93, 'Raum', 6, 'Lorem ipsum dolor sit amet'),
-  (94, 'Sprechzeiten', 7, 'Lorem ipsum dolor sit amet'),
-  (95, 'Shortinfo', 8, 'Lorem ipsum dolor sit amet'),
-  (96, 'Longinfo', 9, 'Lorem ipsum dolor sit amet'),
-  (97, 'Bild', 4, 'Lorem ipsum dolor sit amet'),
-  (98, 'Curriculum', 10, 'Lorem ipsum dolor sit amet'),
-  (99, 'Test', 9, 'Lorem ipsum dolor sit amet');
+INSERT INTO `#__thm_groups_attribute` (`id`, `name`, `dynamic_typeID`, `options`) VALUES
+  (1, 'Vorname', 1, '{ "length" : "40", "required" : "true" }'),
+  (2, 'Nachname', 1, '{ "length" : "40", "required" : "true" }'),
+  (3, 'Username', 1, '{ "length" : "40", "required" : "true" }'),
+  (4, 'Email', 2, '{ "length" : "40", "required" : "true" }'),
+  (5, 'Titel', 1, '{ "length" : "40", "required" : "true" }'),
+  (6, 'Posttitel', 1, '{ "length" : "40", "required" : "true" }'),
+  (7, 'Website', 3, '{"required" : "true"}'),
+  (8, 'Curriculum', 4, '{ "columns" : "Spalte1;Spalte2;", "required" : "true" }');
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_users_attribute` (
   `ID`          INT(11)    NOT NULL AUTO_INCREMENT,
@@ -174,12 +153,7 @@ INSERT INTO `#__thm_groups_roles` (`id`, `name`) VALUES
   (2, 'Moderator'),
   (3, 'Role1'),
   (4, 'Role2'),
-  (5, 'Role3'),
-  (6, 'Role4'),
-  (7, 'Role5'),
-  (8, 'Role6'),
-  (9, 'Role7'),
-  (10, 'Role8');
+  (5, 'Role3');
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_usergroups_roles` (
   `ID`           INT(11)          NOT NULL AUTO_INCREMENT,
@@ -242,19 +216,15 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attribute` (
   ENGINE = InnoDB;
 
 INSERT INTO `#__thm_groups_profile_attribute` (`ID`, `profileID`, `attributeID`, `order`, `params`) VALUES
-  (1, 1, 1, 2, '{ "show" : false, "wrap" : false}'),
-  (2, 1, 2, 1, '{ "show" : false, "wrap" : false}'),
-  (3, 1, 3, 3, '{ "show" : true, "wrap" : true}'),
-  (4, 1, 4, 4, '{ "show" : false, "wrap" : true}'),
-  (5, 1, 5, 0, '{ "show" : false, "wrap" : true}'),
-  (6, 1, 6, 7, '{ "show" : true, "wrap" : true}'),
-  (7, 1, 7, 8, '{ "show" : true, "wrap" : true}'),
-  (8, 1, 97, 6, '{ "show" : false, "wrap" : true}'),
-  (10, 1, 91, 5, '{ "show" : false, "wrap" : false}'),
-  (11, 1, 92, 10, '{ "show" : true, "wrap" : true }'),
-  (12, 2, 5, 2, '{ "show" : false, "wrap" : true}'),
-  (13, 2, 93, 2, '{ "show" : false, "wrap" : true}'),
-  (14, 2, 3, 1, '{"show" : true , "wrap" : false}');
+  (1, 1, 1, 1, '{ "label" : true, "wrap" : true}'),
+  (2, 1, 2, 2, '{ "label" : true, "wrap" : true}'),
+  (3, 1, 3, 3, '{ "label" : true, "wrap" : true}'),
+  (4, 1, 4, 4, '{ "label" : true, "wrap" : true}'),
+  (5, 1, 5, 5, '{ "label" : true, "wrap" : true}'),
+  (6, 1, 6, 6, '{ "label" : true, "wrap" : true}'),
+  (7, 1, 7, 7, '{ "label" : true, "wrap" : true}'),
+  (8, 1, 8, 8, '{ "label" : true, "wrap" : true}');
+
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_usergroups` (
   `ID`           INT(11)          NOT NULL AUTO_INCREMENT,

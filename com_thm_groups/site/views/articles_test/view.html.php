@@ -55,6 +55,9 @@ class THM_GroupsViewArticles_Test extends THM_CoreViewList
 
         $model = $this->getModel();
         $this->newButton = $model->getCreateNewArticleButton();
+        // Load stylesheet
+        $document = JFactory::getDocument();
+        $document->addStyleSheet(JURI::base(true) . '/components/com_thm_groups/css/quickpage.css');
         parent::display($tpl);
     }
 

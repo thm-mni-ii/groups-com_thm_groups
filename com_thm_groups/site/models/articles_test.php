@@ -4,8 +4,8 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsModelUser_Manager
- * @description THM_GroupsModelUser_Manager file from com_thm_groups
+ * @name        THM_GroupsModelArticles_Test
+ * @description THM_GroupsModelArticles_Test file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2015 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -337,6 +337,4 @@ class THM_GroupsModelArticles_Test extends THM_CoreModelList
 
         return false;
     }
-
-
 }

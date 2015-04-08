@@ -325,7 +325,7 @@ $session = JFactory::getSession();
                 </div>
             </div>
         </div>
-        <input type='hidden' id='jform_userID' name='jform[userID]' value='<?php echo $this->item; ?>'/>
+        <input type='hidden' id='jform_userID' name='jform[userID]' value='<?php echo $this->item->id; ?>'/>
         </div>
         <input type="hidden" name="task" value="" />
     </form>

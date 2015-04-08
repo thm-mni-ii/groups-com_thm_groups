@@ -44,7 +44,7 @@ class THM_GroupsViewRole_Manager extends THM_CoreViewList
      */
     public function display($tpl = null)
     {
-        $this->batch = JPATH_COMPONENT_ADMINISTRATOR . '/views/role_manager/tmpl/default_batch.php';
+        $this->batch = array('batch' => JPATH_COMPONENT_ADMINISTRATOR . '/views/role_manager/tmpl/default_batch.php');
 
         $document = JFactory::getDocument();
         $document->addScript(JURI::root(true) . '/administrator/components/com_thm_groups/assets/js/role_manager.js');

@@ -35,7 +35,7 @@ class THM_GroupsModelGroup extends JModelLegacy
     {
         $input = JFactory::getApplication()->input;
 
-        // an array of user ids
+        // An array of user ids
         $userIDs = $input->get('cid', array(), 'array');
         JArrayHelper::toInteger($userIDs);
 
@@ -49,17 +49,16 @@ class THM_GroupsModelGroup extends JModelLegacy
 
         $cmd = $list['action'];
 
-        // a list of group ids
+        // A list of group ids
         $groupIDs = $list['group_ids'];
 
         if (empty($groupIDs))
         {
-            $this->setError(JText::_('COM_THM_GROUPS_NO_GROUP_SELECTED'));
-
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_NO_GROUP_SELECTED'), 'error');
             return false;
         }
 
-        // an array with group ids
+        // An array with group ids
         $groupIDs = explode(',', $groupIDs);
         JArrayHelper::toInteger($groupIDs);
 
@@ -69,11 +68,10 @@ class THM_GroupsModelGroup extends JModelLegacy
             unset($groupIDs[array_search(0, $groupIDs, true)]);
         }
 
-        // will never used, because of javascript check, but security is security LOL :)
+        // Will never used, because of javascript check, but security is security LOL :)
         if (empty($userIDs))
         {
-            $this->setError(JText::_('COM_THM_GROUPS_NO_USER_SELECTED'));
-
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_NO_USER_SELECTED'), 'error');
             return false;
         }
 
@@ -88,17 +86,27 @@ class THM_GroupsModelGroup extends JModelLegacy
             $done = true;
         }
 
-        // maybe redundant code ... hm
+        // Maybe redundant code ... hm
         if (!$done)
         {
-            $this->setError(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
-
+            JFactory::getApplication()->enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'), 'error');
             return false;
         }
 
         return true;
     }
 
+    /**
+     * Assigns a moderator to a group
+     *
+     * @param   array   $userIDs   An array with user ids
+     * @param   array   $groupIDs  An array with group ids
+     * @param   string  $action    An action, add or delete
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
     public function saveModerator($userIDs, $groupIDs, $action)
     {
         $query = $this->_db->getQuery(true);
@@ -133,8 +141,7 @@ class THM_GroupsModelGroup extends JModelLegacy
             }
             catch (RuntimeException $e)
             {
-                $this->setError($e->getMessage());
-
+                JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
                 return false;
             }
         }
@@ -150,40 +157,44 @@ class THM_GroupsModelGroup extends JModelLegacy
             $this->_db->setQuery($query);
             $users_groups = $this->_db->loadObjectList();
 
-            // prepare content for compare with data to insert
+            // Prepare content for compare with data to insert
             $dataFromDB = array();
-            foreach($users_groups as $user_group)
+            foreach ($users_groups as $user_group)
             {
                 $groups = explode(', ', $user_group->usergroupsID);
                 JArrayHelper::toInteger($groups);
                 $dataFromDB[$user_group->usersID] = $groups;
             }
 
-            // join user ids with group ids
+            // Join user ids with group ids
             $insertValues = array();
-            foreach($userIDs as $uid)
+            foreach ($userIDs as $uid)
             {
-                foreach($groupIDs as $gid)
+                foreach ($groupIDs as $gid)
                 {
                     $insertValues[$uid][] = $gid;
                 }
             }
 
-            // filter values before insert
+            // Filter values before insert
             THM_GroupsHelperDatabase_Compare::filterInsertValues($insertValues, $dataFromDB);
 
             // Build the values clause for the assignment query.
             $query->clear();
 
-            if(!empty($insertValues)) {
+            if (!empty($insertValues))
+            {
                 $query = $this->_db->getQuery(true);
                 $query
                     ->insert('#__thm_groups_users_usergroups_moderator')
                     ->columns(array($this->_db->quoteName('usersID'), $this->_db->quoteName('usergroupsID')));
 
-                foreach ($insertValues as $key => $values) {
-                    if (!empty($values)) {
-                        foreach ($values as $gid) {
+                foreach ($insertValues as $key => $values)
+                {
+                    if (!empty($values))
+                    {
+                        foreach ($values as $gid)
+                        {
                             $query->values($key . ',' . $gid);
                         }
                     }
@@ -198,7 +209,6 @@ class THM_GroupsModelGroup extends JModelLegacy
                 catch (Exception $exc)
                 {
                     JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
-
                     return false;
                 }
             }
@@ -210,6 +220,7 @@ class THM_GroupsModelGroup extends JModelLegacy
      * Deletes a moderator from a group
      *
      * @return bool
+     *
      * @throws Exception
      */
     public function deleteModerator()
@@ -224,7 +235,7 @@ class THM_GroupsModelGroup extends JModelLegacy
             ->delete('#__thm_groups_users_usergroups_moderator')
             ->where("usersID = '$userID'")
             ->where("usergroupsID = '$groupID'");
-        $this->_db->setQuery((string)$query);
+        $this->_db->setQuery((string) $query);
 
         try
         {
@@ -243,6 +254,7 @@ class THM_GroupsModelGroup extends JModelLegacy
      * Deletes a role from a group
      *
      * @return bool
+     *
      * @throws Exception
      */
     public function deleteRole()
@@ -257,7 +269,7 @@ class THM_GroupsModelGroup extends JModelLegacy
             ->delete('#__thm_groups_usergroups_roles')
             ->where("rolesID = '$roleID'")
             ->where("usergroupsID = '$groupID'");
-        $this->_db->setQuery((string)$query);
+        $this->_db->setQuery((string) $query);
 
         try
         {
@@ -298,13 +310,13 @@ class THM_GroupsModelGroup extends JModelLegacy
     {
         $jinput = JFactory::getApplication()->input;
 
-        // array with action command
+        // Array with action command
         $action = $jinput->post->get('batch_action', array(), 'array');
 
-        // array of role ids
+        // Array of role ids
         $rid = $jinput->post->get('batch_id', array(), 'array');
 
-        // array of group ids
+        // Array of group ids
         $cid  = $jinput->post->get('cid', array(), 'array');
 
         // Sanitize group ids.
@@ -319,8 +331,7 @@ class THM_GroupsModelGroup extends JModelLegacy
 
         if (empty($pks))
         {
-            $this->setError(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'));
-
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'error');
             return false;
         }
 
@@ -340,8 +351,7 @@ class THM_GroupsModelGroup extends JModelLegacy
 
         if (!$done)
         {
-            $this->setError(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
-
+            JFactory::getApplication()->enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'), 'error');
             return false;
         }
 
@@ -354,9 +364,9 @@ class THM_GroupsModelGroup extends JModelLegacy
     /**
      * Perform batch operations
      *
-     * @param   array    $role_ids   The role IDs which assignments are being edited
-     * @param   array    $group_ids  An array of group IDs on which to operate
-     * @param   string   $action     The action to perform
+     * @param   array   $role_ids   The role IDs which assignments are being edited
+     * @param   array   $group_ids  An array of group IDs on which to operate
+     * @param   string  $action     The action to perform
      *
      * @return  boolean  True on success, false on failure
      *
@@ -408,8 +418,7 @@ class THM_GroupsModelGroup extends JModelLegacy
             }
             catch (RuntimeException $e)
             {
-                $this->setError($e->getMessage());
-
+                JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
                 return false;
             }
         }
@@ -431,7 +440,7 @@ class THM_GroupsModelGroup extends JModelLegacy
 
             // Contains groups and roles from db
             $dataFromDB = array();
-            foreach($groups_roles as $group_role)
+            foreach ($groups_roles as $group_role)
             {
                 $dataFromDB[$group_role->usergroupsID][] = (int) $group_role->rolesID;
             }
@@ -442,45 +451,51 @@ class THM_GroupsModelGroup extends JModelLegacy
 
             // Contains groups and roles to insert in DB
             $insertValues = array();
-            foreach($group_ids as $gid)
+            foreach ($group_ids as $gid)
             {
-                foreach($role_ids as $rid)
+                foreach ($role_ids as $rid)
                 {
                     $insertValues[$gid][] = $rid;
                 }
             }
 
-            // filter values before insert
+            // Filter values before insert
             THM_GroupsHelperDatabase_Compare::filterInsertValues($insertValues, $dataFromDB);
 
-            // prepare insert values
-            if(!empty($insertValues)) {
-                foreach ($insertValues as $key => $values) {
-                    if(!empty($values))
+            // Prepare insert values
+            if (!empty($insertValues))
+            {
+                foreach ($insertValues as $key => $values)
+                {
+                    if (!empty($values))
                     {
-                        foreach ($values as $rid) {
+                        foreach ($values as $rid)
+                        {
                             $query->values($key . ',' . $rid);
                         }
                         $groups = true;
                     }
                 }
 
-                // If we have no roles to process, throw an error to notify the user
-                if (!$groups) {
-                    $this->setError(JText::_('COM_THM_GROUPS_ERROR_NO_ADDITIONS'));
-
+                // If there are no roles to process, throw an error to notify the user
+                if (!$groups)
+                {
+                    JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR_NO_ADDITIONS'), 'error');
                     return false;
                 }
 
-                $query->insert($db->quoteName('#__thm_groups_usergroups_roles'))
+                $query
+                    ->insert($db->quoteName('#__thm_groups_usergroups_roles'))
                     ->columns(array($db->quoteName('usergroupsID'), $db->quoteName('rolesID')));
                 $db->setQuery($query);
 
-                try {
+                try
+                {
                     $db->execute();
-                } catch (RuntimeException $e) {
-                    $this->setError($e->getMessage());
-
+                }
+                catch (RuntimeException $e)
+                {
+                    JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
                     return false;
                 }
             }
