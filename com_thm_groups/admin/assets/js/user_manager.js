@@ -78,12 +78,14 @@ function updateView()
     // put groups with roles to div
     jq('#group-roles-id').empty();
 
-    data.each(function(group){
+    console.log(data);
+
+    jq.each(data, function(key, group){
         jq('#group-roles-id').append("<br /><b><span class='icon-trash' onclick='gr.removeGroup(" + group.id + ");updateView();'></span> " + group.name + "</b>");
         jq('#group-roles-id').append(" : ");
 
         var roles = [];
-        group.roles.each(function(role){
+        jq.each(group.roles, function(key, role){
             roles.push(role.name + " <span class='icon-trash' onclick='gr.removeRoleFromGroup(" + group.id + "," + role.id + ");updateView();'></span>");
         });
 
