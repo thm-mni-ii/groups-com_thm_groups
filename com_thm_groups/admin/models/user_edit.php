@@ -211,7 +211,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
             // TODO return default pic?
             return "true";
         }
-        catch(Exception $e)
+        catch (Exception $e)
         {
             return $e;
         }
@@ -320,10 +320,10 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
 
         // Convert structure to fit in json
         $index = null;
-        foreach ($formData as $key=>$value)
+        foreach ($formData as $key => $value)
         {
             $sKey = (string) $key;
-            $vals = explode(' ',$sKey);
+            $vals = explode(' ', $sKey);
             $vals[0] = (int) $vals[0];
 
             if ($index === null)
@@ -345,7 +345,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         array_push($final, $output);
 
         // Check for empty columns and delete them
-        foreach ($final as $key=>$column)
+        foreach ($final as $key => $column)
         {
             $size = sizeof($column);
             $empty = 0;
@@ -359,7 +359,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
             if ($size == $empty)
             {
                 // Don't delete when it's the last element / prevents empty json crash
-                if(sizeof($final)!= 1)
+                if (sizeof($final)!= 1)
                 {
                     unset($final[$key]);
                 }

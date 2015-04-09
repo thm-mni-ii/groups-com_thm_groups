@@ -46,12 +46,10 @@ class THM_GroupsModelRoles_Ajax extends JModelLegacy
             ->select('r.id, r.name')
             ->from('#__thm_groups_roles AS r')
             ->innerJoin('#__thm_groups_usergroups_roles AS a ON r.id = a.rolesID')
-            ->innerJoin('#__thm_groups_users_usergroups_roles AS b ON a.id = b.usergroups_rolesID')
-            ->where('b.usersID IN (' . $nestedQuery .')')
             ->group('r.id')
             ->order('r.name ASC');
 
-        if(!empty($groupID))
+        if (!empty($groupID))
         {
             $query->where("a.usergroupsID = $groupID");
         }
@@ -62,9 +60,9 @@ class THM_GroupsModelRoles_Ajax extends JModelLegacy
         $roles = $db->loadObjectList();
 
         $result = array();
-        foreach($roles as $role)
+        foreach ($roles as $role)
         {
-            $result[(int)$role->id] = $role->name;
+            $result[(int) $role->id] = $role->name;
         }
 
         $result = json_encode($result);

@@ -34,7 +34,7 @@ class THM_GroupsViewRoles_Ajax extends JViewLegacy
     {
         $model = $this->getModel();
         $success = $model->getRolesOfGroup();
-        if($success)
+        if ($success)
         {
             echo json_encode($success);
         }

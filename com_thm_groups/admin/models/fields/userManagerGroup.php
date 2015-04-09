@@ -9,7 +9,6 @@ class JFormFieldUserManagerGroup extends JFormFieldList
     protected $type = 'UserManagerGroup';
 
     /**
-     * Cached array of the category items.
      *
      * @var    array
      * @since  3.2

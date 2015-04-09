@@ -12,6 +12,13 @@ function deleteRole(groupId, roleId){
     document.adminForm.submit();
 }
 
+function deleteProfile(groupId, profileId){
+    document.getElementsByName('task')[0].value="group.deleteProfile";
+    document.getElementsByName('g_id')[0].value=groupId;
+    document.getElementsByName('p_id')[0].value=profileId;
+    document.adminForm.submit();
+}
+
 function confirmMsg(){
     var msg = "You leave the component THM Groups!";
     if(!confirm(msg)){

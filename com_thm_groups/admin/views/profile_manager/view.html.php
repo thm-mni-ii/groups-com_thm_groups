@@ -15,8 +15,8 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-// import Joomla view library
 jimport('thm_core.list.view');
+require_once JPATH_COMPONENT . '/assets/helpers/group_manager_helper.php';
 
 /**
  * THM_GroupsViewProfile_Manager class for component com_thm_groups
@@ -34,6 +34,10 @@ class THM_GroupsViewProfile_Manager extends THM_CoreViewList
 
     public $state;
 
+    public $groups;
+
+    public $batch;
+
     /**
      * Method to get display
      *
@@ -43,6 +47,13 @@ class THM_GroupsViewProfile_Manager extends THM_CoreViewList
      */
     public function display($tpl = null)
     {
+        // Set batch template path
+        $this->batch = array(
+            'batch' => JPATH_COMPONENT_ADMINISTRATOR . '/views/profile_manager/tmpl/default_batch.php'
+        );
+
+        $this->groups = THM_GroupsHelperGroup_Manager::getGroups();
+
         parent::display($tpl);
     }
 
@@ -62,6 +73,19 @@ class THM_GroupsViewProfile_Manager extends THM_CoreViewList
         JToolBarHelper::addNew('profile.add', 'COM_THM_GROUPS_PROFILE_MANAGER_ADD', false);
         JToolBarHelper::editList('profile.edit', 'COM_THM_GROUPS_PROFILE_MANAGER_EDIT');
         JToolBarHelper::deleteList('COM_THM_GROUPS_PROFILE_MANAGER_REALLY_DELETE', 'profile.delete', 'JTOOLBAR_DELETE');
+
+        if ($user->authorise('core.create', 'com_users') && $user->authorise('core.edit', 'com_users') && $user->authorise('core.edit.state', 'com_users'))
+        {
+            $bar = JToolBar::getInstance('toolbar');
+            JHtml::_('bootstrap.modal', 'myModal');
+            $title = JText::_('COM_THM_GROUPS_PROFILE_MANAGER_BATCH');
+
+            // TODO change name for data-target to a meaningful name
+            $dhtml = "<button data-toggle='modal' data-target='#collapseModal' class='btn btn-small'><i class='icon-edit' title='$title'></i> $title</button>";
+
+            $bar->appendButton('Custom', $dhtml, 'batch');
+        }
+
 
         if ($user->authorise('core.admin', 'com_users'))
         {

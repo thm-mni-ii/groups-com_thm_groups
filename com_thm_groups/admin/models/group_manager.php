@@ -297,8 +297,12 @@ class THM_GroupsModelGroup_Manager extends THM_CoreModelList
         $return = '';
         if (!empty($profile))
         {
+            $deleteIcon = '<span class="icon-trash"></span>';
+            $deleteBtn = "<a href='javascript:deleteProfile(" . $gid . "," . $profile->id . ")'>" . $deleteIcon . "</a>";
+
             $url = "index.php?option=com_thm_groups&view=profile_edit&cid[]=$profile->id";
-            $return = "<a href=$url>" . $profile->name . "</a>";
+
+            $return = "<a href=$url>" . $profile->name . "</a> " . $deleteBtn;
         }
 
         return $return;
@@ -317,6 +321,7 @@ class THM_GroupsModelGroup_Manager extends THM_CoreModelList
         $fields[] = '<input type="hidden" name="g_id" value="">';
         $fields[] = '<input type="hidden" name="u_id" value="">';
         $fields[] = '<input type="hidden" name="r_id" value="">';
+        $fields[] = '<input type="hidden" name="p_id" value="">';
 
         return $fields;
     }

@@ -116,6 +116,27 @@ class THM_GroupsControllerGroup extends JControllerForm
     }
 
     /**
+     * Trash icon for profile
+     *
+     * @return void
+     */
+    public function deleteProfile()
+    {
+        $model = $this->getModel('group');
+        $success = $model->deleteProfile();
+        if ($success)
+        {
+            $msg = JText::_('COM_THM_GROUPS_GROUP_MANAGER_PROFILE_DELETED');
+            $type = 'message';
+        }
+        else
+        {
+            $this->setMessage(JText::sprintf('COM_THM_GROUPS_SAVE_ERROR', $model->getError()), 'warning');
+        }
+        $this->setRedirect("index.php?option=com_thm_groups&view=group_manager", $msg, $type);
+    }
+
+    /**
      * Apply - Save button
      *
      * @return void
@@ -137,14 +158,14 @@ class THM_GroupsControllerGroup extends JControllerForm
     }
 
     /**
- * Method to run batch operations.
- *
- * @param   object  $model  The model.
- *
- * @return  boolean  True on success, false on failure
- *
- * @since   2.5
- */
+     * Method to run batch operations.
+     *
+     * @param   object  $model  The model.
+     *
+     * @return  boolean  True on success, false on failure
+     *
+     * @since   2.5
+     */
     public function batch($model = null)
     {
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));

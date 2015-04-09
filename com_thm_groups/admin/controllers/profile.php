@@ -179,4 +179,33 @@ class THM_GroupsControllerProfile extends JControllerLegacy
         }
     }
 
+    /**
+     * Method to run batch operations.
+     *
+     * @param   object  $model  The model.
+     *
+     * @return  boolean  True on success, false on failure
+     *
+     * @since   2.5
+     */
+    public function batch($model = null)
+    {
+        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+        // Set the model
+        $model = $this->getModel('profile', '', array());
+
+        // Preset the redirect
+        $this->setRedirect(JRoute::_('index.php?option=com_thm_groups&view=profile_manager', false));
+
+        if ($model->batch())
+        {
+            $this->setMessage(JText::_('JLIB_APPLICATION_SUCCESS_BATCH'));
+        }
+        else
+        {
+            $this->setMessage(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_FAILED', $model->getError()), 'warning');
+        }
+    }
+
 }

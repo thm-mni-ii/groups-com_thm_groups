@@ -293,6 +293,41 @@ class THM_GroupsModelGroup extends JModelLegacy
         return true;
     }
 
+    /**
+     * Deletes a profile from a group by clicking on
+     * delete icon near profile name
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function deleteProfile()
+    {
+        $input = JFactory::getApplication()->input;
+
+        $profileID = $input->getInt('p_id');
+        $groupID = $input->getInt('g_id');
+
+        $query = $this->_db->getQuery(true);
+        $query
+            ->delete('#__thm_groups_profile_usergroups')
+            ->where("profileID = '$profileID'")
+            ->where("usergroupsID = '$groupID'");
+        $this->_db->setQuery((string) $query);
+
+        try
+        {
+            $this->_db->execute();
+        }
+        catch (Exception $exc)
+        {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            return false;
+        }
+
+        return true;
+    }
+
     // TODO delete group from joomla table
     /**
      * Delete item

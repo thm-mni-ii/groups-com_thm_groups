@@ -73,8 +73,6 @@ class THM_GroupsHelperGroup_Manager
             ->from('#__usergroups as a')
             ->join('LEFT', '#__usergroups  AS b ON a.lft > b.lft AND a.rgt < b.rgt')
             ->innerJoin('#__thm_groups_usergroups_roles AS c ON a.id = c.usergroupsID')
-            ->innerJoin('#__thm_groups_users_usergroups_roles AS d ON c.id = d.usergroups_rolesID')
-            ->where('d.usersID IN (' . $nestedQuery . ')')
             ->where('a.id NOT IN  (1,2)')
             ->group('a.id, a.title, a.lft, a.rgt')
             ->order('a.lft ASC');
