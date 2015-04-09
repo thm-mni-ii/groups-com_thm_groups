@@ -25,7 +25,7 @@ require_once JPATH_BASE . '/components/com_users/models/group.php';
 class THM_GroupsModelGroup extends JModelLegacy
 {
     /**
-     * Assigns an administrator to a group
+     * Assigns a moderator to a group
      *
      * @return bool
      *
@@ -326,6 +326,20 @@ class THM_GroupsModelGroup extends JModelLegacy
         // Array of role ids
         $rid = $jinput->post->get('batch_id', array(), 'array');
 
+        JArrayHelper::toInteger($rid);
+
+        // Remove any values of zero.
+        if (array_search(0, $rid, true))
+        {
+            unset($rid[array_search(0, $rid, true)]);
+        }
+
+        if (empty($rid))
+        {
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ROLE_SELECTED'), 'error');
+            return false;
+        }
+
         // Array of group ids
         $cid  = $jinput->post->get('cid', array(), 'array');
 
@@ -442,7 +456,7 @@ class THM_GroupsModelGroup extends JModelLegacy
             $query
                 ->select('usergroupsID, rolesID')
                 ->from($db->quoteName('#__thm_groups_usergroups_roles'))
-                ->where($db->quoteName('usergroupsID') . ' IN (' . implode(',', $group_ids) . ')')
+                ->where('usergroupsID IN (' . implode(',', $group_ids) . ')')
                 ->order('usergroupsID');
 
             $db->setQuery($query);

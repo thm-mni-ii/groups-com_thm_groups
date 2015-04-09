@@ -28,7 +28,7 @@ class THM_GroupsHelperGroup_Manager
         $db = JFactory::getDbo();
         $query = $db->getQuery(true)
             ->select('id AS value, name AS text')
-            ->from($db->quoteName('#__thm_groups_roles'))
+            ->from('#__thm_groups_roles')
             ->order('id');
         $db->setQuery($query);
 
@@ -51,7 +51,9 @@ class THM_GroupsHelperGroup_Manager
     }
 
     /**
-     * Return all existing groups as select field
+     * Returns groups as select field
+     * It shows only groups with users in it, because this select field
+     * will be used only for filtering in backend-user-manager
      *
      * @return array
      */
@@ -66,14 +68,16 @@ class THM_GroupsHelperGroup_Manager
             ->from('#__thm_groups_users');
 
         $query
-            ->select('g.id, g.title')
-            ->from('#__usergroups AS g')
-            ->innerJoin('#__thm_groups_usergroups_roles AS a ON g.id = a.usergroupsID')
-            ->innerJoin('#__thm_groups_users_usergroups_roles AS b ON a.id = b.usergroups_rolesID')
-            ->where('b.usersID IN (' . $nestedQuery . ')')
-            ->where('g.id NOT IN  (1,2)')
-            ->group('g.id')
-            ->order('g.title ASC');
+            ->select('a.id, a.title')
+            ->select('COUNT(DISTINCT b.id) AS level')
+            ->from('#__usergroups as a')
+            ->join('LEFT', '#__usergroups  AS b ON a.lft > b.lft AND a.rgt < b.rgt')
+            ->innerJoin('#__thm_groups_usergroups_roles AS c ON a.id = c.usergroupsID')
+            ->innerJoin('#__thm_groups_users_usergroups_roles AS d ON c.id = d.usergroups_rolesID')
+            ->where('d.usersID IN (' . $nestedQuery . ')')
+            ->where('a.id NOT IN  (1,2)')
+            ->group('a.id, a.title, a.lft, a.rgt')
+            ->order('a.lft ASC');
 
         $db->setQuery($query);
 
@@ -89,7 +93,7 @@ class THM_GroupsHelperGroup_Manager
 
         for ($i = 0, $n = count($options); $i < $n; $i++)
         {
-            $groups[] = JHtml::_('select.option', $options[$i]->id, $options[$i]->title);
+            $groups[] = JHtml::_('select.option', $options[$i]->id, str_repeat('- ', $options[$i]->level) . $options[$i]->title);
         }
 
         return $groups;
