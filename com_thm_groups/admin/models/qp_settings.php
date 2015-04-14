@@ -23,6 +23,7 @@ jimport('joomla.application.categories');
  */
 class THM_GroupsModelQp_Settings extends JModelAdmin
 {
+    const TYPE = 'quickpages';
 
     /**
      * Method to get the form
@@ -55,103 +56,135 @@ class THM_GroupsModelQp_Settings extends JModelAdmin
      */
     protected function loadFormData()
     {
-        $item = $this->getSettings();
+        $objParams = $this->getQPParams();
+        if (empty($objParams))
+        {
+            return false;
+        }
+        $item = json_decode($objParams->params);
+
         return $item;
     }
 
+    /**
+     * Saves quickpages settings into database
+     *
+     * @param   array  $data  Data to save
+     *
+     * @return bool
+     */
     public function save($data)
     {
         $qp_enabled = $data['qp_enabled'];
+        $qp_show_all_categories = $data['qp_show_all_categories'];
         $qp_root_category = $data['qp_root_category'];
         $qp_move_subcategories = $data['qp_move_subcategories'];
 
-        $item = $this->getSettings();
+        $params = array();
+        $params['qp_enabled'] = $qp_enabled;
+        $params['qp_show_all_categories'] = $qp_show_all_categories;
+        $params['qp_root_category'] = $qp_root_category;
+
+        $objParams = $this->getQPParams();
 
         // Save settings at first time
-        if($item == null)
+        if (empty($objParams))
         {
-            return($this->saveNewQPSettings($qp_enabled, $qp_root_category));
+            return($this->saveNewQPSettings($params));
         }
 
-        $qp_old_root_category = $item->qp_root_category;
+        $oldParams = json_decode($objParams->params);
+        $qp_old_root_category = $oldParams->qp_root_category;
 
-        // TODO make if with &
-        if($qp_move_subcategories == 1)
+        if ($qp_move_subcategories == 1)
         {
-            if($qp_root_category != $qp_old_root_category)
+            if ($qp_root_category != $qp_old_root_category)
             {
-                var_dump("TEST");
                 $categories = JCategories::getInstance('Content');
                 $cat = $categories->get($qp_old_root_category);
 
                 $children = $cat->getChildren();
 
                 $pks = [];
-                foreach ($children as $child) {
+                foreach ($children as $child)
+                {
                     array_push($pks, $child->id);
                 }
-                echo '<pre>';
-                print_r($pks);
-                echo '</pre>';
                 $this->batchMove($qp_root_category, $pks, null);
             }
         }
 
-
-        return($this->setNewQPSettings($qp_enabled, $qp_root_category));
+        return($this->setNewQPSettings($params));
     }
 
-    /*
-     * Update function
+    /**
+     * Updates params in the database
+     *
+     * @param   array  $params  An array with params, which will be updated
+     *
+     * @return bool
+     *
+     * @throws Exception
      */
-    public function setNewQPSettings($qp_enabled, $qp_root_category)
+    public function setNewQPSettings($params)
     {
 
-        // Get a new database query instance
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
 
-        // Build the query
-        $query->update('#__thm_groups_quickpages_settings AS a');
-        $query->set('a.qp_enabled = ' . $db->quote((string)$qp_enabled));
-        $query->set('a.qp_root_category = ' . $db->quote((string)$qp_root_category));
+        $query
+            ->update('#__thm_groups_settings')
+            ->set('params = ' . $db->q(json_encode($params)))
+            ->where('type = ' . $db->q($this::TYPE));
 
-        // Execute the query
         $db->setQuery($query);
-        $success = $db->execute();
 
-        if($success)
+        try
         {
-            return true;
+            $db->execute();
+        }
+        catch (Exception $e)
+        {
+            JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+            return false;
         }
 
-        return false;
+        return true;
     }
 
-    /*
-     * Save function
+    /**
+     * Saves params if there are no params in database
+     *
+     * @param   array  $params  An array with params, which will be saved
+     *
+     * @return bool
      */
-    public function saveNewQPSettings($qp_enabled, $qp_root_category)
+    public function saveNewQPSettings($params)
     {
-
-        // Get a new database query instance
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
+        $params = $db->q(json_encode($params));
+        $columns = array('type', 'params');
+        $values = array($db->q($this::TYPE), $params);
 
-        $query->insert('#__thm_groups_quickpages_settings');
-        $query->columns('qp_enabled', 'qp_root_category');
-        $query->values($qp_enabled, $qp_root_category);
+        $query
+            ->insert('#__thm_groups_settings')
+            ->columns($db->qn($columns))
+            ->values(implode(',', $values));
 
-        // Execute the query
         $db->setQuery($query);
-        $success = $db->execute();
 
-        if ($success)
+        try
         {
-            return true;
+            $db->execute();
+        }
+        catch (Exception $e)
+        {
+            JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -290,16 +323,35 @@ class THM_GroupsModelQp_Settings extends JModelAdmin
         return true;
     }
 
-    public function getSettings()
+    /**
+     * Returns quickpages parameters
+     *
+     * @return bool|object with params
+     *
+     * @throws Exception
+     */
+    public function getQPParams()
     {
-        $dbo = JFactory::getDbo();
-        $query = $dbo->getQuery();
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
 
         $query
-            ->select('qp_enabled, qp_root_category')
-            ->from('#__thm_groups_quickpages_settings');
-        $dbo->setQuery($query);
+            ->select('params')
+            ->from('#__thm_groups_settings')
+            ->where('type = "quickpages"');
 
-        return $dbo->loadObject();
+        $db->setQuery($query);
+
+        try
+        {
+            $result = $db->loadObject();
+        }
+        catch (Exception $e)
+        {
+            JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+            return false;
+        }
+
+        return $result;
     }
 }

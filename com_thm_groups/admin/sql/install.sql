@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS
 `#__thm_groups_roles`,
 `#__thm_groups_profile`,
 `#__thm_groups_profile_attribute`,
-`#__thm_groups_quickpages_settings`;
+`#__thm_groups_settings`;
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_users` (
   `id`          INT(11)    NOT NULL AUTO_INCREMENT,
@@ -95,7 +95,9 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_dynamic_type` (
 INSERT INTO `#__thm_groups_dynamic_type` (`id`, `static_typeID`, `name`, `regex`, `options`) VALUES
   (1, 1, 'Name', '^[0-9a-zA-ZäöüÄÖÜ]+$', '{ "length" : "40" }'),
   (2, 1, 'Email', '^([0-9a-zA-Z\\\\.]+)@(([\\\\w]|\\\\.\\\\w)+)\\\\.(\\\\w+)$', '{ "length" : "40" }'),
-  (3, 3, 'Website', '(http|ftp|https:\\\\/\\\\/){0,1}[\\\\w\\\\-_]+(\\\\.[\\\\w\\\\-_]+)+([\\\\w\\\\-\\\\.,@?^=%&amp;:/~\\\\+#]*[\\\\w\\\\-\\\\@?^=%&amp;/~\\\\+#])?', '{}'),
+  (3, 3, 'Website',
+   '(http|ftp|https:\\\\/\\\\/){0,1}[\\\\w\\\\-_]+(\\\\.[\\\\w\\\\-_]+)+([\\\\w\\\\-\\\\.,@?^=%&amp;:/~\\\\+#]*[\\\\w\\\\-\\\\@?^=%&amp;/~\\\\+#])?',
+   '{}'),
   (4, 6, 'Table', '', '{ "columns" : "Spalte1;Spalte2;", "required" : "true" }');
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_attribute` (
@@ -240,9 +242,11 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_usergroups` (
 )
   ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `#__thm_groups_quickpages_settings` (
-  `qp_enabled`       TINYINT(1) NOT NULL,
-  `qp_root_category` INT(11)    NOT NULL
+CREATE TABLE IF NOT EXISTS `#__thm_groups_settings` (
+  `id`     INT(1)       NOT NULL AUTO_INCREMENT,
+  `type`   VARCHAR(255) NOT NULL,
+  `params` TEXT         NOT NULL,
+  PRIMARY KEY (`id`)
 )
   ENGINE = InnoDB;
 

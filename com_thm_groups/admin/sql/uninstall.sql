@@ -16,6 +16,6 @@ DROP TABLE IF EXISTS
             `#__thm_groups_roles`,
             `#__thm_groups_profile`,
             `#__thm_groups_profile_attribute`,
-            `#__thm_groups_quickpages_settings`;
+            `#__thm_groups_settings`;
 
 
