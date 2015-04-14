@@ -232,13 +232,14 @@ class THM_GroupsModelAdvanced extends JModelLegacy
         }
 
         $userList = THMLibThmGroups::getMitglieder($groupid, $arrSortedRoles);
+        $profileid = THMLibThmGroups::getGroupsProfile($groupid);
 
         foreach($userList as $roleID=>$users)
         {
             foreach($users as $useritem)
             {
                 //ToDo Updating when the Group are a profile
-                $userData = THMLibThmGroupsUser::getUserInfo($useritem);
+                $userData = THMLibThmGroupsUser::getUserProfileInfo($useritem, $profileid);
 
                 $data[$useritem] = $userData;
              }
