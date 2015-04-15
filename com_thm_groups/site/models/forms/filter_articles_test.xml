@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+<fields name="filter">
+    <field
+            name="catid"
+            type="customcategory"
+            label="JOPTION_FILTER_CATEGORY"
+            extension="com_content"
+            description="JOPTION_FILTER_CATEGORY_DESC"
+            onchange="this.form.submit();"
+            >
+        <option value="">JOPTION_SELECT_CATEGORY</option>
+    </field>
+    <field
+            name="stateid"
+            type="list"
+            label="COM_THM_GROUPS_PUBLISHED"
+            onchange="this.form.submit();"
+            >
+        <option value="">JALL</option>
+        <option value="1">JPUBLISHED</option>
+        <option value="0">JUNPUBLISHED</option>
+        <option value="2">JARCHIVED</option>
+        <option value="-2">JTRASHED</option>
+    </field>
+    <field
+        name="published"
+        type="list"
+        label="COM_THM_GROUPS_QUICKPAGES_SHOW_LINK"
+        onchange="this.form.submit()"
+        >
+        <option value="">JALL</option>
+        <option value="1">JPUBLISHED</option>
+        <option value="0">JUNPUBLISHED</option>
+    </field>
+    <field
+            name="featured"
+            type="list"
+            label="COM_THM_GROUPS_QUICKPAGES_SHOW_CONTENT"
+            onchange="this.form.submit()"
+            >
+        <option value="">JALL</option>
+        <option value="1">JPUBLISHED</option>
+        <option value="0">JUNPUBLISHED</option>
+    </field>
+    <field
+            name="search"
+            type="text"
+            label="COM_THM_ORGANIZER_FILTER_SEARCH_DESC"
+            />
+</fields>
+</form>
+

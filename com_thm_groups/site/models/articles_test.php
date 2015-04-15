@@ -89,7 +89,7 @@ class THM_GroupsModelArticles_Test extends THM_CoreModelList
         $this->setOrdering($query);
 
         echo '<pre>';
-        print_r($query->__toString());
+        print_r($query->dump());
         echo '</pre>';
 
         return $query;
