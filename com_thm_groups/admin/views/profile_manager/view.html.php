@@ -54,6 +54,10 @@ class THM_GroupsViewProfile_Manager extends THM_CoreViewList
 
         $this->groups = THM_GroupsHelperGroup_Manager::getGroups();
 
+        $document = JFactory::getDocument();
+        $document->addScript(JURI::root(true) . '/administrator/components/com_thm_groups/assets/js/profile_manager.js');
+
+
         parent::display($tpl);
     }
 

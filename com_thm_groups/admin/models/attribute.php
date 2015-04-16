@@ -26,6 +26,156 @@ require_once JPATH_COMPONENT . '/assets/helpers/static_type_options_helper.php';
  */
 class THM_GroupsModelAttribute extends JModelLegacy
 {
+
+    /**
+     * Creates empty database entries for all users for the new created attribute
+     *
+     * @param   int  $attributeID  An id of a new created attribute
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function createEmptyRowsForAllUsers($attributeID)
+    {
+        $db = JFactory::getDbo();
+        $ids = $this->getUserIDs();
+        $usersWhichHaveAttribute = $this->getUserIDsByAttributeID($attributeID);
+        $ids = $this->filterIDs($ids, $usersWhichHaveAttribute);
+
+        /*
+         * Create database entry for created attribute with empty value for all users
+         * It will be used in user_edit view
+         * If you find a better solution, you replace it
+         */
+        foreach ($ids as $id)
+        {
+            $query = $db->getQuery(true);
+            $columns = array('usersID', 'attributeID', 'published');
+
+            // $id->id this is stupid...
+            $values = array($id, $attributeID, 0);
+            $query
+                ->insert($db->qn('#__thm_groups_users_attribute'))
+                ->columns($db->qn($columns))
+                ->values(implode(',', $values));
+            $db->setQuery($query);
+            try
+            {
+                $db->execute();
+            }
+            catch (Exception $e)
+            {
+                JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Filters user IDs and exclude IDs, which already have
+     * an attribute
+     *
+     * @param   array  $ids     An array with all user IDs
+     * @param   array  $badIDs  An array with user IDs, which have an attribute
+     *
+     * @return array
+     */
+    public function filterIDs($ids, $badIDs)
+    {
+        $idsToSave = array();
+        $idsNotToSave = array();
+
+        // Prepare ids for search
+        foreach ($ids as $id)
+        {
+            array_push($idsToSave, $id->id);
+        }
+
+        // Prepare ids for search
+        foreach ($badIDs as $id)
+        {
+            array_push($idsNotToSave, $id->usersID);
+        }
+
+        // Search ids and if founded then delete
+        foreach ($idsToSave as $key => $id)
+        {
+            if (array_search($id, $idsNotToSave) !== false)
+            {
+                unset($idsToSave[$key]);
+            }
+        }
+
+        return $idsToSave;
+    }
+
+    /**
+     * Returns all user IDs which have an attribute with
+     * the $attributeID
+     *
+     * @param   int  $attributeID  An attribute id
+     *
+     * @return bool|mixed
+     *
+     * @throws Exception
+     */
+    public function getUserIDsByAttributeID($attributeID)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query
+            ->select('usersID')
+            ->from('#__thm_groups_users_attribute')
+            ->where("attributeID = $attributeID");
+        $db->setQuery($query);
+
+        try
+        {
+            $result = $db->loadObjectList();
+        }
+        catch (Exception $e)
+        {
+            JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+            return false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Returns user IDs from THM Groups component
+     *
+     * @return bool|mixed
+     *
+     * @throws Exception
+     */
+    public function getUserIDs()
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query
+            ->select('id')
+            ->from($db->qn('#__thm_groups_users'));
+
+        $db->setQuery($query);
+        try
+        {
+            $ids = $db->loadObjectList();
+        }
+        catch (Exception $e)
+        {
+            JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+            return false;
+        }
+
+        return $ids;
+    }
+
     /**
      * Saves the attribute
      *
@@ -216,7 +366,6 @@ class THM_GroupsModelAttribute extends JModelLegacy
                     copy($oldPath . $folderPic, $newPath . $folderPic);
                     unlink($oldPath . $folderPic);
                 }
-
             }
         }
         return true;

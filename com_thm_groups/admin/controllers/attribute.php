@@ -153,27 +153,25 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
     public function save($key = null, $urlVar = null)
     {
         $model = $this->getModel('attribute');
-        //$isValid = $model->validateForm();
-        $isValid = true;
-
-        if ($isValid)
+        $success = $model->save();
+        if ($success)
         {
-            $success = $model->save();
-            if ($success)
+            $rowsCreated = $model->createEmptyRowsForAllUsers($success);
+            if ($rowsCreated)
             {
                 $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
                 $this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager', $msg);
             }
             else
             {
-                $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-                $this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager' . $success, $msg);
+                $msg = JText::_('COM_THM_GROUPS_SAVE_ATTRIBUTE_EMPTY_ROWS_ERROR');
+                $this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager&id=' . $success, $msg);
             }
         }
         else
         {
-            $msg = JText::_('COM_THM_GROUPS_VALIDATION_ERROR');
-            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager', $msg, 'warning');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager$id=' . $success, $msg);
         }
     }
 
@@ -187,27 +185,16 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
     {
         $model = $this->getModel('attribute');
 
-        //$isValid = $model->validateForm();
-        $isValid = true;
-
-        if ($isValid)
+        $success = $model->save();
+        if ($success)
         {
-            $success = $model->save();
-            if ($success)
-            {
-                $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
-                $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=0', $msg);
-            }
-            else
-            {
-                $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-                $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=0', $msg);
-            }
+            $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=0', $msg);
         }
         else
         {
-            $msg = JText::_('COM_THM_GROUPS_VALIDATION_ERROR');
-            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=0', $msg, 'warning');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=0', $msg);
         }
     }
 
@@ -219,7 +206,7 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
      */
     public function delete()
     {
-        $model = $this->getModel('attribute_manager');
+        $model = $this->getModel('attribute');
 
         if ($model->delete())
         {
