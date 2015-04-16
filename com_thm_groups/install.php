@@ -77,7 +77,7 @@ class THM_Groups_Install_Script
         }
 
         // If there are no users in Joomla
-        if (empty($users) || $users == null)
+        if (empty($users))
         {
             JFactory::getApplication()->enqueueMessage('There are no users in Joomla', 'error');
             return false;
@@ -146,6 +146,7 @@ class THM_Groups_Install_Script
     private static function copyUserAttributes(&$users)
     {
         $db = JFactory::getDbo();
+        $attributes = self::getInstalledAttributes();
 
         foreach ($users as $user)
         {
@@ -176,6 +177,13 @@ class THM_Groups_Install_Script
                 ->values(implode(',', $username))
                 ->values(implode(',', $email));
 
+            foreach ($attributes as $attribute)
+            {
+                $values = array($user->id, $attribute->id, "''", 0);
+                $query
+                    ->values(implode(',', $values));
+            }
+
             $db->setQuery($query);
 
             try
@@ -189,6 +197,42 @@ class THM_Groups_Install_Script
             }
         }
         return true;
+    }
+
+    /**
+     * Returns all installed attributes ID except of 1,2,3,4
+     * 1 - first name
+     * 2 - second name
+     * 3 - username
+     * 4 - email
+     *
+     * @return bool|mixed
+     *
+     * @throws Exception
+     */
+    private static function getInstalledAttributes()
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query
+            ->select('id')
+            ->from('#__thm_groups_attribute')
+            ->where('id NOT IN (1, 2, 3, 4)');
+
+        $db->setQuery($query);
+
+        try
+        {
+            $result = $db->loadObjectList();
+        }
+        catch (Exception $e)
+        {
+            JFactory::getApplication()->enqueueMessage('getInstalledAttribute ' . $e->getMessage(), 'error');
+            return false;
+        }
+
+        return $result;
     }
 
     /**
