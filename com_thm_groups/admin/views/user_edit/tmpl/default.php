@@ -122,7 +122,7 @@ $session = JFactory::getSession();
                                 $output .= "<span>";
                                 $cCount = 1;
                                 $rowCount++;
-                                foreach ($tData[0] as $key=>$value)
+                                foreach ($tData[0] as $key => $value)
                                 {
                                     $output .= "<input id='jform_" . $name . "_" . $cCount
                                         . "' style ='float:left !important;' "

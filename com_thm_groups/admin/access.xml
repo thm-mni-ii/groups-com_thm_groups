@@ -3,5 +3,13 @@
         <section name="component">
                 <action name="core.admin" title="JACTION_ADMIN" description="JACTION_ADMIN_COMPONENT_DESC" />
                 <action name="frontend.access" title="COM_THM_QUICKPAGES_ACTION_FRONTEND_ACCESS" description="COM_THM_QUICKPAGES_ACTION_FRONTEND_ACCESS_DESC" />
+
+                <action name="core.create" title="COM_THM_GROUPS_CORE_ACCESS_CREATE" description="COM_THM_GROUPS_CORE_ACCESS_CREATE_DESC" />
+                <action name="core.edit" title="COM_THM_GROUPS_CORE_ACCESS_EDIT" description="COM_THM_GROUPS_CORE_ACCESS_EDIT_DESC" />
+                <action name="core.delete" title="COM_THM_GROUPS_CORE_ACCESS_DELETE" description="COM_THM_GROUPS_CORE_ACCESS_DELETE_DESC" />
+
+                <action name="frontend.create" title="COM_THM_GROUPS_FRONTEND_ACCESS_CREATE" description="COM_THM_GROUPS_FRONTEND_ACCESS_CREATE_DESC" />
+                <action name="frontend.edit" title="COM_THM_GROUPS_FRONTEND_ACCESS_EDIT" description="COM_THM_GROUPS_FRONTEND_ACCESS_EDIT_DESC" />
+                <action name="frontend.delete" title="COM_THM_GROUPS_FRONTEND_ACCESS_DELETE" description="COM_THM_GROUPS_FRONTEND_ACCESS_DELETE_DESC" />
         </section>
 </access>

@@ -63,8 +63,6 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     /**
      * Returns all user attributes for the user edit form
      *
-     * @param   Integer  $userId  User ID
-     *
      * @return  mixed
      */
     public function getContent()
@@ -238,12 +236,16 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     private function saveValues($formData, $content, $userID)
     {
         $dbo = JFactory::getDbo();
+        var_dump($formData);
+        var_dump("HEY");
 
         // Save new values in #__thm_groups_users_attribute
         foreach ($content as $attr)
         {
+            var_dump($attr);
             if (array_key_exists($attr->attribute, $formData))
             {
+                var_dump($attr->attribute);
                 try
                 {
                     $newValue = false;
@@ -292,6 +294,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                     );
 
                     $dbo->setQuery($query);
+
                     $result = $dbo->execute();
                 }
                 catch (Exception $e)
@@ -359,7 +362,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
             if ($size == $empty)
             {
                 // Don't delete when it's the last element / prevents empty json crash
-                if (sizeof($final)!= 1)
+                if (sizeof($final) != 1)
                 {
                     unset($final[$key]);
                 }

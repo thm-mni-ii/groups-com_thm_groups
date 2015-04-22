@@ -14,10 +14,12 @@
  */
 
 defined('_JEXEC') or die;
-$logoURL = 'administrator/components/com_thm_groups/assets/images/THM_Groups_Logo_t.png';
+$logoURL = 'administrator/components/com_thm_groups/assets/images/THM_Groups.png';
 ?>
 <?php
-    echo JHTML::_('image', $logoURL, JText::_('COM_THM_GROUPS'), array( 'class' => 'thm_groups_main_image'));
+    $attribs['width'] = '50%';
+    $attribs['class'] = 'thm_groups_main_image';
+    echo JHTML::_('image', $logoURL, JText::_('COM_THM_GROUPS'), $attribs);
 ?>
 <div id="thm_groups_main_description" class='thm_groups_main_description'>
     <?php echo JText::_("COM_THM_GROUPS_MAIN_DESC"); ?>

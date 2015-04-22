@@ -71,9 +71,9 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
             ->innerJoin('#__thm_groups_users AS a5 ON a1.usersID = a5.id')
             ->leftJoin('#__thm_groups_users_usergroups_roles AS a7 ON a7.usersID = a1.usersID')
             ->leftJoin('#__thm_groups_usergroups_roles AS a6 ON a6.ID = a7.usergroups_rolesID')
-            ->where('a1.attributeID = 1')   // first name
-            ->where('a2.attributeID = 2')   // surname
-            ->where('a4.attributeID = 4');  // email
+            ->where('a1.attributeID = 1')   // First name
+            ->where('a2.attributeID = 2')   // Surname
+            ->where('a4.attributeID = 4');  // Email
 
         $this->setSearchFilter($query, array('a1.value', 'a2.value'));
 
@@ -83,7 +83,6 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
 
         $app = JFactory::getApplication();
         $list = $app->input->get('list', array(), 'array');
-        //var_dump($list);
 
         if (isset($list['groupID']) && !empty($list['groupID']))
         {
@@ -275,5 +274,22 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
 
         $db->setQuery($query);
         return $db->loadObjectList();
+    }
+
+    /**
+     * Returns custom hidden fields for page
+     *
+     * @return array
+     */
+    public function getHiddenFields()
+    {
+        $fields = array();
+
+        // Hidden fields for deletion of one moderator or role at once
+        $fields[] = '<input type="hidden" name="g_id" value="">';
+        $fields[] = '<input type="hidden" name="u_id" value="">';
+        $fields[] = '<input type="hidden" name="r_id" value="">';
+
+        return $fields;
     }
 }
