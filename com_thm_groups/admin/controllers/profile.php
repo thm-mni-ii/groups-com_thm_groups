@@ -208,4 +208,25 @@ class THM_GroupsControllerProfile extends JControllerLegacy
         }
     }
 
+    /**
+     * Trash icon for group
+     *
+     * @return void
+     */
+    public function deleteGroup()
+    {
+        $model = $this->getModel('profile');
+        $success = $model->deleteGroup();
+        if ($success)
+        {
+            $msg = JText::_('COM_THM_GROUPS_PROFILE_MANAGER_GROUP_DELETED');
+            $type = 'message';
+        }
+        else
+        {
+            $this->setMessage(JText::sprintf('COM_THM_GROUPS_SAVE_ERROR', $model->getError()), 'warning');
+        }
+        $this->setRedirect("index.php?option=com_thm_groups&view=profile_manager", $msg, $type);
+    }
+
 }

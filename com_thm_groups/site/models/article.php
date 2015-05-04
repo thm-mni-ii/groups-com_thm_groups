@@ -194,7 +194,7 @@ class THM_GroupsModelArticle extends JModelAdmin
      */
     public function getForm($data = array(), $loadData = true)
     {
-        return 'Fatal Error: No form supported for Quickpage articles';
+        return 'Fatal Error: No form supported for Quickpage articles_old';
     }
 
     /**

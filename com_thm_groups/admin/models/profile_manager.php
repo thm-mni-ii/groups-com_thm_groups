@@ -185,10 +185,29 @@ class THM_GroupsModelProfile_Manager extends THM_CoreModelList
         {
             foreach ($result as $group)
             {
-                $return[] = $group->title;
+                $deleteIcon = '<span class="icon-trash"></span>';
+                $deleteBtn = "<a href='javascript:deleteGroup(" . $group->id . "," . $pid . ")'>" . $deleteIcon . "</a>";
+
+                $return[] = $group->title . " " . $deleteBtn;
             }
         }
 
         return implode(',<br /> ', $return);
+    }
+
+    /**
+     * Returns custom hidden fields for page
+     *
+     * @return array
+     */
+    public function getHiddenFields()
+    {
+        $fields = array();
+
+        // Hidden fields for deletion of one moderator or role at once
+        $fields[] = '<input type="hidden" name="g_id" value="">';
+        $fields[] = '<input type="hidden" name="p_id" value="">';
+
+        return $fields;
     }
 }

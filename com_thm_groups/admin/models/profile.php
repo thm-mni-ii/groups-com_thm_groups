@@ -340,4 +340,39 @@ class THM_GroupsModelProfile extends JModelLegacy
 
         return $lastPosition->order;
     }
+
+    /**
+     * Deletes a group from a profile by clicking on
+     * delete icon near profile name
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function deleteGroup()
+    {
+        $input = JFactory::getApplication()->input;
+
+        $profileID = $input->getInt('p_id');
+        $groupID = $input->getInt('g_id');
+
+        $query = $this->_db->getQuery(true);
+        $query
+            ->delete('#__thm_groups_profile_usergroups')
+            ->where("profileID = '$profileID'")
+            ->where("usergroupsID = '$groupID'");
+        $this->_db->setQuery((string) $query);
+
+        try
+        {
+            $this->_db->execute();
+        }
+        catch (Exception $exc)
+        {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            return false;
+        }
+
+        return true;
+    }
 }

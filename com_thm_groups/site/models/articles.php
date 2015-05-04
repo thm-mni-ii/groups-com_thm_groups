@@ -1,411 +1,551 @@
 <?php
-
 /**
- * @version     v0.1.0
+ * @version     v1.0.0
  * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @author      Daniel Kirsten, <daniel.kirsten@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @subpackage  com_thm_groups.admin
+ * @name        THM_GroupsModelArticles_Test
+ * @description THM_GroupsModelArticles_Test file from com_thm_groups
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @copyright   2015 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
-
-// No direct access
-defined('_JEXEC') or die;
-
-jimport('joomla.application.component.modellist');
+defined('_JEXEC') or die();
+jimport('thm_core.list.model');
 jimport('thm_groups.data.lib_thm_groups_quickpages');
-
+require_once JPATH_COMPONENT . '/models/article.php';
 
 /**
- * Methods supporting a list of article records.
+ * THM_GroupsModelUser_Manager class for component com_thm_groups
  *
- * @category  Joomla.Component.Site
- * @package   thm_groups
- * @since     v0.1.0
+ * @category  Joomla.Component.Admin
+ * @package   com_thm_groups.admin
+ * @link      www.mni.thm.de
+ * @since     Class available since Release 2.0
  */
-class THM_GroupsModelArticles extends JModelList
+class THM_GroupsModelArticles extends THM_CoreModelList
 {
 
-    private $_currUser;
+    protected $defaultOrdering = "id";
 
-    private $_profileIdentData;
+    protected $defaultDirection = "ASC";
+
+    protected $defaultLimit = "20";
+
+    protected $defaultFilters = array();
 
     /**
-     * Constructor.
+     * Constructor
      *
-     * @param   array  $config  An optional associative array of configuration settings.
-     *
-     * @see		JController
+     * @param   array  $config  config array
      */
     public function __construct($config = array())
     {
         if (empty($config['filter_fields']))
         {
             $config['filter_fields'] = array(
-                'id', 'a.id',
-                'title', 'a.title',
-                'alias', 'a.alias',
-                'checked_out', 'a.checked_out',
-                'checked_out_time', 'a.checked_out_time',
-                'catid', 'a.catid', 'category_title',
-                'state', 'a.state',
-                'access', 'a.access', 'access_level',
-                'created', 'a.created',
-                'created_by', 'a.created_by',
-                'ordering', 'a.ordering',
-                'featured', 'a.featured',
-                'language', 'a.language',
-                'hits', 'a.hits',
-                'publish_up', 'a.publish_up',
-                'publish_down', 'a.publish_down',
+
             );
         }
-        else
-        {
-        }
+
+        // Get user quickpages root category and show on start
+        $this->defaultFilters = array('catid' => THMLibThmQuickpages::getCategoryByProfileData(array('Id' => JFactory::getUser()->id)));
 
         parent::__construct($config);
-
-        // Get current user from session
-        $this->_currUser = JFactory::getUser();
-
-        // Get profile identification (default is user session)
-        $this->_profileIdentData = THMLibThmQuickpages::getPageProfileDataByRequest($this->_currUser->get('id'));
-
     }
 
     /**
-     * Returns the current array of the profile's information
+     * Method to build an SQL query to load the list data.
      *
-     * @return array	An array of all information to identify and pass the profile id
-     */
-    public function getProfileIdentData()
-    {
-        return $this->_profileIdentData;
-    }
-
-    /**
-     * Updates the profile id by the selected category.
-     * Needed because of possible filter changes to other categories.
-     *
-     * @param   int  $categoryID  The category ID
-     *
-     * @return void
-     */
-    private function updateProfileIdentData($categoryID)
-    {
-        $this->_profileIdentData = THMLibThmQuickpages::getPageProfileDataByCategory($categoryID);
-
-        // If category is no quickpage category (ergo no profile found), set profile to default
-        if (empty($this->_profileIdentData['Id']))
-        {
-            $this->_profileIdentData = THMLibThmQuickpages::getPageProfileDataByUserSession();
-        }
-    }
-
-
-
-    /**
-     * Returns the ID of the quickpage-category for the selected user or group (request params).
-     * Pre: $profileIdentData has to be set
-     *
-     * @return 	int 	The category ID
-     */
-    private function getDefaultCategoryID()
-    {
-        $categoryID = THMLibThmQuickpages::getCategoryByProfileData($this->_profileIdentData);
-
-        // Ugly fallback, if invalid profile ID was requested
-        if (empty($categoryID))
-        {
-            // Get default profile
-            $this->_profileIdentData = THMLibThmQuickpages::getPageProfileDataByUserSession();
-
-            // Try again with default profile
-            $categoryID = THMLibThmQuickpages::getCategoryByProfileData($this->_profileIdentData);
-        }
-        else
-        {
-        }
-
-        return $categoryID;
-    }
-
-    /**
-     * Method to auto-populate the model state.
-     *
-     * Note. Calling getState in this method will result in recursion.
-     *
-     * @param   object  $ordering   Ordering
-     * @param   object  $direction  Direction
-     *
-     * @return	void
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    protected function populateState($ordering = null, $direction = null)
-    {
-        // Adjust the context to support modal layouts.
-        if ($layout = JRequest::getVar('layout'))
-        {
-            $this->context .= '.' . $layout;
-        }
-        else
-        {
-        }
-
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
-        $this->setState('filter.search', $search);
-
-        /*
-        $access = $this->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', 0, 'int');
-        $this->setState('filter.access', $access);
-
-        $authorId = $app->getUserStateFromRequest($this->context.'.filter.author_id', 'filter_author_id');
-        $this->setState('filter.author_id', $authorId);
-        */
-
-        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
-        $this->setState('filter.published', $published);
-
-        // Set category (param or default)
-        $categoryId = $this->getUserStateFromRequest($this->context . '.filter.category_id', 'filter_category_id');
-
-        if (empty($categoryId))
-        {
-            $categoryId = $this->getDefaultCategoryID();
-        }
-        else
-        {
-        }
-
-        $this->setState('filter.category_id', $categoryId);
-
-        /* $language = $this->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', ''); */
-        /* $this->setState('filter.language', $language); */
-
-        // Update profile data, if category has been changed by filter
-        $this->updateProfileIdentData($categoryId);
-
-        // List state information.
-        parent::populateState('a.title', 'asc');
-    }
-
-    /**
-     * Method to get a store id based on model configuration state.
-     *
-     * This is necessary because the model is used by the component and
-     * different modules that might need different sets of data or different
-     * ordering requirements.
-     *
-     * @param   string  $id  A prefix for the store id.
-     *
-     * @return	string		A store id.
-     */
-    protected function getStoreId($id = '')
-    {
-        // Compile the store id.
-        $id	.= ':' . $this->getState('filter.search');
-        $id	.= ':' . $this->getState('filter.access');
-        $id	.= ':' . $this->getState('filter.published');
-        $id	.= ':' . $this->getState('filter.category_id');
-        $id	.= ':' . $this->getState('filter.author_id');
-        $id	.= ':' . $this->getState('filter.language');
-
-        return parent::getStoreId($id);
-    }
-
-    /**
-     * Build an SQL query to load the list data.
-     *
-     * @return	JDatabaseQuery
+     * @return      string  An SQL query
      */
     protected function getListQuery()
     {
-        // Create a new query object.
-        $db = $this->getDbo();
+        $db = JFactory::getDbo();
         $query = $db->getQuery(true);
+        $uid = JFactory::getUser()->id;
 
-        // Select the required fields from the table.
-        $query->select(
-            $this->getState(
-                'list.select',
-                'a.id, a.title, a.alias, a.checked_out, a.checked_out_time, a.catid' .
-                ', a.state, a.access, a.created, a.created_by, a.ordering, a.featured, a.language, a.hits' .
-                ', a.publish_up, a.publish_down'
-            )
-        );
-        $query->from('#__content AS a');
-
-        // Join over the language
-        $query->select('l.title AS language_title');
-        $query->join('LEFT', '`#__languages` AS l ON l.lang_code = a.language');
-
-        // Join over the users for the checked out user.
-        $query->select('uc.name AS editor');
-        $query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
-
-        // Join over the asset groups.
-        $query->select('ag.title AS access_level');
-        $query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
-
-        // Join over the categories.
-        $query->select('c.title AS category_title');
-        $query->join('LEFT', '#__categories AS c ON c.id = a.catid');
-
-        // Join over the users for the author.
-        $query->select('ua.name AS author_name');
-        $query->join('LEFT', '#__users AS ua ON ua.id = a.created_by');
-
-        // Join over the groups of the author users.
-        /* $query->join('LEFT', '#__user_usergroup_map AS uag ON uag.user_id = ua.id'); */
-
-        // Join over the groups of the current users.
-        //$query->join('LEFT', THMLibThmQuickpages::TABLE_NAME_THM_GROUPS_GROUPS_MAP . ' AS cug ON cug.uid = ' . (int) $this->_currUser->get('id'));
-
-        // Join over the quickpage categories.
-        $query->join('LEFT', '#__thm_groups_users_categories' . ' AS qc ON qc.categoriesID = a.catid');
-
-        // Filter own articles or quickpage articles
-        $whereClause = '( ';
-        $whereClause .= 'a.created_by = ' . ((int) $this->_currUser->get('id')) . ' ';
-        $whereClause .= 'OR qc.id = ' . ((int) $this->_currUser->get('id'));
-        //$whereClause .= ' AND qc.id_kind = ' . $db->quote(THMLibThmQuickpages::TABLE_USER_ID_KIND) . ' ';
-        //$whereClause .= 'OR qc.id = cug.gid';
-        //$whereClause .= ' AND qc.id_kind = ' . $db->quote(THMLibThmQuickpages::TABLE_GROUP_ID_KIND) . ' ';
-        $whereClause .= ') ';
-        $query->where($whereClause);
-        $query->where('c.extension = \'com_content\'');
+        $query
+            ->select('a.id, a.title, a.alias, a.checked_out, a.checked_out_time, a.catid, a.state, a.access, a.created, a.created_by, a.ordering, a.featured, a.language, a.hits, a.publish_up, a.publish_down,l.title AS language_title,uc.name AS editor,ag.title AS access_level,c.title AS category_title,ua.name AS author_name')
+            ->select('d.featured, d.published')
+            ->from('#__content AS a')
+            ->leftJoin('#__languages AS l ON l.lang_code = a.language')
+            ->leftJoin('#__users AS uc ON uc.id=a.checked_out')
+            ->leftJoin('#__viewlevels AS ag ON ag.id = a.access')
+            ->leftJoin('#__categories AS c ON c.id = a.catid')
+            ->leftJoin('#__users AS ua ON ua.id = a.created_by')
+            ->leftJoin('#__thm_groups_users_categories AS qc ON qc.categoriesID = a.catid')
+            ->leftJoin('#__thm_groups_users_content AS d ON d.contentID = a.id');
+            //->where('(a.created_by = ' . ((int) $uid) . ' OR qc.id = ' . ((int) $uid) . ')');
 
 
-        /* // Filter by access level.
-         if ($access = $this->getState('filter.access')) {
-            $query->where('a.access = ' . (int) $access);
-        } */
+        $this->setSearchFilter($query, array('a.title', 'a.alias'));
+        $this->setIDFilter($query, 'a.catid', array('filter.catid'));
+        $this->setIDFilter($query, 'a.state', array('filter.stateid'));
+        $this->setIDFilter($query, 'd.published', array('filter.published'));
+        $this->setIDFilter($query, 'd.featured', array('filter.featured'));
 
-        // Filter by published state
-        $published = $this->getState('filter.published');
-        if (is_numeric($published))
-        {
-            $query->where('a.state = ' . (int) $published);
-        }
-        elseif ($published === '')
-        {
-            $query->where('(a.state = 0 OR a.state = 1)');
-        }
+        $this->setOrdering($query);
 
-        // Filter by a single or group of categories.
-        // TODO make filter by categories
-        $categoryId = $this->getState('filter.category_id');
-        if (is_numeric($categoryId))
-        {
-            $query->where('a.catid = ' . (int) $categoryId);
-        }
-        elseif (is_array($categoryId))
-        {
-            JArrayHelper::toInteger($categoryId);
-            $categoryId = implode(',', $categoryId);
-            $query->where('a.catid IN (' . $categoryId . ')');
-        }
-
-        /* // Filter by author
-        $authorId = $this->getState('filter.author_id');
-        if (is_numeric($authorId))
-        {
-            $type = $this->getState('filter.author_id.include', true) ? '= ' : '<>';
-            $query->where('a.created_by '.$type.(int) $authorId);
-        } */
-
-
-        // Filter by search in title.
-        $search = $this->getState('filter.search');
-        if (!empty($search))
-        {
-            if (stripos($search, 'id:') === 0)
-            {
-                $query->where('a.id = ' . (int) substr($search, 3));
-            }
-            elseif (stripos($search, 'author:') === 0)
-            {
-                $search = $db->Quote('%' . $db->getEscaped(substr($search, 7), true) . '%');
-                $query->where('(ua.name LIKE ' . $search . ' OR ua.username LIKE ' . $search . ')');
-            }
-            else
-            {
-                $search = $db->Quote('%' . $search . '%');
-                $query->where('(a.title LIKE ' . $search . ' OR a.alias LIKE ' . $search . ')');
-            }
-        }
-
-        /* // Filter on the language.
-        if ($language = $this->getState('filter.language')) {
-            $query->where('a.language = '.$db->quote($language));
-        } */
-
-        // Add the list ordering clause.
-        $orderCol	= $this->state->get('list.ordering');
-        $orderDirn	= $this->state->get('list.direction');
-        if ($orderCol == 'a.ordering' || $orderCol == 'category_title')
-        {
-            $orderCol = 'category_title ' . $orderDirn . ', a.ordering';
-            $query->order($db->getEscaped($orderCol . ' ' . $orderDirn));
-        }
-
-
-        // Group by content id to distinct selected rows
-        $query->group('a.id');
-
-        /* echo nl2br(str_replace('#__','jos_',$query)); */
         echo '<pre>';
-        print_r($query->__toString());
+        print_r($query->dump());
         echo '</pre>';
+
         return $query;
     }
 
     /**
-     * Build a list of relevant categories
+     * Function to feed the data in the table body correctly to the list view
      *
-     * @return	JDatabaseQuery
+     * @return array consisting of items in the body
      */
-    public function getCategories()
+    public function getItems()
     {
-        // Create a new query object.
-        $db = $this->getDbo();
-        $query = $db->getQuery(true);
-        $cat_id  = THMLibThmQuickpages::getUserQuickpageCategory($this->_currUser->get('id'));
-        $query->select("*");
-        $query->from("#__categories");
-        $query->where("id =" . $cat_id->categoriesID);
-        $db->setQuery($query);
-        $db->execute();
-        return $db->loadObjectList();
-    }
+        $items = parent::getItems();
 
+        if (empty($items))
+        {
+            return false;
+        }
+
+        $index = 0;
+        $return['attributes'] = array('class' => 'ui-sortable');
+        foreach ($items as $key => $item)
+        {
+            $canChange = $this->hasUserRightTo('EditState', $item);
+            $archived = $this->state->get('filter.published') == 2 ? true : false;
+            $trashed = $this->state->get('filter.published') == -2 ? true : false;
+
+            $listOrder = $this->state->get('list.ordering');
+            $saveOrder = $listOrder == 'a.ordering';
+            $iconClass = '';
+
+            if (!$canChange)
+            {
+                $iconClass = ' inactive';
+            }
+            elseif (!$saveOrder)
+            {
+                $iconClass = ' inactive tip-top hasTooltip';
+            }
+
+            $action = $archived ? 'unarchive' : 'archive';
+            JHtml::_('actionsdropdown.' . $action, 'cb' . $key, 'articles');
+            $action = $trashed ? 'untrash' : 'trash';
+            JHtml::_('actionsdropdown.' . $action, 'cb' . $key, 'articles');
+
+            $url = JRoute::_('index.php?option=com_content&task=article.edit&a_id=' . $item->id);
+            $return[$index] = array();
+
+            $order = '';
+            if ($canChange && $saveOrder)
+            {
+                $order = '<input type="text" style="display:none" name="order[]" size="5" value="'
+                    . $item->ordering . '" class="width-20 text-area-order " />';
+            }
+
+            $publishedBtn = JHtml::_('jgrid.published', $item->state, $key, 'articles.', $canChange, 'cb', $item->publish_up, $item->publish_down);
+            $dropdownBtn = JHtml::_('actionsdropdown.render', $item->title);
+
+            $return[$index]['attributes'] = array( 'class' => 'order nowrap center hidden-phone', 'id' => $item->id);
+            $return[$index]['ordering']['attributes'] = array( 'class' => "order nowrap center hidden-phone", 'style' => "width: 40px;");
+            $return[$index]['ordering']['value']
+                = "<span class='sortable-handler$iconClass'><i class='icon-menu'></i></span>" . $order;
+            $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
+            $return[$index][1] = $this->renderTitle($item);
+            $return[$index][2] = "<div class='btn-group'>$publishedBtn . $dropdownBtn</div>";
+            $return[$index][4] = JHTML::_('date', $item->created, JText::_('DATE_FORMAT_LC4'));
+            $return[$index][5] = (int) $item->hits;
+            $return[$index][6] = $this->renderCheckInAndEditIcons($key, $item);
+            $return[$index][7] = $this->renderTrashIcon($key, $item);
+            $return[$index][8] = $this->getToggle($item->id, $item->published, 'articles', '', 'published');
+            $return[$index][9] = $this->getToggle($item->id, $item->featured, 'articles', '', 'featured');
+            $return[$index][10] = $item->category_title;
+
+            $index++;
+        }
+        return $return;
+    }
 
     /**
-     * Build a list of authors
+     * Returns a title of an article
      *
-     * @return	JDatabaseQuery
+     * @param   object  &$item  An object item
+     *
+     * @return  string
      */
-    public function getAuthors()
+    public function renderTitle(&$item)
     {
-        // Create a new query object.
-        $db = $this->getDbo();
-        $query = $db->getQuery(true);
-
-        // Construct the query
-        $query->select('u.id AS value, u.name AS text');
-        $query->from('#__users AS u');
-        $query->join('INNER', '#__content AS c ON c.created_by = u.id');
-        $query->group('u.id');
-        $query->order('u.name');
-
-        // Setup the query
-        $db->setQuery($query->__toString());
-
-        // Return the result
-        return $db->loadObjectList();
+        if ($item->state > 0)
+        {
+            $additionalURLParams = array('gsuid' => $item->created_by);
+            return JHTML::_('link', THMLibThmQuickpages::getQuickpageRoute($item, '&' . http_build_query($additionalURLParams)), $item->title);
+        }
+        else
+        {
+            return $item->title;
+        }
     }
+
+    /**
+     * Renders checkin and edit icons
+     *
+     * @param   int     $key    An index of an item
+     *
+     * @param   object  &$item  An object item
+     *
+     * @return  mixed|string
+     */
+    public function renderCheckInAndEditIcons($key, &$item)
+    {
+        $canEdit = $this->hasUserRightTo('Edit', $item);
+        $canCheckin = $this->hasUserRightTo('Checkin', $item);
+        $return = '';
+
+        // Output checkin icon
+        if ($item->checked_out)
+        {
+            return JHtml::_('jgrid.checkedout', $key, $item->editor, $item->checked_out_time, 'articles.', $canCheckin);
+        }
+
+        // Output edit icon
+        if ($canEdit)
+        {
+            $itemId = JFactory::getApplication()->input->getInt('Itemid', 0);
+            $returnURL = base64_encode("index.php?option=com_thm_groups&view=articles&Itemid=$itemId");
+            $editURL = 'index.php/' . $item->alias . '?task=article.edit&a_id=' . $item->id . '&return=' . $returnURL;
+            $imgSpanTag = '<span class="state edit" style=""><span class="text">Edit</span></span>';
+
+            $return .= JHTML::_('link', $editURL, $imgSpanTag, 'title="'
+                . JText::_('COM_THM_QUICKPAGES_HTML_EDIT_ITEM')
+                . '" class="jgrid"'
+            );
+            $return .= "\n";
+        }
+        else
+        {
+            $return = '<span class="jgrid"><span class="state edit_disabled"><span class="text">Edit</span></span></span>';
+        }
+
+        return $return;
+    }
+
+    /**
+     * Returns an output icon
+     *
+     * @param   int     $key    An index of an item
+     *
+     * @param   object  &$item  An item object
+     *
+     * @return mixed
+     */
+    public function renderTrashIcon($key, &$item)
+    {
+        $canDelete	= $this->hasUserRightTo('Delete', $item);
+        if ($item->state >= 0)
+        {
+            // Define state changes needed by JHtmlJGrid.state(), see also JHtmlJGrid.published()
+            $states	= array(
+                0	=> array(),		// Dummy: Wird nicht gebraucht, erzeugt aber sonst Notice
+                3	=> array(
+                    'trash',
+                    'JPUBLISHED',
+                    'COM_THM_QUICKPAGES_HTML_TRASH_ITEM',
+                    'JPUBLISHED',
+                    false,
+                    'trash',
+                    'trash_disabled'
+                ),
+                -3	=> array(
+                    'publish',
+                    'JTRASHED',
+                    'COM_THM_QUICKPAGES_HTML_UNTRASH_ITEM',
+                    'JTRASHED',
+                    false,
+                    'untrash',
+                    'untrash'
+                ),
+            );
+            $button = JHtml::_('jgrid.state', $states, ($item->state < 0 ? -3 : 3), $key, 'articles.', $canDelete);
+            $button = str_replace(
+                "onclick=\"", "onclick=\"if (confirm('" . JText::_('COM_THM_GROUPS_REALLY_DELETE') . "')) ", $button
+            );
+            return $button;
+        }
+    }
+
+    /**
+     * Returns a button for creating of a new article
+     *
+     * @return mixed|string
+     */
+    public function getCreateNewArticleButton()
+    {
+        // Check for authorization to create article in current category
+        $currCategoryID = THMLibThmQuickpages::getCategoryByProfileData(array('Id' => JFactory::getUser()->id));
+        $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
+
+        if ($canCreate AND $currCategoryID != 0)
+        {
+            $itemId = JFactory::getApplication()->input->getInt('Itemid', 0);
+            $returnURL = base64_encode("index.php?option=com_thm_groups&view=articles&Itemid=$itemId");
+            $addURL = JRoute::_('index.php?option=com_content&view=form&layout=edit&catid='
+                . $currCategoryID . '&return=' . $returnURL
+            );
+
+            return JHTML::_('link', $addURL, '<i class="icon-new"></i> ' . JText::_('COM_THM_GROUPS_QUICKPAGES_CREATE_NEW_ARTICLE'), 'title="'
+                . JText::_('COM_THM_QUICKPAGES_HTML_CREATE')
+                . '" class="btn btn-success btn-lg"'
+            );
+
+        }
+        else
+        {
+            return '<span class="qp_icon_big qp_create_icon_disabled"><span class="qp_invisible_text">' .
+             JText::_('COM_THM_GROUPS_QUICKPAGES_CREATE_NEW_ARTICLE') . '</span></span>';
+        }
+    }
+
+    /**
+     * Method to test whether the session user
+     * has the permission to create a new article.
+     *
+     * @param   int  $categoryID  The category id to create the article in.
+     *
+     * @return	boolean	True if permission granted.
+     */
+    protected function hasUserRightToCreateArticle($categoryID)
+    {
+        $articleModel = new THM_GroupsModelArticle;
+
+        return $articleModel->canCreate($categoryID);
+    }
+
+    /**
+     * Function to get table headers
+     *
+     * @return array including headers
+     */
+    public function getHeaders()
+    {
+        $ordering = $this->state->get('list.ordering');
+        $direction = $this->state->get('list.direction');
+
+        $headers = array();
+        $headers['ordering'] =  JHtml::_('searchtools.sort', '', 'a.ordering', $direction, $ordering , null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2');
+        $headers['checkbox'] = '';
+        $headers['title'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_TITLE'), 'a.title', $direction, $ordering);
+        $headers['stateid'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_PUBLISHED'), 'published', $direction, $ordering);
+        //$headers['ordering'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_ORDERING'), 'ordering', $direction, $ordering);
+        $headers['data'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_DATA'), 'created', $direction, $ordering);
+        $headers['hits'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_HITS'), 'hits', $direction, $ordering);
+        $headers['edit'] = JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_EDIT');
+        $headers['delete'] = JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_DELETE');
+        $headers['published'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_SHOW_LIST'), 'd.published', $direction, $ordering);
+        $headers['featured'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_SHOW_CONTENT'), 'd.featured', $direction, $ordering);
+        $headers['catid'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_CATEGORY'), 'catid', $direction, $ordering);
+
+        return $headers;
+    }
+
+    /**
+     * Method to test whether the session user
+     * has the permission to do something with an article.
+     *
+     * @param   Strig   $rightName    The right name
+     * @param   object  $articleItem  A article record object.
+     *
+     * @return	boolean	True if permission granted.
+     */
+    protected function hasUserRightTo($rightName, $articleItem)
+    {
+        $methodName = 'can' . $rightName;
+
+        $articleModel = new THM_GroupsModelArticle;
+
+        if (method_exists($articleModel, $methodName))
+        {
+            return $articleModel->$methodName($articleItem);
+        }
+
+        return false;
+    }
+
+    /**
+     * Method to test whether a record can be deleted.
+     *
+     * @param   object  $record  A record object.
+     *
+     * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
+     *
+     * @since   12.2
+     */
+    protected function canEditState($record)
+    {
+        $user = JFactory::getUser();
+
+        return $user->authorise('core.edit.state', 'com_content');
+    }
+
+    /**
+     * Saves the manually set order of records.
+     *
+     * @param   array    $pks    An array of primary key ids.
+     * @param   integer  $order  +1 or -1
+     *
+     * @return  mixed
+     *
+     * @since   12.2
+     */
+    public function saveorder($pks = null, $order = null)
+    {
+        JTable::addIncludePath(JPATH_ROOT . '/libraries/legacy/table');
+        $table = $this->getTable('Content', 'JTable');
+        $tableClassName = get_class($table);
+        $contentType = new JUcmType;
+        $type = $contentType->getTypeByTable($tableClassName);
+        $tagsObserver = $table->getObserverOfClass('JTableObserverTags');
+        $conditions = array();
+
+        if (empty($pks))
+        {
+            return JError::raiseWarning(500, JText::_($this->text_prefix . '_ERROR_NO_ITEMS_SELECTED'));
+        }
+
+        // Update ordering values
+        foreach ($pks as $i => $pk)
+        {
+            $table->load((int) $pk);
+
+            // Access checks.
+            if (!$this->canEditState($table))
+            {
+                // Prune items that you can't change.
+                unset($pks[$i]);
+                JLog::add(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+            }
+            elseif ($table->ordering != $order[$i])
+            {
+                $table->ordering = $order[$i];
+
+                if (!$table->store())
+                {
+                    $this->setError($table->getError());
+                    return false;
+                }
+
+                // Remember to reorder within position and client_id
+                $condition = $this->getReorderConditions($table);
+                $found = false;
+
+                foreach ($conditions as $cond)
+                {
+                    if ($cond[1] == $condition)
+                    {
+                        $found = true;
+                        break;
+                    }
+                }
+
+                if (!$found)
+                {
+                    $key = $table->getKeyName();
+                    $conditions[] = array($table->$key, $condition);
+                }
+            }
+        }
+
+        // Execute reorder for each category.
+        foreach ($conditions as $cond)
+        {
+            $table->load($cond[0]);
+            $table->reorder($cond[1]);
+        }
+
+        // Clear the component's cache
+        $this->cleanCache();
+
+        return true;
+    }
+
+    /**
+     * A protected method to get a set of ordering conditions.
+     *
+     * @param   JTable  $table  A JTable object.
+     *
+     * @return  array  An array of conditions to add to ordering queries.
+     *
+     * @since   12.2
+     */
+    protected function getReorderConditions($table)
+    {
+        return array();
+    }
+
+    /**
+     * Method to change the published state of one or more records.
+     *
+     * @param   array    &$pks   A list of the primary keys to change.
+     * @param   integer  $value  The value of the published state.
+     *
+     * @return  boolean  True on success.
+     *
+     * @since   12.2
+     */
+    public function publish(&$pks, $value = 1)
+    {
+        $dispatcher = JEventDispatcher::getInstance();
+        $user = JFactory::getUser();
+        JTable::addIncludePath(JPATH_ROOT . '/libraries/legacy/table');
+        $table = $this->getTable('Content', 'JTable');
+        $pks = (array) $pks;
+
+        // Include the plugins for the change of state event.
+        JPluginHelper::importPlugin($this->events_map['change_state']);
+
+        // Access checks.
+        foreach ($pks as $i => $pk)
+        {
+            $table->reset();
+
+            if ($table->load($pk))
+            {
+                if (!$this->canEditState($table))
+                {
+                    // Prune items that you can't change.
+                    unset($pks[$i]);
+                    JLog::add(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+
+                    return false;
+                }
+            }
+        }
+
+        // Attempt to change the state of the records.
+        if (!$table->publish($pks, $value, $user->get('id')))
+        {
+            $this->setError($table->getError());
+
+            return false;
+        }
+
+        $context = $this->option . '.' . $this->name;
+
+        // Trigger the change state event.
+        $result = $dispatcher->trigger($this->event_change_state, array($context, $pks, $value));
+
+        if (in_array(false, $result, true))
+        {
+            $this->setError($table->getError());
+
+            return false;
+        }
+
+        // Clear the component's cache
+        $this->cleanCache();
+
+        return true;
+    }
+
 }

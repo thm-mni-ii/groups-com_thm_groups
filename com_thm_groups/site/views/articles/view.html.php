@@ -1,81 +1,83 @@
 <?php
-
 /**
- * @version     v0.1.0
+ * @version     v1.0.0
  * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_Groups.site
- * @author      Daniel Kirsten, <daniel.kirsten@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @subpackage  com_thm_groups.admin
+ * @name        THMGroupsViewUser_Manager
+ * @description THMGroupsViewUser_Manager file from com_thm_groups
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
 
-// No direct access
-defined('_JEXEC') or die;
+// No direct access to this file
+defined('_JEXEC') or die();
 
-jimport('joomla.application.component.view');
-require_once JPATH_COMPONENT  . '/models/article.php';
+// import Joomla view library
+jimport('thm_core.list.view');
 JHtml::_('bootstrap.framework');
 JHtml::_('jquery.framework');
 
 /**
- * View class for a list of articles.
+ * THMGroupsViewUserManager class for component com_thm_groups
  *
- * @category  Joomla.Component.Site
- * @package   thm_groups
- * @since     v0.1.0
+ * @category  Joomla.Component.Admin
+ * @package   com_thm_groups.admin
+ * @link      www.mni.thm.de
+ * @since     Class available since Release 2.0
  */
-class THM_GroupsViewArticles extends JViewLegacy
+class THM_GroupsViewArticles extends THM_CoreViewList
 {
-    protected $items;
 
-    protected $pagination;
+    public $items;
 
-    protected $state;
+    public $pagination;
 
-    protected $categories;
+    public $state;
 
-    protected $profileIdentData;
+    public $batch;
+
+    public $groups;
 
     /**
-     * Display the view
+     * Method to get display
      *
-     * @param   object  $tpl  Template
+     * @param   Object  $tpl  template
      *
-     * @return	void
+     * @return void
      */
     public function display($tpl = null)
     {
-        $this->items		= $this->get('Items');
-        $this->pagination	= $this->get('Pagination');
-        $this->state		= $this->get('State');
-        /* $this->authors		= $this->get('Authors'); */
-        $this->categories	= $this->get('Categories');
-        $this->profileIdentData	= $this->get('ProfileIdentData');
-        $this->filterForm = $this->get('FilterForm');
-        $this->activeFilters = $this->get('ActiveFilters');
+        // Set batch template path
+        $this->batch = JPATH_COMPONENT_ADMINISTRATOR . '/views/user_manager/tmpl/default_batch.php';
 
-        // Check for errors.
-        if (count($errors = $this->get('Errors')))
-        {
-            JError::raiseError(500, implode("\n", $errors));
-            return false;
-        }
-
+        $model = $this->getModel();
+        $this->newButton = $model->getCreateNewArticleButton();
         // Load stylesheet
         $document = JFactory::getDocument();
         $document->addStyleSheet(JURI::base(true) . '/components/com_thm_groups/css/quickpage.css');
-
+        $document->addStyleSheet(JURI::base(true) . '/components/com_thm_groups/css/articles.css');
         parent::display($tpl);
     }
 
-    function getToolbar() {
+    /**
+     * Add Joomla ToolBar with add edit delete options.
+     *
+     * @return void
+     */
+    protected function addToolbar()
+    {
+    }
+
+    public function getToolbar()
+    {
         jimport('cms.html.toolbar');
-        $bar = new JToolBar( 'toolbar' );
+        $bar = new JToolBar('toolbar');
 
         // Add category to user root quickpage category
-        $image = 'cog';
+        $image = 'new';
         $title = JText::_('COM_THM_GROUPS_QUICKPAGES_ADD_CATEGORY');
         $link = 'index.php?option=com_thm_groups&amp;view=qp_categories&amp;tmpl=component';
         $height = '600';
@@ -84,61 +86,6 @@ class THM_GroupsViewArticles extends JViewLegacy
         $left = 0;
         $onClose = 'window.location.reload();';
         $bar->appendButton('Popup', $image, $title, $link, $width, $height, $top, $left, $onClose);
-
-        // Add other category as alias
-        $image1 = 'edit';
-        $title1 = JText::_('COM_THM_GROUPS_QUICKPAGES_ADD_ALIAS');
-        $link1 = 'index.php?option=com_thm_groups&amp;view=qp_alias&amp;tmpl=component';
-        $height1 = '600';
-        $width1 = '900';
-        $top1 = 0;
-        $left1 = 0;
-        $onClose1 = 'window.location.reload();';
-
-        $bar->appendButton('Popup', $image1, $title1, $link1, $width1, $height1, $top1, $left1, $onClose1);
-
-        // Generate the html and return
         return $bar->render();
     }
-
-
-    /**
-     * Method to test whether the session user
-     * has the permission to do something with an article.
-     *
-     * @param   Strig   $rightName    The right name
-     * @param   object  $articleItem  A article record object.
-     *
-     * @return	boolean	True if permission granted.
-     */
-    protected function hasUserRightTo($rightName, $articleItem)
-    {
-        $methodName = 'can' . $rightName;
-
-        $articleModel = new THMGroupsModelArticle;
-
-        if (method_exists($articleModel, $methodName))
-        {
-            return $articleModel->$methodName($articleItem);
-        }
-
-        return false;
-    }
-
-    /**
-     * Method to test whether the session user
-     * has the permission to create a new article.
-     *
-     * @param   int  $categoryID  The category id to create the article in.
-     *
-     * @return	boolean	True if permission granted.
-     */
-    protected function hasUserRightToCreateArticle($categoryID)
-    {
-        $articleModel = new THMGroupsModelArticle;
-
-        return $articleModel->canCreate($categoryID);
-    }
-
-
 }

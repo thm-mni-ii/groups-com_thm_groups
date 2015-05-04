@@ -122,6 +122,8 @@ class THM_GroupsControllerUser extends JControllerLegacy
 
     /**
      * Deletes a role of a user by user id
+     *
+     * @return void
      */
     public function deleteRoleInGroupByUser()
     {
@@ -142,15 +144,20 @@ class THM_GroupsControllerUser extends JControllerLegacy
 
     /**
      * Deletes all roles in a group by a user id
+     *
+     * @return void
      */
     public function deleteAllRolesInGroupByUser()
     {
         $model = $this->getModel('user');
         $success = $model->deleteAllRolesInGroupByUser();
-        if ($success) {
+        if ($success)
+        {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
             $type = 'message';
-        } else {
+        }
+        else
+        {
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
             $type = 'error';
         }
@@ -219,5 +226,4 @@ class THM_GroupsControllerUser extends JControllerLegacy
         $this->input->set('hidemainmenu', 1);
         parent::display();
     }
-
 }

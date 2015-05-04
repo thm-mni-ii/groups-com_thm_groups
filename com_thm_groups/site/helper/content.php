@@ -36,7 +36,7 @@ class ContentHelper
         JSubMenuHelper::addEntry(
             JText::_('JGLOBAL_ARTICLES'),
             'index.php?option=com_content&view=articles',
-            $vName == 'articles'
+            $vName == 'articles_old'
         );
         JSubMenuHelper::addEntry(
             JText::_('COM_CONTENT_SUBMENU_CATEGORIES'),

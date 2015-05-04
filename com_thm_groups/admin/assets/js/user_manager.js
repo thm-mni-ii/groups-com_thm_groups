@@ -236,3 +236,18 @@ function GR() {
         return JSON.stringify(data);
     };
 }
+
+function deleteAllRolesInGroupByUser(userId, groupId){
+    document.getElementsByName('task')[0].value="user.deleteAllRolesInGroupByUser";
+    document.getElementsByName('g_id')[0].value=groupId;
+    document.getElementsByName('u_id')[0].value=userId;
+    document.adminForm.submit();
+}
+
+function deleteRoleInGroupByUser(userId, groupId, roleId){
+    document.getElementsByName('task')[0].value="user.deleteRoleInGroupByUser";
+    document.getElementsByName('g_id')[0].value=groupId;
+    document.getElementsByName('u_id')[0].value=userId;
+    document.getElementsByName('r_id')[0].value=roleId;
+    document.adminForm.submit();
+}

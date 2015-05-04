@@ -1,427 +1,162 @@
 <?php
-
 /**
- * @version     v3.4.5
+ * @version     v1.0.0
  * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @author      Daniel Kirsten, <daniel.kirsten@mni.thm.de>
- * @author      Tobias Schmitt, <tobias.schmitt@mni.thm.de>
+ * @subpackage  com_thm_groups.admin
+ * @name        THMGroupsViewUser_Manager
+ * @description THMGroupsViewUser_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
 
-// No direct access
-defined('_JEXEC') or die;
+// No direct access to this file
+defined('_JEXEC') or die();
+jimport('thm_core.list.template');
+JHtml::_('jquery.framework', true, true);
+JHtml::_('jquery.ui');
+JHtml::_('jquery.ui', array('sortable'));
+JHtml::_('bootstrap.tooltip');
+JHtml::_('behavior.multiselect');
+JHtml::_('formbehavior.chosen', 'select');
+JHtml::script(JURI::root() . 'media/jui/js/sortablelist.js');
+JHTML::stylesheet(JURI::root() . 'media/jui/css/sortablelist.css');
 
-$helper_path = JPATH_BASE . '/components/com_thm_groups/helper';
-
-include_once $helper_path . '/articles_helper.php';
-
-include_once 'libraries/thm_groups/data/lib_thm_groups.php';
-
-$helperObject = new ArticleHelper;
-
-JHtml::addIncludePath(JPATH_COMPONENT . '/helper/html');
-JHtml::_('behavior.tooltip');
-
-$user		= JFactory::getUser();
-$userId		= $user->get('id');
-$listOrder	= $this->state->get('list.ordering');
-$listDirn	= $this->state->get('list.direction');
+$listOrder	= $this->escape($this->state->get('list.ordering'));
+$listDirn	= $this->escape($this->state->get('list.direction'));
 $saveOrder	= $listOrder == 'a.ordering';
 
-// Get menu id
-$menuItemID = JRequest :: getVar('Itemid', 0);
-
-// Calc return URI encoding
-$currURI = JFactory::getURI();
-$retCryptURI = base64_encode($currURI->toString());
-$itemParam = '&Itemid=' . $menuItemID;
-$staticParams = '&' . $this->profileIdentData['ParamName'] . '=' . $this->profileIdentData['Id'] . '&return=' . $retCryptURI;
-
-// Define basic extension of ACL rights
-define('EXTENSION_RIGHTS', 'com_content');
-
-// Check for authorization to create article in current category
-$currCategoryID = $this->state->get('filter.category_id');
-$canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
+if ($saveOrder)
+{
+    $saveOrderingUrl = 'index.php?option=com_thm_groups&task=articles.saveOrderAjax&tmpl=component';
+    JHtml::_('sortablelist.sortable', 'articles-list', 'adminForm', null, $saveOrderingUrl);
+}
 
 ?>
-<h1>Quickpages </h1>
-<form action="<?php echo JRoute::_('index.php?option=com_thm_groups&view=articles' . $itemParam); ?>" method="post" name="adminForm" id="adminForm">
-    <fieldset id="filter-bar">
-        <div style ="inline:block; float:left; align:text-bottom;">
-        <?php echo JText::_('COM_THM_QUICKPAGES_CATEGORY_LABEL') . ":"; ?>
-            <b>
-                <?php
 
-                // Array with first name and name
-                $name = explode(",", $this->categories[0]->title);
+    <script type="text/javascript">
 
-                // Makes link
-                $attribut = THMLibThmGroups::getUrl(array("name", "gsuid", "gsgid"));
-                $itemid = JRequest::getVar('Itemid', 0);
-                $linkTarget = 'index.php?option=com_thm_groups&view=profile&layout=default&' . $attribut . 'Itemid=' . $itemid;
-
-                // HTML output
-                $lintToProfile = '<a href="' . JRoute::_(
-                                            $linkTarget . '&gsuid=' .
-                                            $this->categories[0]->created_user_id .
-                                             '&name=' . $name[0]
-                                         ) .
-                                '">';
-                $lintToProfile .= $this->categories[0]->title . '</a>&nbsp';
-                echo $lintToProfile;
-                ?>
-
-            </b>
-         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">Filters</div>
-            <div class="panel-body">
-                <?php $filters = $this->filterForm->getGroup('filter');
-                foreach ($filters as $fieldName => $field)
-                {
-                    echo '<div class="js-stools-field-filter">';
-                    echo $field->input;
-                    echo '</div>';
-                }
-                ?>
-            </div>
-        </div>
-
-         <div style ="inline:block; float:left; align:text-bottom; margin-left: 10px;">
-            <select name="filter_published"  onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('COM_THM_QUICKPAGES_SELECT_PUBLISHED');?></option>
-                <?php echo JHtml::_(
-                        'select.options',
-                        JHtml::_('jgrid.publishedOptions'),
-                        'value',
-                        'text',
-                        $this->state->get('filter.published'), true
-                        );?>
-            </select>
-        </div>
-        <div class="qp_filter_search">
-            <label class="qp_filter_label" for="filter_search"><?php echo JText::_('COM_THM_QUICKPAGES_FILTER_LABEL'); ?></label>
-            <input type="text" name="filter_search" id="filter_search" value="<?php
-                echo $this->escape($this->state->get('filter.search'));
-            ?>" title="<?php
-            echo JText::_('COM_THM_QUICKPAGES_FILTER_DESC');
-            ?>" />
-
-            <button type="submit" class="qp_button"><?php echo JText::_('COM_THM_QUICKPAGES_FILTER_SUBMIT'); ?></button>
-        </div>
-
-    </fieldset>
-    <button type="button" href="index.php?option=com_thm_groups&view=qp_categories&tmpl=component" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-        Launch demo modal
-    </button>
-    <?php echo $this->getToolbar(); ?>
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>-->
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="qp_clear"> </div>
-
-    <table class="qp_mainlist">
-        <thead>
-            <tr>
-                <th>
-                    <?php echo JHtml::_('grid.sort', 'COM_THM_QUICKPAGES_TITLE', 'a.title', $listDirn, $listOrder); ?>
-                </th>
-                <th width="*">
-                    <?php echo JHtml::_('grid.sort', 'COM_THM_QUICKPAGES_PUBLISHED', 'a.state', $listDirn, $listOrder); ?>
-                </th>
-                <th width="18%">
-                    <?php echo trim(JHtml::_('grid.sort',  'COM_THM_QUICKPAGES_ORDERING', 'a.ordering', $listDirn, $listOrder));
-                    if ($saveOrder)
-                    {
-                        echo JHtml::_('grid.order',  $this->items, 'filesave.png', 'articles.saveorder');
-                    }
-                    ?>
-                </th>
-                <th width="10%">
-                    <?php echo JHtml::_('grid.sort', 'COM_THM_QUICKPAGES_DATE', 'a.created', $listDirn, $listOrder); ?>
-                </th>
-                <th width="10%">
-                    <?php echo JHtml::_('grid.sort', 'COM_THM_QUICKPAGES_HITS', 'a.hits', $listDirn, $listOrder); ?>
-                </th>
-                <th width="15%">
-                    <?php /* echo JHtml::_('grid.sort', 'COM_THM_QUICKPAGES_EDIT', 'a.state', $listDirn, $listOrder); */ ?>
-                    <?php /* echo JHtml::_('grid.sort', 'COM_THM_QUICKPAGES_TRASH', 'a.state', $listDirn, $listOrder); */ ?>
-                    <?php
-                        if ($canCreate AND $currCategoryID != 0)
-                        {
-                            /*$editURL = JRoute::_('index.php?option=com_content&task=article.add&catid='.$currCategoryID.$itemParam.$staticParams);*/
-                            $editURL = JRoute::_('index.php?option=com_content&view=form&layout=edit&catid='
-                                    . $currCategoryID
-                                    . $itemParam
-                                    . $staticParams
-                                    );
-
-                            $imgSpanTag = '<span class="qp_icon_big qp_create_icon"><span class="qp_invisible_text">New</span></span>';
-
-                            echo JHTML::_('link', $editURL, $imgSpanTag, 'title="'
-                                    . JText::_('COM_THM_QUICKPAGES_HTML_CREATE')
-                                    . '" class="qp_icon_link"'
-                                    );
+        jQuery( document ).ajaxSuccess(function( event, xhr, settings ) {
+            if ( settings.url == "<?php echo $saveOrderingUrl;?>" ) {
+                var data_profile = jQuery.parseJSON(xhr.responseText);
+                var ordering = data_profile.data;
+                var profile_table = jQuery('#articles-list > tbody > tr').each(function(){
+                    var id = jQuery(this).attr('id');
+                    var row = this;
+                    jQuery.each(ordering, function(index, profile){
+                        if(profile.id ==id){
+                            jQuery("#position_" + id ).html(profile.order);
                         }
-                        else
-                        {
-                            echo '<span class="qp_icon_big qp_create_icon_disabled"><span class="qp_invisible_text">New</span></span>';
-                        }
+                    });
+                });
 
-                    ?>
-                </th>
-                <th>
-                <?php
-                   echo JText::_('COM_THM_QUICKPAGES_TRASH');
-                ?>
-                </th>
-                <th>
-                    Featured
-                </th>
-            </tr>
-        </thead>
-        <!--
-        <tfoot>
-            <tr>
-                <td colspan="15">
-                    <?php /* echo $this->pagination->getListFooter(); */ ?>
-                </td>
-            </tr>
-        </tfoot>
-        <tbody>
-        -->
-        <?php foreach ($this->items as $i => $item)
-        {
-            $item->max_ordering = 0;
-            $ordering	= ($listOrder == 'a.ordering');
+            }
+        });
 
-            $canEdit	= $this->hasUserRightTo('Edit', $item);
-            $canCheckin	= $this->hasUserRightTo('Checkin', $item);
-            $canChange	= $this->hasUserRightTo('EditState', $item);
-            $canDelete	= $this->hasUserRightTo('Delete', $item);
-        ?>
-            <tr class="row<?php echo $i % 2; ?>">
-                <td>
-                    <span class="qp_invisible_text"><?php echo JHtml::_('grid.id', $i, $item->id); ?></span>
-                    <?php
-                        if ($item->state > 0)
-                        {
-                            echo JHTML::_('link', THMLibThmQuickpages::getQuickpageRoute($item, $staticParams), $this->escape($item->title));
-                        }
-                        else
-                        {
-                            echo $this->escape($item->title);
-                        }
-                    ?>
-                </td>
-                <td class="center">
-                    <?php
-                        echo JHtml::_('jgrid.published', $item->state, $i, 'articles.', $canChange, 'cb', $item->publish_up, $item->publish_down);
-                    ?>
-                </td>
-                <td class="order">
-                    <?php if ($canChange)
-                          {
-                              if ($saveOrder)
-                              {
-                                  if ($listDirn == 'asc')
-                                  {
-                              ?>
-                                <span>
-                                <?php
-                                    echo $this->pagination->orderUpIcon(
-                                            $i,
-                                            ($item->catid == @$this->items[$i - 1]->catid),
-                                            'articles.orderup',
-                                            'JLIB_HTML_MOVE_UP',
-                                            $ordering
-                                            );
-                                ?>
-                                </span>
-                                <span>
-                                <?php
-                                    echo $this->pagination->orderDownIcon(
-                                            $i,
-                                            $this->pagination->total,
-                                            ($item->catid == @$this->items[$i + 1]->catid),
-                                            'articles.orderdown',
-                                            'JLIB_HTML_MOVE_DOWN',
-                                            $ordering
-                                            );
-                                ?>
-                                </span>
-                            <?php
-                                  }
-                                elseif ($listDirn == 'desc')
-                                {
-                            ?>
-                                <span>
-                                <?php
-                                    echo $this->pagination->orderUpIcon(
-                                            $i,
-                                            ($item->catid == @$this->items[$i - 1]->catid),
-                                            'articles.orderdown',
-                                            'JLIB_HTML_MOVE_UP',
-                                            $ordering
-                                            );
-                                ?>
-                                </span>
-                                <span>
-                                <?php
-                                    echo $this->pagination->orderDownIcon(
-                                            $i,
-                                            $this->pagination->total,
-                                            ($item->catid == @$this->items[$i + 1]->catid),
-                                            'articles.orderup',
-                                            'JLIB_HTML_MOVE_DOWN',
-                                            $ordering
-                                            );
-                                ?>
-                                </span>
-                            <?php
-                                }
-                            ?>
-                        <?php
-                              }
-                        ?>
-                        <?php $disabled = $saveOrder ?  '' : 'disabled="disabled"'; ?>
-                        <input type="text" name="order[]" size="5" value="<?php echo $item->ordering;?>" <?php
-                        echo $disabled ?> class="text-area-order" />
-                    <?php
-}
-                          else
-                          {
-                            echo $item->ordering;
-                          }
-                    ?>
-                </td>
-                <td class="center nowrap">
-                    <?php echo JHTML::_('date', $item->created, JText::_('DATE_FORMAT_LC4')); ?>
-                </td>
-                <td class="center">
-                    <?php echo (int) $item->hits; ?>
-                </td>
-                <td class="center">
-                    <?php
-                        // Output checkin icon
-                        if ($item->checked_out)
-                        {
-                            echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'articles.', $canCheckin);
-                        }
-                        else
-                        {
-                        }
+    </script>
 
-                        // Output edit icon
-                        if ($canEdit)
-                        {
-                            $editURL = JRoute::_('index.php?option=com_content&task=article.edit&a_id=' . $item->id . $itemParam . $staticParams);
-                            /* $editURL = JRoute::_('index.php?option=com_content&view=form&layout=edit&a_id='.$item->id.$itemParam.$staticParams); */
-                            $imgSpanTag = '<span class="state edit" style=""><span class="text">Edit</span></span>';
-
-                            echo JHTML::_('link', $editURL, $imgSpanTag, 'title="'
-                                    . JText::_('COM_THM_QUICKPAGES_HTML_EDIT_ITEM')
-                                    . '" class="jgrid"'
-                                    );
-                            echo "\n";
-                        }
-                        else
-                        {
-                            echo '<span class="jgrid"><span class="state edit_disabled"><span class="text">Edit</span></span></span>';
-                        }
-                    ?>
-                </td>
-                <td class="center">
-                <?php
-                // Output trash icon
-                if ($item->state >= 0)
-                {
-                    // Define state changes needed by JHtmlJGrid.state(), see also JHtmlJGrid.published()
-                    $states	= array(
-                            0	=> array(),		// Dummy: Wird nicht gebraucht, erzeugt aber sonst Notice
-                            3	=> array(
-                                    'trash',
-                                    'JPUBLISHED',
-                                    'COM_THM_QUICKPAGES_HTML_TRASH_ITEM',
-                                    'JPUBLISHED',
-                                    false,
-                                    'trash',
-                                    'trash_disabled'
-                            ),
-                            -3	=> array(
-                                    'publish',
-                                    'JTRASHED',
-                                    'COM_THM_QUICKPAGES_HTML_UNTRASH_ITEM',
-                                    'JTRASHED',
-                                    false,
-                                    'untrash',
-                                    'untrash'
-                            ),
-                    );
-                    $button = JHtml::_('jgrid.state', $states, ($item->state < 0 ? -3 : 3), $i, 'articles.', $canDelete);
-                    $button = str_replace(
-                            "onclick=\"", "onclick=\"if (confirm('" . JText::_('COM_THM_GROUPS_REALLY_DELETE') . "')) ", $button
-                    );
-                    echo $button;
-                }
-                ?>
-                </td>
-                <td class="center">
-                <?php
-
-                            $featureURL = JRoute::_('index.php?option=com_thm_groups&task=articles.featureArticle&a_id=' . $item->id);
-
-                            if ($helperObject::isArticleFeatured($item->id) == null)
-                            {
-                                $imgSpanTag = '<span class="state unpublish"><span class="text">'
-                                     . JText::_('COM_THM_GROUPS_UNFEATURE') . '</span></span>';
-                            }
-                            else
-                            {
-                                $imgSpanTag = '<span class="state publish"><span class="text">'
-                                    . JText::_('COM_THM_GROUPS_FEATURE') . '</span></span>';
-                            }
-
-                            echo JHTML::_('link', $featureURL, $imgSpanTag, 'title="'
-                                    . JText::_('(Un)Feature')
-                                    . '" class="jgrid"'
-                                    );
-                            echo "\n";
-                 ?>
-                </td>
-            </tr>
 <?php
-}
-?>
-        </tbody>
-    </table>
+class ArticlesTemplate extends THM_CoreTemplateList
+{
+    /**
+     * Method to create a list output
+     *
+     * @param   object  &$view  the view context calling the function
+     *
+     * @return void
+     */
+    public static function render(&$view)
+    {
+        if (!empty($view->sidebar))
+        {
+            echo '<div id="j-sidebar-container" class="span2">' . $view->sidebar . '</div>';
+        }
+        $data = array('view' => $view, 'options' => array());
+        $filters = $view->filterForm->getGroup('filter');
+        $itemId = JFactory::getApplication()->input->get->get('Itemid', 0, 'INT');
+        $url = "index.php?option=com_thm_groups&view=articles&Itemid=$itemId";
+        ?>
 
-    <div>
-        <input type="hidden" name="task" value="" />
-        <input type="hidden" name="boxchecked" value="0" />
-        <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
-        <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
-        <?php echo JHtml::_('form.token'); ?>
-    </div>
-</form>
+        <div id="j-main-container" class="span10">
+            <form action="<?php echo $url?>" id="adminForm"  method="post"
+                  name="adminForm" xmlns="http://www.w3.org/1999/html">
+                <div class="searchArea">
+                    <div class="js-stools clearfix">
+                        <div class="clearfix">
+                            <div class="js-stools-container-bar">
+                                <?php
+                                    self::renderSearch($filters);
+                                    echo $view->newButton;
+                                    echo $view->getToolbar();
+                                ?>
+                            </div>
+                            <div class="js-stools-container-list hidden-phone hidden-tablet">
+                                <?php echo JLayoutHelper::render('joomla.searchtools.default.list', $data); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-striped" id="<?php echo $view->get('name'); ?>-list">
+                    <?php
+                    echo '<thead>';
+                    self::renderHeader($view->headers);
+                    self::renderHeaderFilters($view->headers, $filters);
+                    echo '</thead>';
+                    self::renderBody($view->items);
+                    self::renderFooter($view);
+                    ?>
+                </table>
+                <input type="hidden" name="task" value="" />
+                <input type="hidden" name="boxchecked" value="0" />
+                <input type="hidden" name="option" value="<?php echo JFactory::getApplication()->input->get('option'); ?>" />
+                <input type="hidden" name="view" value="<?php echo $view->get('name'); ?>" />
+                <?php echo JHtml::_('form.token');?>
+            </form>
+        </div>
+    <?php
+    }
+
+    /**
+     * Renders the table head
+     *
+     * @param   array  &$items  an array containing the table headers
+     *
+     * @return  void
+     */
+    protected static function renderBody(&$items)
+    {
+        if (empty($items))
+        {
+           return false;
+        }
+        if (!empty($items['attributes']) AND is_array($items['attributes']))
+        {
+            $bodyAttributes = '';
+            foreach ($items['attributes'] AS $bodyAttribute => $bodyAttributeValue)
+            {
+                $bodyAttributes .= $bodyAttribute . '="' . $bodyAttributeValue . '" ';
+            }
+            echo "<tbody $bodyAttributes>";
+        }
+        else
+        {
+            echo '<tbody>';
+        }
+
+        $iteration = 0;
+        foreach ($items as $index => $row)
+        {
+            if ($index === 'attributes')
+            {
+                continue;
+            }
+            self::renderRow($row, $iteration);
+        }
+        echo '</thead>';
+    }
+}
+
+ArticlesTemplate::render($this);
+?>

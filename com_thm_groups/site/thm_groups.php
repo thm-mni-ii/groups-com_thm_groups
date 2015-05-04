@@ -21,7 +21,7 @@ $input = JFactory::getApplication()->input;
 $task = $input->getCmd('task');
 $contr = $input->getCmd('controller');
 
-if ($view == "articles_test")
+if ($view == "articles")
 {
     jimport('thm_groups.data.lib_thm_groups_quickpages');
 

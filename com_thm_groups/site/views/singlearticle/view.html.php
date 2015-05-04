@@ -23,7 +23,7 @@ require_once JPATH_COMPONENT . '/../com_content/models/article.php';
 
 jimport('joomla.application.component.helper');
 /**
- * View class for a list of articles.
+ * View class for a list of articles_old.
  *
  * @category  Joomla.Component.Site
  * @package   thm_groups
@@ -67,7 +67,7 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
         $old_option = $input->get('back_option', 'com_thm_groups', 'STRING');
 
         //$old_view   = JRequest::getVar('back_view', 0);
-        $old_view   =$input->get('back_view', 'articles', 'STRING');
+        $old_view   =$input->get('back_view', 'articles_old', 'STRING');
 
         //$old_layout = JRequest::getVar('back_layout', 0);
         $old_layout = $input->get('back_layout', '', 'STRING');
