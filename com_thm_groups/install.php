@@ -47,6 +47,7 @@ class THM_Groups_Install_Script
             return true;
         }
 
+
         JFactory::getApplication()->enqueueMessage('install', 'error');
         return false;
     }

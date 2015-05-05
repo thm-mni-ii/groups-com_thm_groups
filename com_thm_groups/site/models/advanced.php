@@ -150,35 +150,20 @@ class THM_GroupsModelAdvanced extends JModelLegacy
     }
 
     /**
-     * Qery, if actual user can edit the group member attributes
-     *
-     * @return  integer  if can edit return 1, else 0
+     * Method to check if user can edit
+     * @param Integer  $groupid  Group Id
+     * @return database object
      */
-    public function canEdit()
+    public function canEdit($groupid)
     {
-        $canEdit = 0;
         $groupid = $this->getGroupNumber();
-        $user    = JFactory::getUser();
-        $query   = $this->db->getQuery(true);
-
-        $query->select('rolesID as rid');
-        $query->from('#__thm_groups_usergroups_roles AS groups');
-        $query->leftJoin('#__thm_groups_users_usergroups_roles AS users ON users.usergroups_rolesID = groups.id');
-        $query->where('users.usersID = ' . $this->db->quote($user->id));
-        $query->where("groups.usergroupsID =" . $this->db->quote($groupid), 'AND');
-
-        $this->db->setQuery($query);
-        $userRoles = $this->db->loadObjectList();
-        foreach ($userRoles as $userRole)
-        {
-            if ($userRole->rid == 2)
-            {
-                $canEdit = 1;
-            }
-        }
-        return $canEdit;
+        $user = JFactory::getUser();
+        if($user->authorise('core.admin', 'com_thm_groups'))
+            return true;
+        if(THMLibThmGroupsUser::getModerator($groupid))
+            return true;
+        return false;
     }
-
     /**
      * Get all attribute types
      *
@@ -213,15 +198,7 @@ class THM_GroupsModelAdvanced extends JModelLegacy
         $params            = $this->getViewParams();
 
         $sortedRoles       = $params->get('roleid');
-        $types             = $this->getTypes();
-        $puffer            = array();
-        $result            = array();
-        $usedUser          = array();
-        $showStructure     = array();
-        $paramStructSelect = $params->get('struct');
         $data             = array();
-        $sortedMember		= array();
-
         if ($sortedRoles == "")
         {
             $arrSortedRoles = $this->getUnsortedRoles($groupid);

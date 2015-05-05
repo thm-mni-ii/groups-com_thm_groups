@@ -287,39 +287,6 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
         $this->item = JFactory::getApplication()->input->get('gsuid');
         $this->is_mod = $this->get('Moderator');
 
-        // old parts: ------------------------------------------------------
-       /** $pathway = JFactory::getApplication()->getPathway();
-        $name = JRequest::getVar('name', 0) . ', ';
-        $firstname = "";
-
-        $link = 'index.php?';
-        $params = 'option=' . JRequest::getVar('option_back', 0)
-            . '&view=' . JRequest::getVar('view_back', 0)
-            . '&layout=' . JRequest::getVar('layout_back', 0)
-            . '&gsuid=' . $this->item
-            . '&gsgid=' . JRequest::getVar('gsgid', 0)
-            . '&name=' . JRequest::getVar('name', 0);
-
-        $uri = JURI::getInstance($link . $params);
-
-        $pathway->addItem($name . $firstname, $uri->toString());
-        $pathway->addItem(JText::_("COM_THM_GROUPS_EDIT_BREADCRUMB"), '');
-
-        /* ZURÜCK BUTTON */
-       /** $option_back = JRequest::getVar('option_back');
-        $layout_back = JRequest::getVar('layout_back');
-        $view_back = JRequest::getVar('view_back');
-
-        $this->assignRef('option_back', $option_back);
-        $this->assignRef('layout_back', $layout_back);
-        $this->assignRef('view_back', $view_back);
-        //$this->assignRef('items', $items);
-        //$this->assignRef('is_mod', $is_mod);
-        $this->assignRef('userid', $this->item);
-        //$this->assignRef('structure', $structure);
-        //$this->assignRef('gsgid', $gsgid);
-        $this->assignRef('backRef', $params);*/
-        // end old parts.  ---------------------------------------------------
 
         $componentDir = "/administrator/components/com_thm_groups";
 

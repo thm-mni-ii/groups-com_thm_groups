@@ -12,12 +12,16 @@
  * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
+ * @author      Dieudonne Timma,      <dieudonne.timma.meyatchie@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
 defined('_JEXEC') or die();
 jimport('joomla.application.component.modelform');
+Jimport('thm_groups.data.lib_thm_group_user');
+Jimport('thm_groups.data.lib_thm_group');
+
 
 /**
  * THMGroupsModelProfile class for component com_thm_groups
@@ -66,34 +70,21 @@ class THM_GroupsModelProfile extends JModelForm
 
     /**
      * Method to check if user can edit
-     *
+     * @param Integer  $groupid  Group Id
      * @return database object
      */
-    public function canEdit()
+    public function canEdit($groupid)
     {
-        $canEdit = 0;
         $groupid = $this->getGroupNumber();
         $user = JFactory::getUser();
-        /*
-         $query = "SELECT rid FROM #__thm_groups_groups_map " . "WHERE uid = $user->id AND gid = $groupid";
-        */
-        $query = $this->db->getQuery(true);
-        $query->select('rid');
-        $query->from($this->db->qn('#__thm_groups_groups_map'));
-        $query->where('uid = ' . $this->db->quote($user->id));
-        $query->where('gid = ' . $this->db->quote($groupid));
-
-        $this->db->setQuery($query);
-        $userRoles = $this->db->loadObjectList();
-        foreach ($userRoles as $userRole)
-        {
-            if ($userRole->rid == 2)
-            {
-                $canEdit = 1;
-            }
-        }
-        return $canEdit;
+        if($user->authorise('core.admin', 'com_thm_groups'))
+            return true;
+        if($this->getModerator($groupid))
+            return true;
+        return false;
     }
+
+
 
     /**
      * Method to get data
@@ -102,36 +93,11 @@ class THM_GroupsModelProfile extends JModelForm
      */
     public function getData()
     {
-        $cid = JRequest::getVar('gsuid', '');
-        $types = $this->getTypes();
-        $db = JFactory::getDBO();
-        $puffer = array();
-        $result = array();
+        $userid = JFactory::$application->input->get('gsuid');
+        $groupid = $this->getGroupNumber();
+        $profilid = THMLibThmGroups::getGroupsProfile($groupid);
+        $result = THMLibThmGroupsUser::getAllUserProfilData($userid,$profilid);
 
-        foreach ($types as $type)
-        {
-            /*
-             $query = "SELECT structid, value, publish FROM #__thm_groups_" . strtolower($type->Type) . " as a where a.userid = " . $cid;
-            */
-            $query = $db->getQuery(true);
-            $query->select('*');
-            $query->from($db->qn('#__thm_groups_' . strtolower($type->Type)) . ' AS a');
-            $query->where('a.userid = ' . $this->db->quote($cid));
-
-            $db->setQuery($query);
-            if (!is_null($db->loadObjectList()))
-            {
-                array_push($puffer, $db->loadObjectList());
-            }
-        }
-
-        foreach ($puffer as $type)
-        {
-            foreach ($type as $row)
-            {
-                array_push($result, $row);
-            }
-        }
         return $result;
     }
 
@@ -142,15 +108,8 @@ class THM_GroupsModelProfile extends JModelForm
      */
     public function getStructure()
     {
-        $db = JFactory::getDBO();
-        $query = $db->getQuery(true);
 
-        $query->select('*');
-        $query->from('#__thm_groups_structure AS a');
-        $query->order('a.order');
-
-        $db->setQuery($query);
-        return $db->loadObjectList();
+        return THMLibThmGroupsUser::getAllAttributes();
     }
 
     /**
@@ -160,22 +119,8 @@ class THM_GroupsModelProfile extends JModelForm
      */
     public function getTypes()
     {
-        $db = JFactory::getDBO();
-        /*
-         $query = "SELECT Type FROM #__thm_groups_relationtable " . "WHERE Type in (SELECT type FROM #__thm_groups_structure)";
-        */
-        $nestedQuery = $db->getQuery(true);
-        $query = $db->getQuery(true);
 
-        $nestedQuery->select('type');
-        $nestedQuery->from($db->qn('#__thm_groups_structure'));
-
-        $query->select('Type');
-        $query->from($db->qn('#__thm_groups_relationtable'));
-        $query->where('Type in (' . $nestedQuery . ')');
-
-        $db->setQuery($query);
-        return $db->loadObjectList();
+        return THMLibThmGroupsUser::getTypes();
     }
 
     /**
@@ -187,18 +132,10 @@ class THM_GroupsModelProfile extends JModelForm
      * @access	public
      * @return	String	True on success
      */
-    public function getExtra($structid, $type)
+    public function getExtra($structid)
     {
-        $db = JFactory::getDBO();
-        /*
-         $query = "SELECT value FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
-        */
-        $query = $db->getQuery(true);
-        $query->select('*');
-        $query->from($db->qn('#__thm_groups_' . strtolower($type) . '_extra'));
-        $query->where('structid = ' . $this->db->quote($structid));
-        $db->setQuery($query);
-        $res = $db->loadObject();
+
+        $res = THMLibThmGroupsUser::getExtra($structid);
         if (isset($res))
         {
             return $res->value;
@@ -216,22 +153,24 @@ class THM_GroupsModelProfile extends JModelForm
      *
      * @access	public
      * @return	null / value
+     * @depracated
      */
     public function getPicPath($structid)
     {
-        $db = JFactory::getDBO();
-        /*
-            $query = "SELECT value FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
-        */
-        $query = $db->getQuery(true);
-        $query->select('*');
-        $query->from($db->qn('#__thm_groups_picture_extra'));
-        $query->where('structid = ' . $this->db->quote($structid));
-        $db->setQuery($query);
-        $res = $db->loadObject();
-        if (isset($res->path))
+
+        $res = THMLibThmGroupsUser::getPicPath($structid);
+        if (isset($res->options)) {
+            $pictureOption = json_decode($res->options);
+        }
+        else {
+            $pictureOption = json_decode($res->dynOptions);
+        }
+        $tempposition   = explode('images/', $pictureOption->path,2);
+        $picpath = 'images/' . $tempposition[1];
+
+        if (isset($picpath))
         {
-            return $res->path;
+            return $picpath;
         }
         else
         {
@@ -247,7 +186,7 @@ class THM_GroupsModelProfile extends JModelForm
      */
     public function getGroupNumber()
     {
-        $gsgid = JRequest::getVar('gsgid', 1);
+        $gsgid = JFactory::getApplication()->input->get('gsgid', 1);
         return $gsgid;
     }
 
@@ -257,32 +196,24 @@ class THM_GroupsModelProfile extends JModelForm
      * @access	public
      * @return	boolean	True on success
      */
-    public function getModerator()
+    public function getModerator($gid)
     {
         $user = JFactory::getUser();
         $id  = $user->id;
-        $gid = $this->getGroupNumber();
         $db = JFactory::getDBO();
-        /*
-         $query = "SELECT rid FROM `#__thm_groups_groups_map` where uid=$id AND gid=$gid";
-        */
-        $query = $db->getQuery(true);
-        $query->select('rid');
-        $query->from($db->qn('#__thm_groups_groups_map'));
-        $query->where('uid = ' . $this->db->quote($id));
-        $query->where('gid = ' . $this->db->quote($gid));
-        $db->setQuery($query);
-        $roles			  = $db->loadObjectList();
-        $this->_isModerator = false;
-        foreach ($roles as $role)
-        {
-            if ($role->rid == 2)
-            {
-                $this->_isModerator = true;
-            }
-        }
 
-        return $this->_isModerator;
+        $query = $db->getQuery(true);
+        $query->select('id');
+        $query->from($db->qn('#__thm_groups_users_usergroups_moderator'));
+        $query->where('usersID = ' . $this->db->quote($id));
+        $query->where('usergroupsID = ' . $this->db->quote($gid));
+        $db->setQuery($query);
+        $modid	= $db->loadObject();
+
+        if(isset($modid))
+            return true;
+
+        return false;
     }
 
     /**
@@ -293,9 +224,10 @@ class THM_GroupsModelProfile extends JModelForm
      */
     public function getLink()
     {
-        $itemid			   = $itemid = JRequest::getVar('Itemid', 0);
-        $id				   = JRequest::getVar('id', 0);
-        $userInfo['lastName'] = JRequest::getVar('lastName', 0);
+        $app = JFactory::$application->input;
+        $itemid = $app->get('Itemid', 0);
+        $id	= $app->get('id', 0);
+        $userInfo['lastName'] = $app->get('lastName', 0);
         $letter			   = strtoupper(substr($userInfo['lastName'], 0, 1));
         $db = JFactory::getDBO();
         /*
@@ -321,23 +253,15 @@ class THM_GroupsModelProfile extends JModelForm
      */
     public  function getDefaultPic($structid)
     {
-        $db = JFactory::getDBO();
-        /*
-         $query = "SELECT path FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
-        */
-        $query = $db->getQuery(true);
-        $query->select('value');
-        $query->from("#__thm_groups_picture_extra");
-        $query->where("`structid` = '" . $this->db->quote($structid) . "'");
-        $db->setQuery($query);
-        $res = $db->loadObject();
-        if (isset($res->value))
-        {
-            return $res->value;
+        $elem = THMLibThmGroupsUser::getExtra($structid);
+        $options = json_decode($elem->options);
+        $dynOptions = json_decode($elem->dynOptions);
+        if(isset($options)){
+            return $options->filename;
         }
-        else
-        {
-            return "";
+        else{
+            return $dynOptions->filename;
         }
+
     }
 }

@@ -15,6 +15,7 @@
  * @author      Tobias Schmitt, <tobias.schmitt@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @author      Dieudonne Timma, <dieudonne.timma.meyatchie@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -29,16 +30,14 @@ $user = JFactory::getUser();
 $componentparams = JComponentHelper::getParams('com_thm_groups');
 
 $backLink = $this->backRef;
-$canEdit = (($user->id == $this->userid && $componentparams->getValue('editownprofile', '0') == 1) || $this->canEdit);
-
+$canEdit = (($user->id == $this->userid && $componentparams->get('editownprofile', 0) == 1 ) || $this->canEdit);
 $model = new THMLibThmGroupsUser;
 
 // Get user information
-$userInfoAsObject = $model::getUserInfo($this->userid);
-$userInfoArray = $userInfoAsObject->profilInfos;
+$userInfoArray =  $this->model->getData();
 $backAttribute = $this->backAttribute;
 
-$html = buildHtmlOutput($this->userid, $userInfoArray, $backLink, $backAttribute);
+$html = buildHtmlOutput($this->userid, $userInfoArray, $backLink, $backAttribute,$canEdit);
 
 // Get css
 $mycss = getProfilCss();
@@ -64,7 +63,7 @@ echo $html;
  *
  * @return information about user
  */
-function buildHtmlOutput($userid, $userData, $backLink, $backAttribute)
+function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
 {
     // Class for title, first name, name, post title and portrait image
     $head = '<div class="thm_groups_contentheading">';
@@ -76,6 +75,7 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute)
     $result = '';
 
     $firstPic = true;
+    $componentparams = JComponentHelper::getParams('com_thm_groups');
 
     // For edit url
     $attribut = THMLibThmGroupsUser::getUrl(array("name", "gsuid", "gsgid"));
@@ -88,20 +88,14 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute)
 
     if ($userid)
     {
-        $struct = array();
 
-        // Save structure names
-        foreach (THMLibThmGroupsUser::getStructure() as $structItem)
-        {
-            $struct[$structItem->id] = $structItem->field;
-        }
 
         // Edit icon
-        if ($userid == JFactory::getUser()->id && THMLibThmGroupsUser::canEdit() == true)
+        if (($userid == JFactory::getUser()->id && $componentparams->get('editownprofile', 0) == 1) || $canEdit == true)
         {
             $head .= '<div class="thm_groups_content_profile_edit">';
 
-            $head .= "<a href='" . JRoute::_('index.php?option=com_thm_groups&view=edit&layout=default&' . $attribut . '&gsuid=' . $userid
+            $head .= "<a href='" . JRoute::_('index.php?option=com_thm_groups&view=user_edit&layout=default&' . $attribut . '&gsuid=' . $userid
                     . '&name=' . trim($lastName) . '&gsgid=4' ) . "'>"
                     . JHTML::image("libraries/thm_groups/assets/icons/edit.png", 'bearbeiten', 'bearbeiten') . "</a>";
             $head .= '</div>';
@@ -119,39 +113,39 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute)
                 {
                     // Vorname
                     case "1" :
-                        $head .= '<span class="head_text" id="' . $struct[$data->structid] . '">';
+                        $head .= '<span class="head_text" id="' . $data->name . '">';
                         $head .= $data->value . '&nbsp;';
                         $head .= '</span>';
                         break;
 
                     // Nachname
                     case "2" :
-                        $head .= '<span class="head_text" id="' . $struct[$data->structid] . '">';
+                        $head .= '<span class="head_text" id="' . $data->name . '">';
                         $head .= $data->value . '&nbsp;';
                         $head .= '</span>';
                         break;
 
                     // Titel
                     case "5" :
-                        $head .= '<span class="head_text" id="' . $struct[$data->structid] . '">';
+                        $head .= '<span class="head_text" id="' . $data->name . '">';
                         $head .= $data->value . '&nbsp;';
                         $head .= '</span>';
                         break;
 
                     // Posttitel
-                    case "7" :
-                        $head .= '<span class="head_text" id="' . $struct[$data->structid] . '">';
+                    case "6" :
+                        $head .= '<span class="head_text" id="' . $data->name . '">';
                         $head .= $data->value . '&nbsp;';
                         $head .= '</span>';
                         break;
 
                     // EMail
                     case "4" :
-                        $body .= '<div class="field_container" id="' . $struct[$data->structid] . '_field">';
-                        $body .= '<div class="label" id="' . $struct[$data->structid] . '_label">';
-                        $body .= $struct[$data->structid] . ':';
+                        $body .= '<div class="field_container" id="' . $data->name . '_field">';
+                        $body .= '<div class="label" id="' . $data->name . '_label">';
+                        $body .= $data->name . ':';
                         $body .= '</div>';
-                        $body .= '<div class="value" id="' . $struct[$data->structid] . '_value">';
+                        $body .= '<div class="value" id="' . $data->name . '_value">';
                         $body .= JHTML::_('email.cloak', $data->value, 1, $data->value, 0);
                         $body .= '</div>';
                         $body .= '</div>';
@@ -162,11 +156,11 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute)
                             case "LINK" :
                                 if ($data->type == 'LINK' && trim($data->value) != "")
                                 {
-                                    $body .= '<div class="field_container" id="' . $struct[$data->structid] . '_field">';
-                                    $body .= '<div class="label" id="' . $struct[$data->structid] . '_label">';
-                                    $body .= $struct[$data->structid] . ':';
+                                    $body .= '<div class="field_container" id="' . $data->name . '_field">';
+                                    $body .= '<div class="label" id="' . $data->name . '_label">';
+                                    $body .= $data->name . ':';
                                     $body .= '</div>';
-                                    $body .= '<div class="value" id="' . $struct[$data->structid] . '_value">';
+                                    $body .= '<div class="value" id="' . $data->name . '_value">';
                                     $body .= "<a href='" . htmlspecialchars_decode($data->value) . "'>"
                                              . htmlspecialchars_decode($data->value) . "</a>";
                                     $body .= '</div>';
@@ -177,12 +171,12 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute)
                             case "PICTURE" :
                                 $attribs['class'] = 'picture';
                                 $attribs['id'] = 'pic_' . $data->structid;
-                                $path = THMLibthmGroupsUser::getPicPath($data->structid);
+                                $path = THMLibthmGroupsUser::getPicPathValue($data->structid);
 
                                 // The first structure of the type image will be a portrait picture
                                 if ($firstPic)
                                 {
-                                    $image = JHTML::image("$path" . '/' . $data->value, 'Portrait', $attribs);
+                                    $image = JHTML::image($path . '/' . $data->value, 'Portrait', $attribs);
                                     $head .= $image;
                                     $firstPic = false;
 
@@ -191,11 +185,11 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute)
                                 // All other pictures
                                 else
                                 {
-                                    $body .= '<div class="field_container" id="' . $struct[$data->structid] . '_field">';
-                                    $body .= '<div class="label" id="' . $struct[$data->structid] . '_label">';
-                                    $body .= $struct[$data->structid] . ':';
+                                    $body .= '<div class="field_container" id="' . $data->name . '_field">';
+                                    $body .= '<div class="label" id="' . $data->name . '_label">';
+                                    $body .= $data->name . ':';
                                     $body .= '</div>';
-                                    $body .= '<div class="value" id="' . $struct[$data->structid] . '_value">';
+                                    $body .= '<div class="value" id="' . $data->name . '_value">';
                                     $image = JHTML::image("$path" . '/' . $data->value, 'Image', $attribs);
                                     $body .= $image;
                                     $body .= '</div>';
@@ -205,22 +199,22 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute)
                                 break;
 
                             case "TABLE" :
-                                $body .= '<div class="field_container" id="' . $struct[$data->structid] . '_field">';
-                                $body .= '<div class="label" id="' . $struct[$data->structid] . '_label">';
-                                $body .= $struct[$data->structid] . ':';
+                                $body .= '<div class="field_container" id="' . $data->name . '_field">';
+                                $body .= '<div class="label" id="' . $data->name . '_label">';
+                                $body .= $data->name . ':';
                                 $body .= '</div>';
-                                $body .= '<div class="table" id="' . $struct[$data->structid] . '_value">';
+                                $body .= '<div class="table" id="' . $data->name . '_value">';
                                 $body .= getTable($data);
                                 $body .= '</div>';
                                 $body .= '</div>';
                                 break;
 
                             default :
-                                $body .= '<div class="field_container" id="' . $struct[$data->structid] . '_field">';
-                                $body .= '<div class="label" id="' . $struct[$data->structid] . '_label">';
-                                $body .= $struct[$data->structid] . ':';
+                                $body .= '<div class="field_container" id="' . $data->name . '_field">';
+                                $body .= '<div class="label" id="' . $data->name . '_label">';
+                                $body .= $data->name . ':';
                                 $body .= '</div>';
-                                $body .= '<div class="value" id="' . $struct[$data->structid] . '_value">';
+                                $body .= '<div class="value" id="' . $data->name . '_value">';
                                 $body .= nl2br(htmlspecialchars_decode($data->value));
                                 $body .= '</div>';
                                 $body .= '</div>';
@@ -269,11 +263,7 @@ function getTable($data)
 {
 
     // Get header of table from DB
-    $dbo = JFactory::getDbo();
-    $query = $dbo->getQuery(true);
-    $query->select('value')->from('#__thm_groups_table_extra')->where('structid =' . $dbo->q($data->structid));
-    $dbo->setQuery($query);
-    $result = $dbo->loadRow();
+    $result = json_decode($data->options);
 
     $jsonTable = json_decode($data->value);
 

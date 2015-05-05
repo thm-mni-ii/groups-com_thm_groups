@@ -22,6 +22,7 @@ $user = JFactory::getUser();
 $session = JFactory::getSession();
 // old TODO this variablen müssen noch angepasst werden, Welche id hat Moderator?????:
 // (!( (int) $user->id > 0)) || (empty($this->userid)) || $user->id != $this->item && !$this->is_mod
+
 if (!( $user->id > 0) || (empty($this->item)) || $user->id != $this->item)
 {
     //var_dump($user, $this->is_mod, $this->item, $user->authorise('com.edit.own', 'com_content'));

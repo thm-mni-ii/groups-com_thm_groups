@@ -60,6 +60,7 @@ class THM_GroupsViewProfile extends JViewLegacy
      * @param   Int  $aid  content the Artikel ID
      *
      * @return String $result  content the artikel name
+     * @deprecated
      */
     public function getArtikelname($aid)
     {
@@ -69,7 +70,7 @@ class THM_GroupsViewProfile extends JViewLegacy
         $query = $db->getQuery(true);
         $query->select("title")->from("#__content")->where("id =" . $tempaid);
         $db->setQuery($query);
-        $db->query();
+        $db->execute();
 
         $artikel = $db->loadObject();
 
@@ -111,20 +112,20 @@ class THM_GroupsViewProfile extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        $app	 = JFactory::getApplication();
-
-        $pathway = $app->getPathway();
+        $app	 = JFactory::getApplication()->input;
+        $mainfarme = JFactory::getApplication();
+        $pathway = $mainfarme->getPathway();
         $pathwayitems = $pathway->getPathWay();
         $document = JFactory::getDocument();
         $document->addStyleSheet("administrator/components/com_thm_groups/css/membermanager/icon.css");
 
-        $cid = JRequest::getVar('gsuid', 0);
+        $cid = $app->get('gsuid', 0);
 
         $model     = $this->getModel();
         $items     = $this->get('Data');
         $structure = $this->get('Structure');
-        $gsgid     = JRequest::getVar('gsgid');
-        $gsuid     = JRequest::getVar('gsuid');
+        $gsgid     = $app->get('gsgid');
+        $gsuid     = $app->get('gsuid');
 
         $var = array();
         if (isset($_GET))
@@ -166,11 +167,11 @@ class THM_GroupsViewProfile extends JViewLegacy
         if (isset($attribut))
         {
             $this->links = JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid;
-            $old_option = JRequest::getVar("option_back");
+            $old_option = $app->get("option_back");
             switch ($old_option)
             {
                 case "com_content":
-                    $artikleId = JRequest::getVar("id_back");
+                    $artikleId = $app->get("id_back");
                     $artikelname = (JFactory::getConfig()->getValue('config.sef') == 1)? $this->getArtikelname($artikleId) : explode(":", $artikleId);
                     if (isset($artikelname))
                     {
@@ -184,7 +185,7 @@ class THM_GroupsViewProfile extends JViewLegacy
                     break;
 
                 case "com_thm_groups":
-                    $layout = JRequest::getVar("layout_back");
+                    $layout = $app->get("layout_back");
                     if ($layout == 'singlearticle')
                     {
                         $pathway->addItem(JFactory::getDocument()->get('title'), JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
@@ -224,16 +225,17 @@ class THM_GroupsViewProfile extends JViewLegacy
             $this->form->bind($textField);
         }
 
-        $this->assignRef('backAttribute', $attribut);
-        $itemid = JRequest::getVar('Itemid', 0);
-        $this->assignRef('backRef', $backRef);
-        $this->assignRef('items', $items);
-        $this->assignRef('itemid', $itemid);
-        $canedit = $model->canEdit();
-        $this->assignRef('canEdit', $canedit);
-        $this->assignRef('userid', $cid);
-        $this->assignRef('structure', $structure);
-        $this->assignRef('gsgid', $gsgid);
+        $this->backAttribute = $attribut;
+        $itemid = $app->get('Itemid', 0);
+        $this->backRef = $backRef;
+        $this->items = $items;
+        $this->itemid = $itemid;
+        $canedit = $model->canEdit($gsgid);
+        $this->canEdit =  $canedit;
+        $this->userid = $cid;
+        $this->structure = $structure;
+        $this->gsgid =$gsgid;
+        $this->model = $this->getModel("profile");
         parent::display($tpl);
     }
 
