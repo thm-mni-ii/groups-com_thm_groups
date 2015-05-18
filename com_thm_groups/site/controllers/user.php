@@ -147,19 +147,28 @@ class THM_GroupsControllerUser extends JControllerLegacy
     public function apply()
     {
         $model = $this->getModel('user_edit');
+        $app = JFactory::getApplication()->input;
+        $data = $app->get('jform', array(), 'array');
+
+        $userid = $data['gsuid'];
+        $gsgid = $data['gsgid'];
+
 
         //Formvalidation is done in View via js
         $success = $model->save();
         if ($success)
         {
             $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
-            $this->setRedirect('index.php?option=com_thm_groups&view=user_edit&id=' . $success, $msg);
+
+            $this->setRedirect('index.php?option=com_thm_groups&view=profile&gsgid=' . $gsgid
+                . '&gsuid=' . $userid, $msg);
         }
         else
         {
             $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
             //todo: fails:
-            $this->setRedirect('index.php?option=com_thm_groups&view=user_edit&id=0', $msg);
+            $this->setRedirect('index.php?option=com_thm_groups&view=profile&gsgid=' . $gsgid
+                . '&gsuid=' . $userid, $msg);
         }
     }
 

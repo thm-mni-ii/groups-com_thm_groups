@@ -20,7 +20,10 @@
 
 defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
+jimport('thm_groups.data.lib_thm_groups_user');
 jimport('joomla.filesystem.path');
+jimport('thm_core.edit.view');
+
 
 /**
  * THMGroupsViewEdit class for component com_thm_groups
@@ -44,7 +47,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
      * @param   Int     $size      Size
      * @param   String  $value     Value
      * @param   Int     $structid  StructID
-     *
+     * @depracated
      * @return textform
      */
     public function getTextForm ($name, $size, $value, $structid)
@@ -75,7 +78,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
      * @param   Int     $rows      Rows
      * @param   String  $value     Value
      * @param   Int     $structid  StructID
-     *
+     * @depracated
      * @return textarea
      */
     public function getTextArea ($name, $rows, $value, $structid)
@@ -103,7 +106,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
      * @param   String  $name      Name
      * @param   Int     $structid  StructID
      * @param   String  $value     Value
-     *
+     * @depracated
      * @return picturearea
      */
     public function getPictureArea ($name, $structid, $value)
@@ -134,17 +137,18 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
      * @param   String  $name      Name
      * @param   String  $value     Value
      * @param   Int     $structid  StructID
-     *
+     * @depracated
      * @return tablearea
      */
     public function getTableArea ($name, $value, $structid)
     {
         $model = $this->getModel();
 
+        $app = JFactory::getApplication()->input();
         // $cid = JRequest::getVar('cid', array(0), '', 'array');
         $extra = $model->getExtra($structid, 'TABLE');
         $arrValue = json_decode($value);
-        $gsuid = JRequest::getVar('gsuid');
+        $gsuid = $this->app('gsuid');
         if ($extra != "")
         {
             $head = explode(';', $extra);
@@ -206,9 +210,9 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
                     " />";
             }
 
-            $option_back = JRequest::getVar('option_back', '0', 'post');
-            $layout_back = JRequest::getVar('layout_back', '0', 'post');
-            $view_back = JRequest::getVar('view_back', '0', 'post');
+            $option_back = $app->get('option_back', '0', 'post');
+            $layout_back =  $app->get('layout_back', '0', 'post');
+            $view_back = $app->get('view_back', '0', 'post');
 
             $output .= "<br /><br /><input type='submit' id='addTableRow" . $name . "' " .
                 "onclick='document.forms[\"adminForm\"].elements[\"structid\"].value =" . $structid . "," .
@@ -233,7 +237,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
      * @param   String  $name   Name
      * @param   Int     $size   Size
      * @param   String  $value  Value
-     *
+     * @depracated
      * @return void
      */
     public function getDateForm ($name, $size, $value)
@@ -248,7 +252,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
      * @param   Int     $size      Size
      * @param   String  $value     Value
      * @param   Int     $structid  StructID
-     *
+     * @depracated
      * @return multiselectform
      */
     public function getMultiSelectForm ($name, $size, $value, $structid)
@@ -284,9 +288,12 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        $this->item = JFactory::getApplication()->input->get('gsuid');
-        $this->is_mod = $this->get('Moderator');
+        $app = JFactory::getApplication()->input;
+        $this->item = intval($app->get('gsuid'));
 
+        $gsgid = intval($app->get('gsgid'));
+        $this->canEdit = THMLibThmGroupsUser::canEdit($gsgid);
+        $this->gsgid = $gsgid;
 
         $componentDir = "/administrator/components/com_thm_groups";
 
@@ -304,10 +311,25 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
         $doc -> addStyleSheet(JUri::root() . "libraries/thm_core/fonts/iconfont.css");
         $doc -> addScript(JUri::root() . "libraries/thm_core/js/formbehaviorChosenHelper.js");
 
+        $this->app = $app;
         $this->userContent = $this->get('Content');
         //$this->addToolBar();
 
         parent::display($tpl);
+    }
+    protected function modifyDocument()
+    {
+        JHtml::_('bootstrap.tooltip');
+        JHtml::_('behavior.framework', true);
+        JHtml::_('behavior.formvalidation');
+        JHtml::_('formbehavior.chosen', 'select');
+
+        $option = JFactory::getApplication()->input->get('option');
+        $document = Jfactory::getDocument();
+        $document -> addStyleSheet($this->baseurl . "../../libraries/thm_core/fonts/iconfont.css");
+        $document -> addStyleSheet($this->baseurl . "../../media/$option/css/backend.css");
+        $document -> addScript($this->baseurl . "../../libraries/thm_core/js/formbehaviorChosenHelper.js");
+        $document -> addScript($this->baseurl . "../../libraries/thm_core/js/validators.js");
     }
 
 }

@@ -79,29 +79,20 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
      */
     public function getContent()
     {
-        $userId = JFactory::getApplication()->input->get('gsuid');
+        $app = JFactory::getApplication()->input;
+        $userId = intval($app->get('gsuid'));
+        $gsgid = intval($app->get('gsgid'));
+        $profilId = THMLibThmGroupsUser::getGroupsProfile($gsgid);
+        $myprofile = JFactory::getUser()->id == $userId;
 
-        if ($userId == null)
-        {
-            $formData = JFactory::getApplication()->input->post->get('jform', array(), 'array');
-            $userId = $formData['userID'];
+        if($myprofile){
+            $data = THMLibThmGroupsUser::getAllUserAttributesByUserID($userId);
+        }
+        else{
+            $data = THMLibThmGroupsUser::getAllUserProfilData($userId, $profilId,false);
         }
 
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-
-        $query
-            ->select('ust.usersID, ust.attributeID, st.options, dyn.regex, st.name as attribute, ust.value, ust.published, static.name')
-            //->select('st.name as attribute, ust.value')
-            ->from('#__thm_groups_users_attribute AS ust')
-            ->innerJoin('#__thm_groups_attribute AS st ON ust.attributeID = st.id')
-            ->innerJoin('#__thm_groups_dynamic_type AS dyn ON st.dynamic_typeID = dyn.id')
-            ->innerJoin('#__thm_groups_static_type AS static ON dyn.static_typeID = static.id')
-            ->where("ust.usersID IN ( $userId )")
-            ->order('ust.attributeID');
-        $db->setQuery($query);
-
-        return $db->loadObjectList();
+        return $data;
     }
 
     /**
@@ -147,16 +138,15 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
      */
     public function save($data = null)
     {
-        $app = JFactory::getApplication();
-        $formData = $app->input->post->get('jform', array(), 'array');
+        $app = JFactory::getApplication()->input;
+        $formData = $app->post->get('jform', array(), 'array');
         $content = $this->getContent();
-        $userID = $formData['userID'];
+        $userID = $formData['gsuid'];
+
 
         // Dimensions for thumbnails
         $sizes = array('300x300', '64x64', '250x125');
 
-        // Change '_' in array into ' '
-        $this->fixArrayKey($formData);
 
         $this->saveValues($formData, $content, $userID);
         $this->saveFullSizePictures($formData, $content, $userID);
@@ -193,6 +183,8 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                 $convertedPath = substr($path, $position);
                 $prev = "<img  src='" . JURI::root() . $convertedPath . "' style='display: block;"
                     . "max-width:500px; max-height:240px; width: auto; height: auto;'/>";
+                $prev .= "<input type='hidden' name='jform[" . THMLibThmGroupsUser::getExtra($attrID)->name. "][file]'
+                            value='" . "cropped_" . $filename . "'>";
 
                 return $prev;
             }
@@ -235,55 +227,47 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     private function saveValues($formData, $content, $userID){
         $dbo = JFactory::getDbo();
         // Save new values in #__thm_groups_users_attribute
-        foreach ($content as $attr)
+        foreach ($formData as $attr)
         {
-            if (array_key_exists($attr->attribute, $formData)) //Tabelle
-            {
+
                 try
                 {
-                    $newValue = false;
                     $query = $dbo->getQuery(true);
 
                     $query->update($dbo->qn('#__thm_groups_users_attribute'));
 
                     // Set new value when it's different from value in database, set JSON when array (TABLE,MULTISELECT)
-                    if (is_array($formData[$attr->attribute]))
-                    {
-                        $jsonString = $this->createJSON($attr, $formData[$attr->attribute]);
+                    if(strcmp($attr['type'], 'TABLE') == 0 || strcmp($attr['type'], 'MULTISELECT') == 0 ){
+                        $jsonString = json_encode($attr['value']);
                         $query->set($dbo->qn('value') . ' = ' . $dbo->quote($jsonString));
-                        $newValue = true;
                     }
-                    elseif ($formData[$attr->attribute] != $attr->value)
+                    elseif(strcmp($attr['type'], 'PICTURE') == 0 && isset($attr['file'])){
+                        $query->set($dbo->qn('value') . ' = ' . $dbo->quote($attr['file']));
+                    }
+                    else
                     {
-                        $query->set($dbo->qn('value') . ' = ' . $dbo->quote($formData[$attr->attribute]));
-                        $newValue = true;
+                        $query->set($dbo->qn('value') . ' = ' . $dbo->quote($attr['value']));
                     }
 
-                    if (array_key_exists($attr->attribute . " published", $formData))
+                    if (isset($attr['published']))
                     {
-                        $published = $formData[$attr->attribute . " published"];
+                        $published = $attr['published'];
 
-                        if (($published === 'on') && ($attr->published === '0'))
+                        if ( $published === 'on')
                         {
                             $query->set($dbo->qn('published') . ' = ' . 1);
                         }
-                        elseif (!$newValue)
-                        {
-                            continue;
-                        }
+
                     }
-                    elseif ($attr->published === '1')
+                    else
                     {
                         $query->set($dbo->qn('published') . ' = ' . 0);
                     }
-                    elseif (!$newValue)
-                    {
-                        continue;
-                    }
+
 
                     $query->where(
-                        $dbo->qn('usersID') . ' = ' . (int) $attr->usersID . ' AND '
-                        . $dbo->qn('attributeID') . ' = ' . (int) $attr->attributeID . ''
+                        $dbo->qn('usersID') . ' = ' . intval($userID) . ' AND '
+                        . $dbo->qn('attributeID') . ' = ' . intval($attr['strucid']) . ''
                     );
 
                     $dbo->setQuery($query);
@@ -294,7 +278,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                     echo "Very demotivating error occurs";
                     echo $e->getMessage();
                 }
-            }
+
         }
     }
 

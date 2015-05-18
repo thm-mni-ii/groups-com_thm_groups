@@ -75,7 +75,6 @@ class THM_GroupsControllerUser_Edit extends JControllerLegacy
         $file = $app->input->files->get('data');
         $attrID = $app->input->get('attrID');
         $filename = $app->input->get('filename');
-
         $success = $model->saveCropped($attrID, $file, $filename);
         if ($success != false)
         {

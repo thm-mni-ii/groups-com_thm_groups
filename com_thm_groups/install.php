@@ -42,7 +42,7 @@ class THM_Groups_Install_Script
      */
     public static function install()
     {
-        if (self::copyUsers() && self::copyGroupsRolesMapping())
+        if (self::copyUsers() && self::copyGroupsRolesMapping()) //&& self::copyMenutoProfile() && self::copyModuletoProfile())
         {
             return true;
         }
@@ -93,6 +93,207 @@ class THM_Groups_Install_Script
         return false;
     }
 
+    /**
+     * copy Advanced Menu in Profile
+     */
+    public static function  copyMenutoProfile()
+    {
+        try {
+            $db = JFactory::getDbo();
+            $searchAllQuery = $db->getQuery(true);
+            $searchAllQuery->select('id as menuid, title as menutitle, params as menuparams')
+                ->from('#__menu')
+                ->where("link like 'index.php?option=com_thm_groups&view=advanced'")
+                ->where("type like component");
+
+            $db->setQuery($searchAllQuery);
+            $searchAllData = $db->loadObjectList();
+            $allProfilData = [];
+            foreach($searchAllData as $menuData){
+                $profilItem = new stdClass();
+                $menuparams = json_decode($menuData->menuparams);
+                $menuGroupID = $menuparams->selGroup;
+                $profilItem->gid = $menuGroupID;
+                $menuAttrStruct = $menuparams->struct;
+                $profilItem->attrData = self::getOldAttrToProfileData($menuAttrStruct);
+                $profilItem->name = $menuparams->menutitle;
+                $allProfilData []= $profilItem;
+            }
+            //Insert Profile in the Database
+            $insertProfileQuery = $db->getQuery(true);
+            $profileColumn = array("name", "order");
+            $insertProfileQuery->insert('#__thm_groups_profile')
+                ->columns($profileColumn);
+            $profileorder =1;
+            foreach($allProfilData as $profilData){
+                $insertProfileQuery->values($profilData->name,$profileorder);
+                $profileorder++;
+            }
+            $db->setQuery($insertProfileQuery);
+            $db->execute();
+            $firstProfileID = $db->insertid()- count($allProfilData);
+
+            //Insert Profile and Groups in the Database
+            $insertProfileGroupQuery = $db->getQuery(true);
+            $profileGroupColumn = array("profileID", "usergroupsID");
+            $insertProfileGroupQuery->insert('#__thm_groups_profile_usergroups')
+                ->columns($profileGroupColumn);
+            $profilIdcounter = $firstProfileID;
+            foreach($allProfilData as $profilData){
+                $insertProfileGroupQuery->values($profilIdcounter, $profilData->gid);
+                $profilData->id = $profilIdcounter;
+                $profilIdcounter++;
+            }
+            $db->setQuery($insertProfileGroupQuery);
+            $db->execute();
+
+            //Insert Profile and Attribute in the Database
+            $insertProfileAttrQuery = $db->getQuery(true);
+            $profileAttrColumn = array("profileID", "attributeID", "order", "params");
+            $insertProfileAttrQuery->insert('#__thm_groups_profile_attribute')
+                ->columns($profileAttrColumn);
+            foreach($allProfilData as $profilData)
+            {
+                foreach($profilData->attrData as $attritem)
+                {
+                    $insertProfileAttrQuery->values($profilData->id,
+                        $attritem->attrID, $attritem->order, json_encode($attritem->params));
+                }
+
+
+            }
+            $db->setQuery($insertProfileAttrQuery);
+            $db->execute();
+        }
+        catch (Exception $exc)
+        {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            return false;
+        }
+        return true;
+
+}
+    /**
+     * copy Thm Groups Module in Profile
+     */
+    public static function  copyModuletoProfile()
+    {
+        if (self::copyModuleTypetoProfile('mod_thm_groups_smallview')
+            && self::copyModuleTypetoProfile("mod_thm_groups_members"))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * copy Thm Groups Module in Profile
+     * @param  String $moduletype
+     */
+    public static function  copyModuleTypetoProfile($moduletype)
+    {
+        try {
+            $db = JFactory::getDbo();
+            $searchAllQuery = $db->getQuery(true);
+            $searchAllQuery->select('id as modid, title as modtitle, params as modparams')
+                ->from('#__modules')
+                ->where("module like '$moduletype'");
+
+            $db->setQuery($searchAllQuery);
+            $searchAllData = $db->loadObjectList();
+            $allProfilData = [];
+            foreach ($searchAllData as $modData) {
+                $profilItem = new stdClass();
+                $modparams = json_decode($modData->menuparams);
+                $modGroupID = $modparams->selGroup;
+                $profilItem->gid = $modGroupID;
+                if (strcmp($moduletype, 'mod_thm_groups_smallview') == 0) {
+                    $modAttrStruct = $modparams->structid;
+                }
+                else {
+                    $modAttrStruct = $modparams->struct;
+                }
+
+                $profilItem->attrData = self::getOldAttrToProfileData($modAttrStruct);
+                $profilItem->name = 'mod_' . $modparams->menutitle;
+                $allProfilData [] = $profilItem;
+            }
+            //Insert Profile in the Database
+            $insertProfileQuery = $db->getQuery(true);
+            $profileColumn = array("name", "order");
+            $insertProfileQuery->insert('#__thm_groups_profile')
+                ->columns($profileColumn);
+            $profileorder = 1;
+            foreach ($allProfilData as $profilData) {
+                $insertProfileQuery->values($profilData->name, $profileorder);
+                $profileorder++;
+            }
+            $db->setQuery($insertProfileQuery);
+            $db->execute();
+            $firstProfileID = $db->insertid() - count($allProfilData) + 1;
+
+            //Insert Profile and Groups in the Database
+            $insertProfileGroupQuery = $db->getQuery(true);
+            $profileGroupColumn = array("profileID", "usergroupsID");
+            $insertProfileGroupQuery->insert('#__thm_groups_profile_usergroups')
+                ->columns($profileGroupColumn);
+            $profilIdcounter = $firstProfileID;
+            foreach ($allProfilData as $profilData) {
+                $insertProfileGroupQuery->values($profilIdcounter, $profilData->gid);
+                $profilData->id = $profilIdcounter;
+                $profilIdcounter++;
+            }
+            $db->setQuery($insertProfileGroupQuery);
+            $db->execute();
+
+            //Insert Profile and Attribute in the Database
+            $insertProfileAttrQuery = $db->getQuery(true);
+            $profileAttrColumn = array("profileID", "attributeID", "order", "params");
+            $insertProfileAttrQuery->insert('#__thm_groups_profile_attribute')
+                ->columns($profileAttrColumn);
+            foreach ($allProfilData as $profilData) {
+                foreach ($profilData->attrData as $attritem) {
+                    $insertProfileAttrQuery->values($profilData->id,
+                        $attritem->attrID, $attritem->order, json_encode($attritem->params));
+                }
+
+
+            }
+            $db->setQuery($insertProfileAttrQuery);
+            $db->execute();
+        }
+        catch (Exception $exc)
+            {
+                JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+                return false;
+            }
+        return true;
+    }
+
+
+    /**
+     * Transform the old Attribute Structure to the new
+     *
+     */
+    public static function  getOldAttrToProfileData($oldAttrStruct){
+        $result = [];
+        $count = 1;
+        foreach($oldAttrStruct as $id=> $oldItem){
+            $newItem = new stdClass();
+            $stringFormOld = "" . $oldItem;
+            $wrap = substr($stringFormOld, -1);
+            $label = substr($stringFormOld, -2);
+            $attrID = substr($stringFormOld, 0, -2);
+            $newItem->attrID = $attrID;
+            $newItem->order = $count;
+            $newItem->params = [];
+            $newItem->params['label'] = $label;
+            $newItem->params['wrap'] = $wrap;
+            $result []= $newItem;
+            $count++;
+        }
+        return $result;
+    }
     /**
      * Copy user id and save it into THM Groups table with additional attributes like:
      * published is 1, it means that the user is activated in the THM Groups component

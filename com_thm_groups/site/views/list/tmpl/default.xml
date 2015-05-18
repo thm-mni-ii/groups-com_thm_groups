@@ -78,19 +78,17 @@
                 label="COM_THM_GROUPS_STANDARD_ALPHABET_CHAR"
             />
             <field
-                addfieldpath="/administrator/components/com_thm_groups/elements/"
                 name="alphabet_exists_color"
                 id="alphabet_exists_color"
-                type="alphabetColor"
+                type="color"
                 label="COM_THM_GROUPS_BACKGROUND_COLOR"
                 description="COM_THM_GROUPS_BACKGROUND_COLOR_DESC"
                 default="#4A5C66"
             />
             <field
-                addfieldpath="/administrator/components/com_thm_groups/elements/"
                 name="alphabet_exists_font_color"
                 id="alphabet_exists_font_color"
-                type="alphabetColor"
+                type="color"
                 label="COM_THM_GROUPS_FONT_COLOR"
                 description="COM_THM_GROUPS_FONT_COLOR_DESC"
                 default="#ffffff"
@@ -101,17 +99,15 @@
                 label="COM_THM_GROUPS_STANDARD_ALPHABET_CHAR"
             />
             <field
-                addfieldpath="/administrator/components/com_thm_groups/elements/"
                 name="alphabet_inactive_color"
-                type="alphabetColor"
+                type="color"
                 label="COM_THM_GROUPS_BACKGROUND_COLOR"
                 description="COM_THM_GROUPS_BACKGROUND_COLOR_DESC"
                 default="#4A5C66"
             />
             <field
-                addfieldpath="/administrator/components/com_thm_groups/elements/"
                 name="alphabet_inactive_font_color"
-                type="alphabetColor"
+                type="color"
                 label="COM_THM_GROUPS_FONT_COLOR"
                 description="COM_THM_GROUPS_FONT_COLOR_DESC"
                 default="#ffffff"
@@ -122,17 +118,15 @@
                 label="COM_THM_GROUPS_ACTIV_ALPHABET_CHAR"
             />
             <field
-                addfieldpath="/administrator/components/com_thm_groups/elements/"
                 name="alphabet_active_color"
-                type="alphabetColor"
+                type="color"
                 label="COM_THM_GROUPS_BACKGROUND_COLOR"
                 description="COM_THM_GROUPS_BACKGROUND_COLOR_DESC"
                 default="#4A5C66"
             />
             <field
-                addfieldpath="/administrator/components/com_thm_groups/elements/"
                 name="alphabet_active_font_color"
-                type="alphabetColor"
+                type="color"
                 label="COM_THM_GROUPS_FONT_COLOR"
                 description="COM_THM_GROUPS_FONT_COLOR_DESC"
                 default="#ffffff"

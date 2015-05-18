@@ -236,8 +236,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     private function saveValues($formData, $content, $userID)
     {
         $dbo = JFactory::getDbo();
-        var_dump($formData);
-        var_dump("HEY");
+
 
         // Save new values in #__thm_groups_users_attribute
         foreach ($content as $attr)
