@@ -1,0 +1,110 @@
+/**
+* All responsive Styles for THM Groups Frontend
+* Included some Bootstrap 3 Grid-Features from
+* https://github.com/zirafa/bootstrap-grid-only
+* to enable the various column classes from BS3
+* in BS2. Inserted because Joomla3 does not support
+* BS3 in it's Core.
+**/
+//-----------GroupsCustomStyles-------------
+
+// Imports for BS3 Grid
+@import "mixins/grid-framework.less";
+@import "mixins/grid.less";
+
+
+// THM Groups Styles
+#mob_nav .container-fluid{
+  padding: 0px;
+}
+
+#thm_groups_profile_container_list .thm_groups_profile_container_list_coloumn_wrapper_full{
+  width:100%;
+}
+
+.gslistview{
+  .fullScreenItem(left, 100%);
+}
+
+.gslistview > .col-sm-6 > ul, ol {
+  margin: 13px 13px 0px 25px;
+}
+
+#mob_nav{
+  visibility: hidden;
+  .navbar-inner{
+    background-color: #4A5C66;
+    background-image: none;
+  }
+}
+//----------Functions--------------------
+.fullScreenItem(@float: none, @width){
+  width: @width !important;
+  float: @float !important;
+}
+
+.respImage(@width: 100%){
+  max-width: @width !important;
+  height: auto !important;
+}
+
+@media screen and (max-width: 480px){
+  .thm_groups_profile_container_profile_image{
+    .respImage(20%);
+  }
+  #mob_nav{
+    visibility: visible;
+  }
+  .thm_groups_alphabet, #gslistview .thm_groups_alphabet > a {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.7rem;
+  }
+  .gslistview > .col-sm-6 > ul, ol {
+    margin-left: 0px;
+  }
+
+}
+@media screen and (min-width: 481px) and (max-width: 665px){
+  .col_med_6_advanced{
+    .fullScreenItem(left, 100%);
+  }
+  #mob_nav{
+    visibility: visible;
+  }
+}
+
+//-----------Variables-------------------
+
+// Small screen / tablet
+@screen-sm:                  769px;
+@screen-sm-min:              481px;
+@screen-tablet:              @screen-sm-min;
+
+// So media queries don't overlap when required, provide a maximum
+@screen-xs-max:              (@screen-sm-min - 1);
+
+//-----------GridSystemBS3-------------
+
+//** Number of columns in the grid.
+@grid-columns:              12;
+
+//** Padding between columns. Gets divided in half for the left and right.
+@grid-gutter-width:         30px;
+
+// Navbar collapse
+//** Point at which the navbar becomes uncollapsed.
+@grid-float-breakpoint:     @screen-sm-min;
+
+//** Point at which the navbar begins collapsing.
+@grid-float-breakpoint-max: (@grid-float-breakpoint - 1);
+// Small grid, this grid was used in Groups RWD Project
+// to compensate the Grid-limitations of BS2 in Joomla3
+@media (min-width: @screen-sm-min) and (max-width: @screen-sm) {
+  #content{
+    .make-grid(sm);
+  }
+  #content .col-sm-6{
+    margin: 0px 0px 0px 0px !important;
+  }
+}

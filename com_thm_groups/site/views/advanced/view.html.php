@@ -21,6 +21,7 @@
  */
 jimport('joomla.application.component.view');
 jimport('thm_groups.data.lib_thm_groups');
+JHtml::_('bootstrap.framework');
 
 
 /**
@@ -100,9 +101,15 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         // Load test
         $scriptDir = str_replace(JPATH_SITE, '', "/libraries/thm_groups/assets/js/");
 
+		// Include Bootstrap
+		JHtmlBootstrap::loadCSS();
+		
+		// Load responsive CSS
+		$document = JFactory::getDocument();
+		$document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/responsiveGroups.css');
         // Load Dynamic CSS
         $mycss = $this->getCssView($params, $advancedView);
-        $document = JFactory::getDocument();
+       
         $document->addStyleDeclaration($mycss);
 
         // Notify Preview Observer
@@ -249,8 +256,8 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                 }
 
                 div.thm_groups_profile_container_list_row_odd, div.thm_groups_profile_container_list_row_even {
-                    width: 100%;
-                    margin-bottom: ' . $this->addPxSuffixToNumeric($containerMarginBottom) . ';
+                     //width: 100%;
+                    margin: 0px 0px ' . $this->addPxSuffixToNumeric($containerMarginBottom) . ' 0px !important;
                     clear: both;
                     ' . $profileContainerStyles . '
                 }
@@ -271,14 +278,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
                 div.thm_groups_profile_container_list_coloumn_wrapper {
                     width: ' . $containerWrapperWidth . ';
-                }
-
-                div.thm_groups_profile_container_list_coloumn_wrapper_left {
-                    float: left;
-                }
-
-                div.thm_groups_profile_container_list_coloumn_wrapper_right {
-                    float: right;
+					float: left;
                 }
 
                 div.thm_groups_profile_container_list_coloumn {
@@ -404,12 +404,15 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $User = JFactory::getUser();
         $result = "";
 
-
+        // 1 Column or 2 Columns in one Row.
         $countOfColoumns = $col_view;
         $elementCounter = 0;
         $rowCounter = 0;
         $lastIndex = count($members) - 1;
 
+		// Get mobile Navigation
+        $result .= $this->getMobileNavbar();
+		
         foreach ($members as $id => $member) {
             // Open Row Tag - Even / Odd
             if ($elementCounter % $countOfColoumns == 0) {
@@ -423,12 +426,13 @@ class THM_GroupsViewAdvanced extends JViewLegacy
             // Open Coloumn Wrapper Tag - Only for float-attribute, now is easy to work with width:100%
             if ($countOfColoumns == 1) {
                 $cssListColoumnClass = '_full';
+                $result .= '<div class="thm_groups_profile_container_list_coloumn_wrapper' . $cssListColoumnClass .'">';
             }
             else {
                 $cssListColoumnClass = ($elementCounter % $countOfColoumns == 0) ? '_left' : '_right';
+                $result .= '<div class="thm_groups_profile_container_list_coloumn_wrapper '
+                    . ' col_med_6_advanced col-sm-6 span6 thm_groups_profile_container_list_coloumn_wrapper' . $cssListColoumnClass . '">';
             }
-            $result .= '<div class="thm_groups_profile_container_list_coloumn_wrapper thm_groups_profile_container_list_coloumn_wrapper'
-                . $cssListColoumnClass . '">';
 
             // Open Coloumn Tag - Only for dimensions
             $result .= '<div class="thm_groups_profile_container_list_coloumn">';
@@ -448,6 +452,8 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                 switch ($memberhead->structid) {
                     case "2":
                         $lastName = $memberhead->value;
+						//TODO CHANGE THIS; ONLY FOR TESTING RWD PURPOSES
+                        $result .= "<div id='" . $lastName . "' style='visibility:hidden;'></div>";
                         break;
                     default:
                         if ($memberhead->type == "PICTURE" && $picture == null && $memberhead->publish) {
@@ -473,6 +479,11 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
                 $result .= JHTML::image(JURI::root() . $picpath . $picture, "Portrait", array('class' => 'thm_groups_profile_container_profile_image'));
             }
+ 			/*else
+            {
+                //TODO CHANGE THIS; ONLY FOR TESTING RWD PURPOSES
+                $result .= JHTML::image(JURI::root() . "images/cropped_xartas.PNG", "Portrait", array('class' => 'thm_groups_profile_container_profile_image'));
+            }*/
 
             $result .= "<div id='gs_advlistTopic'>";
 
@@ -639,5 +650,47 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                                 </script>';
         }
         return $result;
+    }
+
+	/**
+     * Return a Navigation for the mobile Context
+     *
+     * @return string
+     */
+    public function getMobileNavbar()
+    {
+        $navbar = "";
+        $navbar .= "<nav id='mob_nav' class='navbar navbar-inverse navbar-fixed-top'>";
+        $navbar .= "<div class='navbar-inner'>";
+        $navbar .= "<div class='container-fluid'>";
+        $navbar .= "<a class='btn btn-navbar' data-toggle='collapse' data-target='.nav-collapse'>";
+        $navbar .= "<span class='icon-bar'></span>";
+        $navbar .= "<span class='icon-bar'></span>";
+        $navbar .= "<span class='icon-bar'></span>";
+        $navbar .= "</a>";
+
+        $navbar .= "<div class='nav-collapse'>";
+        $navbar .= "<ul id='adv_nav_menu' class='nav '>";
+
+        $members = $this->data;
+        foreach($members as $key=>$attr)
+        {
+            foreach ($attr as $key => $value)
+            {
+                if ($value->structid === '2')
+                {
+                    $navbar .= "<li><a class='menu - cpanel' href='#" . $value->value . "'>" . $value->value . "</a></li>";
+                    $navbar .= "<li class='divider'><span></span></li>";
+                }
+            }
+        }
+
+        $navbar .= "</ul>";
+        $navbar .= "</div>";
+        $navbar .= "</div>";
+        $navbar .= "</div>";
+        $navbar .= "</nav>";
+
+        return $navbar;
     }
 }

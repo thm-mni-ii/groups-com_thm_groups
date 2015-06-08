@@ -35,6 +35,7 @@ $model = new THMLibThmGroupsUser;
 
 // Get user information
 $userInfoArray =  $this->model->getData();
+
 $backAttribute = $this->backAttribute;
 
 $html = buildHtmlOutput($this->userid, $userInfoArray, $backLink, $backAttribute,$canEdit);
@@ -301,7 +302,7 @@ function getProfilCss()
     $out .= '
             .thm_groups_content_profile
             {
-                width:inherit;
+                width:100%;
             }
 
             .thm_groups_contentheading > span
@@ -320,6 +321,10 @@ function getProfilCss()
             .thm_groups_content_profile_edit
             {
                 float:right !important;
+            }
+
+            #content .breadcrumb{
+                margin: 0px 0px 18px 0px;
             }
 
             .thm_groups_contentbody > div

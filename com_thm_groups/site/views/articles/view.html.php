@@ -59,6 +59,9 @@ class THM_GroupsViewArticles extends THM_CoreViewList
         $document = JFactory::getDocument();
         $document->addStyleSheet(JURI::base(true) . '/components/com_thm_groups/css/quickpage.css');
         $document->addStyleSheet(JURI::base(true) . '/components/com_thm_groups/css/articles.css');
+        $document->addStyleSheet(JURI::base(true) . '/components/com_thm_groups/css/respArticles.css');
+        // Include Bootstrap
+        JHtmlBootstrap::loadCSS();
         parent::display($tpl);
     }
 

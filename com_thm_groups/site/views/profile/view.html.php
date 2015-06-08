@@ -100,6 +100,7 @@ class THM_GroupsViewProfile extends JViewLegacy
                 $structureType = $structureItem->type;
             }
         }
+
         return $structureType;
     }
 

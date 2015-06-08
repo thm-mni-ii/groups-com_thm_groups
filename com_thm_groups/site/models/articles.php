@@ -89,7 +89,7 @@ class THM_GroupsModelArticles extends THM_CoreModelList
         $this->setOrdering($query);
 
         echo '<pre>';
-        print_r($query->dump());
+        //print_r($query->dump());
         echo '</pre>';
 
         return $query;
@@ -148,8 +148,8 @@ class THM_GroupsModelArticles extends THM_CoreModelList
             $publishedBtn = JHtml::_('jgrid.published', $item->state, $key, 'articles.', $canChange, 'cb', $item->publish_up, $item->publish_down);
             $dropdownBtn = JHtml::_('actionsdropdown.render', $item->title);
 
-            $return[$index]['attributes'] = array( 'class' => 'order nowrap center hidden-phone', 'id' => $item->id);
-            $return[$index]['ordering']['attributes'] = array( 'class' => "order nowrap center hidden-phone", 'style' => "width: 40px;");
+            $return[$index]['attributes'] = array( 'class' => 'order nowrap center', 'id' => $item->id);
+            $return[$index]['ordering']['attributes'] = array( 'class' => "order nowrap center", 'style' => "width: 40px;");
             $return[$index]['ordering']['value']
                 = "<span class='sortable-handler$iconClass'><i class='icon-menu'></i></span>" . $order;
             $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
@@ -344,6 +344,8 @@ class THM_GroupsModelArticles extends THM_CoreModelList
         $headers['delete'] = JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_DELETE');
         $headers['published'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_SHOW_LIST'), 'd.published', $direction, $ordering);
         $headers['featured'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_SHOW_CONTENT'), 'd.featured', $direction, $ordering);
+        //$headers['published'] = JHtml::_('searchtools.sort', JText::_('Show L.M.'), 'd.published', $direction, $ordering);
+        //$headers['featured'] = JHtml::_('searchtools.sort', JText::_('Show C.M.'), 'd.featured', $direction, $ordering);
         $headers['catid'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_CATEGORY'), 'catid', $direction, $ordering);
 
         return $headers;

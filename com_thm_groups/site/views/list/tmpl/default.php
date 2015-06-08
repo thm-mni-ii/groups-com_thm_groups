@@ -38,9 +38,7 @@
 ?>
 </div>
 
-<div id="gslistview">
-</div>
-
+<!--<div id="gslistview"></div>-->
 <?php
 /**
  * Method to get list all
@@ -53,7 +51,7 @@
  */
 function getListAll($params, $pagetitle, $gid)
 {
-    $result = '<div id="gslistview">';
+    $result = '<div id="gslistview" class="gslistview">';
 
         // $showAll = $model->getShowMode();
         $groupid = $gid;
@@ -135,7 +133,8 @@ function getListAll($params, $pagetitle, $gid)
         $maxColumnSize = ceil(($rows[0]->anzahl) / $numColumns);
         $numberOfPersons = $rows[0]->anzahl;
 
-        $divStyle = " style='width: " . floor(100 / $numColumns) . "%; float: left;'";
+        //$divStyle = " style='width: " . floor(100 / $numColumns) . "%; float: left;'";
+        $divStyle = " class='col-sm-6 span" . floor(12 / $numColumns) . "'";
 
         $attribut = THMLibThmGroups::getUrl(array("name", "gsuid", "gsgid"));
 
@@ -711,8 +710,8 @@ function writeName($arrOrderAtt, $member, $arrshowStructure, $linkElement, $link
  */
 function getCssView($params)
 {
-    $out = " ";
-    $out .= ".thm_groups_alphabet > .thm_groups_listitem {
+
+    $out = ".thm_groups_alphabet > .thm_groups_listitem {
             margin-left: 20px;
             margin-top: 0px;
             padding-top: 7px;

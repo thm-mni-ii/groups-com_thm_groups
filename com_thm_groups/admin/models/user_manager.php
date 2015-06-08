@@ -112,7 +112,6 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
     public function getItems()
     {
         $items = parent::getItems();
-
         // TODO check if there are no users
         $index = 0;
         foreach ($items as $key => $item)

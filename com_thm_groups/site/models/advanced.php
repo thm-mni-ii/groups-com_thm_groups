@@ -223,7 +223,6 @@ class THM_GroupsModelAdvanced extends JModelLegacy
 
         }
 
-
         return $data;
     }
 

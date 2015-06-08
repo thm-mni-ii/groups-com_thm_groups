@@ -21,6 +21,7 @@
 jimport('thm_groups.data.lib_thm_groups');
 jimport('thm_groups.data.lib_thm_groups_user');
 jimport('joomla.application.component.view');
+JHtml::_('bootstrap.framework');
 /**
  * THMGroupsViewList class for component com_thm_groups
  *
@@ -45,6 +46,10 @@ class THM_GroupsViewList extends JViewLegacy
         $model = $this->getModel();
         $document = JFactory::getDocument();
         $document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/frontend.php');
+        JHtmlBootstrap::loadCSS();
+        //TODO add lib path and update files
+        //$document->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/responsiveGroups.css');
+        $document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/responsiveGroups.css');
         $userid = $app->get('gsuid', 0);
 
         // Mainframe Parameter
