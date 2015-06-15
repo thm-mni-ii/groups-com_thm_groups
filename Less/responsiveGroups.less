@@ -8,12 +8,18 @@
 **/
 //-----------GroupsCustomStyles-------------
 
+//Set this to refer in rem breakpoints
+html{
+  font-size: 16px !important;
+}
+
 // Imports for BS3 Grid
 @import "mixins/grid-framework.less";
 @import "mixins/grid.less";
 
+// Import for list view
+@import "mixins/list.less";
 
-// THM Groups Styles
 #mob_nav .container-fluid{
   padding: 0px;
 }
@@ -26,10 +32,6 @@
   .fullScreenItem(left, 100%);
 }
 
-.gslistview > .col-sm-6 > ul, ol {
-  margin: 13px 13px 0px 25px;
-}
-
 #mob_nav{
   visibility: hidden;
   .navbar-inner{
@@ -37,6 +39,7 @@
     background-image: none;
   }
 }
+
 //----------Functions--------------------
 .fullScreenItem(@float: none, @width){
   width: @width !important;
@@ -47,24 +50,58 @@
   max-width: @width !important;
   height: auto !important;
 }
-
+//---------------------------------------
+#secondWrapper{
+  .respEmail {
+    display: none;
+  }
+  .respEmail-hidden{
+    display: inherit;
+    float:left;
+  }
+}
+//Advanced
 @media screen and (max-width: 480px){
   .thm_groups_profile_container_profile_image{
     .respImage(20%);
   }
+
   #mob_nav{
     visibility: visible;
   }
-  .thm_groups_alphabet, #gslistview .thm_groups_alphabet > a {
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 0.7rem;
-  }
-  .gslistview > .col-sm-6 > ul, ol {
-    margin-left: 0px;
+
+  #secondWrapper{
+
+    a > .icon-mail-2{
+      font-size: 1rem;
+    }
+
+    a.btn{
+      width: 26%;
+    }
+
+    .respMail-label{
+      display:none;
+    }
+
+    .respEmail-hidden{
+      display: none;
+    }
+
+    .respEmail{
+      display: inherit;
+    }
+
+    .thm_groups_profile_container_line{
+      width: 75%;
+    }
   }
 
+  #thm_groups_profile_container_list .thm_groups_profile_container_list_coloumn{
+    font-size: 0.75rem !important;
+  }
 }
+
 @media screen and (min-width: 481px) and (max-width: 665px){
   .col_med_6_advanced{
     .fullScreenItem(left, 100%);

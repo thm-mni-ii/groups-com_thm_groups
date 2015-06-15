@@ -51,7 +51,10 @@
  */
 function getListAll($params, $pagetitle, $gid)
 {
-    $result = '<div id="gslistview" class="gslistview">';
+    $result = '<div id="listWrapper" class="row-fluid">
+                <div class="span12">';
+
+    $result .= '<div id="gslistview" class="gslistview">';
 
         // $showAll = $model->getShowMode();
         $groupid = $gid;
@@ -85,8 +88,6 @@ function getListAll($params, $pagetitle, $gid)
         }
 
         $allLastNames = THMLibThmGroups::getFirstletter($groupid);
-
-
 
         $itemid = $app->get('Itemid', 0);
         $abc = array(
@@ -133,7 +134,6 @@ function getListAll($params, $pagetitle, $gid)
         $maxColumnSize = ceil(($rows[0]->anzahl) / $numColumns);
         $numberOfPersons = $rows[0]->anzahl;
 
-        //$divStyle = " style='width: " . floor(100 / $numColumns) . "%; float: left;'";
         $divStyle = " class='col-sm-6 span" . floor(12 / $numColumns) . "'";
 
         $attribut = THMLibThmGroups::getUrl(array("name", "gsuid", "gsgid"));
@@ -184,8 +184,9 @@ function getListAll($params, $pagetitle, $gid)
             }
 
       $result .= '<ul class="thm_groups_alphabet">';
-      $result .= '<a class="thm_groups_list">' . $char . '</a>';
-      $result .= '<div class="thm_groups_listitem">';
+      //$result .= '<a class="thm_groups_list">' . $char . '</a>';
+            $result .= '<div class="respListHeader" onclick="toogle(this);">' . $char . '</div>';
+      $result .= '<div class="thm_groups_listitem thm_groups_toogleitem" style="display: none;">';
 
 
       // Wurde beim letzten Durchlauf  ein Buchstabenpaket komplett geschrieben
@@ -261,7 +262,7 @@ function getListAll($params, $pagetitle, $gid)
         }
 // 	    echo $result .'</div>';
 
-      return $result . '</div>';
+      return $result . '</div></div></div>';
 }
 
 /**
@@ -283,7 +284,6 @@ function getListAlphabet($params, $pagetitle, $gid)
 
         $retString = "";
         $app = JFactory::getApplication()->input;
-
 
         $shownLetter = $app->get('letter');
         $paramLinkTarget = $params['linkTarget'];
@@ -712,12 +712,12 @@ function getCssView($params)
 {
 
     $out = ".thm_groups_alphabet > .thm_groups_listitem {
-            margin-left: 20px;
+            margin-left: 25px;
             margin-top: 0px;
             padding-top: 7px;
             padding-left: 7px;}";
 
-    $out .= ".thm_groups_alphabet > a {
+   /* $out .= ".thm_groups_alphabet > a {
             background: none repeat scroll 0 0 " . $params['alphabet_exists_color'] . ";
             border-color: " . $params['alphabet_exists_color'] . ";
             border-style: solid;
@@ -731,9 +731,16 @@ function getCssView($params)
             margin: 2px 2px 0 0;
             text-decoration: none;
             cursor:pointer;
-        }";
+        }";*/
 
-    $out .= ".thm_groups_alphabet > a:hover, .thm_groups_alphabet > a:focus, .alphabet > a:thm_groups_active {
+    $out .= ".thm_groups_alphabet > .respListHeader{
+            background: none repeat scroll 0 0 " . $params['alphabet_exists_color'] . ";
+            border-color: " . $params['alphabet_exists_color'] . ";
+            color: " . $params['alphabet_exists_font_color'] . " ;
+            ";
+
+    $out .= ".thm_groups_alphabet > div.respListHeader:hover, .thm_groups_alphabet > div.respListHeader:focus,
+            .alphabet > div.respListHeader:thm_groups_active {
                 background: none repeat scroll 0 0 " . $params['alphabet_active_color'] . " ;
                 border-color: " . $params['alphabet_active_color'] . ";
                 color:" . $params['alphabet_active_font_color'] . " ;}";
@@ -786,3 +793,24 @@ else
 {
     echo getListAlphabet($paramsArray, $pagetitle, $model->getGroupNumber());
 }
+
+$script = '<script type="text/javascript">'
+    . 'jQuery(".thm_groups_alphabet").click('
+    . 'function() {'
+    . 'if(jQuery(window).width() <= 480){'
+    . 'jQuery(".thm_groups_toogleitem", this).slideToggle();}});'
+    . '</script>';
+
+//echo $script;
+?>
+<script>
+    function toogle(caller){
+        if(caller.nextElementSibling.style.display == "none"){
+            caller.nextElementSibling.style.display = "inherit";
+        }
+        else
+        {
+            caller.nextElementSibling.style.display = "none";
+        }
+    }
+</script>

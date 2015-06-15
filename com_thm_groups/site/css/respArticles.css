@@ -97,10 +97,10 @@ table thead th {
     content: "Delete";
   }
   #adminForm td:nth-of-type(9):before {
-    content: "Show in list m.";
+    content: "List Module";
   }
   #adminForm td:nth-of-type(10):before {
-    content: "Show in content m.";
+    content: "Content Module";
   }
   #adminForm td:nth-of-type(11):before {
     content: "Category";

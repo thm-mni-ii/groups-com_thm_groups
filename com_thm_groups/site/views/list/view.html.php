@@ -46,10 +46,14 @@ class THM_GroupsViewList extends JViewLegacy
         $model = $this->getModel();
         $document = JFactory::getDocument();
         $document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/frontend.php');
+
+        // Include Bootstrap
         JHtmlBootstrap::loadCSS();
-        //TODO add lib path and update files
-        //$document->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/responsiveGroups.css');
+
+        //TODO comment library path in when lib is pushed to Gerrit.
+        //$document->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/respList.css');
         $document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/responsiveGroups.css');
+
         $userid = $app->get('gsuid', 0);
 
         // Mainframe Parameter

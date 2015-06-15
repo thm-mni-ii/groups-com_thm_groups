@@ -103,10 +103,14 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
 		// Include Bootstrap
 		JHtmlBootstrap::loadCSS();
-		
-		// Load responsive CSS
+
 		$document = JFactory::getDocument();
+
+        // Load responsive CSS
+        //todo: comment library path in when lib is pushed to Gerrit.
+        //$document->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/respAdvanced.css');
 		$document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/responsiveGroups.css');
+
         // Load Dynamic CSS
         $mycss = $this->getCssView($params, $advancedView);
        
@@ -232,7 +236,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
             $imgPosition = 'margin:0px 0px 0px 10px!important;float:right;';
         }
 
-        // Addition individuell Styles
+        // Addition individual Styles
         $profileContainerStyles = $params->get('profileContainerStyles', false);
         $profileImageStyles = $params->get('profileImageStyles', false);
         $textLineStyles = $params->get('textLineStyles', false);
@@ -411,7 +415,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $lastIndex = count($members) - 1;
 
 		// Get mobile Navigation
-        $result .= $this->getMobileNavbar();
+        $result .= $this->getMobileNavbar($allUsersData);
 		
         foreach ($members as $id => $member) {
             // Open Row Tag - Even / Odd
@@ -452,7 +456,6 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                 switch ($memberhead->structid) {
                     case "2":
                         $lastName = $memberhead->value;
-						//TODO CHANGE THIS; ONLY FOR TESTING RWD PURPOSES
                         $result .= "<div id='" . $lastName . "' style='visibility:hidden;'></div>";
                         break;
                     default:
@@ -482,7 +485,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
  			/*else
             {
                 //TODO CHANGE THIS; ONLY FOR TESTING RWD PURPOSES
-                $result .= JHTML::image(JURI::root() . "images/cropped_xartas.PNG", "Portrait", array('class' => 'thm_groups_profile_container_profile_image'));
+                $result .= JHTML::image(JURI::root() . "images/default.jpg", "Portrait", array('class' => 'thm_groups_profile_container_profile_image'));
             }*/
 
             $result .= "<div id='gs_advlistTopic'>";
@@ -526,8 +529,14 @@ class THM_GroupsViewAdvanced extends JViewLegacy
             foreach ($member as $memberitem) {
                 if ($memberitem->value != "" && $memberitem->publish) {
                     if ($memberitem->structwrap == true) {
-                        $result .= "<br /><div class='gs_advlist_longinfo thm_groups_profile_container_line'
+                        if($memberitem->structname == true && $memberitem->name == 'Email'){
+                            $result .= "<br /><div class='gs_advlist_longinfo thm_groups_profile_container_line respMail-line'
                             style='float: left;'> ";
+                        }
+                        else{
+                            $result .= "<br /><div class='gs_advlist_longinfo thm_groups_profile_container_line'
+                            style='float: left;'> ";
+                        }
                     }
                     else {
                         $result .= "<div style='display: inline;'> ";
@@ -535,8 +544,14 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                     // Attributnamen anzeigen
 
                     if ($memberitem->structname == true) {
-                        $result .= '<span class="thm_groups_profile_container_line_label" style="float: left" >'
-                            . JText::_($memberitem->name) . ":&nbsp" . '</span>';
+                        if($memberitem->name == 'Email' ){
+                            $result .= '<span class="thm_groups_profile_container_line_label respMail-label" style="float: left" >'
+                                . JText::_($memberitem->name) . ":&nbsp" . '</span>';
+                        }
+                        else{
+                            $result .= '<span class="thm_groups_profile_container_line_label" style="float: left" >'
+                                . JText::_($memberitem->name) . ":&nbsp" . '</span>';
+                        }
                     }
 
                     // Attribut anzeigen
@@ -553,7 +568,9 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                             break;
                         case "4":
                             // EMail
-                            $result .= JHTML:: _('email.cloak', $memberitem->value);
+                            $result .= '<span class="respEmail"><a href="mailto:' . $memberitem->value . '" class="btn" role="button">
+                                        <span class="icon-mail-2"></span></a></span>';
+                            $result .= '<span class="respEmail-hidden">' . JHTML:: _('email.cloak', $memberitem->value) . '</span>';
                             break;
                         default:
                             switch ($memberitem->type) {
@@ -657,8 +674,29 @@ class THM_GroupsViewAdvanced extends JViewLegacy
      *
      * @return string
      */
-    public function getMobileNavbar()
+    public function getMobileNavbar($attribs)
     {
+        /* Get the first letter of a name and the name for
+         * the mobile navigation.
+         */
+        $list = array();
+        $list['alphabet'] = array();
+        $list['name'] = array();
+        foreach ($attribs as $attr)
+        {
+            foreach ($attr as $object)
+            {
+                if ($object->structid == '2')
+                {
+                    if (!in_array(substr($object->value, 0, 1), $list['alphabet']))
+                    {
+                        array_push($list['alphabet'], substr($object->value, 0, 1));
+                        array_push($list['name'], $object->value);
+                    }
+                }
+            }
+        }
+
         $navbar = "";
         $navbar .= "<nav id='mob_nav' class='navbar navbar-inverse navbar-fixed-top'>";
         $navbar .= "<div class='navbar-inner'>";
@@ -672,17 +710,12 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $navbar .= "<div class='nav-collapse'>";
         $navbar .= "<ul id='adv_nav_menu' class='nav '>";
 
-        $members = $this->data;
-        foreach($members as $key=>$attr)
+        // Insert the letters and names into the navigation.
+        for ($i = 0; $i < sizeof($list['alphabet']); $i ++)
         {
-            foreach ($attr as $key => $value)
-            {
-                if ($value->structid === '2')
-                {
-                    $navbar .= "<li><a class='menu - cpanel' href='#" . $value->value . "'>" . $value->value . "</a></li>";
-                    $navbar .= "<li class='divider'><span></span></li>";
-                }
-            }
+            $navbar .= "<li><a class='menu - cpanel' href='#" . $list['name'][$i] . "'>"
+                . $list['alphabet'][$i] . "</a></li>";
+            $navbar .= "<li class='divider'><span></span></li>";
         }
 
         $navbar .= "</ul>";

@@ -6,6 +6,44 @@
 * in BS2. Inserted because Joomla3 does not support
 * BS3 in it's Core.
 **/
+html {
+  font-size: 16px !important;
+}
+div.respListHeader {
+  text-align: center;
+  font-weight: bold;
+  padding: 5px 0px 0px 0px;
+  height: 1.25rem;
+  border: 1px solid;
+  cursor: pointer;
+}
+.gslistview {
+  margin-top: 10px;
+}
+.gslistview .col-sm-6 > ul,
+.gslistview ol {
+  margin: 4px 13px 0px 0px;
+}
+ul.thm_groups_alphabet {
+  width: 100%;
+}
+#gslistview .thm_groups_toogleitem {
+  display: none;
+}
+@media (min-width: 481px) {
+  .gslistview > .col-sm-6 > ul,
+  ol {
+    margin-left: 25px;
+  }
+  #gslistview .thm_groups_toogleitem {
+    display: inherit!important;
+  }
+  .respListHeader {
+    width: 25px;
+    float: left;
+    margin-right: 5px;
+  }
+}
 #mob_nav .container-fluid {
   padding: 0px;
 }
@@ -16,16 +54,19 @@
   width: 100% !important;
   float: left !important;
 }
-.gslistview > .col-sm-6 > ul,
-ol {
-  margin: 13px 13px 0px 25px;
-}
 #mob_nav {
   visibility: hidden;
 }
 #mob_nav .navbar-inner {
   background-color: #4A5C66;
   background-image: none;
+}
+#secondWrapper .respEmail {
+  display: none;
+}
+#secondWrapper .respEmail-hidden {
+  display: inherit;
+  float: left;
 }
 @media screen and (max-width: 480px) {
   .thm_groups_profile_container_profile_image {
@@ -35,15 +76,26 @@ ol {
   #mob_nav {
     visibility: visible;
   }
-  .thm_groups_alphabet,
-  #gslistview .thm_groups_alphabet > a {
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 0.7rem;
+  #secondWrapper a > .icon-mail-2 {
+    font-size: 1rem;
   }
-  .gslistview > .col-sm-6 > ul,
-  ol {
-    margin-left: 0px;
+  #secondWrapper a.btn {
+    width: 26%;
+  }
+  #secondWrapper .respMail-label {
+    display: none;
+  }
+  #secondWrapper .respEmail-hidden {
+    display: none;
+  }
+  #secondWrapper .respEmail {
+    display: inherit;
+  }
+  #secondWrapper .thm_groups_profile_container_line {
+    width: 75%;
+  }
+  #thm_groups_profile_container_list .thm_groups_profile_container_list_coloumn {
+    font-size: 0.75rem !important;
   }
 }
 @media screen and (min-width: 481px) and (max-width: 665px) {

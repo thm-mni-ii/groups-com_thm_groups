@@ -59,7 +59,11 @@ class THM_GroupsViewArticles extends THM_CoreViewList
         $document = JFactory::getDocument();
         $document->addStyleSheet(JURI::base(true) . '/components/com_thm_groups/css/quickpage.css');
         $document->addStyleSheet(JURI::base(true) . '/components/com_thm_groups/css/articles.css');
+
+        //todo: comment in library path when lib is pushed to Gerrit.
+        //$document->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/respArticles.css');
         $document->addStyleSheet(JURI::base(true) . '/components/com_thm_groups/css/respArticles.css');
+
         // Include Bootstrap
         JHtmlBootstrap::loadCSS();
         parent::display($tpl);
