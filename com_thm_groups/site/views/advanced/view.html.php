@@ -136,14 +136,17 @@ class THM_GroupsViewAdvanced extends JViewLegacy
     {
         $jsonTable = json_decode($data);
         $table = "<table class='table'><tr>";
-        foreach ($jsonTable[0] as $key => $value) {
+        foreach ($jsonTable[0] as $key => $value)
+        {
             $headItem = str_replace("_", " ", $key);
             $table = $table . "<th>" . $headItem . "</th>";
         }
         $table = $table . "</tr>";
-        foreach ($jsonTable as $item) {
+        foreach ($jsonTable as $item)
+        {
             $table = $table . "<tr>";
-            foreach ($item as $value) {
+            foreach ($item as $value)
+            {
                 $table = $table . "<td>" . $value . "</td>";
             }
             $table = $table . "</tr>";
@@ -165,7 +168,8 @@ class THM_GroupsViewAdvanced extends JViewLegacy
      */
     public function addPxSuffixToNumeric($value)
     {
-        if (is_numeric($value)) {
+        if (is_numeric($value))
+        {
             $value .= 'px';
         }
         return $value;
@@ -374,7 +378,8 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                     . JRoute::_($path . $itemid . '&gsuid=' . $userID . '&name=' . trim($lastName) . '&gsgid=' . $gsgid)
                     . ">";
         }
-        if (trim($attribut->value) != "") {
+        if (trim($attribut->value) != "")
+        {
             $result .= "<div class='gs_advlist_longinfo'" . ($attribut->structwrap ? $displayLeft : $displayInline) . ">" . trim($attribut->value) . "</div> ";
         }
 
@@ -384,23 +389,23 @@ class THM_GroupsViewAdvanced extends JViewLegacy
     }
 
     /**
-     * to get All the User of a Group for Advanced-View
+     * To get All the User of a Group for Advanced-View
      *
-     * @param  Array   $allUsersData     content All Member of a groups
-     * @param  Integer $col_view         Number of column
-     * @param  String  $paramLinkTarget  Show Option for Link
-     * @param  Boolean $canEdit          Can User Edit
-     * @param  Integer $gsgid            Group Id
-     * @param  Integer $itemid           Menu Id
-     * @param  Integer $app_option       Group Member ID
-     * @param  Array   $app_layout       Layout Option
-     * @param  Array   $app_view         view Option
-     * @param  Boolean $truncateLongInfo Hidden the Attribute
+     * @param   Array    $allUsersData      content All Member of a groups
+     * @param   Integer  $col_view          Number of column
+     * @param   String   $paramLinkTarget   Show Option for Link
+     * @param   Boolean  $canEdit           Can User Edit
+     * @param   Integer  $gsgid             Group Id
+     * @param   Integer  $itemid            Menu Id
+     * @param   Integer  $app_option        Group Member ID
+     * @param   Array    $app_layout        Layout Option
+     * @param   Array    $app_view          view Option
+     * @param   Boolean  $truncateLongInfo  Hidden the Attribute
      *
      * @return the HTML Code with all users information
      */
-    public function showAllUserOfGroup($allUsersData, $col_view, $paramLinkTarget, $canEdit, $gsgid,
-                                       $itemid, $app_option, $app_layout, $app_view, $truncateLongInfo)
+    public function showAllUserOfGroup($allUsersData, $col_view, $paramLinkTarget,
+                                       $canEdit, $gsgid, $itemid, $app_option, $app_layout, $app_view, $truncateLongInfo)
     {
 
         // Show Profiles
@@ -419,7 +424,8 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 		
         foreach ($members as $id => $member) {
             // Open Row Tag - Even / Odd
-            if ($elementCounter % $countOfColoumns == 0) {
+            if ($elementCounter % $countOfColoumns == 0)
+            {
                 // Count Elements
                 $rowCounter++;
 
@@ -428,11 +434,13 @@ class THM_GroupsViewAdvanced extends JViewLegacy
             }
 
             // Open Coloumn Wrapper Tag - Only for float-attribute, now is easy to work with width:100%
-            if ($countOfColoumns == 1) {
+            if ($countOfColoumns == 1)
+            {
                 $cssListColoumnClass = '_full';
                 $result .= '<div class="thm_groups_profile_container_list_coloumn_wrapper' . $cssListColoumnClass .'">';
             }
-            else {
+            else
+            {
                 $cssListColoumnClass = ($elementCounter % $countOfColoumns == 0) ? '_left' : '_right';
                 $result .= '<div class="thm_groups_profile_container_list_coloumn_wrapper '
                     . ' col_med_6_advanced col-sm-6 span6 thm_groups_profile_container_list_coloumn_wrapper' . $cssListColoumnClass . '">';
@@ -451,20 +459,25 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
             $componentparams = JComponentHelper::getParams('com_thm_groups');
 
-            foreach ($member as $memberhead) {
+            foreach ($member as $memberhead)
+            {
                 // Daten fuer den HEAD in Variablen speichern
-                switch ($memberhead->structid) {
+                switch ($memberhead->structid)
+                {
                     case "2":
                         $lastName = $memberhead->value;
                         $result .= "<div id='" . $lastName . "' style='visibility:hidden;'></div>";
                         break;
                     default:
-                        if ($memberhead->type == "PICTURE" && $picture == null && $memberhead->publish) {
+                        if ($memberhead->type == "PICTURE" && $picture == null && $memberhead->publish)
+                        {
                             $picture = $memberhead->value;
-                            if (isset($memberhead->options)) {
+                            if (isset($memberhead->options))
+                            {
                                 $pictureOption = json_decode($memberhead->options);
                             }
-                            else {
+                            else
+                            {
                                 $pictureOption = json_decode($memberhead->dynOptions);
                             }
                             $tempposition = explode('images/', $pictureOption->path, 2);
@@ -474,12 +487,10 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                 }
             }
 
-
             $result .= "<div id='secondWrapper'>";
 
-
-            if ($picture != null) {
-
+            if ($picture != null)
+            {
                 $result .= JHTML::image(JURI::root() . $picpath . $picture, "Portrait", array('class' => 'thm_groups_profile_container_profile_image'));
             }
  			/*else
@@ -494,7 +505,8 @@ class THM_GroupsViewAdvanced extends JViewLegacy
             $tempcanEdit = (($User->id == $id && $componentparams->get('editownprofile', 0) == 1) || $canEdit);
 
             // Jeder Benutzer kann sich selbst editieren
-            if ($tempcanEdit) {
+            if ($tempcanEdit)
+            {
 
                 $attribs['title'] = 'bearbeiten';
 
@@ -505,20 +517,10 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                 $path = "index.php?option=com_thm_groups&view=user_edit&layout=default&tmpl=component&Itemid=";
                 $gspart = '&gsgid=' . $gsgid;
                 $trim = "&name=" . trim($lastName);
-                $result .= "<a href='#' id='openFrame'>"
+                $asd = "iframe";
+                $result .= "<a href='". JRoute:: _(
+                        $path . $itemid . '&gsuid=' . $id . $trim . $gspart ) . "' class='modal' rel='{size: {x: 700, y: 600}, handler: \"iframe\", onClose: \"window.location.reload();\"}'>"
                     . JHTML:: image("components/com_thm_groups/img/edit.png", 'bearbeiten', $attribs) . "</a>";
-                $result .= '<div id="thm_groups_profile" class="modal hide fade" tabindex="-1" role="dialog">
-	                            <div class="modal-header">
-		                            <button type="button" class="close" data-dismiss="modal">×</button>
-			                <h3>' . JText::_('COM_THM_GROUPS_PROFILE_EDIT'). '</h3>
-                            </div>
-                            <div class="modal-body">
-                              <iframe src="' . JRoute:: _(
-                        $path . $itemid . '&gsuid=' . $id . $trim . $gspart ) .
-                     '" style="width:110%; height:150em" frameborder="0"></iframe>
-                            </div>
-
-                        </div>';
             }
             $result .= "</div>";
 
@@ -538,7 +540,8 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                             style='float: left;'> ";
                         }
                     }
-                    else {
+                    else
+                    {
                         $result .= "<div style='display: inline;'> ";
                     }
                     // Attributnamen anzeigen
@@ -555,7 +558,8 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                     }
 
                     // Attribut anzeigen
-                    switch ($memberitem->structid) {
+                    switch ($memberitem->structid)
+                    {
                         // Reihenfolge ist von ORDER in Datenbank abhaengig. somit ist hier die Reihenfolge egal
                         case "1":
                             $result .= $this->getUserinInformation($paramLinkTarget, $itemid, $lastName, $gsgid, $id, $memberitem);
@@ -573,7 +577,8 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                             $result .= '<span class="respEmail-hidden">' . JHTML:: _('email.cloak', $memberitem->value) . '</span>';
                             break;
                         default:
-                            switch ($memberitem->type) {
+                            switch ($memberitem->type)
+                            {
                                 case "LINK":
                                     $result .= "<a href='" . htmlspecialchars_decode($memberitem->value) . "'>"
                                         . htmlspecialchars_decode($memberitem->value) . "</a>";
@@ -587,17 +592,21 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                                 case "TEXTFIELD":
                                     // Long Info
                                     $text = JString::trim(htmlspecialchars_decode($memberitem->value));
-                                    if (!empty($text)) {
-                                        if (stripos($text, '<li>') === false) {
+                                    if (!empty($text))
+                                    {
+                                        if (stripos($text, '<li>') === false)
+                                        {
                                             $text = nl2br($text);
                                         }
                                         // Truncate Long Info Text
-                                        if ($truncateLongInfo) {
+                                        if ($truncateLongInfo)
+                                        {
                                             $result .= '<span class="thm_groups_profile_container_profile_read_more">' .
                                                 JText::_('COM_THM_GROUPS_PROFILE_CONTAINER_LONG_INFO_READ_MORE') . '</span>';
                                             $result .= '<div class="thm_groups_profile_container_profile_long_info" style="display:none;">' . $text . '</div>';
                                         }
-                                        else {
+                                        else
+                                        {
                                             $result .= '<div class="thm_groups_profile_container_profile_long_info">' . $text . '</div>';
                                         }
                                     }
@@ -610,15 +619,15 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                     }
 
                     $result .= "</div>";
-                    if ($memberitem->structwrap == true) {
+                    if ($memberitem->structwrap == true)
+                    {
                         $wrap = true;
                     }
-                    else {
+                    else
+                    {
                         $wrap = false;
                         $result .= " ";
                     }
-                }
-                else {
                 }
             }
             $result .= "</div>";
@@ -636,13 +645,16 @@ class THM_GroupsViewAdvanced extends JViewLegacy
             $result .= '</div>';
 
             // Close Wrapper Tag
-            if (($elementCounter + 1) % $countOfColoumns == 0) {
+            if (($elementCounter + 1) % $countOfColoumns == 0)
+            {
                 $result .= '<div class="clearfix"></div>';
                 $result .= '</div>';
             }
 
-            if (($elementCounter % 2 == 0) && ($elementCounter == $lastIndex)) {
-                if ($countOfColoumns == 2) {
+            if (($elementCounter % 2 == 0) && ($elementCounter == $lastIndex))
+            {
+                if ($countOfColoumns == 2)
+                {
                     $result .= '</div>';
                 }
             }
@@ -652,19 +664,17 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
         }
         // Truncate Long Info Text
-        if ($truncateLongInfo) {
+        if ($truncateLongInfo)
+        {
 
             $result .= '<script type="text/javascript">
-
-                        jQuery(".thm_groups_profile_container_profile_read_more").click(
-                            function() {
-                                jQuery(this).next().slideToggle();});
-                        jQuery("#openFrame").click(function(){
-                        jQuery("#thm_groups_profile").on("show", function () {});
-                        jQuery("#thm_groups_profile").modal({show:true})});
-
-
-                                </script>';
+                            jQuery(".thm_groups_profile_container_profile_read_more").click(
+                                function() {
+                                    jQuery(this).next().slideToggle();});
+                            jQuery("#openFrame").click(function(){
+                            jQuery("#thm_groups_profile").on("show", function () {});
+                            jQuery("#thm_groups_profile").modal({show:true})});
+                        </script>';
         }
         return $result;
     }

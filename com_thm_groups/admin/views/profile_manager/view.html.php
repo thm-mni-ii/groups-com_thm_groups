@@ -16,6 +16,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('thm_core.list.view');
+JHtml::_('jquery.framework');
 require_once JPATH_COMPONENT . '/assets/helpers/group_manager_helper.php';
 
 /**
@@ -83,9 +84,7 @@ class THM_GroupsViewProfile_Manager extends THM_CoreViewList
             $bar = JToolBar::getInstance('toolbar');
             JHtml::_('bootstrap.modal', 'myModal');
             $title = JText::_('COM_THM_GROUPS_PROFILE_MANAGER_BATCH');
-
-            // TODO change name for data-target to a meaningful name
-            $dhtml = "<button data-toggle='modal' data-target='#collapseModal' class='btn btn-small'><i class='icon-edit' title='$title'></i> $title</button>";
+            $dhtml = "<button id='add_group_to_profile_btn' data-toggle='modal' data-target='#collapseModal' class='btn btn-small'><i class='icon-edit' title='$title'></i> $title</button>";
 
             $bar->appendButton('Custom', $dhtml, 'batch');
         }

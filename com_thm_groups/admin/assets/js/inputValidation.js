@@ -55,8 +55,9 @@ function disable()
         }
     }
 
+    // Disable only all save-buttons except cancel-button
     if (disable){
-        for (var i=0;i<buttons.length;i++)
+        for (var i=0;i<buttons.length-1;i++)
         {
             buttons[i].disabled = true;
         }

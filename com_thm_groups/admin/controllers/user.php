@@ -64,6 +64,7 @@ class THM_GroupsControllerUser extends JControllerLegacy
     public function publish()
     {
         $model = $this->getModel('user');
+        JFactory::getApplication()->input->set('attribute', 1);
         $success = $model->toggle('publish');
         if ($success)
         {
@@ -84,6 +85,56 @@ class THM_GroupsControllerUser extends JControllerLegacy
     public function unpublish()
     {
         $model = $this->getModel('user');
+        $success = $model->toggle('unpublish');
+        if ($success)
+        {
+            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
+            $type = 'message';
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
+            $type = 'error';
+        }
+        $this->setRedirect("index.php?option=com_thm_groups&view=user_manager", $msg, $type);
+    }
+
+    /**
+     * Activates quickpages for multiple users
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
+    public function activateQPForUser()
+    {
+        $model = $this->getModel('user');
+        JFactory::getApplication()->input->set('attribute', 'qpPublished');
+        $success = $model->toggle('publish');
+        if ($success)
+        {
+            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
+            $type = 'message';
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
+            $type = 'error';
+        }
+        $this->setRedirect("index.php?option=com_thm_groups&view=user_manager", $msg, $type);
+    }
+
+    /**
+     * Deactivates quickpages for multiple users
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
+    public function deactivateQPForUser()
+    {
+        $model = $this->getModel('user');
+        JFactory::getApplication()->input->set('attribute', 'qpPublished');
         $success = $model->toggle('unpublish');
         if ($success)
         {
@@ -211,19 +262,22 @@ class THM_GroupsControllerUser extends JControllerLegacy
     }
 
     /**
-     * Redirects to the category_edit view for the editing of existing categories
+     * Redirects to the user_edit view for the editing of existing user
      *
      * @return void
      */
     public function edit()
     {
-        if (!JFactory::getUser()->authorise('core.admin'))
-        {
-            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
-        }
+        $cid = $this->input->post->get('cid', array(), 'array');
 
-        $this->input->set('view', 'user_edit');
-        $this->input->set('hidemainmenu', 1);
-        parent::display();
+        // Only edit the first id in the list
+        if (count($cid) > 0)
+        {
+            $this->setRedirect(JRoute::_("index.php?option=com_thm_groups&view=user_edit&id=$cid[0]", false));
+        }
+        else
+        {
+            $this->setRedirect("index.php?option=com_thm_groups&view=user_edit");
+        }
     }
 }

@@ -305,11 +305,15 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
         JHtml::_('script', JUri::root() . $componentDir . '/assets/js/inputValidation.js');
         JHtml::_('script', JUri::root() . $componentDir . '/assets/js/user_edit.js');
 
+
         $doc = JFactory::getDocument();
         $doc -> addStyleSheet(JURI::root(true) . $componentDir . '/assets/css/cropbox.css');
         $doc -> addStyleSheet(JURI::root(true) . $componentDir . '/assets/css/edit.css');
         $doc -> addStyleSheet(JUri::root() . "libraries/thm_core/fonts/iconfont.css");
         $doc -> addScript(JUri::root() . "libraries/thm_core/js/formbehaviorChosenHelper.js");
+        $doc -> addScriptDeclaration("        window.onbeforeunload = function() {
+            window.parent.location.reload();
+        };");
 
         $this->app = $app;
         $this->userContent = $this->get('Content');

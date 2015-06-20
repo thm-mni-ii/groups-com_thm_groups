@@ -133,7 +133,7 @@ class THM_GroupsModelArticle extends JModelAdmin
      * @param   array   $config  Configuration array for model. Optional.
      *
      * @return	JTable	A database object
-    */
+     */
     public function getTable($type = 'Content', $prefix = 'JTable', $config = array())
     {
         return JTable::getInstance($type, $prefix, $config);
@@ -194,7 +194,7 @@ class THM_GroupsModelArticle extends JModelAdmin
      */
     public function getForm($data = array(), $loadData = true)
     {
-        return 'Fatal Error: No form supported for Quickpage articles_old';
+        return 'Fatal Error: No form supported for Quickpage articles';
     }
 
     /**

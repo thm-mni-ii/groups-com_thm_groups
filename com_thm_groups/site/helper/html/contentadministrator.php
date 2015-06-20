@@ -36,15 +36,15 @@ abstract class JHtmlContentAdministrator
     {
         // Array of image, task, title, action
         $states	= array(
-            0	=> array('disabled.png',	'articles_old.featured',	'COM_CONTENT_UNFEATURED',	'COM_CONTENT_TOGGLE_TO_FEATURE'),
-            1	=> array('featured.png',	'articles_old.unfeatured',	'COM_CONTENT_FEATURED',		'COM_CONTENT_TOGGLE_TO_UNFEATURE'),
+            0	=> array('disabled.png',	'articles.featured',	'COM_CONTENT_UNFEATURED',	'COM_CONTENT_TOGGLE_TO_FEATURE'),
+            1	=> array('featured.png',	'articles.unfeatured',	'COM_CONTENT_FEATURED',		'COM_CONTENT_TOGGLE_TO_UNFEATURE'),
         );
         $state	= JArrayHelper::getValue($states, (int) $value, $states[1]);
         $html	= JHtml::_('image', 'admin/' . $state[0], JText::_($state[2]), null, true);
         if ($canChange)
         {
             $html	= '<a href="javascript:void(0);" onclick="return listItemTask(\'cb' . $index . '\',\'' . $state[1] . '\')" title="' .
-            JText::_($state[3]) . '">' . $html . '</a>';
+                JText::_($state[3]) . '">' . $html . '</a>';
         }
 
         return $html;

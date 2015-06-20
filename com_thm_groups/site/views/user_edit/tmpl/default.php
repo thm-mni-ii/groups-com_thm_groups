@@ -41,7 +41,10 @@ else
     JHTML::_('behavior.modal', 'a.modal-button');
     JHTML::_('behavior.calendar');
     ?>
-    <script>jQf = jQuery.noConflict();</script>
+    <script>
+        jQf = jQuery.noConflict();
+
+    </script>
     <form action="index.php"
           enctype="multipart/form-data"
           method="post"
@@ -52,8 +55,7 @@ else
         <div class="form-horizontal">
 
             <div class="form-actions">
-                <button type="submit" class="btn "><?php echo JText::_('JSUBMIT');?></button>
-                <a class="btn" href="<?php echo JRoute::_('');?>" title="<?php echo JText::_('JCANCEL');?>"><?php echo JText::_('JCANCEL');?></a>
+                <button type="submit" class="btn btn-primary"><?php echo JText::_('JAPPLY');?></button>
                 <input type="hidden" name="option" value="com_thm_groups" />
                 <input type="hidden" name="task" value="user.apply"/>
                 <?php echo JHtml::_('form.token');?>

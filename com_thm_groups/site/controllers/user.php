@@ -160,7 +160,7 @@ class THM_GroupsControllerUser extends JControllerLegacy
         {
             $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
 
-            $this->setRedirect('index.php?option=com_thm_groups&view=profile&gsgid=' . $gsgid
+            $this->setRedirect('index.php?option=com_thm_groups&view=user_edit&tmpl=component&gsgid=' . $gsgid
                 . '&gsuid=' . $userid, $msg);
         }
         else

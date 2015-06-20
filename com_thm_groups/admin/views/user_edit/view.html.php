@@ -29,6 +29,7 @@ jimport('thm_core.edit.view');
 class THM_GroupsViewUser_Edit extends THM_CoreViewEdit
 {
     public $item = null;
+
     public $userContent = null;
 
     /**

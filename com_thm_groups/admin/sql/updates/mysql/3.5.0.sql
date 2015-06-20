@@ -18,12 +18,18 @@ INSERT INTO `#__thm_groups_users`
     `injoomla`  AS "injoomla",
     1           AS "canEdit",
     0           AS "qpPublished"
-  FROM `#__thm_groups_additional_userdata`;
+  FROM `#__thm_groups_additional_userdata` AS a
+    JOIN `#__users` AS b ON a.userid = b.id;
+
+UPDATE `#__thm_groups_users` AS users
+  JOIN `#__thm_quickpages_map` AS qp_map
+    ON users.userid = qp_map.id
+SET qpPublished = 1;
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_users_categories` (
-  `ID`           INT(11)          NOT NULL AUTO_INCREMENT,
-  `usersID`      INT(11) UNSIGNED NOT NULL,
-  `categoriesID` INT(11)          NOT NULL,
+  `ID`           INT(11) NOT NULL AUTO_INCREMENT,
+  `usersID`      INT(11) NOT NULL,
+  `categoriesID` INT(11) NOT NULL,
   PRIMARY KEY (`ID`),
   FOREIGN KEY (`usersID`) REFERENCES `#__thm_groups_users` (`id`)
     ON UPDATE CASCADE
@@ -34,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_users_categories` (
 )
   ENGINE = InnoDB;
 
-INSERT INTO `#__thm_groups_users_categories(ID, usersID, categoriesID)`
+INSERT INTO `#__thm_groups_users_categories`(ID, usersID, categoriesID)
   SELECT
     ''       AS ID,
     users.id AS usersID,
@@ -43,13 +49,14 @@ INSERT INTO `#__thm_groups_users_categories(ID, usersID, categoriesID)`
     JOIN `#__categories` AS cat
       ON users.id = cat.created_user_id AND cat.parent_id = (SELECT id
                                                              FROM `#__categories`
-                                                             WHERE path = "quickpages");
+                                                             WHERE path = "quickpages" OR path = "persoenliche-seiten");
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_users_content` (
-  `ID`        INT(11)    NOT NULL AUTO_INCREMENT,
-  `usersID`   INT(11)    NOT NULL,
-  `contentID` INT(11)    NOT NULL,
-  `featured`  TINYINT(1) NULL,
+  `ID`        INT(11)          NOT NULL AUTO_INCREMENT,
+  `usersID`   INT(11)          NOT NULL,
+  `contentID` INT(11) UNSIGNED NOT NULL,
+  `featured`  TINYINT(1)       NULL,
+  `published` TINYINT(1)       NULL,
   PRIMARY KEY (`ID`),
   FOREIGN KEY (`usersID`) REFERENCES `#__thm_groups_users` (`id`)
     ON UPDATE CASCADE
@@ -60,18 +67,18 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_users_content` (
 )
   ENGINE = InnoDB;
 
-INSERT INTO `#__thm_groups_users_content` (`ID`, `usersID`, `contentID`, `featured`)
+INSERT INTO `#__thm_groups_users_content` (`usersID`, `contentID`, `featured`, `published`)
   SELECT
-    ''         AS ID,
     users.id   AS usersID,
     content.id AS contentID,
-    ''         AS featured
+    0          AS featured,
+    0          AS published
   FROM `#__thm_groups_users` AS users
     JOIN `#__content` AS content
       ON users.id = content.created_by AND content.catid IN (SELECT categoriesID
                                                              FROM `#__thm_groups_users_categories`);
 
-UPDATE `#__thm_groups_user_content` AS content
+UPDATE `#__thm_groups_users_content` AS content
   JOIN `#__thm_quickpages_featured` AS featured
     ON content.contentID = featured.conid
 SET featured = 1;
@@ -122,7 +129,7 @@ INSERT INTO `#__thm_groups_dynamic_type` (`id`, `name`, `regex`, `static_typeID`
   (8, 'DATE', '', 8, 'DESCRIPTION DATE', ''),
   (9, 'TEMPLATE', '', 9, 'DESCRIPTION TEMPLATE', '');
 
-CREATE TABLE IF NOT EXISTS `#__thm_groups_attributes` (
+CREATE TABLE IF NOT EXISTS `#__thm_groups_attribute` (
   `id`             INT(11)      NOT NULL AUTO_INCREMENT,
   `dynamic_typeID` INT(11)      NOT NULL,
   `name`           VARCHAR(255) NOT NULL,
@@ -134,9 +141,10 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_attributes` (
     ON DELETE CASCADE,
   UNIQUE INDEX `name_UNIQUE` (`name` ASC)
 )
-  ENGINE = InnoDB;
+  ENGINE = InnoDB
+  AUTO_INCREMENT =100;
 
-INSERT INTO `#__thm_groups_attributes` (`id`, `dynamic_typeID`, `name`)
+INSERT INTO `#__thm_groups_attribute` (`id`, `dynamic_typeID`, `name`)
   SELECT
     struct.id    AS id,
     dyntype.id   AS dynamic_typeID,
@@ -145,126 +153,160 @@ INSERT INTO `#__thm_groups_attributes` (`id`, `dynamic_typeID`, `name`)
     JOIN `#__thm_groups_dynamic_type` AS dyntype
       ON struct.type = dyntype.name;
 
-CREATE TABLE IF NOT EXISTS `#__thm_groups_users_attributes` (
+CREATE TABLE IF NOT EXISTS `#__thm_groups_users_attribute` (
   `ID`          INT(11)    NOT NULL AUTO_INCREMENT,
   `usersID`     INT(11)    NOT NULL,
   `attributeID` INT(11)    NOT NULL,
   `value`       TEXT       NULL,
   `published`   TINYINT(1) NULL,
   PRIMARY KEY (`ID`),
-  FOREIGN KEY (`usersID`) REFERENCES `#__thm_groups_users` (`id`)
+  FOREIGN KEY (`usersID`) REFERENCES `#__users` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  FOREIGN KEY (`attributeID`) REFERENCES `#__thm_groups_attributes` (`id`)
+  FOREIGN KEY (`attributeID`) REFERENCES `#__thm_groups_attribute` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE
 )
   ENGINE = InnoDB;
 
-INSERT INTO `#__thm_groups_users_attributes` (`userID`, `attributeID`, `value`, `published`)
+INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, `published`)
   SELECT
     userid,
     structid AS attributeID,
     value,
     publish  AS published
-  FROM `#__thm_groups_picture`;
+  FROM `#__thm_groups_picture` AS a
+    JOIN `#__users` AS b ON a.userid = b.id;
 
-INSERT INTO `#__thm_groups_users_attributes` (`userID`, `attributeID`, `value`, `published`)
+INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, `published`)
   SELECT
     userid,
     structid AS attributeID,
     value,
     publish  AS published
-  FROM `#__thm_groups_text`;
+  FROM `#__thm_groups_text` AS a
+    JOIN `#__users` AS b ON a.userid = b.id
+      JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
 
-INSERT INTO `#__thm_groups_users_attributes` (`userID`, `attributeID`, `value`, `published`)
+INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, `published`)
   SELECT
     userid,
     structid AS attributeID,
     value,
     publish  AS published
-  FROM `#__thm_groups_textfield`;
+  FROM `#__thm_groups_textfield` AS a
+    JOIN `#__users` AS b ON a.userid = b.id
+      JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
 
-INSERT INTO `#__thm_groups_users_attributes` (`userID`, `attributeID`, `value`, `published`)
+INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, `published`)
   SELECT
     userid,
     structid AS attributeID,
     value,
     publish  AS published
-  FROM `#__thm_groups_multiselect`;
+  FROM `#__thm_groups_multiselect` AS a
+    JOIN `#__users` AS b ON a.userid = b.id
+      JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
 
-INSERT INTO `#__thm_groups_users_attributes` (`userID`, `attributeID`, `value`, `published`)
+INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, `published`)
   SELECT
     userid,
     structid AS attributeID,
     value,
     publish  AS published
-  FROM `#__thm_groups_table`;
+  FROM `#__thm_groups_table` AS a
+    JOIN `#__users` AS b ON a.userid = b.id
+      JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
 
-INSERT INTO `#__thm_groups_users_attributes` (`userID`, `attributeID`, `value`, `published`)
+INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, `published`)
   SELECT
     userid,
     structid AS attributeID,
     value,
     publish  AS published
-  FROM `#__thm_groups_link`;
+  FROM `#__thm_groups_link` AS a
+    JOIN `#__users` AS b ON a.userid = b.id
+      JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
 
-INSERT INTO `#__thm_groups_users_attributes` (`userID`, `attributeID`, `value`, `published`)
+INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, `published`)
   SELECT
     userid,
     structid AS attributeID,
     value,
     publish  AS published
-  FROM `#__thm_groups_number`;
+  FROM `#__thm_groups_number` AS a
+    JOIN `#__users` AS b ON a.userid = b.id
+      JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
 
-INSERT INTO `#__thm_groups_users_attributes` (`userID`, `attributeID`, `value`, `published`)
+INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, `published`)
   SELECT
     userid,
     structid AS attributeID,
     value,
     publish  AS published
-  FROM `#__thm_groups_date`;
+  FROM `#__thm_groups_date` AS a
+    JOIN `#__users` AS b ON a.userid = b.id
+      JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
 
-CREATE TABLE IF NOT EXISTS `#__thm_groups_mappings` (
-  `ID`           INT(11) NOT NULL AUTO_INCREMENT,
-  `usersID`      INT(11) NOT NULL,
-  `usergroupsID` INT(11) NOT NULL,
-  `rolesID`      INT(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `#__thm_groups_usergroups_roles` (
+  `ID`           INT(11)          NOT NULL AUTO_INCREMENT,
+  `usergroupsID` INT(11) UNSIGNED NOT NULL,
+  `rolesID`      INT(11)          NOT NULL,
   PRIMARY KEY (`ID`),
-  FOREIGN KEY (`usersID`) REFERENCES `#__thm_groups_users` (`id`)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
   FOREIGN KEY (`usergroupsID`) REFERENCES `#__usergroups` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  FOREIGN KEY (`rolesID`) REFERENCES `#__thm_groups_roles` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  AUTO_INCREMENT = 1;
+
+CREATE TABLE IF NOT EXISTS `#__thm_groups_users_usergroups_roles` (
+  `ID`                 INT(11) NOT NULL AUTO_INCREMENT,
+  `usersID`            INT(11) NOT NULL,
+  `usergroups_rolesID` INT(11) NOT NULL,
+  PRIMARY KEY (`ID`),
+  FOREIGN KEY (`usergroups_rolesID`) REFERENCES `#__thm_groups_usergroups_roles` (`ID`)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  FOREIGN KEY (`rolesID`) REFERENCES `#__thm_groups_roles` (`id`)
+  FOREIGN KEY (`usersID`) REFERENCES `#__users` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE
 )
   ENGINE = InnoDB;
 
-INSERT INTO `#__thm_groups_mappings` (`usersID`, `usergroupsID`, `rolesID`)
+INSERT INTO `#__thm_groups_usergroups_roles` (`usergroupsID`, `rolesID`)
   SELECT
-    map.uid AS userID,
-    map.gid AS usergroupsID,
-    map.rid AS rolesID
-  FROM `#__thm_groups_groups_map` AS map;
+    DISTINCT map.gid AS usergroupsID, map.rid AS rolesID
+  FROM `#__thm_groups_groups_map` AS map
+    JOIN `#__usergroups` AS a ON a.id = map.gid
+      JOIN `#__thm_groups_roles` AS b ON b.id = map.rid;
+
+INSERT INTO `#__thm_groups_users_usergroups_roles` (`usersID`, `usergroups_rolesID`)
+  SELECT
+    map.uid AS usersID, a.ID as usergroups_rolesID
+  FROM `#__thm_groups_usergroups_roles` as a
+    JOIN `#__thm_groups_groups_map` AS map ON a.rolesID = map.rid AND a.usergroupsID = map.gid
+      JOIN `#__users` AS b ON map.uid = b.id;
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile` (
   `id`      INT(11)      NOT NULL AUTO_INCREMENT,
   `name`    VARCHAR(255) NULL,
-  `orderBy` INT          NULL,
+  `order`   INT          NULL,
   PRIMARY KEY (`id`)
 )
   ENGINE = InnoDB;
 
-INSERT INTO `#__thm_groups_profile` (`id`, `name`, `orderBy`) VALUES
-  (1, 'STANDARD', 1);
+INSERT INTO `#__thm_groups_profile` (`id`, `name`, `order`) VALUES
+  (1, 'Standard', 1);
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_usergroups` (
-  `ID`           INT(11) NOT NULL AUTO_INCREMENT,
-  `profileID`    INT(11) NOT NULL,
-  `usergroupsID` INT(11) NOT NULL,
+  `ID`           INT(11)          NOT NULL AUTO_INCREMENT,
+  `profileID`    INT(11)          NOT NULL,
+  `usergroupsID` INT(11) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`profileID`) REFERENCES `#__thm_groups_profile` (`id`)
     ON UPDATE CASCADE
@@ -275,29 +317,51 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_usergroups` (
 )
   ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attributes` (
+CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attribute` (
   `ID`          INT(11) NOT NULL AUTO_INCREMENT,
   `profileID`   INT(11) NOT NULL,
   `attributeID` INT(11) NOT NULL,
-  `orderBy`     INT(3)  NULL,
-  `options`     TEXT    NULL,
+  `order`       INT(3)  NULL,
+  `params`      TEXT    NULL,
   PRIMARY KEY (`ID`),
   FOREIGN KEY (`profileID`) REFERENCES `#__thm_groups_profile` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  FOREIGN KEY (`attributeID`) REFERENCES `#__thm_groups_attributes` (`id`)
+  FOREIGN KEY (`attributeID`) REFERENCES `#__thm_groups_attribute` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE
 )
   ENGINE = InnoDB;
 
-INSERT INTO `#__thm_groups_profile_attributes` (`profileID`, `attributeID`, `orderBy`)
+INSERT INTO `#__thm_groups_profile_attribute` (`profileID`, `attributeID`, `order`, `params`)
   SELECT
     1,
     structitem.id   AS attributeID,
-    structure.order AS orderBy
-  FROM `#__thm_groups_structure_item` AS structitem
-    JOIN `#__thm_groups_structure` AS structure ON structitem.id = structure.id;
+    structitem.order AS `order`,
+    '{ "label" : true, "wrap" : true}'
+  FROM `#__thm_groups_structure` AS structitem;
+
+CREATE TABLE IF NOT EXISTS `#__thm_groups_settings` (
+  `id`     INT(1)       NOT NULL AUTO_INCREMENT,
+  `type`   VARCHAR(255) NOT NULL,
+  `params` TEXT         NOT NULL,
+  PRIMARY KEY (`id`)
+)
+  ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `#__thm_groups_users_usergroups_moderator` (
+  `id`           INT(11)          NOT NULL AUTO_INCREMENT,
+  `usersID`      INT(11)          NULL,
+  `usergroupsID` INT(11) UNSIGNED NULL,
+  PRIMARY KEY (`id`, `usersID`, `usergroupsID`),
+  FOREIGN KEY (`usersID`) REFERENCES `#__thm_groups_users` (`id`)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  FOREIGN KEY (`usergroupsID`) REFERENCES `#__usergroups` (`id`)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+)
+  ENGINE = InnoDB;
 
 
 

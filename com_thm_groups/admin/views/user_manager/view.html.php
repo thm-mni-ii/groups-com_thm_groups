@@ -83,6 +83,8 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
         {
             JToolBarHelper::publishList('user.publish', 'COM_THM_GROUPS_USER_MANAGER_PUBLISH');
             JToolBarHelper::unpublishList('user.unpublish', 'COM_THM_GROUPS_USER_MANAGER_DISABLE');
+            JToolBarHelper::publishList('user.activateQPForUser', 'COM_THM_GROUPS_USER_MANAGER_QP_ACTIVATE');
+            JToolBarHelper::unpublishList('user.deactivateQPForUser', 'COM_THM_GROUPS_USER_MANAGER_QP_DEACTIVATE');
             JToolBarHelper::divider();
         }
 

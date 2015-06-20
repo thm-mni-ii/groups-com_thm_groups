@@ -19,18 +19,35 @@ function deleteProfile(groupId, profileId){
     document.adminForm.submit();
 }
 
-function confirmMsg(){
-    var msg = "You leave the component THM Groups!";
-    if(!confirm(msg)){
+function checkSelection() {
+    if (document.adminForm.boxchecked.value==0) {
+        alert('Please first make a selection from the list');
         return false;
     }
 }
 
-var jq = jQuery.noConflict();
-jq(document).ready(function() {
-   jq('#toolbar-new').on('click', function(){
-      confirmMsg();
-   });
+var $ = jQuery.noConflict();
+$(document).ready(function() {
+
+    $('#toolbar-new').click(function(){
+        if (!confirm('You leave the component THM Groups!')) {
+            javascript:history.go(0);
+            return false;
+        }
+    });
+
+    $("#toolbar-popup-edit").click(function() {
+        return checkSelection();
+    });
+
+    $("#add_role_to_group_btn").click(function() {
+        return checkSelection();
+
+    });
+
+    $("#add_profile_to_group_btn").click(function() {
+        return checkSelection();
+    });
 });
 
 

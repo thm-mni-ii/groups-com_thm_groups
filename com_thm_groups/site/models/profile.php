@@ -30,7 +30,7 @@ Jimport('thm_groups.data.lib_thm_group');
  * @package   thm_groups
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
-*/
+ */
 class THM_GroupsModelProfile extends JModelForm
 {
     protected $db;
@@ -96,7 +96,7 @@ class THM_GroupsModelProfile extends JModelForm
         $userid = JFactory::$application->input->get('gsuid');
         $groupid = $this->getGroupNumber();
         $profilid = THMLibThmGroups::getGroupsProfile($groupid);
-        $result = THMLibThmGroupsUser::getAllUserProfilData($userid,$profilid);
+        $result = THMLibThmGroupsUser::getAllUserProfilData($userid,$profilid->profileID);
         return $result;
     }
 

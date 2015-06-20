@@ -60,14 +60,14 @@ $session = JFactory::getSession();
                     </div>
                     <div id='jform_<?php echo $name; ?>_box' class='controls'>
                         <?php if ($item->name == 'TEXTFIELD') :
-                            $output = "<textarea id='jform_" . $name . "'"
+                            $output = "<textarea class='hasTooltip' data-original-title='". $item->description ."' data-placement='right' id='jform_" . $name . "'"
                                 . "style='float:left !important;'"
                                 . "type='text'"
                                 . "name='jform[" . $name . "]'>" . $item->value . "</textarea>";
                             echo $output;
                             ?>
                         <?php elseif ($item->name == 'MULTISELECT') :
-                            $output = "<select multiple class='form-control' id='jform_" . $name . "'"
+                            $output = "<select multiple class='hasTooltip' data-original-title='". $item->description ."' data-placement='right' class='form-control' id='jform_" . $name . "'"
                                 . "name='jform[" . $name . "[]]'>"
                                 . "style='float:left !important; margin-left: 0px !important;'";
                             $fields     = explode(';', json_decode($item->options)->options);
@@ -147,6 +147,13 @@ $session = JFactory::getSession();
                             echo $output;
                             ?>
                         <?php elseif ($item->name == 'PICTURE') :
+
+                            // If name of file is empty, use default picture
+                            /*if (empty($item->value))
+                            {
+                                $item->value = json_decode($item->options)->filename;
+                            }*/
+
                             $pData      = json_decode($item->options);
                             $position   = strpos($pData->path, 'images/');
                             $path       = substr($pData->path, $position);
@@ -287,6 +294,7 @@ $session = JFactory::getSession();
                         <?php else : ?>
                             <input id='jform_<?php echo $name; ?>'
                                    style='float:left !important;'
+                                   class='hasTooltip' data-original-title='<?php echo $item->description; ?>' data-placement='right'
                                    type='text'
                                    data=''
                                    data-req='<?php echo json_decode($item->options)->required; ?>'

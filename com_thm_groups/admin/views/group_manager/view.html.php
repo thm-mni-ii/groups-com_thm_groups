@@ -106,7 +106,7 @@ class THM_GroupsViewGroup_Manager extends THM_CoreViewList
             $title = JText::_('COM_THM_GROUPS_GROUP_MANAGER_BATCH');
 
             // TODO change name for data-target to a meaningful name
-            $dhtml = "<button data-toggle='modal' data-target='#collapseModal' class='btn btn-small'><i class='icon-edit' title='$title'></i> $title</button>";
+            $dhtml = "<button id='add_role_to_group_btn' data-toggle='modal' data-target='#collapseModal' class='btn btn-small'><i class='icon-edit' title='$title'></i> $title</button>";
 
             $bar->appendButton('Custom', $dhtml, 'batch');
         }
@@ -117,7 +117,7 @@ class THM_GroupsViewGroup_Manager extends THM_CoreViewList
             $title = JText::_('COM_THM_GROUPS_GROUP_MANAGER_ASSIGN_PROFILE');
 
             // TODO change name for data-target to a meaningful name
-            $dhtml = "<button data-toggle='modal' data-target='#myModal' class='btn btn-small'><i class='icon-edit' title='test'></i> $title</button>";
+            $dhtml = "<button id='add_profile_to_group_btn' data-toggle='modal' data-target='#myModal' class='btn btn-small'><i class='icon-edit' title='test'></i> $title</button>";
 
             $bar->appendButton('Custom', $dhtml, 'batch');
         }

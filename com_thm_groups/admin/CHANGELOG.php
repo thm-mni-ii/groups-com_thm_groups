@@ -1,4 +1,12 @@
 <?php die();?>
+THM Groups 3.5.2
+================================================================================
++ New database scheme
++ New Back-End views
++ New Front-End view for quickpages
++ Validation of user input added
+# Multiple bug fixes
+
 THM Groups 3.4.11
 ================================================================================
 # [MEDIUM] Profile view, css was changed

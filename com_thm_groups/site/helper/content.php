@@ -36,7 +36,7 @@ class ContentHelper
         JSubMenuHelper::addEntry(
             JText::_('JGLOBAL_ARTICLES'),
             'index.php?option=com_content&view=articles',
-            $vName == 'articles_old'
+            $vName == 'articles'
         );
         JSubMenuHelper::addEntry(
             JText::_('COM_CONTENT_SUBMENU_CATEGORIES'),
@@ -88,12 +88,12 @@ class ContentHelper
     }
 
     /**
-    * Applies the content tag filters to arbitrary text as per settings for current user group
-    *
-    * @param   text  $text  The string to filter
-    *
-    * @return  string  The filtered string
-    */
+     * Applies the content tag filters to arbitrary text as per settings for current user group
+     *
+     * @param   text  $text  The string to filter
+     *
+     * @return  string  The filtered string
+     */
     public static function filterText($text)
     {
         // Filter settings

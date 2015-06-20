@@ -16,8 +16,7 @@ defined('_JEXEC') or die;
 
 // Create the add/delete options.
 $options = array(
-	JHtml::_('select.option', 'add', JText::_('COM_THM_GROUPS_BATCH_ADD')),
-	JHtml::_('select.option', 'del', JText::_('COM_THM_GROUPS_BATCH_DELETE')),
+	JHtml::_('select.option', 'add', JText::_('COM_THM_GROUPS_BATCH_ADD'))
 );
 
 JHtml::_('formbehavior.chosen', 'select');

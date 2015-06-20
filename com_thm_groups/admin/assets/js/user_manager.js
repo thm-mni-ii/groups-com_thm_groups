@@ -1,6 +1,13 @@
 var jq = jQuery.noConflict();
 jq(document).ready(function() {
 
+    jq("#toolbar-batch").click(function() {
+        if (document.adminForm.boxchecked.value==0) {
+            alert('Please first make a selection from the list');
+            return false;
+        }
+    });
+
     // Chained select field
     jq("#batch-roles-id").remoteChained({
         parents : "#batch-groups-id",

@@ -105,7 +105,7 @@ class THM_GroupsControllerRole extends JControllerLegacy
         $model = $this->getModel('Role', '', array());
 
         // Preset the redirect
-        $this->setRedirect(JRoute::_('index.php?option=com_thm_groups&view=role_manager' . $this->getRedirectToListAppend(), false));
+        $this->setRedirect('index.php?option=com_thm_groups&view=role_manager');
 
         if ($model->batch())
         {

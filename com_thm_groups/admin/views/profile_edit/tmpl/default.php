@@ -119,7 +119,6 @@ function actualAttributTable(){
             <fieldset class="form-vertical">
                 <?php
                 echo $this->form->renderField('name');
-                echo $this->form->renderField('type');
                 ?>
             </fieldset>
         </div>

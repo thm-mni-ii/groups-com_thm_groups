@@ -23,7 +23,7 @@ require_once JPATH_COMPONENT . '/../com_content/models/article.php';
 
 jimport('joomla.application.component.helper');
 /**
- * View class for a list of articles_old.
+ * View class for a list of articles
  *
  * @category  Joomla.Component.Site
  * @package   thm_groups
@@ -67,7 +67,7 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
         $old_option = $input->get('back_option', 'com_thm_groups', 'STRING');
 
         //$old_view   = JRequest::getVar('back_view', 0);
-        $old_view   =$input->get('back_view', 'articles_old', 'STRING');
+        $old_view   =$input->get('back_view', 'articles', 'STRING');
 
         //$old_layout = JRequest::getVar('back_layout', 0);
         $old_layout = $input->get('back_layout', '', 'STRING');
@@ -86,15 +86,23 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 
         $pathway = $app->getPathway();
         $backURL = JRoute::_(
-                            'index.php?option=' . $old_option . '&view=' . $old_view . '&layout=' . $old_layout
-                            . '&gsgid=' . $old_gsgid . '&gsuid=' . $gsuid . '&name=' . $name
-                            );
+            'index.php?option=' . $old_option . '&view=' . $old_view . '&layout=' . $old_layout
+            . '&gsgid=' . $old_gsgid . '&gsuid=' . $gsuid . '&name=' . $name
+        );
 
 
         $pathway->addItem($this->getUsername($gsuid), $backURL);
-        $parts = explode(":", $input->get('id', '', 'STRING'));
 
-        $pathway->addItem($parts[1]);
+        // Get id of an article
+        $id = $input->get('id', '', 'STRING');
+
+        // Load article title by id
+        $article = JTable::getInstance('content');
+        $article->load($id);
+        $article_title = $article->get('title');
+
+        // Add article title in breadcrumb
+        $pathway->addItem($article_title);
 
         $pagetitle = $parts[1];
 
@@ -209,7 +217,7 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
             }
             $arrayTexts[$count] = $this->item->introtext;
             $toc .= '" href="' . JURI::base() . 'index.php?' . $url . 'start='
-                    . $count . '">' . $pagetitle . '</a></li>';
+                . $count . '">' . $pagetitle . '</a></li>';
             $count++;
             foreach ($parts  as $part)
             {
@@ -230,7 +238,7 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
                     {
                     }
                     $toc .= '" href="' . JURI::base() . 'index.php?' . $url . 'start='
-                            . $count . '">' . $title . '</a>';
+                        . $count . '">' . $title . '</a>';
                     $toc .= '</li>';
                     $count++;
                 }
@@ -317,9 +325,9 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
         if ($item->params->get('access-view') != true && (($item->params->get('show_noauth') != true &&  $user->get('guest') )))
         {
 
-                        JError::raiseWarning(403, JText::_('JERROR_ALERTNOAUTHOR'));
+            JError::raiseWarning(403, JText::_('JERROR_ALERTNOAUTHOR'));
 
-                return;
+            return;
 
         }
         else
@@ -405,9 +413,9 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
             $path = array(array('title' => $this->item->title, 'link' => ''));
             $category = JCategories::getInstance('Content')->get($this->item->catid);
             while (
-                    $category && ($menu->query['option'] != 'com_content' || $menu->query['view'] == 'article' || $id != $category->id)
-                    && $category->id > 1
-                  )
+                $category && ($menu->query['option'] != 'com_content' || $menu->query['view'] == 'article' || $id != $category->id)
+                && $category->id > 1
+            )
             {
                 $path[] = array('title' => $category->title, 'link' => ContentHelperRoute::getCategoryRoute($category->id));
                 $category = $category->getParent();
@@ -477,12 +485,12 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
         {
             $this->item->title = $this->item->title . ' - ' . $this->item->page_title;
             $this->document->setTitle(
-                                        $this->item->page_title . ' - '
-                                                . JText::sprintf(
-                                                'PLG_CONTENT_PAGEBREAK_PAGE_NUM',
-                                                $this->state->get('list.offset') + 1
-                                                )
-                                      );
+                $this->item->page_title . ' - '
+                . JText::sprintf(
+                    'PLG_CONTENT_PAGEBREAK_PAGE_NUM',
+                    $this->state->get('list.offset') + 1
+                )
+            );
         }
 
         if ($this->print)

@@ -17,25 +17,25 @@ defined('_JEXEC') or die;
 $logoURL = 'administrator/components/com_thm_groups/assets/images/THM_Groups.png';
 ?>
 <?php
-    $attribs['width'] = '50%';
-    $attribs['class'] = 'thm_groups_main_image';
-    echo JHTML::_('image', $logoURL, JText::_('COM_THM_GROUPS'), $attribs);
+$attribs['width'] = '20%';
+$attribs['class'] = 'thm_groups_main_image';
+echo JHTML::_('image', $logoURL, JText::_('COM_THM_GROUPS'), $attribs);
 ?>
 <div id="thm_groups_main_description" class='thm_groups_main_description'>
-    <?php echo JText::_("COM_THM_GROUPS_MAIN_DESC"); ?>
+    <?php //echo JText::_("COM_THM_GROUPS_MAIN_DESC"); ?>
 </div>
 <div id="cpanel" class='cpanel'>
-<?php foreach ($this->views as $view)
-{
-?>
-    <div class="icon">
-        <a href='<?php echo $view['url']; ?>'
-           class='hasTip' title='<?php echo $view['tooltip']; ?>' >
-            <span><?php echo $view['title']; ?></span>
-        </a>
-        <br />
-    </div>
-<?php
-}
-?>
+    <?php foreach ($this->views as $view)
+    {
+        ?>
+        <div class="icon">
+            <a href='<?php echo $view['url']; ?>'
+               class='hasTip' title='<?php echo $view['tooltip']; ?>' >
+                <span><?php echo $view['title']; ?></span>
+            </a>
+            <br />
+        </div>
+    <?php
+    }
+    ?>
 </div>

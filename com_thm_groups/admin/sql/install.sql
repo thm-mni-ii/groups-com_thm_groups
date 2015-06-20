@@ -1,3 +1,5 @@
+SET foreign_key_checks = 0;
+
 DROP TABLE IF EXISTS
 `#__thm_groups_users`,
 `#__thm_groups_users_content`,
@@ -62,8 +64,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_static_type` (
   `id`          INT(11)      NOT NULL AUTO_INCREMENT,
   `name`        VARCHAR(255) NOT NULL,
   `description` TEXT         NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC)
+  PRIMARY KEY (`id`)
 )
   ENGINE = INNODB
   DEFAULT CHARSET =utf8;
@@ -87,8 +88,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_dynamic_type` (
   PRIMARY KEY (`id`),
   FOREIGN KEY (`static_typeID`) REFERENCES `#__thm_groups_static_type` (`id`)
     ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC)
+    ON DELETE CASCADE
 )
   ENGINE = InnoDB;
 
@@ -109,8 +109,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_attribute` (
   PRIMARY KEY (`id`),
   FOREIGN KEY (`dynamic_typeID`) REFERENCES `#__thm_groups_dynamic_type` (`id`)
     ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC)
+    ON DELETE CASCADE
 )
   ENGINE = InnoDB
   AUTO_INCREMENT =100;
@@ -144,8 +143,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_users_attribute` (
 CREATE TABLE IF NOT EXISTS `#__thm_groups_roles` (
   `id`   INT(11)      NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC)
+  PRIMARY KEY (`id`)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT =5;

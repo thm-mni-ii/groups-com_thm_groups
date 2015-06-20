@@ -88,9 +88,12 @@ $doc->addStyleSheet(JURI::root(true) . $componentDir . "/assets/css/jqueryFileTr
                             <?php
                             if ($this->item->options != null)
                             {
-                                if (json_decode($this->item->options)->required == 'true')
+                                if (isset(json_decode($this->item->options)->required))
                                 {
-                                    echo 'checked';
+                                    if (json_decode($this->item->options)->required == 'true')
+                                    {
+                                        echo 'checked';
+                                    }
                                 }
                             }
                             ?>

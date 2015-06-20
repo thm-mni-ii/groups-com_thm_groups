@@ -235,13 +235,13 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
         {
 
             // Back button with javascript
-            $body .= '<div><input type="button" style="margin-top:10px" value="'
+            $body .= '<div><input type="button" class="btn btn-default" style="margin-top:10px" value="'
                     . JText::_("COM_THM_GROUPS_BACK_BUTTON") . '" onclick="window.history.back()" /> </div>';
         }
         else
         {
             // Back button with self generated link
-            $body .= '<div><a href="' . $backLink . '"><input type="button" style="margin-top:10px" value="'
+            $body .= '<div><a href="' . $backLink . '"><input type="button" class="btn btn-default" style="margin-top:10px" value="'
                     . JText::_("COM_THM_GROUPS_BACK_BUTTON") . '" /></div>';
         }
     }

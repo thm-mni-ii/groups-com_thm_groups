@@ -77,7 +77,7 @@ class THM_GroupsModelArticles extends THM_CoreModelList
             ->leftJoin('#__users AS ua ON ua.id = a.created_by')
             ->leftJoin('#__thm_groups_users_categories AS qc ON qc.categoriesID = a.catid')
             ->leftJoin('#__thm_groups_users_content AS d ON d.contentID = a.id');
-            //->where('(a.created_by = ' . ((int) $uid) . ' OR qc.id = ' . ((int) $uid) . ')');
+        //->where('(a.created_by = ' . ((int) $uid) . ' OR qc.id = ' . ((int) $uid) . ')');
 
 
         $this->setSearchFilter($query, array('a.title', 'a.alias'));
@@ -179,8 +179,10 @@ class THM_GroupsModelArticles extends THM_CoreModelList
     {
         if ($item->state > 0)
         {
-            $additionalURLParams = array('gsuid' => $item->created_by);
-            return JHTML::_('link', THMLibThmQuickpages::getQuickpageRoute($item, '&' . http_build_query($additionalURLParams)), $item->title);
+            // $additionalURLParams = array('gsuid' => $item->created_by);
+
+            $singlearticleLink = JRoute::_('index.php?option=com_thm_groups&view=singlearticle&id='.$item->id.'&nameqp='.$item->alias.'&gsuid='.JFactory::getUser()->id.'&name='.JRequest::getVar('name', 0));
+            return  JHTML::_('link', $singlearticleLink, $item->title, 'class="qpl_list_link"');
         }
         else
         {
@@ -303,7 +305,7 @@ class THM_GroupsModelArticles extends THM_CoreModelList
         else
         {
             return '<span class="qp_icon_big qp_create_icon_disabled"><span class="qp_invisible_text">' .
-             JText::_('COM_THM_GROUPS_QUICKPAGES_CREATE_NEW_ARTICLE') . '</span></span>';
+            JText::_('COM_THM_GROUPS_QUICKPAGES_CREATE_NEW_ARTICLE') . '</span></span>';
         }
     }
 

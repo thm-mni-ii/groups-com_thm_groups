@@ -24,6 +24,8 @@ if (!defined('DS'))
 }
 
 require_once 'install.php';
+require_once 'update.php';
+
 jimport("thm_core.log.THMChangelogColoriser");
 
 /**
@@ -58,8 +60,8 @@ class Com_THM_GroupsInstallerScript
             $oldRelease = $this->getParam('version');
             $rel = $oldRelease . ' &rArr; ' . $this->release;
 
-            // For old versions before 3.4.3, deletes some unused files
-            if (version_compare($oldRelease, '3.4.3', 'le'))
+            // For old versions before 3.5.0, deletes some unused files
+            if (version_compare($oldRelease, '3.5.0', 'le'))
             {
                 $admin = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_thm_groups';
                 $site = JPATH_ROOT . DS . 'components' . DS . 'com_thm_groups';
@@ -102,7 +104,7 @@ class Com_THM_GroupsInstallerScript
             return true;
         }
 
-        JFactory::getApplication()->enqueueMessage('script', 'error');
+        JFactory::getApplication()->enqueueMessage('install script', 'error');
         return false;
     }
 
@@ -116,7 +118,13 @@ class Com_THM_GroupsInstallerScript
      */
     public function update($parent)
     {
+        if (THM_Groups_Update_Script::update())
+        {
+            return true;
+        }
 
+        JFactory::getApplication()->enqueueMessage('update script', 'error');
+        return false;
     }
 
     /*
@@ -140,7 +148,6 @@ class Com_THM_GroupsInstallerScript
      */
     public function postflight($type,$parent)
     {
-
         if ($type == 'update' || $type == 'install')
         {
             $isLibraryEnabled = $this->checkExtension('lib_thm_core');
@@ -185,7 +192,6 @@ class Com_THM_GroupsInstallerScript
         {
             return null;
         }
-
     }
 
     /*
@@ -208,7 +214,7 @@ class Com_THM_GroupsInstallerScript
      *
      * @return void
      */
-    public function deleteDir($path)
+    private function deleteDir($path)
     {
         $it = new RecursiveDirectoryIterator($path);
         $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
@@ -239,5 +245,4 @@ class Com_THM_GroupsInstallerScript
             }
         }
     }
-
 }
