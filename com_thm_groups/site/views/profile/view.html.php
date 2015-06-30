@@ -119,6 +119,16 @@ class THM_GroupsViewProfile extends JViewLegacy
         $pathway = $mainfarme->getPathway();
         $pathwayitems = $pathway->getPathWay();
         $document = JFactory::getDocument();
+
+        //include Picturefill 2.0 fallback
+        //$document->addScript(JUri::root() . 'libraries/thm_groups_responsive/assets/js/picturefill_min.js','text/javascript" defer="false" async="true');
+
+        // Include Bootstrap
+        JHtmlBootstrap::loadCSS();
+
+        //todo: comment library path in when lib is pushed to Gerrit.
+        $document->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/respBaseStyles.css');
+        //$document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/responsiveGroups.css');
         $document->addStyleSheet("administrator/components/com_thm_groups/css/membermanager/icon.css");
 
         $cid = $app->get('gsuid', 0);

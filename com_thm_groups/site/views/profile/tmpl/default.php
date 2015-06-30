@@ -67,7 +67,7 @@ echo $html;
 function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
 {
     // Class for title, first name, name, post title and portrait image
-    $head = '<div class="thm_groups_contentheading">';
+    $head = '<div id="cHead" class="thm_groups_contentheading">';
 
     // Class for user information
     $body = '<div class="thm_groups_contentbody">';
@@ -80,7 +80,9 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
 
     // For edit url
     $attribut = THMLibThmGroupsUser::getUrl(array("name", "gsuid", "gsgid"));
-    $result .= '<div class="thm_groups_content_profile">';
+    $result .= '<div class="row-fluid">';
+    $result .= '<div class="thm_groups_content_profile span12">';
+    $result .= '<div id="j-main-container">';
 
     // For edit Button
     $tempName = JFactory::getUser($userid)->get('name');
@@ -174,13 +176,57 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
                                 $attribs['id'] = 'pic_' . $data->structid;
                                 $path = THMLibthmGroupsUser::getPicPathValue($data->structid);
 
+                                // Get the thumbnails from folder
+                                $temp = getResizedPictures($data->value, $path);
+
+                                // Extract small and medium filename
+                                if ($temp != null)
+                                {
+                                    if($temp[0][1] === 'small'){
+                                        $small = $temp[0][0];
+                                        $medium = $temp[1][0];
+                                    }
+                                    else{
+                                        $small = $temp[1][0];
+                                        $medium = $temp[0][0];
+                                    }
+                                }
+
+                                /**
+                                 * Couldn't test this with real data, because the pictures are not
+                                 * loaded from the database.
+                                 * todo: test this! and put $attribs in <img> element. put full path in $path.
+                                 */
                                 // The first structure of the type image will be a portrait picture
                                 if ($firstPic)
                                 {
-                                    $image = JHTML::image($path . '/' . $data->value, 'Portrait', $attribs);
-                                    $head .= $image;
-                                    $firstPic = false;
+                                    //$image = JHTML::image($path . '/' . $data->value, 'Portrait', $attribs);
+                                    $head .= "<div id='pictureContainer'>";
+                                    $image = "<img class='Portrait' ";
+                                    $root= JURI::root(true);
 
+                                    // Pictures don't have to be in the defined resolution, it's just a value for
+                                    // the browser to decide what it should load. 'w' is not supported by iOS yet.
+                                    if ($temp != null)
+                                    {
+                                        $image .= "srcset='". $root . "/" . $path . "thumbs/" . $small . " 480w";
+                                        $image .= ", " . $root . "/" . $path . "thumbs/" . $medium . " 600w";
+                                        $image .= ", " . $root . "/" . $path . $data->value . " 700w' ";
+
+                                        // Outcomment this, if picturefill is used. Otherwise this picture will load twice.
+                                        $image .= "src='" . $root . "/" . $path . "thumbs/" . $small . "'";
+                                    }
+                                    else
+                                    {
+                                        // Outcomment this, if picturefill is used. Otherwise this picture will load twice.
+                                        $image .= "src='" . $root . "/" . $path .  $data->value . "'";
+                                    }
+
+                                    $image .= " alt='Profilbild' />";
+
+                                    $head .= $image;
+                                    $head .= "</div>";
+                                    $firstPic = false;
                                 }
 
                                 // All other pictures
@@ -191,7 +237,18 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
                                     $body .= $data->name . ':';
                                     $body .= '</div>';
                                     $body .= '<div class="value" id="' . $data->name . '_value">';
-                                    $image = JHTML::image("$path" . '/' . $data->value, 'Image', $attribs);
+                                    //$image = JHTML::image("$path" . '/' . $data->value, 'Image', $attribs);
+                                    $image = "<img class='Image' ";
+
+                                    if ($temp != null)
+                                    {
+                                        $image .= "srcset='" . $path . "/thumbs/" . $small . " 480w";
+                                        $image .= ", " . $path . "/thumbs/" . $medium . " 600w";
+                                        $image .= ", " . $path . "/" . $data->value . " 700w' ";
+                                    }
+
+                                    $image .= "src='". $path . "/" . $data->value . "'";
+                                    $image .= " alt='Bild' />";
                                     $body .= $image;
                                     $body .= '</div>';
                                     $body .= '</div>';
@@ -205,7 +262,9 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
                                 $body .= $data->name . ':';
                                 $body .= '</div>';
                                 $body .= '<div class="table" id="' . $data->name . '_value">';
+                                $body .= '<div class="thm_table_area">';
                                 $body .= getTable($data);
+                                $body .= '</div>';
                                 $body .= '</div>';
                                 $body .= '</div>';
                                 break;
@@ -248,7 +307,7 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
 
     $body .= '</div>';
     $result .= $head . $body;
-    $result .= '</div>';
+    $result .= '</div></div></div>';
 
     return $result;
 }
@@ -262,6 +321,9 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
  */
 function getTable($data)
 {
+    $document = JFactory::getDocument();
+    $tableHeaders = "@media only screen and (max-width: 760px){
+    #" . $data->name . "'_value .thm_table_area{";
 
     // Get header of table from DB
     $result = json_decode($data->options);
@@ -271,9 +333,17 @@ function getTable($data)
     $table = "<table class='table'><tr>";
 
     $titles = explode(';', $result[0]);
+
+    $tableHeaderscounter = 1;
     foreach ($titles as $title)
     {
         $table = $table . "<th>" . $title . "</th>";
+
+        // Write table header into td for mobile view.
+        // TODO: test this!
+        $tableHeaders .= "
+        td:nth-of-type(" . $tableHeaderscounter . "):before { content: " . $title . "; }";
+        $tableHeaderscounter ++;
     }
 
     $table = $table . "</tr>";
@@ -287,8 +357,76 @@ function getTable($data)
         $table = $table . "</tr>";
     }
     $table = $table . "</table>";
+
+    // Write CSS for table headers.
+    $tableHeaders .= "}";
+    $document->addStyleDeclaration($tableHeaders);
     return $table;
 }
+
+/**
+ * Searches smaller pictures for responsive images.
+ * Compares the pictures in the thumb folder and marks them as
+ * small or medium, based on the file size.
+ * The given path has to be the attribute path of the picture.
+ * The thumb folder is relative to the attribute path.
+ * Returns an array that consists of 2 arrays with the picture filename
+ * and the tag 'small' or 'medium'. Return null if no files found.
+ *
+ * Image sizes of thumbs are generated in the
+ * user_edit model at the backend, change them if needed.
+ *
+ * @param $filename
+ * @param $path
+ * @return array, null
+ */
+function getResizedPictures($filename, $path)
+{
+    $pictures = array();
+    $picsFound = 0;
+    foreach (scandir($path . 'thumbs\\') as $folderPic) {
+        if ($folderPic === '.' || $folderPic === '..') {
+            continue;
+        } else {
+            /**
+             * Get the filename till the '_width-height.extension' part
+             * and check if its part of the saved filename in database.
+             *
+             * When a pos was found it will be dropped from the folder.
+             */
+            $extPos = strrpos($folderPic, '_');
+            $length = strlen($folderPic);
+            $thumbFileName = substr($folderPic, 0, -($length - $extPos));
+
+            $pos = strpos($filename, $thumbFileName);
+
+            if ($pos === 0) {
+                $temp = array();
+                $temp[0] = $folderPic;
+                array_push($pictures, $temp);
+                $picsFound ++;
+            }
+        }
+    }
+    if ($picsFound != 0)
+    {
+        if(filesize($path . '/thumbs/' . $pictures[0][0]) < filesize($path . '/thumbs/' . $pictures[1][0]))
+        {
+            $pictures[1][1] = 'medium';
+            $pictures[0][1] = 'small';
+        }
+        else
+        {
+            $pictures[0][1] = 'medium';
+            $pictures[1][1] = 'small';
+        }
+        return $pictures;
+    }
+    else
+    {
+        return null;
+    }
+ }
 
 /**
  * Generates the css code
@@ -303,6 +441,10 @@ function getProfilCss()
             .thm_groups_content_profile
             {
                 width:100%;
+            }
+
+            .field_container{
+                width: 100%;
             }
 
             .thm_groups_contentheading > span
@@ -345,20 +487,38 @@ function getProfilCss()
 
             .field_container > .label
             {
-                width:90px;
+                width: 100px;
                 font-weight: bold;
+                margin-bottom: 5px;
             }
 
             .field_container > .value
             {
-                margin-left:20px;
-                width:500px;
+                width: 80%;
+            }
+
+            @media screen and (min-width: 480px){
+                .field_container > .value{
+                     margin-left: 20px;
+                }
             }
 
             .field_container > .table
             {
                 margin-left: 20px;
             }
+
+            #pictureContainer{
+                width: 30%;
+            }
+
+            @media screen and (min-width: 600px){
+                .Portrait{
+                    max-width:70%;
+                }
+            }
             ';
     return $out;
 }
+
+

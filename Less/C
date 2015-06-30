@@ -1,6 +1,0 @@
-@media screen and (min-width: 480px) and (max-width: 767px) {
-  .col_med_6 {
-    width: 48.61878453038674% !important;
-    *width: 48.56559304102504%;
-  }
-}

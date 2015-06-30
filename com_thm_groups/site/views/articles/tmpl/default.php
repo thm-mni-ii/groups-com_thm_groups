@@ -98,16 +98,18 @@ class ArticlesTemplate extends THM_CoreTemplateList
                         </div>
                     </div>
                 </div>
-                <table class="table table-striped" id="<?php echo $view->get('name'); ?>-list">
-                    <?php
-                    echo '<thead>';
-                    self::renderHeader($view->headers);
-                    self::renderHeaderFilters($view->headers, $filters);
-                    echo '</thead>';
-                    self::renderBody($view->items);
-                    self::renderFooter($view);
-                    ?>
-                </table>
+                <div class="thm_table_area">
+                    <table class="table table-striped" id="<?php echo $view->get('name'); ?>-list">
+                        <?php
+                        echo '<thead>';
+                        self::renderHeader($view->headers);
+                        self::renderHeaderFilters($view->headers, $filters);
+                        echo '</thead>';
+                        self::renderBody($view->items);
+                        self::renderFooter($view);
+                        ?>
+                    </table>
+                </div>
                 <input type="hidden" name="task" value="" />
                 <input type="hidden" name="boxchecked" value="0" />
                 <input type="hidden" name="option" value="<?php echo JFactory::getApplication()->input->get('option'); ?>" />

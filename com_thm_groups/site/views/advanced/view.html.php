@@ -108,8 +108,8 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
         // Load responsive CSS
         //todo: comment library path in when lib is pushed to Gerrit.
-        //$document->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/respAdvanced.css');
-		$document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/responsiveGroups.css');
+        $document->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/respAdvanced.css');
+		//$document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/responsiveGroups.css');
 
         // Load Dynamic CSS
         $mycss = $this->getCssView($params, $advancedView);
@@ -547,11 +547,12 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                     // Attributnamen anzeigen
 
                     if ($memberitem->structname == true) {
-                        if($memberitem->name == 'Email' ){
+                        if(($memberitem->name == 'Email') || ($memberitem->name == 'Website')){
                             $result .= '<span class="thm_groups_profile_container_line_label respMail-label" style="float: left" >'
                                 . JText::_($memberitem->name) . ":&nbsp" . '</span>';
                         }
                         else{
+                            //var_dump($memberitem->structid, $memberitem->name);
                             $result .= '<span class="thm_groups_profile_container_line_label" style="float: left" >'
                                 . JText::_($memberitem->name) . ":&nbsp" . '</span>';
                         }
@@ -580,8 +581,14 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                             switch ($memberitem->type)
                             {
                                 case "LINK":
-                                    $result .= "<a href='" . htmlspecialchars_decode($memberitem->value) . "'>"
-                                        . htmlspecialchars_decode($memberitem->value) . "</a>";
+                                    $result .= "<span class='respEmail'><a href='"
+                                        . htmlspecialchars_decode($memberitem->value) ."' class='btn' role='button'>"
+                                        . "<span class='icon-home'></span>"
+                                        . "</a></span>"
+                                        . "<span class='respEmail-hidden'>"
+                                        . "<a href='" . htmlspecialchars_decode($memberitem->value) . "'>"
+                                        . htmlspecialchars_decode($memberitem->value) . "</a>"
+                                        . "</span>";
                                     break;
                                 case "PICTURE":
                                     // TODO
@@ -686,12 +693,16 @@ class THM_GroupsViewAdvanced extends JViewLegacy
      */
     public function getMobileNavbar($attribs)
     {
-        /* Get the first letter of a name and the name for
-         * the mobile navigation.
+        /* Put the first letter of a name and all names for
+         * this latter in an array.
          */
+
         $list = array();
         $list['alphabet'] = array();
-        $list['name'] = array();
+        $list['names'] = array();
+        $list['names'] = array();
+        $namesCounter = 0;
+
         foreach ($attribs as $attr)
         {
             foreach ($attr as $object)
@@ -700,8 +711,15 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                 {
                     if (!in_array(substr($object->value, 0, 1), $list['alphabet']))
                     {
-                        array_push($list['alphabet'], substr($object->value, 0, 1));
-                        array_push($list['name'], $object->value);
+                        $currentLetter = substr($object->value, 0, 1);
+                        array_push($list['alphabet'], $currentLetter);
+                        $list['names'][$namesCounter] = array();
+                        foreach ($attr as $namesForLetter){
+                            if (($namesForLetter->structid == '2') && (substr($object->value, 0, 1) == $currentLetter)){
+                                array_push($list['names'][$namesCounter], $object->value);
+                            }
+                        }
+                        $namesCounter ++;
                     }
                 }
             }
@@ -720,13 +738,8 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $navbar .= "<div class='nav-collapse'>";
         $navbar .= "<ul id='adv_nav_menu' class='nav '>";
 
-        // Insert the letters and names into the navigation.
-        for ($i = 0; $i < sizeof($list['alphabet']); $i ++)
-        {
-            $navbar .= "<li><a class='menu - cpanel' href='#" . $list['name'][$i] . "'>"
-                . $list['alphabet'][$i] . "</a></li>";
-            $navbar .= "<li class='divider'><span></span></li>";
-        }
+        // Generate the list items
+        $navbar .= $this->getUserList($list);
 
         $navbar .= "</ul>";
         $navbar .= "</div>";
@@ -735,5 +748,31 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $navbar .= "</nav>";
 
         return $navbar;
+    }
+
+    /**
+     * Get the nav items HTML as string.
+     *
+     * @param $list
+     * @return string
+     */
+    public function getUserList($list)
+    {
+        $navItems = "";
+        for ($i = 0; $i < sizeof($list['alphabet']); $i++) {
+            $navItems .= "<li class='dropdown'>"
+                . "<a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button'"
+                . "aria-haspopup='true' aria-expanded='false'>" . $list['alphabet'][$i] . "<span class='caret'></span></a>";
+
+            $navItems .= "<ul class='dropdown-menu'>";
+            foreach ($list['names'][$i] as $name) {
+                $navItems .= "<li><a href='#" . $name . "'>" . $name . "</a>";
+            }
+            $navItems .= "</ul>";
+            $navItems .= "</li>";
+            $navItems .= "<li class='divider'><span></span></li>";
+        }
+
+        return $navItems;
     }
 }

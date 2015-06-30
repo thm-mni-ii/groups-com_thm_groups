@@ -141,7 +141,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         $userID = $formData['userID'];
 
         // Dimensions for thumbnails
-        $sizes = array('300x300', '64x64', '250x125');
+        //$sizes = array('300x300', '64x64', '250x125');
 
         // Change '_' in array into ' '
         $this->fixArrayKey($formData);
@@ -164,7 +164,9 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     public function saveCropped($attrID, $file, $filename)
     {
         $pathAttr = $this->getLocalPath($attrID);
-        $sizes = array('64x64', '250x125');
+
+        // Dimensions for thumbnails
+        $sizes = array('100x75', '140x105');
 
         if ($file != null)
         {
@@ -241,10 +243,8 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         // Save new values in #__thm_groups_users_attribute
         foreach ($content as $attr)
         {
-            var_dump($attr);
             if (array_key_exists($attr->attribute, $formData))
             {
-                var_dump($attr->attribute);
                 try
                 {
                     $newValue = false;
