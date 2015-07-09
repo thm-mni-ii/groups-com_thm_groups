@@ -96,7 +96,7 @@ class THM_GroupsModelProfile extends JModelForm
         $userid = JFactory::$application->input->get('gsuid');
         $groupid = $this->getGroupNumber();
         $profilid = THMLibThmGroups::getGroupsProfile($groupid);
-        $result = THMLibThmGroupsUser::getAllUserProfilData($userid,$profilid->profileID);
+        $result = THMLibThmGroupsUser::getAllUserProfilData($userid,$profilid);
         return $result;
     }
 

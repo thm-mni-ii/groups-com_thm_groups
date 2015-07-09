@@ -79,7 +79,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         $query = $db->getQuery(true);
 
         $query
-            ->select('ust.usersID, ust.attributeID, st.options, dyn.regex, st.name as attribute, ust.value, ust.published, static.name')
+            ->select('ust.usersID, ust.attributeID, st.options, dyn.regex, dyn.description, st.name as attribute, ust.value, ust.published, static.name')
             //->select('st.name as attribute, ust.value')
             ->from('#__thm_groups_users_attribute AS ust')
             ->innerJoin('#__thm_groups_attribute AS st ON ust.attributeID = st.id')

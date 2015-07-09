@@ -70,7 +70,7 @@ $session = JFactory::getSession();
                             $output = "<select multiple class='hasTooltip' data-original-title='". $item->description ."' data-placement='right' class='form-control' id='jform_" . $name . "'"
                                 . "name='jform[" . $name . "[]]'>"
                                 . "style='float:left !important; margin-left: 0px !important;'";
-                            $fields     = explode(';', json_decode($item->options)->options);
+                            $fields = explode(';', json_decode($item->options)->value);
                             foreach ($fields as $field)
                             {
                                 $output .= "<option>" . $field . "</option>";
@@ -100,14 +100,14 @@ $session = JFactory::getSession();
                             foreach ($tData as $row)
                             {
                                 $output .= "<tr>";
-                                foreach ($row as $key=>$value)
+                                foreach ($row as $key => $value)
                                 {
                                     $output .= "<td>"
                                         . "<input type='text' style='width: 90% !important;'"
                                         . "id='jform_" . $key . "_" . $value . "'"
                                         . "name='jform[" . $name . "][" . $rowCount
                                         . "_" . $key . "_" . mt_rand() . "]'"
-                                        ." value='" . $value . "'/>"
+                                        . " value='" . $value . "'/>"
                                         . "</td>";
                                 }
                                 $output .= "<td><button type='button' class='btn btn-small' onclick='delRow(this)'>"
@@ -122,7 +122,7 @@ $session = JFactory::getSession();
                             $output .= "<span>";
                             $cCount = 1;
                             $rowCount++;
-                            foreach ($tData[0] as $key=>$value)
+                            foreach ($tData[0] as $key => $value)
                             {
                                 $output .= "<input id='jform_" . $name . "_" . $cCount
                                     . "' style ='float:left !important;' "
@@ -149,17 +149,17 @@ $session = JFactory::getSession();
                         <?php elseif ($item->name == 'PICTURE') :
 
                             // If name of file is empty, use default picture
-                            /*if (empty($item->value))
+                            if (empty($item->value))
                             {
                                 $item->value = json_decode($item->options)->filename;
-                            }*/
+                            }
 
                             $pData      = json_decode($item->options);
                             $position   = strpos($pData->path, 'images/');
                             $path       = substr($pData->path, $position);
                             ?>
                             <span id='<?php echo $name; ?>_IMG'>
-                                    <img  src='<?php echo JURI::root() . $path . $item->value; ?>' class='edit_img'/>
+                                    <img  src='<?php echo JURI::root() . $path . '/' . $item->value; ?>' class='edit_img'/>
                                 </span>
                             <input id='jform_<?php echo $name; ?>_hidden'
                                    name='jform[<?php echo $name; ?>]'

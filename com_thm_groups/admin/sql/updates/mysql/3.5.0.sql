@@ -23,7 +23,7 @@ INSERT INTO `#__thm_groups_users`
 
 UPDATE `#__thm_groups_users` AS users
   JOIN `#__thm_quickpages_map` AS qp_map
-    ON users.userid = qp_map.id
+    ON users.id = qp_map.id
 SET qpPublished = 1;
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_users_categories` (
