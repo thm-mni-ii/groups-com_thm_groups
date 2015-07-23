@@ -21,7 +21,7 @@ $lang = JFactory::getLanguage();
 $lang->load('lib_thm_groups', JPATH_SITE);
 
 /**
- * JFormFieldAlphabetColor class for component com_thm_groups
+ * JFormFieldOrderAttributes class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
@@ -87,9 +87,11 @@ class JFormFieldOrderAttributes extends JFormField
 
                 switch ($value)
                 {
-                    case 2: $orderSelect .= JText::_('LIB_THM_GROUPS_VORNAME');
+                    case 2:
+                        $orderSelect .= JText::_('LIB_THM_GROUPS_VORNAME');
                         break;
-                    case 3: $orderSelect .= JText::_('LIB_THM_GROUPS_NACHNAME');
+                    case 3:
+                        $orderSelect .= JText::_('LIB_THM_GROUPS_NACHNAME');
                         break;
                 }
                 $orderSelect .= '</li>';
@@ -102,11 +104,13 @@ class JFormFieldOrderAttributes extends JFormField
                          . '</li>';
             $orderSelect .= '<li value="2" id="item"  class="listItem">' . JText::_('LIB_THM_GROUPS_VORNAME')
                          . '</li>';
-            $orderAtt = '1,2,3,4';
+            $orderAtt = '1,3,2,4';
         }
         $orderSelect .= '</ul>';
-        $orderSelect .= '<div  value="4" id="nodroppable"  ><span>' . JText::_('LIB_THM_GROUPS_POST_TITLE')
+
+        $orderSelect .= '<div id="nodroppable" value="4"><span>' . JText::_('LIB_THM_GROUPS_POST_TITLE')
                     . '</span></div></div>';
+
         $orderSelect .= '<input type="hidden" id="resultOrder" value= "' . $orderAtt . '" name="' . $tagname . '"/>';
         return $orderSelect;
     }
