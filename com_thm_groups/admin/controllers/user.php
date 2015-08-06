@@ -218,8 +218,8 @@ class THM_GroupsControllerUser extends JControllerLegacy
     public function apply()
     {
         $model = $this->getModel('user_edit');
-
         $success = $model->save();
+
         if ($success)
         {
             $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');

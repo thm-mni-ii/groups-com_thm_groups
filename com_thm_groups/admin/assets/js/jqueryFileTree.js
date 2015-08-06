@@ -71,6 +71,9 @@ function getFile(file){
 }
 
 function getDir(dire){
+    var position = dire.indexOf('/images');
+    dire = dire.substring(position, dire.length);
+
     document.getElementById('PICTURE_path').value = dire;
     document.getElementById('PICTURE_name').value = 'anonym.jpg';
 }

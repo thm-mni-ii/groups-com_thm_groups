@@ -170,14 +170,14 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
 
         if ($file != null)
         {
-            $path = JPATH_ROOT . "\\" . $pathAttr . "\cropped_" . $filename;
-            var_dump($path);
+            $path = JPATH_ROOT . $pathAttr . "cropped_" . $filename;
+
             $success = jFile::upload($file['tmp_name'], $path, false);
 
             if ($success)
             {
                 $image  = new JImage($path);
-                $image->createThumbs($sizes, JImage::SCALE_INSIDE, JPATH_ROOT . "\\" . $pathAttr . 'thumbs\\');
+                $image->createThumbs($sizes, JImage::SCALE_INSIDE, JPATH_ROOT . $pathAttr . 'thumbs\\');
 
                 $path = str_replace('\\', '/', $path);
                 $position = strpos($path, 'images/');
@@ -388,14 +388,15 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
             if ($attribute->attributeID == $key)
             {
                 // Delete cropped
-                unlink(JPATH_ROOT . "\\" . $attrPath . "\\" . $attribute->value);
+                unlink(JPATH_ROOT . $attrPath . $attribute->value);
 
                 // Delete fullRes
                 $oriFileName = $this->after('cropped_', $attribute->value);
-                unlink(JPATH_ROOT . "\\" . $attrPath . 'fullRes\\' . $oriFileName);
+
+                unlink(JPATH_ROOT . $attrPath . 'fullRes\\' . $oriFileName);
 
                 // Delete thumbs
-                foreach ( scandir(JPATH_ROOT . "\\" . $attrPath . "\\" . 'thumbs\\') as $folderPic)
+                foreach ( scandir(JPATH_ROOT . $attrPath . 'thumbs\\') as $folderPic)
                 {
                     if ( $folderPic === '.' || $folderPic === '..')
                     {
@@ -417,7 +418,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
 
                         if ($pos === 0)
                         {
-                            unlink(JPATH_ROOT . "\\" . $attrPath . "\\" . 'thumbs\\' . $folderPic);
+                            unlink(JPATH_ROOT . $attrPath . 'thumbs\\' . $folderPic);
                         }
                     }
                 }
@@ -451,7 +452,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                     // Get local path
                     $attrPath = $this->getLocalPath($key);
 
-                    $path = JPATH_ROOT . "\\" . $attrPath . 'fullRes\\' . $value['name'];
+                    $path = JPATH_ROOT . $attrPath . 'fullRes\\' . $value['name'];
                     $success = jFile::upload($value['tmp_name'], $path, false);
 
                     if (JFile::exists(JPATH_ROOT . $attrPath . 'cropped_' . $value['name']) && $success)
@@ -534,12 +535,13 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
      */
     private function getLocalPath($attrID)
     {
-        $attrPath = json_decode($this->getPicturePath($attrID)->options);
+        $attrPath = json_decode($this->getPicturePath($attrID)->options)->path;
 
-        // Convert / to \:
-        $position = strpos($attrPath->path, '/images/');
+        /*$position = strpos($attrPath->path, '/images/');
         $path = substr($attrPath->path, $position);
 
-        return $path = str_replace('/', '\\', $path);
+        // Convert / to \:
+        return $path = str_replace('/', '\\', $path);*/
+        return $path = str_replace('/', '\\', $attrPath);
     }
 }

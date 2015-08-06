@@ -134,7 +134,7 @@ function getListAll($params, $pagetitle, $gid)
         $maxColumnSize = ceil(($rows[0]->anzahl) / $numColumns);
         $numberOfPersons = $rows[0]->anzahl;
 
-        $divStyle = " class='col-sm-6 span" . floor(12 / $numColumns) . "'";
+        $divStyle = "class='span" . floor(12 / $numColumns) . " col-sm-6'";
 
         $attribut = THMLibThmGroups::getUrl(array("name", "gsuid", "gsgid"));
 
@@ -223,8 +223,14 @@ function getListAll($params, $pagetitle, $gid)
           // Wenn aktuelles Buchstabenpaket schon Einträge in der vorherigen Spalte hat, werden diese übersprungen
           if ($remeberNextTime == 0)
           {
-
-              $result .= '<div style="margin-bottom:-11px;">';
+              if(($actualRowPlaced +1) == $maxColumnSize)
+              {
+                  $result .= '<div style="margin-bottom: 25px;">';
+              }
+              else
+              {
+                  $result .= '<div style="margin-bottom: -11px;">';
+              }
 
               $result .= writeName($arrOrderAtt, $row, $showStructure, $linkElement, $linkTarget, $groupid);
               $actualRowPlaced++;
@@ -239,7 +245,7 @@ function getListAll($params, $pagetitle, $gid)
                   break;
               }
 
-              $result .= '</div><br>';
+              $result .= '</div><br/>';
           }
           else
           {
@@ -737,7 +743,7 @@ function getCssView($params)
             background: none repeat scroll 0 0 " . $params['alphabet_exists_color'] . ";
             border-color: " . $params['alphabet_exists_color'] . ";
             color: " . $params['alphabet_exists_font_color'] . " ;
-            ";
+            }";
 
     $out .= ".thm_groups_alphabet > div.respListHeader:hover, .thm_groups_alphabet > div.respListHeader:focus,
             .alphabet > div.respListHeader:thm_groups_active {

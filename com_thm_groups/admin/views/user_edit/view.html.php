@@ -73,7 +73,7 @@ class THM_GroupsViewUser_Edit extends THM_CoreViewEdit
     {
         JFactory::getApplication()->input->set('hidemainmenu', true);
 
-        $title = $this->item->id == 0 ? 'New' : 'Edit';
+        $title = $this->item == '0' ? 'New' : 'Edit';
 
         JToolBarHelper::title($title, 'title');
 

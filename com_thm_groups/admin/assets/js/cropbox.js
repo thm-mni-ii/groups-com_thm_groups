@@ -110,7 +110,11 @@ function deletePic(name, attributeID, userID) {
     }).success(function (response) {
         if (response == 'true')
         {
+            alert ('dingdong mfkr');
             document.getElementById(name + "_IMG").innerHTML = '';
+        }
+        else{
+            alert('nope');
         }
     });
 }

@@ -47,7 +47,7 @@ $session = JFactory::getSession();
                     <div id='header_right'><?php echo JText::_('COM_THM_QUICKPAGES_PUBLISHED'); ?></div>
                 </div>
                 <?php
-                foreach ($this->userContent as $item) :
+                foreach ($this->userContent as $item):
                 $name = str_replace(' ', '_', $item->attribute);
                 ?>
                 <div class='control-group'>
@@ -67,10 +67,10 @@ $session = JFactory::getSession();
                             echo $output;
                             ?>
                         <?php elseif ($item->name == 'MULTISELECT') :
-                            $output = "<select multiple class='hasTooltip' data-original-title='". $item->description ."' data-placement='right' class='form-control' id='jform_" . $name . "'"
+                            $output = "<select multiple data-original-title='". $item->description ."' data-placement='right' class='hasTooltip form-control' id='jform_" . $name . "'"
                                 . "name='jform[" . $name . "[]]'>"
                                 . "style='float:left !important; margin-left: 0px !important;'";
-                            $fields = explode(';', json_decode($item->options)->value);
+                            $fields = explode(';', json_decode($item->options)->options);
                             foreach ($fields as $field)
                             {
                                 $output .= "<option>" . $field . "</option>";
@@ -159,12 +159,13 @@ $session = JFactory::getSession();
                             $path       = substr($pData->path, $position);
                             ?>
                             <span id='<?php echo $name; ?>_IMG'>
-                                    <img  src='<?php echo JURI::root() . $path . '/' . $item->value; ?>' class='edit_img'/>
+                                    <img  src='<?php echo JURI::root() . $path . '/' . $item->value; ?>' class='edit_img' alt='Kein Bild vorhanden'/>
                                 </span>
                             <input id='jform_<?php echo $name; ?>_hidden'
                                    name='jform[<?php echo $name; ?>]'
                                    type='hidden'
                                    value='<?php echo $item->value; ?>'/>
+
                             <!-- Create bootstrap modal output -->
                             <br/>
                             <button
