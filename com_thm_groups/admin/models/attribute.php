@@ -70,7 +70,6 @@ class THM_GroupsModelAttribute extends JModelLegacy
                 return false;
             }
         }
-
         return true;
     }
 
@@ -399,19 +398,23 @@ class THM_GroupsModelAttribute extends JModelLegacy
      * The path for #__thm_groups_attribute will be set in calling function.
      *
      * @param   Integer  $inputPath    Typed in path from user-interface
-     * @param   String   $path         Old path from database
+     * @param   String   $oldPath         Old path from database
      * @param   Integer  $attrID       ID from selected attribute
      * @param   Integer  $dynamicType  DynamicTypeID from form
      *
      * @return  boolean
      */
-    private function movePictures($inputPath, $path, $attrID, $dynamicType)
+    private function movePictures($inputPath, $oldPath, $attrID, $dynamicType)
     {
+        $serverPath = self::getSeverPath();
+        $inputPath = $serverPath . $inputPath;
+        $oldPath = $serverPath . $oldPath;
+
         if (!self::dirExists($inputPath))
         {
             self::makeNewDir($inputPath);
         }
-        if (!self::copyPictures($path, $inputPath, $attrID, $dynamicType))
+        if (!self::copyPictures($oldPath, $inputPath, $attrID, $dynamicType))
         {
             return false;
         }
@@ -419,6 +422,10 @@ class THM_GroupsModelAttribute extends JModelLegacy
         {
             return true;
         }
+    }
+
+    private function getSeverPath(){
+        return str_replace('\\', '/', JPATH_ROOT);
     }
 
 }
