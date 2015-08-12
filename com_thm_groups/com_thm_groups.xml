@@ -6,7 +6,7 @@
     <authorUrl>http://www.fh-giessen.de</authorUrl>
     <copyright>TH Mittelhessen</copyright>
     <license>GNU/GPL Version 2</license>
-    <version>3.5.2</version>
+    <version>3.5.3</version>
     <scriptfile>script.php</scriptfile>
     <install>
         <sql>
@@ -52,61 +52,21 @@
     <administration>
         <menu>COM_THM_GROUPS</menu>
         <submenu>
-            <menu
-                    alias="User Manager"
-                    link="option=com_thm_groups&amp;view=user_manager"
-                    view="user_manager"
-                    alt="THM-Groups/Member Manager"
-                    >COM_THM_GROUPS_USER_MANAGER</menu>
+            <menu alias="User Manager" link="option=com_thm_groups&amp;view=user_manager" view="user_manager" alt="THM-Groups/Member Manager">COM_THM_GROUPS_USER_MANAGER</menu>
 
-            <menu
-                    alias="Group Manager"
-                    link="option=com_thm_groups&amp;view=group_manager"
-                    view="group_manager"
-                    alt="THM-Groups/Group Manager"
-                    >COM_THM_GROUPS_GROUP_MANAGER</menu>
+            <menu alias="Group Manager" link="option=com_thm_groups&amp;view=group_manager" view="group_manager" alt="THM-Groups/Group Manager">COM_THM_GROUPS_GROUP_MANAGER</menu>
 
-            <menu
-                    alias="Role Manager"
-                    link="option=com_thm_groups&amp;view=role_manager"
-                    view="role_manager"
-                    alt="THM-Groups/Role Manager"
-                    >COM_THM_GROUPS_ROLE_MANAGER</menu>
+            <menu alias="Role Manager" link="option=com_thm_groups&amp;view=role_manager" view="role_manager" alt="THM-Groups/Role Manager">COM_THM_GROUPS_ROLE_MANAGER</menu>
 
-            <menu
-                    alias="Profile Manager"
-                    link="option=com_thm_groups&amp;view=profile_manager"
-                    view="profile_manager"
-                    alt="THM-Groups/Profile manager"
-                    >COM_THM_GROUPS_PROFILE_MANAGER</menu>
+            <menu alias="Profile Manager" link="option=com_thm_groups&amp;view=profile_manager" view="profile_manager" alt="THM-Groups/Profile manager">COM_THM_GROUPS_PROFILE_MANAGER</menu>
 
-            <menu
-                    alias="Attribute Manager"
-                    link="option=com_thm_groups&amp;view=attribute_manager"
-                    view="attribute_manager"
-                    alt="THM-Groups/Attribute manager"
-                    >COM_THM_GROUPS_ATTRIBUTE_MANAGER</menu>
+            <menu alias="Attribute Manager" link="option=com_thm_groups&amp;view=attribute_manager" view="attribute_manager" alt="THM-Groups/Attribute manager">COM_THM_GROUPS_ATTRIBUTE_MANAGER</menu>
 
-            <menu
-                    alias="Dynamic Type Manager"
-                    link="option=com_thm_groups&amp;view=dynamic_type_manager"
-                    view="dynamic_type_manager"
-                    alt="THM-Groups/Dynamic Type manager"
-                    >COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER</menu>
+            <menu alias="Dynamic Type Manager" link="option=com_thm_groups&amp;view=dynamic_type_manager" view="dynamic_type_manager" alt="THM-Groups/Dynamic Type manager">COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER</menu>
 
-            <menu
-                    alias="Static Type Manager"
-                    link="option=com_thm_groups&amp;view=static_type_manager"
-                    view="static_type_manager"
-                    alt="THM-Groups/Static Type manager"
-                    >COM_THM_GROUPS_STATIC_TYPE_MANAGER</menu>
+            <menu alias="Static Type Manager" link="option=com_thm_groups&amp;view=static_type_manager" view="static_type_manager" alt="THM-Groups/Static Type manager">COM_THM_GROUPS_STATIC_TYPE_MANAGER</menu>
 
-            <menu
-                    alias="Plugin Manager"
-                    link="option=com_thm_groups&amp;view=plugin_manager"
-                    view="plugin_manager"
-                    alt="THM-Groups/Plugin Manager"
-                    >COM_THM_GROUPS_PLUGIN_MANAGER</menu>
+            <menu alias="Plugin Manager" link="option=com_thm_groups&amp;view=plugin_manager" view="plugin_manager" alt="THM-Groups/Plugin Manager">COM_THM_GROUPS_PLUGIN_MANAGER</menu>
         </submenu>
 
         <files folder="admin">
