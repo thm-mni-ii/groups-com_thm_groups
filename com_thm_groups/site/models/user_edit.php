@@ -181,6 +181,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                 $path = str_replace('\\', '/', $path);
                 $position = strpos($path, 'images/');
                 $convertedPath = substr($path, $position);
+                //TODO FIXARRAYKEY changed something here
                 $prev = "<img  src='" . JURI::root() . $convertedPath . "' style='display: block;"
                     . "max-width:500px; max-height:240px; width: auto; height: auto;'/>";
                 $prev .= "<input type='hidden' name='jform[" . THMLibThmGroupsUser::getExtra($attrID)->name. "][file]'

@@ -163,9 +163,10 @@ class JFormFieldAttributeField extends JFormField {
                     }
                     else
                     {
-                        $fields .= JPATH_ROOT . "images/";
+                        $fields .= "images/";
                     }
                     $fields .= "' />";
+                    $fields .= "<input type='hidden' name='root' id='Jroot' value='" . JPATH_ROOT . "'></input";
                     $fields .= "<input type='hidden' name='attrID' id='attrID' value='" . $attrID . "'></input>";
                     $fields .= "<br/><button type='button' class='btn btn-small' onclick='showFTree()'>"
                             . JText::_('COM_THM_GROUPS_BROWSE')

@@ -207,12 +207,12 @@ class THM_GroupsModelAttribute extends JModelLegacy
             case "3":
                 $options['3'] = '{ "required" : "' . $required . '" }';
             case "4":
-                $attrID = $app->input->get('attrID');
+                $attrID = $data['id'];
                 $inputPath   = $app->input->getHtml('PICTURE_path');
                 $inputName   = $app->input->getHtml('PICTURE_name');
 
                 // Move pictures to new path when different to path in database
-                if ((($attrID != null) || ($attrID != "")) || ($attrID != "0"))
+                if ((($attrID) && ($attrID != "")) && ($attrID != "0"))
                 {
                     $pictureType = $this->getPictureItem($attrID);
 
@@ -224,6 +224,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
                         $this->movePictures($inputPath, $path, $attrID, $data['dynamic_typeID']);
                     }
                 }
+
                 $options['4'] = '{ "filename" : "' . $inputName . '", "path" : "' . $inputPath . '", "required" : "' . $required . '" }';
                 break;
             case "5":
@@ -362,12 +363,74 @@ class THM_GroupsModelAttribute extends JModelLegacy
 
                 if ($folderPic == $picName)
                 {
+                    // Copy the cropped picture
                     copy($oldPath . $folderPic, $newPath . $folderPic);
                     unlink($oldPath . $folderPic);
+
+                    // Copy the picture in full resolution
+                    $oriFileName = $this->after('cropped_', $folderPic);
+
+                    if (!self::dirExists($newPath . 'fullRes/'))
+                    {
+                        self::makeNewDir($newPath . 'fullRes/');
+                    }
+                    copy($oldPath . 'fullRes/' . $oriFileName, $newPath . 'fullRes/' .  $oriFileName);
+                    unlink($oldPath . 'fullRes/' . $oriFileName);
+
+                    // TODO make this work here and in dynamictype edit.
+                    // Copy the thumbnails for the picture
+                    foreach ( scandir($oldPath . 'thumbs/') as $thumbnail)
+                    {
+                        if ( $thumbnail === '.' || $thumbnail === '..')
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            /**
+                             * Get the filename till the '_width-height.extension' part
+                             * and check if its part of the saved filename in database.
+                             *
+                             * When a pos was found it will be dropped from the folder.
+                             */
+                            $extPos = strrpos($thumbnail, '_');
+                            $length = strlen($thumbnail);
+                            $thumbFileName = substr($thumbnail, 0, -($length - $extPos));
+
+                            $pos = strpos($folderPic, $thumbFileName);
+
+                            if ($pos === 0)
+                            {
+                                if (!self::dirExists($newPath . 'thumbs/'))
+                                {
+                                    self::makeNewDir($newPath . 'thumbs/');
+                                }
+                                copy($oldPath . 'thumbs/' . $thumbnail, $newPath . 'thumbs/' . $thumbnail);
+                                unlink($oldPath . 'thumbs/' . $thumbnail);
+                            }
+                        }
+                    }
+                    // TODO end.
                 }
             }
         }
         return true;
+    }
+
+    /**
+     * Returns substring after $part
+     *
+     * @param   String  $part      Substring
+     * @param   String  $inString  Search string
+     *
+     * @return  String
+     */
+    private function after ($part, $inString)
+    {
+        if (!is_bool(strpos($inString, $part)))
+        {
+            return substr($inString, strpos($inString, $part) + strlen($part));
+        }
     }
 
     /**

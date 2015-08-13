@@ -288,10 +288,6 @@ class THM_GroupsModelDynamic_Type extends JModelLegacy
         }
         try
         {
-           /* echo "<hr/>";
-            echo "save <br/>";
-            var_dump($save);
-            echo "<hr/>";*/
             foreach ($save as $pic)
             {
                 $query = $dbo->getQuery(true);

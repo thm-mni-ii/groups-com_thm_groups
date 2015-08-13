@@ -83,8 +83,9 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
         if ($isValid)
         {
             $success = $model->save();
+            $rowsCreated = $model->createEmptyRowsForAllUsers($success);
 
-            if ($success)
+            if ($rowsCreated)
             {
                 $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
                 $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=' . $success, $msg);
@@ -154,9 +155,11 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
     {
         $model = $this->getModel('attribute');
         $success = $model->save();
+
         if ($success)
         {
             $rowsCreated = $model->createEmptyRowsForAllUsers($success);
+
             if ($rowsCreated)
             {
                 $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
