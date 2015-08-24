@@ -65,7 +65,7 @@ function getListAll($params, $pagetitle, $gid)
         $numColumns = $params['columnCount'];
         $orderAttr = $params['orderingAttributes'];
         $showStructure = $params['showstructure'];
-        $linkElement = $params['showLinks'];;
+        $linkElement = $params['showLinks'];
 
         $arrOrderAtt = array();
         if ($orderAttr)
@@ -76,7 +76,6 @@ function getListAll($params, $pagetitle, $gid)
         {
             $arrOrderAtt = null;
         }
-
 
         if (isset($numColumns))
         {
@@ -179,13 +178,10 @@ function getListAll($params, $pagetitle, $gid)
                 $result .= '<div id="' . $divid . '"' . $divStyle . '>';
 
             }
-            else
-            {
-            }
 
       $result .= '<ul class="thm_groups_alphabet">';
       //$result .= '<a class="thm_groups_list">' . $char . '</a>';
-            $result .= '<div class="respListHeader" onclick="toogle(this);">' . $char . '</div>';
+        $result .= '<div class="respListHeader" onclick="toogle(this);">' . $char . '</div>';
       $result .= '<div class="thm_groups_listitem thm_groups_toogleitem" style="display: none;">';
 
 
@@ -196,9 +192,6 @@ function getListAll($params, $pagetitle, $gid)
              {
                  $oneEntryMore = 1;
              }
-             else
-             {
-             }
              // Passt das aktuelle Buchstabenpaket noch in die aktuelle Spalte ($maxColumnSize +2)
              if ($actualRowPlaced + count($rows) - $maxColumnSize > 2)
              {
@@ -208,12 +201,6 @@ function getListAll($params, $pagetitle, $gid)
                  {
                         $stop = 2;
                  }
-                 else
-                 {
-                 }
-             }
-             else
-             {
              }
       }
 
@@ -223,7 +210,7 @@ function getListAll($params, $pagetitle, $gid)
           // Wenn aktuelles Buchstabenpaket schon Einträge in der vorherigen Spalte hat, werden diese übersprungen
           if ($remeberNextTime == 0)
           {
-              if(($actualRowPlaced +1) == $maxColumnSize)
+              if (($actualRowPlaced + 1) == $maxColumnSize)
               {
                   $result .= '<div style="margin-bottom: 25px;">';
               }
@@ -475,9 +462,6 @@ function getUserForLetter($gid, $column, $letter, $paramLinkTarget, $orderAttr, 
         $linkTarget = "";
         $itemid = $app->get('Itemid');
 
-
-
-
         switch ($paramLinkTarget)
         {
             case "module":
@@ -535,9 +519,6 @@ function getUserForLetter($gid, $column, $letter, $paramLinkTarget, $orderAttr, 
             {
                 $retString .= '<div ' . $divStyle . '>';
             }
-            else
-            {
-            }
             if (substr($searchUm, 0, 6) == "&Auml;" || substr($searchUm, 0, 6) == "&Ouml;" || substr($searchUm, 0, 6) == "&Uuml;")
             {
                 $memberWithU[] = $member;
@@ -555,9 +536,6 @@ function getUserForLetter($gid, $column, $letter, $paramLinkTarget, $orderAttr, 
                 $retString .= "</div>";
                 $actualRowPlaced = 0;
             }
-            else
-            {
-            }
         }
         foreach ($memberWithU as $member)
         {
@@ -571,140 +549,141 @@ function getUserForLetter($gid, $column, $letter, $paramLinkTarget, $orderAttr, 
 }
 
 /**
- * Method to show the name correct
+ * Writes a string containing all available, not empty and published attributes of a user
  *
- * @param   object  $arrOrderAtt       Array of the attributes order
- * @param   object  $member            Data of the user
- * @param   Array   $arrshowStructure  Show the title of the users
- * @param   String  $linkElement       The Elements where a link should place
- * @param   String  $linkTarget        Link Target
- * @param   String  $groupid           Groupid
+ * @param   array   $arrOrderAtt       array with attributes' ordering
+ * @param   object  $member            object with a user information
+ * @param   array   $arrshowStructure  array with attributes' id to be shown
+ * @param   array   $linkElement       array with ids of attributes to be linked
+ * @param   string  $linkTarget        string with target url
+ * @param   int     $groupid           group id
  *
- * @return  String  $string  Return String
+ * @return  string a string containing containing all available, not empty and published attributes of a user
  */
 function writeName($arrOrderAtt, $member, $arrshowStructure, $linkElement, $linkTarget, $groupid)
 {
+    $result = '';
+    $arrName = array();
+    $sortedUserAttributes = array();
+    JArrayHelper::toInteger($arrOrderAtt);
+    JArrayHelper::toInteger($arrshowStructure);
+    JArrayHelper::toInteger($linkElement);
 
+    $attributes = array(
+        0 => 'title',
+        1 => 'firstName',
+        2 => 'lastName',
+        3 => 'posttitle'
+    );
 
-
-        // Wenn der Paramter orderingAttributes gestzt ist soll entsprechend die Parameter geordnet werden ansonten default Sortierung
-        if (count($arrOrderAtt) != 0 && !empty($arrshowStructure))
+    // Merge user attributes and their order in one array
+    foreach ($arrOrderAtt as $attributeID => $order)
+    {
+        if (array_search($attributeID, $arrshowStructure) !== false)
         {
-
-            $run = 0;
-            $result = array();
-            $title="";
-            $postTitle="";
-            foreach ($arrOrderAtt as $val)
+            $value = $member->$attributes[$attributeID];
+            if (!empty($value))
             {
-                switch ($val)
-                {
-                    case '1':
-                        if (!empty($member->title)) {
-                            if (array_search('0', $arrshowStructure) !== null && array_search('0', $arrshowStructure) !== false) {
-                                if (!empty($linkElement) && array_search('0', $linkElement) !== null && array_search('0', $linkElement) !== false) {
-                                    $title .= '<a href="' . JRoute::_(
-                                            $linkTarget . '&gsuid=' . $member->id . '&name=' .
-                                            trim($member->lastName) . '&gsgid=' . $groupid
-                                        ) .
-                                        '">';
-                                    $title .= $member->title . '</a>&nbsp';
-
-                                }
-                                else {
-                                    $title .= $member->title . ' ';
-
-                                }
-                                $run++;
-                            }
-                        }
-                    break;
-
-                    case '2':
-                        if (!empty($member->firstName)) {
-                            if (array_search('1', $arrshowStructure) !== null && array_search('1', $arrshowStructure) !== false) {
-                                if (!empty($linkElement) && array_search('1', $linkElement) !== null && array_search('1', $linkElement) !== false) {
-
-                                    $result [] = '<a href="' . JRoute::_(
-                                            $linkTarget . '&gsuid=' . $member->id
-                                            . '&name=' . trim($member->lastName) . '&gsgid=' . $groupid
-                                        ) . '">' . trim($member->firstName) . '</a>&nbsp';
-                                }
-                                else
-                                {
-
-                                    $result [] = trim($member->firstName) . '&nbsp';
-                                }
-                                $run++;
-                            }
-                        }
-                    break;
-
-                    case '3':
-                        if (!empty($member->lastName)) {
-                            if (array_search('2', $arrshowStructure) !== null && array_search('2', $arrshowStructure) !== false) {
-                                if (!empty($linkElement) && array_search('2', $linkElement) !== false && array_search('2', $linkElement) !== null) {
-
-                                    $result [] = '<a href="' . JRoute::_(
-                                            $linkTarget . '&gsuid=' . $member->id . '&name=' .
-                                            trim($member->lastName) . '&gsgid=' . $groupid
-                                        )
-                                        . '">' . trim($member->lastName) . '</a>&nbsp';
-                                }
-                                else
-                                {
-                                    $result [] = trim($member->lastName) . '&nbsp';
-                                }
-                                $run++;
-                            }
-                        }
-                    break;
-
-                    case '4':
-                        if (!empty($member->posttitle))
-                        {
-                        if ( array_search('3', $arrshowStructure) !== null && array_search('3', $arrshowStructure) !== false)
-                        {
-                            if (!empty($linkElement) && array_search('3', $linkElement) !== null && array_search('3', $linkElement) !== false)
-                            {
-                                $postTitle .= '<a href="' . JRoute::_(
-                                        $linkTarget . '&gsuid=' . $member->id . '&name=' .
-                                        trim($member->lastName) . '&gsgid=' . $groupid
-                                ) .
-                                '">';
-                                $postTitle .= $member->posttitle . '</a>';
-                            }
-                            else
-                            {
-                                $postTitle .= $member->posttitle;
-
-                            }
-                        }
-                        }
-                    break;
-
-                }
-
+                array_push(
+                    $sortedUserAttributes, array(
+                        'id' => $attributeID,
+                        'value' => $value,
+                        'order' => $order
+                    )
+                );
             }
         }
-        else
+    }
+
+    // Sort merged array by order
+    usort($sortedUserAttributes, "cmp");
+
+    // Write name
+    foreach ($sortedUserAttributes as $userAttribute)
+    {
+        switch ($userAttribute['id'])
         {
-
+            case 0:
+                $arrName[$userAttribute['id']] = $userAttribute['value'] . ' ';
+                break;
+            case 1:
+                // If there is a last name on the second place
+                if (array_key_exists(array_search('lastName', $attributes), $arrName))
+                {
+                    $arrName[$userAttribute['id']] = ', '
+                        . isLink($userAttribute['id'], $linkElement, $linkTarget, $member, $groupid, $userAttribute['value']);
+                }
+                else
+                {
+                    $arrName[$userAttribute['id']]
+                        = isLink($userAttribute['id'], $linkElement, $linkTarget, $member, $groupid, $userAttribute['value']);
+                }
+                break;
+            case 2:
+                // If there is a first name on the second place
+                if (array_key_exists(array_search('firstName', $attributes), $arrName))
+                {
+                    $arrName[$userAttribute['id']] = ' '
+                        . isLink($userAttribute['id'], $linkElement, $linkTarget, $member, $groupid, $userAttribute['value']);
+                }
+                else
+                {
+                    $arrName[$userAttribute['id']]
+                        = isLink($userAttribute['id'], $linkElement, $linkTarget, $member, $groupid, $userAttribute['value']);
+                }
+                break;
+            case 3:
+                $arrName[$userAttribute['id']] = ', ' . $userAttribute['value'];
+                break;
         }
-            $showTitle  = array_search(0, $arrshowStructure);
-            $showPtitle = array_search(3, $arrshowStructure);
+    }
 
-           if($showTitle)
-          unset($arrshowStructure[$showTitle]);
+    $result .= implode('', $arrName);
+    return $result;
+}
 
-           if($showPtitle)
-          unset($arrOrderAtt[$showPtitle]);
+/**
+ * Checks if an attribute must be a link
+ *
+ * @param   int     $currentElement  id of current attribute
+ * @param   array   $linkElement     array with ids of attributes to be linked
+ * @param   string  $linkTarget      string with target url
+ * @param   object  $member          object with user information
+ * @param   int     $gid             group id
+ * @param   string  $value           attribute that will be captured in link
+ *
+ * @return  string a string containing a link or just a $value
+ */
+function isLink($currentElement, $linkElement, $linkTarget, $member, $gid, $value)
+{
+    $return = '';
+    if (array_search($currentElement, $linkElement) !== false)
+    {
+        $return .= JHtml::link(
+            JRoute::_(
+            $linkTarget . '&gsuid=' . $member->id . '&name=' .
+            trim($member->lastName) . '&gsgid=' . $gid
+        ), $value
+        );
+    }
+    else
+    {
+        $return .= $value;
+    }
+    return $return;
+}
 
-         if(sizeof($arrOrderAtt)==1|| array_search(3, $arrOrderAtt) > array_search(2, $arrOrderAtt))
-             return $title . implode("",$result) . " ". $postTitle . "</br>";
-
-
-        return $title . implode(",",$result) . " ". $postTitle . "</br>";
+/**
+ * Sort array by order
+ *
+ * @param   int  $a  element a
+ * @param   int  $b  element b
+ *
+ * @return  int
+ */
+function cmp($a, $b)
+{
+    return strcmp($a["order"], $b["order"]);
 }
 
 /**
