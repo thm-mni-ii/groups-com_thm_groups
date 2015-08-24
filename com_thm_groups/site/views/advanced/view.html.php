@@ -37,7 +37,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
     /**
      * Method to get display
      *
-     * @param   Object $tpl template
+     * @param   Object  $tpl  template
      *
      * @return void
      */
@@ -45,7 +45,6 @@ class THM_GroupsViewAdvanced extends JViewLegacy
     {
         $mainframe = Jfactory::getApplication();
         $app = JFactory::getApplication()->input;
-        // $layout = $this->getLayout();
         $model = $this->getmodel('advanced');
 
         // Mainframe Parameter
@@ -53,14 +52,17 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $userid = $app->get('gsuid', 0);
         $pagetitle = $params->get('page_title');
         $showpagetitle = $params->get('show_page_heading');
-        if ($showpagetitle) {
+        if ($showpagetitle)
+        {
             $title = $pagetitle;
         }
-        else {
+        else
+        {
             $title = "";
         }
         $pathway = $mainframe->getPathway();
-        if ($userid) {
+        if ($userid)
+        {
             $db = JFactory::getDBO();
             $query = $db->getQuery(true);
             $query->select('value');
@@ -72,8 +74,6 @@ class THM_GroupsViewAdvanced extends JViewLegacy
             $firstname = $db->loadObjectList();
             $name = $app->get('name', '') . ', ' . $firstname[0]->value;
             $pathway->addItem($name, '');
-        }
-        else {
         }
         $this->title = $title;
         $this->app = $app;
@@ -101,15 +101,15 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         // Load test
         $scriptDir = str_replace(JPATH_SITE, '', "/libraries/thm_groups/assets/js/");
 
-		// Include Bootstrap
-		JHtmlBootstrap::loadCSS();
+        // Include Bootstrap
+        // JHtmlBootstrap::loadCSS();
 
-		$document = JFactory::getDocument();
+        $document = JFactory::getDocument();
 
         // Load responsive CSS
-        //todo: comment library path in when lib is pushed to Gerrit.
+        // TODO comment library path in when lib is pushed to Gerrit.
         $document->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/respAdvanced.css');
-		//$document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/responsiveGroups.css');
+        //$document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/responsiveGroups.css');
 
         // Load Dynamic CSS
         $mycss = $this->getCssView($params, $advancedView);
@@ -118,7 +118,8 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
         // Notify Preview Observer
         $token = $app->get('notifytoken', false);
-        if (!empty($token)) {
+        if (!empty($token))
+        {
             $model->notifyPreviewObserver($itemId, $token);
         }
 
@@ -128,7 +129,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
     /**
      * Method to generate table
      *
-     * @param   Object $data Data
+     * @param   Object  $data  Data
      *
      * @return String table
      */
@@ -159,7 +160,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
     /**
      * Add px Suffix to numeric value (for css)
      *
-     * @param   Mixed $value Value
+     * @param   Mixed  $value  Value
      *
      * @author    Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
      * @author    Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
@@ -179,8 +180,8 @@ class THM_GroupsViewAdvanced extends JViewLegacy
     /**
      * Get the Stylesheet for Advance View List
      *
-     * @param   Array   $params       Contains the Paramter for the View
-     * @param   Boolean $advancedView Show multiple Containers in one Row
+     * @param   Array  $params        Contains the Paramter for the View
+     * @param   mixed  $advancedView  Show multiple Containers in one Row
      *
      * @author    Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
      * @author    Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
@@ -222,21 +223,25 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $imgWidth = $params->get('profileImageWidth', '66');
         $imgHeight = $params->get('profileImageHeight', 'auto');
         $imgBordered = $params->get('profileImageBorderd', false);
-        if ($imgBordered) {
+        if ($imgBordered)
+        {
             $imgBordered = 'border: 1px solid #ffffff;
                             -webkit-border-radius: 4px;
                             border-radius: 4px;
                             -webkit-box-shadow: 0px 0px 3px 0px #999999;
                             box-shadow: 0px 0px 3px 0px #999999;';
         }
-        else {
+        else
+        {
             $imgBordered = '';
         }
         $imgPositionLeft = $params->get('profileImageFloatedLeft', false);
-        if ($imgPositionLeft) {
+        if ($imgPositionLeft)
+        {
             $imgPosition = 'margin:0px 10px 0px 0px!important;float:left;';
         }
-        else {
+        else
+        {
             $imgPosition = 'margin:0px 0px 0px 10px!important;float:right;';
         }
 
@@ -286,7 +291,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
                 div.thm_groups_profile_container_list_coloumn_wrapper {
                     width: ' . $containerWrapperWidth . ';
-					float: left;
+                    float: left;
                 }
 
                 div.thm_groups_profile_container_list_coloumn {
@@ -345,12 +350,12 @@ class THM_GroupsViewAdvanced extends JViewLegacy
     /**
      * to get the Link to show the User Information
      *
-     * @param  String  $paramLinkTarget Show Option for Link
-     * @param  Integer $itemid          Menu Id
-     * @param  String  $lastName        Group Member last anem
-     * @param  Integer $gsgid           Group Id
-     * @param  Integer $userID          Group Member ID
-     * @param  Array   $attribut        Group Member Attribut
+     * @param   String   $paramLinkTarget  Show Option for Link
+     * @param   Integer  $itemid           Menu Id
+     * @param   String   $lastName         Group Member last anem
+     * @param   Integer  $gsgid            Group Id
+     * @param   Integer  $userID           Group Member ID
+     * @param   Array    $attribut         Group Member Attribut
      *
      * @return the HTML to link the User information
      */
@@ -359,7 +364,8 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $displayInline = " style='display: inline'";
         $displayLeft = " style='float: left'";
         $result = "";
-        switch ($paramLinkTarget) {
+        switch ($paramLinkTarget)
+        {
             case "module":
                 $path = "index.php?option=com_thm_groups&view=advanced&layout=list&Itemid=";
                 $result .= "<a href="
@@ -380,7 +386,11 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         }
         if (trim($attribut->value) != "")
         {
-            $result .= "<div class='gs_advlist_longinfo'" . ($attribut->structwrap ? $displayLeft : $displayInline) . ">" . trim($attribut->value) . "</div> ";
+            $result .=
+                "<div class='gs_advlist_longinfo'"
+                . ($attribut->structwrap ? $displayLeft : $displayInline) . ">"
+                . trim($attribut->value)
+                . "</div> ";
         }
 
         $result .= "</a>&nbsp";
@@ -404,8 +414,17 @@ class THM_GroupsViewAdvanced extends JViewLegacy
      *
      * @return the HTML Code with all users information
      */
-    public function showAllUserOfGroup($allUsersData, $col_view, $paramLinkTarget,
-                                       $canEdit, $gsgid, $itemid, $app_option, $app_layout, $app_view, $truncateLongInfo)
+    public function showAllUserOfGroup(
+     $allUsersData,
+     $col_view,
+     $paramLinkTarget,
+     $canEdit,
+     $gsgid,
+     $itemid,
+     $app_option,
+     $app_layout,
+     $app_view,
+     $truncateLongInfo)
     {
 
         // Show Profiles
@@ -419,10 +438,11 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $rowCounter = 0;
         $lastIndex = count($members) - 1;
 
-		// Get mobile Navigation
+        // Get mobile Navigation
         $result .= $this->getMobileNavbar($allUsersData);
-		
-        foreach ($members as $id => $member) {
+
+        foreach ($members as $id => $member)
+        {
             // Open Row Tag - Even / Odd
             if ($elementCounter % $countOfColoumns == 0)
             {
@@ -437,7 +457,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
             if ($countOfColoumns == 1)
             {
                 $cssListColoumnClass = '_full';
-                $result .= '<div class="thm_groups_profile_container_list_coloumn_wrapper' . $cssListColoumnClass .'">';
+                $result .= '<div class="thm_groups_profile_container_list_coloumn_wrapper' . $cssListColoumnClass . '">';
             }
             else
             {
@@ -491,23 +511,17 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
             if ($picture != null)
             {
-                $result .= JHTML::image(JURI::root() . $picpath . $picture, "Portrait", array('class' => 'thm_groups_profile_container_profile_image'));
+                $result .=
+                    JHTML::image(JURI::root() . $picpath . $picture, "Portrait", array('class' => 'thm_groups_profile_container_profile_image'));
             }
- 			/*else
-            {
-                //TODO CHANGE THIS; ONLY FOR TESTING RWD PURPOSES
-                $result .= JHTML::image(JURI::root() . "images/default.jpg", "Portrait", array('class' => 'thm_groups_profile_container_profile_image'));
-            }*/
 
             $result .= "<div id='gs_advlistTopic'>";
-
 
             $tempcanEdit = (($User->id == $id && $componentparams->get('editownprofile', 0) == 1) || $canEdit);
 
             // Jeder Benutzer kann sich selbst editieren
             if ($tempcanEdit)
             {
-
                 $attribs['title'] = 'bearbeiten';
 
                 // Daten fuer die EditForm
@@ -518,9 +532,10 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                 $gspart = '&gsgid=' . $gsgid;
                 $trim = "&name=" . trim($lastName);
                 $asd = "iframe";
-                $result .= "<a href='". JRoute:: _(
-                        $path . $itemid . '&gsuid=' . $id . $trim . $gspart ) . "' class='modal' rel='{size: {x: 700, y: 600}, handler: \"iframe\", onClose: \"window.location.reload();\"}'>"
-                    . JHTML:: image("components/com_thm_groups/img/edit.png", 'bearbeiten', $attribs) . "</a>";
+                $result .= "<a href='". JRoute::_(
+                        $path . $itemid . '&gsuid=' . $id . $trim . $gspart )
+                    . "' class='modal' rel='{size: {x: 700, y: 600}, handler: \"iframe\", onClose: \"window.location.reload();\"}'>"
+                    . JHTML::image("components/com_thm_groups/img/edit.png", 'bearbeiten', $attribs) . "</a>";
             }
             $result .= "</div>";
 
@@ -528,33 +543,39 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
             // Rest des Profils darstellen
             $result .= "<div>";
-            foreach ($member as $memberitem) {
-                if ($memberitem->value != "" && $memberitem->publish) {
-                    if ($memberitem->structwrap == true) {
-                        if($memberitem->structname == true && (($memberitem->name == 'Email') || ($memberitem->structid == 4))){
+            foreach ($member as $memberitem)
+            {
+                if ($memberitem->value != "" && $memberitem->publish)
+                {
+                    if ($memberitem->structwrap == true)
+                    {
+                        if ($memberitem->structname == true && (($memberitem->name == 'Email') || ($memberitem->structid == 4)))
+                        {
                             $result .= "<div class='gs_advlist_longinfo thm_groups_profile_container_line respMail-line'>";
-                            //style='float: left;'>";
                         }
-                        else{
+                        else
+                        {
                             $result .= "<div class='gs_advlist_longinfo thm_groups_profile_container_line'> ";
-                            //style='float: left;'> ";
                         }
                     }
                     else
                     {
                         $result .= "<div style='display: inline;'> ";
                     }
-                    // Attributnamen anzeigen
 
-                    if ($memberitem->structname == true) {
-                        if(($memberitem->name == 'Email' || $memberitem->structid == 4) || ($memberitem->name == 'Website' || $memberitem->type == 'TEXTFIELD'))
+                    // Attributnamen anzeigen
+                    if ($memberitem->structname == true)
+                    {
+                        if (($memberitem->name == 'Email'
+                         || $memberitem->structid == 4)
+                         || ($memberitem->name == 'Website'
+                         || $memberitem->type == 'TEXTFIELD'))
                         {
                             $result .= '<span class="thm_groups_profile_container_line_label respMail-label" style="float: left" >'
                                 . JText::_($memberitem->name) . ":&nbsp" . '</span>';
                         }
                         else
                         {
-                            //var_dump($memberitem->structid, $memberitem->name);
                             $result .= '<span class="thm_groups_profile_container_line_label" style="float: left" >'
                                 . JText::_($memberitem->name) . ":&nbsp" . '</span>';
                         }
@@ -576,15 +597,15 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                         case "4":
                             // EMail
                             $result .= '<span class="respEmail"><a href="mailto:' . $memberitem->value . '" class="btn" role="button">'
-                                    .  '<span class="icon-mail-2"></span></a></span>';
-                            $result .= '<span class="respEmail-hidden">' . JHTML:: _('email.cloak', $memberitem->value) . '</span>';
+                                    . '<span class="icon-mail-2"></span></a></span>';
+                            $result .= '<span class="respEmail-hidden">' . JHTML::_('email.cloak', $memberitem->value) . '</span>';
                             break;
                         default:
                             switch ($memberitem->type)
                             {
                                 case "LINK":
                                     $result .= "<span class='respEmail'><a href='"
-                                        . htmlspecialchars_decode($memberitem->value) ."' class='btn' role='button'>"
+                                        . htmlspecialchars_decode($memberitem->value) . "' class='btn' role='button'>"
                                         . "<span class='icon-home'></span>"
                                         . "</a></span>"
                                         . "<span class='respEmail-hidden'>"
@@ -608,15 +629,20 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                                             $text = nl2br($text);
                                         }
                                         // Truncate Long Info Text
-                                        if ($truncateLongInfo) {
+                                        if ($truncateLongInfo)
+                                        {
                                             $result .= '<span class="respEmail btn" onclick="toogle(this);" style="width: 26%;">'
                                                 . '<span class="thm_groups_profile_container_profile_read_more">'
                                                 . $memberitem->name . '</span></span>';
                                             $result .= '<span class="thm_groups_profile_container_profile_read_more respEmail-hidden">'
                                                 . JText::_('COM_THM_GROUPS_PROFILE_CONTAINER_LONG_INFO_READ_MORE') . '</span>';
-                                            $result .= '<div class="thm_groups_profile_container_profile_long_info" style="display:none;"><br/>' . $text . '<br/></div>';
+                                            $result .=
+                                                '<div class="thm_groups_profile_container_profile_long_info" style="display:none;"><br/>'
+                                                . $text
+                                                . '<br/></div>';
                                         }
-                                        else {
+                                        else
+                                        {
                                             $result .= '<div class="thm_groups_profile_container_profile_long_info">' . $text . '</div>';
                                         }
                                     }
@@ -699,8 +725,10 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         return $result;
     }
 
-	/**
+    /**
      * Return a Navigation for the mobile Context
+     *
+     * @param   array  $attribs  TODO what are $attribs?
      *
      * @return string
      */
@@ -728,10 +756,12 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                         array_push($list['alphabet'], $currentLetter);
                         $list['names'][$namesCounter] = array();
 
-                        foreach ($attribs as $namesForLetter){
-
-                            foreach($namesForLetter as $name){
-                                if (($name->structid == '2') && (substr($name->value, 0, 1) == $currentLetter)){
+                        foreach ($attribs as $namesForLetter)
+                        {
+                            foreach ($namesForLetter as $name)
+                            {
+                                if (($name->structid == '2') && (substr($name->value, 0, 1) == $currentLetter))
+                                {
                                     array_push($list['names'][$namesCounter], $name->value);
                                 }
                             }
@@ -771,20 +801,23 @@ class THM_GroupsViewAdvanced extends JViewLegacy
     /**
      * Get the nav items HTML as string.
      *
-     * @param $list
+     * @param   something  $list  TODO wrtie: what is $list?
+     *
      * @return string
      */
     public function getUserList($list)
     {
 
         $navItems = "";
-        for ($i = 0; $i < sizeof($list['alphabet']); $i++) {
+        for ($i = 0; $i < sizeof($list['alphabet']); $i++)
+        {
             $navItems .= "<li class='dropdown'>"
                 . "<a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button'"
                 . "aria-haspopup='true' aria-expanded='false'>" . $list['alphabet'][$i] . "<span class='caret'></span></a>";
 
             $navItems .= "<ul class='dropdown-menu'>";
-            foreach ($list['names'][$i] as $name) {
+            foreach ($list['names'][$i] as $name)
+            {
                 $navItems .= "<li><a href='#" . $name . "'>" . $name . "</a></li>";
             }
             $navItems .= "</ul>";
