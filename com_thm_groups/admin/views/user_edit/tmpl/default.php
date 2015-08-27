@@ -14,7 +14,8 @@
 defined('_JEXEC') or die;
 
 jimport('thm_core.edit.advancedtemplate');
-//THM_CoreTemplateAdvanced::render($this);
+
+// THM_CoreTemplateAdvanced::render($this);
 $session = JFactory::getSession();
 ?>
 <script>jQf = jQuery.noConflict();</script>
@@ -60,46 +61,53 @@ $session = JFactory::getSession();
                     </div>
                     <div id='jform_<?php echo $name; ?>_box' class='controls'>
                         <?php if ($item->name == 'TEXTFIELD') :
-                            $output = "<textarea class='hasTooltip' data-original-title='". $item->description ."' data-placement='right' id='jform_" . $name . "'"
+                            $output = "<textarea class='hasTooltip' data-original-title='"
+                                . $item->description . "' data-placement='right' id='jform_" . $name . "'"
                                 . "style='float:left !important;'"
                                 . "type='text'"
                                 . "name='jform[" . $name . "]'>" . $item->value . "</textarea>";
                             echo $output;
                             ?>
                         <?php elseif ($item->name == 'MULTISELECT') :
-                            $output = "<select multiple data-original-title='". $item->description ."' data-placement='right' class='hasTooltip form-control' id='jform_" . $name . "'"
+                            $output = "<select multiple data-original-title='"
+                                . $item->description . "' data-placement='right' class='hasTooltip form-control' id='jform_" . $name . "'"
                                 . "name='jform[" . $name . "[]]'>"
                                 . "style='float:left !important; margin-left: 0px !important;'";
                             $fields = explode(';', json_decode($item->options)->options);
+
                             foreach ($fields as $field)
                             {
                                 $output .= "<option>" . $field . "</option>";
                             }
+
                             $output .= "</select>";
                             echo $output;
                             ?>
                         <?php elseif ($item->name == 'TABLE') :
                             $tData   = json_decode($item->value, true);
                             $columns = count($tData);
-                            //var_dump($columns);
 
                             $output  = "<div class='span2'>";
                             $output .= "<table class='table table-striped' id='jform_" . $name . "'>";
                             $output .= "<thead>";
                             $output .= "<tr>";
-                            foreach ($tData[0] as $key=>$value)
+
+                            foreach ($tData[0] as $key => $value)
                             {
                                 $output .= "<th>" . $key . "</th>";
                             }
+
                             $output .= "<th>Delete</th>";
                             $output .= "</tr>";
                             $output .= "</thead>";
 
                             $output .= "<tbody>";
                             $rowCount = 0;
+
                             foreach ($tData as $row)
                             {
                                 $output .= "<tr>";
+
                                 foreach ($row as $key => $value)
                                 {
                                     $output .= "<td>"
@@ -110,11 +118,13 @@ $session = JFactory::getSession();
                                         . " value='" . $value . "'/>"
                                         . "</td>";
                                 }
+
                                 $output .= "<td><button type='button' class='btn btn-small' onclick='delRow(this)'>"
                                     . "del</button></td>";
                                 $output .= "</tr>";
                                 $rowCount ++;
                             }
+
                             $session->set($name . "_rowCount", $rowCount);
                             $output .= "</tbody>";
                             $output .= "</table>";
@@ -122,6 +132,7 @@ $session = JFactory::getSession();
                             $output .= "<span>";
                             $cCount = 1;
                             $rowCount++;
+
                             foreach ($tData[0] as $key => $value)
                             {
                                 $output .= "<input id='jform_" . $name . "_" . $cCount
@@ -130,7 +141,6 @@ $session = JFactory::getSession();
                                     . "<br/><br/>";
                                 $cCount ++;
                             }
-
 
                             $output .= "<button type='button' class='btn btn-success'
                                         . onclick=\"Joomla.submitbutton('user.apply')\" >Add to Table</button>";
@@ -141,7 +151,6 @@ $session = JFactory::getSession();
                                     . $item->attributeID . "\", \"" . $columns . "\")' >Add to Table</button>";
 
                             */
-
                             $output .= "</span>";
                             $output .= "</div>";
                             echo $output;
@@ -196,7 +205,9 @@ $session = JFactory::getSession();
                                                     aria-label='Close'>
                                                 <span aria-hidden='true'>&times;</span>
                                             </button>
-                                            <h4 class='modal-title' id='myModalLabel'><?php echo JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_UPLOAD'); ?></h4>
+                                            <h4 class='modal-title' id='myModalLabel'>
+                                                <?php echo JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_UPLOAD'); ?>
+                                            </h4>
                                         </div>
 
                                         <div id='<?php echo $name; ?>_Modal_Body' class='modal-body modalPicture'>
@@ -224,14 +235,20 @@ $session = JFactory::getSession();
                                                 </div>
                                                 <div id='<?php echo $name; ?>_cropped_controls'
                                                      class='cropped_controls'>
-                                                    <span><hr/><br/><b><?php echo JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_SELECT_DIM'); ?></b></span><br/><br/>
+                                                    <span>
+                                                        <hr/>
+                                                        <br/>
+                                                        <b>
+                                                            <?php echo JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_SELECT_DIM'); ?>
+                                                        </b>
+                                                    </span>
+                                                    <br/><br/>
                                                     <button
                                                         type='button'
                                                         id='<?php echo $name; ?>_switch'
                                                         class='btn btn-default'
                                                         value='switch mode'><?php echo JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_SWITCH'); ?>
                                                     </button>
-                                                    <span><?php echo JText::_('COM_THM_GROUPS_NORMALMODE'); ?></span>
                                                     <br/><br/>
                                                     <div id='<?php echo $name; ?>_result'
                                                          class="alert alert-success"

@@ -1,8 +1,9 @@
 .imageBox
 {
     position: relative;
-    height: 400px;
-    width: 400px;
+    height: 220px;
+    width: 100%;
+    min-width: 150px;
     border:1px solid #aaa;
     background: #fff;
     overflow: hidden;
@@ -55,12 +56,33 @@
 }
 .previewContainer
 {
-    height: 80%;
+    height: 80%; /*width:80%*/
+    width: 80%;
+    display: block;
+}
+.cropped_controls_wrapper{
     width: 80%;
 }
 .cropped_controls
 {
-    height: 200px;
-    width: 250px;
+    height: 15em; /*200px*/
+    width: 50%; /*150px*/
+    float: left;
+}
+.cropped>img{
+    float:right;
+    border: 1px solid grey
+}
+.cropped{
+    min-height: 15em;
+    width: 50%;
     float: right;
+    padding-top: 5%;
+}
+.cropped_menu{
+    min-height: 100px;
+    width: 100%;
+}
+.editBox{
+    margin-top: 5em;
 }

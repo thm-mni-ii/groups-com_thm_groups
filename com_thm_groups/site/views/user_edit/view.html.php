@@ -13,6 +13,7 @@
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
+ * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -37,7 +38,9 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
 {
 
     protected $form;
+
     public $item = null;
+
     public $userContent = null;
 
     /**
@@ -47,6 +50,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
      * @param   Int     $size      Size
      * @param   String  $value     Value
      * @param   Int     $structid  StructID
+     *
      * @depracated
      * @return textform
      */
@@ -58,6 +62,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
             "class='inputbox' " .
             "type='text' name='$name' " .
             "id='$name' ";
+
             if (isset($extra))
             {
                 $output .= "maxlength='$extra'";
@@ -66,6 +71,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
             {
                 $output .= "maxlength='$size'";
             }
+
             $output .= "value='$value'" .
             " />";
         echo $output;
@@ -78,6 +84,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
      * @param   Int     $rows      Rows
      * @param   String  $value     Value
      * @param   Int     $structid  StructID
+     *
      * @depracated
      * @return textarea
      */
@@ -86,6 +93,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
         $model = $this->getModel();
         $extra = $model->getExtra($structid, 'TEXTFIELD');
         $output = "<textarea ";
+
             if (isset($extra))
             {
                 $output .= "rows='$extra' ";
@@ -94,6 +102,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
             {
                 $output .= "rows='$rows' ";
             }
+
             $output .= "name='$name' >" .
             $value .
             "</textarea>";
@@ -106,6 +115,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
      * @param   String  $name      Name
      * @param   Int     $structid  StructID
      * @param   String  $value     Value
+     *
      * @depracated
      * @return picturearea
      */
@@ -114,6 +124,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
         $model = $this->getModel();
         $extra = $model->getExtra($structid, 'PICTURE');
         $path = JURI::base() . $model->getPicPath($structid);
+
         if ($value != "")
         {
             $output = '<img src=' . $path . '/' . $value . ' />';
@@ -122,6 +133,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
         {
             $output = '<img src=' . $path . '/' . $extra . ' />';
         }
+
         $output .= "<br /><input type='file' value='bla' accept='image' name='$name' />" .
         "<br /><input type='submit' id='gs_editView_buttons' " .
         "onclick='return confirm(\"" . JText::_("COM_THM_GROUPS_REALLY_DELETE") . "\"), " .
@@ -137,6 +149,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
      * @param   String  $name      Name
      * @param   String  $value     Value
      * @param   Int     $structid  StructID
+     *
      * @depracated
      * @return tablearea
      */
@@ -145,35 +158,43 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
         $model = $this->getModel();
 
         $app = JFactory::getApplication()->input();
+
         // $cid = JRequest::getVar('cid', array(0), '', 'array');
         $extra = $model->getExtra($structid, 'TABLE');
         $arrValue = json_decode($value);
         $gsuid = $this->app('gsuid');
+
         if ($extra != "")
         {
             $head = explode(';', $extra);
             $output = "<table>" .
                         "<tr>";
+
             foreach ($head as $headItem)
             {
                 $output .= "<th>$headItem </th>";
             }
+
             $output .= "<th>" . JText::_('JACTION_DELETE') . "</th>";
             $output .= "<th>" . JText::_('JACTION_EDIT') . "</th>";
             $output .= "</tr>";
+
             if ($value != "" && $value != "[]")
             {
                 $index = 0;
+
                 foreach ($arrValue as $key => $row)
                 {
                     if ($index)
                     {
                         $output .= "<tr style='background-color:#F7F7F7;'>";
                     }
+
                     foreach ($row as $rowItem)
                     {
                         $output .= "<td>" . $rowItem . "</td>";
                     }
+
                     $path = "index.php?option=com_thm_groups&view=edit&layout=edit_table&tmpl=component&gsuid=$gsuid&structid=$structid&key=$key";
                     $output .= "<td><a href='javascript:delTableRow($key, $structid );' title='" . JText::_('COM_THM_GROUPS_ROW_LABEL') . ": "
                     . ($key + 1)
@@ -194,7 +215,9 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
                     "<td colspan='" . (count($head) + 1) . "'>" . JText::_('COM_THM_GROUPS_NO_DATA') . "</td>" .
                     "</tr>";
             }
+
             $output .= "</table>";
+
             foreach ($head as $headItem)
             {
                 $output .= "<input " .
@@ -211,7 +234,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
             }
 
             $option_back = $app->get('option_back', '0', 'post');
-            $layout_back =  $app->get('layout_back', '0', 'post');
+            $layout_back = $app->get('layout_back', '0', 'post');
             $view_back = $app->get('view_back', '0', 'post');
 
             $output .= "<br /><br /><input type='submit' id='addTableRow" . $name . "' " .
@@ -235,12 +258,12 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
      * Method to get date form
      *
      * @param   String  $name   Name
-     * @param   Int     $size   Size
      * @param   String  $value  Value
+     *
      * @depracated
      * @return void
      */
-    public function getDateForm ($name, $size, $value)
+    public function getDateForm ($name, $value)
     {
         echo JHTML::calendar($value, $name, $name, '%Y-%m-%d');
     }
@@ -249,23 +272,25 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
      * Method to get multi select form
      *
      * @param   String  $name      Name
-     * @param   Int     $size      Size
      * @param   String  $value     Value
      * @param   Int     $structid  StructID
+     *
      * @depracated
      * @return multiselectform
      */
-    public function getMultiSelectForm ($name, $size, $value, $structid)
+    public function getMultiSelectForm ($name, $value, $structid)
     {
         $arrValue = explode(';', $value);
         $model = $this->getModel();
         $extra = $model->getExtra($structid, 'MULTISELECT');
         $arrExtra = explode(';', $extra);
         $output = "<select MULTIPLE size='" . (count($arrExtra)) . "' name='" . $name . "[]' id='$name' >";
+
         foreach ($arrExtra as $extraValue)
         {
             $tExtra = trim($extraValue);
             $sel = "";
+
             foreach ($arrValue as $val)
             {
                 if ($tExtra == $val)
@@ -273,8 +298,10 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
                     $sel = "selected";
                 }
             }
+
             $output .= "<OPTION VALUE='$tExtra' $sel>$tExtra</option>";
         }
+
         $output .= "</SELECT>";
         echo $output;
     }
@@ -310,17 +337,27 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
         $doc -> addStyleSheet(JURI::root(true) . $componentDir . '/assets/css/cropbox.css');
         $doc -> addStyleSheet(JURI::root(true) . $componentDir . '/assets/css/edit.css');
         $doc -> addStyleSheet(JUri::root() . "libraries/thm_core/fonts/iconfont.css");
+        $doc->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/respBaseStyles.css');
         $doc -> addScript(JUri::root() . "libraries/thm_core/js/formbehaviorChosenHelper.js");
+
+        // TODO: comment this out to prevent modal from closing after saving changes. For debugging.
         $doc -> addScriptDeclaration("        window.onbeforeunload = function() {
             window.parent.location.reload();
         };");
 
         $this->app = $app;
+
+        // Get user data for edit view.
         $this->userContent = $this->get('Content');
-        //$this->addToolBar();
 
         parent::display($tpl);
     }
+
+    /**
+     * Modifies the document
+     *
+     * @return void
+     */
     protected function modifyDocument()
     {
         JHtml::_('bootstrap.tooltip');
@@ -335,5 +372,4 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
         $document -> addScript($this->baseurl . "../../libraries/thm_core/js/formbehaviorChosenHelper.js");
         $document -> addScript($this->baseurl . "../../libraries/thm_core/js/validators.js");
     }
-
 }

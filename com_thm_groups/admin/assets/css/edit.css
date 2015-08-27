@@ -9,6 +9,11 @@
     width: 500px;
     float: left;
 }
+#header_right
+{
+    float: left;
+    text-align: right;
+}
 .edit_img
 {
     display: block;

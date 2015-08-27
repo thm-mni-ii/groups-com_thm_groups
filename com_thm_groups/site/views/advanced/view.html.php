@@ -39,7 +39,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
      *
      * @param   Object  $tpl  template
      *
-     * @return void
+     * @return  void
      */
     public function display($tpl = null)
     {
@@ -52,6 +52,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $userid = $app->get('gsuid', 0);
         $pagetitle = $params->get('page_title');
         $showpagetitle = $params->get('show_page_heading');
+
         if ($showpagetitle)
         {
             $title = $pagetitle;
@@ -60,7 +61,9 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         {
             $title = "";
         }
+
         $pathway = $mainframe->getPathway();
+
         if ($userid)
         {
             $db = JFactory::getDBO();
@@ -75,6 +78,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
             $name = $app->get('name', '') . ', ' . $firstname[0]->value;
             $pathway->addItem($name, '');
         }
+        
         $this->title = $title;
         $this->app = $app;
         $itemId = $app->get('Itemid', 0, 'get');
@@ -102,14 +106,14 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $scriptDir = str_replace(JPATH_SITE, '', "/libraries/thm_groups/assets/js/");
 
         // Include Bootstrap
-        // JHtmlBootstrap::loadCSS();
+        JHtmlBootstrap::loadCSS();
 
         $document = JFactory::getDocument();
 
         // Load responsive CSS
-        // TODO comment library path in when lib is pushed to Gerrit.
         $document->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/respAdvanced.css');
-        //$document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/responsiveGroups.css');
+
+        // $document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/responsiveGroups.css');
 
         // Load Dynamic CSS
         $mycss = $this->getCssView($params, $advancedView);
@@ -118,6 +122,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
         // Notify Preview Observer
         $token = $app->get('notifytoken', false);
+
         if (!empty($token))
         {
             $model->notifyPreviewObserver($itemId, $token);
@@ -137,22 +142,29 @@ class THM_GroupsViewAdvanced extends JViewLegacy
     {
         $jsonTable = json_decode($data);
         $table = "<table class='table'><tr>";
+
         foreach ($jsonTable[0] as $key => $value)
         {
             $headItem = str_replace("_", " ", $key);
             $table = $table . "<th>" . $headItem . "</th>";
         }
+
         $table = $table . "</tr>";
+
         foreach ($jsonTable as $item)
         {
             $table = $table . "<tr>";
+
             foreach ($item as $value)
             {
                 $table = $table . "<td>" . $value . "</td>";
             }
+
             $table = $table . "</tr>";
         }
+
         $table = $table . "</table>";
+
         return $table;
     }
 
@@ -173,6 +185,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         {
             $value .= 'px';
         }
+
         return $value;
     }
 
@@ -223,6 +236,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $imgWidth = $params->get('profileImageWidth', '66');
         $imgHeight = $params->get('profileImageHeight', 'auto');
         $imgBordered = $params->get('profileImageBorderd', false);
+
         if ($imgBordered)
         {
             $imgBordered = 'border: 1px solid #ffffff;
@@ -231,11 +245,14 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                             -webkit-box-shadow: 0px 0px 3px 0px #999999;
                             box-shadow: 0px 0px 3px 0px #999999;';
         }
+
         else
         {
             $imgBordered = '';
         }
+
         $imgPositionLeft = $params->get('profileImageFloatedLeft', false);
+
         if ($imgPositionLeft)
         {
             $imgPosition = 'margin:0px 10px 0px 0px!important;float:left;';
@@ -291,7 +308,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
                 div.thm_groups_profile_container_list_coloumn_wrapper {
                     width: ' . $containerWrapperWidth . ';
-                    float: left;
+					float: left;
                 }
 
                 div.thm_groups_profile_container_list_coloumn {
@@ -344,6 +361,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                 span.thm_groups_profile_container_line_label {
                     ' . $textLineLabelStyles . '
                 }';
+
         return $out;
     }
 
@@ -364,6 +382,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $displayInline = " style='display: inline'";
         $displayLeft = " style='float: left'";
         $result = "";
+
         switch ($paramLinkTarget)
         {
             case "module":
@@ -384,6 +403,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                     . JRoute::_($path . $itemid . '&gsuid=' . $userID . '&name=' . trim($lastName) . '&gsgid=' . $gsgid)
                     . ">";
         }
+
         if (trim($attribut->value) != "")
         {
             $result .=
@@ -394,8 +414,8 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         }
 
         $result .= "</a>&nbsp";
+        
         return $result;
-
     }
 
     /**
@@ -426,7 +446,6 @@ class THM_GroupsViewAdvanced extends JViewLegacy
      $app_view,
      $truncateLongInfo)
     {
-
         // Show Profiles
         $members = $allUsersData;
         $User = JFactory::getUser();
@@ -492,6 +511,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                         if ($memberhead->type == "PICTURE" && $picture == null && $memberhead->publish)
                         {
                             $picture = $memberhead->value;
+
                             if (isset($memberhead->options))
                             {
                                 $pictureOption = json_decode($memberhead->options);
@@ -500,6 +520,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                             {
                                 $pictureOption = json_decode($memberhead->dynOptions);
                             }
+
                             $tempposition = explode('images/', $pictureOption->path, 2);
                             $picpath = 'images/' . $tempposition[1];
                         }
@@ -511,8 +532,10 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
             if ($picture != null)
             {
-                $result .=
-                    JHTML::image(JURI::root() . $picpath . $picture, "Portrait", array('class' => 'thm_groups_profile_container_profile_image'));
+                $result .= JHTML::image(
+                    JURI::root()
+                    . $picpath . $picture, "Portrait", array('class' => 'thm_groups_profile_container_profile_image')
+                );
             }
 
             $result .= "<div id='gs_advlistTopic'>";
@@ -532,17 +555,18 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                 $gspart = '&gsgid=' . $gsgid;
                 $trim = "&name=" . trim($lastName);
                 $asd = "iframe";
-                $result .= "<a href='". JRoute::_(
+                $result .= "<a href='". JRoute:: _(
                         $path . $itemid . '&gsuid=' . $id . $trim . $gspart )
                     . "' class='modal' rel='{size: {x: 700, y: 600}, handler: \"iframe\", onClose: \"window.location.reload();\"}'>"
-                    . JHTML::image("components/com_thm_groups/img/edit.png", 'bearbeiten', $attribs) . "</a>";
+                    . JHTML:: image("components/com_thm_groups/img/edit.png", 'bearbeiten', $attribs) . "</a>";
             }
-            $result .= "</div>";
 
+            $result .= "</div>";
             $wrap = true;
 
             // Rest des Profils darstellen
             $result .= "<div>";
+
             foreach ($member as $memberitem)
             {
                 if ($memberitem->value != "" && $memberitem->publish)
@@ -622,6 +646,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                                 case "TEXTFIELD":
                                     // Long Info
                                     $text = JString::trim(htmlspecialchars_decode($memberitem->value));
+
                                     if (!empty($text))
                                     {
                                         if (stripos($text, '<li>') === false)
@@ -655,6 +680,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                     }
 
                     $result .= "</div>";
+
                     if ($memberitem->structwrap == true)
                     {
                         $wrap = true;
@@ -666,6 +692,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                     }
                 }
             }
+
             $result .= "</div>";
 
             $result .= '<div class="clearfix"></div>';
@@ -702,7 +729,6 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         // Truncate Long Info Text
         if ($truncateLongInfo)
         {
-
             $result .= '<script type="text/javascript">
                             jQuery(".thm_groups_profile_container_profile_read_more").click(
                                 function() {
@@ -722,15 +748,16 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                             }
                         </script>';
         }
+
         return $result;
     }
 
     /**
-     * Return a Navigation for the mobile Context
+     * Return a Navigtion for the mobile Context
      *
-     * @param   array  $attribs  TODO what are $attribs?
+     * @param   mixed  $attribs  Attributes
      *
-     * @return string
+     * @return  String
      */
     public function getMobileNavbar($attribs)
     {
@@ -766,6 +793,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                                 }
                             }
                         }
+
                         $namesCounter ++;
                     }
                 }
@@ -801,25 +829,29 @@ class THM_GroupsViewAdvanced extends JViewLegacy
     /**
      * Get the nav items HTML as string.
      *
-     * @param   something  $list  TODO wrtie: what is $list?
+     * @param   Array  $list  Array of Users sorted by first letter of name
      *
-     * @return string
+     * @return  String
      */
     public function getUserList($list)
     {
 
         $navItems = "";
+
         for ($i = 0; $i < sizeof($list['alphabet']); $i++)
         {
             $navItems .= "<li class='dropdown'>"
                 . "<a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button'"
-                . "aria-haspopup='true' aria-expanded='false'>" . $list['alphabet'][$i] . "<span class='caret'></span></a>";
+                . "aria-haspopup='true' aria-expanded='false'>"
+                . $list['alphabet'][$i] . "<span class='caret'></span></a>";
 
             $navItems .= "<ul class='dropdown-menu'>";
+
             foreach ($list['names'][$i] as $name)
             {
-                $navItems .= "<li><a href='#" . $name . "'>" . $name . "</a></li>";
+                $navItems .= "<li style='height: 44px; width: 100%;'><a href='#" . $name . "'>" . $name . "</a></li>";
             }
+
             $navItems .= "</ul>";
             $navItems .= "</li>";
             $navItems .= "<li class='divider'></li>";

@@ -38,10 +38,10 @@ class THM_GroupsModelAttribute extends JModelLegacy
      */
     public function createEmptyRowsForAllUsers($attributeID)
     {
-        $db = JFactory::getDbo();
+        $dbo = JFactory::getDbo();
         $ids = $this->getUserIDs();
-        $usersWhichHaveAttribute = $this->getUserIDsByAttributeID($attributeID);
-        $ids = $this->filterIDs($ids, $usersWhichHaveAttribute);
+        $usersWhithAttribute = $this->getUserIDsByAttributeID($attributeID);
+        $ids = $this->filterIDs($ids, $usersWhithAttribute);
 
         /*
          * Create database entry for created attribute with empty value for all users
@@ -50,26 +50,29 @@ class THM_GroupsModelAttribute extends JModelLegacy
          */
         foreach ($ids as $id)
         {
-            $query = $db->getQuery(true);
+            $query = $dbo->getQuery(true);
             $columns = array('usersID', 'attributeID', 'published');
 
             // $id->id this is stupid...
             $values = array($id, $attributeID, 0);
             $query
-                ->insert($db->qn('#__thm_groups_users_attribute'))
-                ->columns($db->qn($columns))
+                ->insert($dbo->qn('#__thm_groups_users_attribute'))
+                ->columns($dbo->qn($columns))
                 ->values(implode(',', $values));
-            $db->setQuery($query);
+            $dbo->setQuery($query);
+
             try
             {
-                $db->execute();
+                $dbo->execute();
             }
             catch (Exception $e)
             {
                 JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+
                 return false;
             }
         }
+
         return true;
     }
 
@@ -123,22 +126,23 @@ class THM_GroupsModelAttribute extends JModelLegacy
      */
     public function getUserIDsByAttributeID($attributeID)
     {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
 
         $query
             ->select('usersID')
             ->from('#__thm_groups_users_attribute')
             ->where("attributeID = $attributeID");
-        $db->setQuery($query);
+        $dbo->setQuery($query);
 
         try
         {
-            $result = $db->loadObjectList();
+            $result = $dbo->loadObjectList();
         }
         catch (Exception $e)
         {
             JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+
             return false;
         }
 
@@ -154,21 +158,23 @@ class THM_GroupsModelAttribute extends JModelLegacy
      */
     public function getUserIDs()
     {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
 
         $query
             ->select('id')
-            ->from($db->qn('#__thm_groups_users'));
+            ->from($dbo->qn('#__thm_groups_users'));
 
-        $db->setQuery($query);
+        $dbo->setQuery($query);
+
         try
         {
-            $ids = $db->loadObjectList();
+            $ids = $dbo->loadObjectList();
         }
         catch (Exception $e)
         {
             JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+
             return false;
         }
 
@@ -236,6 +242,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
             case "7":
                 $options['7'] = '{ "required" : "' . $required . '" }';
         }
+
         $data['options'] = $options[$data['static_typeID']];
         $dbo->transactionStart();
 
@@ -248,11 +255,13 @@ class THM_GroupsModelAttribute extends JModelLegacy
         if (!$success)
         {
             $dbo->transactionRollback();
+
             return false;
         }
         else
         {
             $dbo->transactionCommit();
+
             return $attribute->id;
         }
     }
@@ -316,18 +325,18 @@ class THM_GroupsModelAttribute extends JModelLegacy
     /**
      * Returns one single pictureItem from database
      *
-     * @param   Integer  $id  ID of selected attribute
+     * @param   Integer  $atrId  ID of selected attribute
      *
      * @return null|$result
      */
-    private function getPictureItem($id)
+    private function getPictureItem($atrId)
     {
         $dbo = JFactory::getDbo();
         $query = $dbo->getQuery(true);
 
         $query->select('*')
             ->from($dbo->qn('#__thm_groups_attribute'))
-            ->where('id = ' . (int) $id);
+            ->where('id = ' . (int) $atrId);
 
         $dbo->setQuery($query);
         $result = $dbo->loadObject();
@@ -374,10 +383,10 @@ class THM_GroupsModelAttribute extends JModelLegacy
                     {
                         self::makeNewDir($newPath . 'fullRes/');
                     }
-                    copy($oldPath . 'fullRes/' . $oriFileName, $newPath . 'fullRes/' .  $oriFileName);
+
+                    copy($oldPath . 'fullRes/' . $oriFileName, $newPath . 'fullRes/' . $oriFileName);
                     unlink($oldPath . 'fullRes/' . $oriFileName);
 
-                    // TODO make this work here and in dynamictype edit.
                     // Copy the thumbnails for the picture
                     foreach ( scandir($oldPath . 'thumbs/') as $thumbnail)
                     {
@@ -405,15 +414,16 @@ class THM_GroupsModelAttribute extends JModelLegacy
                                 {
                                     self::makeNewDir($newPath . 'thumbs/');
                                 }
+
                                 copy($oldPath . 'thumbs/' . $thumbnail, $newPath . 'thumbs/' . $thumbnail);
                                 unlink($oldPath . 'thumbs/' . $thumbnail);
                             }
                         }
                     }
-                    // TODO end.
                 }
             }
         }
+
         return true;
     }
 
@@ -461,7 +471,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
      * The path for #__thm_groups_attribute will be set in calling function.
      *
      * @param   Integer  $inputPath    Typed in path from user-interface
-     * @param   String   $oldPath         Old path from database
+     * @param   String   $oldPath      Old path from database
      * @param   Integer  $attrID       ID from selected attribute
      * @param   Integer  $dynamicType  DynamicTypeID from form
      *
@@ -477,6 +487,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
         {
             self::makeNewDir($inputPath);
         }
+
         if (!self::copyPictures($oldPath, $inputPath, $attrID, $dynamicType))
         {
             return false;
@@ -487,8 +498,13 @@ class THM_GroupsModelAttribute extends JModelLegacy
         }
     }
 
-    private function getSeverPath(){
+    /**
+     * Gets the server path
+     *
+     * @return mixed
+     */
+    private function getSeverPath()
+    {
         return str_replace('\\', '/', JPATH_ROOT);
     }
-
 }

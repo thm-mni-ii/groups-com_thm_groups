@@ -4,8 +4,7 @@
 'use strict';
 
 /**
- * Binds a imageCropper to the given elements of the bootstrap modal
- * created in the user_edit controller function getUserContent.
+ * Binds a imageCropper to the given elements of the bootstrap modal.
  *
  * @return null
  **/
@@ -71,7 +70,9 @@ function bindImageCropper(element, attrID, uID)
                 result.innerHTML = 'Picture successfully uploaded!';
                 result.style.visibility = 'visible';
 
-                jQuery("#jform_" + element + "_message").append("</br><div class='text-error'>Please save picture to proceed!</div>");
+                //jQuery("#jform_" + element + "_message").append("</br><div class='text-error'>Please save picture to proceed!</div>");
+                jQuery("#uEditSubmit").append("</br><div class='alert alert-error'>Please save your changes to proceed!</div>");
+                document.getElementById('uEditSubmit').scrollIntoView();
                 });
             });
 

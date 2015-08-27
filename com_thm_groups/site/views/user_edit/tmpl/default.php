@@ -25,14 +25,16 @@ $session = JFactory::getSession();
 $componentparams = JComponentHelper::getParams('com_thm_groups');
 
 $canEdit = (($user->id == $this->item && $componentparams->get('editownprofile', 0) == 1 ) || $this->canEdit);
+
 if (!$canEdit)
 {
 
     $mainframe = JFactory::getApplication();
     $itemid = $this->app->get('Itemid', 0);
-    $view =  $this->app->get('view', 'list');
+    $view = $this->app->get('view', 'list');
     $msg = JText::_('COM_THM_GROUPS_MEMBERMANAGER_NO_RIGHTS_TO_EDIT_USER');
-    //$link = JRoute :: _('index.php?option=com_thm_groups&Itemid=' . $itemid);
+
+    // $link = JRoute :: _('index.php?option=com_thm_groups&Itemid=' . $itemid);
     $link = JRoute :: _('index.php');
     $mainframe->Redirect($link, $msg);
 }
@@ -54,7 +56,7 @@ else
 
         <div class="form-horizontal">
 
-            <div class="form-actions">
+            <div id="uEditSubmit" class="form-actions">
                 <button type="submit" class="btn btn-primary"><?php echo JText::_('JAPPLY');?></button>
                 <input type="hidden" name="option" value="com_thm_groups" />
                 <input type="hidden" name="task" value="user.apply"/>
@@ -100,50 +102,57 @@ else
                                         . "name='jform[" . $name . "][value]'>"
                                         . "style='float:left !important; margin-left: 0px !important;'";
                                     $fields     = explode(';', json_decode($item->options)->options);
+
                                     foreach ($fields as $field)
                                     {
                                         $output .= "<option>" . $field . "</option>";
                                     }
+
                                     $output .= "</select>";
                                     echo $output;
                                     ?>
                                 <?php elseif ($item->type == 'TABLE') :
                                     $tData   = json_decode($item->value, true);
                                     $columns = count($tData);
-                                    //var_dump($columns);
 
                                     $output  = "<div class='span2'>";
                                     $output .= "<table class='table table-striped' id='jform_" . $name . "'>";
                                     $output .= "<thead>";
                                     $output .= "<tr>";
+
                                     foreach ($tData[0] as $key=>$value)
                                     {
                                         $output .= "<th>" . $key . "</th>";
                                     }
+
                                     $output .= "<th>Delete</th>";
                                     $output .= "</tr>";
                                     $output .= "</thead>";
 
                                     $output .= "<tbody>";
                                     $rowCount = 0;
+
                                     foreach ($tData as $row)
                                     {
                                         $output .= "<tr>";
-                                        foreach ($row as $key=>$value)
+
+                                        foreach ($row as $key => $value)
                                         {
                                             $output .= "<td>"
                                                 . "<input type='text' style='width: 90% !important;'"
                                                 . "id='jform_" . $key . "_" . $value . "'"
                                                 . "name='jform[" . $name . "][value][" . $rowCount
                                                 . "_" . $key . "_" . mt_rand() . "]'"
-                                                ." value='" . $value . "'/>"
+                                                . " value='" . $value . "'/>"
                                                 . "</td>";
                                         }
+
                                         $output .= "<td><button type='button' class='btn btn-small' onclick='delRow(this)'>"
                                             . "del</button></td>";
                                         $output .= "</tr>";
                                         $rowCount ++;
                                     }
+
                                     $session->set($name . "_rowCount", $rowCount);
                                     $output .= "</tbody>";
                                     $output .= "</table>";
@@ -151,6 +160,7 @@ else
                                     $output .= "<span>";
                                     $cCount = 1;
                                     $rowCount++;
+
                                     foreach ($tData[0] as $key => $value)
                                     {
                                         $output .= "<input id='jform_" . $name . "_" . $cCount
@@ -159,7 +169,6 @@ else
                                             . "<br/><br/>";
                                         $cCount ++;
                                     }
-
 
                                     $output .= "<button type='button' class='btn btn-success'
                                         . onclick=\"Joomla.submitbutton('user.apply')\" >Add to Table</button>";
@@ -187,123 +196,9 @@ else
                                            name='jform[<?php echo $name; ?>][value]'
                                            type='hidden'
                                            value='<?php echo $item->value; ?>'/>
-                                    <!-- Create bootstrap modal output -->
                                     <br/>
-                                    <button
-                                        type='button'
-                                        id='<?php echo $name; ?>_upload'
-                                        onclick='bindImageCropper("<?php echo $name; ?>", "<?php echo $item->structid; ?>"
-                                            , "<?php echo $this->item; ?>")'
-                                        class='btn btn-success'
-                                        style='float: left;'
-                                        data-toggle='modal'
-                                        data-target='#<?php echo $name; ?>_Modal'><?php echo JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_CHANGE'); ?>
-                                    </button>
-
-                                    <div
-                                        class='modal fade modalFade'
-                                        id='<?php echo $name; ?>_Modal'
-                                        tabindex='-1'
-                                        role='dialog'
-                                        aria-labelledby='myModalLabel'
-                                        aria-hidden='true'>
-
-                                        <div class='modal-dialog'>
-
-                                            <div class='modal-content'>
-
-                                                <div class='modal-header'>
-                                                    <button type='button' class='close' data-dismiss='modal'
-                                                            aria-label='Close'>
-                                                        <span aria-hidden='true'>&times;</span>
-                                                    </button>
-                                                    <h4 class='modal-title' id='myModalLabel'><?php echo JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_UPLOAD'); ?></h4>
-                                                </div>
-
-                                                <div id='<?php echo $name; ?>_Modal_Body' class='modal-body modalPicture'>
-
-                                                    <div id='<?php echo $name; ?>_leftContent' class='leftContent'>
-                                                        <div class='previewContainer'>
-                                                            <div id='<?php echo $name; ?>_imageBox' class='imageBox'>
-                                                                <div id='<?php echo $name; ?>_thumbBox' class='thumbBox'>
-                                                                </div>
-                                                                <div
-                                                                    id='<?php echo $name; ?>_spinner'
-                                                                    class='spinner'
-                                                                    style='display: none'><?php echo JText::_('COM_THM_GROUPS_LOAD'); ?>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div id='<?php echo $name; ?>_rightContent' class='rightContent'>
-                                                        <div
-                                                            id='<?php echo $name; ?>_cropped'
-                                                            class='cropped'
-                                                            style='min-height: 220px; min-width: 170px;
-                                                            float: right !important;'>
-                                                        </div>
-                                                        <div id='<?php echo $name; ?>_cropped_controls'
-                                                             class='cropped_controls'>
-                                                            <span><hr/><br/><b><?php echo JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_SELECT_DIM'); ?></b></span><br/><br/>
-                                                            <button
-                                                                type='button'
-                                                                id='<?php echo $name; ?>_switch'
-                                                                class='btn btn-default'
-                                                                value='switch mode'><?php echo JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_SWITCH'); ?>
-                                                            </button>
-                                                            <span><?php echo JText::_('COM_THM_GROUPS_NORMALMODE'); ?></span>
-                                                            <br/><br/>
-                                                            <div id='<?php echo $name; ?>_result'
-                                                                 class="alert alert-success"
-                                                                 style="visibility: hidden;"></div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                                <div class='modal-footer'>
-                                                    <div class='action'>
-                                                        <input
-                                                            id='jform_<?php echo $name; ?>'
-                                                            type='file'
-                                                            class='file'
-                                                            name='jform1[<?php echo $name; ?>][<?php echo $item->structid; ?>]'
-                                                            style='float:left; width: 112px'/>
-                                                        <input
-                                                            class='btn btn-primary'
-                                                            type='button'
-                                                            id='<?php echo $name; ?>_btnCrop'
-                                                            value='Crop'
-                                                            style='float: left; margin-left: 5px !important;
-                                                               width: 50px !important;'/>
-                                                        <input
-                                                            class='btn btn-success'
-                                                            type='button'
-                                                            id='<?php echo $name; ?>_btnZoomIn'
-                                                            value='+'
-                                                            style='float: left; margin-left: 5px !important;'/>
-                                                        <input
-                                                            class='btn btn-danger'
-                                                            type='button'
-                                                            id='<?php echo $name; ?>_btnZoomOut'
-                                                            value='-'
-                                                            style='float: left;'/>
-                                                    </div>
-                                                    <button type='button' class='btn btn-default' data-dismiss='modal'>
-                                                        <?php echo JText::_('COM_THM_GROUPS_CLOSE'); ?>
-                                                    </button>
-                                                    <button
-                                                        id='<?php echo $name; ?>_saveChanges'
-                                                        type='button'
-                                                        class='savePic btn btn-primary'><?php echo JText::_('COM_THM_GROUPS_UPLOAD'); ?>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                     <button id='<?php echo $name; ?>_del' class='btn btn-danger'
-                                            style='margin-left: 10px !important;
+                                            style='margin-right: 10px !important;
                                             width: 95px !important;
                                             float: left;'
                                             onclick='deletePic("<?php echo $name; ?>", "<?php echo $item->structid; ?>"
@@ -311,8 +206,109 @@ else
                                             type='button'>
                                         <span class='icon-delete'></span><?php echo JText::_('COM_THM_QUICKPAGES_TRASH'); ?>
                                     </button>
-                                    <br/>
+                                    <button
+                                        id='<?php echo $name; ?>_upload'
+                                        type='button'
+                                        class='btn btn-success'
+                                        onclick='bindImageCropper("<?php echo $name; ?>", "<?php echo $item->structid; ?>"
+                                            , "<?php echo $this->item; ?>"); toggleNext(this);'
+                                        style="float: left;">
+                                        <?php echo JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_CHANGE'); ?>
+                                    </button>
 
+                                    <!-- hidden edit-box for pictures -->
+                                    <div
+                                        id='<?php echo $name; ?>_editBox'
+                                        class='editBox'
+                                        style='display: none;'
+                                        >
+
+                                        <h3>
+                                            Bild bearbeiten:
+                                        </h3>
+                                        <hr/>
+                                        <!-- Picture menu (zoom, cut etc.) -->
+                                        <div class='cropped_menu'>
+                                            <input
+                                                id='jform_<?php echo $name; ?>'
+                                                type='file'
+                                                class='file'
+                                                name='jform1[<?php echo $name; ?>][<?php echo $item->structid; ?>]'
+                                                style='float:left; width: 120px'/>
+                                            <button
+                                                id='<?php echo $name; ?>_saveChanges'
+                                                type='button'
+                                                class='savePic btn btn-primary'><?php echo JText::_('COM_THM_GROUPS_UPLOAD'); ?>
+                                            </button>
+                                            <br/>
+                                            <hr/>
+                                            <input
+                                                class='btn btn-primary'
+                                                type='button'
+                                                id='<?php echo $name; ?>_btnCrop'
+                                                value='Crop'/>
+                                            <input
+                                                class='btn btn-success'
+                                                type='button'
+                                                id='<?php echo $name; ?>_btnZoomIn'
+                                                value='+'/>
+                                            <input
+                                                class='btn btn-danger'
+                                                type='button'
+                                                id='<?php echo $name; ?>_btnZoomOut'
+                                                value='-'/>
+                                        </div>
+
+                                        <!-- Edit window for uploaded picture -->
+                                        <div class='previewContainer'>
+                                            <div id='<?php echo $name; ?>_imageBox' class='imageBox'>
+                                                <div id='<?php echo $name; ?>_thumbBox' class='thumbBox'>
+                                                </div>
+                                                <div
+                                                    id='<?php echo $name; ?>_spinner'
+                                                    class='spinner'
+                                                    style='display: none'><?php echo JText::_('COM_THM_GROUPS_LOAD'); ?>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Controls for aspect ratio and success message box -->
+                                        <div class="cropped_controls_wrapper">
+                                            <div id='<?php echo $name; ?>_cropped_controls'
+                                                 class='cropped_controls'>
+                                                <span>
+                                                    <hr/>
+                                                    <br/>
+                                                    <b>
+                                                        <?php echo JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_SELECT_DIM'); ?>
+                                                    </b>
+                                                </span>
+                                                <br/><br/>
+                                                <button
+                                                    type='button'
+                                                    id='<?php echo $name; ?>_switch'
+                                                    class='btn btn-default'
+                                                    value='switch mode'><?php echo JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_SWITCH'); ?>
+                                                </button>
+                                                <br/>
+                                            </div>
+
+                                            <!-- Preview picture on the right side of controls -->
+                                            <div
+                                                id='<?php echo $name; ?>_cropped'
+                                                class='cropped'>
+                                            </div>
+                                        </div>
+                                    <span>
+                                          <div id='<?php echo $name; ?>_result'
+                                               class="alert alert-success"
+                                               style="visibility: hidden;">
+                                          </div>
+                                    </span>
+
+                                    </div>
+                                    <!-- end edit-box for pictures -->
+                                    <br/>
                                 <?php else : ?>
                                     <input id='jform_<?php echo $name; ?>'
                                            style='float:left !important;'
@@ -361,5 +357,22 @@ else
         <input type='hidden' id='jform_gsuid' name='jform[gsuid]' value='<?php echo $this->item; ?>'/>
         <input type='hidden' id='jform_gsgid' name='jform[gsgid]' value='<?php echo $this->gsgid; ?>'/>
 </form>
+    <script>
+        /**
+         * Mobile-save toogle Function.
+         * Hides or shows next Element in DOM.
+         *
+         * @param caller
+         */
+        function toggleNext(caller){
+            if(caller.nextElementSibling.style.display == "none"){
+                caller.nextElementSibling.style.display = "inherit";
+            }
+            else
+            {
+                caller.nextElementSibling.style.display = "none";
+            }
+        }
+    </script>
 <?php
 }

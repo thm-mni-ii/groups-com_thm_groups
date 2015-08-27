@@ -73,8 +73,6 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     /**
      * Returns all user attributes for the user edit form
      *
-     * @param   Integer  $userId  User ID
-     *
      * @return  mixed
      */
     public function getContent()
@@ -82,17 +80,64 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         $app = JFactory::getApplication()->input;
         $userId = intval($app->get('gsuid'));
         $gsgid = intval($app->get('gsgid'));
+
+        /* When function is called to save the user data from the modal
+         * window, $userId and $gsgid are empty and have to be set here.
+         */
+        if ($userId == 0 || $gsgid == 0)
+        {
+            $formData = $app->post->get('jform', array(), 'array');
+            $userId = intval($formData['gsuid']);
+            $gsgid = intval($formData['gsgid']);
+        }
+
         $profilId = THMLibThmGroupsUser::getGroupsProfile($gsgid);
         $myprofile = JFactory::getUser()->id == $userId;
 
-        if($myprofile){
+        // TODO crashes when superuser is trying to edit someone else in frontend.
+        if ($myprofile)
+        {
             $data = THMLibThmGroupsUser::getAllUserAttributesByUserID($userId);
         }
-        else{
-            $data = THMLibThmGroupsUser::getAllUserProfilData($userId, $profilId,false);
+        else
+        {
+            $data = THMLibThmGroupsUser::getAllUserProfilData($userId, $profilId, false);
         }
 
         return $data;
+
+        // return THMLibThmGroupsUser::getAllUserAttributesByUserID($userId);
+    }
+
+    /**
+     * Returns all user attributes for the user edit form
+     *
+     * @return  mixed
+     */
+    public function  getContentAttribute()
+    {
+        $userId = JFactory::getApplication()->input->get('gsuid');
+
+        if ($userId == null)
+        {
+            $formData = JFactory::getApplication()->input->post->get('jform', array(), 'array');
+            $userId = $formData['gsuid'];
+        }
+
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+
+        $query
+            ->select('ust.usersID, ust.attributeID, st.options, dyn.regex, dyn.description, st.name as attribute, ust.value, ust.published, static.name')
+            ->from('#__thm_groups_users_attribute AS ust')
+            ->innerJoin('#__thm_groups_attribute AS st ON ust.attributeID = st.id')
+            ->innerJoin('#__thm_groups_dynamic_type AS dyn ON st.dynamic_typeID = dyn.id')
+            ->innerJoin('#__thm_groups_static_type AS static ON dyn.static_typeID = static.id')
+            ->where('ust.usersID IN (' . $userId . ') ')
+            ->order('ust.attributeID');
+        $dbo->setQuery($query);
+
+        return $dbo->loadObjectList();
     }
 
     /**
@@ -113,6 +158,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         $query->select('id, options')
             ->from('#__thm_groups_attribute')
             ->where('id=' . $attrID);
+
         try
         {
             $dbo->setQuery($query);
@@ -143,12 +189,20 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         $content = $this->getContent();
         $userID = $formData['gsuid'];
 
+        // $oldDS = $this->getContentAttribute();
 
         // Dimensions for thumbnails
-        $sizes = array('300x300', '64x64', '250x125');
+        // $sizes = array('300x300', '64x64', '250x125');
 
+        /*
+         * Change '_' in array into ' ', important because div id's
+         * allow no spaces in id names, but attribute names can.
+         * If this is not executed, save-procedure will fail.
+         */
+        $this->fixArrayKey($formData);
 
         $this->saveValues($formData, $content, $userID);
+
         $this->saveFullSizePictures($formData, $content, $userID);
 
         return $userID;
@@ -181,10 +235,10 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                 $path = str_replace('\\', '/', $path);
                 $position = strpos($path, 'images/');
                 $convertedPath = substr($path, $position);
-                //TODO FIXARRAYKEY changed something here
+
                 $prev = "<img  src='" . JURI::root() . $convertedPath . "' style='display: block;"
                     . "max-width:500px; max-height:240px; width: auto; height: auto;'/>";
-                $prev .= "<input type='hidden' name='jform[" . THMLibThmGroupsUser::getExtra($attrID)->name. "][file]'
+                $prev .= "<input type='hidden' name='jform[" . THMLibThmGroupsUser::getExtra($attrID)->name . "][file]'
                             value='" . "cropped_" . $filename . "'>";
 
                 return $prev;
@@ -199,14 +253,14 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     /**
      * Deletes picture from path
      *
-     * @param $userID
-     * @param $attributeID
+     * @param   String  $attributeID  ID of attribute
      *
      * @return mixed
      */
     public function deletePicture($attributeID)
     {
-        $content = $this->getContent();
+        $content = $this->getContentAttribute();
+
         try
         {
             $this->deleteOldPictures($content, $attributeID);
@@ -214,80 +268,93 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
             // TODO return default pic?
             return "true";
         }
-        catch(Exception $e)
+        catch (Exception $e)
         {
             return $e;
         }
     }
 
     /**
-     * @param $formData
-     * @param $content
-     * @param $userID
+     * Finaly saves the given values from the user_edit form when the new values
+     * are different from the ones that are already in the database.
+     *
+     * @param   Array   $formData  All data from the submitted form
+     * @param   Array   $content   The user content from the database
+     * @param   String  $userID    The user id
+     *
+     * @return void
      */
-    private function saveValues($formData, $content, $userID){
+    private function saveValues($formData, $content, $userID)
+    {
         $dbo = JFactory::getDbo();
+
         // Save new values in #__thm_groups_users_attribute
         foreach ($formData as $attr)
         {
+            if (is_string($attr))
+            {
+                continue;
+            }
 
-                try
+            try
+            {
+                $query = $dbo->getQuery(true);
+
+                $query->update($dbo->qn('#__thm_groups_users_attribute'));
+
+                // Set new value when it's different from value in database, set JSON when array (TABLE,MULTISELECT)
+                if (strcmp($attr['type'], 'TABLE') == 0 || strcmp($attr['type'], 'MULTISELECT') == 0)
                 {
-                    $query = $dbo->getQuery(true);
-
-                    $query->update($dbo->qn('#__thm_groups_users_attribute'));
-
-                    // Set new value when it's different from value in database, set JSON when array (TABLE,MULTISELECT)
-                    if(strcmp($attr['type'], 'TABLE') == 0 || strcmp($attr['type'], 'MULTISELECT') == 0 ){
-                        $jsonString = json_encode($attr['value']);
-                        $query->set($dbo->qn('value') . ' = ' . $dbo->quote($jsonString));
-                    }
-                    elseif(strcmp($attr['type'], 'PICTURE') == 0 && isset($attr['file'])){
-                        $query->set($dbo->qn('value') . ' = ' . $dbo->quote($attr['file']));
-                    }
-                    else
-                    {
-                        $query->set($dbo->qn('value') . ' = ' . $dbo->quote($attr['value']));
-                    }
-
-                    if (isset($attr['published']))
-                    {
-                        $published = $attr['published'];
-
-                        if ( $published === 'on')
-                        {
-                            $query->set($dbo->qn('published') . ' = ' . 1);
-                        }
-
-                    }
-                    else
-                    {
-                        $query->set($dbo->qn('published') . ' = ' . 0);
-                    }
-
-
-                    $query->where(
-                        $dbo->qn('usersID') . ' = ' . intval($userID) . ' AND '
-                        . $dbo->qn('attributeID') . ' = ' . intval($attr['strucid']) . ''
-                    );
-
-                    $dbo->setQuery($query);
-                    $result = $dbo->execute();
+                    // TODO This dosent work anymore since the datastructure has been modified
+                    // $jsonString = json_encode($attr['value']);
+                    // $query->set($dbo->qn('value') . ' = ' . $dbo->quote($jsonString));
                 }
-                catch (Exception $e)
+                elseif (strcmp($attr['type'], 'PICTURE') == 0 && isset($attr['file']))
                 {
-                    echo "Very demotivating error occurs";
-                    echo $e->getMessage();
+                    $query->set($dbo->qn('value') . ' = ' . $dbo->quote($attr['file']));
+                }
+                else
+                {
+                    $query->set($dbo->qn('value') . ' = ' . $dbo->quote($attr['value']));
                 }
 
+                if (isset($attr['published']))
+                {
+                    $published = $attr['published'];
+
+                    if ($published === 'on')
+                    {
+                        $query->set($dbo->qn('published') . ' = ' . 1);
+                    }
+                }
+                else
+                {
+                    $query->set($dbo->qn('published') . ' = ' . 0);
+                }
+
+
+                $query->where(
+                    $dbo->qn('usersID') . ' = ' . intval($userID) . ' AND '
+                    . $dbo->qn('attributeID') . ' = ' . intval($attr['strucid']) . ''
+                );
+
+                $dbo->setQuery($query);
+                $result = $dbo->execute();
+            }
+            catch (Exception $e)
+            {
+                echo "Very demotivating error occurs";
+                echo $e->getMessage();
+            }
         }
     }
 
     /**
      * Creates a JSON String for table from given form data.
      *
-     * @param $attr
-     * @param $formData
+     * @param   Array  $attr      Attributes
+     * @param   Array  $formData  All data from user_edit form
+     *
      * @return string
      */
     private function createJSON($attr, $formData)
@@ -300,10 +367,11 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
 
         // Convert structure to fit in json
         $index = null;
-        foreach ($formData as $key=>$value)
+
+        foreach ($formData as $key => $value)
         {
             $sKey = (string) $key;
-            $vals = explode(' ',$sKey);
+            $vals = explode(' ', $sKey);
             $vals[0] = (int) $vals[0];
 
             if ($index === null)
@@ -322,13 +390,15 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                 $output[$vals[1]] = $value;
             }
         }
+
         array_push($final, $output);
 
         // Check for empty columns and delete them
-        foreach ($final as $key=>$column)
+        foreach ($final as $key => $column)
         {
             $size = sizeof($column);
             $empty = 0;
+
             foreach ($column as $row)
             {
                 if ($row == '')
@@ -336,24 +406,29 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                     $empty ++;
                 }
             }
+
             if ($size == $empty)
             {
                 // Don't delete when it's the last element / prevents empty json crash
-                if(sizeof($final)!= 1)
+                if (sizeof($final) != 1)
                 {
                     unset($final[$key]);
                 }
             }
         }
+
         $json = json_encode($final);
+
         return $json;
     }
 
     /**
      * Deletes old Pictures
      *
-     * @param $content
-     * @param $key
+     * @param   Array  $content  User attributes
+     * @param   String $key      Attribute id
+     *
+     * @return  void
      */
     private function deleteOldPictures($content, $key)
     {
@@ -404,9 +479,13 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     }
 
     /**
-     * @param $formData
-     * @param $content
-     * @param $userID
+     * Saves the uploaded picture 'un-cropped' and in full file size.
+     *
+     * @param   Array   $formData  Form data from user_edit form
+     * @param   Array   $content   User content
+     * @param   String  $userID    User id
+     *
+     * @return  void
      */
     private function saveFullSizePictures($formData, $content, $userID)
     {
@@ -449,7 +528,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                                     . $dbo->qn('attributeID') . ' = ' . (int) $key . '');
 
                             $dbo->setQuery($query);
-                            $result = $dbo->execute();
+                            $dbo->execute();
                         }
                         catch (Exception $e)
                         {
@@ -471,16 +550,26 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
      *
      * @param   Pointer  &$arr  Pointer to array
      *
-     * @return null
+     * @return void
      */
     private function fixArrayKey(&$arr)
     {
-        $arr=array_combine(array_map(function($str){return str_replace("_"," ",$str);},array_keys($arr)),
-            array_values($arr));
+        $arr = array_combine(
+            array_map(
+                function($str){
+                    return str_replace("_", " ", $str);
+                },
+                array_keys($arr)
+            ),
+            array_values($arr)
+        );
 
-        foreach($arr as $key=>$val)
+        foreach ($arr as $key => $val)
         {
-            if(is_array($val)) $this->fixArrayKey($arr[$key]);
+            if (is_array($val))
+            {
+                $this->fixArrayKey($arr[$key]);
+            }
         }
     }
 
@@ -520,5 +609,4 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
 
         return $path = str_replace('/', '\\', $path);
     }
-
 }

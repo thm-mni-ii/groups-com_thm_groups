@@ -56,6 +56,7 @@ function THM_groupsBuildRoute(&$query)
                 $segments[] = $query['gsuid'] . "-" . $query['name'];
 
             }
+
             unset($query['gsuid']);
             unset($query['name']);
         }
@@ -101,8 +102,10 @@ function THM_groupsBuildRoute(&$query)
 /**
  * builds back options
  *
- * @param   array  $query     query
- * @param   array  $segments  segments
+ * @param   array  &$query     query
+ * @param   array  &$segments  segments
+ *
+ * @return  void
  */
 function buildOptionsRoute(&$query, &$segments)
 {
@@ -137,8 +140,12 @@ function buildOptionsRoute(&$query, &$segments)
  */
 function THM_groupsParseRoute($segments)
 {
+    /* TODO: Fails when popup modal in frontend user_edit is closed
+       TODO: because third element of Array is 'index.php', see -> case: default.*/
+
     // NM PATCH: switch between different views profile/singlearticle
     $vars = array();
+
     if ($segments[0] != "")
     {
         switch ($segments[0])
@@ -147,6 +154,7 @@ function THM_groupsParseRoute($segments)
             case 'articles':
 
                 $vars['view']   = $segments[0];
+
                 if (isset ($segments[1]))
                 {
                     $arrVar = explode(':', $segments[1]);
@@ -209,9 +217,11 @@ function THM_groupsParseRoute($segments)
                 }
                 break;*/
                 $vars['view'] = 'singlearticle';
+
                 if (isset ($segments[1]))
                 {
                     $arrVar = explode(':', $segments[1]);
+
                     if (isset ($arrVar[0]) && isset ($arrVar[1]))
                     {
                         $vars['gsuid'] = $arrVar[0];
@@ -247,6 +257,15 @@ function THM_groupsParseRoute($segments)
                     // User information
                     if (isset ($segments[2]))
                     {
+                        // TODO: This temporary prevents a crash.
+                        if ($segments[2] == 'index.php')
+                        {
+                            // Leeds to previous page.
+                            $vars = array();
+
+                            return $vars;
+                        }
+
                         $userInfoTemp = explode(':', $segments[2]);
                     }
 
@@ -267,6 +286,7 @@ function THM_groupsParseRoute($segments)
                         }
                     }
                 }
+
                 if ($numberOfSegments == 4)
                 {
                     // Back options
@@ -322,5 +342,6 @@ function THM_groupsParseRoute($segments)
                 break;
         }
     }
+
     return $vars;
 }
