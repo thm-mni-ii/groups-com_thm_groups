@@ -113,8 +113,6 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         // Load responsive CSS
         $document->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/respAdvanced.css');
 
-        // $document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/responsiveGroups.css');
-
         // Load Dynamic CSS
         $mycss = $this->getCssView($params, $advancedView);
        
@@ -245,7 +243,6 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                             -webkit-box-shadow: 0px 0px 3px 0px #999999;
                             box-shadow: 0px 0px 3px 0px #999999;';
         }
-
         else
         {
             $imgBordered = '';
@@ -753,7 +750,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
     }
 
     /**
-     * Return a Navigtion for the mobile Context
+     * Return a navigation for the mobile Context
      *
      * @param   mixed  $attribs  Attributes
      *

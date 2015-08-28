@@ -51,7 +51,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
      * @param   String  $value     Value
      * @param   Int     $structid  StructID
      *
-     * @depracated
+     * @deprecated
      * @return textform
      */
     public function getTextForm ($name, $size, $value, $structid)
@@ -85,7 +85,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
      * @param   String  $value     Value
      * @param   Int     $structid  StructID
      *
-     * @depracated
+     * @deprecated
      * @return textarea
      */
     public function getTextArea ($name, $rows, $value, $structid)
@@ -116,7 +116,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
      * @param   Int     $structid  StructID
      * @param   String  $value     Value
      *
-     * @depracated
+     * @deprecated
      * @return picturearea
      */
     public function getPictureArea ($name, $structid, $value)
@@ -150,7 +150,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
      * @param   String  $value     Value
      * @param   Int     $structid  StructID
      *
-     * @depracated
+     * @deprecated
      * @return tablearea
      */
     public function getTableArea ($name, $value, $structid)
@@ -260,7 +260,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
      * @param   String  $name   Name
      * @param   String  $value  Value
      *
-     * @depracated
+     * @deprecated
      * @return void
      */
     public function getDateForm ($name, $value)
@@ -275,7 +275,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
      * @param   String  $value     Value
      * @param   Int     $structid  StructID
      *
-     * @depracated
+     * @deprecated
      * @return multiselectform
      */
     public function getMultiSelectForm ($name, $value, $structid)
@@ -336,9 +336,9 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
         $doc = JFactory::getDocument();
         $doc -> addStyleSheet(JURI::root(true) . $componentDir . '/assets/css/cropbox.css');
         $doc -> addStyleSheet(JURI::root(true) . $componentDir . '/assets/css/edit.css');
-        $doc -> addStyleSheet(JUri::root() . "libraries/thm_core/fonts/iconfont.css");
-        $doc->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/respBaseStyles.css');
-        $doc -> addScript(JUri::root() . "libraries/thm_core/js/formbehaviorChosenHelper.js");
+        $doc -> addStyleSheet(JURI::root() . 'libraries/thm_core/fonts/iconfont.css');
+        $doc -> addStyleSheet(JURI::root() . 'libraries/thm_groups_responsive/assets/css/respBaseStyles.css');
+        $doc -> addScript(JURI::root() . 'libraries/thm_core/js/formbehaviorChosenHelper.js');
 
         // TODO: comment this out to prevent modal from closing after saving changes. For debugging.
         $doc -> addScriptDeclaration("        window.onbeforeunload = function() {

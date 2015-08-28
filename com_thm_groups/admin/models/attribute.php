@@ -40,8 +40,8 @@ class THM_GroupsModelAttribute extends JModelLegacy
     {
         $dbo = JFactory::getDbo();
         $ids = $this->getUserIDs();
-        $usersWhithAttribute = $this->getUserIDsByAttributeID($attributeID);
-        $ids = $this->filterIDs($ids, $usersWhithAttribute);
+        $usersWithAttribute = $this->getUserIDsByAttributeID($attributeID);
+        $ids = $this->filterIDs($ids, $usersWithAttribute);
 
         /*
          * Create database entry for created attribute with empty value for all users
