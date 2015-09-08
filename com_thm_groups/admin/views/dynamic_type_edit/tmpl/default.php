@@ -32,8 +32,6 @@ $doc->addStyleSheet(JURI::root(true) . $componentDir . "/assets/css/jqueryFileTr
 <form action='index.php?option=com_thm_groups' method="post" name="adminForm" id="adminForm" accept-charset="UTF-8">
     <div class="width-60 fltlft">
         <fieldset class="adminform">
-            <legend><?php echo 'TEST LEGEND'; ?></legend>
-
             <div class="control-label">
                 <div class="control-label">
                     <?php echo $this->form->getLabel('name'); ?>

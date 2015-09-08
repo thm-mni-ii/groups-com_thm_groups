@@ -14,6 +14,7 @@
 defined('_JEXEC') or die;
 
 jimport('thm_core.edit.advancedtemplate');
+jimport('joomla.html.editor');
 
 // THM_CoreTemplateAdvanced::render($this);
 $session = JFactory::getSession();
@@ -61,12 +62,8 @@ $session = JFactory::getSession();
                     </div>
                     <div id='jform_<?php echo $name; ?>_box' class='controls'>
                         <?php if ($item->name == 'TEXTFIELD') :
-                            $output = "<textarea class='hasTooltip' data-original-title='"
-                                . $item->description . "' data-placement='right' id='jform_" . $name . "'"
-                                . "style='float:left !important;'"
-                                . "type='text'"
-                                . "name='jform[" . $name . "]'>" . $item->value . "</textarea>";
-                            echo $output;
+                            $editor = JFactory::getEditor();
+                            echo $editor->display("jform[$name]", $item->value, '', '', '', '', false);
                             ?>
                         <?php elseif ($item->name == 'MULTISELECT') :
                             $output = "<select multiple data-original-title='"

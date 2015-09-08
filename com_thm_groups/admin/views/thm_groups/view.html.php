@@ -4,11 +4,10 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsViewTHMGroups
- * @description THMGroupsViewTHMGroups file from com_thm_groups
- * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
- * @authors     Niklas Simonis, <niklas.simonis@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @name        THM_GroupsViewTHM_Groups
+ * @description THM_GroupsViewTHM_Groups file from com_thm_groups
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @copyright   2015 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
@@ -17,7 +16,7 @@ jimport('joomla.application.component.view');
 jimport('joomla.html.pane');
 
 /**
- * THMGroupsViewTHMGroups class for component com_thm_groups
+ * THM_GroupsViewTHM_Groups class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
@@ -85,7 +84,7 @@ class THM_GroupsViewTHM_Groups extends JViewLegacy
         $views['group_manager'] = array();
         $views['group_manager']['title'] = JText::_('COM_THM_GROUPS_GROUP_MANAGER');
         $views['group_manager']['tooltip'] = JText::_('COM_THM_GROUPS_GROUP_MANAGER') . '::' . JText::_('COM_THM_GROUPS_GROUP_MANAGER_DESC');
-        $views['group_manager']['url'] = "index.php?option=com_users&view=group_manager";
+        $views['group_manager']['url'] = "index.php?option=com_thm_groups&view=group_manager";
 
         $views['role_manager'] = array();
         $views['role_manager']['title'] = JText::_('COM_THM_GROUPS_ROLE_MANAGER');

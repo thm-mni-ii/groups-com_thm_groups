@@ -200,18 +200,18 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
                                 // The first structure of the type image will be a portrait picture
                                 if ($firstPic)
                                 {
-                                    //$image = JHTML::image($path . '/' . $data->value, 'Portrait', $attribs);
+                                    // $image = JHTML::image($path . '/' . $data->value, 'Portrait', $attribs);
                                     $head .= "<div id='pictureContainer'>";
                                     $image = "<img class='Portrait' ";
-                                    $root= JURI::root(true);
+                                    $root = JURI::root(true);
 
                                     // Pictures don't have to be in the defined resolution, it's just a value for
                                     // the browser to decide what it should load. 'w' is not supported by iOS yet.
                                     if ($temp != null)
                                     {
-                                        $image .= "srcset='". $root . "/" . $path . "thumbs/" . $small . " 480w";
+                                        $image .= "srcset='" . $root . "/" . $path . "thumbs/" . $small . " 480w";
                                         $image .= ", " . $root . "/" . $path . "thumbs/" . $medium . " 600w";
-                                        $image .= ", " . $root . "/" . $path . $data->value . " 700w' ";
+                                        $image .= ", " . $root . "/" . $path . "/" . $data->value . " 700w' ";
 
                                         // Outcomment this, if picturefill is used. Otherwise this picture will load twice.
                                         $image .= "src='" . $root . "/" . $path . "thumbs/" . $small . "'";
@@ -219,7 +219,7 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
                                     else
                                     {
                                         // Outcomment this, if picturefill is used. Otherwise this picture will load twice.
-                                        $image .= "src='" . $root . "/" . $path .  $data->value . "'";
+                                        $image .= "src='" . $root . "/" . $path . "/" . $data->value . "'";
                                     }
 
                                     $image .= " alt='Profilbild' />";
@@ -237,7 +237,8 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
                                     $body .= $data->name . ':';
                                     $body .= '</div>';
                                     $body .= '<div class="value" id="' . $data->name . '_value">';
-                                    //$image = JHTML::image("$path" . '/' . $data->value, 'Image', $attribs);
+
+                                    // $image = JHTML::image("$path" . '/' . $data->value, 'Image', $attribs);
                                     $image = "<img class='Image' ";
 
                                     if ($temp != null)
@@ -247,7 +248,7 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
                                         $image .= ", " . $path . "/" . $data->value . " 700w' ";
                                     }
 
-                                    $image .= "src='". $path . "/" . $data->value . "'";
+                                    $image .= "src='" . $path . "/" . $data->value . "'";
                                     $image .= " alt='Bild' />";
                                     $body .= $image;
                                     $body .= '</div>';
@@ -384,33 +385,44 @@ function getResizedPictures($filename, $path)
 {
     $pictures = array();
     $picsFound = 0;
-    foreach (scandir($path . 'thumbs\\') as $folderPic) {
-        if ($folderPic === '.' || $folderPic === '..') {
-            continue;
-        } else {
-            /**
-             * Get the filename till the '_width-height.extension' part
-             * and check if its part of the saved filename in database.
-             *
-             * When a pos was found it will be dropped from the folder.
-             */
-            $extPos = strrpos($folderPic, '_');
-            $length = strlen($folderPic);
-            $thumbFileName = substr($folderPic, 0, -($length - $extPos));
+    $pathToThumbs = $path . 'thumbs\\';
 
-            $pos = strpos($filename, $thumbFileName);
+    if (is_dir($pathToThumbs) != false)
+    {
+        $folder = scandir($pathToThumbs);
+        foreach ($folder as $folderPic)
+        {
+            if ($folderPic === '.' || $folderPic === '..')
+            {
+                continue;
+            }
+            else
+            {
+                /**
+                 * Get the filename till the '_width-height.extension' part
+                 * and check if its part of the saved filename in database.
+                 *
+                 * When a pos was found it will be dropped from the folder.
+                 */
+                $extPos = strrpos($folderPic, '_');
+                $length = strlen($folderPic);
+                $thumbFileName = substr($folderPic, 0, -($length - $extPos));
 
-            if ($pos === 0) {
-                $temp = array();
-                $temp[0] = $folderPic;
-                array_push($pictures, $temp);
-                $picsFound ++;
+                $pos = strpos($filename, $thumbFileName);
+
+                if ($pos === 0)
+                {
+                    $temp = array();
+                    $temp[0] = $folderPic;
+                    array_push($pictures, $temp);
+                    $picsFound ++;
+                }
             }
         }
     }
     if ($picsFound != 0)
     {
-        if(filesize($path . '/thumbs/' . $pictures[0][0]) < filesize($path . '/thumbs/' . $pictures[1][0]))
+        if (filesize($path . '/thumbs/' . $pictures[0][0]) < filesize($path . '/thumbs/' . $pictures[1][0]))
         {
             $pictures[1][1] = 'medium';
             $pictures[0][1] = 'small';

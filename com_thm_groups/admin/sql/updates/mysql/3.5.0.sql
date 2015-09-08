@@ -1,3 +1,5 @@
+ALTER TABLE `#__thm_groups_roles` ENGINE = INNODB;
+
 CREATE TABLE IF NOT EXISTS `#__thm_groups_users` (
   `id`          INT(11)    NOT NULL AUTO_INCREMENT,
   `published`   TINYINT(1) NULL,
@@ -40,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_users_categories` (
 )
   ENGINE = InnoDB;
 
-INSERT INTO `#__thm_groups_users_categories`(ID, usersID, categoriesID)
+INSERT INTO `#__thm_groups_users_categories` (ID, usersID, categoriesID)
   SELECT
     ''       AS ID,
     users.id AS usersID,
@@ -142,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_attribute` (
   UNIQUE INDEX `name_UNIQUE` (`name` ASC)
 )
   ENGINE = InnoDB
-  AUTO_INCREMENT =100;
+  AUTO_INCREMENT = 100;
 
 INSERT INTO `#__thm_groups_attribute` (`id`, `dynamic_typeID`, `name`)
   SELECT
@@ -186,7 +188,7 @@ INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, 
     publish  AS published
   FROM `#__thm_groups_text` AS a
     JOIN `#__users` AS b ON a.userid = b.id
-      JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
+    JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
 
 INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, `published`)
   SELECT
@@ -196,7 +198,7 @@ INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, 
     publish  AS published
   FROM `#__thm_groups_textfield` AS a
     JOIN `#__users` AS b ON a.userid = b.id
-      JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
+    JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
 
 INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, `published`)
   SELECT
@@ -206,7 +208,7 @@ INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, 
     publish  AS published
   FROM `#__thm_groups_multiselect` AS a
     JOIN `#__users` AS b ON a.userid = b.id
-      JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
+    JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
 
 INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, `published`)
   SELECT
@@ -216,7 +218,7 @@ INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, 
     publish  AS published
   FROM `#__thm_groups_table` AS a
     JOIN `#__users` AS b ON a.userid = b.id
-      JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
+    JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
 
 INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, `published`)
   SELECT
@@ -226,7 +228,7 @@ INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, 
     publish  AS published
   FROM `#__thm_groups_link` AS a
     JOIN `#__users` AS b ON a.userid = b.id
-      JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
+    JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
 
 INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, `published`)
   SELECT
@@ -236,7 +238,7 @@ INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, 
     publish  AS published
   FROM `#__thm_groups_number` AS a
     JOIN `#__users` AS b ON a.userid = b.id
-      JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
+    JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
 
 INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, `published`)
   SELECT
@@ -246,11 +248,11 @@ INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, 
     publish  AS published
   FROM `#__thm_groups_date` AS a
     JOIN `#__users` AS b ON a.userid = b.id
-      JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
+    JOIN `#__thm_groups_attribute` AS c ON c.id = a.structid;
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_usergroups_roles` (
   `ID`           INT(11)          NOT NULL AUTO_INCREMENT,
-  `usergroupsID` INT(11) UNSIGNED NOT NULL,
+  `usergroupsID` INT(10) UNSIGNED NOT NULL,
   `rolesID`      INT(11)          NOT NULL,
   PRIMARY KEY (`ID`),
   FOREIGN KEY (`usergroupsID`) REFERENCES `#__usergroups` (`id`)
@@ -280,22 +282,25 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_users_usergroups_roles` (
 
 INSERT INTO `#__thm_groups_usergroups_roles` (`usergroupsID`, `rolesID`)
   SELECT
-    DISTINCT map.gid AS usergroupsID, map.rid AS rolesID
+    DISTINCT
+    map.gid AS usergroupsID,
+    map.rid AS rolesID
   FROM `#__thm_groups_groups_map` AS map
     JOIN `#__usergroups` AS a ON a.id = map.gid
-      JOIN `#__thm_groups_roles` AS b ON b.id = map.rid;
+    JOIN `#__thm_groups_roles` AS b ON b.id = map.rid;
 
 INSERT INTO `#__thm_groups_users_usergroups_roles` (`usersID`, `usergroups_rolesID`)
   SELECT
-    map.uid AS usersID, a.ID as usergroups_rolesID
-  FROM `#__thm_groups_usergroups_roles` as a
+    map.uid AS usersID,
+    a.ID    AS usergroups_rolesID
+  FROM `#__thm_groups_usergroups_roles` AS a
     JOIN `#__thm_groups_groups_map` AS map ON a.rolesID = map.rid AND a.usergroupsID = map.gid
-      JOIN `#__users` AS b ON map.uid = b.id;
+    JOIN `#__users` AS b ON map.uid = b.id;
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile` (
-  `id`      INT(11)      NOT NULL AUTO_INCREMENT,
-  `name`    VARCHAR(255) NULL,
-  `order`   INT          NULL,
+  `id`    INT(11)      NOT NULL AUTO_INCREMENT,
+  `name`  VARCHAR(255) NULL,
+  `order` INT          NULL,
   PRIMARY KEY (`id`)
 )
   ENGINE = InnoDB;
@@ -336,7 +341,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attribute` (
 INSERT INTO `#__thm_groups_profile_attribute` (`profileID`, `attributeID`, `order`, `params`)
   SELECT
     1,
-    structitem.id   AS attributeID,
+    structitem.id    AS attributeID,
     structitem.order AS `order`,
     '{ "label" : true, "wrap" : true}'
   FROM `#__thm_groups_structure` AS structitem;

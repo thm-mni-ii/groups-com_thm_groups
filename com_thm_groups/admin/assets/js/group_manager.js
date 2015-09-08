@@ -26,6 +26,10 @@ function checkSelection() {
     }
 }
 
+function confirmMsg() {
+    alert('You leave the component THM Groups!');
+}
+
 var $ = jQuery.noConflict();
 $(document).ready(function() {
 

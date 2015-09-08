@@ -1,19 +1,14 @@
 <?php
 /**
- * @version     v3.4.3
+ * @version     v3.5.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
- * @name        THMGroupsViewEdit
- * @description THMGroupsViewEdit file from com_thm_groups
- * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
- * @author      Markus Kaiser,  <markus.kaiser@mni.thm.de>
- * @author      Daniel Bellof,  <daniel.bellof@mni.thm.de>
- * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
- * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
- * @author      Alexander Boll, <alexander.boll@mni.thm.de>
- * @author      Peter May,      <peter.may@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @name
+ * @description
+ * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @copyright   2015 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
@@ -91,11 +86,8 @@ else
                             </div>
                             <div id='jform_<?php echo $name; ?>_box' class='controls'>
                                 <?php if ($item->type == 'TEXTFIELD') :
-                                    $output = "<textarea id='jform_" . $name . "'"
-                                        . "style='float:left !important;'"
-                                        . "type='text'"
-                                        . "name='jform[" . $name . "][value]'>" . $item->value . "</textarea>";
-                                    echo $output;
+                                    $editor = JFactory::getEditor();
+                                    echo $editor->display("jform[$name]", $item->value, '', '', '', '', false);
                                     ?>
                                 <?php elseif ($item->type == 'MULTISELECT') :
                                     $output = "<select multiple class='form-control' id='jform_" . $name . "'"
@@ -120,7 +112,7 @@ else
                                     $output .= "<thead>";
                                     $output .= "<tr>";
 
-                                    foreach ($tData[0] as $key=>$value)
+                                    foreach ($tData[0] as $key => $value)
                                     {
                                         $output .= "<th>" . $key . "</th>";
                                     }

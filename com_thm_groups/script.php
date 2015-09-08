@@ -98,7 +98,6 @@ class Com_THM_GroupsInstallerScript
      */
     public function install($parent)
     {
-
         if (THM_Groups_Install_Script::install())
         {
             return true;
@@ -118,13 +117,19 @@ class Com_THM_GroupsInstallerScript
      */
     public function update($parent)
     {
-        if (THM_Groups_Update_Script::update())
-        {
-            return true;
-        }
+        $oldRelease = $this->getParam('version');
 
-        JFactory::getApplication()->enqueueMessage('update script', 'error');
-        return false;
+        // Make global update only for versions less than 3.5.5
+        if (version_compare($oldRelease, '3.5.0', 'lt'))
+        {
+            if (THM_Groups_Update_Script::update())
+            {
+                return true;
+            }
+
+            JFactory::getApplication()->enqueueMessage('update script', 'error');
+            return false;
+        }
     }
 
     /*

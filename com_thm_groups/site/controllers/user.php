@@ -35,7 +35,7 @@ class THM_GroupsControllerUser extends JControllerLegacy
     /**
      * Method to run batch operations.
      *
-     * @param   object   $model  The model.
+     * @param   object  $model  The model.
      *
      * @return  boolean  True on success, false on failure
      *
@@ -154,13 +154,13 @@ class THM_GroupsControllerUser extends JControllerLegacy
         $gsgid = $data['gsgid'];
 
 
-        //Formvalidation is done in View via js
+        // Formvalidation is done in View via js
         $success = $model->save();
         if ($success)
         {
             $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
 
-            $this->setRedirect('index.php?option=com_thm_groups&view=user_edit&tmpl=component&gsgid=' . $gsgid
+            $this->setRedirect('index.php?option=com_thm_groups&view=user_edit&gsgid=' . $gsgid
                 . '&gsuid=' . $userid, $msg);
         }
         else
