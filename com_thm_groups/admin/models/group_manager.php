@@ -300,7 +300,7 @@ class THM_GroupsModelGroup_Manager extends THM_CoreModelList
             $deleteIcon = '<span class="icon-trash"></span>';
             $deleteBtn = "<a href='javascript:deleteProfile(" . $gid . "," . $profile->id . ")'>" . $deleteIcon . "</a>";
 
-            $url = "index.php?option=com_thm_groups&view=profile_edit&cid[]=$profile->id";
+            $url = "index.php?option=com_thm_groups&view=profile_edit&id=$profile->id";
 
             $return = "<a href=$url>" . $profile->name . "</a> " . $deleteBtn;
         }
