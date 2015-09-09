@@ -322,6 +322,10 @@ else
                                     <input type='checkbox' name='jform[<?php echo $name; ?>][published]'
                                            style='margin-left: 100px;' id='jform_<?php echo $name; ?>_published'
                                     <?php
+                                    if ($name == 'Username')
+                                    {
+                                        echo "disabled='disabled'";
+                                    }
                                     if ($item->publish == 1)
                                     {
                                         echo "checked='checked'/>";
