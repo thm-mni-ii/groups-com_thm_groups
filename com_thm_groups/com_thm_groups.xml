@@ -6,7 +6,7 @@
     <authorUrl>http://www.fh-giessen.de</authorUrl>
     <copyright>TH Mittelhessen</copyright>
     <license>GNU/GPL Version 2</license>
-    <version>3.5.10</version>
+    <version>3.5.11</version>
     <scriptfile>script.php</scriptfile>
     <install>
         <sql>
