@@ -75,7 +75,7 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
             ->where('a2.attributeID = 2')   // Surname
             ->where('a4.attributeID = 4');  // Email
 
-        $this->setSearchFilter($query, array('a1.value', 'a2.value'));
+        $this->setSearchFilter($query, array('a1.value', 'a1.usersID', 'a2.value'));
 
         $this->setIDFilter($query, 'a5.published', array('filter.published'));
         $this->setIDFilter($query, 'a5.canEdit', array('filter.canEdit'));
