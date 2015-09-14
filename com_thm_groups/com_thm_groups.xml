@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<extension method="upgrade" type="component" version="2.5">
+<extension type="component" version="2.5" method="upgrade" >
     <name>COM_THM_GROUPS</name>
-    <creationDate>06-06-2015</creationDate>
+    <creationDate>June 2015</creationDate>
     <author>THM iCampus</author>
-    <authorUrl>http://www.fh-giessen.de</authorUrl>
+    <authorUrl>http://www.thm.de</authorUrl>
     <copyright>TH Mittelhessen</copyright>
     <license>GNU/GPL Version 2</license>
     <version>3.5.11</version>
@@ -101,6 +101,6 @@
     </administration>
 
     <updateservers>
-        <server type="extension" priority="1" name="THM Groups Component">https://jenkins.mni.thm.de/jenkins/job/J.THM.Releases/lastSuccessfulBuild/artifact/updates/com_thm_groups.xml</server>
+        <server type="collection" priority="1" name="THM Groups Component Update">https://www.thm.de/thmupdate/index.php?option=com_ars&amp;view=update&amp;task=all&amp;format=xml</server>
     </updateservers>
 </extension>
