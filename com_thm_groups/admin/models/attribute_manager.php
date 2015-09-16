@@ -62,10 +62,14 @@ class THM_GroupsModelAttribute_Manager extends THM_CoreModelList
             ->select('attribute.name')
             ->select('dynamic.name as dynamic_type_name')
             ->select('attribute.options')
+            ->select('attribute.published')
+            ->select('attribute.ordering')
             ->select('attribute.description')
             ->from('#__thm_groups_attribute AS attribute')
             ->innerJoin('#__thm_groups_dynamic_type AS dynamic ON attribute.dynamic_typeID = dynamic.id');
 
+
+        $this->setIDFilter($query, 'attribute.published', array('filter.published'));
 
         $search = $this->getState('filter.search');
         if (!empty($search))
@@ -99,16 +103,46 @@ class THM_GroupsModelAttribute_Manager extends THM_CoreModelList
         }
 
         $index = 0;
+        $return['attributes'] = array('class' => 'ui-sortable');
         foreach ($items as $item)
         {
+            // TODO check user rights to sort attributes
+            // $canChange = $this->hasUserRightTo('EditState', $item);
+            $canChange = true;
+            $listOrder = $this->state->get('list.ordering');
+            $saveOrder = $listOrder == 'attribute.ordering';
+            $iconClass = '';
+            if (!$canChange)
+            {
+                $iconClass = ' inactive';
+            }
+            elseif (!$saveOrder)
+            {
+                $iconClass = ' inactive tip-top hasTooltip';
+            }
+
+            $order = '';
+
+            if ($canChange && $saveOrder)
+            {
+                $order = '<input type="text" style="display:none" name="order[]" size="5" value="'
+                    . $item->ordering . '" class="width-20 text-area-order " />';
+            }
+
             $url = "index.php?option=com_thm_groups&view=attribute_edit&cid[]=$item->id";
             $return[$index] = array();
+
+            $return[$index]['attributes'] = array( 'class' => 'order nowrap center', 'id' => $item->id);
+            $return[$index]['ordering']['attributes'] = array( 'class' => "order nowrap center", 'style' => "width: 40px;");
+            $return[$index]['ordering']['value']
+                = "<span class='sortable-handler$iconClass'><i class='icon-menu'></i></span>" . $order;
 
             $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
             $return[$index][1] = $item->id;
             $return[$index][2] = JHtml::_('link', $url, $item->name);
-            $return[$index][3] = $item->dynamic_type_name;
-            $return[$index][4] = $item->description;
+            $return[$index][3] = $this->getToggle($item->id, $item->published, 'attribute', '', 'published');
+            $return[$index][4] = $item->dynamic_type_name;
+            $return[$index][5] = $item->description;
             $index++;
         }
         return $return;
@@ -125,9 +159,11 @@ class THM_GroupsModelAttribute_Manager extends THM_CoreModelList
         $direction = $this->state->get('list.direction');
 
         $headers = array();
+        $headers['order'] =  JHtml::_('searchtools.sort', '', 'attribute.ordering', $direction, $ordering , null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2');
         $headers['checkbox'] = '';
         $headers['id'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'attribute.id', $direction, $ordering);
         $headers['attribute'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ATTRIBUTE_NAME', 'attribute.name', $direction, $ordering);
+        $headers['published'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ATTRIBUTE_PUBLISHED', 'attribute.published', $direction, $ordering);
         $headers['dynamic'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_DYNAMIC_TYPE_NAME', 'dynamic.name', $direction, $ordering);
         $headers['description'] = JText::_('COM_THM_GROUPS_DESCRIPTION');
 
@@ -254,5 +290,14 @@ class THM_GroupsModelAttribute_Manager extends THM_CoreModelList
         {
             return false;
         }
+    }
+    /**
+     * Returns custom hidden fields for page
+     *
+     * @return array
+     */
+    public function getHiddenFields()
+    {
+        return array();
     }
 }

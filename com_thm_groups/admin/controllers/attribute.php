@@ -246,4 +246,58 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
             echo $e;
         }
     }
+
+    /**
+     * Toggles category behaviour properties
+     *
+     * @return void
+     */
+    public function toggle()
+    {
+        $model = $this->getModel('attribute');
+        $success = $model->toggle();
+        if ($success)
+        {
+            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
+            $type = 'message';
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
+            $type = 'error';
+        }
+        $this->setRedirect("index.php?option=com_thm_groups&view=attribute_manager", $msg, $type);
+    }
+
+    /**
+     * Method to save the submitted ordering values for records via AJAX.
+     *
+     * @return  void
+     *
+     * @since   3.0
+     */
+    public function saveOrderAjax()
+    {
+        // Get the input
+        $pks = $this->input->post->get('cid', array(), 'array');
+        $order = $this->input->post->get('order', array(), 'array');
+
+        // Sanitize the input
+        JArrayHelper::toInteger($pks);
+        JArrayHelper::toInteger($order);
+
+        // Get the model
+        $model = $this->getModel('attribute');
+
+        // Save the ordering
+        $return = $model->saveorder($pks, $order);
+
+        if ($return)
+        {
+            echo "1";
+        }
+
+        // Close the application
+        JFactory::getApplication()->close();
+    }
 }

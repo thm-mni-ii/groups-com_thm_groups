@@ -507,4 +507,187 @@ class THM_GroupsModelAttribute extends JModelLegacy
     {
         return str_replace('\\', '/', JPATH_ROOT);
     }
+
+    /**
+     * Toggles the attribute
+     *
+     * @param   String  $action  publish/unpublish
+     *
+     * @return  boolean  true on success, otherwise false
+     */
+    public function toggle($action = null)
+    {
+        $db = JFactory::getDBO();
+        $input = JFactory::getApplication()->input;
+
+        // Get array of ids if divers users selected
+        $cid = $input->post->get('cid', array(), 'array');
+
+        // A string with type of column in table
+        $attribute = $input->get('attribute', '', 'string');
+
+        // If array is empty, the toggle button was clicked
+        if (empty($cid))
+        {
+            $id = $input->getInt('id', 0);
+        }
+        else
+        {
+            JArrayHelper::toInteger($cid);
+            $id = implode(',', $cid);
+        }
+
+        if (empty($id))
+        {
+            return false;
+        }
+
+        // Will used if buttons (Publish/Unpublish user) in toolbar clicked
+        switch ($action)
+        {
+            case 'publish':
+                $value = 1;
+                break;
+            case 'unpublish':
+                $value = 0;
+                break;
+            default:
+                $value = $input->getInt('value', 1)? 0 : 1;
+                break;
+        }
+
+        $query = $db->getQuery(true);
+
+        $query
+            ->update('#__thm_groups_attribute')
+            ->where("id IN ( $id )");
+
+        switch ($attribute)
+        {
+            case 'published':
+            default:
+                $query->set("published = '$value'");
+                break;
+        }
+
+        $db->setQuery((string) $query);
+
+        try
+        {
+            return (bool) $db->execute();
+        }
+        catch (Exception $exc)
+        {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            return false;
+        }
+    }
+
+    /**
+     * Saves the manually set order of records.
+     *
+     * @param   array    $pks    An array of primary key ids.
+     * @param   integer  $order  +1 or -1
+     *
+     * @return  mixed
+     *
+     * @since   12.2
+     */
+    public function saveorder($pks = null, $order = null)
+    {
+        JTable::addIncludePath(JPATH_ROOT . '/administrator/components/com_thm_groups/tables/');
+        $table = $this->getTable('Attribute', 'Table');
+
+        $conditions = array();
+
+        if (empty($pks))
+        {
+            return JError::raiseWarning(500, JText::_($this->text_prefix . '_ERROR_NO_ITEMS_SELECTED'));
+        }
+
+        // Update ordering values
+        foreach ($pks as $i => $pk)
+        {
+            $table->load((int) $pk);
+
+            // Access checks.
+            if (!$this->canEditState($table))
+            {
+                // Prune items that you can't change.
+                unset($pks[$i]);
+                JLog::add(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+            }
+            elseif ($table->ordering != $order[$i])
+            {
+                $table->ordering = $order[$i];
+
+                if (!$table->store())
+                {
+                    $this->setError($table->getError());
+                    return false;
+                }
+
+                // Remember to reorder within position and client_id
+                $condition = $this->getReorderConditions($table);
+                $found = false;
+
+                foreach ($conditions as $cond)
+                {
+                    if ($cond[1] == $condition)
+                    {
+                        $found = true;
+                        break;
+                    }
+                }
+
+                if (!$found)
+                {
+                    $key = $table->getKeyName();
+                    $conditions[] = array($table->$key, $condition);
+                }
+            }
+        }
+
+        // Execute reorder for each category.
+        foreach ($conditions as $cond)
+        {
+            $table->load($cond[0]);
+            $table->reorder($cond[1]);
+        }
+
+        // Clear the component's cache
+        $this->cleanCache();
+
+        return true;
+    }
+
+    /**
+     * A protected method to get a set of ordering conditions.
+     *
+     * @param   JTable  $table  A JTable object.
+     *
+     * @return  array  An array of conditions to add to ordering queries.
+     *
+     * @since   12.2
+     */
+    protected function getReorderConditions($table)
+    {
+        return array();
+    }
+
+    /**
+     * Method to test whether a record can be deleted.
+     *
+     * @param   object  $record  A record object.
+     *
+     * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
+     *
+     * @since   12.2
+     */
+    protected function canEditState($record)
+    {
+        $user = JFactory::getUser();
+
+        return $user->authorise('core.edit.state', 'com_content');
+    }
 }

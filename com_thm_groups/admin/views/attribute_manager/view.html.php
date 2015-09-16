@@ -17,6 +17,7 @@ defined('_JEXEC') or die('Restricted access');
 
 // import Joomla view library
 jimport('thm_core.list.view');
+JHtml::_('bootstrap.framework');
 
 /**
  * THM_GroupsViewAttribute_Manager class for component com_thm_groups

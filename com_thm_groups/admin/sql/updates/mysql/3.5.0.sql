@@ -85,8 +85,8 @@ UPDATE `#__thm_groups_users_content` AS content
     ON content.contentID = featured.conid
 SET featured = 1;
 
-UPDATE `jos_thm_groups_users_content` AS groups_content
-  JOIN `jos_content` AS content
+UPDATE `#__thm_groups_users_content` AS groups_content
+  JOIN `#__content` AS content
     ON groups_content.contentID = content.id
 SET groups_content.featured =
 CASE content.state
@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_attribute` (
   `dynamic_typeID` INT(11)      NOT NULL,
   `name`           VARCHAR(255) NOT NULL,
   `published`      TINYINT(1)   NULL,
-  `order`          TINYINT(1)   NULL,
+  `ordering`       TINYINT(1)   NULL,
   `options`        TEXT         NULL,
   `description`    TEXT         NULL,
   PRIMARY KEY (`id`),
@@ -158,12 +158,12 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_attribute` (
   AUTO_INCREMENT = 100;
 
 # START VERSION 3.5.11
-INSERT INTO `#__thm_groups_attribute` (`id`, `dynamic_typeID`, `name`, `order`, `published`)
+INSERT INTO `#__thm_groups_attribute` (`id`, `dynamic_typeID`, `name`, `ordering`, `published`)
   SELECT
     struct.id    AS id,
     dyntype.id   AS dynamic_typeID,
     struct.field AS name,
-    struct.order AS `order`,
+    struct.order AS ordering,
     1            AS published
   FROM `#__thm_groups_structure` AS struct
     JOIN `#__thm_groups_dynamic_type` AS dyntype
