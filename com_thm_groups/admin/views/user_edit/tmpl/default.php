@@ -68,8 +68,8 @@ $session = JFactory::getSession();
                         <?php elseif ($item->name == 'MULTISELECT') :
                             $output = "<select multiple data-original-title='"
                                 . $item->description . "' data-placement='right' class='hasTooltip form-control' id='jform_" . $name . "'"
-                                . "name='jform[" . $name . "[]]'>"
-                                . "style='float:left !important; margin-left: 0px !important;'";
+                                . "name='jform[" . $name . "[]]'"
+                                . "style='float:left !important; margin-left: 0px !important;'>";
                             $fields = explode(';', json_decode($item->options)->options);
 
                             foreach ($fields as $field)

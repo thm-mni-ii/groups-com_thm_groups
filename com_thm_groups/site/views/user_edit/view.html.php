@@ -340,7 +340,7 @@ class THM_GroupsViewUser_Edit extends JViewLegacy
         $doc -> addStyleSheet(JURI::root() . 'libraries/thm_groups_responsive/assets/css/respBaseStyles.css');
         $doc -> addScript(JURI::root() . 'libraries/thm_core/js/formbehaviorChosenHelper.js');
 
-        // TODO: comment this out to prevent modal from closing after saving changes. For debugging.
+        // Close modal after editing
         $doc -> addScriptDeclaration("        window.onbeforeunload = function() {
             window.parent.location.reload();
         };");

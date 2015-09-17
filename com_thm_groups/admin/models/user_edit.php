@@ -75,23 +75,22 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
             $userId = $formData['userID'];
         }
 
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
 
         $query
             ->select('ust.usersID, ust.attributeID, st.options, dyn.regex, dyn.description, st.name as attribute, ust.value, ust.published, static.name')
-            //->select('st.name as attribute, ust.value')
             ->from('#__thm_groups_users_attribute AS ust')
             ->innerJoin('#__thm_groups_attribute AS st ON ust.attributeID = st.id')
             ->innerJoin('#__thm_groups_dynamic_type AS dyn ON st.dynamic_typeID = dyn.id')
             ->innerJoin('#__thm_groups_static_type AS static ON dyn.static_typeID = static.id')
             ->where("ust.usersID IN ( $userId )")
             ->where('st.published = 1')
-            //->order('ust.attributeID');
             ->order('st.ordering');
-        $db->setQuery($query);
 
-        return $db->loadObjectList();
+        $dbo->setQuery($query);
+
+        return $dbo->loadObjectList();
     }
 
     /**
@@ -109,9 +108,11 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         $dbo = JFactory::getDBO();
 
         $query = $dbo->getQuery(true);
-        $query->select('id, options')
+        $query
+            ->select('id, options')
             ->from('#__thm_groups_attribute')
             ->where('id =' . $attrID);
+
         try
         {
             $dbo->setQuery($query);
@@ -141,9 +142,6 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         $formData = $app->input->post->get('jform', array(), 'array');
         $content = $this->getContent();
         $userID = $formData['userID'];
-
-        // Dimensions for thumbnails
-        //$sizes = array('300x300', '64x64', '250x125');
 
         // Change '_' in array into ' '
         $this->fixArrayKey($formData);
@@ -178,6 +176,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
 
             if ($success)
             {
+                $this->deleteThumbs($filename, $attrID);
                 $image  = new JImage($path);
                 $image->createThumbs($sizes, JImage::SCALE_INSIDE, JPATH_ROOT . $pathAttr . 'thumbs\\');
 
@@ -199,17 +198,33 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     /**
      * Deletes picture from path
      *
-     * @param $userID
-     * @param $attributeID
+     * @param   String  $attributeID  The attribute id
+     * @param   String  $userID       The user id
      *
      * @return mixed
      */
-    public function deletePicture($attributeID)
+    public function deletePicture($attributeID, $userID)
     {
         $content = $this->getContent();
+        $dbo = JFactory::getDbo();
+
         try
         {
             $this->deleteOldPictures($content, $attributeID);
+
+            // Update new picture filename
+            $query = $dbo->getQuery(true);
+
+            // Update the database with new picture information
+            $query
+                ->update($dbo->qn('#__thm_groups_users_attribute'))
+                ->set($dbo->qn('value') . ' = ' . $dbo->quote(''))
+                ->where(
+                    $dbo->qn('usersID') . ' = ' . (int) $userID . ' AND '
+                    . $dbo->qn('attributeID') . ' = ' . (int) $attributeID . '');
+
+            $dbo->setQuery($query);
+            $dbo->execute();
 
             // TODO return default pic?
             return "true";
@@ -220,6 +235,14 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         }
     }
 
+    /**
+     * Returns json for a table attribute
+     *
+     * @param   String  $uid     The user id
+     * @param   String  $attrid  The attribute id
+     *
+     * @return mixed
+     */
     private function getJsonTable($uid, $attrid)
     {
         $dbo = JFactory::getDbo();
@@ -234,9 +257,14 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     }
 
     /**
-     * @param $formData
-     * @param $content
-     * @param $userID
+     * Saves the send values from the user edit form if they are different from the existing attribute values in the
+     * database.
+     *
+     * @param   Array   $formData  Send form data
+     * @param   Array   $content   Saved attribute values from the database
+     * @param   String  $userID    The id of the edited user
+     *
+     * @return  void
      */
     private function saveValues($formData, $content, $userID)
     {
@@ -295,8 +323,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                     );
 
                     $dbo->setQuery($query);
-
-                    $result = $dbo->execute();
+                    $dbo->execute();
                 }
                 catch (Exception $e)
                 {
@@ -310,9 +337,10 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     /**
      * Creates a JSON String for table from given form data.
      *
-     * @param $attr
-     * @param $formData
-     * @return string
+     * @param   String  $attr      The attribute
+     * @param   Array   $formData  The formdata
+     *
+     * @return  string
      */
     private function createJSON($attr, $formData)
     {
@@ -324,6 +352,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
 
         // Convert structure to fit in json
         $index = null;
+
         foreach ($formData as $key => $value)
         {
             $sKey = (string) $key;
@@ -346,6 +375,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                 $output[$vals[1]] = $value;
             }
         }
+
         array_push($final, $output);
 
         // Check for empty columns and delete them
@@ -353,6 +383,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         {
             $size = sizeof($column);
             $empty = 0;
+
             foreach ($column as $row)
             {
                 if ($row == '')
@@ -360,6 +391,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                     $empty ++;
                 }
             }
+
             if ($size == $empty)
             {
                 // Don't delete when it's the last element / prevents empty json crash
@@ -369,15 +401,19 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                 }
             }
         }
+
         $json = json_encode($final);
+
         return $json;
     }
 
     /**
      * Deletes old Pictures
      *
-     * @param $content
-     * @param $key
+     * @param   Array   $content  Attributes assigned to user
+     * @param   String  $key      attribute id
+     *
+     * @return  void
      */
     private function deleteOldPictures($content, $key)
     {
@@ -429,9 +465,62 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     }
 
     /**
-     * @param $formData
-     * @param $content
-     * @param $userID
+     * Deletes all thumbnails that have the same name like the uploaded image, to avoid dead images on server.
+     * For generated image-file names the separator have to be different from '_' because this function compares
+     * of equality till the underscore and deletes all matches.
+     * For example 'filename-RANDOMNUMBER_48x64.jpg' would not be deleted.
+     *
+     * @param   String  $filename  The filename of the uploaded image
+     * @param   String  $key       The attribute id
+     *
+     * @return  void
+     */
+    private function deleteThumbs($filename, $key)
+    {
+        // Get local path
+        $attrPath = $this->getLocalPath($key);
+
+        // Delete thumbs
+        foreach (scandir(JPATH_ROOT . $attrPath . 'thumbs\\') as $folderPic)
+        {
+            if ($folderPic === '.' || $folderPic === '..')
+            {
+                continue;
+            }
+            else
+            {
+                /**
+                 * Get the filename till the '_width-height.extension' part
+                 * and check if its part of the saved filename in database.
+                 *
+                 * When a pos was found it will be dropped from the folder.
+                 */
+                $extPos = strrpos($folderPic, '_');
+                $length = strlen($folderPic);
+                $thumbFileName = substr($folderPic, 0, -($length - $extPos));
+
+                $pos = strpos("cropped_" . $filename, $thumbFileName);
+
+                if ($pos === 0)
+                {
+                    unlink(JPATH_ROOT . $attrPath . 'thumbs\\' . $folderPic);
+                }
+            }
+        }
+    }
+
+    /**
+     * Saves uploaded picture in full size and stores new value of image in the specific user-attribute.
+     * Filedata array has to be named : 'Picture', containing array elements are named by its attribute id.
+     *
+     * Note: If the 'upload_max_filesize' variable in PHP.ini is set to a low value, upload operations for
+     * pictures will fail!.
+     *
+     * @param   Array   $formData  The formdata
+     * @param   Array   $content   The attributes + values assigned to the user
+     * @param   String  $userID    The user id
+     *
+     * @return void
      */
     private function saveFullSizePictures($formData, $content, $userID)
     {
@@ -461,12 +550,27 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                     {
                         try
                         {
-                            // Delete old files
-                            $this->deleteOldPictures($content, $key);
+                            $query = $dbo->getQuery(true);
+                            $query
+                                ->select('value')
+                                ->from('#__thm_groups_users_attribute')
+                                ->where(
+                                    $dbo->qn('usersID') . ' = ' . (int) $userID . ' AND '
+                                    . $dbo->qn('attributeID') . ' = ' . (int) $key . '');
+
+                            $dbo->setQuery($query);
+                            $oldFilename = $dbo->loadObject();
+
+                            if ($oldFilename->value != 'cropped_' . $value['name'])
+                            {
+                                // Delete old files
+                                $this->deleteOldPictures($content, $key);
+                            }
 
                             // Update new picture filename
                             $query = $dbo->getQuery(true);
 
+                            // Update the database with new picture information
                             $query->update($dbo->qn('#__thm_groups_users_attribute'))
                                 ->set($dbo->qn('value') . ' = ' . $dbo->quote('cropped_' . $value['name']))
                                 ->where(
@@ -474,7 +578,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                                     . $dbo->qn('attributeID') . ' = ' . (int) $key . '');
 
                             $dbo->setQuery($query);
-                            $result = $dbo->execute();
+                            $dbo->execute();
                         }
                         catch (Exception $e)
                         {
@@ -500,12 +604,12 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
      */
     private function fixArrayKey(&$arr)
     {
-        $arr=array_combine(array_map(function($str){return str_replace("_"," ",$str);},array_keys($arr)),
+        $arr = array_combine(array_map(function($str){return str_replace("_"," ",$str);},array_keys($arr)),
             array_values($arr));
 
-        foreach($arr as $key=>$val)
+        foreach ($arr as $key => $val)
         {
-            if(is_array($val)) $this->fixArrayKey($arr[$key]);
+            if (is_array($val)) $this->fixArrayKey($arr[$key]);
         }
     }
 
@@ -544,6 +648,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
 
         // Convert / to \:
         return $path = str_replace('/', '\\', $path);*/
+
         return $path = str_replace('/', '\\', $attrPath);
     }
 }

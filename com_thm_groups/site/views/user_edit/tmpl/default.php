@@ -52,7 +52,7 @@ else
         <div class="form-horizontal">
 
             <div id="uEditSubmit" class="form-actions">
-                <button type="submit" class="btn btn-primary"><?php echo JText::_('JAPPLY');?></button>
+                <button type="submit" class="btn btn-primary"><?php echo JText::_('COM_THM_GROUPS_APPLY');?></button>
                 <input type="hidden" name="option" value="com_thm_groups" />
                 <input type="hidden" name="task" value="user.apply"/>
                 <?php echo JHtml::_('form.token');?>
@@ -91,8 +91,8 @@ else
                                     ?>
                                 <?php elseif ($item->type == 'MULTISELECT') :
                                     $output = "<select multiple class='form-control' id='jform_" . $name . "'"
-                                        . "name='jform[" . $name . "][value]'>"
-                                        . "style='float:left !important; margin-left: 0px !important;'";
+                                        . "name='jform[" . $name . "][value]'"
+                                        . "style='float:left !important; margin-left: 0px !important;'>";
                                     $fields     = explode(';', json_decode($item->options)->options);
 
                                     foreach ($fields as $field)
@@ -183,7 +183,7 @@ else
                                     ?>
                                     <span id='<?php echo $name; ?>_IMG'>
                                     <img  src='<?php echo JURI::root() . $path . $item->value; ?>' class='edit_img'/>
-                                </span>
+                                    </span>
                                     <input id='jform_<?php echo $name; ?>_hidden'
                                            name='jform[<?php echo $name; ?>][value]'
                                            type='hidden'
@@ -194,7 +194,7 @@ else
                                             width: 95px !important;
                                             float: left;'
                                             onclick='deletePic("<?php echo $name; ?>", "<?php echo $item->structid; ?>"
-                                                , "<?php echo $item->structid; ?>")'
+                                                , "<?php echo $this->item; ?>")'
                                             type='button'>
                                         <span class='icon-delete'></span><?php echo JText::_('COM_THM_QUICKPAGES_TRASH'); ?>
                                     </button>
@@ -225,7 +225,7 @@ else
                                                 id='jform_<?php echo $name; ?>'
                                                 type='file'
                                                 class='file'
-                                                name='jform1[<?php echo $name; ?>][<?php echo $item->structid; ?>]'
+                                                name='jform1[Picture][<?php echo $item->structid; ?>]'
                                                 style='float:left; width: 120px'/>
                                             <button
                                                 id='<?php echo $name; ?>_saveChanges'
@@ -320,7 +320,17 @@ else
                                 </div>
                                 <div>
                                     <input type='checkbox' name='jform[<?php echo $name; ?>][published]'
-                                           style='margin-left: 100px;' id='jform_<?php echo $name; ?>_published'
+                                           <?php
+                                               if ($item->type == 'MULTISELECT')
+                                               {
+                                                   echo "style='margin-left: 104px;'";
+                                               }
+                                               else
+                                               {
+                                                   echo "style='margin-left: 100px;'";
+                                               }
+                                           ?>
+                                            id='jform_<?php echo $name; ?>_published'
                                     <?php
                                     if ($name == 'Username')
                                     {

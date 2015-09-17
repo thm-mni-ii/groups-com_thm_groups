@@ -49,15 +49,16 @@ class THM_GroupsViewUser_Edit extends THM_CoreViewEdit
         JHtml::_('behavior.formvalidation');
         JHtml::_('formbehavior.chosen', 'select');
         //JHtml::_('script', JUri::root() . $componentDir . '/assets/js/tabReload.js');
-        JHtml::_('script', JUri::root() . $componentDir . '/assets/js/cropbox.js');
-        JHtml::_('script', JUri::root() . $componentDir . '/assets/js/inputValidation.js');
-        JHtml::_('script', JUri::root() . $componentDir . '/assets/js/user_edit.js');
+        JHtml::_('script', JURI::root() . $componentDir . '/assets/js/cropbox.js');
+        JHtml::_('script', JURI::root() . $componentDir . '/assets/js/inputValidation.js');
+        JHtml::_('script', JURI::root() . $componentDir . '/assets/js/user_edit.js');
 
         $doc = JFactory::getDocument();
         $doc -> addStyleSheet(JURI::root(true) . $componentDir . '/assets/css/cropbox.css');
         $doc -> addStyleSheet(JURI::root(true) . $componentDir . '/assets/css/edit.css');
-        $doc -> addStyleSheet(JUri::root() . "libraries/thm_core/fonts/iconfont.css");
-        $doc -> addScript(JUri::root() . "libraries/thm_core/js/formbehaviorChosenHelper.js");
+        $doc -> addStyleSheet(JURI::root() . "libraries/thm_core/fonts/iconfont.css");
+        $doc -> addStyleSheet(JURI::root() . 'libraries/thm_groups_responsive/assets/css/respBaseStyles.css');
+        $doc -> addScript(JURI::root() . "libraries/thm_core/js/formbehaviorChosenHelper.js");
 
         $this->userContent = $this->get('Content');
 

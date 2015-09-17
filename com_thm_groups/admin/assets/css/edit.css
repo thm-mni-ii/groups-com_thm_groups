@@ -37,3 +37,7 @@
     z-index: 1050;
     top: 50%;
 }
+.chzn-container-multi
+{
+    float: left;
+}

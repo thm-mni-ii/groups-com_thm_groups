@@ -103,16 +103,21 @@ function bindImageCropper(element, attrID, uID)
             }
 
 function deletePic(name, attributeID, userID) {
+    alert("deletePic");
     jQf.ajax({
         type: "POST",
         url: "index.php?option=com_thm_groups&controller=user_edit&task=user_edit.deletePicture&tmpl=component&id="
         + userID + "&attrID=" + attributeID + "",
         datatype: "HTML"
     }).success(function (response) {
-        if (response == 'true')
+
+        document.getElementById(name + "_IMG").innerHTML = response;
+        /*if (response == 'true')
         {
             document.getElementById(name + "_IMG").innerHTML = '';
-        }
+            alert("jform_" + name + "_hidden");
+            document.getElementById("jform_" + name + "_hidden").value = "";
+        }*/
     });
 }
 

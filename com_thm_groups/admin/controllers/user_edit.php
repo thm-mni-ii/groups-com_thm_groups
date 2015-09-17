@@ -76,8 +76,9 @@ class THM_GroupsControllerUser_Edit extends JControllerLegacy
         $app = JFactory::getApplication();
         $model = $this->getModel('user_edit');
         $attrID = $app->input->get('attrID');
+        $uid = $app->input->get('id');
 
-        $success = $model->deletePicture($attrID);
+        $success = $model->deletePicture($attrID, $uid);
         if ($success != false)
         {
             echo $success;
