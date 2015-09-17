@@ -67,8 +67,8 @@ class THM_GroupsModelArticles extends THM_CoreModelList
         $uid = JFactory::getUser()->id;
 
         $query
-            ->select('a.id, a.title, a.alias, a.checked_out, a.checked_out_time, a.catid, a.state, a.access, a.created, a.created_by, a.ordering, a.featured, a.language, a.hits, a.publish_up, a.publish_down,l.title AS language_title,uc.name AS editor,ag.title AS access_level,c.title AS category_title,ua.name AS author_name')
-            ->select('d.featured, d.published')
+            ->select('a.id, a.title, a.alias, a.checked_out, a.checked_out_time, a.catid, a.state, a.access, a.created, a.featured, a.created_by, a.ordering, a.language, a.hits, a.publish_up, a.publish_down,l.title AS language_title,uc.name AS editor,ag.title AS access_level,c.title AS category_title,ua.name AS author_name')
+            ->select('d.featured as qp_featured, d.published as qp_published')
             ->from('#__content AS a')
             ->leftJoin('#__languages AS l ON l.lang_code = a.language')
             ->leftJoin('#__users AS uc ON uc.id=a.checked_out')
@@ -87,10 +87,6 @@ class THM_GroupsModelArticles extends THM_CoreModelList
         $this->setIDFilter($query, 'd.featured', array('filter.featured'));
 
         $this->setOrdering($query);
-
-        echo '<pre>';
-        //print_r($query->dump());
-        echo '</pre>';
 
         return $query;
     }
@@ -159,8 +155,8 @@ class THM_GroupsModelArticles extends THM_CoreModelList
             $return[$index][5] = (int) $item->hits;
             $return[$index][6] = $this->renderCheckInAndEditIcons($key, $item);
             $return[$index][7] = $this->renderTrashIcon($key, $item);
-            $return[$index][8] = $this->getToggle($item->id, $item->published, 'articles', '', 'published');
-            $return[$index][9] = $this->getToggle($item->id, $item->featured, 'articles', '', 'featured');
+            $return[$index][9] = $this->getToggle($item->id, $item->qp_featured, 'articles', '', 'featured');
+            $return[$index][8] = $this->getToggle($item->id, $item->qp_published, 'articles', '', 'published');
             $return[$index][10] = $item->category_title;
 
             $index++;
@@ -344,10 +340,8 @@ class THM_GroupsModelArticles extends THM_CoreModelList
         $headers['hits'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_HITS'), 'hits', $direction, $ordering);
         $headers['edit'] = JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_EDIT');
         $headers['delete'] = JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_DELETE');
-        $headers['published'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_SHOW_LIST'), 'd.published', $direction, $ordering);
-        $headers['featured'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_SHOW_CONTENT'), 'd.featured', $direction, $ordering);
-        //$headers['published'] = JHtml::_('searchtools.sort', JText::_('Show L.M.'), 'd.published', $direction, $ordering);
-        //$headers['featured'] = JHtml::_('searchtools.sort', JText::_('Show C.M.'), 'd.featured', $direction, $ordering);
+        $headers['featured'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_SHOW_LIST'), 'd.featured', $direction, $ordering);
+        $headers['published'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_SHOW_CONTENT'), 'd.published', $direction, $ordering);
         $headers['catid'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_CATEGORY'), 'catid', $direction, $ordering);
 
         return $headers;

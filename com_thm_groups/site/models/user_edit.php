@@ -138,7 +138,9 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
             ->innerJoin('#__thm_groups_dynamic_type AS dyn ON st.dynamic_typeID = dyn.id')
             ->innerJoin('#__thm_groups_static_type AS static ON dyn.static_typeID = static.id')
             ->where('ust.usersID IN (' . $userId . ') ')
-            ->order('ust.attributeID');
+            ->where('st.published = 1')
+            //->order('ust.attributeID');
+            ->order('st.ordering');
         $dbo->setQuery($query);
 
         return $dbo->loadObjectList();

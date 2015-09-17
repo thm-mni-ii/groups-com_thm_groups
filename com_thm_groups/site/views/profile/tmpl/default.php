@@ -1,3 +1,13 @@
+<script>
+    // TODO save it in an external script
+    $ = jQuery.noConflict();
+    $(document).ready(function() {
+        $('#sbox-btn-close').on('click', function(){
+            window.parent.location.reload();
+        });
+    });
+</script>
+
 <?php
 /**
  * @version     v3.4.6
@@ -24,6 +34,8 @@ defined('_JEXEC') or die('Restricted access');
 
 JHTML::_('behavior.modal', 'a.modal-button');
 JHTML::_('behavior.calendar');
+
+
 
 $user = JFactory::getUser();
 
@@ -98,9 +110,21 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
         {
             $head .= '<div class="thm_groups_content_profile_edit">';
 
-            $head .= "<a href='" . JRoute::_('index.php?option=com_thm_groups&view=user_edit&layout=default&' . $attribut . '&gsuid=' . $userid
+            /*$head .= "<a href='" . JRoute::_('index.php?option=com_thm_groups&view=user_edit&layout=default&' . $attribut . '&gsuid=' . $userid
                     . '&name=' . trim($lastName) . '&gsgid=4' ) . "'>"
-                    . JHTML::image("libraries/thm_groups/assets/icons/edit.png", 'bearbeiten', 'bearbeiten') . "</a>";
+                    . JHTML::image("libraries/thm_groups/assets/icons/edit.png", 'bearbeiten', 'bearbeiten') . "</a>";*/
+
+            $attribs['title'] = 'bearbeiten';
+
+            $path = "index.php?option=com_thm_groups&view=user_edit&layout=default&tmpl=component";
+
+            // TODO use existing group id and not just a number
+            $gspart = '&gsgid=4';
+            $trim = "&name=" . trim($lastName);
+            $head .= "<a href='". JRoute:: _(
+                    $path . '&gsuid=' . $userid . $trim . $gspart )
+                . "' class='modal' rel='{size: {x: 1000, y: 600}, handler: \"iframe\", onClose: \"window.location.reload();\"}'>"
+                . JHTML:: image("components/com_thm_groups/img/edit.png", 'bearbeiten', $attribs) . "</a>";
             $head .= '</div>';
         }
 

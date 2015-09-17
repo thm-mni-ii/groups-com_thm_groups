@@ -22,7 +22,7 @@
 jimport('joomla.application.component.view');
 jimport('thm_groups.data.lib_thm_groups');
 JHtml::_('bootstrap.framework');
-
+JHtml::_('behavior.modal');
 
 /**
  * THMGroupsViewAdvanced class for component com_thm_groups
@@ -410,7 +410,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                 . "</div> ";
         }
 
-        $result .= "</a>&nbsp";
+        $result .= "</a>";
         
         return $result;
     }
@@ -554,7 +554,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                 $asd = "iframe";
                 $result .= "<a href='". JRoute:: _(
                         $path . $itemid . '&gsuid=' . $id . $trim . $gspart )
-                    . "' class='modal' rel='{size: {x: 700, y: 600}, handler: \"iframe\", onClose: \"window.location.reload();\"}'>"
+                    . "' class='modal' rel='{size: {x: 1000, y: 600}, handler: \"iframe\", onClose: \"window.location.reload();\"}'>"
                     . JHTML:: image("components/com_thm_groups/img/edit.png", 'bearbeiten', $attribs) . "</a>";
             }
 
@@ -593,12 +593,12 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                          || $memberitem->type == 'TEXTFIELD'))
                         {
                             $result .= '<span class="thm_groups_profile_container_line_label respMail-label" style="float: left" >'
-                                . JText::_($memberitem->name) . ":&nbsp" . '</span>';
+                                . JText::_($memberitem->name) . ':&nbsp;' . '</span>';
                         }
                         else
                         {
                             $result .= '<span class="thm_groups_profile_container_line_label" style="float: left" >'
-                                . JText::_($memberitem->name) . ":&nbsp" . '</span>';
+                                . JText::_($memberitem->name) . ':&nbsp;' . '</span>';
                         }
                     }
 

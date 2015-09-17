@@ -22,7 +22,6 @@
  * @link        www.mni.thm.de
  */
 ?>
-<?php JHTML::_('behavior.modal'); ?>
 <script>
     $ = jQuery.noConflict();
     $(document).ready(function() {
@@ -30,7 +29,6 @@
             window.parent.location.reload();
         });
     });
-
 </script>
 <div id="title"><?php echo "<h2 class='contentheading'>" . $this->title . "</h2>" ?></div>
 <div id="thm_groups_profile_container_list" class="row-fluid">

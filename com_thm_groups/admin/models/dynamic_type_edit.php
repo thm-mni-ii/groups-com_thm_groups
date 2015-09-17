@@ -6,7 +6,7 @@
  * @name        dynamic type model
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @copyright   2015 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
@@ -173,6 +173,12 @@ class THM_GroupsModelDynamic_Type_Edit extends JModelAdmin
                 JHtml::_('select.option', '^[A-E]{1}([0-9]{2}\\\\.|\\\\.)[0-9]{1,2}\\\\.([0-9]{2}[a-z]{0,1})$', 'Room'),
                 JHtml::_('select.option', '^(\\\\w+\\\\.?)+$', 'Title')
             );
+
+            /*array_push($regexOptions,
+                array('text'=>'Other', 'value' =>''),
+                array('text'=>'Only numbers', 'value' => '^[0-9]*$'));
+
+            $test = JHtml::_('select.options', $regexOptions, 'value', 'text', 1);*/
             return $regexOptions;
         }
         elseif ($name == 'LINK')
@@ -203,6 +209,7 @@ class THM_GroupsModelDynamic_Type_Edit extends JModelAdmin
         $selected = $static_typeID;
 
         $staticType = $this->getStaticType($selected);
+
 
         /** TODO: When user clicks on +new
          * in dynamic type manager an error

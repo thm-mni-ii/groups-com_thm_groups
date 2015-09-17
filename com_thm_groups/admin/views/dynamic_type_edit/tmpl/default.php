@@ -49,7 +49,7 @@ $doc->addStyleSheet(JURI::root(true) . $componentDir . "/assets/css/jqueryFileTr
                     <?php echo $this->form->getLabel('regex'); ?>
                 </div>
                 <div id="regexSelect" class="controls">
-                    <?php echo $this->form->getInput('regex'); ?>
+                    <?php echo $this->form->getInput('regex');?>
                     <span id="regexSelectField">
                         <?php
                             if ($this->regexOptions != null)

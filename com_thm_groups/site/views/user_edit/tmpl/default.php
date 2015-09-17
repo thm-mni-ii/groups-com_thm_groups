@@ -52,7 +52,7 @@ else
         <div class="form-horizontal">
 
             <div id="uEditSubmit" class="form-actions">
-                <button type="submit" class="btn btn-primary"><?php echo JText::_('COM_THM_GROUPS_APPLY');?></button>
+                <button type="submit" class="btn btn-primary"><?php echo JText::_('JSAVE');?></button>
                 <input type="hidden" name="option" value="com_thm_groups" />
                 <input type="hidden" name="task" value="user.apply"/>
                 <?php echo JHtml::_('form.token');?>
