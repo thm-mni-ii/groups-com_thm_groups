@@ -87,7 +87,7 @@ else
                             <div id='jform_<?php echo $name; ?>_box' class='controls'>
                                 <?php if ($item->type == 'TEXTFIELD') :
                                     $editor = JFactory::getEditor();
-                                    echo $editor->display("jform[$name]", $item->value, '', '', '', '', false);
+                                    echo $editor->display("jform[" . $name . "][value]", $item->value, '', '', '', '', false);
                                     ?>
                                 <?php elseif ($item->type == 'MULTISELECT') :
                                     $output = "<select multiple class='form-control' id='jform_" . $name . "'"

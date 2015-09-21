@@ -116,12 +116,6 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
      */
     public function  getContentAttribute($userId)
     {
-        // TODO: get right userid
-
-        echo"control, im here";
-        var_dump($userId);
-
-
         if ($userId == null)
         {
             $formData = JFactory::getApplication()->input->post->get('jform', array(), 'array');
@@ -463,7 +457,6 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
 
             if ($attribute->attributeID == $key)
             {
-                var_dump($key, $attribute->value);
                 // Delete cropped
                 unlink(JPATH_ROOT . $attrPath . $attribute->value);
 
@@ -615,7 +608,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                         }
                         catch (Exception $e)
                         {
-                            echo $e->getMessage() . "oh no";
+                            echo $e->getMessage();
                         }
                     }
                     else
@@ -625,7 +618,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                 }
             }
         }
-        die();
+
     }
 
     /**
