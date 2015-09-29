@@ -141,10 +141,12 @@ class THM_GroupsViewProfile extends JViewLegacy
         $gsuid     = $app->get('gsuid');
 
         $var = array();
+
         if (isset($_GET))
         {
             $var = $_GET;
             $attribut = "";
+
             foreach ($var as $index => $value)
             {
                 $pos = strpos($index, '_back');
@@ -156,7 +158,9 @@ class THM_GroupsViewProfile extends JViewLegacy
                 }
             }
         }
+
         $name = "";
+
         foreach ($items as $val)
         {
             if ($val->structid == 2)

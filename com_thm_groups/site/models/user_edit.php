@@ -186,13 +186,10 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     {
         $app = JFactory::getApplication()->input;
         $formData = $app->post->get('jform', array(), 'array');
-        $content = $this->getContent();
         $userID = $formData['gsuid'];
 
-        // $oldDS = $this->getContentAttribute();
-
-        // Dimensions for thumbnails
-        // $sizes = array('300x300', '64x64', '250x125');
+        // Gets all user data
+        $content = $this->getContent();
 
         /*
          * Change '_' in array into ' ', important because div id's
@@ -355,7 +352,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                 );
 
                 $dbo->setQuery($query);
-                $result = $dbo->execute();
+                $dbo->execute();
             }
             catch (Exception $e)
             {

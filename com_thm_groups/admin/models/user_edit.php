@@ -87,6 +87,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
             ->where("ust.usersID IN ( $userId )")
             ->where('st.published = 1')
             ->order('st.ordering');
+            //->order('ust.attributeID');
 
         $dbo->setQuery($query);
 

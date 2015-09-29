@@ -104,7 +104,6 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
     if ($userid)
     {
 
-
         // Edit icon
         if (($userid == JFactory::getUser()->id && $componentparams->get('editownprofile', 0) == 1) || $canEdit == true)
         {
@@ -121,17 +120,20 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
             // TODO use existing group id and not just a number
             $gspart = '&gsgid=4';
             $trim = "&name=" . trim($lastName);
-            $head .= "<a href='". JRoute:: _(
-                    $path . '&gsuid=' . $userid . $trim . $gspart )
+            $head .= "<a href='" . JRoute:: _(
+                    $path . '&gsuid=' . $userid . $trim . $gspart
+                )
                 . "' class='modal' rel='{size: {x: 1000, y: 600}, handler: \"iframe\", onClose: \"window.location.reload();\"}'>"
                 . JHTML:: image("components/com_thm_groups/img/edit.png", 'bearbeiten', $attribs) . "</a>";
             $head .= '</div>';
         }
 
+        // Temporary variable to add pic after the user name.
+        $profilePic = "";
+
         // Loop through all structures
         for ($index = 0; $index < count($userData); $index ++)
         {
-
             $data = $userData[$index];
 
             if ($data->value != "" && $data->publish)
@@ -206,28 +208,31 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
                                 // Extract small and medium filename
                                 if ($temp != null)
                                 {
-                                    if($temp[0][1] === 'small'){
+                                    if ($temp[0][1] === 'small')
+                                    {
                                         $small = $temp[0][0];
                                         $medium = $temp[1][0];
                                     }
-                                    else{
+                                    else
+                                    {
                                         $small = $temp[1][0];
                                         $medium = $temp[0][0];
                                     }
                                 }
 
-                                /**
-                                 * Couldn't test this with real data, because the pictures are not
-                                 * loaded from the database.
-                                 * todo: test this! and put $attribs in <img> element. put full path in $path.
-                                 */
                                 // The first structure of the type image will be a portrait picture
                                 if ($firstPic)
                                 {
                                     // $image = JHTML::image($path . '/' . $data->value, 'Portrait', $attribs);
-                                    $head .= "<div id='pictureContainer'>";
-                                    $image = "<img class='Portrait' ";
+                                    $profilePic .= "<div id='pictureContainer'>";
                                     $root = JURI::root(true);
+
+                                    $imgDimensions = getimagesize(JPATH_BASE . "/" . $path . "/" . $data->value);
+
+                                    $image = "<a href='" . $root . "/" . $path . "/" . $data->value . "'"
+                                     . "class='modal'"
+                                     . "rel='{size: {x: " . $imgDimensions[0] . ", y: " . $imgDimensions[1] . "}}'>"
+                                     . "<img class='Portrait' ";
 
                                     // Pictures don't have to be in the defined resolution, it's just a value for
                                     // the browser to decide what it should load. 'w' is not supported by iOS yet.
@@ -246,10 +251,10 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
                                         $image .= "src='" . $root . "/" . $path . "/" . $data->value . "'";
                                     }
 
-                                    $image .= " alt='Profilbild' />";
+                                    $image .= " alt='Profilbild' /></a>";
 
-                                    $head .= $image;
-                                    $head .= "</div>";
+                                    $profilePic .= $image;
+                                    $profilePic .= "</div>";
                                     $firstPic = false;
                                 }
 
@@ -311,13 +316,13 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
         }
     }
 
+    $head .= $profilePic;
     $head .= '</div>';
 
     if (JComponentHelper::getParams('com_thm_groups')->get('backButtonForProfile') == 1)
     {
         if (empty($backAttribute))
         {
-
             // Back button with javascript
             $body .= '<div><input type="button" class="btn btn-default" style="margin-top:10px" value="'
                     . JText::_("COM_THM_GROUPS_BACK_BUTTON") . '" onclick="window.history.back()" /> </div>';
@@ -360,6 +365,7 @@ function getTable($data)
     $titles = explode(';', $result[0]);
 
     $tableHeaderscounter = 1;
+
     foreach ($titles as $title)
     {
         $table = $table . "<th>" . $title . "</th>";
@@ -372,20 +378,25 @@ function getTable($data)
     }
 
     $table = $table . "</tr>";
+
     foreach ($jsonTable as $item)
     {
         $table = $table . "<tr>";
+
         foreach ($item as $value)
         {
             $table = $table . "<td>" . $value . "</td>";
         }
+
         $table = $table . "</tr>";
     }
+
     $table = $table . "</table>";
 
     // Write CSS for table headers.
     $tableHeaders .= "}";
     $document->addStyleDeclaration($tableHeaders);
+
     return $table;
 }
 
@@ -401,9 +412,10 @@ function getTable($data)
  * Image sizes of thumbs are generated in the
  * user_edit model at the backend, change them if needed.
  *
- * @param $filename
- * @param $path
- * @return array, null
+ * @param   String  $filename  The name of the picture
+ * @param   String  $path      The path of the picture
+ *
+ * @return  array, null
  */
 function getResizedPictures($filename, $path)
 {
@@ -414,6 +426,7 @@ function getResizedPictures($filename, $path)
     if (is_dir($pathToThumbs) != false)
     {
         $folder = scandir($pathToThumbs);
+
         foreach ($folder as $folderPic)
         {
             if ($folderPic === '.' || $folderPic === '..')
@@ -444,6 +457,7 @@ function getResizedPictures($filename, $path)
             }
         }
     }
+
     if ($picsFound != 0)
     {
         if (filesize($path . '/thumbs/' . $pictures[0][0]) < filesize($path . '/thumbs/' . $pictures[1][0]))
@@ -456,13 +470,14 @@ function getResizedPictures($filename, $path)
             $pictures[0][1] = 'medium';
             $pictures[1][1] = 'small';
         }
+
         return $pictures;
     }
     else
     {
         return null;
     }
- }
+}
 
 /**
  * Generates the css code
@@ -553,7 +568,16 @@ function getProfilCss()
                     max-width:70%;
                 }
             }
+
+            .sbox-content-image img{
+                height: auto !important;
+                width: auto !important;
+                max-height: 100% !important;
+                max-width: 100% !important;
+                margin: 0px auto !important;
+            }
             ';
+
     return $out;
 }
 
