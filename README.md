@@ -1,6 +1,6 @@
 #Component THM Groups
 
-<a href="http://icampus.thm.de"><img src="com_thm_groups/media/img/iCampusLogo_V2.png"
+<a href="http://icampus.thm.de"> <img src="com_thm_groups/media/img/iCampusLogo_V2.png"
 alt="Homepage of iCampus"height="180" /></a>
 
 Whereas the user management of Joomla! only supports expected entry attributes like name, username and email address, THM Groups provides the possibility to manage additional attributes. With THM Groups, users have the opportunity to manage their attributes for themselves on a Joomla!-based website. The same applies to user groups....
