@@ -23,6 +23,9 @@ defined('_JEXEC') or die;
  */
 class THM_GroupsControllerArticles extends JControllerLegacy
 {
+
+    protected $text_prefix = 'COM_THM_GROUPS';
+
     /**
      * Constructor.
      *
@@ -64,7 +67,7 @@ class THM_GroupsControllerArticles extends JControllerLegacy
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
             $type = 'error';
         }
-        $this->setRedirect("index.php?option=com_thm_groups&view=articles", $msg, $type);
+        $this->setRedirect(JRoute::_('index.php?option=com_thm_groups&view=articles', false), $msg, $type);
     }
 
     /**

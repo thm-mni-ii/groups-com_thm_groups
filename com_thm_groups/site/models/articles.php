@@ -52,6 +52,8 @@ class THM_GroupsModelArticles extends THM_CoreModelList
         // Get user quickpages root category and show on start
         $this->defaultFilters = array('catid' => THMLibThmQuickpages::getCategoryByProfileData(array('Id' => JFactory::getUser()->id)));
 
+        //var_dump($this->defaultFilters);
+
         parent::__construct($config);
     }
 
@@ -77,8 +79,17 @@ class THM_GroupsModelArticles extends THM_CoreModelList
             ->leftJoin('#__users AS ua ON ua.id = a.created_by')
             ->leftJoin('#__thm_groups_users_categories AS qc ON qc.categoriesID = a.catid')
             ->leftJoin('#__thm_groups_users_content AS d ON d.contentID = a.id');
-        //->where('(a.created_by = ' . ((int) $uid) . ' OR qc.id = ' . ((int) $uid) . ')');
+            //->where('(a.created_by = ' . ((int) $uid) . ' OR qc.id = ' . ((int) $uid) . ')');
 
+
+        /* TODO it's a first attempt to solve bug if user clicks on clear search
+         * where clause with search by catid appears in some cases twice
+         */
+        /*if (!empty($this->defaultFilters))
+        {
+            $query
+                ->where('a.catid =' . $this->defaultFilters['catid']);
+        }*/
 
         $this->setSearchFilter($query, array('a.title', 'a.alias'));
         $this->setIDFilter($query, 'a.catid', array('filter.catid'));
@@ -87,6 +98,10 @@ class THM_GroupsModelArticles extends THM_CoreModelList
         $this->setIDFilter($query, 'd.featured', array('filter.featured'));
 
         $this->setOrdering($query);
+
+        /*echo "<pre>";
+        echo $query->dump();
+        echo "</pre>";*/
 
         return $query;
     }
@@ -282,6 +297,15 @@ class THM_GroupsModelArticles extends THM_CoreModelList
     {
         // Check for authorization to create article in current category
         $currCategoryID = THMLibThmQuickpages::getCategoryByProfileData(array('Id' => JFactory::getUser()->id));
+        $input = JFactory::getApplication()->input;
+        $stateFilters = $input->get('filter', array(), 'ARRAY');
+        $filterCategory = $stateFilters['catid'];
+
+        if (!empty($filterCategory))
+        {
+            $currCategoryID = $filterCategory;
+        }
+
         $canCreate = $this->hasUserRightToCreateArticle($currCategoryID);
 
         if ($canCreate AND $currCategoryID != 0)
@@ -292,10 +316,13 @@ class THM_GroupsModelArticles extends THM_CoreModelList
                 . $currCategoryID . '&return=' . $returnURL
             );
 
-            return JHTML::_('link', $addURL, '<i class="icon-new"></i> ' . JText::_('COM_THM_GROUPS_QUICKPAGES_CREATE_NEW_ARTICLE'), 'title="'
-                . JText::_('COM_THM_QUICKPAGES_HTML_CREATE')
-                . '" class="btn btn-success btn-lg"'
+            $attribs = array(
+                'title' => JText::_('COM_THM_QUICKPAGES_HTML_CREATE')
             );
+
+            $text = '<span class="icon-new"></span> ' . JText::_('COM_THM_GROUPS_QUICKPAGES_CREATE_NEW_ARTICLE');
+
+            return JHTML::_('link', $addURL, $text, $attribs);
 
         }
         else
@@ -334,15 +361,14 @@ class THM_GroupsModelArticles extends THM_CoreModelList
         $headers['ordering'] =  JHtml::_('searchtools.sort', '', 'a.ordering', $direction, $ordering , null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2');
         $headers['checkbox'] = '';
         $headers['title'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_TITLE'), 'a.title', $direction, $ordering);
-        $headers['stateid'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_PUBLISHED'), 'published', $direction, $ordering);
-        //$headers['ordering'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_ORDERING'), 'ordering', $direction, $ordering);
-        $headers['data'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_DATA'), 'created', $direction, $ordering);
-        $headers['hits'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_HITS'), 'hits', $direction, $ordering);
+        $headers['stateid'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_PUBLISHED'), 'a.state', $direction, $ordering);
+        $headers['data'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_DATA'), 'a.created', $direction, $ordering);
+        $headers['hits'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_HITS'), 'a.hits', $direction, $ordering);
         $headers['edit'] = JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_EDIT');
         $headers['delete'] = JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_DELETE');
         $headers['featured'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_SHOW_LIST'), 'd.featured', $direction, $ordering);
         $headers['published'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_SHOW_CONTENT'), 'd.published', $direction, $ordering);
-        $headers['catid'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_CATEGORY'), 'catid', $direction, $ordering);
+        $headers['catid'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_CATEGORY'), 'a.catid', $direction, $ordering);
 
         return $headers;
     }

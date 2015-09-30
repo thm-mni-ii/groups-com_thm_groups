@@ -420,7 +420,7 @@ class THM_GroupsModelUser extends JModelLegacy
         }
 
         $db->setQuery($query);
-        var_dump($query->__toString());
+        //var_dump($query->__toString());
 
         try
         {

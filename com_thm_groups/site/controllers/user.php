@@ -153,7 +153,6 @@ class THM_GroupsControllerUser extends JControllerLegacy
         $userid = $data['gsuid'];
         $gsgid = $data['gsgid'];
 
-
         // Formvalidation is done in View via js
         $success = $model->save();
         if ($success)

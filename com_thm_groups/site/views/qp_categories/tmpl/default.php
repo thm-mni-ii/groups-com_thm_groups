@@ -26,9 +26,10 @@ class QuickpageCategoriesTemplateModal
     {
         ?>
         <form action="index.php?" id="adminForm"  method="post" name="adminForm" xmlns="http://www.w3.org/1999/html">
-            <div id="j-main-container">
+            <div id="j-main-container" class="panel panel-primary">
 
-                <?php echo $view->form->renderFieldset('category'); ?>
+                <?php echo $view->form->renderFieldset('category');
+                ?>
                 <div class="clr"> </div>
                 <input type="hidden" name="task" value="" />
                 <input type="hidden" name="option" value="<?php echo JFactory::getApplication()->input->get('option'); ?>" />

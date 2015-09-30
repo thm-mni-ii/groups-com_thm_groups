@@ -163,12 +163,12 @@ class THMGroupsModeledit extends JModelForm
             if ( strtolower($structureItem->type) == 'text' && $structureItem->id == '2' )
             {
                 $lastName = htmlspecialchars($field);
-                var_dump($lastName);
+                //var_dump($lastName);
             }
             if (	strtolower($structureItem->type) == 'text' && $structureItem->id == '1' )
             {
                 $firstName = htmlspecialchars($field);
-                var_dump($firstName);
+                //var_dump($firstName);
             }
 
             /*

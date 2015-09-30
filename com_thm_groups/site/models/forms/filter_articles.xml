@@ -14,7 +14,7 @@
     <field
             name="stateid"
             type="list"
-            label="COM_THM_GROUPS_PUBLISHED"
+            label="COM_CONTENT_FILTER_PUBLISHED"
             onchange="this.form.submit();"
             >
         <option value="">JALL</option>

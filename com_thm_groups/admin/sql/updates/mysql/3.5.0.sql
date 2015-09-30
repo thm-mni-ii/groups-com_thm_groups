@@ -144,8 +144,6 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_attribute` (
   `id`             INT(11)      NOT NULL AUTO_INCREMENT,
   `dynamic_typeID` INT(11)      NOT NULL,
   `name`           VARCHAR(255) NOT NULL,
-  `published`      TINYINT(1)   NULL,
-  `ordering`       TINYINT(1)   NULL,
   `options`        TEXT         NULL,
   `description`    TEXT         NULL,
   PRIMARY KEY (`id`),
@@ -157,18 +155,14 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_attribute` (
   ENGINE = InnoDB
   AUTO_INCREMENT = 100;
 
-# START VERSION 3.5.11
-INSERT INTO `#__thm_groups_attribute` (`id`, `dynamic_typeID`, `name`, `ordering`, `published`)
+INSERT INTO `#__thm_groups_attribute` (`id`, `dynamic_typeID`, `name`)
   SELECT
     struct.id    AS id,
     dyntype.id   AS dynamic_typeID,
-    struct.field AS name,
-    struct.order AS ordering,
-    1            AS published
+    struct.field AS name
   FROM `#__thm_groups_structure` AS struct
     JOIN `#__thm_groups_dynamic_type` AS dyntype
       ON struct.type = dyntype.name;
-# END VERSION 3.5.11
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_users_attribute` (
   `ID`          INT(11)    NOT NULL AUTO_INCREMENT,

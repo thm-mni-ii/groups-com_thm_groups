@@ -14,6 +14,7 @@ defined('_JEXEC') or die;
 jimport('thm_core.list.view');
 JHtml::_('bootstrap.framework');
 JHtml::_('jquery.framework');
+
 /**
  * Class which loads data into the view output context
  *
@@ -46,7 +47,6 @@ class THM_GroupsViewQP_Categories extends JViewLegacy
         jimport('cms.html.toolbar');
         $bar = new JToolBar( 'toolbar' );
         $bar->appendButton( 'Standard', 'apply', 'Save', 'qp_categories.apply', false );
-
         return $bar->render();
     }
 }
