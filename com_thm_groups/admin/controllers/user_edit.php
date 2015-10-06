@@ -52,13 +52,15 @@ class THM_GroupsControllerUser_Edit extends JControllerLegacy
      */
     public function saveCropped()
     {
-        $app = JFactory::getApplication();
-        $model = $this->getModel('user_edit');
-        $file = $app->input->files->get('data');
-        $attrID = $app->input->get('attrID');
+        $app      = JFactory::getApplication();
+        $model    = $this->getModel('user_edit');
+        $file     = $app->input->files->get('data');
+        $attrID   = $app->input->get('attrID');
         $filename = $app->input->get('filename');
+        $userID   = $app->input->get('id');
 
-        $success = $model->saveCropped($attrID, $file, $filename);
+        $success  = $model->saveCropped($attrID, $file, $filename, $userID);
+
         if ($success != false)
         {
             // Draw new image preview in user_edit.view
@@ -73,12 +75,13 @@ class THM_GroupsControllerUser_Edit extends JControllerLegacy
      */
     public function deletePicture()
     {
-        $app = JFactory::getApplication();
-        $model = $this->getModel('user_edit');
-        $attrID = $app->input->get('attrID');
-        $uid = $app->input->get('id');
+        $app     = JFactory::getApplication();
+        $model   = $this->getModel('user_edit');
+        $attrID  = $app->input->get('attrID');
+        $uid     = $app->input->get('id');
 
         $success = $model->deletePicture($attrID, $uid);
+
         if ($success != false)
         {
             echo $success;

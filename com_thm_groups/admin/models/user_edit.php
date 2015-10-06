@@ -49,14 +49,6 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         $id = (empty($ids)) ? $app->input->get->get('id') : $ids[0];
         $item = $this->getItem($id);
 
-        /* $content = $this->getContent($id);
-         // add data
-         foreach ($content as $field)
-         {
-             $attrName = $field->attribute;
-             $item->$attrName = $field->value;
-         }*/
-
         return $item;
     }
 
@@ -148,7 +140,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         $this->fixArrayKey($formData);
 
         $this->saveValues($formData, $content, $userID);
-        $this->saveFullSizePictures($formData, $content, $userID);
+        $this->saveFullSizePictures($userID);
 
         return $userID;
     }
@@ -159,31 +151,46 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
      * @param   Integer  $attrID    Attribute ID
      * @param   File     $file      Uploaded file
      * @param   String   $filename  Uploaded filename
+     * @param   String   $userID    The user id
      *
-     * @return bool|mixed|string
+     * @return  bool|mixed|string
      */
-    public function saveCropped($attrID, $file, $filename)
+    public function saveCropped($attrID, $file, $filename, $userID)
     {
         $pathAttr = $this->getLocalPath($attrID);
 
         // Dimensions for thumbnails
         $sizes = array('100x75', '140x105');
 
+        // Generate the image filename
+        $newFileName = $userID . "_" . $attrID . "." . pathinfo($filename, PATHINFO_EXTENSION);
+
         if ($file != null)
         {
-            $path = JPATH_ROOT . $pathAttr . "cropped_" . $filename;
+            $path = JPATH_ROOT . $pathAttr . $newFileName;
 
+            $content = $this->getContent();
+
+            /*
+             * All image names are the same now - id_attrid.extension
+             * delete old files to avoid dead files on server because of
+             * file-extension differences
+             */
+            $this->deleteOldPictures($content, $attrID);
+
+            // Upload new cropped image
             $success = jFile::upload($file['tmp_name'], $path, false);
 
+            // Create thumbs and send back prev image to the form
             if ($success)
             {
-                $this->deleteThumbs($filename, $attrID);
                 $image  = new JImage($path);
                 $image->createThumbs($sizes, JImage::SCALE_INSIDE, JPATH_ROOT . $pathAttr . 'thumbs\\');
 
                 $path = str_replace('\\', '/', $path);
                 $position = strpos($path, 'images/');
                 $convertedPath = substr($path, $position);
+
                 $prev = "<img  src='" . JURI::root() . $convertedPath . "' style='display: block;"
                     . "max-width:500px; max-height:240px; width: auto; height: auto;'/>";
 
@@ -211,7 +218,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
 
         try
         {
-            $this->deleteOldPictures($content, $attributeID);
+            $attributeDefault = $this->deleteOldPictures($content, $attributeID);
 
             // Update new picture filename
             $query = $dbo->getQuery(true);
@@ -219,7 +226,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
             // Update the database with new picture information
             $query
                 ->update($dbo->qn('#__thm_groups_users_attribute'))
-                ->set($dbo->qn('value') . ' = ' . $dbo->quote(''))
+                ->set($dbo->qn('value') . ' = ' . $dbo->quote($attributeDefault))
                 ->where(
                     $dbo->qn('usersID') . ' = ' . (int) $userID . ' AND '
                     . $dbo->qn('attributeID') . ' = ' . (int) $attributeID . '');
@@ -227,7 +234,6 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
             $dbo->setQuery($query);
             $dbo->execute();
 
-            // TODO return default pic?
             return "true";
         }
         catch (Exception $e)
@@ -414,55 +420,72 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
      * @param   Array   $content  Attributes assigned to user
      * @param   String  $key      attribute id
      *
-     * @return  void
+     * @return  String
      */
     private function deleteOldPictures($content, $key)
     {
         // Get local path
         $attrPath = $this->getLocalPath($key);
 
+        // Get attribute default filename
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query
+            ->select('options')
+            ->from('#__thm_groups_attribute')
+            ->where(
+                $dbo->qn('id') . '=' . (int) $key
+            );
+        $dbo->setQuery($query);
+        $attributeDefault = json_decode($dbo->loadObject()->options)->filename;
+
         // Delete old file
         foreach ($content as $attribute)
         {
             if ($attribute->attributeID == $key)
             {
-                // Delete cropped
-                unlink(JPATH_ROOT . $attrPath . $attribute->value);
-
-                // Delete fullRes
-                $oriFileName = $this->after('cropped_', $attribute->value);
-
-                unlink(JPATH_ROOT . $attrPath . 'fullRes\\' . $oriFileName);
-
-                // Delete thumbs
-                foreach ( scandir(JPATH_ROOT . $attrPath . 'thumbs\\') as $folderPic)
+                if (($attribute->value != $attributeDefault) && ($attribute->value != ''))
                 {
-                    if ( $folderPic === '.' || $folderPic === '..')
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        /**
-                         * Get the filename till the '_width-height.extension' part
-                         * and check if its part of the saved filename in database.
-                         *
-                         * When a pos was found it will be dropped from the folder.
-                         */
-                        $extPos = strrpos($folderPic, '_');
-                        $length = strlen($folderPic);
-                        $thumbFileName = substr($folderPic, 0, -($length - $extPos));
+                    // Delete cropped
+                    unlink(JPATH_ROOT . $attrPath . $attribute->value);
 
-                        $pos = strpos($attribute->value, $thumbFileName);
+                    // Delete fullRes
+                    $oriFileName = $attribute->value;
 
-                        if ($pos === 0)
+                    unlink(JPATH_ROOT . $attrPath . 'fullRes\\' . $oriFileName);
+
+                    // Delete thumbs
+                    foreach ( scandir(JPATH_ROOT . $attrPath . 'thumbs\\') as $folderPic)
+                    {
+                        if ( $folderPic === '.' || $folderPic === '..')
                         {
-                            unlink(JPATH_ROOT . $attrPath . 'thumbs\\' . $folderPic);
+                            continue;
+                        }
+                        else
+                        {
+                            /**
+                             * Get the filename till the '_width-height.extension' part
+                             * and check if its part of the saved filename in database.
+                             *
+                             * When a pos was found it will be dropped from the folder.
+                             */
+                            $extPos = strrpos($folderPic, '_');
+                            $length = strlen($folderPic);
+                            $thumbFileName = substr($folderPic, 0, -($length - $extPos));
+
+                            $pos = strpos($attribute->value, $thumbFileName);
+
+                            if ($pos === 0)
+                            {
+                                unlink(JPATH_ROOT . $attrPath . 'thumbs\\' . $folderPic);
+                            }
                         }
                     }
                 }
             }
         }
+
+        return $attributeDefault;
     }
 
     /**
@@ -499,12 +522,15 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                 $extPos = strrpos($folderPic, '_');
                 $length = strlen($folderPic);
                 $thumbFileName = substr($folderPic, 0, -($length - $extPos));
-
-                $pos = strpos("cropped_" . $filename, $thumbFileName);
+                $pos = strpos($filename, $thumbFileName);
 
                 if ($pos === 0)
                 {
-                    unlink(JPATH_ROOT . $attrPath . 'thumbs\\' . $folderPic);
+                    // Delete thumbnail if exists
+                    if (file_exists(JPATH_ROOT . $attrPath . 'thumbs\\' . $folderPic))
+                    {
+                        unlink(JPATH_ROOT . $attrPath . 'thumbs\\' . $folderPic);
+                    }
                 }
             }
         }
@@ -517,17 +543,15 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
      * Note: If the 'upload_max_filesize' variable in PHP.ini is set to a low value, upload operations for
      * pictures will fail!.
      *
-     * @param   Array   $formData  The formdata
-     * @param   Array   $content   The attributes + values assigned to the user
-     * @param   String  $userID    The user id
+     * @param   String  $userID  The user id
      *
      * @return void
      */
-    private function saveFullSizePictures($formData, $content, $userID)
+    private function saveFullSizePictures($userID)
     {
         $dbo = JFactory::getDbo();
 
-        // Upload given full size file(s)
+        // Get full size file(s)
         $filedata = JFactory::getApplication()->input->files->get('jform1');
 
         if ($filedata != null)
@@ -535,7 +559,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
             // Upload Images $key is attributeID
             foreach ($filedata['Picture'] as $key => $value)
             {
-                if ($value['name'] === '')
+                if ($value['size'] === 0)
                 {
                     continue;
                 }
@@ -544,36 +568,23 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                     // Get local path
                     $attrPath = $this->getLocalPath($key);
 
-                    $path = JPATH_ROOT . $attrPath . 'fullRes\\' . $value['name'];
+                    // Get image filename
+                    $newFileName = $userID . "_" . $key . "." . pathinfo($value['name'], PATHINFO_EXTENSION);
+                    $path = JPATH_ROOT . $attrPath . 'fullRes\\' . $newFileName;
+
+                    // Upload file to path on server
                     $success = jFile::upload($value['tmp_name'], $path, false);
 
-                    if (JFile::exists(JPATH_ROOT . $attrPath . 'cropped_' . $value['name']) && $success)
+                    // Check if upload from cropped and full size was ok
+                    if (JFile::exists(JPATH_ROOT . $attrPath . $newFileName) && $success)
                     {
                         try
                         {
                             $query = $dbo->getQuery(true);
-                            $query
-                                ->select('value')
-                                ->from('#__thm_groups_users_attribute')
-                                ->where(
-                                    $dbo->qn('usersID') . ' = ' . (int) $userID . ' AND '
-                                    . $dbo->qn('attributeID') . ' = ' . (int) $key . '');
-
-                            $dbo->setQuery($query);
-                            $oldFilename = $dbo->loadObject();
-
-                            if ($oldFilename->value != 'cropped_' . $value['name'])
-                            {
-                                // Delete old files
-                                $this->deleteOldPictures($content, $key);
-                            }
-
-                            // Update new picture filename
-                            $query = $dbo->getQuery(true);
 
                             // Update the database with new picture information
                             $query->update($dbo->qn('#__thm_groups_users_attribute'))
-                                ->set($dbo->qn('value') . ' = ' . $dbo->quote('cropped_' . $value['name']))
+                                ->set($dbo->qn('value') . ' = ' . $dbo->quote($newFileName))
                                 ->where(
                                     $dbo->qn('usersID') . ' = ' . (int) $userID . ' AND '
                                     . $dbo->qn('attributeID') . ' = ' . (int) $key . '');
@@ -583,6 +594,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                         }
                         catch (Exception $e)
                         {
+                            echo ":O";
                             echo $e->getMessage();
                         }
                     }
@@ -643,12 +655,6 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     private function getLocalPath($attrID)
     {
         $attrPath = json_decode($this->getPicturePath($attrID)->options)->path;
-
-        /*$position = strpos($attrPath->path, '/images/');
-        $path = substr($attrPath->path, $position);
-
-        // Convert / to \:
-        return $path = str_replace('/', '\\', $path);*/
 
         return $path = str_replace('/', '\\', $attrPath);
     }

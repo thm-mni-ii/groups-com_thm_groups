@@ -177,6 +177,13 @@ else
                                     echo $output;
                                     ?>
                                 <?php elseif ($item->type == 'PICTURE') :
+
+                                    // If name of file is empty, use default picture
+                                    if (empty($item->value))
+                                    {
+                                        $item->value = json_decode($item->options)->filename;
+                                    }
+
                                     $pData      = json_decode($item->options);
                                     $position   = strpos($pData->path, 'images/');
                                     $path       = substr($pData->path, $position);

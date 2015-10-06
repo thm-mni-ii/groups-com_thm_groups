@@ -111,10 +111,10 @@ function deletePic(name, attributeID, userID) {
     }).success(function (response) {
 
         //document.getElementById(name + "_IMG").innerHTML = response;
+
         if (response == 'true')
         {
             document.getElementById(name + "_IMG").innerHTML = '';
-            alert("jform_" + name + "_hidden");
             document.getElementById("jform_" + name + "_hidden").value = "";
         }
     });

@@ -47,13 +47,15 @@ class THM_GroupsControllerUser_Edit extends JControllerLegacy
 
     /**
      *  Method to get the link, where the redirect has to go
-     *@since  Method available since Release 2.0
      *
-     *@return   string  link.
+     * @since    Method available since Release 2.0
+     *
+     * @return   String  link
      */
     public function getLink()
     {
         $model = $this->getModel('user_edit');
+
         return $model->getLink();
     }
 
@@ -70,12 +72,15 @@ class THM_GroupsControllerUser_Edit extends JControllerLegacy
      */
     public function saveCropped()
     {
-        $app = JFactory::getApplication();
-        $model = $this->getModel('user_edit');
-        $file = $app->input->files->get('data');
-        $attrID = $app->input->get('attrID');
+        $app      = JFactory::getApplication();
+        $model    = $this->getModel('user_edit');
+        $file     = $app->input->files->get('data');
+        $attrID   = $app->input->get('attrID');
         $filename = $app->input->get('filename');
-        $success = $model->saveCropped($attrID, $file, $filename);
+        $userID   = $app->input->get('id');
+
+        $success = $model->saveCropped($attrID, $file, $filename, $userID);
+
         if ($success != false)
         {
             // Draw new image preview in user_edit.view
@@ -90,12 +95,13 @@ class THM_GroupsControllerUser_Edit extends JControllerLegacy
      */
     public function deletePicture()
     {
-        $app = JFactory::getApplication();
-        $model = $this->getModel('user_edit');
+        $app    = JFactory::getApplication();
+        $model  = $this->getModel('user_edit');
         $userID = $app->input->get('id');
         $attrID = $app->input->get('attrID');
 
         $success = $model->deletePicture($attrID, $userID);
+
         if ($success != false)
         {
             echo $success;

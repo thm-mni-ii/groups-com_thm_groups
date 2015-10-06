@@ -165,7 +165,7 @@ $session = JFactory::getSession();
                             $path       = substr($pData->path, $position);
                             ?>
                             <span id='<?php echo $name; ?>_IMG'>
-                                    <img  src='<?php echo JURI::root() . $path . '/' . $item->value; ?>' class='edit_img' alt='Kein Bild vorhanden'/>
+                                    <img  src='<?php echo JURI::root() . $path . $item->value; ?>' class='edit_img' alt='Kein Bild vorhanden'/>
                                 </span>
                             <input id='jform_<?php echo $name; ?>_hidden'
                                    name='jform[<?php echo $name; ?>]'
