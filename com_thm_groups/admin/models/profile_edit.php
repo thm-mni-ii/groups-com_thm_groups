@@ -87,7 +87,7 @@ class THM_GroupsModelProfile_Edit extends THM_CoreModelEdit
         {
             $query->select("A.id,A.name, A.description")
                 ->from("#__thm_groups_attribute as A ")
-                ->where(" a.id not in (select attributeID from #__thm_groups_profile_attribute as N where profileID =" . $profilID
+                ->where(" A.id not in (select attributeID from #__thm_groups_profile_attribute as N where profileID =" . $profilID
                     . " order by N.order)");
 
         }
