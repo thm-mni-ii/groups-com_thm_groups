@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension type="component" version="2.5" method="upgrade">
     <name>COM_THM_GROUPS</name>
-    <creationDate>September 2015</creationDate>
+    <creationDate>October 2015</creationDate>
     <author>THM iCampus</author>
     <authorUrl>http://www.thm.de</authorUrl>
     <copyright>TH Mittelhessen 2015</copyright>
     <license>GNU/GPL Version 2</license>
-    <version>3.5.15</version>
+    <version>3.5.16</version>
     <scriptfile>script.php</scriptfile>
     <install>
         <sql>
