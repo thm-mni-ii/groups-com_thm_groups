@@ -17,6 +17,7 @@ defined('_JEXEC') or die();
 
 // import Joomla view library
 jimport('thm_core.list.view');
+jimport('thm_groups.data.lib_thm_groups_user');
 JHtml::_('bootstrap.framework');
 JHtml::_('jquery.framework');
 
@@ -40,6 +41,8 @@ class THM_GroupsViewArticles extends THM_CoreViewList
     public $batch;
 
     public $groups;
+
+    public $url;
 
     /**
      * Method to get display
@@ -66,6 +69,10 @@ class THM_GroupsViewArticles extends THM_CoreViewList
 
         // Include Bootstrap
         JHtmlBootstrap::loadCSS();
+
+        $this->addBreadcrumbs();
+        $this->setURL();
+
         parent::display($tpl);
     }
 
@@ -94,5 +101,25 @@ class THM_GroupsViewArticles extends THM_CoreViewList
         $onClose = 'window.location.reload();';
         $bar->appendButton('Popup', $image, $title, $link, $width, $height, $top, $left, $onClose);
         return $bar->render();
+    }
+
+    protected function addBreadcrumbs()
+    {
+        $app = JFactory::getApplication();
+        $pathway = $app->getPathway();
+
+        $userID = JFactory::getUser()->id;
+        $name = THMLibThmGroupsUser::getUserValueByAttributeID($userID, 2);
+        $profileLink = JRoute::_('index.php?option=com_thm_groups&view=profile&layout=default&gsuid=' . $userID . '&name=' . $name);
+        $pathway->addItem(THMLibThmGroupsUser::getUserName($userID), $profileLink);
+        $pathway->addItem(JText::_('COM_THM_GROUPS_ARTICLES'));
+    }
+
+    protected function setURL()
+    {
+        $input = JFactory::getApplication()->input;
+        $view = $input->get('view', 'articles');
+        $url = JRoute::_("index.php?view=$view", false);
+        $this->url = $url;
     }
 }

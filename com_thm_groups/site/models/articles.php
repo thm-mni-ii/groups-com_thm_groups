@@ -14,6 +14,7 @@
 defined('_JEXEC') or die();
 jimport('thm_core.list.model');
 jimport('thm_groups.data.lib_thm_groups_quickpages');
+jimport('thm_groups.data.lib_thm_groups_user');
 require_once JPATH_COMPONENT . '/models/article.php';
 
 /**
@@ -191,8 +192,9 @@ class THM_GroupsModelArticles extends THM_CoreModelList
         if ($item->state > 0)
         {
             // $additionalURLParams = array('gsuid' => $item->created_by);
-
-            $singlearticleLink = JRoute::_('index.php?option=com_thm_groups&view=singlearticle&id='.$item->id.'&nameqp='.$item->alias.'&gsuid='.JFactory::getUser()->id.'&name='.JRequest::getVar('name', 0));
+            $userID = JFactory::getUser()->id;
+            $name = THMLibThmGroupsUser::getUserValueByAttributeID($userID, 2);
+            $singlearticleLink = JRoute::_('index.php?option=com_thm_groups&view=singlearticle&id=' . $item->id . '&nameqp=' . $item->alias . '&gsuid=' . $userID . '&name=' . $name, false);
             return  JHTML::_('link', $singlearticleLink, $item->title, 'class="qpl_list_link"');
         }
         else
@@ -571,5 +573,4 @@ class THM_GroupsModelArticles extends THM_CoreModelList
 
         return true;
     }
-
 }

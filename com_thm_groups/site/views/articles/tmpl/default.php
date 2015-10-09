@@ -83,13 +83,10 @@ class ArticlesTemplate extends THM_CoreTemplateList
         }
         $data = array('view' => $view, 'options' => array());
         $filters = $view->filterForm->getGroup('filter');
-        $input = JFactory::getApplication()->input;
-        $itemId = $input->get->get('Itemid', 0, 'INT');
-        $url = JRoute::_("index.php", false);
         ?>
 
         <div id="j-main-container" class="span10">
-            <form action="<?php echo $url?>" id="adminForm"  method="post"
+            <form action="<?php echo $view->url; ?>" id="adminForm"  method="post"
                   name="adminForm" xmlns="http://www.w3.org/1999/html">
                 <?php //echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $view)); ?>
                 <div class="searchArea">

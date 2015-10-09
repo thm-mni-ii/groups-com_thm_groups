@@ -17,6 +17,7 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
+jimport('thm_groups.data.lib_thm_groups_user');
 require_once JPATH_COMPONENT . '/../com_content/helpers/route.php';
 require_once JPATH_COMPONENT . '/../com_content/helpers/query.php';
 require_once JPATH_COMPONENT . '/../com_content/models/article.php';
@@ -86,12 +87,11 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 
         $pathway = $app->getPathway();
         $backURL = JRoute::_(
-            'index.php?option=' . $old_option . '&view=' . $old_view . '&layout=' . $old_layout
-            . '&gsgid=' . $old_gsgid . '&gsuid=' . $gsuid . '&name=' . $name
+            'index.php?option=com_thm_groups&view=profile&layout=default&gsuid=' . $gsuid . '&name=' . $name
         );
 
 
-        $pathway->addItem($this->getUsername($gsuid), $backURL);
+        $pathway->addItem(THMLibThmGroupsUser::getUserName($gsuid), $backURL);
 
         // Get id of an article
         $id = $input->get('id', '', 'STRING');
@@ -497,32 +497,5 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
         {
             $this->document->setMetaData('robots', 'noindex, nofollow');
         }
-    }
-
-    /**
-     * Method to get username
-     *
-     * @param   Integer  $uid  Id of the user
-     *
-     * @return  string  $name  Name of the user
-     */
-    protected function getUsername($uid)
-    {
-        $db = JFactory::getDBO();
-        $query = $db->getQuery(true);
-
-        $query
-            ->select('a.value AS name, b.value AS surname')
-            ->from('#__thm_groups_users_attribute AS a')
-            ->innerJoin('#__thm_groups_users_attribute AS b ON b.usersID = a.usersID')
-            ->where('a.usersID = ' . $uid)
-            ->where('a.attributeID = 1')
-            ->where('b.attributeID = 2');
-        $db->setQuery($query);
-        $result = $db->loadObject();
-
-        $name = $result->surname . ', ' . $result->name;
-
-        return $name;
     }
 }

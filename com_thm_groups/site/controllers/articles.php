@@ -67,6 +67,7 @@ class THM_GroupsControllerArticles extends JControllerLegacy
             $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
             $type = 'error';
         }
+
         $this->setRedirect(JRoute::_('index.php?option=com_thm_groups&view=articles', false), $msg, $type);
     }
 

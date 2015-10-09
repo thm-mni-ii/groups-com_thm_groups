@@ -375,12 +375,8 @@ if (!empty($this->item->pagination) AND $this->item->pagination AND $this->item-
 <?php
 if (JComponentHelper::getParams('com_thm_groups')->get('backButtonForQuickpages') == 1)
 {
-    echo '<div><a href="' . $backLink . '">
-            <input type="button"
-                   value="' . JText::_("COM_THM_GROUPS_BACK_BUTTON") . '"
-                   style="margin-top:10px"/>
-                    </a>
-                    </div>';
+
+    echo '<input type="button" style="margin-top:10px" value="' . JText::_("COM_THM_GROUPS_BACK_BUTTON")  . '" onclick="window.history.back()">';
 }
 ?>
 
