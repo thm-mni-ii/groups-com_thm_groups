@@ -88,7 +88,14 @@ class THM_GroupsModelProfile_Manager extends THM_CoreModelList
             $return[$index]['ordering']['value'] = "<span class='sortable-handler' style='cursor: move;'><i class='icon-menu'></i></span>";
             $return[$index]['checkbox'] = JHtml::_('grid.id', $index, $item->id);
             $return[$index]['id'] = $item->id;
-            $return[$index]['name'] = !empty($item->name) ? JHtml::_('link', $url, $item->name) : '';
+            if (JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
+            {
+                $return[$index]['name'] = !empty($item->name) ? JHtml::_('link', $url, $item->name) : '';
+            }
+            else
+            {
+                $return[$index]['name'] = !empty($item->name) ? $item->name : '';
+            }
             $return[$index]['profiles'] = $this->getGroupsOfProfile($item->id);
             $return[$index]['order']["attributes"] = array("id" => "position_" . $item->id);
             $return[$index]['order']["value"] = !empty($item->order) ? $item->order : '';

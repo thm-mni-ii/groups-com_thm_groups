@@ -50,6 +50,11 @@ class THM_GroupsViewGroup_Manager extends THM_CoreViewList
      */
     public function display($tpl = null)
     {
+        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
+
         // Set batch template path
         $this->batch = array(
             'batch' => JPATH_COMPONENT_ADMINISTRATOR . '/views/group_manager/tmpl/default_batch.php',
@@ -85,7 +90,7 @@ class THM_GroupsViewGroup_Manager extends THM_CoreViewList
             false
         );
 
-        if ($user->authorise('core.delete', 'com_users') && $user->authorise('core.manage', 'com_users'))
+        if ($user->authorise('core.manage', 'com_thm_groups'))
         {
             $image = 'edit';
             $title = JText::_('COM_THM_GROUPS_EDIT_MODERATOR');
@@ -99,7 +104,7 @@ class THM_GroupsViewGroup_Manager extends THM_CoreViewList
             $bar->appendButton('Popup', $image, $title, $link, $width, $height, $top, $left, $onClose);
         }
 
-        if ($user->authorise('core.create', 'com_users') && $user->authorise('core.edit', 'com_users') && $user->authorise('core.edit.state', 'com_users'))
+        if ($user->authorise('core.manage', 'com_thm_groups') && $user->authorise('core.edit', 'com_users') && $user->authorise('core.edit.state', 'com_users'))
         {
             JHtml::_('bootstrap.modal', 'myModal');
             $title = JText::_('COM_THM_GROUPS_GROUP_MANAGER_BATCH');
@@ -110,7 +115,7 @@ class THM_GroupsViewGroup_Manager extends THM_CoreViewList
             $bar->appendButton('Custom', $dhtml, 'batch');
         }
 
-        if ($user->authorise('core.create', 'com_users') && $user->authorise('core.edit', 'com_users') && $user->authorise('core.edit.state', 'com_users'))
+        if ($user->authorise('core.manage', 'com_thm_groups') && $user->authorise('core.edit', 'com_users') && $user->authorise('core.edit.state', 'com_users'))
         {
             JHtml::_('bootstrap.modal', 'myModal');
             $title = JText::_('COM_THM_GROUPS_GROUP_MANAGER_ASSIGN_PROFILE');
@@ -121,7 +126,7 @@ class THM_GroupsViewGroup_Manager extends THM_CoreViewList
             $bar->appendButton('Custom', $dhtml, 'batch');
         }
 
-        if ($user->authorise('core.admin', 'com_users'))
+        if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))
         {
             JToolBarHelper::divider();
             JToolBarHelper::preferences('com_thm_groups');

@@ -38,6 +38,11 @@ class THM_GroupsViewQuickpage extends JViewLegacy
      */
     public function display($tpl = null)
     {
+        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
+
         $document   = JFactory::getDocument();
         $document->addStyleSheet("components/com_thm_groups/assets/css/membermanager.css");
         $user = JFactory::getUser();

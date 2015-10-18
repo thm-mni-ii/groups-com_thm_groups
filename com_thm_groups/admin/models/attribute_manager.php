@@ -139,7 +139,14 @@ class THM_GroupsModelAttribute_Manager extends THM_CoreModelList
 
             $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
             $return[$index][1] = $item->id;
-            $return[$index][2] = JHtml::_('link', $url, $item->name);
+            if (JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
+            {
+                $return[$index][2] = JHtml::_('link', $url, $item->name);
+            }
+            else
+            {
+                $return[$index][2] = $item->name;
+            }
             $return[$index][3] = $this->getToggle($item->id, $item->published, 'attribute', '', 'published');
             $return[$index][4] = $item->dynamic_type_name;
             $return[$index][5] = $item->description;

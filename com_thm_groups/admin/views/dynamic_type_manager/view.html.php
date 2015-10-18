@@ -45,6 +45,11 @@ class THM_GroupsViewDynamic_Type_Manager extends THM_CoreViewList
      */
     public function display($tpl = null)
     {
+        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
+
         parent::display($tpl);
     }
 
@@ -61,11 +66,22 @@ class THM_GroupsViewDynamic_Type_Manager extends THM_CoreViewList
             JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER'), 'dynamic_type_manager'
         );
 
-        JToolBarHelper::addNew('dynamic_type.add', 'COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER_ADD', false);
-        JToolBarHelper::editList('dynamic_type.edit', 'COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER_EDIT');
-        JToolBarHelper::deleteList('COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER_REALLY_DELETE', 'dynamic_type.delete', 'JTOOLBAR_DELETE');
+        if ($user->authorise('core.create', 'com_thm_groups'))
+        {
+            JToolBarHelper::addNew('dynamic_type.add', 'COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER_ADD', false);
+        }
 
-        if ($user->authorise('core.admin', 'com_users'))
+        if ($user->authorise('core.edit', 'com_thm_groups'))
+        {
+            JToolBarHelper::editList('dynamic_type.edit', 'COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER_EDIT');
+        }
+
+        if ($user->authorise('core.delete', 'com_thm_groups'))
+        {
+            JToolBarHelper::deleteList('COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER_REALLY_DELETE', 'dynamic_type.delete', 'JTOOLBAR_DELETE');
+        }
+
+        if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))
         {
             JToolBarHelper::divider();
             JToolBarHelper::preferences('com_thm_groups');

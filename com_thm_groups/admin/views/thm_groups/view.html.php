@@ -34,7 +34,7 @@ class THM_GroupsViewTHM_Groups extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        if (!JFactory::getUser()->authorise('core.administrator'))
+        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
         {
             return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
         }
@@ -64,7 +64,12 @@ class THM_GroupsViewTHM_Groups extends JViewLegacy
     private function addToolBar()
     {
         JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_HOME_TITLE'), 'logo');
-        JToolBarHelper::preferences('com_thm_groups');
+        $user = JFactory::getUser();
+        if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))
+        {
+            JToolBarHelper::divider();
+            JToolBarHelper::preferences('com_thm_groups');
+        }
     }
 
     /**

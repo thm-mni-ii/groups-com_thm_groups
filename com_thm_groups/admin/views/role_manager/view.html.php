@@ -44,6 +44,11 @@ class THM_GroupsViewRole_Manager extends THM_CoreViewList
      */
     public function display($tpl = null)
     {
+        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
+
         $this->batch = array('batch' => JPATH_COMPONENT_ADMINISTRATOR . '/views/role_manager/tmpl/default_batch.php');
 
         $document = JFactory::getDocument();
@@ -65,16 +70,28 @@ class THM_GroupsViewRole_Manager extends THM_CoreViewList
         $bar = JToolBar::getInstance('toolbar');
 
         JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_ROLE_MANAGER'), 'role_manager');
-        JToolBarHelper::addNew(
-            'role.add',
-            'COM_THM_GROUPS_ROLE_MANAGER_ADD',
-            false
-        );
-        JToolBarHelper::editList('role.editRole', 'COM_THM_GROUPS_ROLE_MANAGER_EDIT');
-        JToolBarHelper::deleteList('COM_THM_GROUPS_REALLY_DELETE', 'role.delete', 'JTOOLBAR_DELETE');
+
+        if ($user->authorise('core.create', 'com_thm_groups'))
+        {
+            JToolBarHelper::addNew(
+                'role.add',
+                'COM_THM_GROUPS_ROLE_MANAGER_ADD',
+                false
+            );
+        }
+
+        if ($user->authorise('core.edit', 'com_thm_groups'))
+        {
+            JToolBarHelper::editList('role.editRole', 'COM_THM_GROUPS_ROLE_MANAGER_EDIT');
+        }
+
+        if ($user->authorise('core.delete', 'com_thm_groups'))
+        {
+            JToolBarHelper::deleteList('COM_THM_GROUPS_REALLY_DELETE', 'role.delete', 'JTOOLBAR_DELETE');
+        }
 
         // Add a batch button
-        if ($user->authorise('core.create', 'com_users') && $user->authorise('core.edit', 'com_users') && $user->authorise('core.edit.state', 'com_users'))
+        if ($user->authorise('core.manage', 'com_thm_groups') && $user->authorise('core.edit', 'com_thm_groups'))
         {
             JHtml::_('bootstrap.modal', 'collapseModal');
             $title = JText::_('COM_THM_GROUPS_ROLE_MANAGER_BATCH');
@@ -86,7 +103,7 @@ class THM_GroupsViewRole_Manager extends THM_CoreViewList
             $bar->appendButton('Custom', $dhtml, 'batch');
         }
 
-        if ($user->authorise('core.admin', 'com_users'))
+        if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))
         {
             JToolBarHelper::divider();
             JToolBarHelper::preferences('com_thm_groups');

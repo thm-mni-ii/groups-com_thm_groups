@@ -38,6 +38,10 @@ class THM_GroupsViewProfile_Edit extends THM_CoreViewEdit
      */
     public function display($tpl = null)
     {
+        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
 
         $app = JFactory::getApplication()->input;
         $user = JFactory::getUser();

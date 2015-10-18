@@ -128,7 +128,14 @@ class THM_GroupsModelUser_Manager extends THM_CoreModelList
 
             $return[$index][0] = JHtml::_('grid.id', $index, $item->userID);
             $return[$index][1] = $item->userID;
-            $return[$index][2] = !empty($item->firstName) ? JHtml::_('link', $url, $item->firstName) : '';
+            if (JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
+            {
+                $return[$index][2] = !empty($item->firstName) ? JHtml::_('link', $url, $item->firstName) : '';
+            }
+            else
+            {
+                $return[$index][2] = !empty($item->firstName) ? $item->firstName : '';
+            }
             $return[$index][3] = !empty($item->surname) ? $item->surname : '';
             $return[$index][4] = !empty($item->email) ? $item->email : '';
             $return[$index][5] = $this->getToggle($item->userID, $item->published, 'user', '', 'published');

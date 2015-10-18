@@ -37,7 +37,6 @@ class THM_GroupsViewPlugin_Members_Select extends JViewLegacy
      */
     public function display($tpl = null)
     {
-
         $lang = JFactory::getLanguage();
         $lang->load('plg_thm_groups_editors_xtd_members', JPATH_PLUGINS . "/editors-xtd/plg_thm_groups_editors_xtd_members/", $lang->getTag(), true);
         JText::script('PLG_ALERT_USERS');

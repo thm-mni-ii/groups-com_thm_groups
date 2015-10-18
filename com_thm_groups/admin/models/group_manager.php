@@ -216,7 +216,14 @@ class THM_GroupsModelGroup_Manager extends THM_CoreModelList
 
                 $url = "index.php?option=com_thm_groups&view=role_edit&cid[]=$role->id";
 
-                $return[] = "<a href=$url>" . $role->name . "</a> " . $deleteBtn;
+                if (JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
+                {
+                    $return[] = "<a href=$url>" . $role->name . "</a> " . $deleteBtn;
+                }
+                else
+                {
+                    $return[] = $role->name;
+                }
             }
         }
 
@@ -255,7 +262,14 @@ class THM_GroupsModelGroup_Manager extends THM_CoreModelList
                 // Link to edit view of user
                 $url = "index.php?option=com_thm_groups&view=user_edit&cid[]=$moderator->id";
 
-                $return[] = "<a href=$url>" . $moderator->name . "</a> " . $deleteBtn;
+                if (JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
+                {
+                    $return[] = "<a href=$url>" . $moderator->name . "</a> " . $deleteBtn;
+                }
+                else
+                {
+                    $return[] = $moderator->name;
+                }
             }
         }
 
@@ -302,7 +316,14 @@ class THM_GroupsModelGroup_Manager extends THM_CoreModelList
 
             $url = "index.php?option=com_thm_groups&view=profile_edit&id=$profile->id";
 
-            $return = "<a href=$url>" . $profile->name . "</a> " . $deleteBtn;
+            if (JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
+            {
+                $return = "<a href=$url>" . $profile->name . "</a> " . $deleteBtn;
+            }
+            else
+            {
+                $return = $profile->name;
+            }
         }
 
         return $return;

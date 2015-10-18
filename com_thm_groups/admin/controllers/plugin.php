@@ -46,7 +46,7 @@ class THM_GroupsControllerPlugin extends JControllerLegacy
 	 */
 	public function edit() 
 	{
-		if (! JFactory::getUser()->authorise('core.admin')) 
+		if (! JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
 		{
 			return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 		} 

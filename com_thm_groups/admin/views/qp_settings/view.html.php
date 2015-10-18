@@ -35,6 +35,11 @@ class THM_GroupsViewQP_Settings extends JViewLegacy
      */
     public function display($tpl = null)
     {
+        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
+
         $this->form = $this->get('Form');
         $this->addToolBar();
 

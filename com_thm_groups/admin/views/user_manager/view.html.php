@@ -52,6 +52,10 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
      */
     public function display($tpl = null)
     {
+        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
 
         // Set batch template path
         $this->batch = array('batch' => JPATH_COMPONENT_ADMINISTRATOR . '/views/user_manager/tmpl/default_batch.php');
@@ -75,22 +79,15 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
     {
         $user = JFactory::getUser();
         JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_USER_MANAGER'), 'membermanager');
-        if (($user->authorise('core.edit', 'com_users') || $user->authorise('core.edit.own', 'com_users')) && $user->authorise('core.manage', 'com_users'))
+        if ($user->authorise('core.edit', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))
         {
             JToolBarHelper::editList('user.edit', 'COM_THM_GROUPS_USER_MANAGER_EDIT');
-        }
-        if ($user->authorise('core.edit.state', 'com_users') && $user->authorise('core.manage', 'com_users'))
-        {
             JToolBarHelper::publishList('user.publish', 'COM_THM_GROUPS_USER_MANAGER_PUBLISH');
             JToolBarHelper::unpublishList('user.unpublish', 'COM_THM_GROUPS_USER_MANAGER_DISABLE');
             JToolBarHelper::publishList('user.activateQPForUser', 'COM_THM_GROUPS_USER_MANAGER_QP_ACTIVATE');
             JToolBarHelper::unpublishList('user.deactivateQPForUser', 'COM_THM_GROUPS_USER_MANAGER_QP_DEACTIVATE');
             JToolBarHelper::divider();
-        }
 
-        // Add a batch button
-        if ($user->authorise('core.create', 'com_users') && $user->authorise('core.edit', 'com_users') && $user->authorise('core.edit.state', 'com_users'))
-        {
             $bar = JToolBar::getInstance('toolbar');
             JHtml::_('bootstrap.modal', 'myModal');
             $title = JText::_('COM_THM_GROUPS_GROUP_MANAGER_BATCH');
@@ -100,10 +97,7 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
             $dhtml = "<button data-toggle='modal' data-target='#collapseModal' class='btn btn-small'><i class='icon-edit' title='$title'></i> $title</button>";
 
             $bar->appendButton('Custom', $dhtml, 'batch');
-        }
 
-        if ($user->authorise('core.delete', 'com_users') && $user->authorise('core.manage', 'com_users'))
-        {
             $image = 'cog';
             $title = JText::_('COM_THM_GROUPS_QUICKPAGES_SETTINGS');
             $link = 'index.php?option=com_thm_groups&amp;view=qp_settings&amp;tmpl=component';
@@ -116,7 +110,7 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
             $bar->appendButton('Popup', $image, $title, $link, $width, $height, $top, $left, $onClose);
         }
 
-        if ($user->authorise('core.admin', 'com_users'))
+        if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))
         {
             JToolBarHelper::divider();
             JToolBarHelper::preferences('com_thm_groups');

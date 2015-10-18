@@ -45,6 +45,11 @@ class THM_GroupsViewStatic_Type_Manager extends THM_CoreViewList
      */
     public function display($tpl = null)
     {
+        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
+
         parent::display($tpl);
     }
 
@@ -61,7 +66,7 @@ class THM_GroupsViewStatic_Type_Manager extends THM_CoreViewList
             JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_STATIC_TYPE_MANAGER'), 'static_types_manager'
         );
 
-        if ($user->authorise('core.admin', 'com_users'))
+        if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))
         {
             JToolBarHelper::divider();
             JToolBarHelper::preferences('com_thm_groups');

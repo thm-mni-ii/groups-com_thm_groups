@@ -33,7 +33,7 @@ class THM_GroupsViewDynamic_Type_Edit extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        if (!JFactory::getUser()->authorise('core.admin'))
+        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
         {
             return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
         }
