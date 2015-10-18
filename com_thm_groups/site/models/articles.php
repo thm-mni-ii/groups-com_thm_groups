@@ -36,6 +36,10 @@ class THM_GroupsModelArticles extends THM_CoreModelList
 
     protected $defaultFilters = array();
 
+    protected $_pagination = null;
+
+    protected $_total = null;
+
     /**
      * Constructor
      *
@@ -53,9 +57,14 @@ class THM_GroupsModelArticles extends THM_CoreModelList
         // Get user quickpages root category and show on start
         $this->defaultFilters = array('catid' => THMLibThmQuickpages::getCategoryByProfileData(array('Id' => JFactory::getUser()->id)));
 
-        //var_dump($this->defaultFilters);
-
         parent::__construct($config);
+
+        $app    = JFactory::getApplication();
+        $config = JFactory::getConfig();
+
+        // Get the pagination request variables
+        $this->setState('limit', $app->getUserStateFromRequest('com_thm_groups.limit', 'limit', $config->get('list_limit'), 'uint'));
+        $this->setState('limitstart', $app->input->get('limitstart', 0, 'uint'));
     }
 
     /**
@@ -116,178 +125,19 @@ class THM_GroupsModelArticles extends THM_CoreModelList
     {
         $items = parent::getItems();
 
+        $this->_total	= count($items);
+
         if (empty($items))
         {
             return false;
         }
 
-        $index = 0;
-        $return['attributes'] = array('class' => 'ui-sortable');
-        foreach ($items as $key => $item)
-        {
-            $canChange = $this->hasUserRightTo('EditState', $item);
-            $archived = $this->state->get('filter.published') == 2 ? true : false;
-            $trashed = $this->state->get('filter.published') == -2 ? true : false;
-
-            $listOrder = $this->state->get('list.ordering');
-            $saveOrder = $listOrder == 'a.ordering';
-            $iconClass = '';
-
-            if (!$canChange)
-            {
-                $iconClass = ' inactive';
-            }
-            elseif (!$saveOrder)
-            {
-                $iconClass = ' inactive tip-top hasTooltip';
-            }
-
-            $action = $archived ? 'unarchive' : 'archive';
-            JHtml::_('actionsdropdown.' . $action, 'cb' . $key, 'articles');
-            $action = $trashed ? 'untrash' : 'trash';
-            JHtml::_('actionsdropdown.' . $action, 'cb' . $key, 'articles');
-
-            $url = JRoute::_('index.php?option=com_content&task=article.edit&a_id=' . $item->id);
-            $return[$index] = array();
-
-            $order = '';
-            if ($canChange && $saveOrder)
-            {
-                $order = '<input type="text" style="display:none" name="order[]" size="5" value="'
-                    . $item->ordering . '" class="width-20 text-area-order " />';
-            }
-
-            $publishedBtn = JHtml::_('jgrid.published', $item->state, $key, 'articles.', $canChange, 'cb', $item->publish_up, $item->publish_down);
-            $dropdownBtn = JHtml::_('actionsdropdown.render', $item->title);
-
-            $return[$index]['attributes'] = array( 'class' => 'order nowrap center', 'id' => $item->id);
-            $return[$index]['ordering']['attributes'] = array( 'class' => "order nowrap center", 'style' => "width: 40px;");
-            $return[$index]['ordering']['value']
-                = "<span class='sortable-handler$iconClass'><i class='icon-menu'></i></span>" . $order;
-            $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
-            $return[$index][1] = $this->renderTitle($item);
-            $return[$index][2] = "<div class='btn-group'>$publishedBtn . $dropdownBtn</div>";
-            $return[$index][4] = JHTML::_('date', $item->created, JText::_('DATE_FORMAT_LC4'));
-            $return[$index][5] = (int) $item->hits;
-            $return[$index][6] = $this->renderCheckInAndEditIcons($key, $item);
-            $return[$index][7] = $this->renderTrashIcon($key, $item);
-            $return[$index][9] = $this->getToggle($item->id, $item->qp_featured, 'articles', '', 'featured');
-            $return[$index][8] = $this->getToggle($item->id, $item->qp_published, 'articles', '', 'published');
-            $return[$index][10] = $item->category_title;
-
-            $index++;
-        }
-        return $return;
+        return $items;
     }
 
-    /**
-     * Returns a title of an article
-     *
-     * @param   object  &$item  An object item
-     *
-     * @return  string
-     */
-    public function renderTitle(&$item)
+    public function getTotal()
     {
-        if ($item->state > 0)
-        {
-            // $additionalURLParams = array('gsuid' => $item->created_by);
-            $userID = JFactory::getUser()->id;
-            $name = THMLibThmGroupsUser::getUserValueByAttributeID($userID, 2);
-            $singlearticleLink = JRoute::_('index.php?option=com_thm_groups&view=singlearticle&id=' . $item->id . '&nameqp=' . $item->alias . '&gsuid=' . $userID . '&name=' . $name, false);
-            return  JHTML::_('link', $singlearticleLink, $item->title, 'class="qpl_list_link"');
-        }
-        else
-        {
-            return $item->title;
-        }
-    }
-
-    /**
-     * Renders checkin and edit icons
-     *
-     * @param   int     $key    An index of an item
-     *
-     * @param   object  &$item  An object item
-     *
-     * @return  mixed|string
-     */
-    public function renderCheckInAndEditIcons($key, &$item)
-    {
-        $canEdit = $this->hasUserRightTo('Edit', $item);
-        $canCheckin = $this->hasUserRightTo('Checkin', $item);
-        $return = '';
-
-        // Output checkin icon
-        if ($item->checked_out)
-        {
-            return JHtml::_('jgrid.checkedout', $key, $item->editor, $item->checked_out_time, 'articles.', $canCheckin);
-        }
-
-        // Output edit icon
-        if ($canEdit)
-        {
-            $itemId = JFactory::getApplication()->input->getInt('Itemid', 0);
-            $returnURL = base64_encode("index.php?option=com_thm_groups&view=articles&Itemid=$itemId");
-            $editURL = 'index.php/' . $item->alias . '?task=article.edit&a_id=' . $item->id . '&return=' . $returnURL;
-            $imgSpanTag = '<span class="state edit" style=""><span class="text">Edit</span></span>';
-
-            $return .= JHTML::_('link', $editURL, $imgSpanTag, 'title="'
-                . JText::_('COM_THM_QUICKPAGES_HTML_EDIT_ITEM')
-                . '" class="jgrid"'
-            );
-            $return .= "\n";
-        }
-        else
-        {
-            $return = '<span class="jgrid"><span class="state edit_disabled"><span class="text">Edit</span></span></span>';
-        }
-
-        return $return;
-    }
-
-    /**
-     * Returns an output icon
-     *
-     * @param   int     $key    An index of an item
-     *
-     * @param   object  &$item  An item object
-     *
-     * @return mixed
-     */
-    public function renderTrashIcon($key, &$item)
-    {
-        $canDelete	= $this->hasUserRightTo('Delete', $item);
-        if ($item->state >= 0)
-        {
-            // Define state changes needed by JHtmlJGrid.state(), see also JHtmlJGrid.published()
-            $states	= array(
-                0	=> array(),		// Dummy: Wird nicht gebraucht, erzeugt aber sonst Notice
-                3	=> array(
-                    'trash',
-                    'JPUBLISHED',
-                    'COM_THM_QUICKPAGES_HTML_TRASH_ITEM',
-                    'JPUBLISHED',
-                    false,
-                    'trash',
-                    'trash_disabled'
-                ),
-                -3	=> array(
-                    'publish',
-                    'JTRASHED',
-                    'COM_THM_QUICKPAGES_HTML_UNTRASH_ITEM',
-                    'JTRASHED',
-                    false,
-                    'untrash',
-                    'untrash'
-                ),
-            );
-            $button = JHtml::_('jgrid.state', $states, ($item->state < 0 ? -3 : 3), $key, 'articles.', $canDelete);
-            $button = str_replace(
-                "onclick=\"", "onclick=\"if (confirm('" . JText::_('COM_THM_GROUPS_REALLY_DELETE') . "')) ", $button
-            );
-            return $button;
-        }
+        return $this->_total;
     }
 
     /**
@@ -364,13 +214,10 @@ class THM_GroupsModelArticles extends THM_CoreModelList
         $headers['checkbox'] = '';
         $headers['title'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_TITLE'), 'a.title', $direction, $ordering);
         $headers['stateid'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_PUBLISHED'), 'a.state', $direction, $ordering);
-        $headers['data'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_DATA'), 'a.created', $direction, $ordering);
-        $headers['hits'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_HITS'), 'a.hits', $direction, $ordering);
         $headers['edit'] = JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_EDIT');
         $headers['delete'] = JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_DELETE');
-        $headers['featured'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_SHOW_LIST'), 'd.featured', $direction, $ordering);
-        $headers['published'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_SHOW_CONTENT'), 'd.published', $direction, $ordering);
-        $headers['catid'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_CATEGORY'), 'a.catid', $direction, $ordering);
+        $headers['featured'] = JHtml::_('searchtools.sort', JText::_('LIST'), 'd.featured', $direction, $ordering);
+        $headers['published'] = JHtml::_('searchtools.sort', JText::_('CONTENT'), 'd.published', $direction, $ordering);
 
         return $headers;
     }
@@ -384,7 +231,7 @@ class THM_GroupsModelArticles extends THM_CoreModelList
      *
      * @return	boolean	True if permission granted.
      */
-    protected function hasUserRightTo($rightName, $articleItem)
+    public function hasUserRightTo($rightName, $articleItem)
     {
         $methodName = 'can' . $rightName;
 
@@ -573,4 +420,20 @@ class THM_GroupsModelArticles extends THM_CoreModelList
 
         return true;
     }
+
+    public function getToggle($id, $value, $controller, $tip, $attribute = null)
+    {
+        return parent::getToggle($id, $value, $controller, $tip, $attribute);
+    }
+
+    /*public function getPagination()
+    {
+        // Lets load the content if it doesn't already exist
+        if (empty($this->_pagination))
+        {
+            $this->_pagination = new JPagination($this->getTotal(), $this->getState('limitstart'), $this->getState('limit'));
+        }
+
+        return $this->_pagination;
+    }*/
 }

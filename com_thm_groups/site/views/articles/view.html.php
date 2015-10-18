@@ -57,15 +57,13 @@ class THM_GroupsViewArticles extends THM_CoreViewList
         $this->batch = JPATH_COMPONENT_ADMINISTRATOR . '/views/user_manager/tmpl/default_batch.php';
 
         $model = $this->getModel();
+
         $this->newButton = $model->getCreateNewArticleButton();
         // Load stylesheet
         $document = JFactory::getDocument();
-        $document->addStyleSheet(JURI::base(true) . '/components/com_thm_groups/css/quickpage.css');
         $document->addStyleSheet(JURI::base(true) . '/components/com_thm_groups/css/articles.css');
-
-        //todo: comment in library path when lib is pushed to Gerrit.
         $document->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/respArticles.css');
-        //$document->addStyleSheet(JURI::base(true) . '/components/com_thm_groups/css/respArticles.css');
+        $document->addStyleSheet(JURI::base(true) . '/components/com_thm_groups/css/quickpage.css');
 
         // Include Bootstrap
         JHtmlBootstrap::loadCSS();

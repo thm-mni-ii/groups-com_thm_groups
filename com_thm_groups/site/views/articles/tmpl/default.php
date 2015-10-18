@@ -112,7 +112,7 @@ class ArticlesTemplate extends THM_CoreTemplateList
                         self::renderHeader($view->headers);
                         //self::renderHeaderFilters($view->headers, $filters);
                         echo '</thead>';
-                        self::renderBody($view->items);
+                        self::renderBody($view);
                         self::renderFooter($view);
                         ?>
                     </table>
@@ -121,11 +121,34 @@ class ArticlesTemplate extends THM_CoreTemplateList
                 <input type="hidden" name="boxchecked" value="0" />
                 <input type="hidden" name="option" value="<?php echo JFactory::getApplication()->input->get('option'); ?>" />
                 <input type="hidden" name="view" value="<?php echo $view->get('name'); ?>" />
+
                 <?php echo JHtml::_('form.token');?>
             </form>
         </div>
     <?php
     }
+
+
+    /*protected static function renderFooter($view)
+    {
+        echo '<div class="form-limit">';
+		echo '<label for="limit">';
+		echo JText::_('JGLOBAL_DISPLAY_NUM');
+		echo '</label>';
+		echo $view->pagination->getLimitBox();
+	    echo '</div>';
+
+        echo '<p class="counter">';
+		echo $view->pagination->getPagesCounter();
+	    echo '</p>';
+
+        echo '<div class="pagination">';
+    	echo '<p class="counter pull-right">';
+		echo $view->pagination->getPagesCounter();
+		echo '</p>';
+		echo $view->pagination->getPagesLinks();
+	    echo '</div>';
+    }*/
 
     /**
      * Renders the search input group if set in the filter xml
@@ -195,7 +218,6 @@ class ArticlesTemplate extends THM_CoreTemplateList
         <?php
     }
 
-
     /**
      * Renders the table head
      *
@@ -248,16 +270,74 @@ class ArticlesTemplate extends THM_CoreTemplateList
      *
      * @return  void
      */
-    protected static function renderBody(&$items)
+    protected static function renderBody(&$view)
     {
-        if (empty($items))
+
+        $items = $view->items;
+        $model = $view->getModel();
+        $index = 0;
+        $return['attributes'] = array('class' => 'ui-sortable');
+        foreach ($items as $key => $item)
+        {
+            $canChange = $model->hasUserRightTo('EditState', $item);
+            $archived = $view->state->get('filter.published') == 2 ? true : false;
+            $trashed = $view->state->get('filter.published') == -2 ? true : false;
+
+            $listOrder = $view->state->get('list.ordering');
+            $saveOrder = $listOrder == 'a.ordering';
+            $iconClass = '';
+
+            if (!$canChange)
+            {
+                $iconClass = ' inactive';
+            }
+            elseif (!$saveOrder)
+            {
+                $iconClass = ' inactive tip-top hasTooltip';
+            }
+
+            $action = $archived ? 'unarchive' : 'archive';
+            JHtml::_('actionsdropdown.' . $action, 'cb' . $key, 'articles');
+            $action = $trashed ? 'untrash' : 'trash';
+            JHtml::_('actionsdropdown.' . $action, 'cb' . $key, 'articles');
+
+            $url = JRoute::_('index.php?option=com_content&task=article.edit&a_id=' . $item->id);
+            $return[$index] = array();
+
+            $order = '';
+            if ($canChange && $saveOrder)
+            {
+                $order = '<input type="text" style="display:none" name="order[]" size="5" value="'
+                    . $item->ordering . '" class="width-20 text-area-order " />';
+            }
+
+            $publishedBtn = JHtml::_('jgrid.published', $item->state, $key, 'articles.', $canChange, 'cb', $item->publish_up, $item->publish_down);
+            $dropdownBtn = JHtml::_('actionsdropdown.render', $item->title);
+
+            $return[$index]['attributes'] = array( 'class' => 'order nowrap center', 'id' => $item->id);
+            $return[$index]['ordering']['attributes'] = array( 'class' => "order nowrap center", 'style' => "width: 40px;");
+            $return[$index]['ordering']['value']
+                = "<span class='sortable-handler$iconClass'><i class='icon-menu'></i></span>" . $order;
+            $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
+            $return[$index][1] = self::renderTitle($item);
+            $return[$index][2] = "<div class='btn-group'>$publishedBtn . $dropdownBtn</div>";
+            $return[$index][4] = self::renderCheckInAndEditIcons($key, $item, $model);
+            $return[$index][5] = self::renderTrashIcon($key, $item, $model);
+            $return[$index][6] = $model->getToggle($item->id, $item->qp_published, 'articles', '', 'published');
+            $return[$index][7] = $model->getToggle($item->id, $item->qp_featured, 'articles', '', 'featured');
+            //$return[$index][6] = self::renderModuleActions('List' . $model->getToggle($item->id, $item->qp_published, 'articles', '', 'published'), 'Content' . $model->getToggle($item->id, $item->qp_featured, 'articles', '', 'featured'));
+
+            $index++;
+        }
+
+        if (empty($return))
         {
            return false;
         }
-        if (!empty($items['attributes']) AND is_array($items['attributes']))
+        if (!empty($return['attributes']) AND is_array($return['attributes']))
         {
             $bodyAttributes = '';
-            foreach ($items['attributes'] AS $bodyAttribute => $bodyAttributeValue)
+            foreach ($return['attributes'] AS $bodyAttribute => $bodyAttributeValue)
             {
                 $bodyAttributes .= $bodyAttribute . '="' . $bodyAttributeValue . '" ';
             }
@@ -269,7 +349,7 @@ class ArticlesTemplate extends THM_CoreTemplateList
         }
 
         $iteration = 0;
-        foreach ($items as $index => $row)
+        foreach ($return as $index => $row)
         {
             if ($index === 'attributes')
             {
@@ -278,6 +358,132 @@ class ArticlesTemplate extends THM_CoreTemplateList
             self::renderRow($row, $iteration);
         }
         echo '</thead>';
+    }
+
+    protected static function renderModuleActions($m1, $m2)
+    {
+        return
+            "<div class='btn-group'>
+            <a class='btn btn-primary' title=''>" . JText::_('TEST') . "</a>
+            <button data-toggle='dropdown' class='dropdown-toggle btn'>
+                <span class='caret'></span>
+            </button>
+            <ul class='dropdown-menu'>
+                <li>$m1</li>
+                <li>$m2></li>
+            </ul>
+            </div>";
+    }
+
+    /**
+     * Returns a title of an article
+     *
+     * @param   object  &$item  An object item
+     *
+     * @return  string
+     */
+    protected static function renderTitle(&$item)
+    {
+        $category = "<div class='small'>" . JText::_('JCATEGORY') . ": " . $item->category_title . "</div>";
+        if ($item->state > 0)
+        {
+            // $additionalURLParams = array('gsuid' => $item->created_by);
+            $userID = JFactory::getUser()->id;
+            $name = THMLibThmGroupsUser::getUserValueByAttributeID($userID, 2);
+            $singlearticleLink = JRoute::_('index.php?option=com_thm_groups&view=singlearticle&id=' . $item->id . '&nameqp=' . $item->alias . '&gsuid=' . $userID . '&name=' . $name, false);
+            return  JHTML::_('link', $singlearticleLink, $item->title, 'class="qpl_list_link"') . $category;
+        }
+        else
+        {
+            return $item->title . $category;
+        }
+    }
+
+    /**
+     * Renders checkin and edit icons
+     *
+     * @param   int     $key    An index of an item
+     *
+     * @param   object  &$item  An object item
+     *
+     * @return  mixed|string
+     */
+    protected static function renderCheckInAndEditIcons($key, &$item, $model)
+    {
+        $canEdit = $model->hasUserRightTo('Edit', $item);
+        $canCheckin = $model->hasUserRightTo('Checkin', $item);
+        $return = '';
+
+        // Output checkin icon
+        if ($item->checked_out)
+        {
+            return JHtml::_('jgrid.checkedout', $key, $item->editor, $item->checked_out_time, 'articles.', $canCheckin);
+        }
+
+        // Output edit icon
+        if ($canEdit)
+        {
+            $itemId = JFactory::getApplication()->input->getInt('Itemid', 0);
+            $returnURL = base64_encode("index.php?option=com_thm_groups&view=articles&Itemid=$itemId");
+            $editURL = 'index.php/' . $item->alias . '?task=article.edit&a_id=' . $item->id . '&return=' . $returnURL;
+            $imgSpanTag = '<span class="state edit" style=""><span class="text">Edit</span></span>';
+
+            $return .= JHTML::_('link', $editURL, $imgSpanTag, 'title="'
+                . JText::_('COM_THM_QUICKPAGES_HTML_EDIT_ITEM')
+                . '" class="jgrid"'
+            );
+            $return .= "\n";
+        }
+        else
+        {
+            $return = '<span class="jgrid"><span class="state edit_disabled"><span class="text">Edit</span></span></span>';
+        }
+
+        return $return;
+    }
+
+    /**
+     * Returns an output icon
+     *
+     * @param   int     $key    An index of an item
+     *
+     * @param   object  &$item  An item object
+     *
+     * @return mixed
+     */
+    protected static function renderTrashIcon($key, &$item, $model)
+    {
+        $canDelete	= $model->hasUserRightTo('Delete', $item);
+        if ($item->state >= 0)
+        {
+            // Define state changes needed by JHtmlJGrid.state(), see also JHtmlJGrid.published()
+            $states	= array(
+                0	=> array(),		// Dummy: Wird nicht gebraucht, erzeugt aber sonst Notice
+                3	=> array(
+                    'trash',
+                    'JPUBLISHED',
+                    'COM_THM_QUICKPAGES_HTML_TRASH_ITEM',
+                    'JPUBLISHED',
+                    false,
+                    'trash',
+                    'trash_disabled'
+                ),
+                -3	=> array(
+                    'publish',
+                    'JTRASHED',
+                    'COM_THM_QUICKPAGES_HTML_UNTRASH_ITEM',
+                    'JTRASHED',
+                    false,
+                    'untrash',
+                    'untrash'
+                ),
+            );
+            $button = JHtml::_('jgrid.state', $states, ($item->state < 0 ? -3 : 3), $key, 'articles.', $canDelete);
+            $button = str_replace(
+                "onclick=\"", "onclick=\"if (confirm('" . JText::_('COM_THM_GROUPS_REALLY_DELETE') . "')) ", $button
+            );
+            return $button;
+        }
     }
 }
 
