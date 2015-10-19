@@ -16,6 +16,11 @@ class JFormFieldAttributeField extends JFormField {
         // code that returns HTML that will be shown as the label
     }*/
 
+    public function __set($name, $value)
+    {
+        $this->options = $value;
+    }
+
     public function getInput() {
 
         // code that returns HTML that will be shown as the form field
