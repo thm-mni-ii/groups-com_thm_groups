@@ -210,14 +210,14 @@ class THM_GroupsModelArticles extends THM_CoreModelList
         $direction = $this->state->get('list.direction');
 
         $headers = array();
-        $headers['ordering'] =  JHtml::_('searchtools.sort', '', 'a.ordering', $direction, $ordering , null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2');
+        $headers['ordering'] =  JHtml::_('searchtools.sort', '', 'a.ordering', $direction, $ordering , null, 'asc', '', 'icon-menu-2');
         $headers['checkbox'] = '';
         $headers['title'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_TITLE'), 'a.title', $direction, $ordering);
         $headers['stateid'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_PUBLISHED'), 'a.state', $direction, $ordering);
         $headers['edit'] = JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_EDIT');
         $headers['delete'] = JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_DELETE');
-        $headers['featured'] = JHtml::_('searchtools.sort', JText::_('LIST'), 'd.featured', $direction, $ordering);
-        $headers['published'] = JHtml::_('searchtools.sort', JText::_('CONTENT'), 'd.published', $direction, $ordering);
+        $headers['featured'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_LIST'), 'd.featured', $direction, $ordering);
+        $headers['published'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_CONTENT'), 'd.published', $direction, $ordering);
 
         return $headers;
     }

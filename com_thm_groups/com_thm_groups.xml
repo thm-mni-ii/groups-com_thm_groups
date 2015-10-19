@@ -27,7 +27,6 @@
     <media folder="media" destination="com_thm_groups">
         <filename>index.html</filename>
         <folder>helpers</folder>
-        <folder>css</folder>
     </media>
 
     <files folder="site">
