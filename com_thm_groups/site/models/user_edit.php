@@ -124,9 +124,9 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
             ->innerJoin('#__thm_groups_dynamic_type AS dyn ON st.dynamic_typeID = dyn.id')
             ->innerJoin('#__thm_groups_static_type AS static ON dyn.static_typeID = static.id')
             ->where('ust.usersID IN (' . $userId . ') ')
-            ->where('st.published = 1')
-            //->order('ust.attributeID');
-            ->order('st.ordering');
+            //->where('st.published = 1')
+            ->order('ust.attributeID');
+            //->order('st.ordering');
         $dbo->setQuery($query);
 
         return $dbo->loadObjectList();
@@ -181,7 +181,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         $userID = $formData['gsuid'];
 
         // Gets all user data
-        $content = $this->getContent();
+        //$content = $this->getContent();
 
         /*
          * Change '_' in array into ' ', important because div id's
@@ -190,7 +190,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
          */
         $this->fixArrayKey($formData);
 
-        $this->saveValues($formData, $content, $userID);
+        $this->saveValues($formData, $userID);
 
         $this->saveFullSizePictures($userID);
 
@@ -286,11 +286,11 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
             $result = $dbo->execute();
 
             // TODO return default pic?
-            return "true";
+            return $attributeDefault;
         }
         catch (Exception $e)
         {
-            return $e;
+            return 'false';
         }
     }
 

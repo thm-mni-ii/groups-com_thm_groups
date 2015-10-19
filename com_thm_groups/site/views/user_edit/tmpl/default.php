@@ -327,17 +327,17 @@ else
                                 </div>
                                 <div>
                                     <input type='checkbox' name='jform[<?php echo $name; ?>][published]'
+                                           id='jform_<?php echo $name; ?>_published'
                                            <?php
                                                if ($item->type == 'MULTISELECT')
                                                {
-                                                   echo "style='margin-left: 104px;'";
+                                                   echo " style='margin-left: 104px;'";
                                                }
                                                else
                                                {
-                                                   echo "style='margin-left: 100px;'";
+                                                   echo " style='margin-left: 100px;'";
                                                }
                                            ?>
-                                            id='jform_<?php echo $name; ?>_published'
                                     <?php
                                     if ($name == 'Username')
                                     {

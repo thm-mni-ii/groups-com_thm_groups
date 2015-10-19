@@ -121,6 +121,11 @@ class THM_GroupsViewTHM_Groups extends JViewLegacy
         $views['plugin_manager']['tooltip'] = JText::_('COM_THM_GROUPS_PLUGIN_MANAGER') . '::' . JText::_('COM_THM_GROUPS_PLUGIN_MANAGER_DESC');
         $views['plugin_manager']['url'] = "index.php?option=com_thm_groups&view=plugin_manager";
 
+        $views['regex_manager'] = array();
+        $views['regex_manager']['title'] = JText::_('COM_THM_GROUPS_REGEX_MANAGER');
+        $views['regex_manager']['tooltip'] = JText::_('COM_THM_GROUPS_REGEX_MANAGER') . '::' . JText::_('COM_THM_GROUPS_REGEX_MANAGER_DESC');
+        $views['regex_manager']['url'] = "index.php?option=com_thm_groups&view=regex_manager";
+
         $this->views = $views;
     }
 }

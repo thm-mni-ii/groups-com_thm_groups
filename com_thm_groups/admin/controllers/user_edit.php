@@ -82,7 +82,9 @@ class THM_GroupsControllerUser_Edit extends JControllerLegacy
 
         $success = $model->deletePicture($attrID, $uid);
 
-        if ($success != false)
+        //echo $success;
+
+        if ($success != 'false')
         {
             echo $success;
             $app->close();

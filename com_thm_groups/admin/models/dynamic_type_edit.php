@@ -161,6 +161,7 @@ class THM_GroupsModelDynamic_Type_Edit extends JModelAdmin
         if ($name == 'TEXT')
         {
             // The '\\\' -parts before an '\' are inserted because of string to regexobject conversion in javascript
+            // Backslashes are used to escape signs that otherwise have a special meaning in regex, like +
             array_push(
                 $regexOptions,
                 JHtml::_('select.option', '', 'Other'),
@@ -174,11 +175,6 @@ class THM_GroupsModelDynamic_Type_Edit extends JModelAdmin
                 JHtml::_('select.option', '^(\\\\w+\\\\.?)+$', 'Title')
             );
 
-            /*array_push($regexOptions,
-                array('text'=>'Other', 'value' =>''),
-                array('text'=>'Only numbers', 'value' => '^[0-9]*$'));
-
-            $test = JHtml::_('select.options', $regexOptions, 'value', 'text', 1);*/
             return $regexOptions;
         }
         elseif ($name == 'LINK')
