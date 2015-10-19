@@ -38,11 +38,11 @@ class THM_GroupsViewPlugin_Members_Select extends JViewLegacy
     public function display($tpl = null)
     {
         $lang = JFactory::getLanguage();
-        $lang->load('plg_thm_groups_editors_xtd_members', JPATH_PLUGINS . "/editors-xtd/plg_thm_groups_editors_xtd_members/", $lang->getTag(), true);
-        JText::script('PLG_ALERT_USERS');
-        JText::script('PLG_ALERT_SUFFIX');
-        JText::script('PLG_ALERT_GROUPS');
-        JText::script('PLG_ALERT_PID');
+        $lang->load('plg_editors-xtd_plg_thm_groups_editors_xtd_members', JPATH_PLUGINS . "/editors-xtd/plg_thm_groups_editors_xtd_members/", $lang->getTag(), true);
+        JText::script('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_ALERT_USERS');
+        JText::script('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_ALERT_SUFFIX');
+        JText::script('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_ALERT_GROUPS');
+        JText::script('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_ALERT_PID');
 
         $ename = 'jform_articletext';
         $script = "
@@ -57,36 +57,36 @@ class THM_GroupsViewPlugin_Members_Select extends JViewLegacy
                 var suffixGroups=$('#suffixGroups').val();
                 var gid=$('#gid').val();
                 var pid=$('#pid').val();
-                var ename = '". $ename . "';
+                var ename = '" . $ename . "';
 
                     if(hasClass(document.getElementById('slider_1'),'tab-pane active')==1){
                      if(temp==null ){
-                         window.alert(Joomla.JText._('PLG_ALERT_USERS'));
+                         window.alert(Joomla.JText._('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_ALERT_USERS'));
                      }else if(pid==null){
-                        window.alert(Joomla.JText._('PLG_ALERT_PID'));
+                        window.alert(Joomla.JText._('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_ALERT_PID'));
                     }else{
 
                     if(suffixUsers==''){
-                   window.alert(Joomla.JText._('PLG_ALERT_SUFFIX'));
+                   window.alert(Joomla.JText._('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_ALERT_SUFFIX'));
                     suffixUsers='Standard';
 
                     }
 
-                         window.parent.jInsertEditorText('{'+'contact'+suffixUsers+' '+'uid='+temp+'|'+'pid='+pid+'}', ename);
+                         window.parent.jInsertEditorText('{'+'thmgroups'+suffixUsers+' '+'uid='+temp+'|'+'pid='+pid+'}', ename);
                             window.parent.jModalClose();
                          }
                     }else if(hasClass(document.getElementById('slider_2'),'tab-pane active')==1){
 
                        if(gid==null){
-                       window.alert(Joomla.JText._('PLG_ALERT_GROUPS'));
+                       window.alert(Joomla.JText._('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_ALERT_GROUPS'));
                        }else{
 
                          if(suffixGroups==''){
-                   window.alert(Joomla.JText._('PLG_ALERT_SUFFIX'));
+                   window.alert(Joomla.JText._('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_ALERT_SUFFIX'));
                     suffixGroups='Standard';
 
                     }
-                       window.parent.jInsertEditorText('{'+'contact'+suffixGroups+' '+'gid='+gid+'}', ename);
+                       window.parent.jInsertEditorText('{'+'thmgroups'+suffixGroups+' '+'gid='+gid+'}', ename);
                        window.parent.jModalClose();
                        }
                     }

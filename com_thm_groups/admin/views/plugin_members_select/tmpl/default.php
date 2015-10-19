@@ -1,35 +1,37 @@
 <?php
 /**
  * @version     v1.0.0
+ * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  THM_Groups
- * @name        HelperPage
- * @author      Mehmet-Ali Pamukci, <mehmet.ali.pamukci@mni.thm.de>
+ * @subpackage  com_thm_groups.admin
+ * @name        THMGroupsViewPlugin_Members_Select
+ * @description THMGroupsViewPlugins_Members_Select
+ * @author      Mehmet-Ali Pamukci, 	<mehmet.ali.pamukci@mni.thm.de>
  * @copyright   2015 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
- *
  */
 
 defined('_JEXEC') or die ('Restricted access');
-require_once ('helper.php');
+require_once 'helper.php';
+
 ?>
 
 <div class="modal-header" rel="height=1000px;">
 
-    <h3><?php echo JText::_('PLG_TITLE'); ?></h3>
+    <h3><?php echo JText::_('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_TITLE'); ?></h3>
 </div>
 
 
 <div class="modal-body">
     <?php echo JHtml::_('bootstrap.startTabSet', 'mySliders', array('active' => 'slider_1')); ?>
 
-    <?php echo JHtml::_('bootstrap.addTab', 'mySliders', 'slider_1', JText::_('PLG_TAB_USERS')); ?>
+    <?php echo JHtml::_('bootstrap.addTab', 'mySliders', 'slider_1', JText::_('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_TAB_USERS')); ?>
 
     <div class="row-fluid">
         <div class="span5">
             <label id="batch-choose-action-lbl" class="control-label" for="batch-choose-action">
-                <?php echo JText::_('PLG_LABEL_SUFFIX'); ?>
+                <?php echo JText::_('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_LABEL_SUFFIX'); ?>
             </label>
             <div style='width:15em'>
             <?php echo createSelectFieldParamsUsers();?>
@@ -38,7 +40,7 @@ require_once ('helper.php');
 
         <div class="span4">
             <label id="batch-choose-action-lbl" class="control-label" for="batch-choose-action">
-                <?php echo JText::_('PLG_LABEL_PROFILE'); ?>
+                <?php echo JText::_('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_LABEL_PROFILE'); ?>
             </label>
             <div style='width:15em'>
                 <?php echo createSelectFieldProfiles() ?>
@@ -46,22 +48,22 @@ require_once ('helper.php');
         </div>
     </div>
     <label id="batch-choose-action-lbl" class="control-label" for="batch-choose-action">
-        <?php echo JText::_('PLG_LABEL_USERS'); ?>
+        <?php echo JText::_('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_LABEL_USERS'); ?>
     </label>
     <div  style="overflow: auto; height:240px;">
     <?php echo createSelectFieldUsers() ?>
     </div>
     <?php echo JHtml::_('bootstrap.endTab'); ?>
-    <?php echo JHtml::_('bootstrap.addTab', 'mySliders', 'slider_2', JText::_('PLG_TAB_GROUPS')); ?>
+    <?php echo JHtml::_('bootstrap.addTab', 'mySliders', 'slider_2', JText::_('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_TAB_GROUPS')); ?>
     <div  style="overflow: auto; height:300px;">
         <label id="batch-choose-action-lbl" class="control-label" for="batch-choose-action">
-        <?php echo JText::_('PLG_LABEL_SUFFIX'); ?>
+        <?php echo JText::_('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_LABEL_SUFFIX'); ?>
             </label>
             <?php echo createSelectFieldParamsGroups() ?>
             <br>
         </br>
         <label id="batch-choose-action-lbl" class="control-label" for="batch-choose-action">
-            <?php echo JText::_('PLG_LABEL_GROUPS'); ?>
+            <?php echo JText::_('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_LABEL_GROUPS'); ?>
         </label>
 
         <?php echo createSelectFieldGroups() ?>
@@ -76,7 +78,7 @@ require_once ('helper.php');
     </button>
     <button class="btn btn-primary" type="button" onclick="insert()">
         <?php
-        echo JText::_('PLG_BUTTON_INSERT');
+        echo JText::_('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_BUTTON_INSERT');
         ?>
     </button>
 </div>
