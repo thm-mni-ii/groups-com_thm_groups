@@ -32,7 +32,7 @@ class THM_GroupsModelArticles extends THM_CoreModelList
 
     protected $defaultDirection = "ASC";
 
-    protected $defaultLimit = "20";
+    protected $defaultLimit = "50";
 
     protected $defaultFilters = array();
 
@@ -58,13 +58,6 @@ class THM_GroupsModelArticles extends THM_CoreModelList
         $this->defaultFilters = array('catid' => THMLibThmQuickpages::getCategoryByProfileData(array('Id' => JFactory::getUser()->id)));
 
         parent::__construct($config);
-
-        $app    = JFactory::getApplication();
-        $config = JFactory::getConfig();
-
-        // Get the pagination request variables
-        $this->setState('limit', $app->getUserStateFromRequest('com_thm_groups.limit', 'limit', $config->get('list_limit'), 'uint'));
-        $this->setState('limitstart', $app->input->get('limitstart', 0, 'uint'));
     }
 
     /**

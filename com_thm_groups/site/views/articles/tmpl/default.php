@@ -113,7 +113,7 @@ class ArticlesTemplate extends THM_CoreTemplateList
                         //self::renderHeaderFilters($view->headers, $filters);
                         echo '</thead>';
                         self::renderBody($view);
-                        self::renderFooter($view);
+                        //self::renderFooter($view);
                         ?>
                     </table>
                 </div>
