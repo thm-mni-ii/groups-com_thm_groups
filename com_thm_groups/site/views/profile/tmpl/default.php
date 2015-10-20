@@ -565,7 +565,7 @@ function getProfilCss()
 
             @media screen and (min-width: 600px){
                 .Portrait{
-                    max-width:70%;
+                    max-width:45%;
                 }
             }
 

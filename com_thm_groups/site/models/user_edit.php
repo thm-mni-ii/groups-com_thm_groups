@@ -212,7 +212,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         $pathAttr = $this->getLocalPath($attrID);
 
         // Dimensions for thumbnails
-        $sizes = array('64x64', '250x125');
+        $sizes = array('100x75', '140x105');
 
         // Generate the image filename
         $newFileName = $userID . "_" . $attrID . "." . pathinfo($filename, PATHINFO_EXTENSION);
