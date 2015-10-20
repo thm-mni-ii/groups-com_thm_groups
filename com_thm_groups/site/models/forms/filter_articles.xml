@@ -24,17 +24,17 @@
         <option value="-2">JTRASHED</option>
     </field>
     <field
-        name="published"
-        type="list"
-        label="COM_THM_GROUPS_QUICKPAGES_SHOW_LINK"
-        onchange="this.form.submit()"
-        >
+            name="featured"
+            type="list"
+            label="COM_THM_GROUPS_QUICKPAGES_SHOW_LINK"
+            onchange="this.form.submit()"
+            >
         <option value="">JALL</option>
         <option value="1">JPUBLISHED</option>
         <option value="0">JUNPUBLISHED</option>
     </field>
     <field
-            name="featured"
+            name="published"
             type="list"
             label="COM_THM_GROUPS_QUICKPAGES_SHOW_CONTENT"
             onchange="this.form.submit()"

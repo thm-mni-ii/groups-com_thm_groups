@@ -266,14 +266,19 @@ class ArticlesTemplate extends THM_CoreTemplateList
     /**
      * Renders the table head
      *
-     * @param   array  &$items  an array containing the table headers
+     * @param   array  &$view  an array containing the table headers
      *
      * @return  void
      */
     protected static function renderBody(&$view)
     {
-
         $items = $view->items;
+
+        if (empty($items))
+        {
+            return false;
+        }
+
         $model = $view->getModel();
         $index = 0;
         $return['attributes'] = array('class' => 'ui-sortable');
@@ -323,8 +328,8 @@ class ArticlesTemplate extends THM_CoreTemplateList
             $return[$index][2] = "<div class='btn-group'>$publishedBtn . $dropdownBtn</div>";
             $return[$index][4] = self::renderCheckInAndEditIcons($key, $item, $model);
             $return[$index][5] = self::renderTrashIcon($key, $item, $model);
-            $return[$index][6] = $model->getToggle($item->id, $item->qp_published, 'articles', '', 'published');
-            $return[$index][7] = $model->getToggle($item->id, $item->qp_featured, 'articles', '', 'featured');
+            $return[$index][6] = $model->getToggle($item->id, $item->qp_featured, 'articles', '', 'featured');
+            $return[$index][7] = $model->getToggle($item->id, $item->qp_published, 'articles', '', 'published');
             //$return[$index][6] = self::renderModuleActions('List' . $model->getToggle($item->id, $item->qp_published, 'articles', '', 'published'), 'Content' . $model->getToggle($item->id, $item->qp_featured, 'articles', '', 'featured'));
 
             $index++;

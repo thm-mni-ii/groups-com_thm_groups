@@ -91,7 +91,7 @@ class THM_GroupsViewArticles extends THM_CoreViewList
         // Add category to user root quickpage category
         $image = 'new';
         $title = JText::_('COM_THM_GROUPS_QUICKPAGES_ADD_CATEGORY');
-        $link = 'index.php?option=com_thm_groups&amp;view=qp_categories&amp;tmpl=component';
+        $link = JRoute::_('index.php?view=qp_categories&tmpl=component');
         $height = '600';
         $width = '900';
         $top = 0;
@@ -108,16 +108,14 @@ class THM_GroupsViewArticles extends THM_CoreViewList
 
         $userID = JFactory::getUser()->id;
         $name = THMLibThmGroupsUser::getUserValueByAttributeID($userID, 2);
-        $profileLink = JRoute::_('index.php?option=com_thm_groups&view=profile&layout=default&gsuid=' . $userID . '&name=' . $name);
+        $profileLink = JRoute::_('index.php?view=profile&layout=default&gsuid=' . $userID . '&name=' . $name);
         $pathway->addItem(THMLibThmGroupsUser::getUserName($userID), $profileLink);
         $pathway->addItem(JText::_('COM_THM_GROUPS_ARTICLES'));
     }
 
     protected function setURL()
     {
-        $input = JFactory::getApplication()->input;
-        $view = $input->get('view', 'articles');
-        $url = JRoute::_("index.php?view=$view", false);
+        $url = JRoute::_('index.php');
         $this->url = $url;
     }
 }

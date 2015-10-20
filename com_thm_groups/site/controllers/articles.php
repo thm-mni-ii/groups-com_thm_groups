@@ -68,7 +68,7 @@ class THM_GroupsControllerArticles extends JControllerLegacy
             $type = 'error';
         }
 
-        $this->setRedirect(JRoute::_('index.php?option=com_thm_groups&view=articles', false), $msg, $type);
+        $this->setRedirect(JRoute::_('index.php'), $msg, $type);
     }
 
     /**
@@ -131,9 +131,7 @@ class THM_GroupsControllerArticles extends JControllerLegacy
             }
         }
 
-        $extension = $this->input->get('extension');
-        $extensionURL = ($extension) ? '&extension=' . $extension : '';
-        $this->setRedirect(JRoute::_('index.php?option=com_thm_groups&view=articles', false));
+        $this->setRedirect(JRoute::_('index.php'));
     }
 
     /**
