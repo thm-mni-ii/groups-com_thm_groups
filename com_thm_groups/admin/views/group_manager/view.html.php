@@ -95,7 +95,7 @@ class THM_GroupsViewGroup_Manager extends THM_CoreViewList
             $image = 'edit';
             $title = JText::_('COM_THM_GROUPS_EDIT_MODERATOR');
             $link = 'index.php?option=com_thm_groups&amp;view=user_select&amp;tmpl=component';
-            $height = '600';
+            $height = '400';
             $width = '900';
             $top = 0;
             $left = 0;

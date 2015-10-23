@@ -101,11 +101,12 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
             $image = 'cog';
             $title = JText::_('COM_THM_GROUPS_QUICKPAGES_SETTINGS');
             $link = 'index.php?option=com_thm_groups&amp;view=qp_settings&amp;tmpl=component';
-            $height = '600';
-            $width = '900';
+            $height = '350';
+            $width = '250';
             $top = 0;
             $left = 0;
             $onClose = 'window.location.reload();';
+            $footer = '';
             $bar = JToolBar::getInstance('toolbar');
             $bar->appendButton('Popup', $image, $title, $link, $width, $height, $top, $left, $onClose);
         }
