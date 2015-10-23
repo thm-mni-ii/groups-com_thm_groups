@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     v3.4.3
+ * @version     v3.5.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -13,7 +13,9 @@
  */
 defined('_JEXEC') or die( 'Restricted access');
 jimport('joomla.application.component.view');
-jimport('joomla.html.pane');
+jimport('thm_core.list.view');
+
+JHtml::_('behavior.tooltip');
 
 /**
  * THM_GroupsViewTHM_Groups class for component com_thm_groups
@@ -23,8 +25,10 @@ jimport('joomla.html.pane');
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THM_GroupsViewTHM_Groups extends JViewLegacy
+class THM_GroupsViewTHM_Groups extends THM_CoreViewList
 {
+    public $batch;
+
     /**
      * Method to get display
      *
@@ -39,17 +43,14 @@ class THM_GroupsViewTHM_Groups extends JViewLegacy
             return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
         }
 
-        JHtml::_('behavior.tooltip');
-
         $document = JFactory::getDocument();
         $document->addStyleSheet($this->baseurl . '/components/com_thm_groups/assets/css/thm_groups.css');
 
-        JHtml::_('tabs.start');
+        // Set path for pop up template
+        $this->batch = array('batch' => JPATH_COMPONENT_ADMINISTRATOR . '/views/thm_groups/tmpl/default_batch.php');
 
         $application = JFactory::getApplication("administrator");
         $this->option = $application->scope;
-
-        $this->addToolBar();
 
         $this->addViews();
 
@@ -61,12 +62,27 @@ class THM_GroupsViewTHM_Groups extends JViewLegacy
      *
      * @return void
      */
-    private function addToolBar()
+    protected function addToolBar()
     {
         JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_HOME_TITLE'), 'logo');
         $user = JFactory::getUser();
         if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))
         {
+            // Get the toolbar object instance
+            $bar = JToolBar::getInstance('toolbar');
+            $name = 'collapseModal';
+            $doTask = 'openPopUp';
+            $text = JText::_('COM_THM_GROUPS_MIGRATION_OPTIONS');
+
+            // Joomla uses old bootstrap 2.3.2 icons (see http://getbootstrap.com/2.3.2/base-css.html#icons)
+            $class = 'icon-wrench';
+
+            // You can find layout and its' parameters in /layout/joomla/toolbar/popup.php
+            $layout = new JLayoutFile('joomla.toolbar.popup');
+
+            $dhtml = $layout->render(array('name' => $name, 'doTask' => $doTask, 'text' => $text, 'class' => $class));
+            $bar->appendButton('Custom', $dhtml, 'batch');
+
             JToolBarHelper::divider();
             JToolBarHelper::preferences('com_thm_groups');
         }

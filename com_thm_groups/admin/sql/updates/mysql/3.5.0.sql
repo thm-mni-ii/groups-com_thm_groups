@@ -376,9 +376,3 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_users_usergroups_moderator` (
     ON DELETE CASCADE
 )
   ENGINE = InnoDB;
-
-
-
-  
-  
-  

@@ -98,13 +98,7 @@ class Com_THM_GroupsInstallerScript
      */
     public function install($parent)
     {
-        if (THM_Groups_Install_Script::install())
-        {
-            return true;
-        }
-
-        JFactory::getApplication()->enqueueMessage('install script', 'error');
-        return false;
+        // you can find the usage of old function in /models/db_data_manager
     }
 
     /*
@@ -160,7 +154,7 @@ class Com_THM_GroupsInstallerScript
             {
                 $uri = JURI::root(true) . '/libraries/thm_core/log/THMChangelogColoriser.css';
                 echo "<link rel='stylesheet' type='text/css' href='{$uri}' />";
-                echo THMChangelogColoriser::colorise(dirname(__FILE__) . '/admin/CHANGELOG.php');
+                echo THMChangelogColoriser::colorise(dirname(__FILE__) . '/admin/CHANGELOG.php', true);
             }
             else
             {
