@@ -36,7 +36,7 @@ class THM_GroupsControllerDB_Data_Manager extends JControllerLegacy
         parent::__construct();
     }
 
-    public function execute()
+    public function run()
     {
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 

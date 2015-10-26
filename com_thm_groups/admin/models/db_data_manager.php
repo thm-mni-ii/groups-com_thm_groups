@@ -49,7 +49,8 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
 
     private static function restoreData()
     {
-        if (self::copyData()
+        if (self::fixCategoriesTable()
+            && self::copyData()
             && THM_Groups_Update_Script::update())
         {
             return true;
@@ -57,6 +58,66 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
 
         JFactory::getApplication()->enqueueMessage('DB_Data_Manager -> Restore Data', 'error');
         return false;
+    }
+
+    /**
+     * Changes created_user_id for all quickpages categories before data's import.
+     * It's an old bug in creation of categories for users
+     */
+    private static function fixCategoriesTable()
+    {
+        $db = JFactory::getDbo();
+
+        // Get QP main category
+        $query = $db->getQuery(true);
+        $query
+            ->select('id')
+            ->from('#__categories')
+            ->where('path = "persoenliche-seiten"');
+        $db->setQuery($query);
+        $mainCat = $db->loadObject();
+
+        // Get all qp users categories
+        $query = $db->getQuery(true);
+        $query
+            ->select('id, path')
+            ->from('#__categories')
+            ->where("parent_id = $mainCat->id");
+        $db->setQuery($query);
+        $categories = $db->loadObjectList();
+
+        foreach ($categories as $cat)
+        {
+            // persoenliche-seiten/max-mustermann-90
+            $temp = explode('/', $cat->path);
+
+            // $temp[1] = max-mustermann-90
+            $temp = $temp[1];
+            $temp = explode('-', $temp);
+
+            // $userID = 90
+            $userID = $temp[count($temp) - 1];
+
+            // Change create_user_id for all qp categories
+            $query = $db->getQuery(true);
+            $query
+                ->update('#__categories')
+                ->set("created_user_id = $userID")
+                ->from('#__categories')
+                ->where("id = $cat->id");
+            $db->setQuery($query);
+
+            try
+            {
+                $db->execute();
+            }
+            catch (Exception $e)
+            {
+                JFactory::getApplication()->enqueueMessage('fixCategoriesTable ' . $e->getMessage(), 'error');
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

@@ -225,9 +225,6 @@ class Thm_QuickpagesHelper
             {
                 $user = JFactory::getUser();
             }
-            else
-            {
-            }
 
             $db = JFactory::getDBO();
             $id = $user->id;
@@ -256,9 +253,6 @@ class Thm_QuickpagesHelper
             if ($user == null)
             {
                 $user = JFactory::getUser();
-            }
-            else
-            {
             }
 
             $db = JFactory::getDBO();
@@ -291,8 +285,6 @@ class Thm_QuickpagesHelper
             $query->set("modified_time");
             $query->set("hits");
             $query->set("language = *");
-
-
 
             $db->setQuery((string) $query);
 

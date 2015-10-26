@@ -68,6 +68,7 @@ class THM_GroupsViewTHM_Groups extends THM_CoreViewList
         $user = JFactory::getUser();
         if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))
         {
+
             // Get the toolbar object instance
             $bar = JToolBar::getInstance('toolbar');
             $name = 'collapseModal';
