@@ -86,11 +86,6 @@
             <folder>views</folder>
         </files>
 
-        <files>
-            <filename>install.php</filename>
-            <filename>update.php</filename>
-        </files>
-
         <languages>
             <language tag="en-GB">language/en-GB/en-GB.com_thm_groups.ini</language>
             <language tag="en-GB">language/en-GB/en-GB.com_thm_groups.sys.ini</language>

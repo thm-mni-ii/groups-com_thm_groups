@@ -47,7 +47,7 @@ class THM_Groups_Update_Script
          && self::migrateTableOptions()
          && self::migrateTextOptions()
          && self::migrateTextFieldOptions()
-         && self::copyModuleToProfile()
+         /* && self::copyModuleToProfile() */
          && self::copyMenuToProfile())
         {
             return true;
@@ -258,7 +258,7 @@ class THM_Groups_Update_Script
         }
         catch (Exception $exc)
         {
-            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            JFactory::getApplication()->enqueueMessage($exc->getMessage() . ' copyModuleTypeToProfile', 'error');
             return false;
         }
         return true;

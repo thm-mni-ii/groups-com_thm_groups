@@ -23,9 +23,6 @@ if (!defined('DS'))
     define('DS', DIRECTORY_SEPARATOR);
 }
 
-require_once 'install.php';
-require_once 'update.php';
-
 jimport("thm_core.log.THMChangelogColoriser");
 
 /**
@@ -57,6 +54,7 @@ class Com_THM_GroupsInstallerScript
 
         if ($type == 'update' && $this->component == "COM_THM_GROUPS")
         {
+            require_once 'admin/update.php';
             $oldRelease = $this->getParam('version');
             $rel = $oldRelease . ' &rArr; ' . $this->release;
 
@@ -83,6 +81,11 @@ class Com_THM_GroupsInstallerScript
         else
         {
             $rel = $this->release;
+        }
+
+        if ($type == 'install')
+        {
+            require_once 'admin/install.php';
         }
 
         echo '<h1 align="center"><strong>THM Groups ' . strtoupper($type) . '<br/>' . $rel . '</strong></h1>';
@@ -193,7 +196,7 @@ class Com_THM_GroupsInstallerScript
         }
     }
 
-    /*
+    /**
      * Get a variable from the manifest file (actually, from the manifest cache).
      *
      * @param   String  $name  param what you need, for example version
