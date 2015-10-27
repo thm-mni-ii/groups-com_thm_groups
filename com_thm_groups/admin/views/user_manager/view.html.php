@@ -79,9 +79,10 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
     {
         $user = JFactory::getUser();
         JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_USER_MANAGER'), 'membermanager');
+
         if ($user->authorise('core.edit', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))
         {
-            JToolBarHelper::editList('user.edit', 'COM_THM_GROUPS_USER_MANAGER_EDIT');
+            JToolBarHelper::editList('user.edit');
             JToolBarHelper::publishList('user.publish', 'COM_THM_GROUPS_USER_MANAGER_PUBLISH');
             JToolBarHelper::unpublishList('user.unpublish', 'COM_THM_GROUPS_USER_MANAGER_DISABLE');
             JToolBarHelper::publishList('user.activateQPForUser', 'COM_THM_GROUPS_USER_MANAGER_QP_ACTIVATE');

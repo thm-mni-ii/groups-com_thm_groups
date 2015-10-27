@@ -84,14 +84,11 @@ class THM_GroupsViewGroup_Manager extends THM_CoreViewList
         $bar = JToolBar::getInstance('toolbar');
 
         JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_GROUP_MANAGER'), 'group_manager');
-        JToolBarHelper::addNew(
-            'group.add',
-            'COM_THM_GROUPS_GROUP_MANAGER_ADD',
-            false
-        );
 
         if ($user->authorise('core.manage', 'com_thm_groups'))
         {
+            JToolBarHelper::addNew('group.add');
+
             $image = 'edit';
             $title = JText::_('COM_THM_GROUPS_EDIT_MODERATOR');
             $link = 'index.php?option=com_thm_groups&amp;view=user_select&amp;tmpl=component';

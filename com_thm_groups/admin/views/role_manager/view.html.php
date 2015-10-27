@@ -73,16 +73,12 @@ class THM_GroupsViewRole_Manager extends THM_CoreViewList
 
         if ($user->authorise('core.create', 'com_thm_groups'))
         {
-            JToolBarHelper::addNew(
-                'role.add',
-                'COM_THM_GROUPS_ROLE_MANAGER_ADD',
-                false
-            );
+            JToolBarHelper::addNew('role.add');
         }
 
         if ($user->authorise('core.edit', 'com_thm_groups'))
         {
-            JToolBarHelper::editList('role.editRole', 'COM_THM_GROUPS_ROLE_MANAGER_EDIT');
+            JToolBarHelper::editList('role.editRole');
         }
 
         if ($user->authorise('core.delete', 'com_thm_groups'))
