@@ -139,6 +139,10 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
         return false;
     }
 
+    /**
+     * @return bool
+     * @throws Exception
+     */
     private static function createExampleDynamicTypes()
     {
         $db = JFactory::getDbo();
