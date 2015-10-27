@@ -48,10 +48,7 @@ class THM_GroupsControllerDynamic_Type extends JControllerLegacy
             return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
         }
 
-        $input = JFactory::getApplication()->input;
-        $input->set('view', 'dynamic_type_edit');
-        $input->set('id', '0');
-        parent::display();
+        $this->setRedirect("index.php?option=com_thm_groups&view=dynamic_type_edit&id=0");
     }
 
     /**
