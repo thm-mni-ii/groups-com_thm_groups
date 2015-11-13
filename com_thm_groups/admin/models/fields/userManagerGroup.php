@@ -3,10 +3,10 @@ defined('_JEXEC') or die('Restricted access');
 JFormHelper::loadFieldClass('list');
 jimport('joomla.form.formfield');
 
-class JFormFieldUserManagerGroup extends JFormFieldList
+class JFormFieldUsermanagergroup extends JFormFieldList
 {
 
-    protected $type = 'UserManagerGroup';
+    protected $type = 'usermanagergroup';
 
     /**
      *

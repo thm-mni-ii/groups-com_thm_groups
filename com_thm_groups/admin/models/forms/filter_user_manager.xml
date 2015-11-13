@@ -46,14 +46,14 @@
     <fields name="list">
         <field addfieldpath="/administrator/com_thm_groups/models/fields"
                 name="groupID"
-                type="UserManagerGroup"
+                type="usermanagergroup"
                 label="COM_THM_GROUPS_GROUPS_FILTER"
                 onchange="this.form.submit();"
                 >
         </field>
         <field addfieldpath="/administrator/com_thm_groups/models/fields"
                 name="roleID"
-                type="UserManagerRole"
+                type="usermanagerrole"
                 label="COM_THM_GROUPS_ROLES_FILTER"
                 onchange="this.form.submit();"
                 >

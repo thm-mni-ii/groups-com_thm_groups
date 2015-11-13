@@ -3,10 +3,10 @@ defined('_JEXEC') or die('Restricted access');
 JFormHelper::loadFieldClass('list');
 jimport('joomla.form.formfield');
 
-class JFormFieldUserManagerRole extends JFormFieldList
+class JFormFieldUsermanagerrole extends JFormFieldList
 {
 
-    protected $type = 'UserManagerRole';
+    protected $type = 'usermanagerrole';
 
     /**
      * Cached array of the category items.

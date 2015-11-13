@@ -68,9 +68,10 @@ class THM_GroupsModelDynamic_Type_Edit extends JModelAdmin
     {
         $dynAttribute = $this->getDynamicTypeItem();
 
-        JFormHelper::addFieldPath(JPATH_COMPONENT . '/models/fields');
+        JFormHelper::addFieldPath(JPATH_COMPONENT_ADMINISTRATOR . '/models/fields/');
+        JFormHelper::addFormPath(JPATH_COMPONENT_ADMINISTRATOR . '/models/fields/');
 
-        $dynFields = JFormHelper::loadFieldType('DynField', false);
+        $dynFields = JFormHelper::loadFieldType('dynfield', false);
         $options = array(
             "selected"  => $selected,
             "isActType" => $isActType,

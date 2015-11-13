@@ -171,7 +171,7 @@ class THM_GroupsModelAttribute_Edit extends JModelAdmin
 
         JFormHelper::addFieldPath(JPATH_COMPONENT . '/models/fields');
 
-        $attributeFields = JFormHelper::loadFieldType('AttributeField', false);
+        $attributeFields = JFormHelper::loadFieldType('attributefield', false);
         $options = array(
             "staticType"  => $staticType,
             "attOpt"      => $attOpt,
