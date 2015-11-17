@@ -38,7 +38,7 @@ class THM_Groups_Update_Script
      * If THM Groups will be updated the script
      * copies old data from old tables
      *
-     * @return void
+     * @return bool
      */
     public static function update()
     {

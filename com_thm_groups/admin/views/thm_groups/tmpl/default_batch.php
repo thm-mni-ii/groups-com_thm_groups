@@ -18,6 +18,7 @@ defined('_JEXEC') or die;
 $options = array(
 	JHtml::_('select.option', 'install_example_data', JText::_('COM_THM_GROUPS_INSTALL_EXAMPLE_DATA')),
 	JHtml::_('select.option', 'copy_data_from_joomla25_thm_groups_tables', JText::_('COM_THM_GROUPS_COPY_OLD_DATA')),
+	JHtml::_('select.option', 'fix_tables', JText::_('COM_THM_GROUPS_FIX_TABLES'))
 );
 
 JHtml::_('formbehavior.chosen', 'select');

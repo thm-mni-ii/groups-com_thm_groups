@@ -40,11 +40,194 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
             case 'copy_data_from_joomla25_thm_groups_tables':
                 self::restoreData();
                 break;
+            case 'fix_tables':
+                self::fixTables();
+                break;
             default:
                 return false;
         }
 
         return true;
+    }
+
+    /**
+     * Fixes a problem with the not copied users after migration
+     * Example: You migrated some Joomla instance, but the old joomla instance become new users
+     * You copy this new users from the old joomla instance with J2XML to your new instance.
+     * You have users only in Joomla, but not in THM Groups.
+     * This method uses the algorithm of sync plugin to copy all basic user attributes like first name,
+     * second name, email and username. It creates also all other existing attributes, but without information.
+     * It assigns also group-role mapping to users.
+     *
+     * @return bool
+     * @throws Exception
+     */
+    private static function fixTables()
+    {
+        $idsAndGroups = self::getUserIDsAndGroups();
+        if(!empty($idsAndGroups))
+        {
+            if(self::copyUserData($idsAndGroups))
+            {
+                return true;
+            }
+        }
+
+        JFactory::getApplication()->enqueueMessage('DB_Data_Manager -> fixTables', 'error');
+        return false;
+    }
+
+    private static function getUserIDsAndGroups()
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query
+            ->select('a.id, a.name, a.username, a.email, group_concat(c.group_id) AS groups')
+            ->from('#__users AS a')
+            ->leftJoin('#__thm_groups_users AS b ON a.id = b.id')
+            ->innerJoin('#__user_usergroup_map AS c ON a.id = c.user_id')
+            ->where('b.id is NULL')
+            ->group('a.id');
+
+        $db->setQuery($query);
+        return $db->loadAssocList();
+    }
+
+    private static function copyUserData($users)
+    {
+        $db = JFactory::getDbo();
+
+        foreach ($users as $user)
+        {
+            $userid = $user['id'];
+            $name = $user['name'];
+            $login = $user['username'];
+            $email = $user['email'];
+            $groups = explode(',', $user['groups']);
+
+            // Cut the Name
+            $nameArray = explode(" ", $name);
+            $lastName = end($nameArray);
+            array_pop($nameArray);
+
+            $deletefromname = array("(", ")", "Admin", "Webmaster");
+            $namesplit = explode(" ", str_replace($deletefromname, '', $name));
+            array_pop($namesplit);
+            $firstName = implode(" ", $nameArray);
+
+            $query = $db->getQuery(true);
+            $query
+                ->insert("`#__thm_groups_users` (`id`, `published`, `injoomla`, `canEdit`)")
+                ->values("'" . $userid . "', '0', '1', '0'");
+
+            $db->setQuery($query);
+
+            try
+            {
+                $db->execute();
+            }
+            catch (Exception $e)
+            {
+                JFactory::getApplication()->enqueueMessage('copyUserData #1 ' . $e->getMessage(), 'error');
+                return false;
+            }
+
+            $arr_attribute = array(1, 2, 3 ,4);
+            $attribute_query = $db->getQuery(true);
+            $attribute_query
+                ->select('id')
+                ->from('#__thm_groups_attribute')
+                ->where('id NOT IN (' . implode(",", $arr_attribute) . ')');
+            $db->setQuery($attribute_query);
+
+            $attributes = $db->loadObjectList();
+
+            // Update InnoDB
+            $query = $db->getQuery(true);
+
+            $query
+                ->insert("#__thm_groups_users_attribute (usersID, attributeID, value,published)")
+                ->values(" $userid , 1 , '" . ucfirst($firstName) . "',1")
+                ->values(" $userid , 2 , '" . ucfirst($lastName) . "',1")
+                ->values(" $userid , 3 , '" . $login . "',1")
+                ->values(" $userid , 4 , '" . $email . "',1");
+
+            foreach ($attributes AS $attribute)
+            {
+                $query->values("$userid , $attribute->id , ' ', 0");
+            }
+
+            $db->setQuery($query);
+
+            try
+            {
+                $db->execute();
+            }
+            catch (Exception $e)
+            {
+                JFactory::getApplication()->enqueueMessage('copyUserData #2 ' . $e->getMessage(), 'error');
+                return false;
+            }
+
+            self::insertUserGroups($userid, $groups);
+        }
+
+        return true;
+    }
+
+    /**
+     * Method to insert the USer groups
+     *
+     * @param   int    $user_id      User id
+     *
+     * @param   array  $user_groups  User groups
+     *
+     * @return void
+     */
+    public function insertUserGroups($user_id, $user_groups)
+    {
+        $db = JFactory::getDBO();
+        $userGroups_ID_List = array();
+        foreach ($user_groups as $index => $value )
+        {
+            $query = $db->getQuery(true);
+            $query->select("ID AS id")
+                ->from("#__thm_groups_usergroups_roles")
+                ->where("rolesID = 1")
+                ->where("usergroupsID =" . $value);
+            $db->setQuery($query);
+            $groups_roles_id = $db->loadObject()->id;
+            if (empty($groups_roles_id))
+            {
+                $insertGroups_query = $db->getQuery(true);
+                $insertGroups_query->insert("#__thm_groups_usergroups_roles (usergroupsID,rolesID)");
+                $insertGroups_query->values("$value, 1");
+                $db->setQuery($insertGroups_query);
+                $db->execute();
+                $groups_roles_id = $db->insertid();
+            }
+            $userGroups_ID_List[] = $groups_roles_id;
+        }
+
+        if ($userGroups_ID_List)
+        {
+            $set_User_groups = $db->getQuery(true);
+            $set_User_groups->insert('#__thm_groups_users_usergroups_roles (usersID, usergroups_rolesID)');
+            foreach ($userGroups_ID_List as $id => $value)
+            {
+                $set_User_groups->values("$user_id, $value");
+            }
+            $db->setQuery($set_User_groups);
+            try
+            {
+                $db->execute();
+            }
+            catch (Exception $e)
+            {
+                JFactory::getApplication()->enqueueMessage('insertUserGroups ' . $e->getMessage(), 'error');
+            }
+        }
     }
 
     private static function restoreData()
@@ -149,7 +332,7 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
         $query = $db->getQuery(true);
 
         /* INSERT INTO '#__thm_groups_dynamic_type' ('id', 'static_typeID', 'name', 'regex', 'options') VALUES
-           (1, 1, 'Name', '^[0-9a-zA-ZäöüÄÖÜ]+$', '{ "length" : "40" }'),
+           (1, 1, 'Name', '^[0-9a-zA-Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+$', '{ "length" : "40" }'),
            (2, 1, 'Email', '^([0-9a-zA-Z\\\\.]+)@(([\\\\w]|\\\\.\\\\w)+)\\\\.(\\\\w+)$', '{ "length" : "40" }'),
            (3, 3, 'Website', '(http|ftp|https:\\\\/\\\\/){0,1}[\\\\w\\\\-_]+(\\\\.[\\\\w\\\\-_]+)+([\\\\w\\\\-\\\\.,@?^=%&amp;:/~\\\\+#]*[\\\\w\\\\-\\\\@?^=%&amp;/~\\\\+#])?', '{}'),
            (4, 6, 'Table', '', '{ "columns" : "Spalte1;Spalte2;", "required" : "true" }');*/
