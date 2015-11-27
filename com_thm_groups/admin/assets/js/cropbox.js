@@ -50,6 +50,7 @@ function bindImageCropper(element, attrID, uID)
             + uID + "&element=" + element + "&attrID=" + attrID +"&filename="
             + filename + "",
             data: fd,
+            dataType: 'html',
             processData: false,
             contentType: false
             }).success(function(response) {
@@ -70,9 +71,16 @@ function bindImageCropper(element, attrID, uID)
                 result.innerHTML = 'Picture successfully uploaded!';
                 result.style.visibility = 'visible';
 
-                //jQuery("#jform_" + element + "_message").append("</br><div class='text-error'>Please save picture to proceed!</div>");
-                jQuery("#uEditSubmit").append("</br><div class='alert alert-error'>Please save your changes to proceed!</div>");
-                document.getElementById('uEditSubmit').scrollIntoView();
+                if (document.getElementById("jform_" + element + "_message"))
+                {
+                    jQuery("#jform_" + element + "_message").append("</br><div class='text-error'>Please save picture to proceed!</div>");
+                }
+
+                if(document.getElementById("uEditSubmit"))
+                {
+                    jQuery("#uEditSubmit").append("</br><div class='alert alert-error'>Please save your changes to proceed!</div>");
+                    document.getElementById('uEditSubmit').scrollIntoView();
+                }
                 });
             });
 

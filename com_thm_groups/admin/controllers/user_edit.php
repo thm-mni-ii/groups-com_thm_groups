@@ -65,6 +65,7 @@ class THM_GroupsControllerUser_Edit extends JControllerLegacy
         {
             // Draw new image preview in user_edit.view
             echo $success;
+            $app->close();
         }
     }
 

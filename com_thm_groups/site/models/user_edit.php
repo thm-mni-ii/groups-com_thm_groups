@@ -210,6 +210,14 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     public function saveCropped($attrID, $file, $filename, $userID)
     {
         $pathAttr = $this->getLocalPath($attrID);
+        $separator = "";
+
+        if (DIRECTORY_SEPARATOR == '/') {
+            $separator ="/";
+        }
+        elseif (DIRECTORY_SEPARATOR == '\\') {
+            $separator ="\\";
+        }
 
         // Dimensions for thumbnails
         $sizes = array('100x75', '140x105');
@@ -220,6 +228,11 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         if ($file != null)
         {
             $path = JPATH_ROOT . $pathAttr . $newFileName;
+
+            if ($separator == "\\")
+            {
+                $path = str_replace('/', '\\', $path);
+            }
 
             $content = $this->getContentAttribute($userID);
 
@@ -235,7 +248,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
             if ($success)
             {
                 $image  = new JImage($path);
-                $image->createThumbs($sizes, JImage::SCALE_INSIDE, JPATH_ROOT . $pathAttr . 'thumbs\\');
+                $image->createThumbs($sizes, JImage::SCALE_INSIDE, JPATH_ROOT . $pathAttr . 'thumbs' . $separator);
 
                 $path = str_replace('\\', '/', $path);
                 $position = strpos($path, 'images/');
@@ -455,6 +468,14 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     {
         // Get local path
         $attrPath = $this->getLocalPath($key);
+        $separator = "";
+
+        if (DIRECTORY_SEPARATOR == '/') {
+            $separator ="/";
+        }
+        elseif (DIRECTORY_SEPARATOR == '\\') {
+            $separator ="\\";
+        }
 
         // Get attribute default filename
         $dbo = JFactory::getDbo();
@@ -476,13 +497,20 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                 if (($attribute->value != $attributeDefault) && ($attribute->value != ''))
                 {
                     // Delete cropped
-                    unlink(JPATH_ROOT . $attrPath . $attribute->value);
+                    if (file_exists(realpath(JPATH_ROOT . $attrPath . $attribute->value)))
+                    {
+                        unlink(JPATH_ROOT . $attrPath . $attribute->value);
+                    }
+
 
                     // Delete fullRes
-                    unlink(JPATH_ROOT . $attrPath . 'fullRes\\' . $attribute->value);
+                    if (file_exists(realpath(JPATH_ROOT . $attrPath . 'fullRes' . $separator . $attribute->value)))
+                    {
+                        unlink(JPATH_ROOT . $attrPath . 'fullRes' . $separator . $attribute->value);
+                    }
 
                     // Delete thumbs
-                    foreach ( scandir(JPATH_ROOT . $attrPath . 'thumbs\\') as $folderPic)
+                    foreach ( scandir(JPATH_ROOT . $attrPath . 'thumbs' . $separator) as $folderPic)
                     {
                         if ( $folderPic === '.' || $folderPic === '..')
                         {
@@ -504,7 +532,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
 
                             if ($pos === 0)
                             {
-                                unlink(JPATH_ROOT . $attrPath . 'thumbs\\' . $folderPic);
+                                unlink(JPATH_ROOT . $attrPath . 'thumbs' . $separator . $folderPic);
                             }
                         }
                     }
@@ -530,9 +558,17 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     {
         // Get local path
         $attrPath = $this->getLocalPath($key);
+        $separator = "";
+
+        if (DIRECTORY_SEPARATOR == '/') {
+            $separator ="/";
+        }
+        elseif (DIRECTORY_SEPARATOR == '\\') {
+            $separator ="\\";
+        }
 
         // Delete thumbs
-        foreach (scandir(JPATH_ROOT . $attrPath . 'thumbs\\') as $folderPic)
+        foreach (scandir(JPATH_ROOT . $attrPath . 'thumbs' . $separator) as $folderPic)
         {
             if ($folderPic === '.' || $folderPic === '..')
             {
@@ -555,9 +591,9 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                 if ($pos === 0)
                 {
                     // Delete thumbnail if exists
-                    if (file_exists(JPATH_ROOT . $attrPath . 'thumbs\\' . $folderPic))
+                    if (file_exists(realpath(JPATH_ROOT . $attrPath . 'thumbs' . $separator . $folderPic)))
                     {
-                        unlink(JPATH_ROOT . $attrPath . 'thumbs\\' . $folderPic);
+                        unlink(realpath(JPATH_ROOT . $attrPath . 'thumbs' . $separator . $folderPic));
                     }
                 }
             }
@@ -694,6 +730,13 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         $position = strpos($attrPath->path, '/images/');
         $path = substr($attrPath->path, $position);
 
-        return $path = str_replace('/', '\\', $path);
+        if (DIRECTORY_SEPARATOR == '/') {
+            $path = str_replace('\\', '/', $path);
+        }
+        elseif (DIRECTORY_SEPARATOR == '\\') {
+            $path = str_replace('/', '\\', $path);
+        }
+
+        return $path;
     }
 }

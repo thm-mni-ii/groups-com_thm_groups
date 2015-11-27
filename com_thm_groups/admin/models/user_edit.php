@@ -158,6 +158,15 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     public function saveCropped($attrID, $file, $filename, $userID)
     {
         $pathAttr = $this->getLocalPath($attrID);
+        $separator = "";
+        $path = "";
+
+        if (DIRECTORY_SEPARATOR == '/') {
+            $separator ="/";
+        }
+        elseif (DIRECTORY_SEPARATOR == '\\') {
+            $separator ="\\";
+        }
 
         // Dimensions for thumbnails
         $sizes = array('100x75', '140x105');
@@ -168,6 +177,11 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
         if ($file != null)
         {
             $path = JPATH_ROOT . $pathAttr . $newFileName;
+
+            if ($separator == "\\")
+            {
+                $path = str_replace('/', '\\', $path);
+            }
 
             $content = $this->getContent();
 
@@ -185,13 +199,12 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
             if ($success)
             {
                 $image  = new JImage($path);
-                $image->createThumbs($sizes, JImage::SCALE_INSIDE, JPATH_ROOT . $pathAttr . 'thumbs\\');
+                $image->createThumbs($sizes, JImage::SCALE_INSIDE, JPATH_ROOT . $pathAttr . 'thumbs' . $separator);
 
-                $path = str_replace('\\', '/', $path);
-                $position = strpos($path, 'images/');
+                $position = strpos($path, 'images' . $separator);
                 $convertedPath = substr($path, $position);
 
-                $prev = "<img  src='" . JURI::root() . $convertedPath . "' style='display: block;"
+                $prev = "<img  src='" . JURI::root() . $convertedPath . "?" . DATE_ATOM . "' style='display: block;"
                     . "max-width:500px; max-height:240px; width: auto; height: auto;'/>";
 
                 return $prev;
@@ -426,6 +439,14 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     {
         // Get local path
         $attrPath = $this->getLocalPath($key);
+        $separator = "";
+
+        if (DIRECTORY_SEPARATOR == '/') {
+            $separator ="/";
+        }
+        elseif (DIRECTORY_SEPARATOR == '\\') {
+            $separator ="\\";
+        }
 
         // Get attribute default filename
         $dbo = JFactory::getDbo();
@@ -447,15 +468,21 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                 if (($attribute->value != $attributeDefault) && ($attribute->value != ''))
                 {
                     // Delete cropped
-                    unlink(JPATH_ROOT . $attrPath . $attribute->value);
+                    if (file_exists(realpath(JPATH_ROOT . $attrPath . $attribute->value)))
+                    {
+                        unlink(realpath(JPATH_ROOT . $attrPath . $attribute->value));
+                    }
 
                     // Delete fullRes
                     $oriFileName = $attribute->value;
 
-                    unlink(JPATH_ROOT . $attrPath . 'fullRes\\' . $oriFileName);
+                    if (file_exists(realpath(JPATH_ROOT . $attrPath . 'fullRes' . $separator . $oriFileName)))
+                    {
+                        unlink(realpath(JPATH_ROOT . $attrPath . 'fullRes' . $separator . $oriFileName));
+                    }
 
                     // Delete thumbs
-                    foreach ( scandir(JPATH_ROOT . $attrPath . 'thumbs\\') as $folderPic)
+                    foreach ( scandir(JPATH_ROOT . $attrPath . 'thumbs' . $separator) as $folderPic)
                     {
                         if ( $folderPic === '.' || $folderPic === '..')
                         {
@@ -477,7 +504,7 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
 
                             if ($pos === 0)
                             {
-                                unlink(JPATH_ROOT . $attrPath . 'thumbs\\' . $folderPic);
+                                unlink(realpath(JPATH_ROOT . $attrPath . 'thumbs' . $separator . $folderPic));
                             }
                         }
                     }
@@ -503,9 +530,17 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     {
         // Get local path
         $attrPath = $this->getLocalPath($key);
+        $separator = "";
+
+        if (DIRECTORY_SEPARATOR == '/') {
+            $separator ="/";
+        }
+        elseif (DIRECTORY_SEPARATOR == '\\') {
+            $separator ="\\";
+        }
 
         // Delete thumbs
-        foreach (scandir(JPATH_ROOT . $attrPath . 'thumbs\\') as $folderPic)
+        foreach (scandir(JPATH_ROOT . $attrPath . 'thumbs' . $separator) as $folderPic)
         {
             if ($folderPic === '.' || $folderPic === '..')
             {
@@ -527,9 +562,9 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
                 if ($pos === 0)
                 {
                     // Delete thumbnail if exists
-                    if (file_exists(JPATH_ROOT . $attrPath . 'thumbs\\' . $folderPic))
+                    if (file_exists(realpath(JPATH_ROOT . $attrPath . 'thumbs' . $separator . $folderPic)))
                     {
-                        unlink(JPATH_ROOT . $attrPath . 'thumbs\\' . $folderPic);
+                        unlink(realpath(JPATH_ROOT . $attrPath . 'thumbs' . $separator . $folderPic));
                     }
                 }
             }
@@ -550,6 +585,14 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     private function saveFullSizePictures($userID)
     {
         $dbo = JFactory::getDbo();
+        $separator = "";
+
+        if (DIRECTORY_SEPARATOR == '/') {
+            $separator ="/";
+        }
+        elseif (DIRECTORY_SEPARATOR == '\\') {
+            $separator ="\\";
+        }
 
         // Get full size file(s)
         $filedata = JFactory::getApplication()->input->files->get('jform1');
@@ -570,13 +613,18 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
 
                     // Get image filename
                     $newFileName = $userID . "_" . $key . "." . pathinfo($value['name'], PATHINFO_EXTENSION);
-                    $path = JPATH_ROOT . $attrPath . 'fullRes\\' . $newFileName;
+                    $path = JPATH_ROOT . $attrPath . 'fullRes' . $separator . $newFileName;
+
+                    if($separator == "\\")
+                    {
+                        $path = str_replace('/', '\\', $path);
+                    }
 
                     // Upload file to path on server
                     $success = jFile::upload($value['tmp_name'], $path, false);
 
                     // Check if upload from cropped and full size was ok
-                    if (JFile::exists(JPATH_ROOT . $attrPath . $newFileName) && $success)
+                    if (JFile::exists(realpath(JPATH_ROOT . $attrPath . $newFileName)) && $success)
                     {
                         try
                         {
@@ -656,6 +704,6 @@ class THM_GroupsModelUser_Edit extends THM_CoreModelEdit
     {
         $attrPath = json_decode($this->getPicturePath($attrID)->options)->path;
 
-        return $path = str_replace('/', '\\', $attrPath);
+        return $attrPath = str_replace('\\', '/', $attrPath);
     }
 }
