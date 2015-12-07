@@ -326,10 +326,10 @@ class ArticlesTemplate extends THM_CoreTemplateList
             $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
             $return[$index][1] = self::renderTitle($item);
             $return[$index][2] = "<div class='btn-group'>$publishedBtn . $dropdownBtn</div>";
-            $return[$index][4] = self::renderCheckInAndEditIcons($key, $item, $model);
-            $return[$index][5] = self::renderTrashIcon($key, $item, $model);
-            $return[$index][6] = $model->getToggle($item->id, $item->qp_featured, 'articles', '', 'featured');
-            $return[$index][7] = $model->getToggle($item->id, $item->qp_published, 'articles', '', 'published');
+            //$return[$index][4] = self::renderCheckInAndEditIcons($key, $item, $model);
+            $return[$index][4] = self::renderTrashIcon($key, $item, $model);
+            $return[$index][5] = $model->getToggle($item->id, $item->qp_featured, 'articles', '', 'featured');
+            $return[$index][6] = $model->getToggle($item->id, $item->qp_published, 'articles', '', 'published');
             //$return[$index][6] = self::renderModuleActions('List' . $model->getToggle($item->id, $item->qp_published, 'articles', '', 'published'), 'Content' . $model->getToggle($item->id, $item->qp_featured, 'articles', '', 'featured'));
 
             $index++;
@@ -389,14 +389,25 @@ class ArticlesTemplate extends THM_CoreTemplateList
      */
     protected static function renderTitle(&$item)
     {
+        $imgSpanTag = '<span class="icon-out-2 small"><span class="text">Edit</span></span>';
         $category = "<div class='small'>" . JText::_('JCATEGORY') . ": " . $item->category_title . "</div>";
         if ($item->state > 0)
         {
-            // $additionalURLParams = array('gsuid' => $item->created_by);
+
+            //$additionalURLParams = array('gsuid' => $item->created_by);
             $userID = JFactory::getUser()->id;
             $name = THMLibThmGroupsUser::getUserValueByAttributeID($userID, 2);
             $singlearticleLink = JRoute::_('index.php?option=com_thm_groups&view=singlearticle&id=' . $item->id . '&nameqp=' . $item->alias . '&gsuid=' . $userID . '&name=' . $name, false);
-            return  JHTML::_('link', $singlearticleLink, $item->title, 'class="qpl_list_link"') . $category;
+
+            $linkToArticle = JHTML::_('link', $singlearticleLink, $imgSpanTag, 'title="'
+                . JText::_('COM_THM_QUICKPAGES_HTML_EDIT_ITEM')
+                . '" class="jgrid"'
+            );
+
+            $itemId = JFactory::getApplication()->input->getInt('Itemid', 0);
+            $returnURL = base64_encode("index.php?option=com_thm_groups&view=articles&Itemid=$itemId");
+            $editURL = JRoute::_('index.php?option=com_content&task=article.edit&Itemid=' . $itemId . '&a_id=' . $item->id . '&return=' . $returnURL);
+            return  JHTML::_('link', $editURL, $item->title) . $linkToArticle . $category;
         }
         else
         {
