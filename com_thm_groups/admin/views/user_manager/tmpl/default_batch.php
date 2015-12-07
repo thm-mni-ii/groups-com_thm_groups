@@ -56,7 +56,7 @@ JHtml::_('formbehavior.chosen', 'select');
 				</button>
 			</div>
 			<div class="control-group">
-				<div id="group-roles-id"></div>
+				<div id="group-roles-id"> ... </div>
 			</div>
 			<div class="control-group radio">
 				<?php echo JHtml::_('select.radiolist', $options, 'batch_action', '', 'value', 'text', 'add') ?>

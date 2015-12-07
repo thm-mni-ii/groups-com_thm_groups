@@ -91,7 +91,7 @@ class THM_GroupsViewUser_Manager extends THM_CoreViewList
 
             $bar = JToolBar::getInstance('toolbar');
             JHtml::_('bootstrap.modal', 'myModal');
-            $title = JText::_('COM_THM_GROUPS_GROUP_MANAGER_BATCH');
+            $title = JText::_('COM_THM_GROUPS_USER_MANAGER_ADD_ROLES');
 
             // Instantiate a new JLayoutFile instance and render the batch button
 
