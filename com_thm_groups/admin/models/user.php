@@ -192,10 +192,13 @@ class THM_GroupsModelUser extends JModelLegacy
          * inner join
          * We just write sql statement in query variable
          */
-        $query = "DELETE a
-                  FROM jos_thm_groups_users_usergroups_roles AS a
-                  INNER JOIN jos_thm_groups_usergroups_roles AS b on b.ID = a.usergroups_rolesID
-                  WHERE a.usersID = $uid AND b.usergroupsID = $gid";
+        $app = JFactory::getApplication();
+        $prefix = $app->get('dbprefix');
+
+        $query = 'DELETE a';
+        $query .= ' FROM ' . $prefix . 'thm_groups_users_usergroups_roles AS a';
+        $query .= ' INNER JOIN ' . $prefix . 'thm_groups_usergroups_roles AS b on b.ID = a.usergroups_rolesID';
+        $query .= " WHERE a.usersID = $uid AND b.usergroupsID = $gid";
 
         $db->setQuery($query);
 
