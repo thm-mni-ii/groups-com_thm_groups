@@ -598,13 +598,17 @@ function writeName($arrOrderAtt, $member, $arrshowStructure, $linkElement, $link
     // Sort merged array by order
     usort($sortedUserAttributes, "cmp");
 
+    //var_dump($sortedUserAttributes);
     // Write name
     foreach ($sortedUserAttributes as $userAttribute)
     {
         switch ($userAttribute['id'])
         {
             case 0:
-                $arrName[$userAttribute['id']] = $userAttribute['value'] . ' ';
+                if (!empty(str_replace(' ', '', $userAttribute['value'])))
+                {
+                    $arrName[$userAttribute['id']] = $userAttribute['value'] . ' ';
+                }
                 break;
             case 1:
                 // If there is a last name on the second place
@@ -633,7 +637,10 @@ function writeName($arrOrderAtt, $member, $arrshowStructure, $linkElement, $link
                 }
                 break;
             case 3:
-                $arrName[$userAttribute['id']] = ', ' . $userAttribute['value'];
+                if (!empty(str_replace(' ', '', $userAttribute['value'])))
+                {
+                    $arrName[$userAttribute['id']] = ', ' . $userAttribute['value'];
+                }
                 break;
         }
     }
