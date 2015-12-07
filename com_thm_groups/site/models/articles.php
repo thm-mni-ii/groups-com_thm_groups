@@ -144,7 +144,11 @@ class THM_GroupsModelArticles extends THM_CoreModelList
         $currCategoryID = THMLibThmQuickpages::getCategoryByProfileData(array('Id' => JFactory::getUser()->id));
         $input = JFactory::getApplication()->input;
         $stateFilters = $input->get('filter', array(), 'ARRAY');
-        $filterCategory = $stateFilters['catid'];
+
+        if (isset($stateFilters['catid']))
+        {
+            $filterCategory = $stateFilters['catid'];
+        }
 
         if (!empty($filterCategory))
         {

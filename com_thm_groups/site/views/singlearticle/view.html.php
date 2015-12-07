@@ -104,8 +104,6 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
         // Add article title in breadcrumb
         $pathway->addItem($article_title);
 
-        $pagetitle = $parts[1];
-
         $this->item = $this->get('Item');
 
         //$this->print	= JRequest::getBool('print');
@@ -216,6 +214,7 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
             {
             }
             $arrayTexts[$count] = $this->item->introtext;
+            $pagetitle = $this->item->title;
             $toc .= '" href="' . JURI::base() . 'index.php?' . $url . 'start='
                 . $count . '">' . $pagetitle . '</a></li>';
             $count++;
