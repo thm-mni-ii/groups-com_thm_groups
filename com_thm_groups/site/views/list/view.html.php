@@ -45,7 +45,7 @@ class THM_GroupsViewList extends JViewLegacy
         $app = JFactory::getApplication()->input;
         $model = $this->getModel();
         $document = JFactory::getDocument();
-        $document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/frontend.php');
+        $document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/frontend.css');
 
         // Include Bootstrap
         JHtmlBootstrap::loadCSS();
