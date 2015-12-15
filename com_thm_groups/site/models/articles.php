@@ -128,10 +128,10 @@ class THM_GroupsModelArticles extends THM_CoreModelList
         return $items;
     }
 
-    public function getTotal()
+/*    public function getTotal()
     {
         return $this->_total;
-    }
+    }*/
 
     /**
      * Returns a button for creating of a new article
