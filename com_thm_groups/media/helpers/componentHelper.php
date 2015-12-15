@@ -77,11 +77,11 @@ class THM_GroupsHelperComponent
             'index.php?option=com_thm_groups&view=static_type_manager',
             $viewName == 'static_type_manager'
         );
-        JHtmlSidebar::addEntry(
+/*        JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_PLUGIN_MANAGER'),
             'index.php?option=com_thm_groups&view=plugin_manager',
             $viewName == 'plugin_manager'
-        );
+        );*/
 
         $view->sidebar = JHtmlSidebar::render();
     }
