@@ -25,6 +25,9 @@ JHtml::script(JURI::root() . 'media/jui/js/sortablelist.js');
 JHtml::stylesheet(JURI::root() . 'media/jui/css/sortablelist.css');
 JHtml::_('behavior.modal');
 
+// Include Bootstrap
+JHtmlBootstrap::loadCSS();
+
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 $saveOrder	= $listOrder == 'a.ordering';
@@ -268,7 +271,7 @@ class ArticlesTemplate extends THM_CoreTemplateList
      *
      * @param   array  &$view  an array containing the table headers
      *
-     * @return  void
+     * @return  mixed
      */
     protected static function renderBody(&$view)
     {

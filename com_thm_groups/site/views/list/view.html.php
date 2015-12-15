@@ -18,6 +18,9 @@
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
+
+// require implode('/', array(JPATH_ROOT, 'components', 'com_thm_groups', 'helper', 'bootstrap_helper.php'));
+
 jimport('thm_groups.data.lib_thm_groups');
 jimport('thm_groups.data.lib_thm_groups_user');
 jimport('joomla.application.component.view');
@@ -41,14 +44,10 @@ class THM_GroupsViewList extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        $mainframe = Jfactory::getApplication();
+        $mainframe = JFactory::getApplication();
         $app = JFactory::getApplication()->input;
         $model = $this->getModel();
         $document = JFactory::getDocument();
-        $document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/frontend.css');
-
-        // Include Bootstrap
-        JHtmlBootstrap::loadCSS();
 
         //TODO comment library path in when lib is pushed to Gerrit.
         $document->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/respList.css');

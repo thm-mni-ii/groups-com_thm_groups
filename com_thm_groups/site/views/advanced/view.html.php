@@ -19,6 +19,9 @@
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
+
+// require implode('/', array(JPATH_ROOT, 'components', 'com_thm_groups', 'helper', 'bootstrap_helper.php'));
+
 jimport('joomla.application.component.view');
 jimport('thm_groups.data.lib_thm_groups');
 JHtml::_('bootstrap.framework');
@@ -104,9 +107,6 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
         // Load test
         $scriptDir = str_replace(JPATH_SITE, '', "/libraries/thm_groups/assets/js/");
-
-        // Include Bootstrap
-        JHtmlBootstrap::loadCSS();
 
         $document = JFactory::getDocument();
 

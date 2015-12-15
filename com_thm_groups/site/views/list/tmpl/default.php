@@ -18,6 +18,9 @@
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
+
+// Include Bootstrap
+JHtmlBootstrap::loadCSS();
 ?>
 
 <div id="title">
@@ -792,8 +795,6 @@ $script = '<script type="text/javascript">'
     . 'if(jQuery(window).width() <= 480){'
     . 'jQuery(".thm_groups_toogleitem", this).slideToggle();}});'
     . '</script>';
-
-//echo $script;
 ?>
 <script>
     function toogle(caller){

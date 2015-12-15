@@ -65,9 +65,6 @@ class THM_GroupsViewArticles extends THM_CoreViewList
         $document->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/respArticles.css');
         $document->addStyleSheet(JURI::base(true) . '/components/com_thm_groups/css/quickpage.css');
 
-        // Include Bootstrap
-        JHtmlBootstrap::loadCSS();
-
         $this->addBreadcrumbs();
         $this->setURL();
 

@@ -21,6 +21,9 @@
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
  */
+
+// Include Bootstrap
+JHtmlBootstrap::loadCSS();
 ?>
 <script>
     $ = jQuery.noConflict();

@@ -19,6 +19,9 @@
  * @link        www.mni.thm.de
  */
 defined('_JEXEC') or die('Restricted access');
+
+// require implode('/', array(JPATH_ROOT, 'components', 'com_thm_groups', 'helper', 'bootstrap_helper.php'));
+
 jimport('joomla.application.component.view');
 jimport('joomla.filesystem.path');
 jimport('thm_groups.data.lib_thm_groups_user');
@@ -123,9 +126,6 @@ class THM_GroupsViewProfile extends JViewLegacy
 
         //include Picturefill 2.0 fallback
         //$document->addScript(JUri::root() . 'libraries/thm_groups_responsive/assets/js/picturefill_min.js','text/javascript" defer="false" async="true');
-
-        // Include Bootstrap
-        JHtmlBootstrap::loadCSS();
 
         //todo: comment library path in when lib is pushed to Gerrit.
         $document->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/respBaseStyles.css');

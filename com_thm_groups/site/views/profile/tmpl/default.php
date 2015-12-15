@@ -35,7 +35,8 @@ defined('_JEXEC') or die('Restricted access');
 JHTML::_('behavior.modal', 'a.modal-button');
 JHTML::_('behavior.calendar');
 
-
+// Include Bootstrap
+JHtmlBootstrap::loadCSS();
 
 $user = JFactory::getUser();
 
