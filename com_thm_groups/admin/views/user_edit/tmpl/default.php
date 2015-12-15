@@ -35,11 +35,11 @@ $session = JFactory::getSession();
                     <?php echo JText::_('COM_THM_GROUPS_USERDATA'); ?>
                 </a>
             </li>
-            <li>
+            <!--<li>
                 <a data-toggle="tab" href="#groups">
-                    <?php echo JText::_('COM_THM_GROUPS_GROUPS'); ?>
+                    <?php /*echo JText::_('COM_THM_GROUPS_GROUPS'); */?>
                 </a>
-            </li>
+            </li>-->
         </ul>
         <div id="myTabContent" class="tab-content">
             <div id="user" class="tab-pane active">
@@ -346,9 +346,9 @@ $session = JFactory::getSession();
             </div>
             <?php endforeach; ?>
         </div>
-        <div id="groups" class="tab-pane">
+        <!--<div id="groups" class="tab-pane">
             Group data here...
-        </div>
+        </div>-->
     </div>
     </div>
     <input type='hidden' id='jform_userID' name='jform[userID]' value='<?php echo $this->item->id; ?>'/>
