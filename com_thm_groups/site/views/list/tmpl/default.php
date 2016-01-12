@@ -215,9 +215,9 @@ function getListAll($params, $pagetitle, $gid)
           {
               // Adding space to the left of a name when it is not the first of a letter-category, prevents wrong indentation
               $result .= '<div style="margin-bottom: -11px;';
-              if ($actualRowPlaced != 0)
+              if ($actualRowPlaced == 0)
               {
-                  $result .= 'margin-left: 3px;">';
+                  $result .= 'margin-left: 0px;">';
               }
               else
               {
@@ -713,6 +713,9 @@ function getCssView($params)
             margin-top: 0px;
             padding-top: 7px;
             padding-left: 7px;}";
+
+    $out .= ".thm_groups_listitem div{
+            margin-left: 3px;}";
 
    /* $out .= ".thm_groups_alphabet > a {
             background: none repeat scroll 0 0 " . $params['alphabet_exists_color'] . ";
