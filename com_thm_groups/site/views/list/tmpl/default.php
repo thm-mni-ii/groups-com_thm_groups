@@ -213,7 +213,17 @@ function getListAll($params, $pagetitle, $gid)
           // Wenn aktuelles Buchstabenpaket schon Einträge in der vorherigen Spalte hat, werden diese übersprungen
           if ($remeberNextTime == 0)
           {
-              $result .= '<div style="margin-bottom: -11px;">';
+              // Adding space to the left of a name when it is not the first of a letter-category, prevents wrong indentation
+              $result .= '<div style="margin-bottom: -11px;';
+              if ($actualRowPlaced != 0)
+              {
+                  $result .= 'margin-left: 3px;">';
+              }
+              else
+              {
+                  $result .= '">';
+              }
+
               $result .= writeName($arrOrderAtt, $row, $showStructure, $linkElement, $linkTarget, $groupid);
               $actualRowPlaced++;
               $allCount++;
