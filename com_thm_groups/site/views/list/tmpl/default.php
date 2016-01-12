@@ -213,15 +213,7 @@ function getListAll($params, $pagetitle, $gid)
           // Wenn aktuelles Buchstabenpaket schon Einträge in der vorherigen Spalte hat, werden diese übersprungen
           if ($remeberNextTime == 0)
           {
-              if (($actualRowPlaced + 1) == $maxColumnSize)
-              {
-                  $result .= '<div style="margin-bottom: 25px;">';
-              }
-              else
-              {
-                  $result .= '<div style="margin-bottom: -11px;">';
-              }
-
+              $result .= '<div style="margin-bottom: -11px;">';
               $result .= writeName($arrOrderAtt, $row, $showStructure, $linkElement, $linkTarget, $groupid);
               $actualRowPlaced++;
               $allCount++;
