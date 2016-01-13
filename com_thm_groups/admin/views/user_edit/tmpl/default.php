@@ -12,6 +12,7 @@
  * @link        www.mni.thm.de
  */
 defined('_JEXEC') or die;
+JHTML::_('behavior.tooltip');
 
 jimport('thm_core.edit.advancedtemplate');
 jimport('joomla.html.editor');
@@ -282,13 +283,19 @@ $session = JFactory::getSession();
                                                     value='-'
                                                     style='float: left;'/>
                                             </div>
-                                            <button type='button' class='btn btn-default' data-dismiss='modal'>
-                                                <?php echo JText::_('COM_THM_GROUPS_CLOSE'); ?>
-                                            </button>
                                             <button
                                                 id='<?php echo $name; ?>_saveChanges'
                                                 type='button'
-                                                class='savePic btn btn-primary'><?php echo JText::_('COM_THM_GROUPS_UPLOAD'); ?>
+                                                class='savePic btn btn-primary hasTip'
+                                                title='Upload cropped::Saves the cropped version of the image.'
+                                                ><?php echo JText::_('COM_THM_GROUPS_UPLOAD_CROPPED'); ?>
+                                            </button>
+                                            <button
+                                                id='<?php echo $name; ?>_saveNormal'
+                                                type='button'
+                                                class='savePic btn btn-primary hasTip'
+                                                title='Normal Upload::Saves the original version of the image.'
+                                                ><?php echo JText::_('COM_THM_GROUPS_UPLOAD_NORMAL'); ?>
                                             </button>
                                         </div>
                                     </div>

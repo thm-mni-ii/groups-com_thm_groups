@@ -1,3 +1,8 @@
+.tip-wrap
+{
+    z-index: 2147483647 !important;
+}
+
 .imageBox
 {
     position: relative;

@@ -37,9 +37,60 @@ function bindImageCropper(element, attrID, uID)
         this.files = [];
     });
 
-    document.querySelector('#' + element + '_saveChanges').addEventListener('click', function(){
-        var blob = cropper.getBlob();
+    // Bind save action to 'Normal upload' button
+    document.querySelector('#' + element + '_saveNormal').addEventListener('click', function() {
 
+        // Get file data from <input>
+        var file = document.getElementById('jform_' + element).files[0];
+
+        var fd = new FormData();
+        fd.append('data', file);
+
+        jQf.ajax({
+            type: "POST",
+            url: "index.php?option=com_thm_groups&controller=user_edit&task=user_edit.saveCropped&tmpl=component&id="
+            + uID + "&element=" + element + "&attrID=" + attrID +"&filename="
+            + filename + "",
+            data: fd,
+            dataType: 'html',
+            processData: false,
+            contentType: false
+        }).success(function(response) {
+            document.getElementById(element + "_IMG").innerHTML = response;
+
+            var buttons = document.getElementsByClassName('btn-small');
+            for (var i=0;i<buttons.length;i++) {
+                if (buttons[i].innerHTML.indexOf('Close') == 37) {
+                    buttons[i].disabled = true;
+                }
+            }
+            document.getElementById(element + "_del").disabled = true;
+            document.getElementById(element + "_del").style.backgroundImage = 'none';
+            document.getElementById(element + "_upload").disabled = true;
+            document.getElementById(element + "_upload").style.backgroundImage = 'none';
+
+            var result = document.getElementById(element + "_result");
+            result.innerHTML = 'Picture successfully uploaded!';
+            result.style.visibility = 'visible';
+
+            if (document.getElementById("jform_" + element + "_message"))
+            {
+                jQuery("#jform_" + element + "_message").append("</br><div class='text-error'>Please save picture to proceed!</div>");
+            }
+
+            if(document.getElementById("uEditSubmit"))
+            {
+                jQuery("#uEditSubmit").append("</br><div class='alert alert-error'>Please save your changes to proceed!</div>");
+                document.getElementById('uEditSubmit').scrollIntoView();
+            }
+        });
+    });
+
+    // Bind save action to 'Upload cropped' button
+    document.querySelector('#' + element + '_saveChanges').addEventListener('click', function(){
+
+        // Get current picture
+        var blob = cropper.getBlob();
         var fd = new FormData();
         fd.append('fname', 'test.pic');
         fd.append('data', blob);
@@ -128,6 +179,9 @@ function deletePic(name, attributeID, userID) {
     });
 }
 
+/* Notice: cropbox works with the chopped image shown in the preview box, not the actual image file
+ * as a result the cropped image can be considered like a snipped from a screen-shot that is converted into a blob.
+ */
 var cropbox = function(options){
     var el = document.querySelector(options.imageBox),
     obj =
