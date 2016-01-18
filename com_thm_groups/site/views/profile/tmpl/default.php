@@ -306,7 +306,7 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
                                 $body .= $data->name . ':';
                                 $body .= '</div>';
                                 $body .= '<div class="value" id="' . $data->name . '_value">';
-                                $body .= nl2br(htmlspecialchars_decode($data->value));
+                                $body .= htmlspecialchars_decode($data->value);
                                 $body .= '</div>';
                                 $body .= '</div>';
                                 break;

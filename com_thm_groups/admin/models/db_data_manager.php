@@ -25,6 +25,13 @@ require_once JPATH_COMPONENT_ADMINISTRATOR . '/update.php';
 class THM_GroupsModelDB_Data_Manager extends JModelLegacy
 {
 
+    /**
+     * Facade
+     *
+     * @return  bool   true on success, false otherwise
+     *
+     * @throws Exception
+     */
     public function execute()
     {
         $jinput = JFactory::getApplication()->input;
@@ -38,10 +45,16 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
                 self::installExampleData();
                 break;
             case 'copy_data_from_joomla25_thm_groups_tables':
-                self::restoreData();
+                self::restoreData(true, 'customUpdate.sql');
+                break;
+            case 'copy_data_for_w_page_from_joomla25_thm_groups_tables':
+                self::restoreData(false, 'customUpdateForW.sql');
                 break;
             case 'fix_tables':
                 self::fixTables();
+                break;
+            case 'convert_tables_in_new_textfields':
+                self::convertTablesInTextFields();
                 break;
             default:
                 return false;
@@ -51,15 +64,209 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
     }
 
     /**
+     * We copied with update script the data from _thm_groups_table_extra and _thm_groups_table.
+     * Table functionality will no more supported, because you can create, edit and delete tables
+     * with help of integrated editors for text fields.
+     *
+     * This function needs two tables from the old structure:
+     *  prefix_thm_groups_table
+     *  prefix_thm_groups_table_extra
+     *
+     * The function converts the old self-defined structure for tables into normal
+     * HTML tables, which will be saved as HTML-Code in new Attributes with the
+     * static type TEXTFIELD (see also dynamic type -> TEXTFIELD)
+     *
+     * @return  bool   true on success, false otherwise
+     *
+     * @throws Exception
+     */
+    private static function convertTablesInTextFields()
+    {
+        $tableStructures = self::getTableStructures();
+        if (self::createNewTextFieldFromTableStructure($tableStructures))
+        {
+            return true;
+        }
+
+        JFactory::getApplication()->enqueueMessage('DB_Data_Manager -> convertTablesInTextFields', 'error');
+        return false;
+    }
+
+    /**
+     * Creates TEXTFIELD Attributes from the table types
+     *
+     * @param   array  $tableStructures  Array with all structures from type TABLE
+     *
+     * @return  bool   true in success, false otherwise
+     */
+    private static function createNewTextFieldFromTableStructure($tableStructures)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $values = array();
+        $header = '';
+
+        foreach ($tableStructures as $structure)
+        {
+            $query
+                ->insert("#__thm_groups_attribute (dynamic_typeID, name, options, published)");
+            // 2 as dynamicType, because by update it's a standard value for TEXTFIELD
+            $value = array(2, $db->q($structure->field . 'COPY'), $db->q('{ "length" : "80", "required" : "false" }'), 1);
+            $query
+                ->values(implode(',', $value));
+            $db->setQuery($query);
+            try
+            {
+                $db->execute();
+            }
+            catch (Exception $e)
+            {
+                JFactory::getApplication()->enqueueMessage('createNewTextFieldFromTableStructure ' . $e->getMessage(), 'error');
+                return false;
+            }
+            $attrID = $db->insertid();
+
+            // Get rows from table #__thm_groups_table
+            $tableContent = self::getTableContent($structure->id);
+            $header = self::getTableHeader($structure->id);
+            foreach($tableContent as $table)
+            {
+                if (!empty($table->value) && $table->value != '[]' && $table->userid != 0)
+                {
+                    $newTableContent = self::convertTableContent($header, $table->value);
+                    $query = $db->getQuery(true);
+                    $query
+                        ->insert('#__thm_groups_users_attribute (usersID, attributeID, value, published)');
+                    $value = array($table->userid, $attrID, $db->q($newTableContent), $table->publish);
+                    $query
+                        ->values(implode(',', $value));
+                    $db->setQuery($query);
+                    try
+                    {
+                        $db->execute();
+                    }
+                    catch (Exception $e)
+                    {
+                        JFactory::getApplication()->enqueueMessage('createNewTextFieldFromTableStructure #2 ' . $e->getMessage(), 'error');
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Return header of a table by structure ID
+     *
+     * @param   int  $structID  structure ID
+     *
+     * @return  object
+     */
+    private static function getTableHeader($structID)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query
+            ->select('value')
+            ->from('#__thm_groups_table_extra')
+            ->where("structid = $structID");
+        $db->setQuery($query);
+
+        return $db->loadObject();
+    }
+
+    /**
+     * Converts old table structure in new one
+     *
+     * @param   object  $tableHeader   Object with header string semicolon separated
+     *
+     * @param   json    $tableContent  JSON string with table's content
+     *
+     * @return  string  New table representation
+     */
+    private static function convertTableContent($tableHeader, $tableContent)
+    {
+        $head = explode(';', $tableHeader->value);
+        $arrValue = json_decode($tableContent);
+        $newContent = '<table class="table table-striped">';
+        $newContent .= '<thead>';
+        $newContent .= '<tr>';
+
+        foreach($head as $headItem)
+            $newContent .= "<th>$headItem</th>";
+
+        $newContent .= '</tr>';
+        $newContent .= '</thead>';
+
+        $newContent .= '<tbody>';
+        foreach($arrValue as $row)
+        {
+            $newContent .= '<tr>';
+            foreach ($row as $rowItem)
+                $newContent .= '<td>' . $rowItem . '</td>';
+            $newContent .= '</tr>';
+        }
+        $newContent .= '</tbody>';
+        $newContent .= '</table>';
+        return $newContent;
+    }
+
+    /**
+     * Retrieve content of tables
+     *
+     * @param   int  $structID  TABLE-Structure ID
+     *
+     * @return ObjectList
+     */
+    private static function getTableContent($structID)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query
+            ->select('userid, structid, value, publish')
+            ->from('#__thm_groups_table')
+            ->where("structid = $structID");
+
+        $db->setQuery($query);
+        return $db->loadObjectList();
+    }
+
+    /**
+     * Returns all structures of type TABLE
+     *
+     * @return ObjectList
+     */
+    private static function getTableStructures()
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        // Get all structures of type TABLE
+        $query
+            ->select('id, field, type, `order`')
+            ->from('#__thm_groups_structure')
+            ->where('type LIKE "TABLE"');
+        $db->setQuery($query);
+        return $db->loadObjectList();
+    }
+
+    /**
      * Fixes a problem with the not copied users after migration
-     * Example: You migrated some Joomla instance, but the old joomla instance become new users
+     * Example:
+     * You migrated some Joomla instance, but the old joomla instance become new users
      * You copy this new users from the old joomla instance with J2XML to your new instance.
      * You have users only in Joomla, but not in THM Groups.
+     *
      * This method uses the algorithm of sync plugin to copy all basic user attributes like first name,
      * second name, email and username. It creates also all other existing attributes, but without information.
      * It assigns also group-role mapping to users.
      *
-     * @return bool
+     * @return  bool   true on success, false otherwise
+     *
      * @throws Exception
      */
     private static function fixTables()
@@ -77,6 +284,11 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
         return false;
     }
 
+    /**
+     * Retrieves user IDs and groups
+     *
+     * @return AssocList
+     */
     private static function getUserIDsAndGroups()
     {
         $db = JFactory::getDbo();
@@ -94,6 +306,15 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
         return $db->loadAssocList();
     }
 
+    /**
+     * Copies users from Joomla into THM Groups using sync-plugin algorithm
+     *
+     * @param   array  $users  Array with users and groups
+     *
+     * @return  bool   true on success, false otherwise
+     *
+     * @throws  Exception
+     */
     private static function copyUserData($users)
     {
         $db = JFactory::getDbo();
@@ -177,7 +398,7 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
     }
 
     /**
-     * Method to insert the USer groups
+     * Method to insert the User groups
      *
      * @param   int    $user_id      User id
      *
@@ -230,14 +451,35 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
         }
     }
 
-    private static function restoreData()
+    /**
+     * @param   bool    $fixCategoriesTable  Fix an old bug with categories for quickpages
+     *
+     * @param   string  $scriptName          SQL-Script which will be launched, e.g. "customUpdate.sql", place script in /admin/sql/updates/
+     *
+     * @return  bool   true on success, false otherwise
+     *
+     * @throws  Exception
+     */
+    private static function restoreData($fixCategoriesTable = true, $scriptName)
     {
-        if (self::fixCategoriesTable()
-            && self::copyData()
-            && THM_Groups_Update_Script::update())
+        if ($fixCategoriesTable)
         {
-            return true;
+            if (self::fixCategoriesTable()
+                && self::copyData($scriptName)
+                && THM_Groups_Update_Script::update())
+            {
+                return true;
+            }
         }
+        else
+        {
+            if (self::copyData($scriptName)
+                && THM_Groups_Update_Script::update())
+            {
+                return true;
+            }
+        }
+
 
         JFactory::getApplication()->enqueueMessage('DB_Data_Manager -> Restore Data', 'error');
         return false;
@@ -245,7 +487,9 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
 
     /**
      * Changes created_user_id for all quickpages categories before data's import.
-     * It's an old bug in creation of categories for users
+     * It's an old bug by creation of categories for users
+     *
+     * @return  bool   true on success, false otherwise
      */
     private static function fixCategoriesTable()
     {
@@ -256,7 +500,7 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
         $query
             ->select('id')
             ->from('#__categories')
-            ->where('path = "persoenliche-seiten"');
+            ->where('path = "persoenliche-seiten" OR path = "quickpages"');
         $db->setQuery($query);
         $mainCat = $db->loadObject();
 
@@ -265,7 +509,8 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
         $query
             ->select('id, path')
             ->from('#__categories')
-            ->where("parent_id = $mainCat->id");
+            ->where("parent_id = $mainCat->id")
+            ->where('published = 1');
         $db->setQuery($query);
         $categories = $db->loadObjectList();
 
@@ -304,7 +549,9 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
     }
 
     /**
-     * install_example_data
+     * Installs example data
+     *
+     * @return  bool   true on success, false otherwise
      */
     private static function installExampleData()
     {
@@ -323,7 +570,10 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
     }
 
     /**
-     * @return bool
+     * Creates example dynamic types
+     *
+     * @return  bool   true on success, false otherwise
+     *
      * @throws Exception
      */
     private static function createExampleDynamicTypes()
@@ -367,6 +617,13 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
         return true;
     }
 
+    /**
+     * Creates example attributes
+     *
+     * @return  bool   true on success, false otherwise
+     *
+     * @throws Exception
+     */
     private static function createExampleAttributes()
     {
         $db = JFactory::getDbo();
@@ -415,6 +672,13 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
         return true;
     }
 
+    /**
+     * Creates example roles
+     *
+     * @return  bool   true on success, false otherwise
+     *
+     * @throws Exception
+     */
     private static function createExampleRoles()
     {
         $db = JFactory::getDbo();
@@ -458,6 +722,13 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
         return true;
     }
 
+    /**
+     * Creates example profiles
+     *
+     * @return  bool   true on success, false otherwise
+     *
+     * @throws Exception
+     */
     private static function createExampleProfiles()
     {
         $db = JFactory::getDbo();
@@ -499,6 +770,13 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
         return true;
     }
 
+    /**
+     * Creates example attributes for profile
+     *
+     * @return  bool   true on success, false otherwise
+     *
+     * @throws Exception
+     */
     private static function createExampleProfileAttributes()
     {
         $db = JFactory::getDbo();
@@ -548,12 +826,16 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
     }
 
     /**
-     * copy_data_from_joomla25_thm_groups_tables
+     * Launches the given SQL-Script
+     *
+     * @param   string  $scriptName  SQL-Script name
+     *
+     * @return  bool   true on success, false otherwise
      */
-    private static function copyData()
+    private static function copyData($scriptName)
     {
         $db = JFactory::getDbo();
-        $buffer = file_get_contents(JPATH_COMPONENT_ADMINISTRATOR . '/sql/updates/customUpdate.sql');
+        $buffer = file_get_contents(JPATH_COMPONENT_ADMINISTRATOR . '/sql/updates/' . $scriptName);
         if ($buffer === false)
         {
             JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_READBUFFER'), JLog::WARNING, 'jerror');

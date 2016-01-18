@@ -48,7 +48,7 @@ class THM_Groups_Update_Script
          && self::migrateTextOptions()
          && self::migrateTextFieldOptions()
          /* && self::copyModuleToProfile() */
-         && self::copyMenuToProfile())
+         /* && self::copyMenuToProfile()*/ )
         {
             return true;
         }
