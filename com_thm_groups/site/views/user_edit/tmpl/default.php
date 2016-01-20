@@ -198,7 +198,6 @@ else
                                     <br/>
                                     <button id='<?php echo $name; ?>_del' class='btn btn-danger'
                                             style='margin-right: 10px !important;
-                                            width: 95px !important;
                                             float: left;'
                                             onclick='deletePic("<?php echo $name; ?>", "<?php echo $item->structid; ?>"
                                                 , "<?php echo $this->item; ?>")'
@@ -237,7 +236,16 @@ else
                                             <button
                                                 id='<?php echo $name; ?>_saveChanges'
                                                 type='button'
-                                                class='savePic btn btn-primary'><?php echo JText::_('COM_THM_GROUPS_UPLOAD'); ?>
+                                                class='savePic btn btn-primary hasTip'
+                                                title='Upload cropped::Saves the cropped version of the image.'>
+                                                <?php echo JText::_('COM_THM_GROUPS_UPLOAD'); ?>
+                                            </button>
+                                            <button
+                                                id='<?php echo $name; ?>_saveNormal'
+                                                type='button'
+                                                class='savePic btn btn-primary hasTip'
+                                                title='Normal Upload::Saves the original version of the image.'
+                                                ><?php echo JText::_('COM_THM_GROUPS_UPLOAD_NORMAL'); ?>
                                             </button>
                                             <br/>
                                             <hr/>

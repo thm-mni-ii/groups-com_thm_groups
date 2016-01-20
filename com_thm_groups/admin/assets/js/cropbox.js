@@ -8,6 +8,8 @@
  *
  * @return null
  **/
+var cropboxEventElements = [];
+
 function bindImageCropper(element, attrID, uID)
 {
     var options =
@@ -21,89 +23,55 @@ function bindImageCropper(element, attrID, uID)
         ,filename = null
         ;
 
-    document.querySelector('#jform_' + element).addEventListener('change', function(){
-        var reader = new FileReader();
+    var isInList = false;
 
-        reader.onload = function(e) {
-            options.imgSrc = e.target.result;
-            cropper = new cropbox(options);
+    for (var i=0; i<cropboxEventElements.length; i++)
+    {
+        if (cropboxEventElements[i] == element)
+        {
+            isInList = true;
         }
+    }
 
-        reader.readAsDataURL(this.files[0]);
+    if(isInList == false)
+    {
+        // Add element to event listener list to prevent multiple bindings
+        cropboxEventElements.push(element);
 
-        var file = this.files[0];
-        filename = file.name;
+        document.querySelector('#jform_' + element).addEventListener('change', function(){
+            var reader = new FileReader();
 
-        this.files = [];
-    });
-
-    // Bind save action to 'Normal upload' button
-    document.querySelector('#' + element + '_saveNormal').addEventListener('click', function() {
-
-        // Get file data from <input>
-        var file = document.getElementById('jform_' + element).files[0];
-
-        var fd = new FormData();
-        fd.append('data', file);
-
-        jQf.ajax({
-            type: "POST",
-            url: "index.php?option=com_thm_groups&controller=user_edit&task=user_edit.saveCropped&tmpl=component&id="
-            + uID + "&element=" + element + "&attrID=" + attrID +"&filename="
-            + filename + "",
-            data: fd,
-            dataType: 'html',
-            processData: false,
-            contentType: false
-        }).success(function(response) {
-            document.getElementById(element + "_IMG").innerHTML = response;
-
-            var buttons = document.getElementsByClassName('btn-small');
-            for (var i=0;i<buttons.length;i++) {
-                if (buttons[i].innerHTML.indexOf('Close') == 37) {
-                    buttons[i].disabled = true;
-                }
-            }
-            document.getElementById(element + "_del").disabled = true;
-            document.getElementById(element + "_del").style.backgroundImage = 'none';
-            document.getElementById(element + "_upload").disabled = true;
-            document.getElementById(element + "_upload").style.backgroundImage = 'none';
-
-            var result = document.getElementById(element + "_result");
-            result.innerHTML = 'Picture successfully uploaded!';
-            result.style.visibility = 'visible';
-
-            if (document.getElementById("jform_" + element + "_message"))
-            {
-                jQuery("#jform_" + element + "_message").append("</br><div class='text-error'>Please save picture to proceed!</div>");
+            reader.onload = function(e) {
+                options.imgSrc = e.target.result;
+                cropper = new cropbox(options);
             }
 
-            if(document.getElementById("uEditSubmit"))
-            {
-                jQuery("#uEditSubmit").append("</br><div class='alert alert-error'>Please save your changes to proceed!</div>");
-                document.getElementById('uEditSubmit').scrollIntoView();
-            }
+            reader.readAsDataURL(this.files[0]);
+
+            var file = this.files[0];
+            filename = file.name;
+
+            this.files = [];
         });
-    });
 
-    // Bind save action to 'Upload cropped' button
-    document.querySelector('#' + element + '_saveChanges').addEventListener('click', function(){
+        // Bind save action to 'Normal upload' button
+        document.querySelector('#' + element + '_saveNormal').addEventListener('click', function() {
 
-        // Get current picture
-        var blob = cropper.getBlob();
-        var fd = new FormData();
-        fd.append('fname', 'test.pic');
-        fd.append('data', blob);
+            // Get file data from <input>
+            var file = document.getElementById('jform_' + element).files[0];
 
-        jQf.ajax({
-            type: "POST",
-            url: "index.php?option=com_thm_groups&controller=user_edit&task=user_edit.saveCropped&tmpl=component&id="
-            + uID + "&element=" + element + "&attrID=" + attrID +"&filename="
-            + filename + "",
-            data: fd,
-            dataType: 'html',
-            processData: false,
-            contentType: false
+            var fd = new FormData();
+            fd.append('data', file);
+
+            jQf.ajax({
+                type: "POST",
+                url: "index.php?option=com_thm_groups&controller=user_edit&task=user_edit.saveCropped&tmpl=component&id="
+                + uID + "&element=" + element + "&attrID=" + attrID +"&filename="
+                + filename + "",
+                data: fd,
+                dataType: 'html',
+                processData: false,
+                contentType: false
             }).success(function(response) {
                 document.getElementById(element + "_IMG").innerHTML = response;
 
@@ -132,51 +100,101 @@ function bindImageCropper(element, attrID, uID)
                     jQuery("#uEditSubmit").append("</br><div class='alert alert-error'>Please save your changes to proceed!</div>");
                     document.getElementById('uEditSubmit').scrollIntoView();
                 }
-                });
             });
+        });
 
-            document.querySelector('#'+ element + '_switch').addEventListener('click', function(){
-                var box = document.getElementById(element + '_thumbBox');
+        // Bind save action to 'Upload cropped' button
+        document.querySelector('#' + element + '_saveChanges').addEventListener('click', function(){
 
-                // Get old values:
-                var style = window.getComputedStyle(box);
-                var height = style.getPropertyValue('height');
-                var width = style.getPropertyValue('width');
+            // Get current picture
+            var blob = cropper.getBlob();
+            var fd = new FormData();
+            fd.append('fname', 'test.pic');
+            fd.append('data', blob);
 
-                // Set new values:
-                box.style.height = width;
-                box.style.width = height;
-                });
+            jQf.ajax({
+                type: "POST",
+                url: "index.php?option=com_thm_groups&controller=user_edit&task=user_edit.saveCropped&tmpl=component&id="
+                + uID + "&element=" + element + "&attrID=" + attrID +"&filename="
+                + filename + "",
+                data: fd,
+                dataType: 'html',
+                processData: false,
+                contentType: false
+            }).success(function(response) {
+                document.getElementById(element + "_IMG").innerHTML = response;
 
-            document.querySelector('#'+ element + '_btnCrop').addEventListener('click', function(){
-                var img = cropper.getDataURL();
-                document.querySelector('#' + element + '_cropped').innerHTML = '';
-                document.querySelector('#' + element + '_cropped').innerHTML = '<img src="'+img+'">';
-                });
-            document.querySelector('#'+ element + '_btnZoomIn').addEventListener('click', function(){
-                cropper.zoomIn();
-                });
-            document.querySelector('#'+ element + '_btnZoomOut').addEventListener('click', function(){
-                cropper.zoomOut();
-                });
+                var buttons = document.getElementsByClassName('btn-small');
+                for (var i=0;i<buttons.length;i++) {
+                    if (buttons[i].innerHTML.indexOf('Close') == 37) {
+                        buttons[i].disabled = true;
+                    }
+                }
+                document.getElementById(element + "_del").disabled = true;
+                document.getElementById(element + "_del").style.backgroundImage = 'none';
+                document.getElementById(element + "_upload").disabled = true;
+                document.getElementById(element + "_upload").style.backgroundImage = 'none';
+
+                var result = document.getElementById(element + "_result");
+                result.innerHTML = 'Picture successfully uploaded!';
+                result.style.visibility = 'visible';
+
+                if (document.getElementById("jform_" + element + "_message"))
+                {
+                    jQuery("#jform_" + element + "_message").append("</br><div class='text-error'>Please save picture to proceed!</div>");
+                }
+
+                if(document.getElementById("uEditSubmit"))
+                {
+                    jQuery("#uEditSubmit").append("</br><div class='alert alert-error'>Please save your changes to proceed!</div>");
+                    document.getElementById('uEditSubmit').scrollIntoView();
+                }
+            });
+        });
+
+        document.querySelector('#'+ element + '_switch').addEventListener('click', function(){
+            var box = document.getElementById(element + '_thumbBox');
+
+            // Get old values:
+            var style = window.getComputedStyle(box);
+            var height = style.getPropertyValue('height');
+            var width = style.getPropertyValue('width');
+
+            // Set new values:
+            box.style.height = width;
+            box.style.width = height;
+        });
+
+        document.querySelector('#'+ element + '_btnCrop').addEventListener('click', function(){
+            var img = cropper.getDataURL();
+            document.querySelector('#' + element + '_cropped').innerHTML = '';
+            document.querySelector('#' + element + '_cropped').innerHTML = '<img src="'+img+'">';
+        });
+        document.querySelector('#'+ element + '_btnZoomIn').addEventListener('click', function(){
+            cropper.zoomIn();
+        });
+        document.querySelector('#'+ element + '_btnZoomOut').addEventListener('click', function(){
+            cropper.zoomOut();
+        });
+    }
+
+    function deletePic(name, attributeID, userID) {
+        jQf.ajax({
+            type: "POST",
+            url: "index.php?option=com_thm_groups&controller=user_edit&task=user_edit.deletePicture&tmpl=component&id="
+            + userID + "&attrID=" + attributeID + "",
+            datatype: "HTML"
+        }).success(function (response) {
+
+            //document.getElementById(name + "_IMG").innerHTML = response;
+
+            if (response != 'false')
+            {
+                document.getElementById(name + "_IMG").innerHTML = '';
+                document.getElementById("jform_" + name + "_hidden").value = response;
             }
-
-function deletePic(name, attributeID, userID) {
-    jQf.ajax({
-        type: "POST",
-        url: "index.php?option=com_thm_groups&controller=user_edit&task=user_edit.deletePicture&tmpl=component&id="
-        + userID + "&attrID=" + attributeID + "",
-        datatype: "HTML"
-    }).success(function (response) {
-
-        //document.getElementById(name + "_IMG").innerHTML = response;
-
-        if (response != 'false')
-        {
-            document.getElementById(name + "_IMG").innerHTML = '';
-            document.getElementById("jform_" + name + "_hidden").value = response;
-        }
-    });
+        });
+    }
 }
 
 /* Notice: cropbox works with the chopped image shown in the preview box, not the actual image file

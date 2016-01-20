@@ -234,7 +234,6 @@ $session = JFactory::getSession();
                                                 <div id='<?php echo $name; ?>_cropped_controls'
                                                      class='cropped_controls'>
                                                     <span>
-                                                        <hr/>
                                                         <br/>
                                                         <b>
                                                             <?php echo JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_SELECT_DIM'); ?>
@@ -250,7 +249,7 @@ $session = JFactory::getSession();
                                                     <br/><br/>
                                                     <div id='<?php echo $name; ?>_result'
                                                          class="alert alert-success"
-                                                         style="visibility: hidden;"></div>
+                                                         style="visibility: hidden; margin-top: 70px;"></div>
                                                 </div>
                                             </div>
 

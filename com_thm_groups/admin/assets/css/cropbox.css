@@ -52,7 +52,7 @@
 }
 .modalPicture
 {
-    max-height: 550px !important;
+    height: 250px;
 }
 .modalFade
 {
