@@ -6,7 +6,7 @@
     <authorUrl>http://www.thm.de</authorUrl>
     <copyright>TH Mittelhessen 2016</copyright>
     <license>GNU/GPL Version 2</license>
-    <version>3.5.76</version>
+    <version>3.5.77</version>
     <scriptfile>script.php</scriptfile>
     <install>
         <sql>
