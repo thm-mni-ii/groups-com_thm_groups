@@ -617,8 +617,8 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                             break;
                         case "4":
                             // EMail
-                            $result .= '<span class="respEmail"><a href="mailto:' . $memberitem->value . '" class="btn" role="button">'
-                                    . '<span class="icon-mail-2"></span></a></span>';
+                            $result .= '<span class="respEmail">' . JHTML::_('email.cloak', $memberitem->value)
+                                    . '<span class="icon-mail-2"></span></span>';
                             $result .= '<span class="respEmail-hidden">' . JHTML::_('email.cloak', $memberitem->value) . '</span>';
                             break;
                         default:
