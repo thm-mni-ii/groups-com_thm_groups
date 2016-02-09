@@ -83,23 +83,33 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         }
         
         $this->title = $title;
+
         $this->app = $app;
+
         $itemId = $app->get('Itemid', 0, 'get');
-        $viewparams = $model->getViewParams();
-        $this->params = $viewparams;
-        $groupnumber = $model->getGroupNumber();
-        $this->gsgid = $groupnumber;
+
+        $this->params = $model->getViewParams();
+
+        $gid = $model->getGroupNumber();
+
+        $this->gsgid = $gid;
+
         $this->itemid = $itemId;
-        $canEdit = $model->canEdit($groupnumber);
-        $this->canEdit = $canEdit;
-        $tempdata = $model->getData();
-        $this->data = $tempdata;
-        $gettable = $model->getDataTable();
-        $this->dataTable = $gettable;
 
-        $advancedView = $model->getAdvancedView();
+        $this->canEdit = $model->canEdit($gid);
 
-        $this->view = $advancedView;
+        $this->data = $model->getData();
+
+        $templateLayout = $params->get('advancedview');
+
+        // For dynamic call
+        if (empty($templateLayout))
+        {
+            // use list layout
+            $templateLayout = 0;
+        }
+
+        $this->view = $templateLayout;
 
         // Long Info Truncate
         $truncateLongInfo = !$params->get('longInfoNotTruncated', false);
@@ -114,7 +124,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $document->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/respAdvanced.css');
 
         // Load Dynamic CSS
-        $mycss = $this->getCssView($params, $advancedView);
+        $mycss = $this->getCssView($params, $templateLayout);
        
         $document->addStyleDeclaration($mycss);
 
@@ -128,44 +138,6 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
         parent::display($tpl);
     }
-
-    /**
-     * Method to generate table
-     *
-     * @param   Object  $data  Data
-     *
-     * @return String table
-     */
-    public function make_table($data)
-    {
-        $jsonTable = json_decode($data);
-        $table = "<table class='table'><tr>";
-
-        foreach ($jsonTable[0] as $key => $value)
-        {
-            $headItem = str_replace("_", " ", $key);
-            $table = $table . "<th>" . $headItem . "</th>";
-        }
-
-        $table = $table . "</tr>";
-
-        foreach ($jsonTable as $item)
-        {
-            $table = $table . "<tr>";
-
-            foreach ($item as $value)
-            {
-                $table = $table . "<td>" . $value . "</td>";
-            }
-
-            $table = $table . "</tr>";
-        }
-
-        $table = $table . "</table>";
-
-        return $table;
-    }
-
 
     /**
      * Add px Suffix to numeric value (for css)

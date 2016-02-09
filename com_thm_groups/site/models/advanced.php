@@ -77,12 +77,19 @@ class THM_GroupsModelAdvanced extends JModelLegacy
     /**
      * Get Group number
      *
-     * @return integer Group number
+     * @return integer on success, -1 on false Group number
      */
     public function getGroupNumber()
     {
         $params = $this->getViewParams();
-        return $params->get('selGroup');
+        $groupID = $params->get('selGroup');
+
+        if (empty($groupID))
+        {
+            $groupID = JFactory::getApplication()->input->getInt('gid', -1);
+        }
+
+        return $groupID;
     }
 
     /**
@@ -156,7 +163,6 @@ class THM_GroupsModelAdvanced extends JModelLegacy
      */
     public function canEdit($groupid)
     {
-        $groupid = $this->getGroupNumber();
         $user = JFactory::getUser();
         if($user->authorise('core.admin', 'com_thm_groups'))
             return true;
@@ -199,6 +205,13 @@ class THM_GroupsModelAdvanced extends JModelLegacy
 
         $sortedRoles       = $params->get('roleid');
         $data             = array();
+
+        if ($groupid === -1)
+        {
+            JFactory::getApplication()->enqueueMessage('Group ID is missing!', 'error');
+            return $data;
+        }
+
         if ($sortedRoles == "")
         {
             $arrSortedRoles = $this->getUnsortedRoles($groupid);
@@ -297,60 +310,6 @@ class THM_GroupsModelAdvanced extends JModelLegacy
             return null;
         }
     }
-
-    /**
-     * Get Data for table view
-     *
-     * @return  array    Two-dimensional array with group members (left and right)
-     */
-    public function getDataTable()
-    {
-        $memberleft = array();
-        $memberright = array();
-        $index = 0;
-        $_data = $this->getData();
-        if (!empty($_data))
-        {
-            foreach ($_data as $key => $member)
-            {
-                if ($index == 0)
-                {
-                    $memberleft[$key] = $member;
-                    $index++;
-                }
-                else
-                {
-                    $memberright[$key] = $member;
-                    $index--;
-                }
-            }
-        }
-
-        $_data = array();
-        $_data['left']  = $memberleft;
-        $_data['right'] = $memberright;
-
-        return $_data;
-    }
-
-    /**
-     * Get the Param for the view
-     *
-     * @return  number   The number of the view
-     */
-    public function getAdvancedView()
-    {
-        $params = $this->getViewParams();
-        $view = $params->get('advancedview');
-        if (!isset($view))
-        {
-            $view = 0;
-        }
-        return $view;
-    }
-
-
-
 
     /**
      * Get Auto Increment Value of Database Table
