@@ -177,24 +177,24 @@ function bindImageCropper(element, attrID, uID)
             cropper.zoomOut();
         });
     }
+}
 
-    function deletePic(name, attributeID, userID) {
-        jQf.ajax({
-            type: "POST",
-            url: "index.php?option=com_thm_groups&controller=user_edit&task=user_edit.deletePicture&tmpl=component&id="
-            + userID + "&attrID=" + attributeID + "",
-            datatype: "HTML"
-        }).success(function (response) {
+function deletePic(name, attributeID, userID) {
+    jQf.ajax({
+        type: "POST",
+        url: "index.php?option=com_thm_groups&controller=user_edit&task=user_edit.deletePicture&tmpl=component&id="
+        + userID + "&attrID=" + attributeID + "",
+        datatype: "HTML"
+    }).success(function (response) {
 
-            //document.getElementById(name + "_IMG").innerHTML = response;
+        //document.getElementById(name + "_IMG").innerHTML = response;
 
-            if (response != 'false')
-            {
-                document.getElementById(name + "_IMG").innerHTML = '';
-                document.getElementById("jform_" + name + "_hidden").value = response;
-            }
-        });
-    }
+        if (response != 'false')
+        {
+            document.getElementById(name + "_IMG").innerHTML = '';
+            document.getElementById("jform_" + name + "_hidden").value = response;
+        }
+    });
 }
 
 /* Notice: cropbox works with the chopped image shown in the preview box, not the actual image file

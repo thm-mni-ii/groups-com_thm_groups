@@ -14,6 +14,7 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modeladmin');
 require_once JPATH_COMPONENT_ADMINISTRATOR . '/install.php';
 require_once JPATH_COMPONENT_ADMINISTRATOR . '/update.php';
+// test
 
 /**
  *
