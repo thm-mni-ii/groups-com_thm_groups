@@ -1,70 +1,75 @@
 <?php
 /**
- * @version     v1.0.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsViewDynamic_Type_Edit
- * @description THM_GroupsViewDynamic_Type_Edit file from com_thm_groups
- * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @name        THMGroupsViewProfile_Edit
+ * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
+ * @author      James Antrim, <james.antrim@nm.thm.de>
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
-defined('_JEXEC') or die('Restricted access');
-jimport('thm_core.edit.view');
+
+// No direct access to this file
+defined('_JEXEC') or die;
+
+require_once JPATH_ROOT . '/media/com_thm_groups/views/profile_edit_view.php';
 
 /**
- * THM_GroupsViewDynamic_Type_Edit class for component com_thm_groups
+ * THMGroupsViewProfile_Edit class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
+ * @link      www.thm.de
  */
-class THM_GroupsViewProfile_Edit extends THM_CoreViewEdit
+class THM_GroupsViewProfile_Edit extends THM_GroupsViewProfile_Edit_View
 {
+    public $userID;
 
-    public $model;
+    public $groupID;
 
-    public $profilid;
+    public $attributes = null;
 
     /**
-     * loads model data into view context
+     * Method to get display
      *
-     * @param   string  $tpl  the name of the template to be used
+     * @param   Object  $tpl  template (default: null)
      *
-     * @return void
+     * @return  void
      */
     public function display($tpl = null)
     {
-        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
+        $input = JFactory::getApplication()->input;
+        $this->userID = $input->getInt('userID', 0);
+        $canEdit = THM_GroupsHelperComponent::canEditProfile($this->userID);
+        if (!$canEdit)
         {
-            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+            THM_GroupsHelperComponent::noAccess();
         }
 
-        $app = JFactory::getApplication()->input;
-        $user = JFactory::getUser();
+        // Get user data for edit view.
+        $this->attributes = $this->get('Attributes');
 
-        // Get user ids
-        $this->profilid = intval($app->get('id'));
-
-
-        $this->model = $this->getModel();
+        $this->modifyDocument();
+        $this->addToolBar();
 
         parent::display($tpl);
     }
 
-    protected function addToolbar()
+    /**
+     * Method to generate buttons for user interaction
+     *
+     * @return  void
+     */
+    protected function addToolBar()
     {
-        $app = JFactory::getApplication();
-        $title = intval($app->get('id')) == 0 ? 'New' : 'Edit';
+        JFactory::getApplication()->input->set('hidemainmenu', true);
 
-        JToolBarHelper::title($title, 'test');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS_PROFILE_EDIT_EDIT_TITLE'), 'title');
 
         JToolBarHelper::apply('profile.apply', 'JTOOLBAR_APPLY');
         JToolBarHelper::save('profile.save', 'JTOOLBAR_SAVE');
-        JToolBarHelper::custom('profile.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
         JToolBarHelper::cancel('profile.cancel', 'JTOOLBAR_CLOSE');
     }
 }

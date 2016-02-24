@@ -9,20 +9,19 @@
  * @description THMGroupsModelWAI file from com_thm_groups
  * @author      Ilja Michajlow,  <ilja.michajlow@mni.thm.de>
  * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
- * @copyright   2013 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 /**
  * THMGroupsModelWai class for component com_thm_groups
  *
  * @category  Joomla.Library
  * @package   lib_thm_groups
- * @link      www.mni.thm.de
- * @since     Class available since Release 3.0
+ * @link      www.thm.de
  */
 class THMGroupsModelWai
 {

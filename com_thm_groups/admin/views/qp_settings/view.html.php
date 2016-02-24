@@ -6,9 +6,9 @@
  * @name        THM_GroupsViewUser_Select
  * @description view output file for user lists
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2015 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 defined('_JEXEC') or die;
 jimport('thm_core.list.view');
@@ -20,7 +20,7 @@ JHtml::_('jquery.framework');
  * @category    Joomla.Component.Admin
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 class THM_GroupsViewQP_Settings extends JViewLegacy
 {
@@ -44,7 +44,7 @@ class THM_GroupsViewQP_Settings extends JViewLegacy
         $this->addToolBar();
 
         $document = JFactory::getDocument();
-        $document->addScript(JURI::root(true) . '/administrator/components/com_thm_groups/assets/js/qp_settings.js');
+        $document->addScript(JURI::root(true) . '/media/com_thm_groups/js/qp_settings.js');
 
         parent::display($tpl);
     }

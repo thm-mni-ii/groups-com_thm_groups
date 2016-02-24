@@ -1,5 +1,4 @@
 /**
- * @version Orderattributte
  * @package Joomla
  * @subpackage THM Groups List View
  * @author Dieudonne Timma

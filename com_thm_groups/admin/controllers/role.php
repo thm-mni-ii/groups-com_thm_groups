@@ -1,19 +1,18 @@
 <?php
 /**
- * @version     v1.0.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsControllerRole
  * @description THM_GroupsControllerRole class from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2015 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 jimport('joomla.application.component.controller');
 
 
@@ -22,8 +21,7 @@ jimport('joomla.application.component.controller');
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
+ * @link      www.thm.de
  */
 class THM_GroupsControllerRole extends JControllerLegacy
 {
@@ -57,7 +55,7 @@ class THM_GroupsControllerRole extends JControllerLegacy
         $success = $model->save();
         if ($success)
         {
-            $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
             $this->setRedirect('index.php?option=com_thm_groups&view=role_edit&id=' . $success, $msg);
         }
         else
@@ -95,7 +93,6 @@ class THM_GroupsControllerRole extends JControllerLegacy
      *
      * @return  boolean  True on success, false on failure
      *
-     * @since   2.5
      */
     public function batch($model = null)
     {
@@ -147,11 +144,11 @@ class THM_GroupsControllerRole extends JControllerLegacy
 
         if ($model->delete())
         {
-            $msg = JText::_('COM_THM_GROUPS_DATA_DELETED');
+            $msg = JText::_('COM_THM_GROUPS_DELETE_SUCCESS');
         }
         else
         {
-            $msg = JText::_('COM_THM_GROUPS_SAVE_DELETED');
+            $msg = JText::_('COM_THM_GROUPS_DELETE_ERROR');
         }
         $this->setRedirect("index.php?option=com_thm_groups&view=role_manager", $msg);
     }
@@ -192,7 +189,7 @@ class THM_GroupsControllerRole extends JControllerLegacy
         $success = $model->save();
         if ($success)
         {
-            $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
             $this->setRedirect('index.php?option=com_thm_groups&view=role_manager', $msg);
         }
         else
@@ -214,7 +211,7 @@ class THM_GroupsControllerRole extends JControllerLegacy
         $success = $model->save();
         if ($success)
         {
-            $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
             $this->setRedirect(Jroute::_('index.php?option=com_thm_groups&view=role_edit', false), $msg);
         }
         else

@@ -1,19 +1,18 @@
 <?php
 /**
- * @version     v1.0.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsViewUser_Manager
  * @description THMGroupsViewUser_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 // No direct access to this file
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 // import Joomla view library
 jimport('thm_core.list.view');
@@ -26,8 +25,7 @@ JHtml::_('jquery.framework');
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
+ * @link      www.thm.de
  */
 class THM_GroupsViewArticles extends THM_CoreViewList
 {
@@ -105,7 +103,7 @@ class THM_GroupsViewArticles extends THM_CoreViewList
 
         $userID = JFactory::getUser()->id;
         $name = THMLibThmGroupsUser::getUserValueByAttributeID($userID, 2);
-        $profileLink = JRoute::_('index.php?view=profile&layout=default&gsuid=' . $userID . '&name=' . $name);
+        $profileLink = JRoute::_('index.php?view=profile&layout=default&userID=' . $userID . '&name=' . $name);
         $pathway->addItem(THMLibThmGroupsUser::getUserName($userID), $profileLink);
         $pathway->addItem(JText::_('COM_THM_GROUPS_ARTICLES'));
     }

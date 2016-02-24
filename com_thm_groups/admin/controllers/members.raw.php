@@ -7,9 +7,9 @@
  * @description THMGroupsControllerMembers file from com_thm_groups
  * @author      Ilja Michajlow,  <ilja.michajlow@mni.thm.de>
  * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
- * @copyright   2013 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 defined('_JEXEC') or die;
 
@@ -20,7 +20,6 @@ jimport('joomla.application.component.controllerform');
  *
  * @category  Joomla.Component.Site
  * @package   thm_groups
- * @since     v0.1.0
  */
 class THMGroupsControllerMembers extends JControllerForm
 {

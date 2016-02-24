@@ -1,14 +1,13 @@
 <?php
 
 /**
- * @version     v0.1.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @author      Daniel Kirsten, <daniel.kirsten@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 // No direct access
@@ -19,7 +18,6 @@ defined('_JEXEC') or die;
  *
  * @category  Joomla.Component.Site
  * @package   thm_groups
- * @since     v0.1.0
  */
 abstract class JHtmlContentAdministrator
 {

@@ -6,9 +6,9 @@
  * @name        THM_GroupsViewUser_Select
  * @description view output file for user lists
  * @author      James Antrim, <james.antrim@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 defined('_JEXEC') or die;
 jimport('thm_core.list.view');
@@ -19,7 +19,7 @@ JHtml::_('jquery.framework');
  * @category    Joomla.Component.Admin
  * @package     thm_organizer
  * @subpackage  com_thm_organizer.admin
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 class THM_GroupsViewUser_Select extends THM_CoreViewList
 {
@@ -40,7 +40,7 @@ class THM_GroupsViewUser_Select extends THM_CoreViewList
     public function display($tpl = null)
     {
         $document = JFactory::getDocument();
-        $document->addScript(JURI::root(true) . '/administrator/components/com_thm_groups/assets/js/user_select.js');
+        $document->addScript(JURI::root(true) . '/media/com_thm_groups/js/user_select.js');
 
         parent::display($tpl);
     }
@@ -53,9 +53,7 @@ class THM_GroupsViewUser_Select extends THM_CoreViewList
     protected function addToolBar()
     {
         JToolbarHelper::title(JText::_('COM_THM_GROUPS_USER_SELECT_VIEW_TITLE'), 'test');
-
-        // if you change type of buttons here, then change admin/assets/js/group_manager.js
-        JToolbarHelper::addNew('group.editModerator', 'COM_THM_GROUPS_ACTION_ADD', true);
-        JToolbarHelper::unpublishList('group.editModerator', 'COM_THM_GROUPS_ACTION_DELETE');
+        JToolbarHelper::addNew('group.editModerator', 'COM_THM_GROUPS_NEW', true);
+        JToolbarHelper::unpublishList('group.editModerator', 'COM_THM_GROUPS_DELETE');
     }
 }

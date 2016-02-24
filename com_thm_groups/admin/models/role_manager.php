@@ -6,9 +6,9 @@
  * @name        dynamic type model
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 defined('_JEXEC') or die;

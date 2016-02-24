@@ -1,19 +1,18 @@
 <?php
 /**
- * @version     v1.0.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsViewAttribute_Manager
  * @description THM_GroupsViewAttribute_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 // import Joomla view library
 jimport('thm_core.list.view');
@@ -24,8 +23,7 @@ JHtml::_('bootstrap.framework');
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
+ * @link      www.thm.de
  */
 class THM_GroupsViewAttribute_Manager extends THM_CoreViewList
 {
@@ -68,16 +66,16 @@ class THM_GroupsViewAttribute_Manager extends THM_CoreViewList
 
         if ($user->authorise('core.create', 'com_thm_groups'))
         {
-            JToolBarHelper::addNew('attribute.add', 'COM_THM_GROUPS_ATTRIBUTE_MANAGER_ADD', false);
+            JToolBarHelper::addNew('attribute.add', 'COM_THM_GROUPS_NEW', false);
         }
 
         if ($user->authorise('core.edit', 'com_thm_groups'))
         {
-            JToolBarHelper::editList('attribute.edit', 'COM_THM_GROUPS_ATTRIBUTE_MANAGER_EDIT');
+            JToolBarHelper::editList('attribute.edit', 'COM_THM_GROUPS_EDIT');
         }
         if ($user->authorise('core.delete', 'com_thm_groups'))
         {
-            JToolBarHelper::deleteList('COM_THM_GROUPS_ATTRIBUTE_MANAGER_REALLY_DELETE', 'attribute.delete', 'JTOOLBAR_DELETE');
+            JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM_DEPENDENCIES', 'attribute.delete', 'JTOOLBAR_DELETE');
         }
 
         if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))

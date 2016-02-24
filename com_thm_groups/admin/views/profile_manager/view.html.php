@@ -1,43 +1,39 @@
 <?php
 /**
- * @version     v1.0.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsViewProfile_Manager
- * @description THM_GroupsViewProfile_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 jimport('thm_core.list.view');
-JHtml::_('jquery.framework');
-require_once JPATH_COMPONENT . '/assets/helpers/group_manager_helper.php';
+
+require_once JPATH_SITE . '/media/com_thm_groups/helpers/batch.php';
 
 /**
  * THM_GroupsViewProfile_Manager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
  */
 class THM_GroupsViewProfile_Manager extends THM_CoreViewList
 {
+
     public $items;
 
     public $pagination;
 
     public $state;
 
-    public $groups;
-
     public $batch;
+
+    public $groups;
 
     /**
      * Method to get display
@@ -54,15 +50,15 @@ class THM_GroupsViewProfile_Manager extends THM_CoreViewList
         }
 
         // Set batch template path
-        $this->batch = array(
-            'batch' => JPATH_COMPONENT_ADMINISTRATOR . '/views/profile_manager/tmpl/default_batch.php'
-        );
+        $this->batch = array('batch' => JPATH_COMPONENT_ADMINISTRATOR . '/views/profile_manager/tmpl/default_batch.php');
 
-        $this->groups = THM_GroupsHelperGroup_Manager::getGroups();
+        $this->groups = THM_GroupsHelperBatch::getGroupOptions();
 
+        JHtml::_('bootstrap.framework');
+        JHtml::_('jquery.framework');
         $document = JFactory::getDocument();
-        $document->addScript(JURI::root(true) . '/administrator/components/com_thm_groups/assets/js/profile_manager.js');
-
+        $document->addScript(JURI::root(true) . '/media/com_thm_groups/js/lib/jquery.chained.remote.js');
+        $document->addScript(JURI::root(true) . '/media/com_thm_groups/js/profile_manager.js');
 
         parent::display($tpl);
     }
@@ -75,34 +71,37 @@ class THM_GroupsViewProfile_Manager extends THM_CoreViewList
     protected function addToolbar()
     {
         $user = JFactory::getUser();
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS_PROFILE_MANAGER_TITLE'), 'profile_manager');
 
-        JToolBarHelper::title(
-            JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_PROFILE_MANAGER'), 'profile_manager'
-        );
-
-        if ($user->authorise('core.create', 'com_thm_groups'))
+        if ($user->authorise('core.edit', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))
         {
-            JToolBarHelper::addNew('profile.add', 'COM_THM_GROUPS_PROFILE_MANAGER_ADD', false);
-        }
+            JToolBarHelper::editList('profile.edit');
+            JToolBarHelper::publishList('profile.publish', 'COM_THM_GROUPS_PUBLISH_PROFILE');
+            JToolBarHelper::unpublishList('profile.unpublish', 'COM_THM_GROUPS_UNPUBLISH_PROFILE');
+            JToolBarHelper::publishList('profile.activateQPForUser', 'COM_THM_GROUPS_ACTIVATE_QPS');
+            JToolBarHelper::unpublishList('profile.deactivateQPForUser', 'COM_THM_GROUPS_DEACTIVATE_QPS');
+            JToolBarHelper::divider();
 
-        if ($user->authorise('core.edit', 'com_thm_groups'))
-        {
-            JToolBarHelper::editList('profile.edit', 'COM_THM_GROUPS_PROFILE_MANAGER_EDIT');
-        }
-
-        if ($user->authorise('core.delete', 'com_thm_groups'))
-        {
-            JToolBarHelper::deleteList('COM_THM_GROUPS_PROFILE_MANAGER_REALLY_DELETE', 'profile.delete', 'JTOOLBAR_DELETE');
-        }
-
-        if ($user->authorise('core.manage', 'com_thm_groups') && $user->authorise('core.edit', 'com_thm_groups'))
-        {
             $bar = JToolBar::getInstance('toolbar');
             JHtml::_('bootstrap.modal', 'myModal');
-            $title = JText::_('COM_THM_GROUPS_PROFILE_MANAGER_BATCH');
-            $dhtml = "<button id='add_group_to_profile_btn' data-toggle='modal' data-target='#collapseModal' class='btn btn-small'><i class='icon-edit' title='$title'></i> $title</button>";
+            $title = JText::_('COM_THM_GROUPS_ADD_ROLES');
 
-            $bar->appendButton('Custom', $dhtml, 'batch');
+            // Instantiate a new JLayoutFile instance and render the batch button
+
+            $html = "<button data-toggle='modal' data-target='#collapseModal' class='btn btn-small'>";
+            $html .= "<i class='icon-user-plus' title='$title'></i> $title</button>";
+            $bar->appendButton('Custom', $html, 'batch');
+
+            $image = 'options';
+            $title = JText::_('COM_THM_GROUPS_QUICKPAGES_SETTINGS');
+            $link = 'index.php?option=com_thm_groups&amp;view=qp_settings&amp;tmpl=component';
+            $height = '350';
+            $width = '250';
+            $top = 0;
+            $left = 0;
+            $onClose = 'window.location.reload();';
+            $bar = JToolBar::getInstance('toolbar');
+            $bar->appendButton('Popup', $image, $title, $link, $width, $height, $top, $left, $onClose);
         }
 
         if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))

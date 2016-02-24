@@ -10,7 +10,7 @@
  * @author      Mariusz Homeniuk, <mariusz.homeniuk@mni.thm.de>
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
@@ -23,8 +23,7 @@ require_once dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'Joomla
  * @category    Joomla.Component.Admin
  * @package     thm_Groups
  * @subpackage  com_thm_groups.site
- * @link        www.mni.thm.de
- * @since       Class available since Release 1.0
+ * @link        www.thm.de
  */
 class AllComThmGroupsGuiTests
 {

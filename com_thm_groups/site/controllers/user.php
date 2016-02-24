@@ -1,22 +1,22 @@
 <?php
 /**
- * @version     v1.0.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsControllerUser
  * @description THM_GroupsControllerUser class from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controller');
 jimport('joomla.application.component.model');
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
 
 // For delete operation
 JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_users/models', 'UsersModel');
@@ -26,11 +26,52 @@ JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_users/models
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
+ * @link      www.thm.de
  */
 class THM_GroupsControllerUser extends JControllerLegacy
 {
+    /**
+     * @TODO: This function is being called instead of save during frontend editing...
+     *
+     * @throws Exception
+     */
+    public function apply()
+    {
+        $model = $this->getModel('profile_edit');
+        $app = JFactory::getApplication()->input;
+        $data = $app->get('jform', array(), 'array');
+
+        $userID = $data['userID'];
+        $groupID = $data['groupID'];
+        $menuID = $data['menuID'];
+        $canEdit = THM_GroupsHelperComponent::canEditProfile($userID, $groupID);
+
+        $baseURL = 'index.php?option=com_thm_groups';
+        $view = '&view=profile';
+        $query = "&groupID=$groupID&userID=$userID&Itemid=$menuID";
+        if(!$canEdit)
+        {
+            $url = JRoute::_($baseURL . $view . $query);
+            $msg = JText::_('COM_THM_GROUPS_NOT_ALLOWED');
+            $this->setRedirect($url, $msg, 'error');
+        }
+
+        $success = $model->save();
+        if ($success)
+        {
+            $url = JRoute::_($baseURL . $view . $query);
+            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
+            $this->setRedirect($url, $msg);
+        }
+        else
+        {
+            $view = '&view=profile_edit';
+            $url = JRoute::_($baseURL . $view . $query);
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+            //todo: fails:
+            $this->setRedirect($url, $msg);
+        }
+    }
 
     /**
      * Method to run batch operations.
@@ -39,7 +80,6 @@ class THM_GroupsControllerUser extends JControllerLegacy
      *
      * @return  boolean  True on success, false on failure
      *
-     * @since   2.5
      */
     public function batch($model = null)
     {
@@ -144,47 +184,20 @@ class THM_GroupsControllerUser extends JControllerLegacy
         $this->setRedirect("index.php?option=com_thm_groups&view=user_manager", $msg, $type);
     }
 
-    public function apply()
-    {
-        $model = $this->getModel('user_edit');
-        $app = JFactory::getApplication()->input;
-        $data = $app->get('jform', array(), 'array');
-
-        $userid = $data['gsuid'];
-        $gsgid = $data['gsgid'];
-
-        // Formvalidation is done in View via js
-        $success = $model->save();
-        if ($success)
-        {
-            $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
-
-            $this->setRedirect('index.php?option=com_thm_groups&view=user_edit&layout=default&tmpl=component&gsgid=' . $gsgid
-                . '&gsuid=' . $userid, $msg);
-        }
-        else
-        {
-            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-            //todo: fails:
-            $this->setRedirect('index.php?option=com_thm_groups&view=profile&layout=default&tmpl=component&gsgid=' . $gsgid
-                . '&gsuid=' . $userid, $msg);
-        }
-    }
-
     public function save()
     {
-        $model = $this->getModel('user_edit');
+        $model = $this->getModel('profile_edit');
         $app = JFactory::getApplication();
         $formData = $app->input->post->get('jform', array(), 'array');;
         $userid = $formData['userID'];
-        //var_dump($formData);
-        //die();
+
         //Formvalidation is done in View via js
+        // TODO: Check here anyways... WTF?!
         $success = $model->save();
         if ($success)
         {
-            $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
-            $this->setRedirect('index.php?option=com_thm_groups&view=user_edit&layout=default&tmpl=component&gsuid=' . $userid, $msg);
+            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
+            $this->setRedirect('index.php?option=com_thm_groups&view=profile_edit&layout=default&tmpl=component&userID=' . $userid, $msg);
         }
         else
         {
@@ -216,7 +229,7 @@ class THM_GroupsControllerUser extends JControllerLegacy
             return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
         }
 
-        $this->input->set('view', 'user_edit');
+        $this->input->set('view', 'profile_edit');
         $this->input->set('hidemainmenu', 1);
         parent::display();
     }

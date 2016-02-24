@@ -1,0 +1,159 @@
+/*  ------------------------------------
+**  Author:     Kristijan Pokas
+**  File:       monitor_edit.css
+**  Styles for: Backend
+**  Site:       www.mni.thm.de
+**  ------------------------------------ */
+
+@import '../../lib_thm_core/scss/variables';
+@import '../../lib_thm_core/scss/icons';
+
+#adminForm {
+
+  button {
+
+    background-color: $foreground;
+    border: $border;
+    padding: 4px 8px;
+
+    &:hover {
+      color: $font-color;
+    }
+  }
+
+  [class^="icon-"], [class*=" icon-"] {
+    margin-right: 5px;
+  }
+
+  .clear {
+    clear: both;
+  }
+
+  .modal {
+
+    border-radius: 0;
+    width: 700px;
+
+    .modal-content {
+
+      padding: 5px;
+
+      .modal-header, .modal-footer {
+
+        background-color: $background;
+        padding: 5px;
+        text-align: left;
+
+        .header-title {
+
+          border-bottom: $border;
+          margin-bottom: 5px;
+          padding: 5px;
+
+          h3 {
+            display: block;
+            float: left;
+
+            [class^="icon-"], [class*=" icon-"] {
+              margin-right: 8px;
+            }
+          }
+
+          button.close {
+            background-color: $background;
+            border: none;
+            color: $font-color;
+            display: block;
+            float: right;
+            opacity: 1;
+          }
+        }
+
+        .toolbar {
+
+          clear: both;
+
+          input[type="file"] {
+            width: 250px;
+          }
+        }
+      }
+
+      .modal-body {
+
+        height: 250px;
+        padding: 0;
+
+        .crop-container
+        {
+          border-left: $background 1px solid;
+          border-right: $background 1px solid;
+          float: left;
+          height: 100%;
+          padding: 0 5px;
+          width: calc(50% - 12px);
+
+          .imageBox
+          {
+            position: relative;
+            height: 220px;
+            width: 100%;
+            min-width: 150px;
+            border:1px solid #aaa;
+            background: #fff;
+            overflow: hidden;
+            background-repeat: no-repeat;
+            cursor:move;
+
+            .thumbBox
+            {
+              position: absolute;
+              width: 150px;
+              height: 200px;
+              margin: auto;
+              top: 0; left: 0; bottom: 0; right: 0;
+              box-sizing: border-box;
+              border: 1px solid rgb(102, 102, 102);
+              box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
+              background: none repeat scroll 0% 0% transparent;
+            }
+
+            .spinner
+            {
+              position: absolute;
+              top: 0;
+              left: 0;
+              bottom: 0;
+              right: 0;
+              text-align: center;
+              line-height: 400px;
+              background: rgba(0,0,0,0.7);
+            }
+          }
+        }
+
+        .preview-container {
+          border-left: $background 1px solid;
+          border-right: $background 1px solid;
+          float: right;
+          height: 250px;
+          padding: 0 5px;
+          width: calc(50% - 12px);
+
+          h4 {
+            margin-bottom: 5px;
+            margin-top: 5px;
+            text-align: center;
+          }
+
+          .cropped img {
+            border: 1px solid grey;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+          }
+        }
+      }
+    }
+  }
+}

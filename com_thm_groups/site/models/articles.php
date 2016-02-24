@@ -1,17 +1,16 @@
 <?php
 /**
- * @version     v1.0.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsModelArticles_Test
  * @description THM_GroupsModelArticles_Test file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2015 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 jimport('thm_core.list.model');
 jimport('thm_groups.data.lib_thm_groups_quickpages');
 jimport('thm_groups.data.lib_thm_groups_user');
@@ -22,8 +21,7 @@ require_once JPATH_COMPONENT . '/models/article.php';
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
+ * @link      www.thm.de
  */
 class THM_GroupsModelArticles extends THM_CoreModelList
 {
@@ -211,7 +209,7 @@ class THM_GroupsModelArticles extends THM_CoreModelList
         $headers['checkbox'] = '';
         $headers['title'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_TITLE'), 'a.title', $direction, $ordering);
         $headers['stateid'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_PUBLISHED'), 'a.state', $direction, $ordering);
-        //$headers['edit'] = JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_EDIT');
+        //$headers['edit'] = JText::_('COM_THM_GROUPS_EDIT');
         $headers['delete'] = JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_DELETE');
         $headers['featured'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_LIST'), 'd.featured', $direction, $ordering);
         $headers['published'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_QUICKPAGES_ARTICLES_CONTENT'), 'd.published', $direction, $ordering);
@@ -249,7 +247,6 @@ class THM_GroupsModelArticles extends THM_CoreModelList
      *
      * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
      *
-     * @since   12.2
      */
     protected function canEditState($record)
     {
@@ -266,7 +263,6 @@ class THM_GroupsModelArticles extends THM_CoreModelList
      *
      * @return  mixed
      *
-     * @since   12.2
      */
     public function saveorder($pks = null, $order = null)
     {
@@ -346,7 +342,6 @@ class THM_GroupsModelArticles extends THM_CoreModelList
      *
      * @return  array  An array of conditions to add to ordering queries.
      *
-     * @since   12.2
      */
     protected function getReorderConditions($table)
     {
@@ -361,7 +356,6 @@ class THM_GroupsModelArticles extends THM_CoreModelList
      *
      * @return  boolean  True on success.
      *
-     * @since   12.2
      */
     public function publish(&$pks, $value = 1)
     {

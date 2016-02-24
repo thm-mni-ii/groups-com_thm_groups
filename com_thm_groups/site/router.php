@@ -1,24 +1,23 @@
 <?php
 /**
- * @version     v3.0.1
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @name		THMGroups component site router
  * @description Template file of module mod_thm_groups_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
+ * @author      James Antrim, <james.antrim@mni.thm.de>
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 /**
  * Creates route for SEF
  *
  * @param   array  &$query  Array, containing the query
- *
- * @since  Method available since Release 1.0
- *
  * @return  array  all SEF Elements as list
  */
 function THM_groupsBuildRoute(&$query)
@@ -42,49 +41,33 @@ function THM_groupsBuildRoute(&$query)
     buildOptionsRoute($query, $segments);
 
     // User options
-    if (isset ($query['gsuid']))
+    if (!empty($query['userID']))
     {
-        if (isset ($query['name']))
+        $profileSegment = '';
+        if (!empty($query['groupID']))
         {
-            if (isset ($query['gsgid']))
+            $profileSegment .= "{$query['groupID']}:{$query['userID']}";
+            unset($query['groupID']);
+            unset($query['userID']);
+            if (!empty($query['name']))
             {
-                $segments[] = $query['gsgid'] . "-" . $query['gsuid'] . "-" . $query['name'];
-                unset($query['gsgid']);
+                $profileSegment .= "-" . $query['name'];
+                unset($query['name']);
             }
-            else
-            {
-                $segments[] = $query['gsuid'] . "-" . $query['name'];
-
-            }
-
-            unset($query['gsuid']);
+        }
+        elseif (!empty($query['name']))
+        {
+            $profileSegment .= $query['userID'] . "-" . $query['name'];
+            unset($query['userID']);
             unset($query['name']);
         }
         else
         {
-            $segments[] = $query['gsuid'];
-            unset($query['gsuid']);
+            $profileSegment .= $query['userID'];
+            unset($query['userID']);
         }
+        $segments[] = $profileSegment;
     }
-
-    // NM PATCH SEF singlearticle view
-
-    /*if (isset ($query['id']))
-    {
-        if (isset ($query['catid']))
-        {
-            $temp = $query['catid'];
-        }
-
-        $idAndName = explode(':', $query['id']);
-        $temp .= '-' . $idAndName[0];
-        $temp .= '-' . $idAndName[1];
-
-        $segments[] = $temp;
-
-        unset($query['id']);
-        unset($query['catid']);
-    }*/
 
     if (isset ($query['id']))
     {
@@ -140,40 +123,101 @@ function buildOptionsRoute(&$query, &$segments)
  */
 function THM_groupsParseRoute($segments)
 {
-    /* TODO: Fails when popup modal in frontend user_edit is closed
+    /* TODO: Fails when popup modal in frontend profile_edit is closed
        TODO: because third element of Array is 'index.php', see -> case: default.*/
 
     // NM PATCH: switch between different views profile/singlearticle
     $vars = array();
 
-    if ($segments[0] != "")
+    $doRoute = (!empty($segments) AND end($segments) != 'index' AND !empty($segments[0]));
+    if (!$doRoute)
     {
-        switch ($segments[0])
-        {
-            // NM PATCH Administration Quickpages
-            case 'articles':
+        return $vars;
+    }
 
-                $vars['view']   = $segments[0];
+    $vars['view']   = $segments[0];
+    switch ($segments[0])
+    {
+        // NM PATCH Administration Quickpages
+        case 'articles':
+            if (isset ($segments[1]))
+            {
+                $arrVar = explode(':', $segments[1]);
 
-                if (isset ($segments[1]))
+                if (isset ($arrVar[0]) && isset ($arrVar[1]))
                 {
-                    $arrVar = explode(':', $segments[1]);
-
-                    if (isset ($arrVar[0]) && isset ($arrVar[1]))
-                    {
-                        $vars['gsuid'] = $arrVar[0];
-                        $vars['name']  = $arrVar[1];
-                    }
+                    $vars['userID'] = $arrVar[0];
+                    $vars['name']  = $arrVar[1];
                 }
-                break;
+            }
+            break;
 
 
-            case 'singlearticle':
-                /*$vars['view'] = 'singlearticle';
+        case 'singlearticle':
 
-                if (isset ($segments[1]))
+            if (isset ($segments[1]))
+            {
+                $arrVar = explode(':', $segments[1]);
+
+                if (isset ($arrVar[0]) && isset ($arrVar[1]))
                 {
-                    $backOptionsTemp = explode(':', $segments[1]);
+                    $vars['userID'] = $arrVar[0];
+                    $vars['name']  = $arrVar[1];
+                }
+            }
+
+            if (isset ($segments[2]))
+            {
+                $arrVar = explode(':', $segments[2]);
+
+                if (isset ($arrVar[0]) && isset ($arrVar[1]))
+                {
+                    $vars['id'] = $arrVar[0];
+                    $vars['nameqp']  = $arrVar[1];
+                }
+            }
+            break;
+
+        case 'profile':
+        case 'profile_edit':
+            parseProfileSegment($vars, end($segments));
+            break;
+
+        // THM Groups default case (original code)
+        default:
+            $numberOfSegments = count($segments);
+
+            $vars['view']   = $segments[0];
+
+            if (isset ($segments[3]))
+            {
+                $vars['layout'] = $segments[1];
+            }
+
+            if ($numberOfSegments == 3)
+            {
+                // User information
+                if (isset ($segments[2]))
+                {
+                    // TODO: This temporary prevents a crash.
+                    if ($segments[2] == 'index.php')
+                    {
+                        // Leeds to previous page.
+                        $vars = array();
+
+                        return $vars;
+                    }
+
+                    parseProfileSegment($vars, $segments[2]);
+                }
+            }
+
+            if ($numberOfSegments == 4)
+            {
+                // Back options
+                if (isset ($segments[2]))
+                {
+                    $backOptionsTemp = explode(':', $segments[2]);
                 }
 
                 if ((isset ($backOptionsTemp[0]) && ($backOptionsTemp[0] == 'com_thm_groups')))
@@ -197,151 +241,45 @@ function THM_groupsParseRoute($segments)
                     }
                 }
 
-                if (isset ($segments[2]))
+                // User information
+                if (!empty ($segments[3]))
                 {
-                    $temp = explode(':', $segments[2]);
-                    $vars['gsuid'] = $temp[0];
+                    parseProfileSegment($vars, $segments[3]);
                 }
-
-                if (isset ($segments[3]))
-                {
-                    $temp = explode(':', $segments[3]);
-                    $vars['catid'] = $temp[0];
-
-                    if (isset ($temp[1]))
-                    {
-                        $idAndName = explode('-', $temp[1]);
-                        $vars['id'] = $idAndName[0];
-                        $vars['name'] = $idAndName[1];
-                    }
-                }
-                break;*/
-                $vars['view'] = 'singlearticle';
-
-                if (isset ($segments[1]))
-                {
-                    $arrVar = explode(':', $segments[1]);
-
-                    if (isset ($arrVar[0]) && isset ($arrVar[1]))
-                    {
-                        $vars['gsuid'] = $arrVar[0];
-                        $vars['name']  = $arrVar[1];
-                    }
-                }
-
-                if (isset ($segments[2]))
-                {
-                    $arrVar = explode(':', $segments[2]);
-
-                    if (isset ($arrVar[0]) && isset ($arrVar[1]))
-                    {
-                        $vars['id'] = $arrVar[0];
-                        $vars['nameqp']  = $arrVar[1];
-                    }
-                }
-                break;
-
-            // THM Groups default case (original code)
-            default:
-                $numberOfSegments = count($segments);
-
-                $vars['view']   = $segments[0];
-
-                if (isset ($segments[3]))
-                {
-                    $vars['layout'] = $segments[1];
-                }
-
-                if ($numberOfSegments == 3)
-                {
-                    // User information
-                    if (isset ($segments[2]))
-                    {
-                        // TODO: This temporary prevents a crash.
-                        if ($segments[2] == 'index.php')
-                        {
-                            // Leeds to previous page.
-                            $vars = array();
-
-                            return $vars;
-                        }
-
-                        $userInfoTemp = explode(':', $segments[2]);
-                    }
-
-                    if (isset ($userInfoTemp[0]))
-                    {
-                        $userInfo = explode('-', $userInfoTemp[1]);
-
-                        if (isset ($userInfo[1]))
-                        {
-                            $vars['gsgid'] = $userInfoTemp[0];
-                            $vars['gsuid'] = $userInfo[0];
-                            $vars['name']  = $userInfo[1];
-                        }
-                        else
-                        {
-                            $vars['gsuid'] = $userInfoTemp[0];
-                            $vars['name']  = $userInfoTemp[1];
-                        }
-                    }
-                }
-
-                if ($numberOfSegments == 4)
-                {
-                    // Back options
-                    if (isset ($segments[2]))
-                    {
-                        $backOptionsTemp = explode(':', $segments[2]);
-                    }
-
-                    if ((isset ($backOptionsTemp[0]) && ($backOptionsTemp[0] == 'com_thm_groups')))
-                    {
-                        $backOptions = explode('-', $backOptionsTemp[1]);
-
-                        if (isset ($backOptions[0]))
-                        {
-                            $vars['option_back'] = $backOptionsTemp[0];
-                            $vars['view_back'] = $backOptions[0];
-
-                            if (isset ($backOptions[1]))
-                            {
-                                $vars['layout_back'] = $backOptions[1];
-                            }
-
-                            if (isset ($backOptions[2]))
-                            {
-                                $vars['Itemid_back'] = $backOptions[2];
-                            }
-                        }
-                    }
-
-                    // User information
-                    if (isset ($segments[3]))
-                    {
-                        $userInfoTemp = explode(':', $segments[3]);
-                    }
-
-                    if (isset ($userInfoTemp[0]))
-                    {
-                        $userInfo = explode('-', $userInfoTemp[1]);
-
-                        if (isset ($userInfo[1]))
-                        {
-                            $vars['gsgid'] = $userInfoTemp[0];
-                            $vars['gsuid'] = $userInfo[0];
-                            $vars['name']  = $userInfo[1];
-                        }
-                        else
-                        {
-                            $vars['gsuid'] = $userInfoTemp[0];
-                            $vars['name']  = $userInfoTemp[1];
-                        }
-                    }
-                }
-                break;
+            }
+            break;
         }
-    }
 
     return $vars;
+}
+
+/**
+ * Parses the segment with profile information
+ *
+ * @param   array   $vars            the input variables
+ * @param   string  $profileSegment  the segment with profile information
+ *
+ * @return  void  sets indexes in &$vars
+ */
+function parseProfileSegment(&$vars, $profileSegment)
+{
+    $profileData = explode('-', $profileSegment);
+    if (!empty($profileData[1]))
+    {
+        $vars['name']  = $profileData[1];
+    }
+
+    // $firstID will always be set irregardless of whether the delimiter was found
+    $profileIDs = explode(':', $profileData[0]);
+
+    // Only the userID
+    if (empty($profileIDs[1]))
+    {
+        $vars['userID'] = $profileIDs[0];
+    }
+    else
+    {
+        $vars['groupID'] = $profileIDs[0];
+        $vars['userID'] = $profileIDs[1];
+    }
 }

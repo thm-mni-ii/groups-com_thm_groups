@@ -8,7 +8,7 @@
 //  * @author	    Daniel Kirsten, <daniel.kirsten@mni.thm.de>
 //  * @copyright   2012 TH Mittelhessen
 //  * @license     GNU GPL v.2
-//  * @link		www.mni.thm.de
+//  * @link		www.thm.de
 //  */
 
 // require_once JPATH_BASE . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_thm_groups' .

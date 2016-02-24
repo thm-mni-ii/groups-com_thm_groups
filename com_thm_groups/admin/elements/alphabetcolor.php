@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     v3.4.4
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -13,9 +12,9 @@
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
 
  */
 defined('_JEXEC') or die( 'Restricted access' );
@@ -27,16 +26,12 @@ jimport('joomla.form.formfield');
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
+ * @link      www.thm.de
  */
 class JFormFieldAlphabetColor extends JFormField
 {
     /**
      * Element name
-     *
-     * @access	protected
-     * @var		string
      *
      * @return html
      */

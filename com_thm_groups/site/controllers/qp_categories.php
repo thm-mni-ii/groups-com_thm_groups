@@ -1,19 +1,18 @@
 <?php
 /**
- * @version     v1.0.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsControllerQp_Categories
  * @description THMGroupsControllerQp_Categories class from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2015 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 // import Joomla controller library
 jimport('joomla.application.component.controller');
@@ -24,8 +23,7 @@ jimport('joomla.application.component.controller');
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
+ * @link      www.thm.de
  */
 class THM_GroupsControllerQp_Categories extends JControllerLegacy
 {
@@ -49,7 +47,7 @@ class THM_GroupsControllerQp_Categories extends JControllerLegacy
         $success = $model->save();
         if ($success)
         {
-            $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
             $this->setRedirect('index.php?option=com_thm_groups&view=qp_categories&tmpl=component', $msg, 'message');
         }
         else

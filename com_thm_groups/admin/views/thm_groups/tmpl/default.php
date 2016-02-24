@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -8,56 +7,45 @@
  * @description THMGroupsViewTHMGroups file from com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @authors     Niklas Simonis, <niklas.simonis@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 defined('_JEXEC') or die;
 $logoURL = 'administrator/components/com_thm_groups/assets/images/THM_Groups.png';
+$attribs = array('class' => 'thm_groups_main_image');
+$image = JHtml::_('image', $logoURL, JText::_('COM_THM_GROUPS'), $attribs);
 ?>
-<?php
-$attribs['width'] = '20%';
-$attribs['class'] = 'thm_groups_main_image';
-echo JHTML::_('image', $logoURL, JText::_('COM_THM_GROUPS'), $attribs);
-?>
-<div id="thm_groups_main_description" class='thm_groups_main_description'>
-    <?php //echo JText::_("COM_THM_GROUPS_MAIN_DESC"); ?>
+<div id="j-sidebar-container" class="span2"><?php echo $this->sidebar; ?></div>
+<div id="j-main-container" class="span10">
+    <div class="span5 form-vertical">
+        <?php echo $image; ?>
+        <?php echo JText::_("COM_THM_GROUPS_HOME_DESC"); ?>
+    </div>
+    <div class="span5 form-vertical">
+        Add resource information here!
+    </div>
 </div>
-<div id="cpanel" class='cpanel'>
-    <?php foreach ($this->views as $view)
-    {
-        ?>
-        <div class="icon">
-            <a href='<?php echo $view['url']; ?>'
-               class='hasTip' title='<?php echo $view['tooltip']; ?>' >
-                <span><?php echo $view['title']; ?></span>
-            </a>
-            <br />
-        </div>
+<form action="index.php" id="adminForm"  method="post"
+      name="adminForm" xmlns="http://www.w3.org/1999/html">
     <?php
-    }
-    ?>
-</div>
-    <form action="index.php" id="adminForm"  method="post"
-          name="adminForm" xmlns="http://www.w3.org/1999/html">
-        <?php
-        // Load html for popup
-        if (isset($this->batch) && !empty($this->batch))
+    // Load html for popup
+    if (isset($this->batch) && !empty($this->batch))
+    {
+        foreach ($this->batch as $name => $path)
         {
-            foreach ($this->batch as $name => $path)
+            if (file_exists($path))
             {
-                if (file_exists($path))
-                {
-                    echo $this->loadTemplate($name);
-                }
+                echo $this->loadTemplate($name);
             }
         }
-        ?>
-        <input type="hidden" name="task" value="" />
-        <input type="hidden" name="boxchecked" value="0" />
-        <input type="hidden" name="option" value="<?php echo JFactory::getApplication()->input->get('option'); ?>" />
-        <input type="hidden" name="view" value="<?php echo $this->get('name'); ?>" />
-        <?php echo JHtml::_('form.token');?>
-    </form>
+    }
+    ?>
+    <input type="hidden" name="task" value="" />
+    <input type="hidden" name="boxchecked" value="0" />
+    <input type="hidden" name="option" value="<?php echo JFactory::getApplication()->input->get('option'); ?>" />
+    <input type="hidden" name="view" value="<?php echo $this->get('name'); ?>" />
+    <?php echo JHtml::_('form.token');?>
+</form>
 

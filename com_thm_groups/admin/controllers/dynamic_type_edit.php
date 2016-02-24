@@ -1,19 +1,18 @@
 <?php
 /**
- * @version     v1.0.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsControllerDynamic_Type
  * @description THMGroupsControllerDynamic_Type class from com_thm_groups
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 // Import Joomla controller library
 jimport('joomla.application.component.controller');
@@ -24,8 +23,7 @@ jimport('thm_groups.assets.elements.explorer');
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
- * @link      www.mni.thm.de
- * @since     Class available since Release 3.5
+ * @link      www.thm.de
  */
 class THM_GroupsControllerDynamic_Type_Edit extends JControllerLegacy
 {

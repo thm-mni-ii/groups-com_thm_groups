@@ -1,32 +1,22 @@
 <?php
 /**
- * @version     v3.0.2
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @name        THMGroupsViewProfile
  * @description THMGroupsViewProfile file from com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
- * @author      Markus Kaiser,  <markus.kaiser@mni.thm.de>
- * @author      Daniel Bellof,  <daniel.bellof@mni.thm.de>
- * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
- * @author      Peter May,      <peter.may@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @author      James Antrim, <james.antrim@nm.thm.de>
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// require implode('/', array(JPATH_ROOT, 'components', 'com_thm_groups', 'helper', 'bootstrap_helper.php'));
-
-jimport('joomla.application.component.view');
-jimport('joomla.filesystem.path');
-jimport('thm_groups.data.lib_thm_groups_user');
-JHtml::_('bootstrap.framework');
-JHtml::_('behavior.modal');
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
 
 /**
  * THMGroupsViewProfile class for component com_thm_groups
@@ -34,62 +24,32 @@ JHtml::_('behavior.modal');
  * @category    Joomla.Component.Site
  * @package     thm_Groups
  * @subpackage  com_thm_groups.site
- * @link        www.mni.thm.de
- * @since       Class available since Release 2.0
  */
 class THM_GroupsViewProfile extends JViewLegacy
 {
-
-    protected $form;
 
     protected $links;
 
     /**
      * Method to get extra
      *
-     * @param   Int     $structId  StructID
-     * @param   String  $type      Type
+     * @param   int  $structID  the dynamic type id
+     *
+     * @TODO: Is this called by AJAX?
      *
      * @return $extra
      */
-    public function getExtra($structId, $type)
+    public function getExtra($structID)
     {
-        $model = $this->getModel();
-        $extra = $model->getExtra($structId, $type);
-        return $extra;
-    }
-
-    /**
-     * Method to get structe type
-     *
-     * @param   Int  $aid  content the Artikel ID
-     *
-     * @return String $result  content the artikel name
-     * @deprecated
-     */
-    public function getArtikelname($aid)
-    {
-
-        $tempaid = intval($aid);
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        $query->select("title")->from("#__content")->where("id =" . $tempaid);
-        $db->setQuery($query);
-        $db->execute();
-
-        $artikel = $db->loadObject();
-
-
-        $result = $artikel->title;
-
-        return $result;
-
+        return THMLibThmGroupsUser::getExtra($structID);
     }
 
     /**
      * Method to get structe type
      *
      * @param   Int  $structId  StructID
+     *
+     * @TODO: Is this called by AJAX?
      *
      * @return structureType
      */
@@ -105,7 +65,6 @@ class THM_GroupsViewProfile extends JViewLegacy
                 $structureType = $structureItem->type;
             }
         }
-
         return $structureType;
     }
 
@@ -118,142 +77,106 @@ class THM_GroupsViewProfile extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        $app	 = JFactory::getApplication()->input;
-        $mainfarme = JFactory::getApplication();
-        $pathway = $mainfarme->getPathway();
-        $pathwayitems = $pathway->getPathWay();
-        $document = JFactory::getDocument();
+        $this->model = $this->getModel();
+        $this->userID = $this->model->userID;
+        $this->groupID =$this->model->groupID;
+        $this->canEdit =  THM_GroupsHelperComponent::canEditProfile($this->userID, $this->groupID);
+        $this->menuID = JFactory::getApplication()->input->get('Itemid', 0);
+        $this->profile = $this->get('Item');
 
-        //include Picturefill 2.0 fallback
-        //$document->addScript(JUri::root() . 'libraries/thm_groups_responsive/assets/js/picturefill_min.js','text/javascript" defer="false" async="true');
-
-        //todo: comment library path in when lib is pushed to Gerrit.
-        $document->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/respBaseStyles.css');
-        //$document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/responsiveGroups.css');
-        $document->addStyleSheet("administrator/components/com_thm_groups/css/membermanager/icon.css");
-
-        $cid = $app->get('gsuid', 0);
-
-        $model     = $this->getModel();
-        $items     = $this->get('Data');
-        $structure = $this->get('Structure');
-        $gsgid     = $app->get('gsgid');
-        $gsuid     = $app->get('gsuid');
-
-        $var = array();
-
-        if (isset($_GET))
-        {
-            $var = $_GET;
-            $attribut = "";
-
-            foreach ($var as $index => $value)
-            {
-                $pos = strpos($index, '_back');
-
-                if ($pos !== false)
-                {
-                    $temp = explode('_back', $index);
-                    $attribut .= $temp[0] . "=" . $value . '&';
-                }
-            }
-        }
-
-        $name = "";
-
-        foreach ($items as $val)
-        {
-            if ($val->structid == 2)
-            {
-                $name = $val->value . ', ' . $name;
-            }
-            else
-            {
-                if ($val->structid == 1)
-                {
-                    $name = $name . $val->value;
-                }
-                else
-                {
-                }
-            }
-        }
-
-        $backRef = (count($pathwayitems) > 0)? $pathwayitems[count($pathwayitems) - 1]->link : " ";
-
-        if (isset($attribut))
-        {
-            $this->links = JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid;
-            $old_option = $app->get("option_back");
-            switch ($old_option)
-            {
-                case "com_content":
-                    $artikleId = $app->get("id_back");
-                    $artikelname = (JFactory::getConfig()->getValue('config.sef') == 1)? $this->getArtikelname($artikleId) : explode(":", $artikleId);
-                    if (isset($artikelname))
-                    {
-                        $pathway->addItem($artikelname, JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
-                    }
-                    else
-                    {
-                        $pathway->addItem(JFactory::getDocument()->get('title'), JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
-                    }
-
-                    break;
-
-                case "com_thm_groups":
-                    $layout = $app->get("layout_back");
-                    if ($layout == 'singlearticle')
-                    {
-                        $pathway->addItem(JFactory::getDocument()->get('title'), JURI::base() . 'index.php?' . $attribut . '&gsuid=' . $gsuid);
-                    }
-                    break;
-            }
-            $pathway->addItem($name);
-        }
-        else
-        {
-            $this->links = JURI::base() . 'index.php';
-            $pathway->addItem($name);
-        }
-
-        // Daten für die Form
-        $textField = array();
-        foreach ($structure as $structureItem)
-        {
-            foreach ($items as $item)
-            {
-                if ($item->structid == $structureItem->id)
-                {
-                    $value = $item->value;
-                }
-            }
-            if ($structureItem->type == "TEXTFIELD")
-            {
-                $textField[$structureItem->field] = $value;
-            }
-        }
-
-        // Daten für die Form
-        $this->form = $this->get('Form');
-
-        if (!empty($textField))
-        {
-            $this->form->bind($textField);
-        }
-
-        $this->backAttribute = $attribut;
-        $itemid = $app->get('Itemid', 0);
-        $this->backRef = $backRef;
-        $this->items = $items;
-        $this->itemid = $itemid;
-        $canedit = $model->canEdit($gsgid);
-        $this->canEdit =  $canedit;
-        $this->userid = $cid;
-        $this->structure = $structure;
-        $this->gsgid =$gsgid;
-        $this->model = $this->getModel("profile");
+        $this->modifyDocument();
         parent::display($tpl);
+    }
+
+    /**
+     * Gets a link to the profile edit view
+     *
+     * @params   mixed  $attributes  An associative array (or simple string) of attributes to add
+     *
+     * @return  string  the Link HTML markup
+     */
+    public function getEditLink($attributes = null)
+    {
+        $editLink = "";
+        if ($this->canEdit)
+        {
+            $fullName = JFactory::getUser($this->userID)->get('name');
+            $nameArray = explode(" ", $fullName);
+            $lastName = array_key_exists(1, $nameArray)? $nameArray[1] : "";
+
+            $lastName = trim($lastName);
+            $path = "index.php?option=com_thm_groups&view=profile_edit";
+            $path .= "&groupID=$this->groupID&userID=$this->userID&name=$lastName&Itemid=$this->menuID";
+            $url = JRoute::_($path);
+            $text = '<span class="icon-edit"></span> '. JText::_('COM_THM_GROUPS_EDIT');
+            $editLink .= JHtml::_('link', $url, $text, $attributes);
+        }
+        return $editLink;
+    }
+
+    /**
+     * Gets a link to the previous static content or webpage
+     *
+     * @params   mixed  $attributes  An associative array (or simple string) of attributes to add
+     *
+     * @return  string  the Link HTML markup
+     */
+    public function getBackLink($attributes = null)
+    {
+        $defaultURL = 'document.referrer';
+        $defaultText = '<span class="icon-undo"></span> '. JText::_('COM_THM_GROUPS_PROFILE_BACK');
+        $defaultLink = JHtml::_('link', $defaultURL, $defaultText, $attributes);
+
+        $menu = JFactory::getApplication()->getMenu()->getItem($this->menuID);
+        if (empty($menu))
+        {
+            return $defaultLink;
+        }
+
+        $notGroupsComponent = ($menu->type != 'component' OR $menu->component != 'com_thm_groups');
+        if ($notGroupsComponent)
+        {
+            return $defaultLink;
+        }
+
+        $url = $menu->link . '&Itemid=' . $this->menuID;
+        $text = '<span class="icon-list"></span> '. JText::_('COM_THM_GROUPS_PROFILE_BACK_TO_LIST');
+        return JHtml::_('link', $url, $text, $attributes);
+    }
+
+    /**
+     * Adds css and javascript files to the document
+     *
+     * @return  void  modifies the document
+     */
+    private function modifyDocument()
+    {
+        $document = JFactory::getDocument();
+        $document->addStyleSheet('libraries/thm_groups_responsive/assets/css/respBaseStyles.css');
+        JHtml::_('bootstrap.framework');
+        JHtml::_('behavior.modal');
+        JHTML::_('behavior.modal', 'a.modal-button');
+    }
+
+    /**
+     * Creates the name to be displayed
+     *
+     * @param   array  $profile  the user's profile information
+     *
+     * @return  string  the profile name
+     */
+    public function getDisplayName($profile)
+    {
+        $displayName = '';
+        $displayName .= (!empty($profile['Titel']) AND !empty($profile['Titel']['value']))?
+            $profile['Titel']['value'] . ' ' : '';
+        $displayName .= (!empty($profile['Vorname']) AND !empty($profile['Vorname']['value']))?
+            $profile['Vorname']['value'] . ' ' : '';
+        $displayName .= (!empty($profile['Nachname']) AND !empty($profile['Nachname']['value']))?
+            $profile['Nachname']['value'] . ' ' : '';
+        $displayName .= (!empty($profile['Posttitel']) AND !empty($profile['Posttitel']['value']))?
+            $profile['Posttitel']['value'] : '';
+        return $displayName;
     }
 
 }

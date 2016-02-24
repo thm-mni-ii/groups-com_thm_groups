@@ -5,9 +5,9 @@
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsModelQuickpage
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2015 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 defined('_JEXEC') or die;
@@ -196,7 +196,6 @@ class THM_GroupsModelQp_Settings extends JModelAdmin
      *
      * @return  boolean  True on success.
      *
-     * @since   1.6
      */
     protected function batchMove($value, $pks, $contexts)
     {
@@ -236,18 +235,6 @@ class THM_GroupsModelQp_Settings extends JModelAdmin
                 $this->setError(JText::_('COM_CATEGORIES_BATCH_CANNOT_CREATE'));
                 return false;
             }
-
-            // Check that user has edit permission for every category being moved
-            // Note that the entire batch operation fails if any category lacks edit permission
-            /*foreach ($pks as $pk)
-            {
-                if (!$this->user->authorise('core.edit', $extension . '.category.' . $pk))
-                {
-                    // Error since user cannot edit this category
-                    $this->setError(JText::_('COM_CATEGORIES_BATCH_CANNOT_EDIT'));
-                    return false;
-                }
-            }*/
         }
 
         // We are going to store all the children and just move the category

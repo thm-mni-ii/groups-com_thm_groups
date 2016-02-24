@@ -1,17 +1,16 @@
 <?php
 /**
- * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsViewRole_Manager
  * @description THMGroupsViewRole_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2015 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 // import Joomla view library
 jimport('thm_core.list.view');
@@ -21,8 +20,7 @@ jimport('thm_core.list.view');
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
+ * @link      www.thm.de
  */
 class THM_GroupsViewRole_Manager extends THM_CoreViewList
 {
@@ -52,7 +50,7 @@ class THM_GroupsViewRole_Manager extends THM_CoreViewList
         $this->batch = array('batch' => JPATH_COMPONENT_ADMINISTRATOR . '/views/role_manager/tmpl/default_batch.php');
 
         $document = JFactory::getDocument();
-        $document->addScript(JURI::root(true) . '/administrator/components/com_thm_groups/assets/js/role_manager.js');
+        $document->addScript(JURI::root(true) . '/media/com_thm_groups/js/role_manager.js');
 
         parent::display($tpl);
     }
@@ -83,7 +81,7 @@ class THM_GroupsViewRole_Manager extends THM_CoreViewList
 
         if ($user->authorise('core.delete', 'com_thm_groups'))
         {
-            JToolBarHelper::deleteList('COM_THM_GROUPS_REALLY_DELETE', 'role.delete', 'JTOOLBAR_DELETE');
+            JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM', 'role.delete', 'JTOOLBAR_DELETE');
         }
 
         // Add a batch button

@@ -1,15 +1,14 @@
 <?php
 /**
- * @version     v3.0.1
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @name        THMPicTransform
  * @description THMGroups helper file for transformation of uploaded pictures
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 /**
@@ -19,8 +18,7 @@
  *
  * @category  Joomla.Component.Site
  * @package   com_thm_groups.site
- * @link      www.mni.thm.de
- * @since     Class available since Release 1.0
+ * @link      www.thm.de
  */
 class THMPicTransform
 {
@@ -28,7 +26,6 @@ class THMPicTransform
      * PictureFile
      *
      * @var    $_FILES[]
-     * @since  1.0
      */
     private $_picFile;
 
@@ -36,13 +33,11 @@ class THMPicTransform
      * Type
      *
      * @var    integer
-     * @since  1.0
      */
     private $_type;
 
     /**
      * Constructor with the Picturefile to transform
-     *@since  Available since Release 1.0
      *
      * @param   $_FILES[]  $picFile  Array, which contains the uploaded file.
      */

@@ -6,9 +6,9 @@
  * @name        THM_GroupsViewUser_Select
  * @description view output file for user lists
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2015 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 defined('_JEXEC') or die;
 jimport('thm_core.list.view');
@@ -21,7 +21,7 @@ JHtml::_('jquery.framework');
  * @category    Joomla.Component.Admin
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 class THM_GroupsViewQP_Categories extends JViewLegacy
 {

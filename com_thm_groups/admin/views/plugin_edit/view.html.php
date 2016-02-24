@@ -1,17 +1,16 @@
 <?php
 /**
- * @version     v1.0.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsViewPlugin_Edit
  * @description THM_GroupsViewPlugin_Edit file from com_thm_groups
  * @author      Florian Kolb, <florian.kolb@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 jimport('thm_core.edit.view');
 
 /**
@@ -19,8 +18,7 @@ jimport('thm_core.edit.view');
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
+ * @link      www.thm.de
  */
 class THM_GroupsViewPlugin_Edit extends THM_CoreViewEdit
 {

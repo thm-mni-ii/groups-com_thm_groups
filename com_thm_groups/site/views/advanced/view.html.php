@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -15,9 +14,9 @@
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
  * @author      Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 // require implode('/', array(JPATH_ROOT, 'components', 'com_thm_groups', 'helper', 'bootstrap_helper.php'));
@@ -32,8 +31,7 @@ JHtml::_('behavior.modal');
  *
  * @category  Joomla.Component.Site
  * @package   thm_groups
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
+ * @link      www.thm.de
  */
 class THM_GroupsViewAdvanced extends JViewLegacy
 {
@@ -52,7 +50,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
         // Mainframe Parameter
         $params = $mainframe->getParams();
-        $userid = $app->get('gsuid', 0);
+        $userid = $app->get('userID', 0);
         $pagetitle = $params->get('page_title');
         $showpagetitle = $params->get('show_page_heading');
 
@@ -83,33 +81,23 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         }
         
         $this->title = $title;
-
         $this->app = $app;
-
         $itemId = $app->get('Itemid', 0, 'get');
-
-        $this->params = $model->getViewParams();
-
-        $gid = $model->getGroupNumber();
-
-        $this->gsgid = $gid;
-
+        $viewparams = $model->getViewParams();
+        $this->params = $viewparams;
+        $groupnumber = $model->getGroupNumber();
+        $this->groupID = $groupnumber;
         $this->itemid = $itemId;
+        $canEdit = $model->canEdit($groupnumber);
+        $this->canEdit = $canEdit;
+        $tempdata = $model->getData();
+        $this->data = $tempdata;
+        $gettable = $model->getDataTable();
+        $this->dataTable = $gettable;
 
-        $this->canEdit = $model->canEdit($gid);
+        $advancedView = $model->getAdvancedView();
 
-        $this->data = $model->getData();
-
-        $templateLayout = $params->get('advancedview');
-
-        // For dynamic call
-        if (empty($templateLayout))
-        {
-            // use list layout
-            $templateLayout = 0;
-        }
-
-        $this->view = $templateLayout;
+        $this->view = $advancedView;
 
         // Long Info Truncate
         $truncateLongInfo = !$params->get('longInfoNotTruncated', false);
@@ -124,7 +112,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $document->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/respAdvanced.css');
 
         // Load Dynamic CSS
-        $mycss = $this->getCssView($params, $templateLayout);
+        $mycss = $this->getCssView($params, $advancedView);
        
         $document->addStyleDeclaration($mycss);
 
@@ -138,6 +126,44 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
         parent::display($tpl);
     }
+
+    /**
+     * Method to generate table
+     *
+     * @param   Object  $data  Data
+     *
+     * @return String table
+     */
+    public function make_table($data)
+    {
+        $jsonTable = json_decode($data);
+        $table = "<table class='table'><tr>";
+
+        foreach ($jsonTable[0] as $key => $value)
+        {
+            $headItem = str_replace("_", " ", $key);
+            $table = $table . "<th>" . $headItem . "</th>";
+        }
+
+        $table = $table . "</tr>";
+
+        foreach ($jsonTable as $item)
+        {
+            $table = $table . "<tr>";
+
+            foreach ($item as $value)
+            {
+                $table = $table . "<td>" . $value . "</td>";
+            }
+
+            $table = $table . "</tr>";
+        }
+
+        $table = $table . "</table>";
+
+        return $table;
+    }
+
 
     /**
      * Add px Suffix to numeric value (for css)
@@ -340,13 +366,13 @@ class THM_GroupsViewAdvanced extends JViewLegacy
      * @param   String   $paramLinkTarget  Show Option for Link
      * @param   Integer  $itemid           Menu Id
      * @param   String   $lastName         Group Member last anem
-     * @param   Integer  $gsgid            Group Id
+     * @param   Integer  $groupID            Group Id
      * @param   Integer  $userID           Group Member ID
      * @param   Array    $attribut         Group Member Attribut
      *
      * @return the HTML to link the User information
      */
-    public function getUserinInformation($paramLinkTarget, $itemid, $lastName, $gsgid, $userID, $attribut)
+    public function getUserinInformation($paramLinkTarget, $itemid, $lastName, $groupID, $userID, $attribut)
     {
         $displayInline = " style='display: inline'";
         $displayLeft = " style='float: left'";
@@ -357,19 +383,19 @@ class THM_GroupsViewAdvanced extends JViewLegacy
             case "module":
                 $path = "index.php?option=com_thm_groups&view=advanced&layout=list&Itemid=";
                 $result .= "<a href="
-                    . JRoute::_($path . $itemid . '&gsuid=' . $userID . '&name=' . trim($lastName) . '&gsgid=' . $gsgid)
+                    . JRoute::_($path . $itemid . '&userID=' . $userID . '&name=' . trim($lastName) . '&groupID=' . $groupID)
                     . ">";
                 break;
             case "profile":
                 $path = 'index.php?option=com_thm_groups&view=profile&layout=default';
                 $result .= "<a href="
-                    . JRoute::_($path . '&gsuid=' . $userID . '&name=' . trim($lastName) . '&gsgid=' . $gsgid)
+                    . JRoute::_($path . '&userID=' . $userID . '&name=' . trim($lastName) . '&groupID=' . $groupID)
                     . ">";
                 break;
             default:
                 $path = "index.php?option=com_thm_groups&view=advanced&layout=list&Itemid=";
                 $result .= "<a href="
-                    . JRoute::_($path . $itemid . '&gsuid=' . $userID . '&name=' . trim($lastName) . '&gsgid=' . $gsgid)
+                    . JRoute::_($path . $itemid . '&userID=' . $userID . '&name=' . trim($lastName) . '&groupID=' . $groupID)
                     . ">";
         }
 
@@ -394,7 +420,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
      * @param   Integer  $col_view          Number of column
      * @param   String   $paramLinkTarget   Show Option for Link
      * @param   Boolean  $canEdit           Can User Edit
-     * @param   Integer  $gsgid             Group Id
+     * @param   Integer  $groupID             Group Id
      * @param   Integer  $itemid            Menu Id
      * @param   Integer  $app_option        Group Member ID
      * @param   Array    $app_layout        Layout Option
@@ -408,7 +434,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
      $col_view,
      $paramLinkTarget,
      $canEdit,
-     $gsgid,
+     $groupID,
      $itemid,
      $app_option,
      $app_layout,
@@ -520,12 +546,12 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                 $option = $app_option;
                 $layout = $app_layout;
                 $view = $app_view;
-                $path = "index.php?option=com_thm_groups&view=user_edit&layout=default&tmpl=component&Itemid=";
-                $gspart = '&gsgid=' . $gsgid;
+                $path = "index.php?option=com_thm_groups&view=profile_edit&layout=default&tmpl=component&Itemid=";
+                $gspart = '&groupID=' . $groupID;
                 $trim = "&name=" . trim($lastName);
                 $asd = "iframe";
                 $result .= "<a href='". JRoute:: _(
-                        $path . $itemid . '&gsuid=' . $id . $trim . $gspart )
+                        $path . $itemid . '&userID=' . $id . $trim . $gspart )
                     . "' class='modal' rel='{size: {x: 1000, y: 600}, handler: \"iframe\", onClose: \"window.location.reload();\"}'>"
                     . JHTML:: image("components/com_thm_groups/img/edit.png", 'bearbeiten', $attribs) . "</a>";
             }
@@ -579,18 +605,18 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                     {
                         // Reihenfolge ist von ORDER in Datenbank abhaengig. somit ist hier die Reihenfolge egal
                         case "1":
-                            $result .= $this->getUserinInformation($paramLinkTarget, $itemid, $lastName, $gsgid, $id, $memberitem);
+                            $result .= $this->getUserinInformation($paramLinkTarget, $itemid, $lastName, $groupID, $id, $memberitem);
                             break;
                         case "2":
-                            $result .= $this->getUserinInformation($paramLinkTarget, $itemid, $lastName, $gsgid, $id, $memberitem);
+                            $result .= $this->getUserinInformation($paramLinkTarget, $itemid, $lastName, $groupID, $id, $memberitem);
                             break;
                         case "5":
                             $result .= nl2br(htmlspecialchars_decode($memberitem->value));
                             break;
                         case "4":
                             // EMail
-                            $result .= '<span class="respEmail">' . JHTML::_('email.cloak', $memberitem->value)
-                                    . '<span class="icon-mail-2"></span></span>';
+                            $result .= '<span class="respEmail"><a href="mailto:' . $memberitem->value . '" class="btn" role="button">'
+                                    . '<span class="icon-mail-2"></span></a></span>';
                             $result .= '<span class="respEmail-hidden">' . JHTML::_('email.cloak', $memberitem->value) . '</span>';
                             break;
                         default:

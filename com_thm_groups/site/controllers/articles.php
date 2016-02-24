@@ -1,14 +1,13 @@
 <?php
 
 /**
- * @version     v3.4.5
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2015 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 // No direct access.
@@ -19,7 +18,6 @@ defined('_JEXEC') or die;
  *
  * @category  Joomla.Component.Site
  * @package   thm_groups
- * @since     v1.0.0
  */
 class THM_GroupsControllerArticles extends JControllerLegacy
 {
@@ -76,7 +74,6 @@ class THM_GroupsControllerArticles extends JControllerLegacy
      *
      * @return  void
      *
-     * @since   12.2
      */
     public function publish()
     {
@@ -139,7 +136,6 @@ class THM_GroupsControllerArticles extends JControllerLegacy
      *
      * @return  void
      *
-     * @since   3.0
      */
     public function saveOrderAjax()
     {

@@ -3,7 +3,7 @@
  * @package  com_thm_groups
  * @author   Peter May (peter.may@mni.thm.de)
  * @license  http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @link     http://www.mni.thm.de
+ * @link     http://www.thm.de
  */
 
 

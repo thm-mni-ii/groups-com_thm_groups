@@ -10,33 +10,24 @@
 
 <?php
 /**
- * @version     v3.4.6
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @name        THMGroupsViewProfile
  * @description THMGroupsViewProfile file from com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
- * @author      Markus Kaiser,  <markus.kaiser@mni.thm.de>
- * @author      Daniel Bellof,  <daniel.bellof@mni.thm.de>
- * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
- * @author      Peter May,      <peter.may@mni.thm.de>
  * @author      Tobias Schmitt, <tobias.schmitt@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      Dieudonne Timma, <dieudonne.timma.meyatchie@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
+ * @author      James Antrim, <james.antrim@nm.thm.de>
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
-defined('_JEXEC') or die('Restricted access');
-
-JHTML::_('behavior.modal', 'a.modal-button');
-JHTML::_('behavior.calendar');
-
-// Include Bootstrap
-JHtmlBootstrap::loadCSS();
+defined('_JEXEC') or die;
 
 $user = JFactory::getUser();
 
@@ -52,12 +43,6 @@ $userInfoArray =  $this->model->getData();
 $backAttribute = $this->backAttribute;
 
 $html = buildHtmlOutput($this->userid, $userInfoArray, $backLink, $backAttribute,$canEdit);
-
-// Get css
-$mycss = getProfilCss();
-
-$document = JFactory::getDocument();
-$document->addStyleDeclaration($mycss);
 
 // Print HTML
 echo $html;
@@ -92,7 +77,7 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
     $componentparams = JComponentHelper::getParams('com_thm_groups');
 
     // For edit url
-    $attribut = THMLibThmGroupsUser::getUrl(array("name", "gsuid", "gsgid"));
+    $attribut = THMLibThmGroupsUser::getUrl(array("name", "userID", "groupID"));
     $result .= '<div class="row-fluid">';
     $result .= '<div class="thm_groups_content_profile span12">';
     $result .= '<div id="j-main-container">';
@@ -110,19 +95,15 @@ function buildHtmlOutput($userid, $userData, $backLink, $backAttribute,$canEdit)
         {
             $head .= '<div class="thm_groups_content_profile_edit">';
 
-            /*$head .= "<a href='" . JRoute::_('index.php?option=com_thm_groups&view=user_edit&layout=default&' . $attribut . '&gsuid=' . $userid
-                    . '&name=' . trim($lastName) . '&gsgid=4' ) . "'>"
-                    . JHTML::image("libraries/thm_groups/assets/icons/edit.png", 'bearbeiten', 'bearbeiten') . "</a>";*/
-
             $attribs['title'] = 'bearbeiten';
 
-            $path = "index.php?option=com_thm_groups&view=user_edit&layout=default&tmpl=component";
+            $path = "index.php?option=com_thm_groups&view=profile_edit&layout=default&tmpl=component";
 
             // TODO use existing group id and not just a number
-            $gspart = '&gsgid=4';
+            $gspart = '&groupID=4';
             $trim = "&name=" . trim($lastName);
             $head .= "<a href='" . JRoute:: _(
-                    $path . '&gsuid=' . $userid . $trim . $gspart
+                    $path . '&userID=' . $userid . $trim . $gspart
                 )
                 . "' class='modal' rel='{size: {x: 1000, y: 600}, handler: \"iframe\", onClose: \"window.location.reload();\"}'>"
                 . JHTML:: image("components/com_thm_groups/img/edit.png", 'bearbeiten', $attribs) . "</a>";
@@ -411,7 +392,7 @@ function getTable($data)
  * and the tag 'small' or 'medium'. Return null if no files found.
  *
  * Image sizes of thumbs are generated in the
- * user_edit model at the backend, change them if needed.
+ * profile_edit model at the backend, change them if needed.
  *
  * @param   String  $filename  The name of the picture
  * @param   String  $path      The path of the picture
@@ -479,107 +460,4 @@ function getResizedPictures($filename, $path)
         return null;
     }
 }
-
-/**
- * Generates the css code
- *
- * @return String with css code
- */
-function getProfilCss()
-{
-    // Here you can define or change css styles
-    $out = '';
-    $out .= '
-            .thm_groups_content_profile
-            {
-                width:100%;
-            }
-
-            .field_container{
-                width: 100%;
-            }
-
-            .thm_groups_contentheading > span
-            {
-                float:left;
-                font-size: 1.375em;
-            }
-
-            .thm_groups_contentheading img
-            {
-                margin-top: 10px;
-                float:left;
-                clear:both;
-            }
-
-            .thm_groups_content_profile_edit
-            {
-                float:right !important;
-            }
-
-            #content .breadcrumb{
-                margin: 0px 0px 18px 0px;
-            }
-
-            .thm_groups_contentbody > div
-            {
-                float:left;
-                clear:both;
-            }
-
-            .thm_groups_contentbody > .field_container
-            {
-                margin-top:20px;
-            }
-
-            .field_container > div
-            {
-                float:left;
-            }
-
-            .field_container > .label
-            {
-                width: 100px;
-                font-weight: bold;
-                margin-bottom: 5px;
-            }
-
-            .field_container > .value
-            {
-                width: 80%;
-            }
-
-            @media screen and (min-width: 480px){
-                .field_container > .value{
-                     margin-left: 20px;
-                }
-            }
-
-            .field_container > .table
-            {
-                margin-left: 20px;
-            }
-
-            #pictureContainer{
-                width: 30%;
-            }
-
-            @media screen and (min-width: 600px){
-                .Portrait{
-                    max-width:45%;
-                }
-            }
-
-            .sbox-content-image img{
-                height: auto !important;
-                width: auto !important;
-                max-height: 100% !important;
-                max-width: 100% !important;
-                margin: 0px auto !important;
-            }
-            ';
-
-    return $out;
-}
-
 

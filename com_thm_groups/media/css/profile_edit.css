@@ -1,0 +1,234 @@
+/*  ------------------------------------
+**  Author:     Kristijan Pokas
+**  File:       monitor_edit.css
+**  Styles for: Backend
+**  Site:       www.mni.thm.de
+**  ------------------------------------ */
+/*icons anpassen*/
+.icon-diff, .icon-import, .icon-import-all, .icon-merge-all {
+  font-weight: bold; }
+
+.icon-add-Space {
+  font-size: 14px; }
+
+/*icons zur jeweiligen View im Header hinzufuegen */
+.icon-organizer::before {
+  content: "\e60b"; }
+
+.icon-organizer_degrees::before {
+  content: "\e606"; }
+
+.icon-organizer_users::before {
+  content: "\e01f"; }
+
+.icon-organizer_monitors::before {
+  content: "\e01c"; }
+
+.icon-organizer_teachers::before {
+  content: "\e604"; }
+
+.icon-organizer_departments::before {
+  content: "\e244"; }
+
+.icon-organizer_subjects::before {
+  content: "\e603"; }
+
+.icon-organizer_fields::before {
+  content: "\74"; }
+
+.icon-organizer_colors::before {
+  content: "\e014"; }
+
+.icon-organizer_subject_pools::before {
+  content: "\43"; }
+
+.icon-organizer_rooms::before {
+  content: "\e60a"; }
+
+.icon-organizer_degree_programs::before {
+  content: "\31"; }
+
+.icon-organizer_schedules::before {
+  content: "\e600"; }
+
+.icon-organizer_categories::before {
+  content: "\e601"; }
+
+.icon-mni::before {
+  content: "\e600"; }
+
+/*icons zu sidebar hinzufuegen*/
+li a[href$="view=thm_organizer"]::before, li a[href$="option=com_thm_organizer"]::before {
+  font-family: icomoon;
+  content: "\e60b";
+  font-size: 16px;
+  padding-right: 8px;
+  color: #80ba24; }
+li a[href*="view=degree_manager"]::before {
+  font-family: icomoon;
+  content: "\e606";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=user_manager"]::before {
+  font-family: icomoon;
+  content: "\e01f";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=monitor_manager"]::before {
+  font-family: icomoon;
+  content: "\e01c";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=teacher_manager"]::before {
+  font-family: icomoon;
+  content: "\e604";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=department_manager"]::before {
+  font-family: icomoon;
+  content: "\e244";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=subject_manager"]::before {
+  font-family: icomoon;
+  content: "\e603";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=field_manager"]::before {
+  font-family: icomoon;
+  content: "\74";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=color_manager"]::before {
+  font-family: icomoon;
+  content: "\e014";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=pool_manager"]::before {
+  font-family: icomoon;
+  content: "\43";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=room_manager"]::before {
+  font-family: icomoon;
+  content: "\e60a";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=program_manager"]::before {
+  font-family: icomoon;
+  content: "\31";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=schedule_manager"]::before {
+  font-family: icomoon;
+  content: "\e600";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=category_manager"]::before {
+  font-family: icomoon;
+  content: "\e601";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=virtual_schedule_manager"]::before {
+  font-family: icomoon;
+  content: "\e600";
+  font-size: 12px;
+  padding-right: 8px; }
+
+#adminForm button {
+  background-color: white;
+  border: 1px solid #77858c;
+  padding: 4px 8px; }
+  #adminForm button:hover {
+    color: #394a59; }
+#adminForm [class^="icon-"], #adminForm [class*=" icon-"] {
+  margin-right: 5px; }
+#adminForm .clear {
+  clear: both; }
+#adminForm .modal {
+  border-radius: 0;
+  width: 700px; }
+  #adminForm .modal .modal-content {
+    padding: 5px; }
+    #adminForm .modal .modal-content .modal-header, #adminForm .modal .modal-content .modal-footer {
+      background-color: #f2f5f6;
+      padding: 5px;
+      text-align: left; }
+      #adminForm .modal .modal-content .modal-header .header-title, #adminForm .modal .modal-content .modal-footer .header-title {
+        border-bottom: 1px solid #77858c;
+        margin-bottom: 5px;
+        padding: 5px; }
+        #adminForm .modal .modal-content .modal-header .header-title h3, #adminForm .modal .modal-content .modal-footer .header-title h3 {
+          display: block;
+          float: left; }
+          #adminForm .modal .modal-content .modal-header .header-title h3 [class^="icon-"], #adminForm .modal .modal-content .modal-header .header-title h3 [class*=" icon-"], #adminForm .modal .modal-content .modal-footer .header-title h3 [class^="icon-"], #adminForm .modal .modal-content .modal-footer .header-title h3 [class*=" icon-"] {
+            margin-right: 8px; }
+        #adminForm .modal .modal-content .modal-header .header-title button.close, #adminForm .modal .modal-content .modal-footer .header-title button.close {
+          background-color: #f2f5f6;
+          border: none;
+          color: #394a59;
+          display: block;
+          float: right;
+          opacity: 1; }
+      #adminForm .modal .modal-content .modal-header .toolbar, #adminForm .modal .modal-content .modal-footer .toolbar {
+        clear: both; }
+        #adminForm .modal .modal-content .modal-header .toolbar input[type="file"], #adminForm .modal .modal-content .modal-footer .toolbar input[type="file"] {
+          width: 250px; }
+    #adminForm .modal .modal-content .modal-body {
+      height: 250px;
+      padding: 0; }
+      #adminForm .modal .modal-content .modal-body .crop-container {
+        border-left: #f2f5f6 1px solid;
+        border-right: #f2f5f6 1px solid;
+        float: left;
+        height: 100%;
+        padding: 0 5px;
+        width: calc(50% - 12px); }
+        #adminForm .modal .modal-content .modal-body .crop-container .imageBox {
+          position: relative;
+          height: 220px;
+          width: 100%;
+          min-width: 150px;
+          border: 1px solid #aaa;
+          background: #fff;
+          overflow: hidden;
+          background-repeat: no-repeat;
+          cursor: move; }
+          #adminForm .modal .modal-content .modal-body .crop-container .imageBox .thumbBox {
+            position: absolute;
+            width: 150px;
+            height: 200px;
+            margin: auto;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            box-sizing: border-box;
+            border: 1px solid #666666;
+            box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
+            background: none repeat scroll 0% 0% transparent; }
+          #adminForm .modal .modal-content .modal-body .crop-container .imageBox .spinner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            text-align: center;
+            line-height: 400px;
+            background: rgba(0, 0, 0, 0.7); }
+      #adminForm .modal .modal-content .modal-body .preview-container {
+        border-left: #f2f5f6 1px solid;
+        border-right: #f2f5f6 1px solid;
+        float: right;
+        height: 250px;
+        padding: 0 5px;
+        width: calc(50% - 12px); }
+        #adminForm .modal .modal-content .modal-body .preview-container h4 {
+          margin-bottom: 5px;
+          margin-top: 5px;
+          text-align: center; }
+        #adminForm .modal .modal-content .modal-body .preview-container .cropped img {
+          border: 1px solid grey;
+          display: block;
+          margin-left: auto;
+          margin-right: auto; }

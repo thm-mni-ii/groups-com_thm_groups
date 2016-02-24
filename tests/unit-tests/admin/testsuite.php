@@ -13,7 +13,7 @@
  *@copyright   2012 TH Mittelhessen
  *
  *@license     GNU GPL v.2
- *@link        www.mni.thm.de
+ *@link        www.thm.de
  *@version     3.0
  */
 
@@ -24,8 +24,7 @@
  *
  * @package     Joomla.Admin
  * @subpackage  thm_groups
- * @link        www.mni.thm.de
- * @since       Class available since Release 3.0
+ * @link        www.thm.de
  * @codeCoverageIgnore
  */
 class AllComThmGroupsAdminTests

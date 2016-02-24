@@ -5,9 +5,9 @@
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsModelGroup_Manager
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2015 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 defined('_JEXEC') or die;
@@ -260,7 +260,7 @@ class THM_GroupsModelGroup_Manager extends THM_CoreModelList
                 $deleteBtn = "<a href='javascript:deleteModerator(" . $gid . "," . $moderator->id . ")'>" . $deleteIcon . "</a>";
 
                 // Link to edit view of user
-                $url = "index.php?option=com_thm_groups&view=user_edit&cid[]=$moderator->id";
+                $url = "index.php?option=com_thm_groups&view=profile_edit&cid[]=$moderator->id";
 
                 if (JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
                 {

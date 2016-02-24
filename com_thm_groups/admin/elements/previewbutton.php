@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -9,9 +8,9 @@
  * @author      Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
  * @author      Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 // Check to ensure this file is included in Joomla!
@@ -26,8 +25,7 @@ $lang->load('com_thm_groups', JPATH_ADMINISTRATOR);
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
- * @link      www.mni.thm.de
- * @since     Class available since Release 3.4
+ * @link      www.thm.de
  */
 class JFormFieldPreviewButton extends JFormField
 {
@@ -44,7 +42,6 @@ class JFormFieldPreviewButton extends JFormField
 
         // Add script-code to the document head
         $document = JFactory::getDocument();
-       // $document->addScript($library_path . '/assets/js/jquery-1.9.1.min.js');
         $document->addScript($elements_path . '/previewbutton.js');
 
         return '<input type="button" id="thm_groups_adv_view_preview_button" value="' . JText::_('COM_THM_GROUPS_PROFILE_CONTAINER_PREVIEW')

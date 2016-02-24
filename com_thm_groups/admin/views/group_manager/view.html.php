@@ -1,30 +1,28 @@
 <?php
 /**
- * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsViewGroup_Manager
  * @description THM_GroupsViewGroup_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2015 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 // import Joomla view library
 jimport('thm_core.list.view');
 JHtml::_('jquery.framework');
-require_once JPATH_COMPONENT . '/assets/helpers/group_manager_helper.php';
+require_once JPATH_SITE . '/media/com_thm_groups/helpers/batch.php';
 
 /**
  * THM_GroupsViewGroup_Manager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
+ * @link      www.thm.de
  */
 class THM_GroupsViewGroup_Manager extends THM_CoreViewList
 {
@@ -62,11 +60,11 @@ class THM_GroupsViewGroup_Manager extends THM_CoreViewList
         );
 
         // Get all roles from DB
-        $this->roles = THM_GroupsHelperGroup_Manager::getRoles();
-        $this->profiles = THM_GroupsHelperGroup_Manager::getProfiles();
+        $this->roles = THM_GroupsHelperBatch::getRoles();
+        $this->profiles = THM_GroupsHelperBatch::getProfiles();
 
         $document = JFactory::getDocument();
-        $document->addScript(JURI::root(true) . '/administrator/components/com_thm_groups/assets/js/group_manager.js');
+        $document->addScript(JURI::root(true) . '/media/com_thm_groups/js/group_manager.js');
 
         parent::display($tpl);
     }
@@ -138,6 +136,6 @@ class THM_GroupsViewGroup_Manager extends THM_CoreViewList
     protected function getScript()
     {
         // Use Joomla.submitbutton in core.js
-        return JURI::root(true) . '/administrator/components/com_thm_groups/assets/js/submitButton.js';
+        return JURI::root(true) . '/media/com_thm_groups/js/submitButton.js';
     }
 }

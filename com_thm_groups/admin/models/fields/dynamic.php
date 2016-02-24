@@ -1,6 +1,6 @@
 <?php
 
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 JFormHelper::loadFieldClass('list');
 jimport('joomla.form.formfield');
 
@@ -13,7 +13,6 @@ class JFormFieldDynamic extends JFormFieldList
      * Cached array of the category items.
      *
      * @var    array
-     * @since  3.2
      */
     protected static $options = array();
 
@@ -42,7 +41,6 @@ class JFormFieldDynamic extends JFormFieldList
      *
      * @return  array  The field option objects.
      *
-     * @since   3.2
      */
     protected function getOptions()
     {

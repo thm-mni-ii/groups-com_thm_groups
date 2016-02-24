@@ -10,7 +10,7 @@ jimport('joomla.application.categories');
  *
  * @category  Joomla.Component.Site
  * @package   com_thm_groups.site
- * @link      www.mni.thm.de
+ * @link      www.thm.de
  */
 class JFormFieldCustomCategory extends JFormFieldCategory
 {
@@ -18,7 +18,6 @@ class JFormFieldCustomCategory extends JFormFieldCategory
      * The form field type.
      *
      * @var    string
-     * @since  11.1
      */
     public $type = 'CustomCategory';
 
@@ -27,7 +26,6 @@ class JFormFieldCustomCategory extends JFormFieldCategory
      *
      * @return  array    The field option objects.
      *
-     * @since   11.1
      */
     protected function getOptions()
     {

@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     v3.0.1
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -8,11 +7,11 @@
  * @description THMGroups component site profile controller
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 jimport('joomla.application.component.controller');
 
 /**
@@ -22,14 +21,12 @@ jimport('joomla.application.component.controller');
  *
  * @category  Joomla.Component.Site
  * @package   com_thm_groups.site
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.1
+ * @link      www.thm.de
  */
 class THM_GroupsControllerProfile extends JControllerLegacy
 {
     /**
      *  Constructor (registers additional tasks to methods)
-     *@since  Method available since Release 2.1
      */
     public function __construct()
     {
@@ -39,7 +36,6 @@ class THM_GroupsControllerProfile extends JControllerLegacy
 
     /**
      *  Method to get the link, where the redirect has to go
-     *@since  Method available since Release 2.1
      *
      *@return   string  link.
      */
@@ -51,7 +47,6 @@ class THM_GroupsControllerProfile extends JControllerLegacy
 
     /**
      *  Method, which sets the redirect for the 'back' button.
-     *@since  Method available since Release 2.1
      *
      *@return   void
      */

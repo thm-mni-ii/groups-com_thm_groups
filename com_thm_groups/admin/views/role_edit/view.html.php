@@ -5,9 +5,9 @@
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsViewRole_Edit
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2015 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 defined('_JEXEC') or die;
 jimport('thm_core.edit.view');
@@ -46,7 +46,7 @@ class THM_GroupsViewRole_Edit extends THM_CoreViewEdit
     protected function addToolBar()
     {
         $isNew = ($this->item->id == 0);
-        $title = $isNew? JText::_('COM_THM_GROUPS_ROLE_EDIT_NEW_VIEW_TITLE') : JText::_('COM_THM_GROUPS_ROLE_EDIT_EDIT_VIEW_TITLE');
+        $title = $isNew? JText::_('COM_THM_GROUPS_ROLE_EDIT_NEW_TITLE') : JText::_('COM_THM_GROUPS_ROLE_EDIT_EDIT_TITLE');
         JToolbarHelper::title($title, 'test');
         JToolBarHelper::apply('role.apply', 'JTOOLBAR_APPLY');
         JToolbarHelper::save('role.save');

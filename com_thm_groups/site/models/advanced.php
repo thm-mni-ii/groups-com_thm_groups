@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     v3.2.5
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -10,12 +9,12 @@
  * @author      Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
  * @name        THMGroupsModelAdvanced
  * @description Advanced model of com_thm_groups
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 jimport('joomla.application.component.model');
 jimport('thm_groups.data.lib_thm_groups');
@@ -29,8 +28,7 @@ jimport('joomla.filesystem.path');
  *
  * @category  Joomla.Component.Site
  * @package   com_thm_groups.site
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
+ * @link      www.thm.de
  */
 class THM_GroupsModelAdvanced extends JModelLegacy
 {
@@ -38,13 +36,11 @@ class THM_GroupsModelAdvanced extends JModelLegacy
     /**
      * DAO
      *
-     * @since  1.0
      */
     protected $db;
 
     /**
      * Constructor
-     *@since Available since Release 3.0
      *
      */
     public function __construct()
@@ -77,19 +73,12 @@ class THM_GroupsModelAdvanced extends JModelLegacy
     /**
      * Get Group number
      *
-     * @return integer on success, -1 on false Group number
+     * @return integer Group number
      */
     public function getGroupNumber()
     {
         $params = $this->getViewParams();
-        $groupID = $params->get('selGroup');
-
-        if (empty($groupID))
-        {
-            $groupID = JFactory::getApplication()->input->getInt('gid', -1);
-        }
-
-        return $groupID;
+        return $params->get('selGroup');
     }
 
     /**
@@ -163,6 +152,7 @@ class THM_GroupsModelAdvanced extends JModelLegacy
      */
     public function canEdit($groupid)
     {
+        $groupid = $this->getGroupNumber();
         $user = JFactory::getUser();
         if($user->authorise('core.admin', 'com_thm_groups'))
             return true;
@@ -205,13 +195,6 @@ class THM_GroupsModelAdvanced extends JModelLegacy
 
         $sortedRoles       = $params->get('roleid');
         $data             = array();
-
-        if ($groupid === -1)
-        {
-            JFactory::getApplication()->enqueueMessage('Group ID is missing!', 'error');
-            return $data;
-        }
-
         if ($sortedRoles == "")
         {
             $arrSortedRoles = $this->getUnsortedRoles($groupid);
@@ -282,34 +265,58 @@ class THM_GroupsModelAdvanced extends JModelLegacy
     }
 
     /**
-     * Method to get extra data
+     * Get Data for table view
      *
-     * @param   Int  $structid  StructID
-     *
-     * @access	public
-     * @return	null / value
+     * @return  array    Two-dimensional array with group members (left and right)
      */
-    public function getPicPath($structid)
+    public function getDataTable()
     {
-        $db = JFactory::getDBO();
-        /*
-         $query = "SELECT value FROM #__thm_groups_" . strtolower($type) . "_extra WHERE structid=" . $structid;
-        */
-        $query = $db->getQuery(true);
-        $query->select('*');
-        $query->from($db->qn('#__thm_groups_picture_extra'));
-        $query->where('structid = ' . $this->db->quote($structid));
-        $db->setQuery($query);
-        $res = $db->loadObject();
-        if (isset($res->path))
+        $memberleft = array();
+        $memberright = array();
+        $index = 0;
+        $_data = $this->getData();
+        if (!empty($_data))
         {
-            return $res->path;
+            foreach ($_data as $key => $member)
+            {
+                if ($index == 0)
+                {
+                    $memberleft[$key] = $member;
+                    $index++;
+                }
+                else
+                {
+                    $memberright[$key] = $member;
+                    $index--;
+                }
+            }
         }
-        else
-        {
-            return null;
-        }
+
+        $_data = array();
+        $_data['left']  = $memberleft;
+        $_data['right'] = $memberright;
+
+        return $_data;
     }
+
+    /**
+     * Get the Param for the view
+     *
+     * @return  number   The number of the view
+     */
+    public function getAdvancedView()
+    {
+        $params = $this->getViewParams();
+        $view = $params->get('advancedview');
+        if (!isset($view))
+        {
+            $view = 0;
+        }
+        return $view;
+    }
+
+
+
 
     /**
      * Get Auto Increment Value of Database Table

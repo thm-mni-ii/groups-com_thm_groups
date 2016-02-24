@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     v3.4.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -8,9 +7,9 @@
  * @description JFormFieldAlphabetColor file from com_thm_groups
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2013 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 // Check to ensure this file is included in Joomla!
@@ -25,16 +24,12 @@ $lang->load('lib_thm_groups', JPATH_SITE);
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
+ * @link      www.thm.de
  */
 class JFormFieldOrderAttributes extends JFormField
 {
     /**
      * Element name
-     *
-     * @access  protected
-     * @var     string
      *
      * @return html
      */

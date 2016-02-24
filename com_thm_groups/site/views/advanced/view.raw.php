@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     v3.0.2
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -8,9 +7,9 @@
  * @description THMGroupsViewGroups file from com_thm_groups
  * @author      Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
  * @author      Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 jimport('joomla.application.component.view');
@@ -24,8 +23,7 @@ JHTML::_('behavior.framework', true);
  *
  * @category  Joomla.Component.Site
  * @package   thm_groups
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
+ * @link      www.thm.de
 */
 class THM_GroupsViewAdvanced extends JViewLegacy
 {

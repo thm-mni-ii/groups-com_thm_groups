@@ -17,7 +17,6 @@ jimport('joomla.application.component.modelitem');
  *
  * @package		Joomla.Site
  * @subpackage	com_content
- * @since 1.5
  */
 class THM_GroupsModelSinglearticle extends JModelItem
 {
@@ -33,7 +32,6 @@ class THM_GroupsModelSinglearticle extends JModelItem
      *
      * Note. Calling getState in this method will result in recursion.
      *
-     * @since	1.6
      */
     protected function populateState()
     {

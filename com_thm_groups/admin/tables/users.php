@@ -9,7 +9,7 @@ jimport('joomla.application.component.table');
  * @category    Joomla.Component.Admin
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 class thm_groupsTableUsers extends JTable
 {

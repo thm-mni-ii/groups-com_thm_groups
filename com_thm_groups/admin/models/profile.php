@@ -3,16 +3,18 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        profile model
+ * @name        user model
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @author      James Antrim, <james.antrim@nm.thm.de>
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 defined('_JEXEC') or die;
 jimport('joomla.application.component.modeladmin');
-require_once JPATH_COMPONENT . '/assets/helpers/database_compare_helper.php';
+jimport('thm_groups.data.lib_thm_groups_quickpages');
+require_once JPATH_COMPONENT_ADMINISTRATOR . '/assets/helpers/database_compare_helper.php';
 
 /**
  * Class loads form data to edit an entry.
@@ -25,12 +27,309 @@ class THM_GroupsModelProfile extends JModelLegacy
 {
 
     /**
+     * Key character to identify the ID in the mapping table as user ID
+     */
+    const TABLE_USER_ID_KIND = 'U';
+
+    /**
+     * Name of request parameter for a user ID
+     */
+    const PROFILE_USER_ID_PARAM = 'userID';
+
+    /**
+     * Deletes one user role from a group
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function deleteRoleInGroupByUser()
+    {
+        $input = JFactory::getApplication()->input;
+
+        $gid = $input->getInt('g_id', 0);
+        $uid = $input->getInt('u_id', 0);
+        $rid = $input->getInt('r_id', 0);
+
+        $db = JFactory::getDbo();
+
+
+        $idToDelete = $this->getUsergroupsRolesID($gid, $rid);
+
+        $query = $db->getQuery(true);
+
+        $query
+            ->delete('#__thm_groups_users_usergroups_roles')
+            ->where("usersID = $uid AND usergroups_rolesID = $idToDelete");
+
+        $db->setQuery($query);
+
+        try
+        {
+            $db->execute();
+        }
+        catch (Exception $e)
+        {
+            JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns usergroups-role relationship ID
+     *
+     * @param   int  $gid  Group id
+     * @param   int  $rid  Role id
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function getUsergroupsRolesID($gid, $rid)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query
+            ->select('ID')
+            ->from('#__thm_groups_usergroups_roles')
+            ->where("usergroupsID = $gid AND rolesID = $rid");
+
+        $db->setQuery($query);
+
+        try
+        {
+            $result = $db->loadObject();
+        }
+        catch (Exception $e)
+        {
+            JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+            return false;
+        }
+
+        return $result->ID;
+    }
+
+    /**
+     * Deletes user from group with all roles
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function deleteAllRolesInGroupByUser()
+    {
+        $input = JFactory::getApplication()->input;
+
+        $uid = $input->getInt('u_id', 0);
+        $gid = $input->getInt('g_id', 0);
+
+        if ($this->deleteTHMGroupsUserGroupMapping($uid, $gid) && $this->deleteUserFromJoomlaGroup($uid, $gid))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Deletes a user group relationship
+     *
+     * @param   int  $uid  An user id
+     * @param   int  $gid  A group id
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    private function deleteUserFromJoomlaGroup($uid, $gid)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query
+            ->delete('#__user_usergroup_map')
+            ->where("user_id = $uid AND group_id = $gid");
+        $db->setQuery($query);
+
+        try
+        {
+            $db->execute();
+        }
+        catch (Exception $e)
+        {
+            JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Deletes an user group role mapping
+     *
+     * @param   int  $uid  An user id
+     * @param   int  $gid  A group id
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    private function deleteTHMGroupsUserGroupMapping($uid, $gid)
+    {
+        $db = JFactory::getDbo();
+
+        /*
+        $query
+            ->delete('a')
+            ->from('#__thm_groups_users_usergroups_roles AS a')
+            ->innerJoin('#__thm_groups_usergroups_roles AS b on b.ID = a.usergroups_rolesID')
+            ->where("a.usersID = $uid AND b.usergroupsID = $gid");
+        */
+
+        /*
+         * Joomla can't perform delete operation with
+         * inner join
+         * We just write sql statement in query variable
+         */
+        $app = JFactory::getApplication();
+        $prefix = $app->get('dbprefix');
+
+        $query = 'DELETE a';
+        $query .= ' FROM ' . $prefix . 'thm_groups_users_usergroups_roles AS a';
+        $query .= ' INNER JOIN ' . $prefix . 'thm_groups_usergroups_roles AS b on b.ID = a.usergroups_rolesID';
+        $query .= " WHERE a.usersID = $uid AND b.usergroupsID = $gid";
+
+        $db->setQuery($query);
+
+        try
+        {
+            $db->execute();
+        }
+        catch (Exception $e)
+        {
+            JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+            return false;
+        }
+
+        return true;
+    }
+
+
+    /**
+     * Toggles the user
+     *
+     * @param   String  $action  publish/unpublish
+     *
+     * @return  boolean  true on success, otherwise false
+     */
+    public function toggle($action = null)
+    {
+        $db = JFactory::getDBO();
+        $input = JFactory::getApplication()->input;
+
+        // Get array of ids if divers users selected
+        $cid = $input->post->get('cid', array(), 'array');
+
+        // A string with type of column in table
+        $attribute = $input->get('attribute', '', 'string');
+
+        // If array is empty, the toggle button was clicked
+        if (empty($cid))
+        {
+            $id = $input->getInt('id', 0);
+        }
+        else
+        {
+            JArrayHelper::toInteger($cid);
+            $id = implode(',', $cid);
+        }
+
+        if (empty($id))
+        {
+            return false;
+        }
+
+        // Will used if buttons (Publish/Unpublish user) in toolbar clicked
+        switch ($action)
+        {
+            case 'publish':
+                $value = 1;
+                break;
+            case 'unpublish':
+                $value = 0;
+                break;
+            default:
+                $value = $input->getInt('value', 1)? 0 : 1;
+                break;
+        }
+
+        $query = $db->getQuery(true);
+
+        $query
+            ->update('#__thm_groups_users')
+            ->where("id IN ( $id )");
+
+        switch ($attribute)
+        {
+            case 'canEdit':
+                $query->set("canEdit = '$value'");
+                break;
+            case 'qpPublished':
+                $query->set("qpPublished = '$value'");
+                if ($value == 1)
+                {
+                    $this->createQuickpageCategoryForUser(array($id));
+                }
+                break;
+            case 'published':
+            default:
+                $query->set("published = '$value'");
+                break;
+        }
+
+        $db->setQuery((string) $query);
+
+        try
+        {
+            return (bool) $db->execute();
+        }
+        catch (Exception $exc)
+        {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            return false;
+        }
+    }
+
+    /**
+     * Create quickpage category for user(s)
+     *
+     * @param   array  $cid  Array with ids
+     *
+     * @return  void
+     */
+    public function createQuickpageCategoryForUser($cid)
+    {
+        foreach ($cid as $id)
+        {
+            $profileData['Id'] = $id;
+            $profileData['IdKind'] = self::TABLE_USER_ID_KIND;
+            $profileData['ParamName'] = self::PROFILE_USER_ID_PARAM;
+
+            // Check if user's quickpage category exist and if not, create it
+            if (!THMLibThmQuickpages::existsQuickpageForProfile($profileData))
+            {
+                THMLibThmQuickpages::createQuickpageForProfile($profileData);
+            }
+        }
+    }
+
+    /**
      * Method to perform batch operations on an item or a set of items.
-     * TODO make generic function which handle all types of batch operations
      *
      * @return  boolean  Returns true on success, false on failure.
      *
-     * @since   2.5
      */
     public function batch()
     {
@@ -39,13 +338,19 @@ class THM_GroupsModelProfile extends JModelLegacy
         // Array with action command
         $action = $jinput->post->get('batch_action', array(), 'array');
 
-        // Array of role ids
-        $gid = $jinput->post->get('batch_id', array(), 'array');
+        // JSON string with groups and roles
+        $data = $jinput->post->get('batch-data', array(), 'array');
 
-        // Array of group ids
+        // Decode to normal string
+        $data = urldecode($data[0]);
+
+        // Make from it an array with objects
+        $data = json_decode($data);
+
+        // Array of user ids
         $cid  = $jinput->post->get('cid', array(), 'array');
 
-        // Sanitize group ids.
+        // Sanitize user ids.
         $pks = array_unique($cid);
         JArrayHelper::toInteger($pks);
 
@@ -57,17 +362,18 @@ class THM_GroupsModelProfile extends JModelLegacy
 
         if (empty($pks))
         {
-            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'error');
+            $this->setError(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'));
+
             return false;
         }
 
         $done = false;
 
-        if (!empty($gid))
+        if (!empty($data))
         {
             $cmd = $action[0];
 
-            if (!$this->batchProfile($gid, $pks, $cmd))
+            if (!$this->batchUser($pks, $data, $cmd))
             {
                 return false;
             }
@@ -77,7 +383,8 @@ class THM_GroupsModelProfile extends JModelLegacy
 
         if (!$done)
         {
-            JFactory::getApplication()->enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'), 'error');
+            $this->setError(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
+
             return false;
         }
 
@@ -88,52 +395,158 @@ class THM_GroupsModelProfile extends JModelLegacy
     }
 
     /**
-     * Perform batch operations
+     * Inserts Joomla user-group mapping
      *
-     * @param   array   $group_ids    The role IDs which assignments are being edited
-     * @param   array   $profile_ids  An array of group IDs on which to operate
-     * @param   string  $action       The action to perform
+     * @param   array  $pks   An array with user ids
+     *
+     * @param   array  $data  An array with groups and roles
+     *
+     * @return bool
+     */
+    public function insertUserGroupMappingInJoomla($pks, $data)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query
+            ->insert('#__user_usergroup_map')
+            ->columns($db->qn(array('user_id', 'group_id')));
+
+        foreach ($pks as $id)
+        {
+            foreach ($data as $group)
+            {
+                $values = array($id, $group->id);
+                $query->values(implode(',', $values));
+            }
+        }
+
+        $db->setQuery($query);
+        //var_dump($query->__toString());
+
+        try
+        {
+            $db->execute();
+        }
+        catch (Exception $e)
+        {
+            /*
+             * Ignore duplicate entry exception
+             */
+            if ($e->getCode() === 1062)
+            {
+                return true;
+            }
+            else
+            {
+                JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Deletes Joomla user-group mapping
+     *
+     * @param   array  $pks   An array with user ids
+     *
+     * @param   array  $data  An array with groups and roles
+     *
+     * @return bool
+     */
+    public function deleteUserGroupMappingInJoomla($pks, $data)
+    {
+//        $db = JFactory::getDbo();
+//        $query = $db->getQuery(true);
+//
+//        $query
+//            ->delete()
+//            ->from('#__user_usergroup_map');
+//
+//        foreach ($pks as $id)
+//        {
+//            foreach ($data as $group)
+//            {
+//                $values = array($id, $group->id);
+//                $query->values(implode(',', $values));
+//            }
+//        }
+//
+//        $db->setQuery($query);
+//        var_dump($query->__toString());
+//
+//        try
+//        {
+//            $db->execute();
+//        }
+//        catch (Exception $e)
+//        {
+//            /*
+//             * Ignore duplicate entry exception
+//             */
+//            if ($e->getCode() === 1062)
+//            {
+//                return true;
+//            }
+//            else
+//            {
+//                JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+//                return false;
+//            }
+//        }
+//
+//        return true;
+    }
+
+    /**
+     * Perform batch operations.
+     * The main idea for this function is to assign groups-roles
+     * relationships to a user.
+     * The function can be extended to perform another
+     * batch operations.
+     *
+     * @param   array   $user_ids  The user IDs which assignments are being edited
+     * @param   array   $data      An array of groups and roles
+     * @param   string  $action    The action to perform
      *
      * @return  boolean  True on success, false on failure
      *
-     * @since   1.6
      */
-    public function batchProfile($group_ids, $profile_ids, $action)
+    public function batchUser($user_ids, $data, $action)
     {
         // Get the DB object
         $db = $this->getDbo();
 
-        JArrayHelper::toInteger($group_ids);
-        JArrayHelper::toInteger($profile_ids);
+        JArrayHelper::toInteger($user_ids);
 
         switch ($action)
         {
-            // Remove groups from a selected profile
             case 'del':
-                $doDelete = 'profile';
+                $doDelete = 'group';
                 break;
 
-            // Add groups to a selected profile
             case 'add':
             default:
                 $doAssign = true;
                 break;
         }
 
-        // Remove the roles from the group if requested.
         if (isset($doDelete))
         {
             $query = $db->getQuery(true);
+            $group_role_relationship_ids = $this->getGroupRoleRelationship($data);
 
-            // Remove groups from the profile
+            // Remove roles from the groups
             $query
-                ->delete('#__thm_groups_profile_usergroups')
-                ->where('profileID' . ' IN (' . implode(',', $profile_ids) . ')');
+                ->delete('#__thm_groups_users_usergroups_roles')
+                ->where('usersID' . ' IN (' . implode(',', $user_ids) . ')');
 
             // Only remove roles from selected group
-            if ($doDelete == 'profile')
+            if ($doDelete == 'group')
             {
-                $query->where('usergroupsID' . ' IN (' . implode(',', $group_ids) . ')');
+                $query->where('usergroups_rolesID' . ' IN (' . implode(',', $group_role_relationship_ids) . ')');
             }
 
             $db->setQuery($query);
@@ -144,76 +557,76 @@ class THM_GroupsModelProfile extends JModelLegacy
             }
             catch (RuntimeException $e)
             {
-                JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+                $this->setError($e->getMessage());
+
                 return false;
             }
         }
 
-        // Assign the roles to the groups if requested.
+        // Assign the group-relationship to user
         if (isset($doAssign))
         {
+            if (!$this->insertUserGroupMappingInJoomla($user_ids, $data))
+            {
+                return false;
+            }
+
             $query = $db->getQuery(true);
 
-            // First, we need to check if the role is already assigned to a group
-            $query
-                ->select('profileID, usergroupsID')
-                ->from('#__thm_groups_profile_usergroups')
-                ->where('profileID IN (' . implode(',', $profile_ids) . ')')
-                ->order('profileID');
+            $user_group_roles = $this->getUserGroupRoleRelationship($user_ids);
+            $group_role_relationship_ids = $this->getGroupRoleRelationship($data);
 
-            $db->setQuery($query);
-            $profile_groups = $db->loadObjectList();
-
-            // Contains groups and roles from db
+            // Contains user-group-role relationship from db
             $dataFromDB = array();
-            foreach ($profile_groups as $profile_group)
+            foreach ($user_group_roles as $user_group_role)
             {
-                $dataFromDB[$profile_group->profileID][] = (int) $profile_group->usergroupsID;
+                $dataFromDB[$user_group_role->usersID][] = (int) $user_group_role->usergroups_rolesID;
             }
 
             // Build the values clause for the assignment query.
             $query->clear();
-            $profiles = false;
+            $group_role_relationship = false;
 
-            // Contains groups and roles to insert in DB
+            // Contains group-role relationship to insert in DB
             $insertValues = array();
-            foreach ($profile_ids as $pid)
+            foreach ($user_ids as $uid)
             {
-                foreach ($group_ids as $gid)
+                foreach ($group_role_relationship_ids as $group_role_relationship_id)
                 {
-                    $insertValues[$pid][] = $gid;
+                    $insertValues[$uid][] = (int) $group_role_relationship_id;
                 }
             }
 
             // Filter values before insert
             THM_GroupsHelperDatabase_Compare::filterInsertValues($insertValues, $dataFromDB);
 
-            // Prepare insert values
+            // Prepare insert statement
             if (!empty($insertValues))
             {
                 foreach ($insertValues as $key => $values)
                 {
                     if (!empty($values))
                     {
-                        foreach ($values as $gid)
+                        foreach ($values as $group_role_id)
                         {
-                            $query->values($key . ',' . $gid);
+                            $query->values($key . ',' . $group_role_id);
                         }
-                        $profiles = true;
+                        $group_role_relationship = true;
                     }
                 }
 
-                // If there are no roles to process, throw an error to notify the user
-                if (!$profiles)
+                // If we have no roles to process, throw an error to notify the user
+                if (!$group_role_relationship)
                 {
-                    JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR_NOTHING_TO_ADD'), 'warning');
+                    $this->setError(JText::_('COM_THM_GROUPS_ERROR_NO_ADDITIONS'));
+
                     return false;
                 }
 
+                // Insert user-group-role relationship in db
                 $query
-                    ->insert('#__thm_groups_profile_usergroups')
-                    ->columns(array($db->quoteName('profileID'), $db->quoteName('usergroupsID')));
-
+                    ->insert($db->quoteName('#__thm_groups_users_usergroups_roles'))
+                    ->columns(array($db->quoteName('usersID'), $db->quoteName('usergroups_rolesID')));
                 $db->setQuery($query);
 
                 try
@@ -222,7 +635,8 @@ class THM_GroupsModelProfile extends JModelLegacy
                 }
                 catch (RuntimeException $e)
                 {
-                    JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+                    $this->setError($e->getMessage());
+
                     return false;
                 }
             }
@@ -231,148 +645,54 @@ class THM_GroupsModelProfile extends JModelLegacy
     }
 
     /**
-     * saves the dynamic types
+     * Returns ids of group to role relationship
      *
-     * @return bool true on success, otherwise false
+     * @param   Array  $data  An array with groups and roles
+     *
+     * @return  Array with ids
      */
-    public function save()
+    public function getGroupRoleRelationship($data)
     {
         $db = JFactory::getDbo();
-        $db->transactionStart();
-        $result = false;
-        $data = JFactory::getApplication()->input->post->get('jform', array(), 'array');
-
-
-        $attributeList = JFactory::getApplication()->input->post->get('attributeList', '', 'string');
-        $profilID = intval($data['id']);
-        $attributeJSON = json_decode($attributeList);
-        if ($profilID == 0)
+        $group_role_relationship_ids = array();
+        foreach ($data as $group)
         {
-            $data['order'] = $this->getLastPosition() + 1;
-        }
-        $profile = JTable::getInstance('Profile', 'Table');
-
-        $success = $profile->save($data);
-
-        if (!$success)
-        {
-            $db->transactionRollback();
-            $result = false;
-        }
-        else
-        {
-
-            if (isset($attributeJSON))
+            foreach ($group->roles as $role)
             {
-                $db->transactionCommit();
-
-                $profilID = ($profilID == 0)? $profile->id: $profilID;
-                $putquery = $db->getQuery(true);
-
-                    $deletequery = $db->getQuery(true);
-                    $deletequery->delete('#__thm_groups_profile_attribute')
-                                ->where('profileID =' . $profilID);
-                    $columnTable = array('profileID', 'attributeID', 'order', 'params');
-                    $db->setQuery($deletequery);
-                    $success = $db->execute();
-
-                $putquery->insert('#__thm_groups_profile_attribute');
-                $putquery->columns($db->quoteName($columnTable));
-                  foreach ($attributeJSON as $index => $value )
-                  {
-                        $params = $db->quote(json_encode($value->params));
-                      $columsValue = array($profilID, intval($index), intval($value->order), $params);
-                      $putquery->values(implode(',', $columsValue));
-                  }
-
-                $db->setQuery($putquery);
-                $success = $db->execute();
-                if (!$success)
-                {
-                    return false;
-                }
+                $query = $db->getQuery(true);
+                $query
+                    ->select('ID')
+                    ->from('#__thm_groups_usergroups_roles')
+                    ->where("usergroupsID = $group->id")
+                    ->where("rolesID = $role->id");
+                $db->setQuery($query);
+                array_push($group_role_relationship_ids, $db->loadResult());
             }
-            return $profile->id;
         }
+        return $group_role_relationship_ids;
     }
 
     /**
-     * Delete item
+     * Returns an array with user -> usergroups_roles association
      *
-     * @return mixed
-     */
-    public function delete()
-    {
-        $ids = JFactory::getApplication()->input->get('cid', array(), 'array');
-
-        $db = JFactory::getDbo();
-
-        $query = $db->getQuery(true);
-
-        $conditions = array(
-            $db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')',
-        );
-
-        $query->delete($db->quoteName('#__thm_groups_profile'));
-        $query->where($conditions);
-
-        $db->setQuery($query);
-
-        return $result = $db->execute();
-    }
-
-    /**
-     * Get the last order position of a profile
+     * @param   Array  $user_ids  An array with user ids
      *
-     * @return Integer
+     * @return array
      */
-    public function getLastPosition()
+    public function getUserGroupRoleRelationship($user_ids)
     {
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
+        // First, we need to check if the group-role relationship is already assigned to the user
         $query
-            ->select(" MAX(`order`)  as 'order'")
-            ->from('#__thm_groups_profile');
+            ->select('ID, usersID, usergroups_rolesID')
+            ->from($db->quoteName('#__thm_groups_users_usergroups_roles'))
+            ->where($db->quoteName('usersID') . ' IN (' . implode(',', $user_ids) . ')')
+            ->order('usersID');
 
         $db->setQuery($query);
-        $lastPosition = $db->loadObject();
-
-        return $lastPosition->order;
-    }
-
-    /**
-     * Deletes a group from a profile by clicking on
-     * delete icon near profile name
-     *
-     * @return bool
-     *
-     * @throws Exception
-     */
-    public function deleteGroup()
-    {
-        $input = JFactory::getApplication()->input;
-
-        $profileID = $input->getInt('p_id');
-        $groupID = $input->getInt('g_id');
-
-        $query = $this->_db->getQuery(true);
-        $query
-            ->delete('#__thm_groups_profile_usergroups')
-            ->where("profileID = '$profileID'")
-            ->where("usergroupsID = '$groupID'");
-        $this->_db->setQuery((string) $query);
-
-        try
-        {
-            $this->_db->execute();
-        }
-        catch (Exception $exc)
-        {
-            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
-            return false;
-        }
-
-        return true;
+        return $db->loadObjectList();
     }
 }
+   

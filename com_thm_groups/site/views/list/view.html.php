@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     v3.2.4
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -14,9 +13,9 @@
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
  * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 // require implode('/', array(JPATH_ROOT, 'components', 'com_thm_groups', 'helper', 'bootstrap_helper.php'));
@@ -30,8 +29,7 @@ JHtml::_('bootstrap.framework');
  *
  * @category  Joomla.Component.Site
  * @package   thm_groups
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
+ * @link      www.thm.de
  */
 class THM_GroupsViewList extends JViewLegacy
 {
@@ -53,7 +51,7 @@ class THM_GroupsViewList extends JViewLegacy
         $document->addStyleSheet($this->baseurl . '/libraries/thm_groups_responsive/assets/css/respList.css');
         //$document->addStyleSheet($this->baseurl . '/components/com_thm_groups/css/responsiveGroups.css');
 
-        $userid = $app->get('gsuid', 0);
+        $userid = $app->get('userID', 0);
 
         // Mainframe Parameter
         $params = $mainframe->getParams();

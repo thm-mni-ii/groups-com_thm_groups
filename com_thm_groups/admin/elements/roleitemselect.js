@@ -1,5 +1,4 @@
 /**
- * @version		rolesOrder
  * @package		Joomla
  * @subpackage	GiessenLatestNews
  * @author		Dieudonne Timma

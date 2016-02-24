@@ -1,5 +1,5 @@
 <?php
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 JFormHelper::loadFieldClass('list');
 jimport('joomla.form.formfield');
 
@@ -11,7 +11,6 @@ class JFormFieldUsermanagergroup extends JFormFieldList
     /**
      *
      * @var    array
-     * @since  3.2
      */
     protected static $options = array();
 
@@ -52,7 +51,6 @@ class JFormFieldUsermanagergroup extends JFormFieldList
      *
      * @return  array  The field option objects.
      *
-     * @since   3.2
      */
     protected function getOptions()
     {
@@ -67,7 +65,7 @@ class JFormFieldUsermanagergroup extends JFormFieldList
             $arrayOfGroups = $this->getGroupsFromDB();
 
             // Convert array to options
-            $options[] = JHTML::_('select.option', '', JText::_('COM_THM_GROUPS_USER_MANAGER_SHOW_ALL_GROUPS'));
+            $options[] = JHTML::_('select.option', '', JText::_('COM_THM_GROUPS_FILTER_BY_GROUP'));
             foreach ($arrayOfGroups as $key => $value) :
                 $options[] = JHTML::_('select.option', $value['id'], $value['title']);
             endforeach;

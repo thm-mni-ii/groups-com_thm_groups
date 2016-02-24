@@ -1,15 +1,14 @@
 <?php
 /**
- * @version     v3.4.2
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        JFormFieldRoleItemSelect
  * @description JFormFieldRoleItemSelect file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die( 'Restricted access' );
@@ -23,16 +22,12 @@ jimport('joomla.application.component.controller');
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
- * @link      www.mni.thm.de
- * @since     Class available since Release 3.4.2
+ * @link      www.thm.de
  */
 class JFormFieldRepoComExist extends JFormField
 {
     /**
      * Element name
-     *
-     * @access	protected
-     * @var		string
      *
      * @return html
      */

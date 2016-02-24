@@ -1,5 +1,5 @@
 <?php
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 JFormHelper::loadFieldClass('list');
 jimport('joomla.form.formfield');
 
@@ -12,7 +12,6 @@ class JFormFieldUsermanagerrole extends JFormFieldList
      * Cached array of the category items.
      *
      * @var    array
-     * @since  3.2
      */
     protected static $options = array();
 
@@ -64,7 +63,6 @@ class JFormFieldUsermanagerrole extends JFormFieldList
      *
      * @return  array  The field option objects.
      *
-     * @since   3.2
      */
     protected function getOptions()
     {
@@ -79,7 +77,7 @@ class JFormFieldUsermanagerrole extends JFormFieldList
             $arrayOfRoles = $this->getRolesFromDB();
 
             // Convert array to options
-            $options[] = JHTML::_('select.option', '', JText::_('COM_THM_GROUPS_USER_MANAGER_SHOW_ALL_ROLES'));
+            $options[] = JHTML::_('select.option', '', JText::_('COM_THM_GROUPS_FILTER_BY_ROLE'));
             foreach ($arrayOfRoles as $key => $value)
             {
                 $options[] = JHTML::_('select.option', $value['id'], $value['name']);

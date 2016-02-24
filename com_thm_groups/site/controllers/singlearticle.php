@@ -1,15 +1,14 @@
 <?php
 
 /**
- * @version     v3.2.3
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @author      Daniel Kirsten, <daniel.kirsten@mni.thm.de>
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 // No direct access.
@@ -22,23 +21,19 @@ jimport('joomla.application.component.controllerform');
  *
  * @category  Joomla.Component.Site
  * @package   thm_groups
- * @since     v0.1.0
  */
 class THM_GroupsControllerSinglearticle extends JControllerForm
 {
 /**
-     * @since	1.6
      */
     protected $view_item = 'form';
 
     /**
-     * @since	1.6
      */
     protected $view_list = 'categories';
 
     /**
      *  Constructor (registers additional tasks to methods)
-     *@since  Method available since Release 2.1
      */
     public function __construct()
     {
@@ -51,7 +46,6 @@ class THM_GroupsControllerSinglearticle extends JControllerForm
      *
      * @return	boolean	True if the article can be added, false if not.
      *
-     * @since	1.6
      */
     public function add()
     {
@@ -69,7 +63,6 @@ class THM_GroupsControllerSinglearticle extends JControllerForm
      *
      * @return	boolean
      *
-     * @since	1.6
      */
     protected function allowAdd($data = array())
     {
@@ -103,7 +96,6 @@ class THM_GroupsControllerSinglearticle extends JControllerForm
      *
      * @return	boolean
      *
-     * @since	1.6
      */
     protected function allowEdit($data = array(), $key = 'id')
     {
@@ -156,7 +148,6 @@ class THM_GroupsControllerSinglearticle extends JControllerForm
      *
      * @return	Boolean	True if access level checks pass, false otherwise.
      *
-     * @since	1.6
      */
     public function cancel($key = 'a_id')
     {
@@ -174,7 +165,6 @@ class THM_GroupsControllerSinglearticle extends JControllerForm
      *
      * @return	Boolean	True if access level check and checkout passes, false otherwise.
      *
-     * @since	1.6
      */
     public function edit($key = null, $urlVar = 'a_id')
     {
@@ -192,7 +182,6 @@ class THM_GroupsControllerSinglearticle extends JControllerForm
      *
      * @return	object	The model.
      *
-     * @since	1.5
      */
     public function getModel($name = 'form', $prefix = '', $config = array('ignore_request' => true))
     {
@@ -209,7 +198,6 @@ class THM_GroupsControllerSinglearticle extends JControllerForm
      *
      * @return	string	The arguments to append to the redirect URL.
      *
-     * @since	1.6
      */
     protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id')
     {
@@ -258,7 +246,6 @@ class THM_GroupsControllerSinglearticle extends JControllerForm
      *
      * @return	string	The return URL.
      *
-     * @since	1.6
      */
     protected function getReturnPage()
     {
@@ -282,7 +269,6 @@ class THM_GroupsControllerSinglearticle extends JControllerForm
      *
      * @return	void
      *
-     * @since	1.6
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -304,7 +290,6 @@ class THM_GroupsControllerSinglearticle extends JControllerForm
      *
      * @return	Boolean	True if successful, false otherwise.
      *
-     * @since	1.6
      */
     public function save($key = null, $urlVar = 'a_id')
     {
@@ -327,7 +312,6 @@ class THM_GroupsControllerSinglearticle extends JControllerForm
      *
      * @return	void
      *
-     * @since	1.6.1
      */
     public function vote()
     {

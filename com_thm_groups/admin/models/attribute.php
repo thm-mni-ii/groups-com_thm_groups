@@ -6,9 +6,9 @@
  * @name        attribute model
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 defined('_JEXEC') or die;
@@ -45,7 +45,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
 
         /*
          * Create database entry for created attribute with empty value for all users
-         * It will be used in user_edit view
+         * It will be used in profile_edit view
          * If you find a better solution, you replace it
          */
         foreach ($ids as $id)
@@ -591,7 +591,6 @@ class THM_GroupsModelAttribute extends JModelLegacy
      *
      * @return  mixed
      *
-     * @since   12.2
      */
     public function saveorder($pks = null, $order = null)
     {
@@ -668,7 +667,6 @@ class THM_GroupsModelAttribute extends JModelLegacy
      *
      * @return  array  An array of conditions to add to ordering queries.
      *
-     * @since   12.2
      */
     protected function getReorderConditions($table)
     {
@@ -682,7 +680,6 @@ class THM_GroupsModelAttribute extends JModelLegacy
      *
      * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
      *
-     * @since   12.2
      */
     protected function canEditState($record)
     {

@@ -1,15 +1,14 @@
 <?php
 
 /**
- * @version     v3.4.4
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @author      Daniel Kirsten, <daniel.kirsten@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 // No direct access
@@ -24,13 +23,11 @@ require_once JPATH_COMPONENT . '/helper/content.php';
  *
  * @category  Joomla.Component.Site
  * @package   thm_groups
- * @since     v0.1.0
  */
 class THM_GroupsModelArticle extends JModelAdmin
 {
     /**
      * @var		string	The prefix to use with controller messages.
-     * @since	1.6
      */
     protected $text_prefix = 'COM_THM_QUICKPAGES';
 

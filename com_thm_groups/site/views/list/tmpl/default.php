@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     v3.4.6
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -14,9 +13,9 @@
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 // Include Bootstrap
@@ -138,7 +137,7 @@ function getListAll($params, $pagetitle, $gid)
 
         $divStyle = "class='span" . floor(12 / $numColumns) . " col-sm-6'";
 
-        $attribut = THMLibThmGroups::getUrl(array("name", "gsuid", "gsgid"));
+        $attribut = THMLibThmGroups::getUrl(array("name", "userID", "groupID"));
 
         // Welche Detailansicht bei Klick auf Person? Modul oder Profilview?
         $linkTarget = "";
@@ -383,7 +382,7 @@ function getListAlphabet($params, $pagetitle, $gid)
         }
         $itemid = $app->get('Itemid');
 
-        $attribut = THMLibThmGroups::getUrl(array("name", "gsuid", "gsgid", "letter", "groupid"));
+        $attribut = THMLibThmGroups::getUrl(array("name", "userID", "groupID", "letter", "groupid"));
 
         $retString .= '<input type=hidden id="thm_groups_columnNumber" value="' . $params['columnCount'] . '">';
         $retString .= '<input type=hidden id="thm_groups_gid" value="' . $groupid . '">';
@@ -673,8 +672,8 @@ function isLink($currentElement, $linkElement, $linkTarget, $member, $gid, $valu
     {
         $return .= JHtml::link(
             JRoute::_(
-            $linkTarget . '&gsuid=' . $member->id . '&name=' .
-            trim($member->lastName) . '&gsgid=' . $gid
+            $linkTarget . '&userID=' . $member->id . '&name=' .
+            trim($member->lastName) . '&groupID=' . $gid
         ), $value
         );
     }

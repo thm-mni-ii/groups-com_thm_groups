@@ -5,9 +5,9 @@
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsModelGroup
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2015 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 defined('_JEXEC') or die;
@@ -349,7 +349,6 @@ class THM_GroupsModelGroup extends JModelLegacy
      *
      * @return  boolean  Returns true on success, false on failure.
      *
-     * @since   2.5
      */
     public function batch()
     {
@@ -429,7 +428,6 @@ class THM_GroupsModelGroup extends JModelLegacy
      *
      * @return  boolean  True on success, false on failure
      *
-     * @since   1.6
      */
     public function batchGroup($role_ids, $group_ids, $action)
     {

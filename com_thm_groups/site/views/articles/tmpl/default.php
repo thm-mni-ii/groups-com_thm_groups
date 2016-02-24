@@ -1,19 +1,18 @@
 <?php
 /**
- * @version     v1.0.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsViewUser_Manager
  * @description THMGroupsViewUser_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 // No direct access to this file
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 jimport('thm_core.list.template');
 JHtml::_('jquery.framework', true, true);
 JHtml::_('jquery.ui');
@@ -397,13 +396,13 @@ class ArticlesTemplate extends THM_CoreTemplateList
         if ($item->state > 0)
         {
 
-            //$additionalURLParams = array('gsuid' => $item->created_by);
+            //$additionalURLParams = array('userID' => $item->created_by);
             $userID = JFactory::getUser()->id;
             $name = THMLibThmGroupsUser::getUserValueByAttributeID($userID, 2);
-            $singlearticleLink = JRoute::_('index.php?option=com_thm_groups&view=singlearticle&id=' . $item->id . '&nameqp=' . $item->alias . '&gsuid=' . $userID . '&name=' . $name, false);
+            $singlearticleLink = JRoute::_('index.php?option=com_thm_groups&view=singlearticle&id=' . $item->id . '&nameqp=' . $item->alias . '&userID=' . $userID . '&name=' . $name, false);
 
             $linkToArticle = JHTML::_('link', $singlearticleLink, $imgSpanTag, 'title="'
-                . JText::_('COM_THM_QUICKPAGES_HTML_EDIT_ITEM')
+                . JText::_('COM_THM_GROUPS_EDIT')
                 . '" class="jgrid"'
             );
 
@@ -448,7 +447,7 @@ class ArticlesTemplate extends THM_CoreTemplateList
             $imgSpanTag = '<span class="state edit" style=""><span class="text">Edit</span></span>';
 
             $return .= JHTML::_('link', $editURL, $imgSpanTag, 'title="'
-                . JText::_('COM_THM_QUICKPAGES_HTML_EDIT_ITEM')
+                . JText::_('COM_THM_GROUPS_EDIT')
                 . '" class="jgrid"'
             );
             $return .= "\n";
@@ -499,7 +498,7 @@ class ArticlesTemplate extends THM_CoreTemplateList
             );
             $button = JHtml::_('jgrid.state', $states, ($item->state < 0 ? -3 : 3), $key, 'articles.', $canDelete);
             $button = str_replace(
-                "onclick=\"", "onclick=\"if (confirm('" . JText::_('COM_THM_GROUPS_REALLY_DELETE') . "')) ", $button
+                "onclick=\"", "onclick=\"if (confirm('" . JText::_('COM_THM_GROUPS_DELETE_CONFIRM') . "')) ", $button
             );
             return $button;
         }

@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     v3.4.6
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -8,9 +7,9 @@
  * @description THMGroupsSingleArticle file from com_thm_groups (copy of com_content)
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2013 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 // No direct access
@@ -28,7 +27,6 @@ jimport('joomla.application.component.helper');
  *
  * @category  Joomla.Component.Site
  * @package   thm_groups
- * @since     v0.1.0
  */
 class THM_GroupsViewSinglearticle extends JViewLegacy
 {
@@ -58,8 +56,8 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 
         $input = JFactory::getApplication()->input;
 
-        //$gsuid      = JRequest::getVar('gsuid', 0);
-        $gsuid      = $input->get('gsuid', 0, 'INT');
+        //$userID      = JRequest::getVar('userID', 0);
+        $userID      = $input->get('userID', 0, 'INT');
 
         //$name		= JRequest::getVar('name', 0);
         $name       = $input->get('name', '', 'STRING');
@@ -73,8 +71,8 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
         //$old_layout = JRequest::getVar('back_layout', 0);
         $old_layout = $input->get('back_layout', '', 'STRING');
 
-        //$old_gsgid  = JRequest::getVar('back_gsgid', 0);
-        $old_gsgid = $input->get('back_gsgid', 0, 'INT');
+        //$old_groupID  = JRequest::getVar('back_groupID', 0);
+        $old_groupID = $input->get('back_groupID', 0, 'INT');
 
         //$start  = JRequest::getVar('start');
         $start = $input->get('start', 0);
@@ -87,11 +85,11 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 
         $pathway = $app->getPathway();
         $backURL = JRoute::_(
-            'index.php?option=com_thm_groups&view=profile&layout=default&gsuid=' . $gsuid . '&name=' . $name
+            'index.php?option=com_thm_groups&view=profile&layout=default&userID=' . $userID . '&name=' . $name
         );
 
 
-        $pathway->addItem(THMLibThmGroupsUser::getUserName($gsuid), $backURL);
+        $pathway->addItem(THMLibThmGroupsUser::getUserName($userID), $backURL);
 
         // Get id of an article
         $id = $input->get('id', '', 'STRING');

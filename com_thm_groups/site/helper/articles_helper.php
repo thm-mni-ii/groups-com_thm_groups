@@ -1,14 +1,13 @@
 <?php
 
 /**
- * @version     v3.4.4
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 // No direct access
@@ -19,8 +18,7 @@ defined('_JEXEC') or die;
  *
  * @category  Joomla.Component.General
  * @package   com_thm_groups
- * @link      www.mni.thm.de
- * @since     Class available since Release 3.0
+ * @link      www.thm.de
  */
 class ArticleHelper
 {

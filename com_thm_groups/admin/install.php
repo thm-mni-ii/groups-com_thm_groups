@@ -1,17 +1,16 @@
 <?php
 /**
- * @version     v3.4.5
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.general
  * @name        Script
  * @description Script file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2015 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 if (!defined('_JEXEC'))
 {
     define('_JEXEC', 1);
@@ -27,7 +26,6 @@ if (!defined('DS'))
  * @category    Joomla.Component.General
  * @package     thm_groups
  * @subpackage  com_thm_groups
- * @since       v3.5.0
  */
 class THM_Groups_Install_Script
 {

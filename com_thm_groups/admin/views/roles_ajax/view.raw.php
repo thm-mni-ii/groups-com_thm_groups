@@ -5,9 +5,9 @@
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsViewRoles_Ajax
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2015 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
@@ -17,7 +17,7 @@ jimport('joomla.application.component.view');
  * @category    Joomla.Component.Site
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 class THM_GroupsViewRoles_Ajax extends JViewLegacy
 {

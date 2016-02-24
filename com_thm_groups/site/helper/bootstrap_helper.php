@@ -10,7 +10,6 @@ class THM_GroupsBootstrap_Helper extends JHtmlBootstrap
      *
      * @return  void
      *
-     * @since   3.0
      */
     public static function loadCss($includeMainCss = true, $direction = 'ltr', $attribs = array())
     {

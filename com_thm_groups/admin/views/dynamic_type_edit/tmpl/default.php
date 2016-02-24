@@ -1,15 +1,14 @@
 <?php
 /**
- * @version     v1.0.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsViewDynamic_Type_Edit
  * @description THMGroupsViewDynamic_Type_Edit file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 defined('_JEXEC') or die ('Restricted access');
 JHTML::_('behavior.tooltip');
@@ -18,15 +17,15 @@ $scriptDir = "libraries/thm_groups/assets/js/";
 $componentDir = "/administrator/components/com_thm_groups";
 
 JHTML::_('script', Juri::root() . $scriptDir . 'jquery-1.9.1.min.js');
-JHTML::_('script', Juri::root() . $componentDir . '/assets/js/jquery.easing.js');
-JHTML::_('script', Juri::root() . $componentDir . '/assets/js/jqueryFileTree.js');
-JHTML::_('script', Juri::root() . $componentDir . '/assets/js/jquery-ui-1.9.2.custom.js');
-JHTML::_('script', Juri::root() . $componentDir . '/assets/js/dynamic.js');
-JHTML::_('script', Juri::root() . $componentDir . '/assets/js/reloadRegex.js');
+JHTML::_('script', Juri::root() . '/media/com_thm_groups/js/jquery.easing.js');
+JHTML::_('script', Juri::root() . '/media/com_thm_groups/js/jqueryFileTree.js');
+JHTML::_('script', Juri::root() . '/media/com_thm_groups/js/jquery-ui-1.9.2.custom.js');
+JHTML::_('script', Juri::root() . '/media/com_thm_groups/js/dynamic.js');
+JHTML::_('script', Juri::root() . '/media/com_thm_groups/js/reloadRegex.js');
 
 $doc = JFactory::getDocument();
 $doc->addStyleSheet(JURI::root(true) . "/libraries/thm_groups/assets/elements/explorer.css");
-$doc->addStyleSheet(JURI::root(true) . $componentDir . "/assets/css/jqueryFileTree.css");
+$doc->addStyleSheet(JURI::root(true) . "/media/com_thm_groups/css/jqueryFileTree.css");
 ?>
 
 <form action='index.php?option=com_thm_groups' method="post" name="adminForm" id="adminForm" accept-charset="UTF-8">

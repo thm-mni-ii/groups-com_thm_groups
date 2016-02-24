@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     v3.4.3
  * @category    Joomla library
  * @package     THM_Groups
  * @subpackage  lib_thm_groups
@@ -9,9 +8,9 @@
  * @author      Simon Schäfer, <simon.schaefer@mni.thm.de>
  * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
  * @author      Cedric Takongmo, <cedric.takongmo@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  *
  */
 defined('_JEXEC') or die ('Restricted access');
@@ -84,7 +83,7 @@ $helper->getKeyword();
 </div>
 <div id="THM_Plugin_Members_AddButton">
     <button onclick="insertOptions();">
-        <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_ADD'); ?>
+        <?php echo JText::_('COM_THM_GROUPS_ADD'); ?>
     </button>
 </div>
 

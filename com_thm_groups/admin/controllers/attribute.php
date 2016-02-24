@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     v1.0.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
@@ -8,13 +7,13 @@
  * @description THMGroupsControllerAttribute class from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 // Import Joomla controller library
 jimport('joomla.application.component.controller');
@@ -25,8 +24,7 @@ jimport('joomla.application.component.controller');
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
- * @link      www.mni.thm.de
- * @since     Class available since Release 3.5
+ * @link      www.thm.de
  */
 class THM_GroupsControllerAttribute extends JControllerLegacy
 {
@@ -87,7 +85,7 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
 
             if ($rowsCreated)
             {
-                $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+                $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
                 $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=' . $success, $msg);
             }
             else
@@ -162,7 +160,7 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
 
             if ($rowsCreated)
             {
-                $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+                $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
                 $this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager', $msg);
             }
             else
@@ -191,7 +189,7 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
         $success = $model->save();
         if ($success)
         {
-            $msg = JText::_('COM_THM_GROUPS_DATA_SAVED');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
             $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=0', $msg);
         }
         else
@@ -213,11 +211,11 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
 
         if ($model->delete())
         {
-            $msg = JText::_('COM_THM_GROUPS_DATA_DELETED');
+            $msg = JText::_('COM_THM_GROUPS_DELETE_SUCCESS');
         }
         else
         {
-            $msg = JText::_('COM_THM_GROUPS_SAVE_DELETED');
+            $msg = JText::_('COM_THM_GROUPS_DELETE_ERROR');
         }
         $this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager', $msg);
     }
@@ -274,7 +272,6 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
      *
      * @return  void
      *
-     * @since   3.0
      */
     public function saveOrderAjax()
     {

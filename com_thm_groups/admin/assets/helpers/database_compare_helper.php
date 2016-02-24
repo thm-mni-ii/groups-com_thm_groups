@@ -3,11 +3,11 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsHelperGroup_Manager
+ * @name        THM_GroupsHelperDatabase_Compare
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2015 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 /**

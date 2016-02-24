@@ -1,6 +1,5 @@
 <?php
 /**
- * @version     v3.2.0
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
@@ -14,11 +13,11 @@
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Peter May,      <peter.may@mni.thm.de>
  * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
- * @copyright   2012 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 jimport('joomla.application.component.model');
 jimport('joomla.filesystem.path');
 
@@ -27,8 +26,7 @@ jimport('joomla.filesystem.path');
  *
  * @category  Joomla.Component.Site
  * @package   com_thm_groups.site
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
+ * @link      www.thm.de
  */
 class THM_GroupsModelList extends JModelLegacy
 {
@@ -36,7 +34,6 @@ class THM_GroupsModelList extends JModelLegacy
 
     /**
      * Constructor
-     *
      */
     public function __construct()
     {

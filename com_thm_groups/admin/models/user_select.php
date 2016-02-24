@@ -5,9 +5,9 @@
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsModelUser_Select
  * @author      James Antrim, <james.antrim@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 defined('_JEXEC') or die;
 jimport('thm_core.list.model');
@@ -18,7 +18,7 @@ jimport('thm_core.list.model');
  * @category    Joomla.Component.Admin
  * @package     thm_organizer
  * @subpackage  com_thm_organizer.admin
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 class THM_GroupsModelUser_Select extends THM_CoreModelList
 {
