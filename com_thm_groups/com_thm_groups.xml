@@ -28,10 +28,13 @@
         <folder>controllers</folder>
         <folder>css</folder>
         <folder>helpers</folder>
+        <folder>images</folder>
         <folder>img</folder>
         <filename>index.html</filename>
         <folder>js</folder>
         <folder>models</folder>
+        <folder>templates</folder>
+        <folder>views</folder>
     </media>
 
     <files folder="site">

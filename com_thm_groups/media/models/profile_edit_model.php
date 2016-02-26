@@ -156,9 +156,9 @@ class THM_GroupsModelProfile_Edit_Model extends THM_CoreModelEdit
         // Delete old file
         foreach ($attributes as $attribute)
         {
-            $fileName = $attribute->value;
-            $uninteresting = $attribute->attributeID != $key;
-            $relevant = (($fileName != $defaultName) AND !empty($attribute->value));
+            $fileName = $attribute['value'];
+            $uninteresting = $attribute['structid'] != $key;
+            $relevant = (($fileName != $defaultName) AND !empty($attribute['value']));
             $irrelevant = ($uninteresting OR !$relevant);
             if ($irrelevant)
             {
@@ -305,7 +305,7 @@ class THM_GroupsModelProfile_Edit_Model extends THM_CoreModelEdit
             return array();
         }
 
-        return THM_GroupsHelperProfile::getProfile($userID);
+        return THM_GroupsHelperProfile::getProfileData($userID);
     }
 
     /**

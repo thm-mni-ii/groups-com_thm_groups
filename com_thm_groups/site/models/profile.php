@@ -50,49 +50,6 @@ class THM_GroupsModelProfile extends JModelItem
      */
     public function getItem($pk = null)
     {
-        $structure = THM_GroupsHelperProfile::getAllAttributes();
-
-        $profile = array();
-        if (!empty($structure))
-        {
-            foreach ($structure as $element)
-            {
-                $name = $element->field;
-                $profile[$name] = array();
-                $profile[$name]['attributeID'] = $element->id;
-                $profile[$name]['options'] = (array) json_decode($element->options);
-                $profile[$name]['dyn_options'] = (array) json_decode($element->dyn_options);
-                $profile[$name]['type'] = $element->type;
-            }
-        }
-
-        $profileID = THM_GroupsHelperProfile::getProfileIDByGroupID($this->groupID);
-        $attributes = THM_GroupsHelperProfile::getProfile($this->userID, $profileID);
-
-        foreach ($attributes as $attribute)
-        {
-            $name = $attribute['name'];
-            if (empty($profile[$name]))
-            {
-                $profile[$name] = array();
-                $profile[$name]['attributeID'] = $attribute['structid'];
-                $profile[$name]['type'] = $attribute['type'];
-            }
-            if (!empty($attribute['options']))
-            {
-                $profile[$name]['options'] = (array)json_decode($attribute['options']);
-            }
-            if (!empty($attribute['dyn_options']))
-            {
-                $profile[$name]['dyn_options'] = (array)json_decode($attribute['dyn_options']);
-            }
-            $profile[$name]['id'] = $attribute['id'];
-            $profile[$name]['value'] = $attribute['value'];
-            $profile[$name]['publish'] = $attribute['publish'];
-            $profile[$name]['description'] = $attribute['description'];
-            $profile[$name]['dynDescription'] = $attribute['dynDescription'];
-            $profile[$name]['params'] = (array)json_decode($attribute['params']);
-        }
-        return $profile;
+        return THM_GroupsHelperProfile::getProfile($this->userID, $this->groupID);
     }
 }

@@ -84,6 +84,9 @@ class THM_GroupsViewProfile extends JViewLegacy
         $this->menuID = JFactory::getApplication()->input->get('Itemid', 0);
         $this->profile = $this->get('Item');
 
+        // Adds the user name to the breadcrumb
+        JFactory::getApplication()->getPathway()->addItem(THM_GroupsHelperProfile::getDisplayName($this->userID), '');
+
         $this->modifyDocument();
         parent::display($tpl);
     }
@@ -167,16 +170,6 @@ class THM_GroupsViewProfile extends JViewLegacy
      */
     public function getDisplayName($profile)
     {
-        $displayName = '';
-        $displayName .= (!empty($profile['Titel']) AND !empty($profile['Titel']['value']))?
-            $profile['Titel']['value'] . ' ' : '';
-        $displayName .= (!empty($profile['Vorname']) AND !empty($profile['Vorname']['value']))?
-            $profile['Vorname']['value'] . ' ' : '';
-        $displayName .= (!empty($profile['Nachname']) AND !empty($profile['Nachname']['value']))?
-            $profile['Nachname']['value'] . ' ' : '';
-        $displayName .= (!empty($profile['Posttitel']) AND !empty($profile['Posttitel']['value']))?
-            $profile['Posttitel']['value'] : '';
-        return $displayName;
+        return THM_GroupsHelperProfile::getDisplayName($this->userID);
     }
-
 }

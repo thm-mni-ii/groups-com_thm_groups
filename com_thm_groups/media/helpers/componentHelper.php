@@ -122,13 +122,14 @@ class THM_GroupsHelperComponent
     public static function canEditProfile($profileUserID, $groupID = 0)
     {
         $user = JFactory::getUser();
-        $isAdmin = $user->authorise('core.admin', 'com_thm_groups');
+        $isSuperAdmin = $user->authorise('core.admin', 'com_thm_groups');
+        $isComponentAdmin = $user->authorise('core.manage', 'com_thm_groups');
         $isModerator = self::getModerator($groupID);
 
         $isOwn = JFactory::getUser()->id == $profileUserID;
         $params = JComponentHelper::getParams('com_thm_groups');
         $canEditOwn = ($isOwn && $params->get('editownprofile', 0) == 1 );
-        $allow = ($isAdmin OR $isModerator OR $canEditOwn);
+        $allow = ($isSuperAdmin OR $isComponentAdmin OR $isModerator OR $canEditOwn);
         return ($allow)? true : false;
     }
 

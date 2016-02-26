@@ -49,6 +49,83 @@ class THM_GroupsHelperProfile
     }
 
     /**
+     * Creates the name to be displayed
+     *
+     * @param   array  $profile  the user's profile information
+     *
+     * @return  string  the profile name
+     */
+    public static function getDisplayName($userID)
+    {
+        $profile = self::getProfile($userID);
+        $displayName = '';
+        $displayName .= (!empty($profile['Titel']) AND !empty($profile['Titel']['value']))?
+            $profile['Titel']['value'] . ' ' : '';
+        $displayName .= (!empty($profile['Vorname']) AND !empty($profile['Vorname']['value']))?
+            $profile['Vorname']['value'] . ' ' : '';
+        $displayName .= (!empty($profile['Nachname']) AND !empty($profile['Nachname']['value']))?
+            $profile['Nachname']['value'] . ' ' : '';
+        $displayName .= (!empty($profile['Posttitel']) AND !empty($profile['Posttitel']['value']))?
+            $profile['Posttitel']['value'] : '';
+        return $displayName;
+    }
+
+    /**
+     * Method to get a single record.
+     *
+     * @param   integer  $pk  The id of the primary key.
+     *
+     * @return  mixed    Object on success, false on failure.
+     */
+    public function getProfile($userID, $groupID = null)
+    {
+        $structure = self::getAllAttributes();
+
+        $profile = array();
+        if (!empty($structure))
+        {
+            foreach ($structure as $element)
+            {
+                $name = $element->field;
+                $profile[$name] = array();
+                $profile[$name]['attributeID'] = $element->id;
+                $profile[$name]['options'] = (array) json_decode($element->options);
+                $profile[$name]['dyn_options'] = (array) json_decode($element->dyn_options);
+                $profile[$name]['type'] = $element->type;
+            }
+        }
+
+        $profileID = THM_GroupsHelperProfile::getProfileIDByGroupID($groupID);
+        $attributes = THM_GroupsHelperProfile::getProfileData($userID, $profileID);
+
+        foreach ($attributes as $attribute)
+        {
+            $name = $attribute['name'];
+            if (empty($profile[$name]))
+            {
+                $profile[$name] = array();
+                $profile[$name]['attributeID'] = $attribute['structid'];
+                $profile[$name]['type'] = $attribute['type'];
+            }
+            if (!empty($attribute['options']))
+            {
+                $profile[$name]['options'] = (array)json_decode($attribute['options']);
+            }
+            if (!empty($attribute['dyn_options']))
+            {
+                $profile[$name]['dyn_options'] = (array)json_decode($attribute['dyn_options']);
+            }
+            $profile[$name]['id'] = $attribute['id'];
+            $profile[$name]['value'] = $attribute['value'];
+            $profile[$name]['publish'] = $attribute['publish'];
+            $profile[$name]['description'] = $attribute['description'];
+            $profile[$name]['dynDescription'] = $attribute['dynDescription'];
+            $profile[$name]['params'] = (array)json_decode($attribute['params']);
+        }
+        return $profile;
+    }
+
+    /**
      * Gets all user attributes, optionally filtering according to a profile template and the attribute pubished status.
      *
      * @param   int   $userID         the user ID
@@ -57,7 +134,7 @@ class THM_GroupsHelperProfile
      *
      * @return  array  array of arrays with profile information
      */
-    public static function getProfile($userID, $profileID = null, $onlyPublished = false)
+    public static function getProfileData($userID, $profileID = null, $onlyPublished = false)
     {
         $dbo = JFactory::getDBO();
         $query = $dbo->getQuery(true);
@@ -94,49 +171,6 @@ class THM_GroupsHelperProfile
         try
         {
             return $dbo->loadAssocList();
-        }
-        catch (Exception $exc)
-        {
-            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
-            return array();
-        }
-    }
-
-    /**
-     * Returns a wire frame with all user attributes independent of a profile without values.
-     *
-     * @param   string  $userID  the user id
-     *
-     * @return  mixed
-     */
-    public static function getProfileData($userID)
-    {
-        if (empty($userID))
-        {
-            return array();
-        }
-
-        $dbo = JFactory::getDbo();
-
-        $select = 'userAttribs.usersID, userAttribs.attributeID, userAttribs.value, userAttribs.published, ';
-        $select .= 'attrib.options, attrib.name as attribute, ';
-        $select .= 'dynamic.regex, dynamic.description, ';
-        $select .= 'static.name';
-
-        $query = $dbo->getQuery(true);
-        $query->select($select);
-        $query->from('#__thm_groups_users_attribute AS userAttribs');
-        $query->innerJoin('#__thm_groups_attribute AS attrib ON userAttribs.attributeID = attrib.id');
-        $query->innerJoin('#__thm_groups_dynamic_type AS dynamic ON attrib.dynamic_typeID = dynamic.id');
-        $query->innerJoin('#__thm_groups_static_type AS static ON dynamic.static_typeID = static.id');
-        $query->where("userAttribs.usersID = '$userID'");
-        $query->order('attrib.ordering');
-
-        $dbo->setQuery((string) $query);
-
-        try
-        {
-            return $dbo->loadObjectList();
         }
         catch (Exception $exc)
         {

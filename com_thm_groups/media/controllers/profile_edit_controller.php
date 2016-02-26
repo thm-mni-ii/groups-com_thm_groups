@@ -13,8 +13,6 @@
 
 // No direct access to this file
 defined('_JEXEC') or die;
-jimport('joomla.application.component.controller');
-
 
 /**
  * THM_GroupsControllerProfile_Edit_Controller class for component com_thm_groups

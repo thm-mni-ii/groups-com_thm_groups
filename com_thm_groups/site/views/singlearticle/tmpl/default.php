@@ -22,7 +22,6 @@ $images = json_decode($this->item->images);
 $urls = json_decode($this->item->urls);
 $canEdit = $this->item->params->get('access-edit');
 $user = JFactory::getUser();
-$backLink = $this->backRef;
 ?>
 <div class="item-page<?php echo $this->pageclass_sfx ?>">
 <?php

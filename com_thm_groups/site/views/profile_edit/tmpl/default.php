@@ -88,6 +88,7 @@ foreach ($this->attributes as $attribute):
     <input type="hidden" name="task" value="user.apply"/>
     <input type='hidden' id='jform_userID' name='jform[userID]' value='<?php echo $this->userID; ?>'/>
     <input type='hidden' id='jform_groupID' name='jform[groupID]' value='<?php echo $this->groupID; ?>'/>
+    <input type='hidden' id='jform_name' name='jform[name]' value='<?php echo $this->name; ?>'/>
 <?php if (!empty($this->menuID)): ?>
     <input type='hidden' id='jform_menuID' name='jform[menuID]' value='<?php echo $this->menuID; ?>'/>
 <?php endif; ?>

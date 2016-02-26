@@ -31,6 +31,8 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 
     public $groupID;
 
+    public $name;
+
     public $menuID;
 
     public $attributes = null;
@@ -47,6 +49,7 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
         $input = JFactory::getApplication()->input;
         $this->userID = $input->getInt('userID', 0);
         $this->groupID = $input->getInt('groupID', 1);
+        $this->name = $input->get('name', 1);
         $this->menuID = $input->getInt('Itemid');
         $canEdit = THM_GroupsHelperComponent::canEditProfile($this->userID, $this->groupID);
         if (!$canEdit)

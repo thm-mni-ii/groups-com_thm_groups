@@ -16,6 +16,7 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
 jimport('thm_groups.data.lib_thm_groups_user');
 require_once JPATH_COMPONENT . '/../com_content/helpers/route.php';
 require_once JPATH_COMPONENT . '/../com_content/helpers/query.php';
@@ -56,40 +57,21 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 
         $input = JFactory::getApplication()->input;
 
-        //$userID      = JRequest::getVar('userID', 0);
-        $userID      = $input->get('userID', 0, 'INT');
+        $userID = $input->getInt('userID', 0);
+        $groupID = $input->getInt('groupID', 0);
+        $name = $input->get('name', '');;
+        $menuID = $input->getInt('Itemid', 0);
 
-        //$name		= JRequest::getVar('name', 0);
-        $name       = $input->get('name', '', 'STRING');
-
-        //$old_option = JRequest::getVar('back_option', 0);
-        $old_option = $input->get('back_option', 'com_thm_groups', 'STRING');
-
-        //$old_view   = JRequest::getVar('back_view', 0);
-        $old_view   =$input->get('back_view', 'articles', 'STRING');
-
-        //$old_layout = JRequest::getVar('back_layout', 0);
-        $old_layout = $input->get('back_layout', '', 'STRING');
-
-        //$old_groupID  = JRequest::getVar('back_groupID', 0);
-        $old_groupID = $input->get('back_groupID', 0, 'INT');
-
-        //$start  = JRequest::getVar('start');
         $start = $input->get('start', 0);
 
-        //$showall  = JRequest::getVar('showall');
         $showall =$input->get('showall', 0);
 
-        $uri = JFactory::getURI();
         $dispatcher	= JDispatcher::getInstance();
 
-        $pathway = $app->getPathway();
-        $backURL = JRoute::_(
-            'index.php?option=com_thm_groups&view=profile&layout=default&userID=' . $userID . '&name=' . $name
-        );
-
-
-        $pathway->addItem(THMLibThmGroupsUser::getUserName($userID), $backURL);
+        $dynamicQuery = "&userID=$userID&groupID=$groupID&name=$name&Itemid=$menuID";
+        $profileURL = JRoute::_("index.php?option=com_thm_groups&view=profile&layout=default$dynamicQuery");
+        $nameText = THM_GroupsHelperProfile::getDisplayName($userID);
+        $app->getPathway()->addItem($nameText, $profileURL);
 
         // Get id of an article
         $id = $input->get('id', '', 'STRING');
@@ -100,7 +82,7 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
         $article_title = $article->get('title');
 
         // Add article title in breadcrumb
-        $pathway->addItem($article_title);
+        $app->getPathway()->addItem($article_title);
 
         $this->item = $this->get('Item');
 
@@ -108,14 +90,6 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
         $this->print    = $input->get('print', false, 'BOOL');
         $this->state	= $this->get('State');
         $this->user		= $user;
-        if (JRequest::getVar('return') != null)
-        {
-            $this->backRef = base64_decode(JRequest::getVar('return'));
-        }
-        else
-        {
-            $this->backRef  = $backURL;
-        }
 
         $comContentParams = JComponentHelper::getParams('com_content');
 

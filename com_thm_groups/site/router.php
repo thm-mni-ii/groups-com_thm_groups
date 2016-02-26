@@ -154,27 +154,20 @@ function THM_groupsParseRoute($segments)
 
 
         case 'singlearticle':
-
-            if (isset ($segments[1]))
+            if (count($segments) == 3)
             {
-                $arrVar = explode(':', $segments[1]);
-
-                if (isset ($arrVar[0]) && isset ($arrVar[1]))
+                if (!empty($segments[1]))
                 {
-                    $vars['userID'] = $arrVar[0];
-                    $vars['name']  = $arrVar[1];
+                    parseProfileSegment($vars, $segments[1]);
+                }
+                if (!empty($segments[1]))
+                {
+                    parseQPSegment($vars, $segments[2]);
                 }
             }
-
-            if (isset ($segments[2]))
+            elseif (count($segments) == 2)
             {
-                $arrVar = explode(':', $segments[2]);
-
-                if (isset ($arrVar[0]) && isset ($arrVar[1]))
-                {
-                    $vars['id'] = $arrVar[0];
-                    $vars['nameqp']  = $arrVar[1];
-                }
+                parseQPSegment($vars, $segments[1]);
             }
             break;
 
@@ -256,14 +249,14 @@ function THM_groupsParseRoute($segments)
 /**
  * Parses the segment with profile information
  *
- * @param   array   $vars            the input variables
- * @param   string  $profileSegment  the segment with profile information
+ * @param   array   $vars     the input variables
+ * @param   string  $segment  the segment with profile information
  *
  * @return  void  sets indexes in &$vars
  */
-function parseProfileSegment(&$vars, $profileSegment)
+function parseProfileSegment(&$vars, $segment)
 {
-    $profileData = explode('-', $profileSegment);
+    $profileData = explode('-', $segment);
     if (!empty($profileData[1]))
     {
         $vars['name']  = $profileData[1];
@@ -282,4 +275,28 @@ function parseProfileSegment(&$vars, $profileSegment)
         $vars['groupID'] = $profileIDs[0];
         $vars['userID'] = $profileIDs[1];
     }
+}
+
+/**
+ * Parses the segment with profile information
+ *
+ * @param   array   $vars            the input variables
+ * @param   string  $segment  the segment with profile information
+ *
+ * @return  void  sets indexes in &$vars
+ */
+function parseQPSegment(&$vars, $segment)
+{
+    $qpParameters = explode(':', $segment);
+
+    $validID = (!empty($qpParameters[0]) AND intval($qpParameters[0]) !== 0);
+    if ($validID)
+    {
+        $vars['id'] = $qpParameters[0];
+    }
+    if (count($qpParameters) == 2)
+    {
+        $vars['nameqp']  = $qpParameters[1];
+    }
+    return;
 }

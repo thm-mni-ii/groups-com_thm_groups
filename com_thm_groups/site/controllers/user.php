@@ -44,11 +44,13 @@ class THM_GroupsControllerUser extends JControllerLegacy
         $userID = $data['userID'];
         $groupID = $data['groupID'];
         $menuID = $data['menuID'];
+        $name = $data['name'];
         $canEdit = THM_GroupsHelperComponent::canEditProfile($userID, $groupID);
 
+        // TODO: get the surname
         $baseURL = 'index.php?option=com_thm_groups';
         $view = '&view=profile';
-        $query = "&groupID=$groupID&userID=$userID&Itemid=$menuID";
+        $query = "&groupID=$groupID&userID=$userID&Itemid=$menuID&name=$name";
         if(!$canEdit)
         {
             $url = JRoute::_($baseURL . $view . $query);
@@ -188,16 +190,16 @@ class THM_GroupsControllerUser extends JControllerLegacy
     {
         $model = $this->getModel('profile_edit');
         $app = JFactory::getApplication();
-        $formData = $app->input->post->get('jform', array(), 'array');;
-        $userid = $formData['userID'];
+        $formData = $app->input->post->get('jform', array(), 'array');
+        $userID = $formData['userID'];
+        $groupID = $formData['groupID'];
 
-        //Formvalidation is done in View via js
         // TODO: Check here anyways... WTF?!
         $success = $model->save();
         if ($success)
         {
             $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-            $this->setRedirect('index.php?option=com_thm_groups&view=profile_edit&layout=default&tmpl=component&userID=' . $userid, $msg);
+            $this->setRedirect('index.php?option=com_thm_groups&view=profile_edit&layout=default&tmpl=component&userID=' . $userID, $msg);
         }
         else
         {
