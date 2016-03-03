@@ -27,7 +27,49 @@ require_once JPATH_ROOT . '/media/com_thm_groups/views/profile_edit_view.php';
  */
 class THM_GroupsViewProfile_Edit extends THM_GroupsViewProfile_Edit_View
 {
+    public $referrer = '';
+
     /**
-     * Outsourced to /media/views/profile_edit_view.php
+     * Method to get display
+     *
+     * @param   Object  $tpl  template (default: null)
+     *
+     * @return  void
      */
+    public function display($tpl = null)
+    {
+        $input = JFactory::getApplication()->input;
+        $passedRef = $input->get('referrer', '', 'raw');
+        $actualRef = $input->server->get('HTTP_REFERER', '', 'raw');
+        $this->referrer = empty($passedRef)? $actualRef : $passedRef;
+
+        $this->modifyDocument();
+
+        parent::display($tpl);
+    }
+    /**
+     * Generates the HTML for a toolbar for the front end view
+     *
+     * @return  string  the HTML for the toolbar
+     */
+    public function getToolbar()
+    {
+        $html = '<div class="frontend-toolbar">';
+        $html .= '<button type="submit" class="btn btn-primary" ';
+        $html .= 'onclick="document.adminForm.task.value=\'profile.apply\';return true;">';
+        $html .= '<span class="icon-save"></span>' . JText::_('COM_THM_GROUPS_SAVE_CHANGES');
+        $html .= '</button>';
+        $html .= '<button type="submit" class="btn btn-primary" ';
+        $html .= 'onclick="document.adminForm.task.value = \'profile.save2profile\';return true;">';
+        $html .= '<span class="icon-user"></span>' . JText::_('COM_THM_GROUPS_SAVE_TO_PROFILE');
+        $html .= '</button>';;
+        if (!empty($this->referrer))
+        {
+            $html .= '<a class="btn btn-primary" href="' . $this->referrer . '">';
+            $html .= '<span class="icon-cancel"></span>' . JText::_('COM_THM_GROUPS_CANCEL');
+            $html .= '</a>';
+        }
+        $html .= '</div>';
+        return $html;
+    }
 }

@@ -90,16 +90,11 @@ class ArticlesTemplate extends THM_CoreTemplateList
         <div id="j-main-container" class="span10">
             <form action="<?php echo $view->url; ?>" id="adminForm"  method="post"
                   name="adminForm" xmlns="http://www.w3.org/1999/html">
-                <?php //echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $view)); ?>
                 <div class="searchArea">
                     <div class="js-stools clearfix">
                         <div class="clearfix">
                             <div class="js-stools-container-bar">
-                                <?php
-                                    self::renderSearch($filters, $view);
-                                    //echo $view->newButton;
-                                    //echo $view->getToolbar();
-                                ?>
+                                <?php self::renderSearch($filters, $view); ?>
                             </div>
                             <div class="js-stools-container-list hidden-phone hidden-tablet">
                                 <?php echo JLayoutHelper::render('joomla.searchtools.default.list', $data); ?>
@@ -112,10 +107,8 @@ class ArticlesTemplate extends THM_CoreTemplateList
                         <?php
                         echo '<thead>';
                         self::renderHeader($view->headers);
-                        //self::renderHeaderFilters($view->headers, $filters);
                         echo '</thead>';
                         self::renderBody($view);
-                        //self::renderFooter($view);
                         ?>
                     </table>
                 </div>
@@ -129,28 +122,6 @@ class ArticlesTemplate extends THM_CoreTemplateList
         </div>
     <?php
     }
-
-
-    /*protected static function renderFooter($view)
-    {
-        echo '<div class="form-limit">';
-		echo '<label for="limit">';
-		echo JText::_('JGLOBAL_DISPLAY_NUM');
-		echo '</label>';
-		echo $view->pagination->getLimitBox();
-	    echo '</div>';
-
-        echo '<p class="counter">';
-		echo $view->pagination->getPagesCounter();
-	    echo '</p>';
-
-        echo '<div class="pagination">';
-    	echo '<p class="counter pull-right">';
-		echo $view->pagination->getPagesCounter();
-		echo '</p>';
-		echo $view->pagination->getPagesLinks();
-	    echo '</div>';
-    }*/
 
     /**
      * Renders the search input group if set in the filter xml
@@ -328,11 +299,9 @@ class ArticlesTemplate extends THM_CoreTemplateList
             $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
             $return[$index][1] = self::renderTitle($item);
             $return[$index][2] = "<div class='btn-group'>$publishedBtn . $dropdownBtn</div>";
-            //$return[$index][4] = self::renderCheckInAndEditIcons($key, $item, $model);
             $return[$index][4] = self::renderTrashIcon($key, $item, $model);
             $return[$index][5] = $model->getToggle($item->id, $item->qp_featured, 'articles', '', 'featured');
             $return[$index][6] = $model->getToggle($item->id, $item->qp_published, 'articles', '', 'published');
-            //$return[$index][6] = self::renderModuleActions('List' . $model->getToggle($item->id, $item->qp_published, 'articles', '', 'published'), 'Content' . $model->getToggle($item->id, $item->qp_featured, 'articles', '', 'featured'));
 
             $index++;
         }

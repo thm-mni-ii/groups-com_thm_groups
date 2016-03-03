@@ -42,7 +42,6 @@ class THM_GroupsViewTHM_Groups extends JViewLegacy
 
         JHtml::_('behavior.tooltip');
         $document = JFactory::getDocument();
-        $document->addStyleSheet($this->baseurl . '/media/com_thm_groups/css/thm_groups.css');
         $document->addStyleSheet($this->baseurl . "../../libraries/thm_core/fonts/iconfont.css");
 
         // Set path for pop up template

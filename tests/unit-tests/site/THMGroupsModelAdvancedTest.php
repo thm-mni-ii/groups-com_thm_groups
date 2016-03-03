@@ -113,30 +113,6 @@ class THMGroupsModelAdvancedTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $result[0]->type);
     }
-
-    // tests getExtra
-    // insert value in database
-    // returns value vom inserted query (THMGroupsTest.jpg)
-    function testgetExtra() {
-        $structid = "999999";
-        $type = "picture";
-
-        $db = JFactory::getDBO();
-        $sql = "INSERT INTO #__thm_groups_picture_extra (structid, value)";
-        $sql .= "VALUES ('999999' ,'THMGroupsTest.jpg')";
-        $db->setQuery( $sql);
-        $db->query();
-
-        $result = $this->instance->getExtra($structid, $type);
-
-        $sql = "DELETE FROM #__thm_groups_picture_extra WHERE structid = '999999'";
-        $db->setQuery( $sql);
-        $db->query();
-
-        $expected = "THMGroupsTest.jpg";
-        $this->assertEquals($expected, $result);
-    }
-
 }
 
 ?>

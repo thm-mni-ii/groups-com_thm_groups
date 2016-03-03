@@ -10,14 +10,33 @@
 
 #adminForm {
 
-  button {
+  .frontend-toolbar {
+    border: $border;
+    background-color: $background;
+    margin-bottom: 10px;
+    padding: 10px;
+    text-align: right;
+  }
+
+  button, a.btn {
 
     background-color: $foreground;
     border: $border;
+    margin-left: 10px;
     padding: 4px 8px;
 
+    &.upload {
+      float: right;
+    }
+
     &:hover {
-      color: $font-color;
+      background-color: $font-color;
+      color: $foreground;
+      border: $foreground 1px solid;
+
+      span:before{
+        color: $foreground;
+      }
     }
   }
 
@@ -25,14 +44,76 @@
     margin-right: 5px;
   }
 
-  .clear {
+  .clear, .control-group {
     clear: both;
+  }
+
+  .control-group {
+
+    .control-label {
+      display: inline-block;
+      padding: 0;
+      width: 180px;
+
+      &.frontend {
+        width: 100px;
+      }
+    }
+
+    .controls {
+      display: inline-block;
+      margin-left: 10px;
+
+      .validation-container {
+
+        margin-left: 5px;
+        float: left;
+
+        .icon-publish {
+          margin-right: 0;
+        }
+      }
+
+      .image-container {
+        float: left;
+      }
+
+      .image-button {
+
+        border-radius: 0;
+        float: left;
+      }
+    }
+
+    .publish-container {
+      display: inline-block;
+      margin-left: 30px;
+      vertical-align: top;
+
+      input {
+        margin-top: 0;
+      }
+    }
   }
 
   .modal {
 
     border-radius: 0;
-    width: 700px;
+    height: 384px;
+    margin: 0;
+    width: 600px;
+
+    &.fade {
+
+      // Ensures that the modal is completely off the screen, when not needed
+      top: -100%;
+
+      // Centers the modal when needed
+      &.in {
+        left: calc(50% - 351px);
+        top: calc(50% - 193px);
+      }
+    }
 
     .modal-content {
 
@@ -81,17 +162,17 @@
 
       .modal-body {
 
-        height: 250px;
+        border-left: $background 5px solid;
+        border-right: $background 5px solid;
+        height: 230px;
         padding: 0;
 
         .crop-container
         {
-          border-left: $background 1px solid;
-          border-right: $background 1px solid;
-          float: left;
           height: 100%;
+          margin: auto;
           padding: 0 5px;
-          width: calc(50% - 12px);
+          width: 50%;
 
           .imageBox
           {
@@ -129,28 +210,6 @@
               line-height: 400px;
               background: rgba(0,0,0,0.7);
             }
-          }
-        }
-
-        .preview-container {
-          border-left: $background 1px solid;
-          border-right: $background 1px solid;
-          float: right;
-          height: 250px;
-          padding: 0 5px;
-          width: calc(50% - 12px);
-
-          h4 {
-            margin-bottom: 5px;
-            margin-top: 5px;
-            text-align: center;
-          }
-
-          .cropped img {
-            border: 1px solid grey;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
           }
         }
       }

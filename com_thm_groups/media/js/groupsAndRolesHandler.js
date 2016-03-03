@@ -31,7 +31,7 @@ function addRole(groupName, groupId, btnId) {
 
     jQuery.ajax({
         type: "POST",
-        url: "index.php?option=com_thm_groups&controller=profile_edit&task=profile_edit.addRole&cid="
+        url: "index.php?option=com_thm_groups&controller=profile&task=profile.addRole&cid="
         + document.getElementById('jform_userID').value + "&groupId=" + groupId + "&groupName=" + groupName + ""
         + "&btnId=" + btnId + "&roleContainer=" + roleContainer + ""
         + "&counter=" + fields + "&rolesSaved=" + rolesSaved + "",
@@ -61,7 +61,7 @@ function checkGroup(groupId, selGroupName) {
     var res = null;
     jQuery.ajax({
         type: "POST",
-        url: "index.php?option=com_thm_groups&controller=profile_edit&task=profile_edit.checkGroup&cid="
+        url: "index.php?option=com_thm_groups&controller=profile&task=profile.checkGroup&cid="
         + document.getElementById('jform_userID').value + "&groupId=" + groupId + "&groupName=" + selGroupName + "",
         async: false,
         datatype: "HTML"
@@ -94,7 +94,7 @@ function addGroupAndRole(div, groupId, selFieldId) {
 
     jQuery.ajax({
         type: "POST",
-        url: "index.php?option=com_thm_groups&controller=profile_edit&task=profile_edit.addGroupAndRole&cid="
+        url: "index.php?option=com_thm_groups&controller=profile&task=profile.addGroupAndRole&cid="
         + document.getElementById('jform_userID').value + "&groupId=" + groupId + "&roleId=" + selRoleId + "&roleName="
         + selRoleName + "",
         async: false,

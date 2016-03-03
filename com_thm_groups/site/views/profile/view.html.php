@@ -27,45 +27,138 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
  */
 class THM_GroupsViewProfile extends JViewLegacy
 {
-
     protected $links;
 
+    public $templateName;
+
     /**
-     * Method to get extra
+     * Creates a container for the profile attribute
      *
-     * @param   int  $structID  the dynamic type id
+     * @param   string  $name       the name of the profile attribute
+     * @param   array   $attribute  the profile attribute
      *
-     * @TODO: Is this called by AJAX?
-     *
-     * @return $extra
+     * @return  array  contains the HTML for the begin and end of the attribute container
      */
-    public function getExtra($structID)
+    private function getContainer($name, $attribute)
     {
-        return THMLibThmGroupsUser::getExtra($structID);
+        $safeName = JFilterOutput::stringURLSafe($name);
+        $paramsExist = !empty($attribute['params']);
+        $isDiv = ($paramsExist AND !empty($attribute['params']['wrap']));
+        $showLabel = (!$paramsExist OR !empty($attribute['params']['label']));
+        if ($isDiv)
+        {
+            $containerClass = "field-container $safeName-container";
+            $labelContainerClass = "field-container-label $safeName-label";
+            $valueClass = "field-container-value $safeName-value";
+        }
+        else
+        {
+            $containerClass = "field-row $safeName-container";
+            $labelContainerClass = "field-row-label $safeName-label";
+            $valueClass = "field-row-value $safeName-value";
+        }
+
+        $start = '';
+        $start .= '<div class="' . $containerClass . '">';
+
+        if ($showLabel)
+        {
+            $start .= '<div class="' . $labelContainerClass . '"><span>' . $name . '</span></div>';
+        }
+
+        $start .= '<div class="' . $valueClass . '">';
+
+        $end = '</div></div>';
+        return array('start' => $start, 'end' => $end);
     }
 
     /**
-     * Method to get structe type
+     * Creates a profile link attribute
      *
-     * @param   Int  $structId  StructID
-     *
-     * @TODO: Is this called by AJAX?
-     *
-     * @return structureType
+     * @param   string  $name       the name of the profile attribute
+     * @param   array   $attribute  the profile attribute
+     * @return array
      */
-    public function getStructureType($structId)
+    public function getLINK($name, $attribute)
     {
-        $model = $this->getModel();
-        $structure = $model->getStructure();
-        $structureType = null;
-        foreach ($structure as $structureItem)
+        $hide = (empty($attribute['publish']) OR empty($attribute['value']));
+        if ($hide)
         {
-            if ($structureItem->id == $structId)
-            {
-                $structureType = $structureItem->type;
-            }
+            return '';
         }
-        return $structureType;
+
+        $container = $this->getContainer($name, $attribute);
+        $value = "<a href='" . htmlspecialchars_decode($attribute['value']) . "'>";
+        $value .= htmlspecialchars_decode($attribute['value']) . "</a>";
+        return $container['start'] . $value . $container['end'];
+    }
+
+    /**
+     * Creates the HTML for an attribute of the type 'PICTURE'
+     *
+     * @param   string  $name      the name of the profile attribute
+     * @param   array  $attribute  the attribute being iterated
+     *
+     * @return  string  the HTML for the image to be displayed
+     */
+    public function getPICTURE($name, $attribute)
+    {
+        $hide = (empty($attribute['publish']) OR empty($attribute['value']));
+        if ($hide)
+        {
+            return '';
+        }
+
+        $container = $this->getContainer($name, $attribute);
+        $value = '';
+        $hasImage = (!empty($attribute['value']));
+        if ($hasImage)
+        {
+            $imgOptions = $attribute['options'];
+            $path = JURI::base() . $imgOptions['path'] . '/' . $attribute['value'];
+            $value .= JHtml::image($path, 'Profilbild');
+        }
+        return $container['start'] . $value . $container['end'];
+    }
+
+    /**
+     * Creates a profile link attribute
+     *
+     * @param   string  $name       the name of the profile attribute
+     * @param   array   $attribute  the profile attribute
+     * @return array
+     */
+    public function getTEXT($name, $attribute)
+    {
+        $hide = (empty($attribute['publish']) OR empty($attribute['value']));
+        if ($hide)
+        {
+            return '';
+        }
+
+        $container = $this->getContainer($name, $attribute);
+        $value = $attribute['value'];
+        return $container['start'] . $value . $container['end'];
+    }
+
+    /**
+     * Creates a profile link attribute
+     *
+     * @param   string  $name       the name of the profile attribute
+     * @param   array   $attribute  the profile attribute
+     * @return array
+     */
+    public function getTEXTFIELD($name, $attribute)
+    {
+        $hide = (empty($attribute['publish']) OR empty($attribute['value']));
+        if ($hide)
+        {
+            return '';
+        }
+
+        $container = $this->getContainer($name, $attribute);
+        $value = htmlspecialchars_decode($attribute['value']);
+        return $container['start'] . $value . $container['end'];
     }
 
     /**
@@ -83,6 +176,9 @@ class THM_GroupsViewProfile extends JViewLegacy
         $this->canEdit =  THM_GroupsHelperComponent::canEditProfile($this->userID, $this->groupID);
         $this->menuID = JFactory::getApplication()->input->get('Itemid', 0);
         $this->profile = $this->get('Item');
+
+        $templateName = THM_GroupsHelperProfile::getTemplateNameByGroupID($this->groupID);
+        $this->templateName = JFilterOutput::stringURLSafe($templateName);
 
         // Adds the user name to the breadcrumb
         JFactory::getApplication()->getPathway()->addItem(THM_GroupsHelperProfile::getDisplayName($this->userID), '');
@@ -155,7 +251,7 @@ class THM_GroupsViewProfile extends JViewLegacy
     private function modifyDocument()
     {
         $document = JFactory::getDocument();
-        $document->addStyleSheet('libraries/thm_groups_responsive/assets/css/respBaseStyles.css');
+        $document->addStyleSheet('media/com_thm_groups/css/profile_item.css');
         JHtml::_('bootstrap.framework');
         JHtml::_('behavior.modal');
         JHTML::_('behavior.modal', 'a.modal-button');
@@ -164,11 +260,9 @@ class THM_GroupsViewProfile extends JViewLegacy
     /**
      * Creates the name to be displayed
      *
-     * @param   array  $profile  the user's profile information
-     *
      * @return  string  the profile name
      */
-    public function getDisplayName($profile)
+    public function getDisplayName()
     {
         return THM_GroupsHelperProfile::getDisplayName($this->userID);
     }

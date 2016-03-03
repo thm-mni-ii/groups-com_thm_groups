@@ -31,13 +31,15 @@ class THM_GroupsHelperProfile
         $dbo = JFactory::getDBO();
         $query = $dbo->getQuery(true);
 
-        $select = 'A.id AS id, A.name AS field , A.options, B.options AS dyn_options , C.name AS type ';
-        $query->select('A.id AS id, A.name AS field , A.options, B.options AS dyn_options , C.name AS type ')
-            ->from('#__thm_groups_attribute AS A')
-            ->leftJoin('#__thm_groups_dynamic_type AS B ON A.dynamic_typeID = B.id')
-            ->leftJoin('#__thm_groups_static_type AS C ON  B.static_typeID = C.id')
-            ->order('A.id');
+        $query->select('A.id AS id, A.name AS field , A.options');
+        $query->select('B.options AS dyn_options');
+        $query->select('C.name AS type');
+        $query->from('#__thm_groups_attribute AS A');
+        $query->leftJoin('#__thm_groups_dynamic_type AS B ON A.dynamic_typeID = B.id');
+        $query->leftJoin('#__thm_groups_static_type AS C ON  B.static_typeID = C.id');
+        $query->order('A.id');
         $dbo->setQuery($query);
+
         try
         {
             return $dbo->loadObjectList();
@@ -77,7 +79,7 @@ class THM_GroupsHelperProfile
      *
      * @return  mixed    Object on success, false on failure.
      */
-    public function getProfile($userID, $groupID = null)
+    public static function getProfile($userID, $groupID = null)
     {
         $structure = self::getAllAttributes();
 
@@ -121,7 +123,13 @@ class THM_GroupsHelperProfile
             $profile[$name]['description'] = $attribute['description'];
             $profile[$name]['dynDescription'] = $attribute['dynDescription'];
             $profile[$name]['params'] = (array)json_decode($attribute['params']);
+            $profile[$name]['order'] = $attribute['order'];
         }
+
+        uasort($profile, function($a, $b) {
+            return $a['order'] - $b['order'];
+        });
+
         return $profile;
     }
 
@@ -142,7 +150,7 @@ class THM_GroupsHelperProfile
         $select = 'DISTINCT a.id AS structid, a.name as name, a.options as options, a.description AS description, ';
         $select .= 'd.options as dynOptions, d.description as dynDescription, d.regex as regex, ';
         $select .= 's.name as type, ';
-        $select .= 'pa.params as params, ';
+        $select .= 'pa.params as params, pa.order, ';
         $select .= 'ua.usersID as id, ua.value, ua.published as publish ';
 
         $query->select($select);
@@ -192,6 +200,34 @@ class THM_GroupsHelperProfile
         $query = $dbo->getQuery(true);
         $query ->select('profileID');
         $query->from('#__thm_groups_profile_usergroups');
+        $query->where("usergroupsID = '$groupID'");
+        $dbo->setQuery($query);
+
+        try
+        {
+            return $dbo->loadResult();
+        }
+        catch (Exception $exc)
+        {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            return 1;
+        }
+    }
+
+    /**
+     * Retrieves the default profile ID of a group
+     *
+     *@param   int  $groupID  the user group id
+     *
+     *@return  int  id of the default group profile, or 1 (the default profile id)
+     */
+    public static function getTemplateNameByGroupID($groupID = 1)
+    {
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query ->select('t.name');
+        $query->from('#__thm_groups_profile as t');
+        $query->innerJoin('#__thm_groups_profile_usergroups as ug ON t.id = ug.profileID');
         $query->where("usergroupsID = '$groupID'");
         $dbo->setQuery($query);
 

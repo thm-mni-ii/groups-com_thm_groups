@@ -29,43 +29,35 @@ $attributeID = $this->attributeID;
                 </div>
                 <div class="toolbar">
                     <input type='file' id='jform_<?php echo $name; ?>' class='file' name='jform1[Picture][<?php echo $attributeID; ?>]' />
-                    <button type='button' id='<?php echo $name; ?>_saveChanges' class='btn hasTip'
-                            title='<?php echo JTEXT::_('COM_THM_GROUPS_CROP_UPLOAD_TIP'); ?>' >
-                        <span class="icon-upload"></span><?php echo JText::_('COM_THM_GROUPS_CROP_UPLOAD'); ?></button>
-                    <button type='button' id='<?php echo $name; ?>_saveNormal' class='btn hasTip'
+                    <button type='button' id='<?php echo $name; ?>_saveNormal' class='btn hasTip upload'
                             title='<?php echo JTEXT::_('COM_THM_GROUPS_UNCROPPED_UPLOAD_TIP'); ?>' >
                         <span class="icon-upload"></span><?php echo JText::_('COM_THM_GROUPS_UNCROPPED_UPLOAD'); ?></button>
                 </div>
             </div>
             <div id='<?php echo $name; ?>_Modal_Body' class='modal-body modalPicture'>
-
                 <div id='<?php echo $name; ?>_leftContent' class='crop-container'>
                     <div id='<?php echo $name; ?>_imageBox' class='imageBox'>
                         <div id='<?php echo $name; ?>_thumbBox' class='thumbBox'></div>
                         <div id='<?php echo $name; ?>_spinner' class='spinner' style='display: none'></div>
                     </div>
                 </div>
-                <div id='<?php echo $name; ?>_rightContent' class='preview-container'>
-                    <h4><?php echo JText::_('COM_THM_GROUPS_PREVIEW'); ?></h4>
-                    <div id="<?php echo $name; ?>_cropped" class="cropped"></div>
-                </div>
             </div>
             <div class='modal-footer'>
                 <button type='button' id='<?php echo $name; ?>_btnZoomIn' class='btn hasTip'
                         title='<?php echo JTEXT::_('COM_THM_GROUPS_ZOOM_IN_TIP'); ?>' >
-                    <span class="icon-zoom-in"></span><?php echo JTEXT::_('COM_THM_GROUPS_ZOOM_IN'); ?>
+                    <span class="icon-zoom-in"></span>
                 </button>
                 <button type='button' id='<?php echo $name; ?>_btnZoomOut' class='btn hasTip'
                         title='<?php echo JTEXT::_('COM_THM_GROUPS_ZOOM_OUT_TIP'); ?>' >
-                    <span class="icon-zoom-out"></span><?php echo JTEXT::_('COM_THM_GROUPS_ZOOM_OUT'); ?>
+                    <span class="icon-zoom-out"></span>
                 </button>
                 <button type='button' id='<?php echo $name; ?>_switch' class='btn hasTip'
                         title='<?php echo JTEXT::_('COM_THM_GROUPS_TOGGLE_CROP_DIRECTION_TIP'); ?>' >
                     <span class="icon-redo-2"></span><?php echo JTEXT::_('COM_THM_GROUPS_TOGGLE_CROP_DIRECTION'); ?>
                 </button>
-                <button type='button' id='<?php echo $name; ?>_btnCrop' class='btn hasTip'
-                        title='<?php echo JTEXT::_('COM_THM_GROUPS_CROP_TIP'); ?>' >
-                    <span class="icon-scissors"></span><?php echo JTEXT::_('COM_THM_GROUPS_CROP'); ?>
+                <button type='button' id='<?php echo $name; ?>_saveChanges' class='btn hasTip upload'
+                        title='<?php echo JTEXT::_('COM_THM_GROUPS_CROP_UPLOAD_TIP'); ?>' >
+                    <span class="icon-upload"></span><?php echo JText::_('COM_THM_GROUPS_CROP_UPLOAD'); ?>
                 </button>
             </div>
         </div>

@@ -119,20 +119,6 @@ class THM_GroupsModelAdvanced extends JModelLegacy
     }
 
     /**
-     * Get link output
-     *
-     * @param   string  $path  Path
-     * @param   string  $text  Text
-     * @param   string  $cssc  CSS class
-     *
-     * @return string
-     */
-    public function getLink($path, $text, $cssc = '')
-    {
-        return "<a class=\"$cssc\" href=\"$path\" target=\"_blank\">$text</a>";
-    }
-
-    /**
      * Get unsorted roles of a specific group
      *
      * @param   integer  $gid  Group id
@@ -234,34 +220,6 @@ class THM_GroupsModelAdvanced extends JModelLegacy
 
         $this->db->setQuery($query);
         return $this->db->loadObjectList();
-    }
-
-    /**
-     * Get additional attribute parameter
-     *
-     * @param   integer  $structid  Structure id
-     * @param   string   $type      Attribute type
-     *
-     * @return  Object    Array with all roles of group with $gid
-     */
-    public function getExtra($structid, $type)
-    {
-        $query = $this->db->getQuery(true);
-
-        $query->select('*');
-        $query->from('#__thm_groups_' . strtolower($type) . '_extra');
-        $query->where("structid =" . $this->db->quote($structid));
-
-        $this->db->setQuery($query);
-        $res = $this->db->loadObject();
-        if (isset($res))
-        {
-            return $res->value;
-        }
-        else
-        {
-            return null;
-        }
     }
 
     /**

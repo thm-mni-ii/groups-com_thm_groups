@@ -13,7 +13,6 @@
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
-
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
 
 /**

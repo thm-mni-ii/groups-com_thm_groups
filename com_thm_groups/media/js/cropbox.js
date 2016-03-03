@@ -64,7 +64,7 @@ function bindImageCropper(element, attrID, uID)
 
             jQf.ajax({
                 type: "POST",
-                url: "index.php?option=com_thm_groups&controller=profile_edit&task=profile_edit.saveCropped&tmpl=component&id="
+                url: "index.php?option=com_thm_groups&controller=profile&task=profile.saveCropped&tmpl=component&id="
                 + uID + "&element=" + element + "&attrID=" + attrID +"&filename="
                 + filename + "",
                 data: fd,
@@ -88,7 +88,7 @@ function bindImageCropper(element, attrID, uID)
 
             jQf.ajax({
                 type: "POST",
-                url: "index.php?option=com_thm_groups&controller=profile_edit&task=profile_edit.saveCropped&tmpl=component&id="
+                url: "index.php?option=com_thm_groups&controller=profile&task=profile.saveCropped&tmpl=component&id="
                 + uID + "&element=" + element + "&attrID=" + attrID +"&filename="
                 + filename + "",
                 data: fd,
@@ -114,11 +114,6 @@ function bindImageCropper(element, attrID, uID)
             box.style.width = height;
         });
 
-        document.querySelector('#'+ element + '_btnCrop').addEventListener('click', function(){
-            var img = cropper.getDataURL();
-            document.querySelector('#' + element + '_cropped').innerHTML = '';
-            document.querySelector('#' + element + '_cropped').innerHTML = '<img src="'+img+'">';
-        });
         document.querySelector('#'+ element + '_btnZoomIn').addEventListener('click', function(){
             cropper.zoomIn();
         });
@@ -131,7 +126,7 @@ function bindImageCropper(element, attrID, uID)
 function deletePic(name, attributeID, userID) {
     jQf.ajax({
         type: "POST",
-        url: "index.php?option=com_thm_groups&controller=profile_edit&task=profile_edit.deletePicture&tmpl=component&id="
+        url: "index.php?option=com_thm_groups&controller=profile&task=profile.deletePicture&tmpl=component&id="
         + userID + "&attrID=" + attributeID + "",
         datatype: "HTML"
     }).success(function (response) {

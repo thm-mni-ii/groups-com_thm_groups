@@ -2,66 +2,156 @@
 /**
  * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        THMGroupsControllerProfile
- * @description THMGroups component site profile controller
- * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
- * @author      Alexander Boll, <alexander.boll@mni.thm.de>
+ * @subpackage  com_thm_groups.admin
+ * @name        THM_GroupsControllerUser
+ * @description THM_GroupsControllerUser class from com_thm_groups
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
+
+// No direct access to this file
 defined('_JEXEC') or die;
-jimport('joomla.application.component.controller');
+
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
+require_once JPATH_SITE . '/media/com_thm_groups/controllers/profile_edit_controller.php';
+
 
 /**
- * Site profile controller class for component com_thm_groups
+ * THM_GroupsControllerUser class for component com_thm_groups
  *
- * Profile controller for the site section of the component
- *
- * @category  Joomla.Component.Site
- * @package   com_thm_groups.site
+ * @category  Joomla.Component.Admin
+ * @package   com_thm_groups.admin
  * @link      www.thm.de
  */
-class THM_GroupsControllerProfile extends JControllerLegacy
+class THM_GroupsControllerProfile extends THM_GroupsControllerProfile_Edit_Controller
 {
+    private $_baseURL = 'index.php?option=com_thm_groups';
+
+    private $_userID;
+
+    private $_groupID;
+
+    private $_menuID;
+
+    private $_name;
+
+    private $_referrer;
+
     /**
-     *  Constructor (registers additional tasks to methods)
+     * Saves changes to the profile and returns to the edit view
+     *
+     * @return  void
      */
-    public function __construct()
+    public function apply()
     {
-        parent::__construct();
-        $this->registerTask('backToRefUrl', '');
+        $this->preProcess();
+
+        $success = $this->getModel('profile_edit')->save();
+
+        if ($success)
+        {
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_SUCCESS'));
+        }
+        else
+        {
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_ERROR'), 'error');
+        }
+
+        // This method of redirection allows the referrer to be input directly into the context
+        $this->input->set('view', 'profile_edit');
+        $this->input->set('groupID', $this->_groupID);
+        $this->input->set('userID', $this->_userID);
+        $this->input->set('Itemid', $this->_menuID);
+        $this->input->set('name', $this->_name);
+        $this->input->set('referrer', $this->_referrer);
+        parent::display();
     }
 
     /**
-     *  Method to get the link, where the redirect has to go
+     * Saves changes to the profile and redirects to the profile on success
      *
-     *@return   string  link.
+     * @return  void
      */
-    public function getLink()
+    public function save2Profile()
     {
-        $model = $this->getModel('profile');
-        return $model->getLink();
+        $this->preProcess();
+
+        $success = $this->getModel('profile_edit')->save();
+
+        $query = "&groupID=$this->_groupID&userID=$this->_userID&Itemid=$this->_menuID&name=$this->_name";
+        if ($success)
+        {
+            $url = JRoute::_($this->_baseURL . '&view=profile' . $query);
+            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
+            $this->setRedirect($url, $msg);
+        }
+        else
+        {
+            $url = JRoute::_($this->_baseURL . '&view=profile_edit' . $query);
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+            //todo: fails:
+            $this->setRedirect($url, $msg);
+        }
     }
 
     /**
-     *  Method, which sets the redirect for the 'back' button.
+     * Sets object variables and checks access rights. Redirects on insufficient access.
      *
-     *@return   void
+     * @return  void
      */
-    public function backToRefUrl()
+    private function preProcess()
     {
-        /*
-        $option_back = JRequest::getVar('option_back', 0);
-        $layout_back = JRequest::getVar('layout_back', 0);
-        $view_back = JRequest::getVar('view_back', 0);
+        $app = JFactory::getApplication()->input;
+        $data = $app->get('jform', array(), 'array');
 
-        $link = JRoute::_('index.php'
-            . '?option=' . $option_back
-            . '&view=' . $view_back
-            . '&layout_back=' . $layout_back
-        );*/
-        $this->setRedirect(JRequest::getVar('refUrl'));
+        $this->_userID = $data['userID'];
+        $this->_groupID = $data['groupID'];
+        $this->_menuID = $data['menuID'];
+        $this->_name = $data['name'];
+        $this->_referrer = $data['referrer'];
+        $canEdit = THM_GroupsHelperComponent::canEditProfile($this->_userID, $this->_groupID);
+
+        $query = "&view=profile&groupID=$this->_groupID&userID=$this->_userID&Itemid=$this->_menuID&name=$this->_name";
+        if(!$canEdit)
+        {
+            $url = JRoute::_($this->_baseURL . $query);
+            $msg = JText::_('COM_THM_GROUPS_NOT_ALLOWED');
+            $this->setRedirect($url, $msg, 'error');
+        }
+        return;
+    }
+
+    /**
+     * Calls picture delete function. Handles ajax call.
+     *
+     * @TODO  Output should be in a view.
+     *
+     * @return  string  the name of the default file on success, otherwise empty
+     */
+    public function deletePicture()
+    {
+        echo parent::saveCropped('frontend');
+    }
+
+    /**
+     * Calls calls the saveCropped() function. Handles ajax call.
+     *
+     * @TODO  Output should be in a view.
+     *
+     * @return  void  the name of the saved file on success, otherwise empty
+     */
+    public function saveCropped()
+    {
+        echo parent::saveCropped('frontend');
+    }
+
+    public function createQuickpageForUser()
+    {
+        $model = $this->getModel('user');
+
+        // TODO function need cid
+        $model->createQuickpageCategoryForUser('');
     }
 }

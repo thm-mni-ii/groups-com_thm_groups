@@ -44,31 +44,6 @@ class THMGroupsModelEditStructureAdminTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($result->id == "1");
         $this->assertTrue($result->field == "Vorname");
     }
-
-    // tests getExtra
-    // insert value in database
-    // function returns object
-    // sholud returned inserted value
-    function testgetExtra() {
-        $relation = "TEXT";
-        $array['cid'] = '999999';
-        JRequest::set($array, 'post');
-
-        $db = JFactory::getDBO();
-        $query = "INSERT INTO #__thm_groups_text_extra (structid, value)";
-        $query .= "VALUES ('999999','88888')";
-        $db->setQuery( $query );
-        $db->query();
-
-        $result = $this->instance->getExtra($relation);
-
-        $query = "DELETE FROM #__thm_groups_text_extra WHERE structid = '999999'";
-        $db->setQuery($query);
-        $db->query();
-
-        $this->assertTrue($result->value == "88888");
-    }
-
 }
 
 ?>

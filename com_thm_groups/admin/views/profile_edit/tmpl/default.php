@@ -5,6 +5,7 @@
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsViewProfile_Edit
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
+ * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
@@ -61,15 +62,16 @@ foreach ($this->attributes as $attribute):
                             break;
                     }
                     ?>
-                    <!-- TODO: Put style in css file -->
-                    <div id='jform_<?php echo $name; ?>_icon' style='margin: 5px; width: 10px; color: red; float: left !important;'></div>
+                    <div id='jform_<?php echo $name; ?>_icon' class="validation-container"'></div>
                     <div>
-                        <?php echo $this->getPublishBox($name, $attribute['publish']); ?>
                         <?php echo $this->getStructInput($name, 'attributeID', $attribute['structid']); ?>
                         <?php echo $this->getStructInput($name, 'type',  $attribute['type']); ?>
                     </div>
                     <div id='jform_<?php echo $name; ?>_message'/></div>
                 <div id='info'></div>
+            </div>
+            <div class="publish-container">
+                <?php echo $this->getPublishBox($name, $attribute['publish']); ?>
             </div>
         </div>
         <?php endforeach; ?>

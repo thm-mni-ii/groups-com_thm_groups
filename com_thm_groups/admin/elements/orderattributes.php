@@ -3,8 +3,7 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        JFormFieldAlphabetColor
- * @description JFormFieldAlphabetColor file from com_thm_groups
+ * @name        JFormFieldOrderAttributes
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen

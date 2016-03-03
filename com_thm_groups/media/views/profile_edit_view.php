@@ -76,10 +76,11 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
      */
     public function getChangeButton($name, $attributeID, $userID)
     {
-        $button = '<button type="button" id="' . $name . '_upload" class="btn btn-success" ';
+        $button = '<button type="button" id="' . $name . '_upload" class="btn image-button" ';
         $button .= 'onclick="bindImageCropper(\'' . $name . '\', \'' . $attributeID . '\', \'' . $userID . '\');" ';
-        $button .= 'style="float: left;" data-toggle="modal" data-target="#' . $name . '_Modal">';
-        $button .= JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_CHANGE') . '</button>';
+        $button .= 'data-toggle="modal" data-target="#' . $name . '_Modal">';
+        $button .= '<span class="icon-edit"></span>' . JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_CHANGE');
+        $button .= '</button>';
         return $button;
     }
 
@@ -90,14 +91,11 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
      * @param   int     $attributeID  the id of the attribute type
      * @param   int     $userID       the id of the user profile being edited
      *
-     * @todo  Put style in css file
-     *
      * @return  string  the HTML output of the delete button
      */
     public function getPicDeleteButton($name, $attributeID, $userID)
     {
-        $button = '<button id="' . $name . '_del" class="btn btn-danger" ';
-        $button .= 'style="margin-left: 10px !important; width: 95px !important; float: left;" ';
+        $button = '<button id="' . $name . '_del" class="btn image-button" ';
         $button .= 'onclick="deletePic(\'' . $name . '\', \'' . $attributeID . '\', \'' . $userID . '\');" ';
         $button .= 'type="button">';
         $button .= '<span class="icon-delete"></span>' . JText::_('COM_THM_QUICKPAGES_TRASH');
@@ -132,8 +130,6 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
         $html .= 'data-original-title="' . $attribute->description . '" ';
         $html .= 'data-placement="right" ';
 
-        // TODO: Outsource style declarations.
-        $html .= 'style="float:left !important; margin-left: 0px !important;" ';
         $html .= '>';
 
         if (!empty($attribute->options))
@@ -176,22 +172,21 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
         $position   = strpos($options['path'], 'images/');
         $path       = substr($options['path'], $position);
 
-        $html = '<span id="' . $name . '_IMG">';
+        $html = '<div id="' . $name . '_IMG" class="image-container">';
         $html .= '<img src="' . JURI::root() . $path . $value . '" class="edit_img" alt="Kein Bild vorhanden" />';
-        $html .= '</span>';
-        $html .= '<input id="jform_' . $name . '_hidden" name="jform[' . $name . '][value]" type="hidden" value="' . $value . '" />';
-        $html .= '<br/>';
+        $html .= '</div>';
         $html .= $this->getChangeButton($name, $attributeID, $this->userID);
         $html .= $this->getPicDeleteButton($name, $attributeID, $this->userID);
+        $html .= '<input id="jform_' . $name . '_hidden" name="jform[' . $name . '][value]" type="hidden" value="' . $value . '" />';
 
         // Load variables into context for the crop modal template
         $this->pictureName = $name;
         $this->attributeID = $attributeID;
+        $this->addTemplatePath(JPATH_ROOT . '/media/com_thm_groups/templates');
         $html .= $this->loadTemplate('crop');
         unset($this->pictureName);
         unset($this->attributeID);
 
-        $html .= '<br/>';
         return $html;
     }
 
@@ -208,7 +203,6 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
         $html = '<input type="checkbox" ';
         $html .= 'id="jform_' . $inputName . '_published" ';
         $html .= 'name="jform[' . $inputName . '][published]" ';
-        $html .= 'style="margin-left: 100px;" ';
         if ($published)
         {
             $html .= 'checked="checked" ';
@@ -350,9 +344,6 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
         $html .= 'data-placement="right" ';
         $html .= 'data-req="' . $required . '" ';
         $html .= 'onchange="validateInput(\'' . $attribute['regex'] . '\', \'jform_' . $attribute['name'] . '\')" ';
-
-        // TODO: Move style to css file.
-        $html .= 'style="float:left !important;" ';
         $html .= 'value="' . $attribute['value'] . '" />';
         return $html;
     }

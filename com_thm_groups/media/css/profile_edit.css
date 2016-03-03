@@ -135,19 +135,64 @@ li a[href*="view=virtual_schedule_manager"]::before {
   font-size: 12px;
   padding-right: 8px; }
 
-#adminForm button {
+#adminForm .frontend-toolbar {
+  border: 1px solid #77858c;
+  background-color: #f2f5f6;
+  margin-bottom: 10px;
+  padding: 10px;
+  text-align: right; }
+#adminForm button, #adminForm a.btn {
   background-color: white;
   border: 1px solid #77858c;
+  margin-left: 10px;
   padding: 4px 8px; }
-  #adminForm button:hover {
-    color: #394a59; }
+  #adminForm button.upload, #adminForm a.btn.upload {
+    float: right; }
+  #adminForm button:hover, #adminForm a.btn:hover {
+    background-color: #394a59;
+    color: white;
+    border: white 1px solid; }
+    #adminForm button:hover span:before, #adminForm a.btn:hover span:before {
+      color: white; }
 #adminForm [class^="icon-"], #adminForm [class*=" icon-"] {
   margin-right: 5px; }
-#adminForm .clear {
+#adminForm .clear, #adminForm .control-group {
   clear: both; }
+#adminForm .control-group .control-label {
+  display: inline-block;
+  padding: 0;
+  width: 180px; }
+  #adminForm .control-group .control-label.frontend {
+    width: 100px; }
+#adminForm .control-group .controls {
+  display: inline-block;
+  margin-left: 10px; }
+  #adminForm .control-group .controls .validation-container {
+    margin-left: 5px;
+    float: left; }
+    #adminForm .control-group .controls .validation-container .icon-publish {
+      margin-right: 0; }
+  #adminForm .control-group .controls .image-container {
+    float: left; }
+  #adminForm .control-group .controls .image-button {
+    border-radius: 0;
+    float: left; }
+#adminForm .control-group .publish-container {
+  display: inline-block;
+  margin-left: 30px;
+  vertical-align: top; }
+  #adminForm .control-group .publish-container input {
+    margin-top: 0; }
 #adminForm .modal {
   border-radius: 0;
-  width: 700px; }
+  height: 384px;
+  margin: 0;
+  width: 600px; }
+  #adminForm .modal.fade {
+    top: -100%; }
+    #adminForm .modal.fade.in {
+      left: calc(50% - 351px);
+      top: calc(50% - 193px); }
   #adminForm .modal .modal-content {
     padding: 5px; }
     #adminForm .modal .modal-content .modal-header, #adminForm .modal .modal-content .modal-footer {
@@ -175,15 +220,15 @@ li a[href*="view=virtual_schedule_manager"]::before {
         #adminForm .modal .modal-content .modal-header .toolbar input[type="file"], #adminForm .modal .modal-content .modal-footer .toolbar input[type="file"] {
           width: 250px; }
     #adminForm .modal .modal-content .modal-body {
-      height: 250px;
+      border-left: #f2f5f6 5px solid;
+      border-right: #f2f5f6 5px solid;
+      height: 230px;
       padding: 0; }
       #adminForm .modal .modal-content .modal-body .crop-container {
-        border-left: #f2f5f6 1px solid;
-        border-right: #f2f5f6 1px solid;
-        float: left;
         height: 100%;
+        margin: auto;
         padding: 0 5px;
-        width: calc(50% - 12px); }
+        width: 50%; }
         #adminForm .modal .modal-content .modal-body .crop-container .imageBox {
           position: relative;
           height: 220px;
@@ -216,19 +261,3 @@ li a[href*="view=virtual_schedule_manager"]::before {
             text-align: center;
             line-height: 400px;
             background: rgba(0, 0, 0, 0.7); }
-      #adminForm .modal .modal-content .modal-body .preview-container {
-        border-left: #f2f5f6 1px solid;
-        border-right: #f2f5f6 1px solid;
-        float: right;
-        height: 250px;
-        padding: 0 5px;
-        width: calc(50% - 12px); }
-        #adminForm .modal .modal-content .modal-body .preview-container h4 {
-          margin-bottom: 5px;
-          margin-top: 5px;
-          text-align: center; }
-        #adminForm .modal .modal-content .modal-body .preview-container .cropped img {
-          border: 1px solid grey;
-          display: block;
-          margin-left: auto;
-          margin-right: auto; }

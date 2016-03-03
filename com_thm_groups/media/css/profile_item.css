@@ -1,0 +1,270 @@
+/*icons anpassen*/
+.icon-diff, .icon-import, .icon-import-all, .icon-merge-all {
+  font-weight: bold; }
+
+.icon-add-Space {
+  font-size: 14px; }
+
+/*icons zur jeweiligen View im Header hinzufuegen */
+.icon-organizer::before {
+  content: "\e60b"; }
+
+.icon-organizer_degrees::before {
+  content: "\e606"; }
+
+.icon-organizer_users::before {
+  content: "\e01f"; }
+
+.icon-organizer_monitors::before {
+  content: "\e01c"; }
+
+.icon-organizer_teachers::before {
+  content: "\e604"; }
+
+.icon-organizer_departments::before {
+  content: "\e244"; }
+
+.icon-organizer_subjects::before {
+  content: "\e603"; }
+
+.icon-organizer_fields::before {
+  content: "\74"; }
+
+.icon-organizer_colors::before {
+  content: "\e014"; }
+
+.icon-organizer_subject_pools::before {
+  content: "\43"; }
+
+.icon-organizer_rooms::before {
+  content: "\e60a"; }
+
+.icon-organizer_degree_programs::before {
+  content: "\31"; }
+
+.icon-organizer_schedules::before {
+  content: "\e600"; }
+
+.icon-organizer_categories::before {
+  content: "\e601"; }
+
+.icon-mni::before {
+  content: "\e600"; }
+
+/*icons zu sidebar hinzufuegen*/
+li a[href$="view=thm_organizer"]::before, li a[href$="option=com_thm_organizer"]::before {
+  font-family: icomoon;
+  content: "\e60b";
+  font-size: 16px;
+  padding-right: 8px;
+  color: #80ba24; }
+li a[href*="view=degree_manager"]::before {
+  font-family: icomoon;
+  content: "\e606";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=user_manager"]::before {
+  font-family: icomoon;
+  content: "\e01f";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=monitor_manager"]::before {
+  font-family: icomoon;
+  content: "\e01c";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=teacher_manager"]::before {
+  font-family: icomoon;
+  content: "\e604";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=department_manager"]::before {
+  font-family: icomoon;
+  content: "\e244";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=subject_manager"]::before {
+  font-family: icomoon;
+  content: "\e603";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=field_manager"]::before {
+  font-family: icomoon;
+  content: "\74";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=color_manager"]::before {
+  font-family: icomoon;
+  content: "\e014";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=pool_manager"]::before {
+  font-family: icomoon;
+  content: "\43";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=room_manager"]::before {
+  font-family: icomoon;
+  content: "\e60a";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=program_manager"]::before {
+  font-family: icomoon;
+  content: "\31";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=schedule_manager"]::before {
+  font-family: icomoon;
+  content: "\e600";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=category_manager"]::before {
+  font-family: icomoon;
+  content: "\e601";
+  font-size: 12px;
+  padding-right: 8px; }
+li a[href*="view=virtual_schedule_manager"]::before {
+  font-family: icomoon;
+  content: "\e600";
+  font-size: 12px;
+  padding-right: 8px; }
+
+div.item-page .page-header {
+  float: left; }
+  div.item-page .page-header h2 {
+    display: inline-block; }
+div.item-page .toolbar {
+  float: right; }
+div.item-page .profile {
+  clear: both; }
+div.item-page button, div.item-page a.btn {
+  background-color: white;
+  border: 1px solid #77858c;
+  margin-left: 10px;
+  margin-bottom: 20px;
+  padding: 4px 8px; }
+  div.item-page button:hover, div.item-page a.btn:hover {
+    background-color: #394a59;
+    color: white;
+    border: white 1px solid; }
+    div.item-page button:hover span:before, div.item-page a.btn:hover span:before {
+      color: white; }
+div.item-page [class^="icon-"], div.item-page [class*=" icon-"] {
+  margin-right: 5px; }
+div.item-page .field-container, div.item-page .field-row {
+  display: inline-block;
+  float: left;
+  padding-bottom: 15px; }
+div.item-page .field-container {
+  clear: left; }
+div.item-page .field-container-label, div.item-page .field-container-value, div.item-page .field-row-label, div.item-page .field-row-value {
+  display: inline-block; }
+div.item-page .field-container-label, div.item-page .field-row-label {
+  font-size: 150%;
+  margin-right: 20px;
+  text-align: right;
+  vertical-align: top;
+  width: 120px; }
+
+div.template-standard .field-container-label, div.template-standard .field-row-label {
+  width: 120px; }
+div.template-standard .titel-container, div.template-standard .vorname-container, div.template-standard .nachname-container, div.template-standard .posttitel-container {
+  display: none; }
+div.template-standard .bild-container, div.template-standard .anschrift-container {
+  background-color: #f2f5f6;
+  height: 200px;
+  padding: 20px; }
+div.template-standard .bild-container {
+  clear: initial;
+  float: right;
+  width: calc(30% - 40px); }
+div.template-standard .anschrift-container {
+  margin-bottom: 20px;
+  width: calc(70% - 40px); }
+div.template-standard .buero-container, div.template-standard .sprechzeiten-container, div.template-standard .email-container,
+div.template-standard .telefon-container, div.template-standard .fax-container, div.template-standard .homepage-container {
+  background-color: #dfeec8;
+  padding-bottom: 8px;
+  width: 100%; }
+div.template-standard .anschrift-container + div {
+  padding-top: 15px; }
+  div.template-standard .anschrift-container + div:before {
+    content: "Kontaktinformationen";
+    display: block;
+    font-family: "THM-Medium", Arial, Helvetica, sans-serif;
+    font-size: 150%;
+    margin-bottom: 15px;
+    padding-left: 20px;
+    width: 100%; }
+div.template-standard .weitere-informationen-container {
+  margin-top: 20px;
+  padding-left: 20px;
+  width: 100%; }
+div.template-standard .field-container-label, div.template-standard .field-row-label {
+  font-family: "THM-Medium", Arial, Helvetica, sans-serif;
+  font-size: 140%;
+  margin-right: 10px; }
+div.template-standard .anschrift-label {
+  display: block;
+  font-size: 150%;
+  padding: 5px 0;
+  text-align: left; }
+div.template-standard .buero-label, div.template-standard .email-label, div.template-standard .fax-label, div.template-standard .homepage-label, div.template-standard .sprechzeiten-label, div.template-standard .telefon-label {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  align: left;
+  color: #394a59;
+  font-family: 'icomoon' !important;
+  font-size: 120%;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  line-height: 1;
+  speak: none;
+  text-transform: none;
+  width: 40px;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+  div.template-standard .buero-label span, div.template-standard .email-label span, div.template-standard .fax-label span, div.template-standard .homepage-label span, div.template-standard .sprechzeiten-label span, div.template-standard .telefon-label span {
+    display: none; }
+div.template-standard .buero-label:before {
+  content: "\21"; }
+div.template-standard .email-label:before {
+  content: "\4d"; }
+div.template-standard .fax-label:before {
+  content: "\e013"; }
+div.template-standard .homepage-label:before {
+  content: "\e903"; }
+div.template-standard .sprechzeiten-label:before {
+  content: "\e927"; }
+div.template-standard .telefon-label:before {
+  content: "\e260"; }
+div.template-standard .weitere-informationen-label {
+  display: block;
+  margin-bottom: 8px;
+  text-align: left;
+  width: 100%; }
+div.template-standard .bild-value {
+  float: right; }
+div.template-standard .anschrift-value {
+  display: block; }
+
+div.template-mni .titel-container, div.template-mni .vorname-container, div.template-mni .nachname-container, div.template-mni .posttitel-container {
+  display: none; }
+div.template-mni .field-container, div.template-mni .field-row {
+  max-width: 70%; }
+div.template-mni .field-container-label, div.template-mni .field-row-label {
+  font-family: "THM-Medium", Arial, Helvetica, sans-serif;
+  font-size: 120%; }
+div.template-mni .field-container-value, div.template-mni .field-row-value {
+  max-width: calc(100% - 140px); }
+div.template-mni .bild-container {
+  clear: right;
+  float: right; }
+  div.template-mni .bild-container .bild-value {
+    max-width: 100%; }
+div.template-mni .bild-container {
+  clear: right;
+  float: right; }
+  div.template-mni .bild-container .bild-value {
+    max-width: 100%; }
