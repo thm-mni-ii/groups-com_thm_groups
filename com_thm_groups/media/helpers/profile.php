@@ -81,41 +81,22 @@ class THM_GroupsHelperProfile
      */
     public static function getProfile($userID, $groupID = null)
     {
-        $structure = self::getAllAttributes();
-
-        $profile = array();
-        if (!empty($structure))
-        {
-            foreach ($structure as $element)
-            {
-                $name = $element->field;
-                $profile[$name] = array();
-                $profile[$name]['attributeID'] = $element->id;
-                $profile[$name]['options'] = (array) json_decode($element->options);
-                $profile[$name]['dyn_options'] = (array) json_decode($element->dyn_options);
-                $profile[$name]['type'] = $element->type;
-            }
-        }
-
         $profileID = THM_GroupsHelperProfile::getProfileIDByGroupID($groupID);
         $attributes = THM_GroupsHelperProfile::getProfileData($userID, $profileID);
 
         foreach ($attributes as $attribute)
         {
             $name = $attribute['name'];
-            if (empty($profile[$name]))
-            {
-                $profile[$name] = array();
-                $profile[$name]['attributeID'] = $attribute['structid'];
-                $profile[$name]['type'] = $attribute['type'];
-            }
+            $profile[$name] = array();
+            $profile[$name]['attributeID'] = $attribute['structid'];
+            $profile[$name]['type'] = $attribute['type'];
             if (!empty($attribute['options']))
             {
                 $profile[$name]['options'] = (array)json_decode($attribute['options']);
             }
-            if (!empty($attribute['dyn_options']))
+            if (!empty($attribute['dynOptions']))
             {
-                $profile[$name]['dyn_options'] = (array)json_decode($attribute['dyn_options']);
+                $profile[$name]['dyn_options'] = (array)json_decode($attribute['dynOptions']);
             }
             $profile[$name]['id'] = $attribute['id'];
             $profile[$name]['value'] = $attribute['value'];

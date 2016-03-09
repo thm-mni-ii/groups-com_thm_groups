@@ -126,18 +126,12 @@ function bindImageCropper(element, attrID, uID)
 function deletePic(name, attributeID, userID) {
     jQf.ajax({
         type: "POST",
-        url: "index.php?option=com_thm_groups&controller=profile&task=profile.deletePicture&tmpl=component&id="
-        + userID + "&attrID=" + attributeID + "",
+        url: "index.php?option=com_thm_groups&task=profile.deletePicture&tmpl=component&userID="
+        + userID + "&attrID=" + attributeID + "&tmpl=component",
         datatype: "HTML"
     }).success(function (response) {
-
-        //document.getElementById(name + "_IMG").innerHTML = response;
-
-        if (response != 'false')
-        {
-            document.getElementById(name + "_IMG").innerHTML = '';
-            document.getElementById("jform_" + name + "_hidden").value = response;
-        }
+        jQf("#" + name + "_IMG").html('');
+        jQf("#jform_" + name + "_hidden").val('');
     });
 }
 

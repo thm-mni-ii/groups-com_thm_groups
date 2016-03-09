@@ -34,13 +34,14 @@ class THM_GroupsControllerProfile_Edit_Controller extends JControllerLegacy
      * @param   string  $area  the area which calls the function. backend is set as default because it was used in the
      *                         creation of this file.
      *
+     * @TODO  make a flipping ajax view
+     *
      * @return  string  the name of the saved file on success, otherwise empty
      */
-    public function saveCropped($area = 'backend')
+    public function saveCropped()
     {
         $input = JFactory::getApplication()->input;
-        $modelPath = ($area == 'backend')? JPATH_ADMINISTRATOR : JPATH_SITE;
-        $modelPath .= '/components/com_thm_groups/models';
+        $modelPath = JPATH_SITE. '/media/com_thm_groups/models';
         $this->addModelPath($modelPath);
         $model = $this->getModel('profile_edit');
         $attributeID   = $input->get('attrID');
@@ -49,7 +50,7 @@ class THM_GroupsControllerProfile_Edit_Controller extends JControllerLegacy
         $userID = $input->get('id');
 
         $savedName  = $model->saveCropped($attributeID, $file, $fileName, $userID);
-        return empty($savedName)? '' : $savedName;
+        echo empty($savedName)? '' : $savedName;
     }
 
     /**

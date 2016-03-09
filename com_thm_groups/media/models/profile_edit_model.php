@@ -180,7 +180,7 @@ class THM_GroupsModelProfile_Edit_Model extends THM_CoreModelEdit
             $this->deleteThumbs($fileName, $filePath);
         }
 
-        return $defaultName;
+        return;
     }
 
     /**
@@ -193,7 +193,7 @@ class THM_GroupsModelProfile_Edit_Model extends THM_CoreModelEdit
      */
     public function deletePicture($attributeID, $userID)
     {
-        $content = $this->getContent();
+        $content = THM_GroupsHelperProfile::getProfileData($userID);
 
         $attributeDefault = $this->deleteOldPictures($content, $attributeID);
 

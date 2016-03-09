@@ -6,6 +6,7 @@
  * @name        THM_GroupsControllerUser
  * @description THM_GroupsControllerUser class from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
@@ -124,18 +125,6 @@ class THM_GroupsControllerProfile extends THM_GroupsControllerProfile_Edit_Contr
     }
 
     /**
-     * Calls picture delete function. Handles ajax call.
-     *
-     * @TODO  Output should be in a view.
-     *
-     * @return  string  the name of the default file on success, otherwise empty
-     */
-    public function deletePicture()
-    {
-        echo parent::saveCropped('frontend');
-    }
-
-    /**
      * Calls calls the saveCropped() function. Handles ajax call.
      *
      * @TODO  Output should be in a view.
@@ -144,7 +133,7 @@ class THM_GroupsControllerProfile extends THM_GroupsControllerProfile_Edit_Contr
      */
     public function saveCropped()
     {
-        echo parent::saveCropped('frontend');
+        parent::saveCropped();
     }
 
     public function createQuickpageForUser()

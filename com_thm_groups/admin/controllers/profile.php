@@ -12,6 +12,7 @@
  */
 
 defined('_JEXEC') or die;
+require_once JPATH_SITE . '/media/com_thm_groups/controllers/profile_edit_controller.php';
 
 /**
  * THM_GroupsControllerProfile class for component com_thm_groups
@@ -19,7 +20,7 @@ defined('_JEXEC') or die;
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  */
-class THM_GroupsControllerProfile extends JControllerLegacy
+class THM_GroupsControllerProfile extends THM_GroupsControllerProfile_Edit_Controller
 {
     /**
      * Activates quickpages for multiple users

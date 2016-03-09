@@ -75,7 +75,7 @@ class THM_GroupsControllerProfile_Edit extends THM_GroupsControllerProfile_Edit_
         $input = JFactory::getApplication()->input;
         $model = $this->getModel();
         $attributeID = $input->getString('attrID');
-        $userID = $input->getInt('id');
+        $userID = $input->getInt('userID');
 
         $pictureName = $model->deletePicture($attributeID, $userID);
 

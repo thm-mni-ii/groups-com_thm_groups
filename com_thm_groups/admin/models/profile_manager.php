@@ -15,7 +15,7 @@ jimport('thm_core.list.model');
 jimport('thm_groups.data.lib_thm_groups_user');
 
 /**
- * THM_GroupsModelUser_Manager class for component com_thm_groups
+ * THM_GroupsModelProfile_Manager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin

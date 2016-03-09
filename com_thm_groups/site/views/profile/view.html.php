@@ -73,6 +73,18 @@ class THM_GroupsViewProfile extends JViewLegacy
     }
 
     /**
+     * Creates a profile date attribute
+     *
+     * @param   string  $name       the name of the profile attribute
+     * @param   array   $attribute  the profile attribute
+     * @return array
+     */
+    public function getDATE($name, $attribute)
+    {
+        return $this->getTEXT($name, $attribute);
+    }
+
+    /**
      * Creates a profile link attribute
      *
      * @param   string  $name       the name of the profile attribute
@@ -91,6 +103,18 @@ class THM_GroupsViewProfile extends JViewLegacy
         $value = "<a href='" . htmlspecialchars_decode($attribute['value']) . "'>";
         $value .= htmlspecialchars_decode($attribute['value']) . "</a>";
         return $container['start'] . $value . $container['end'];
+    }
+
+    /**
+     * Creates a profile number attribute
+     *
+     * @param   string  $name       the name of the profile attribute
+     * @param   array   $attribute  the profile attribute
+     * @return array
+     */
+    public function getNUMBER($name, $attribute)
+    {
+        return $this->getTEXT($name, $attribute);
     }
 
     /**
