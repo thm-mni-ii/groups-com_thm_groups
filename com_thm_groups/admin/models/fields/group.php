@@ -6,7 +6,7 @@ jimport('joomla.form.formfield');
 class JFormFieldGroup extends JFormFieldList
 {
 
-    protected $type = 'Group';
+    protected $type = 'group';
 
     /**
      * Cached array of the category items.

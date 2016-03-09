@@ -93,9 +93,19 @@ class THM_GroupsHelperComponent
      *
      * @return void
      */
-    public static function addActions(&$view)
+    public static function addActions(&$object)
     {
-        return;
+        $user = JFactory::getUser();
+        $result = new JObject;
+
+        $path = JPATH_ADMINISTRATOR . '/components/com_thm_groups/access.xml';
+        $actions = JAccess::getActionsFromFile($path, "/access/section[@name='component']/");
+        foreach ($actions as $action)
+        {
+            $result->set($action->name, $user->authorise($action->name, 'com_thm_groups'));
+        }
+
+        $object->actions = $result;
     }
 
     /**
@@ -108,7 +118,27 @@ class THM_GroupsHelperComponent
      */
     public static function allowEdit(&$model, $itemID = 0)
     {
-        return true;
+        // Admins can edit anything. Department and monitor editing is implicitly covered here.
+        $isAdmin = $model->actions->{'core.admin'};
+        if ($isAdmin)
+        {
+            return true;
+        }
+
+        $name = $model->get('name');
+
+        // Views accessible with component create/edit access
+        $resourceEditViews = array('attribute_edit', 'dynamic_type_edit', 'profile_edit', 'role_edit', 'template_edit');
+        if (in_array($name, $resourceEditViews))
+        {
+            if ((int) $itemID > 0)
+            {
+                return $model->actions->{'core.edit'};
+            }
+            return $model->actions->{'core.create'};
+        }
+
+        return false;
     }
 
     /**
@@ -131,6 +161,23 @@ class THM_GroupsHelperComponent
         $canEditOwn = ($isOwn && $params->get('editownprofile', 0) == 1 );
         $allow = ($isSuperAdmin OR $isComponentAdmin OR $isModerator OR $canEditOwn);
         return ($allow)? true : false;
+    }
+
+    /**
+     * Checks if the current user is a super admin in joomla or a admin of a thm_groups component
+     *
+     * @return boolean  true if the user is a super user or a component moderator
+     */
+    public static function canEdit()
+    {
+        $user = JFactory::getUser();
+        $isSuperUser = $user->authorise('core.admin');
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+        if (!$isSuperUser || !$isComponentManager)
+        {
+            return false;
+        }
+        return true;
     }
 
     /**

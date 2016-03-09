@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modeladmin');
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
-require_once JPATH_COMPONENT . '/assets/helpers/static_type_options_helper.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/static_type.php';
 
 /**
  * Class loads form data to edit an entry.
@@ -65,9 +65,9 @@ class THM_GroupsModelAttribute extends JModelLegacy
             {
                 $dbo->execute();
             }
-            catch (Exception $e)
+            catch (Exception $exception)
             {
-                JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+                JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
                 return false;
             }
@@ -139,10 +139,9 @@ class THM_GroupsModelAttribute extends JModelLegacy
         {
             $result = $dbo->loadObjectList();
         }
-        catch (Exception $e)
+        catch (Exception $exception)
         {
-            JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
-
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
             return false;
         }
 
@@ -171,10 +170,9 @@ class THM_GroupsModelAttribute extends JModelLegacy
         {
             $ids = $dbo->loadObjectList();
         }
-        catch (Exception $e)
+        catch (Exception $exception)
         {
-            JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
-
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
             return false;
         }
 
@@ -188,82 +186,89 @@ class THM_GroupsModelAttribute extends JModelLegacy
      */
     public function save()
     {
-        $options = THM_GroupsHelperOptions::getOptions();
+        $data = JFactory::getApplication()->input->get('jform', array(), 'array');
+        $required = (bool) $data['validate'];
+        $staticTypeID = $this->getStaticTypeIDByDynTypeID($data['dynamic_typeID']);
+        $defOptions = THM_GroupsHelperStatic_Type::getOption($staticTypeID);
 
-        $dbo = JFactory::getDbo();
-        $app = JFactory::getApplication();
-        $data = $app->input->post->get('jform', array(), 'array');
-
-        $required = (isset($data['required']) ? 'true' : 'false');
-
-        // DynamicType usw. is a name of select field
-        $data['dynamic_typeID'] = (int) $app->input->post->get('dynamicType');
-        $data['static_typeID'] = (int) $app->input->post->get('sType');
-        $data['description'] = $dbo->escape($data['description']);
-
-        // Get options from input made in form
-        switch ($data['static_typeID'])
+        $options = new stdClass();
+        switch ($staticTypeID)
         {
-            case "1":
-                $options['1'] = '{ "length" : "' . $app->input->getHtml('TEXT_length') . '", "required" : "' . $required . '" }';
+            case TEXT:
+                $options->length = (int) $data['length'];
+                $options->required = $required;
                 break;
-            case "2":
-                $options['2'] = '{ "length" : "' . $app->input->getHtml('TEXTFIELD_length') . '", "required" : "' . $required . '" }';
+            case TEXTFIELD:
+                $options->length = (int) $data['length'];
+                $options->required = $required;
                 break;
-            case "3":
-                $options['3'] = '{ "required" : "' . $required . '" }';
-            case "4":
-                $attrID = $data['id'];
-                $inputPath   = $app->input->getHtml('PICTURE_path');
-                $inputName   = $app->input->getHtml('PICTURE_name');
-
-                // Move pictures to new path when different to path in database
-                if ((($attrID) && ($attrID != "")) && ($attrID != "0"))
-                {
-                    $pictureType = $this->getPictureItem($attrID);
-
-                    // Get old path
-                    $path = json_decode($pictureType->options)->path;
-
-                    if ($path != $inputPath)
-                    {
-                        $this->movePictures($inputPath, $path, $attrID, $data['dynamic_typeID']);
-                    }
-                }
-
-                $options['4'] = '{ "filename" : "' . $inputName . '", "path" : "' . $inputPath . '", "required" : "' . $required . '" }';
+            case PICTURE:
+                // Save always default values, because pictures are placed now only in /images/com_thm_groups/profile
+                $options->path = $defOptions->path;
+                $options->filename = $defOptions->filename;
+                $options->required = $required;
                 break;
-            case "5":
-                $options['5'] = '{ "options" : "' . $app->input->getHtml('MULTISELECT_options') . '", "required" : "' . $required . '" }';
+            case LINK:
+            case MULTISELECT:
+            case TABLE:
+            case TEMPLATE:
+                $options->required = $required;
                 break;
-            case "6":
-                $options['6'] = '{ "columns" : "' . $app->input->getHtml('TABLE_columns') . '", "required" : "' . $required . '" }';
-                break;
-            case "7":
-                $options['7'] = '{ "required" : "' . $required . '" }';
         }
 
-        $data['options'] = $options[$data['static_typeID']];
+        $data['options'] = (!empty($options)) ? json_encode($options) : $data['options'];
+        $dbo = JFactory::getDbo();
+        $data['description'] = $dbo->escape($data['description']);
+
         $dbo->transactionStart();
 
         $attribute = $this->getTable();
 
         $success = $attribute->save($data);
 
-        // $success = false;
-
         if (!$success)
         {
             $dbo->transactionRollback();
-
             return false;
         }
         else
         {
             $dbo->transactionCommit();
-
             return $attribute->id;
         }
+    }
+
+    /**
+     * Returns a static type ID of a dynamic type by its ID
+     *
+     * @param   Int  $dynTypeID  dynamic type ID
+     *
+     * @return Int On success, else false
+     *
+     * @throws Exception
+     */
+    public function getStaticTypeIDByDynTypeID($dynTypeID)
+    {
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+
+        $query
+            ->select('static_typeID')
+            ->from('#__thm_groups_dynamic_type')
+            ->where('id = ' . (int) $dynTypeID);
+        $dbo->setQuery($query);
+
+        try
+        {
+            $result = $dbo->loadResult();
+        }
+        catch (Exception $exception)
+        {
+            JFactory::getApplication()->enqueueMessage($exception, 'error');
+            return false;
+        }
+
+        return $result;
     }
 
     /**
@@ -292,223 +297,6 @@ class THM_GroupsModelAttribute extends JModelLegacy
     }
 
     /**
-     * Checks, if directory exists
-     *
-     * @param   String  $inputPath  directory path from DB
-     *
-     * @return boolean
-     */
-    private function dirExists($inputPath)
-    {
-        if (file_exists($inputPath))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
-     * Makes a new directory
-     *
-     * @param   String  $inputPath  new directory path
-     *
-     * @return nothing
-     */
-    private function makeNewDir($inputPath)
-    {
-        JFolder::create($inputPath, 0755);
-    }
-
-    /**
-     * Returns one single pictureItem from database
-     *
-     * @param   Integer  $atrId  ID of selected attribute
-     *
-     * @return null|$result
-     */
-    private function getPictureItem($atrId)
-    {
-        $dbo = JFactory::getDbo();
-        $query = $dbo->getQuery(true);
-
-        $query->select('*')
-            ->from($dbo->qn('#__thm_groups_attribute'))
-            ->where('id = ' . (int) $atrId);
-
-        $dbo->setQuery($query);
-        $result = $dbo->loadObject();
-
-        if ($result != null)
-        {
-            return $result;
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    /**
-     * Copies all pictures from old directory to new directory
-     *
-     * @param   String  $oldPath  old directory path
-     * @param   String  $newPath  new directory path
-     * @param   Int     $attrID   attribute id
-     *
-     * @return   boolean
-     */
-    private function copyPictures($oldPath, $newPath, $attrID)
-    {
-        $pictures = self::getPictures($attrID);
-
-        foreach (scandir($oldPath) as $folderPic)
-        {
-            foreach ($pictures as $pic)
-            {
-                $picName = $pic->value;
-
-                if ($folderPic == $picName)
-                {
-                    // Copy the cropped picture
-                    copy($oldPath . $folderPic, $newPath . $folderPic);
-                    unlink($oldPath . $folderPic);
-
-                    // Copy the picture in full resolution
-                    $oriFileName = $this->after('cropped_', $folderPic);
-
-                    if (!self::dirExists($newPath . 'fullRes/'))
-                    {
-                        self::makeNewDir($newPath . 'fullRes/');
-                    }
-
-                    copy($oldPath . 'fullRes/' . $oriFileName, $newPath . 'fullRes/' . $oriFileName);
-                    unlink($oldPath . 'fullRes/' . $oriFileName);
-
-                    // Copy the thumbnails for the picture
-                    foreach ( scandir($oldPath . 'thumbs/') as $thumbnail)
-                    {
-                        if ( $thumbnail === '.' || $thumbnail === '..')
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            /**
-                             * Get the filename till the '_width-height.extension' part
-                             * and check if its part of the saved filename in database.
-                             *
-                             * When a pos was found it will be dropped from the folder.
-                             */
-                            $extPos = strrpos($thumbnail, '_');
-                            $length = strlen($thumbnail);
-                            $thumbFileName = substr($thumbnail, 0, -($length - $extPos));
-
-                            $pos = strpos($folderPic, $thumbFileName);
-
-                            if ($pos === 0)
-                            {
-                                if (!self::dirExists($newPath . 'thumbs/'))
-                                {
-                                    self::makeNewDir($newPath . 'thumbs/');
-                                }
-
-                                copy($oldPath . 'thumbs/' . $thumbnail, $newPath . 'thumbs/' . $thumbnail);
-                                unlink($oldPath . 'thumbs/' . $thumbnail);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Returns substring after $part
-     *
-     * @param   String  $part      Substring
-     * @param   String  $inString  Search string
-     *
-     * @return  String
-     */
-    private function after ($part, $inString)
-    {
-        if (!is_bool(strpos($inString, $part)))
-        {
-            return substr($inString, strpos($inString, $part) + strlen($part));
-        }
-    }
-
-    /**
-     * Gets the pictures by searching for the attribute id in
-     * the #__thm_groups_users_attribute-table.
-     *
-     * @param   Integer  $attrID  The selected attribute id
-     *
-     * @return   Array
-     */
-    private function  getPictures($attrID)
-    {
-        // Get all Pictures from attribute
-        $dbo = JFactory::getDbo();
-
-        $usersAttributeQuery = $dbo->getQuery(true);
-        $usersAttributeQuery->select($dbo->qn(array('ID', 'value', 'attributeID')))
-            ->from($dbo->qn('#__thm_groups_users_attribute'))
-            ->where($dbo->qn('attributeID') . ' = ' . $attrID . '');
-        $dbo->setQuery($usersAttributeQuery);
-        $result = $dbo->loadObjectList();
-
-        return $result;
-    }
-
-    /**
-     * Moves pictures from old to new directory, deletes the old files.
-     * The path for #__thm_groups_attribute will be set in calling function.
-     *
-     * @param   Integer  $inputPath    Typed in path from user-interface
-     * @param   String   $oldPath      Old path from database
-     * @param   Integer  $attrID       ID from selected attribute
-     * @param   Integer  $dynamicType  DynamicTypeID from form
-     *
-     * @return  boolean
-     */
-    private function movePictures($inputPath, $oldPath, $attrID, $dynamicType)
-    {
-        $serverPath = self::getSeverPath();
-        $inputPath = $serverPath . $inputPath;
-        $oldPath = $serverPath . $oldPath;
-
-        if (!self::dirExists($inputPath))
-        {
-            self::makeNewDir($inputPath);
-        }
-
-        if (!self::copyPictures($oldPath, $inputPath, $attrID, $dynamicType))
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
-
-    /**
-     * Gets the server path
-     *
-     * @return mixed
-     */
-    private function getSeverPath()
-    {
-        return str_replace('\\', '/', JPATH_ROOT);
-    }
-
-    /**
      * Toggles the attribute
      *
      * @param   String  $action  publish/unpublish
@@ -517,7 +305,6 @@ class THM_GroupsModelAttribute extends JModelLegacy
      */
     public function toggle($action = null)
     {
-        $db = JFactory::getDBO();
         $input = JFactory::getApplication()->input;
 
         // Get array of ids if divers users selected
@@ -556,7 +343,8 @@ class THM_GroupsModelAttribute extends JModelLegacy
                 break;
         }
 
-        $query = $db->getQuery(true);
+        $dbo = JFactory::getDBO();
+        $query = $dbo->getQuery(true);
 
         $query
             ->update('#__thm_groups_attribute')
@@ -570,15 +358,15 @@ class THM_GroupsModelAttribute extends JModelLegacy
                 break;
         }
 
-        $db->setQuery((string) $query);
+        $dbo->setQuery((string) $query);
 
         try
         {
-            return (bool) $db->execute();
+            return (bool) $dbo->execute();
         }
-        catch (Exception $exc)
+        catch (Exception $exception)
         {
-            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
             return false;
         }
     }

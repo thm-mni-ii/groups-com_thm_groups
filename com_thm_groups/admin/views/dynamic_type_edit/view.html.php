@@ -11,7 +11,7 @@
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
-jimport('joomla.application.component.view');
+jimport('thm_core.edit.view');
 
 /**
  * THM_GroupsViewDynamic_Type_Edit class for component com_thm_groups
@@ -20,7 +20,7 @@ jimport('joomla.application.component.view');
  * @package   com_thm_groups.admin
  * @link      www.thm.de
  */
-class THM_GroupsViewDynamic_Type_Edit extends JViewLegacy
+class THM_GroupsViewDynamic_Type_Edit extends THM_CoreViewEdit
 {
     /**
      * Method to get display
@@ -31,33 +31,28 @@ class THM_GroupsViewDynamic_Type_Edit extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
+        $input = JFactory::getApplication()->input;
+        $id = $input->getInt('id', 0);
+
+        // Disable editing of the selected static type
+        if ($id != 0)
         {
-            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+            $this->get('Form')->setFieldAttribute('static_typeID', 'readonly', 'true');
         }
-
-        $model = $this->getModel('dynamic_type_edit');
-        $form = $this->get('Form');
-        $rep = JPATH_ROOT;
-        $item = $this->get('DynamicTypeItem');
-
-        $this->form = $form;
-        $this->item = $item;
-        $this->path = str_replace(array('\\'), array('/'), $rep) ."/images/";
-        $this->fileTreePath = Juri::root() . "/administrator/components/com_thm_groups/elements/jqueryFileTree.php";
-
-        $this->selectFieldStaticTypes = $model->getStaticTypesSelectField($this->item->static_typeID);
-        $this->regexOptions = $model->getRegexOptions($this->item->static_typeID);
-
-        if (count($errors = $this->get('Errors')))
-        {
-            JError::raiseError(500, implode('<br />', $errors));
-            return false;
-        }
-
-        $this->addToolbar();
 
         parent::display($tpl);
+    }
+
+    /**
+     * Adds styles and scripts to the document
+     *
+     * @return  void  modifies the document
+     */
+    protected function modifyDocument()
+    {
+        parent::modifyDocument();
+        $document = JFactory::getDocument();
+        $document->addScript($this->baseurl . "../../media/com_thm_groups/js/dynamic_type_edit.js");
     }
 
     /**
@@ -69,9 +64,9 @@ class THM_GroupsViewDynamic_Type_Edit extends JViewLegacy
     {
         JFactory::getApplication()->input->set('hidemainmenu', true);
 
-        $title = $this->item->id == 0 ? 'New' : 'Edit';
+        $title = $this->item->id == 0 ? JText::_('COM_THM_GROUPS_DYNAMIC_TYPE_EDIT_NEW_TITLE') : JText::_('COM_THM_GROUPS_DYNAMIC_TYPE_EDIT_EDIT_TITLE');
 
-        JToolBarHelper::title($title, 'test');
+        JToolBarHelper::title($title, 'edit');
 
         JToolBarHelper::apply('dynamic_type.apply', 'JTOOLBAR_APPLY');
         JToolBarHelper::save('dynamic_type.save', 'JTOOLBAR_SAVE');

@@ -48,7 +48,6 @@ class THM_GroupsControllerProfile extends THM_GroupsControllerProfile_Edit_Contr
     public function apply()
     {
         $this->preProcess();
-
         $success = $this->getModel('profile_edit')->save();
 
         if ($success)

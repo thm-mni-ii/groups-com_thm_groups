@@ -52,8 +52,8 @@ class THM_GroupsModelAttribute_Manager extends THM_CoreModelList
      */
     protected function getListQuery()
     {
-        $db = JFactory::getDBO();
-        $query = $db->getQuery(true);
+        $dbo = JFactory::getDBO();
+        $query = $dbo->getQuery(true);
 
         $query
             ->select('attribute.id')
@@ -127,7 +127,7 @@ class THM_GroupsModelAttribute_Manager extends THM_CoreModelList
                     . $item->ordering . '" class="width-20 text-area-order " />';
             }
 
-            $url = "index.php?option=com_thm_groups&view=attribute_edit&cid[]=$item->id";
+            $url = "index.php?option=com_thm_groups&view=attribute_edit&id=$item->id";
             $return[$index] = array();
 
             $return[$index]['attributes'] = array( 'class' => 'order nowrap center', 'id' => $item->id);

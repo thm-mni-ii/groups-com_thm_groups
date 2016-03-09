@@ -99,7 +99,12 @@ class Com_THM_GroupsInstallerScript
      */
     public function install($parent)
     {
-        // you can find the usage of old function in /models/db_data_manager
+        if ($this->createImageFolder() && $this->copyDefaultPictureToImagesFolder())
+        {
+            return true;
+        }
+
+        return false;
     }
 
     /*
@@ -114,7 +119,7 @@ class Com_THM_GroupsInstallerScript
     {
         $oldRelease = $this->getParam('version');
 
-        // Make global update only for versions less than 3.5.5
+        // Make global update only for versions less than 3.5.0
         if (version_compare($oldRelease, '3.5.0', 'lt'))
         {
             if (THM_Groups_Update_Script::update())
@@ -125,14 +130,185 @@ class Com_THM_GroupsInstallerScript
             JFactory::getApplication()->enqueueMessage('update script', 'error');
             return false;
         }
+
+        $isImageFolderCreated = $this->createImageFolder();
+        $isDefPictureCopied = $this->copyDefaultPictureToImagesFolder();
+        $isDefImgPathByDynTypesRewritten = $this->rewriteDefaultImagePathByDynamicTypes();
+        $isDefImgPathByAttrsRewritten = $this->rewriteDefaultImagePathByAttributes();
+
+        $isOk = ($isImageFolderCreated AND $isDefPictureCopied AND $isDefImgPathByDynTypesRewritten AND $isDefImgPathByAttrsRewritten);
+
+        if ($isOk)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Rewrites path option by all dynamic types of the static type PICTURE
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function rewriteDefaultImagePathByDynamicTypes()
+    {
+        $imagesPath = '/images/com_thm_groups/profile/';
+        $imageName = 'anonym.jpg';
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+
+        $query
+            ->select('dt.id, dt.options')
+            ->from('#__thm_groups_dynamic_type AS dt')
+            ->innerJoin('#__thm_groups_static_type AS st ON st.id = dt.static_typeID')
+            ->where('st.name = "PICTURE"');
+
+        $dbo->setQuery($query);
+
+        $dynTypeObjects = $dbo->loadObjectList();
+
+        if (!empty($dynTypeObjects))
+        {
+            foreach ($dynTypeObjects as $dynTypeObject)
+            {
+                $optObject = new stdClass();
+                $optObject->path = $imagesPath;
+                $optObject->filename = $imageName;
+
+                $query = $dbo->getQuery(true);
+                $query
+                    ->update('#__thm_groups_dynamic_type')
+                    ->set("`options` = '" . json_encode($optObject) . "'")
+                    ->where("id = $dynTypeObject->id");
+
+                $dbo->setQuery($query);
+                try
+                {
+                    $dbo->execute();
+                }
+                catch (Exception $exception)
+                {
+                    JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Rewrites path option by all attributes of the static type PICTURE
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function rewriteDefaultImagePathByAttributes()
+    {
+        $imagesPath = '/images/com_thm_groups/profile/';
+        $imageName = 'anonym.jpg';
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+
+        $query
+            ->select('attr.id, attr.options')
+            ->from('#__thm_groups_attribute AS attr')
+            ->innerJoin('#__thm_groups_dynamic_type AS dt ON dt.id = attr.dynamic_typeID')
+            ->innerJoin('#__thm_groups_static_type AS st ON st.id = dt.static_typeID')
+            ->where('st.name = "PICTURE"');
+
+        $dbo->setQuery($query);
+
+        $attrObjects = $dbo->loadObjectList();
+
+        if (!empty($attrObjects))
+        {
+            foreach ($attrObjects as $attrObject)
+            {
+                $optObject = new stdClass();
+                $optObject->path = $imagesPath;
+                $optObject->filename = $imageName;
+                $optObject->required = false;
+
+                $query = $dbo->getQuery(true);
+                $query
+                    ->update('#__thm_groups_attribute')
+                    ->set("`options` = '" . json_encode($optObject) . "'")
+                    ->where('id = ' . $attrObject->id);
+
+                $dbo->setQuery($query);
+                try
+                {
+                    $dbo->execute();
+                }
+                catch (Exception $exception)
+                {
+                    JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Creates a folder com_thm_groups/profile
+     *
+     * @return True on success
+     * @throws Exception
+     */
+    public function createImageFolder()
+    {
+        $imagesPath = JPATH_ROOT . '/images';
+        $dirToCreate = $imagesPath . '/com_thm_groups/profile';
+
+        if (!file_exists($dirToCreate)) {
+            if (!mkdir($dirToCreate, 0755, true))
+            {
+                JFactory::getApplication()->enqueueMessage("Failed to create a new Folder $dirToCreate", 'error');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Copies the default picture from media/com_thm_groups/profile/anonym.jpg to
+     * images/com_thm_groups/profile
+     *
+     * @return True on success
+     * @throws Exception
+     */
+    public function copyDefaultPictureToImagesFolder()
+    {
+        $source = JPATH_ROOT . '/media/com_thm_groups/images/profile/anonym.jpg';
+        $destination = JPATH_ROOT . '/images/com_thm_groups/profile/anonym.jpg';
+
+        if (file_exists($source))
+        {
+            if (!copy($source, $destination))
+            {
+                JFactory::getApplication()->enqueueMessage("Failed to copy $source", 'error');
+                return false;
+            }
+        }
+        else
+        {
+            JFactory::getApplication()->enqueueMessage("File $source does not exist", 'error');
+            return false;
+        }
+
+        return true;
     }
 
     /*
      * Uninstall runs before any other action is taken (file removal or database processing).
      *
      * @param   $parent  is the class calling this method
-     *
-     * @return  nothing
      */
     public function uninstall($parent)
     {
@@ -174,24 +350,16 @@ class Com_THM_GroupsInstallerScript
      */
     public function checkExtension($name)
     {
-        $db = JFactory::getDbo();
-        $db->setQuery('SELECT enabled FROM #__extensions WHERE element ="' . $name . '"');
-        $result = $db->loadObject();
-        if ($result != null)
+        $dbo = JFactory::getDbo();
+        $dbo->setQuery('SELECT enabled FROM #__extensions WHERE element ="' . $name . '"');
+        $result = $dbo->loadObject();
+
+        if ($result != null AND property_exists($result, 'enabled'))
         {
-            if (property_exists($result, 'enabled'))
-            {
-                return $result->enabled;
-            }
-            else
-            {
-                return null;
-            }
+            return $result->enabled;
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     /**
@@ -201,9 +369,9 @@ class Com_THM_GroupsInstallerScript
     */
     public function getParam($name)
     {
-        $db = JFactory::getDbo();
-        $db->setQuery('SELECT manifest_cache FROM #__extensions WHERE name = "com_thm_groups"');
-        $manifest = json_decode($db->loadResult(), true);
+        $dbo = JFactory::getDbo();
+        $dbo->setQuery('SELECT manifest_cache FROM #__extensions WHERE name = "com_thm_groups"');
+        $manifest = json_decode($dbo->loadResult(), true);
         return $manifest[$name];
     }
 

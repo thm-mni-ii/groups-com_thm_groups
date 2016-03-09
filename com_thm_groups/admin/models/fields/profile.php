@@ -6,7 +6,7 @@ jimport('joomla.form.formfield');
 class JFormFieldProfile extends JFormFieldList
 {
 
-    protected $type = 'Profile';
+    protected $type = 'profile';
 
     /**
      * Cached array of the category items.

@@ -15,8 +15,8 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-// Import Joomla controller library
 jimport('joomla.application.component.controller');
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
 
 
 /**
@@ -58,9 +58,10 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
      */
     public function add()
     {
-        if (!JFactory::getUser()->authorise('core.create', 'com_thm_groups'))
+        $canEdit = THM_GroupsHelperComponent::canEdit();
+        if (!$canEdit)
         {
-            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+            return;
         }
 
         $this->setRedirect("index.php?option=com_thm_groups&view=attribute_edit&id=0");
@@ -73,33 +74,26 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
      */
     public function apply()
     {
-        $model = $this->getModel('attribute');
-
-        // $isValid = $model->validateForm();
-        $isValid = true;
-
-        if ($isValid)
+        $canEdit = THM_GroupsHelperComponent::canEdit();
+        if (!$canEdit)
         {
-            $success = $model->save();
-            $rowsCreated = $model->createEmptyRowsForAllUsers($success);
+            return;
+        }
 
-            if ($rowsCreated)
-            {
-                $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-                $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=' . $success, $msg);
-            }
-            else
-            {
-                $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+        $model = $this->getModel('attribute');
+        $success = $model->save();
+        $rowsCreated = $model->createEmptyRowsForAllUsers($success);
 
-               // $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=0', $msg);
-
-            }
+        if ($rowsCreated)
+        {
+            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
+            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&id=' . $success, $msg);
         }
         else
         {
-            $msg = JText::_('COM_THM_GROUPS_VALIDATION_ERROR');
-            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=0', $msg, 'warning');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&id=0', $msg);
+
         }
     }
 
@@ -110,9 +104,10 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
      */
     public function edit()
     {
-        if (!JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
+        $canEdit = THM_GroupsHelperComponent::canEdit();
+        if (!$canEdit)
         {
-            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+            return;
         }
 
         $this->input->set('view', 'attribute_edit');
@@ -131,9 +126,10 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
      */
     public function cancel($key = null)
     {
-        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
+        $canEdit = THM_GroupsHelperComponent::canEdit();
+        if (!$canEdit)
         {
-            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+            return;
         }
 
         $this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager');
@@ -151,6 +147,12 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
      */
     public function save($key = null, $urlVar = null)
     {
+        $canEdit = THM_GroupsHelperComponent::canEdit();
+        if (!$canEdit)
+        {
+            return;
+        }
+
         $model = $this->getModel('attribute');
         $success = $model->save();
 
@@ -184,21 +186,26 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
      */
     public function save2new()
     {
+        $canEdit = THM_GroupsHelperComponent::canEdit();
+        if (!$canEdit)
+        {
+            return;
+        }
+
         $model = $this->getModel('attribute');
 
         $success = $model->save();
         if ($success)
         {
             $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=0', $msg);
+            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&id=0', $msg);
         }
         else
         {
             $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&cid[]=0', $msg);
+            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&id=0', $msg);
         }
     }
-
 
     /**
      * Deletes the selected attribute from the database
@@ -207,6 +214,12 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
      */
     public function delete()
     {
+        $canEdit = THM_GroupsHelperComponent::canEdit();
+        if (!$canEdit)
+        {
+            return;
+        }
+
         $model = $this->getModel('attribute');
 
         if ($model->delete())
@@ -221,37 +234,18 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
     }
 
     /**
-     * Gets additional fields of dynamic type
-     * Loads values of additonal fields from the specific dynamic type
-     * when options of selected attribute are not set in database.
-     *
-     * @return void
-     */
-    public function getFieldExtras()
-    {
-        try
-        {
-            $app = Jfactory::getApplication();
-            $dynTypeId = $app->input->get('dynTypeId');
-            $attrID = $app->input->get('cid');
-            $attOpt = $app->input->getHtml('attOpt');
-
-            $result = $this->getModel('attribute_edit')->getFieldExtras($dynTypeId, $attrID, $attOpt);
-            echo $result;
-        }
-        catch (Exception $e)
-        {
-            echo $e;
-        }
-    }
-
-    /**
      * Toggles category behaviour properties
      *
      * @return void
      */
     public function toggle()
     {
+        $canEdit = THM_GroupsHelperComponent::canEdit();
+        if (!$canEdit)
+        {
+            return;
+        }
+
         $model = $this->getModel('attribute');
         $success = $model->toggle();
         if ($success)
@@ -280,8 +274,8 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
         $order = $this->input->post->get('order', array(), 'array');
 
         // Sanitize the input
-        JArrayHelper::toInteger($pks);
-        JArrayHelper::toInteger($order);
+        Joomla\Utilities\ArrayHelper::toInteger($pks);
+        Joomla\Utilities\ArrayHelper::toInteger($order);
 
         // Get the model
         $model = $this->getModel('attribute');

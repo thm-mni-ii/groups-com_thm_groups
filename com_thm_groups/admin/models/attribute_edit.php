@@ -12,7 +12,7 @@
  */
 
 defined('_JEXEC') or die;
-jimport('joomla.application.component.modeladmin');
+jimport('thm_core.edit.model');
 
 /**
  * Class loads form data to edit an entry.
@@ -21,64 +21,18 @@ jimport('joomla.application.component.modeladmin');
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
  */
-class THM_GroupsModelAttribute_Edit extends JModelAdmin
+class THM_GroupsModelAttribute_Edit extends THM_CoreModelEdit
 {
+    protected $form = false;
 
     /**
-     * Gets the static type from DB returns it as object
+     * Constructor.
      *
-     * @param   integer  $staticTid  ID of desired static type
-     *
-     * @return mixed
+     * @param   array  $config  An optional associative array of configuration settings.
      */
-    public function  getStaticType($staticTid)
+    public function __construct($config = array())
     {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-
-        $query->select('*')
-              ->from('#__thm_groups_static_type')
-              ->where('id = ' . (int) $staticTid);
-
-        $db->setQuery($query);
-
-        return $db->loadObject();
-    }
-
-    /**
-     * returns one attribute item or an dummy object
-     *
-     * @return mixed|stdClass
-     */
-    public function getStructureItem()
-    {
-        $app = JFactory::getApplication();
-        $cid = $app->input->get('cid', array(), 'array');
-        $id = (empty($cid)) ? $app->input->get->get('id') : $cid[0];
-
-        // TODO Ilja, Delete this bullshit! Comment from Ilja :)
-        // Gets all from attribute and the options from dynamic type
-        if ($id != 0)
-        {
-            $db = JFactory::getDBO();
-            $query = $db->getQuery(true);
-            $query->select(array('#__thm_groups_attribute.*', '#__thm_groups_dynamic_type.options AS dynoptions'));
-            $query->from($db->qn(array('#__thm_groups_attribute','#__thm_groups_dynamic_type')));
-            $query->where('#__thm_groups_attribute.id = '
-                . (int) $id . ' AND #__thm_groups_attribute.dynamic_typeID = #__thm_groups_dynamic_type.id ');
-            $db->setQuery($query);
-
-            return $db->loadObject();
-        }
-        else
-        {
-            // Bullshit part
-            $temp = new stdClass;
-            $temp->id = 0;
-            $temp->dynamic_typeID = 0;
-            $temp->options = null;
-            return $temp;
-        }
+        parent::__construct($config);
     }
 
     /**
@@ -93,15 +47,12 @@ class THM_GroupsModelAttribute_Edit extends JModelAdmin
      */
     public function getForm($data = array(), $loadData = true)
     {
-        $form = $this->loadForm('com_thm_groups.attribute_edit', 'attribute_edit',
-            array('control' => 'jform', 'load_data' => $loadData)
-        );
-        if (empty($form))
+        if (empty($this->form))
         {
-            return false;
+            $this->form = $this->loadForm('com_thm_groups.attribute_edit', 'attribute_edit', array('control' => 'jform', 'load_data' => $loadData));
         }
 
-        return $form;
+        return $this->form;
     }
 
     /**
@@ -119,142 +70,38 @@ class THM_GroupsModelAttribute_Edit extends JModelAdmin
     }
 
     /**
-     * Returns a list of dynamic types
-     *
-     * @return  Array
-     */
-    public function getDynamicTypes()
-    {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-
-        $query->select('id, name')
-            ->from('#__thm_groups_dynamic_type');
-        $db->setQuery($query);
-        $db->execute();
-
-        return $db->loadAssocList();
-    }
-
-    /**
-     * Returns a single dynamicType object
-     *
-     * @param   integer  $id  ID of dynamic type
-     *
-     * @return  Object
-     */
-    public function getDynamicType($id)
-    {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-
-        $query->select('*')
-              ->from('#__thm_groups_dynamic_type')
-              ->where('id = ' . (int) $id);
-        $db->setQuery($query);
-        $db->execute();
-        return $db->loadObject();
-    }
-
-    /**
-     * @param $dynTypeID
-     * @param $attrID
-     * @param $attOpt
-     * @return mixed
-     */
-    public function getFieldExtras($dynTypeID, $attrID, $attOpt)
-    {
-        $dynType = $this->getDynamicType($dynTypeID);
-        $staticType = $this->getStaticType($dynType->static_typeID);
-        $dynOptions = json_decode($dynType->options);
-        $attOpt = json_decode($attOpt);
-
-        JFormHelper::addFieldPath(JPATH_COMPONENT . '/models/fields');
-
-        $attributeFields = JFormHelper::loadFieldType('attributefield', false);
-        $options = array(
-            "staticType"  => $staticType,
-            "attOpt"      => $attOpt,
-            "dynOptions"  => $dynOptions,
-            "attrID"      => $attrID
-        );
-        $attributeFields->__set('options', $options );
-        return $attributeFields->getInput();
-    }
-
-    /**
-     * Generate Select Field for static types
-     *
-     * @param   Int  $dynamic_typeID  dynamic type id, check static_TypeID for current dynamic type
-     *
-     * @return  select field
-     */
-    public function getDynamicTypesSelectField($dynamic_typeID)
-    {
-        $options = array();
-
-        $selected = $dynamic_typeID;
-
-        $arrayOfStaticTypes = $this->getDynamicTypes();
-
-        // Convert array to options
-        foreach ($arrayOfStaticTypes as $key => $value) :
-            $options[] = JHTML::_('select.option', $value['id'], $value['name']);
-        endforeach;
-
-        // 'onchange' => js-function that's executed when selection on selectfield has made
-        $settings = array(
-            'id'            => 'staticTypesField',
-            'option.key'    => 'value',
-            'option.value'  => 'text',
-            'onchange'      => 'jQf.fn.getFieldExtras()',
-            'list.select'   => $selected
-        );
-
-        // Generates selectfields:
-        $selectFieldStaticTypes = JHtmlSelect::genericlist(
-            $options,
-            'dynamicType', // Name of select field
-            $settings,     // array of settings
-            'value',       // Standard
-            'text',        // variables
-            $selected      // Selected Index //do not delete
-        );
-
-        return $selectFieldStaticTypes;
-    }
-
-    /**
      * Method to load the form data
      *
      * @return  Object
      */
     protected function loadFormData()
     {
-        $app = JFactory::getApplication();
-        $ids = $app->input->get('cid', array(), 'array');
+        $input = JFactory::getApplication()->input;
+        $name = $this->get('name');
+        $resource = str_replace('_edit', '', $name);
+        $task = $input->getCmd('task', "$resource.add");
+        $resourceID = $input->getInt('id', 0);
 
-        // Input->get because id is in url
-        $id = (empty($ids)) ? $app->input->get->get('id') : $ids[0];
-        return $this->getItem($id);
-    }
-
-    /**
-     * validates form
-     *
-     * @return bool
-     */
-    public function validateForm()
-    {
-        $app = JFactory::getApplication();
-        $data = $app->input->post->get('jform', array(), 'array');
-
-        // TODO make validation better
-        if (empty($data['name']))
+        // Edit can only be explicitly called from the list view or implicitly with an id over a URL
+        $edit = (($task == "$resource.edit")  OR $resourceID > 0);
+        if ($edit)
         {
-            return false;
-        }
+            if (!empty($resourceID))
+            {
+                $item = $this->getItem($resourceID);
+                $options = json_decode($item->options);
+                if (!empty($options))
+                {
+                    if (isset($options->required))
+                        $item->validate = $options->required === false ? 0 : 1;
+                }
 
-        return true;
+                return $item;
+            }
+
+            $resourceIDs = $input->get('cid',  null, 'array');
+            return $this->getItem($resourceIDs[0]);
+        }
+        return $this->getItem(0);
     }
 }

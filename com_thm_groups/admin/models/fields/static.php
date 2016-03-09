@@ -6,7 +6,7 @@ jimport('joomla.form.formfield');
 class JFormFieldStatic extends JFormFieldList
 {
 
-    protected $type = 'Static';
+    protected $type = 'static';
 
     /**
      * Cached array of the category items.

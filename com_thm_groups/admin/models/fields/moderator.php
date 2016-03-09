@@ -6,7 +6,7 @@ jimport('joomla.form.formfield');
 class JFormFieldModerator extends JFormFieldList
 {
 
-    protected $type = 'Moderator';
+    protected $type = 'moderator';
 
     /**
      * Cached array of the category items.

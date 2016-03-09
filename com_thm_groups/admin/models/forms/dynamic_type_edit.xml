@@ -3,26 +3,23 @@
     <fieldset name="details"
             addfieldpath="/administrator/components/com_thm_groups/models/fields">
         <field name="id"
-               type="hidden"
-               required="true" />
+               type="hidden"/>
         <field name="name"
                type="text"
                class="inputbox input-large-text"
                size="40"
                label="Name"
-               description="TEST"
+               description=""
                required="true"/>
-        <!--<field name="staticTypeName"
-               type="text"
-               class="inputbox"
-               size="40"
-               label="Static name"
-               description="TEST"
-               required="true" />-->
+        <field name="static_typeID"
+               type="static"
+               label="Static type"
+               description=""
+               required="true"/>
         <field name="regex"
-               type="text"
+               type="regex"
                label="Regex"
-               description="TEST"
+               description=""
                required="false" />
         <field name="description"
                type="textarea"
@@ -30,8 +27,12 @@
                rows="10"
                cols="5"
                required="false" />
-        <field name="additional"
-               type="DynField"
-               label="COM_THM_GROUPS_ADDITIONAL"/>
+        <field name="extra_options_lbl"
+               type="spacer"
+               label="COM_THM_GROUPS_ADDITIONAL"
+        />
+        <field name="extra_options_spacer"
+               type="spacer"
+               hr="true"/>
     </fieldset>
 </form>

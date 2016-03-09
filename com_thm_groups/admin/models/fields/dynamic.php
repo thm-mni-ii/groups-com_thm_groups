@@ -7,7 +7,7 @@ jimport('joomla.form.formfield');
 class JFormFieldDynamic extends JFormFieldList
 {
 
-    protected $type = 'Dynamic';
+    protected $type = 'dynamic';
 
     /**
      * Cached array of the category items.
