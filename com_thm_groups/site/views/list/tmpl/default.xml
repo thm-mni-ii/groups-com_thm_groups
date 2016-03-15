@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-    <layout title="THM-Groups - List View">
-        <message>
-            <![CDATA[COM_THM_GROUPS_LIST_VIEW_DESC]]>
-        </message>
+    <layout title="COM_THM_GROUPS_PROFILE_LIST">
+        <message>COM_THM_GROUPS_PROFILE_LIST_DESC</message>
     </layout>
     <fields name="params">
         <fieldset name="basic">

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-    <layout title="THM Groups - Advanced View">
-        <message>
-            <![CDATA[COM_THM_GROUPS_ADVANCED_VIEW_DESC]]>
-        </message>
+    <layout title="COM_THM_GROUPS_ADVANCED">
+        <message>COM_THM_GROUPS_ADVANCED_DESC</message>
     </layout>
     <fields name="params">
         <fieldset name="basic">

@@ -19,7 +19,7 @@
 class THM_GroupsHelperQuickpage
 {
     /**
-     * Gets the user's quickpage category id
+     * Gets the user's quickpage category id according to their user id
      *
      * @param   int  $userID  the user id
      *
@@ -35,11 +35,11 @@ class THM_GroupsHelperQuickpage
         $dbo = JFactory::getDBO();
         $query = $dbo->getQuery(true);
 
-        $query->select('a.categoriesID');
-        $query->from('#__thm_groups_users_categories AS a');
-        $query->innerJoin('#__categories AS b ON b.id = a.categoriesID');
-        $query->where("a.usersID = '$userID'");
-        $query->where("b.extension = 'com_content'");
+        $query->select('qpCats.categoriesID');
+        $query->from('#__thm_groups_users_categories AS qpCats');
+        $query->innerJoin('#__categories AS contentCats ON contentCats.id = qpCats.categoriesID');
+        $query->where("qpCats.usersID = '$userID'");
+        $query->where("contentCats.extension = 'com_content'");
         $dbo->setQuery((string) $query);
 
         try

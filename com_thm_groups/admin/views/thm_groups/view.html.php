@@ -61,7 +61,7 @@ class THM_GroupsViewTHM_Groups extends JViewLegacy
      */
     protected function addToolBar()
     {
-        JToolBarHelper::title(JText::_('COM_THM_GROUPS_HOME_TITLE'), 'logo');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS'), 'logo');
         $user = JFactory::getUser();
         if ($user->authorise('core.admin', 'com_thm_groups'))
         {

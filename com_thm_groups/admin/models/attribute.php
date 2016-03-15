@@ -389,7 +389,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
 
         if (empty($pks))
         {
-            return JError::raiseWarning(500, JText::_($this->text_prefix . '_ERROR_NO_ITEMS_SELECTED'));
+            return JError::raiseWarning(500, JText::_('COM_THM_GROUPS_NO_ITEMS_SELECTED'));
         }
 
         // Update ordering values

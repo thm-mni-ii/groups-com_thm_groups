@@ -1,0 +1,131 @@
+@import '../../lib_thm_core/scss/variables';
+
+div.manager-page {
+
+  .page-header {
+
+    float: left;
+
+    h2{
+      display: inline-block;
+    }
+  }
+
+  .toolbar {
+    display: inline-block;
+    float: right;
+  }
+
+  button, a.btn {
+
+    background-color: $background-grey;
+    border: 2px solid $foreground;
+    color: $foreground;
+    margin-left: 10px;
+    margin-bottom: 20px;
+    padding: 4px 8px;
+
+    span:before{
+      color: $foreground;
+    }
+
+    &:hover {
+      background-color: $foreground;
+      color: $background-grey;
+      border: $border;
+
+      span:before{
+        color: $background-grey;
+      }
+    }
+  }
+
+  .btn-group {
+    display: inline-block;
+    background-color: $foreground;
+    border: $border;
+    border-radius: 0;
+
+    .dropdown-toggle
+    {
+      text-align: left;
+      width: 140px;
+
+      span:before {
+        color: $font-color;
+      }
+    }
+
+    &.open .dropdown-toggle, a, a:hover {
+      background-color: $foreground;
+      border: none;
+      box-shadow: none;
+      color: $font-color;
+      margin-bottom: 0;
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+    }
+
+    li
+    {
+
+      margin: 0;
+
+      a {
+
+        padding: 6px 10px;
+
+        &:hover {
+          background: $background-navigation;
+        }
+      }
+    }
+  }
+
+  [class^="icon-"], [class*=" icon-"] {
+    margin-right: 5px;
+  }
+
+  .btn-column
+  {
+    text-align: center;
+    width: 40px;
+  }
+
+  th span:before {
+      color: $foreground;
+  }
+
+  td span.status-container {
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  // TODO: move these to _variables
+  td span {
+
+    &.green:before {
+      color: #409740;
+    }
+
+    &.red:before {
+      color: #942a25;
+    }
+  }
+
+  td a:nth-child(2)
+  {
+    margin-left: 8px;
+  }
+
+  .dropdown-menu {
+    border-radius: 0;
+  }
+
+  input[type="checkbox"] {
+    display: none;
+  }
+}

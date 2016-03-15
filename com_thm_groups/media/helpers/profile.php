@@ -51,9 +51,76 @@ class THM_GroupsHelperProfile
     }
 
     /**
+     * Retrieves a saved profile attribute value
+     *
+     * @param   int  $profileID    the id of the profile
+     * @param   int  $attributeID  the id of the attribute
+     *
+     * @return  string  the attribute value
+     */
+    public static function getAttributeValue($profileID, $attributeID)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query->select('value')->from('#__thm_groups_users_attribute');
+        $query->where("attributeID = '$attributeID'");
+        $query->where("usersID = '$profileID'");
+
+        $db->setQuery($query);
+
+        try
+        {
+            $result = $db->loadResult();
+        }
+        catch (Exception $exc)
+        {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            return '';
+        }
+
+        return empty($result)? '' : $result;
+    }
+
+    /**
+     * Gets the default group id for the user
+     *
+     * @param   int  $userID  the user's profile information
+     *
+     * @return  string  the profile name
+     */
+    public static function getDefaultGroup($userID)
+    {
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query->select('usergroupsID');
+        $query->from('#__thm_groups_usergroups_roles as gr');
+        $query->innerJoin('#__thm_groups_users_usergroups_roles as ugr on ugr.usergroups_rolesID = gr.id');
+        $query->where("ugr.usersID = '$userID'");
+
+        // TODO: make these categories configurable
+        $query->where("gr.usergroupsID NOT IN ('1','2')");
+        $dbo->setQuery((string) $query);
+
+        try
+        {
+            // TODO: add select field for the profile where the user/admin can select a default group
+            // There can be more than one, but we are only interested in the first one right now
+            return $dbo->loadResult();
+        }
+        catch (Exception $exc)
+        {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+
+            // Return null instead of false so that there can be a uniform handling of empty and error
+            return null;
+        }
+    }
+
+    /**
      * Creates the name to be displayed
      *
-     * @param   array  $profile  the user's profile information
+     * @param   int  $userID  the user id
      *
      * @return  string  the profile name
      */
@@ -73,9 +140,11 @@ class THM_GroupsHelperProfile
     }
 
     /**
-     * Method to get a single record.
+     * Retrieves the profile information of the user. Optionally filtered against a profile template associated with a
+     * group.
      *
-     * @param   integer  $pk  The id of the primary key.
+     * @param   int  $userID   the user id
+     * @param   int  $groupID  the group id
      *
      * @return  mixed    Object on success, false on failure.
      */
