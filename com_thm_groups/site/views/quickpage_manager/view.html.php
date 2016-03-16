@@ -44,17 +44,6 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
     public $url;
 
     /**
-     * Adds entries to the list of breadcrumbs.
-     *
-     * @throws Exception
-     */
-    protected function addBreadcrumbs()
-    {
-        $pathway = JFactory::getApplication()->getPathway();
-        $pathway->addItem(JText::_('COM_THM_GROUPS_MY_QUICKPAGES'));
-    }
-
-    /**
      * Method to get display
      *
      * @param   Object  $tpl  template
@@ -73,7 +62,15 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
         $this->categoryID = $this->model->categoryID;
         $this->menuID = JFactory::getApplication()->input->getInt('Itemid', 0);
 
-        $this->addBreadcrumbs();
+        $this->pageTitle = '';
+        $params = JFactory::getApplication()->getParams();
+        $showPageTitle = $params->get('show_page_heading', 0);
+        if ($showPageTitle)
+        {
+            $defaultPageTitle = JText::_('COM_THM_GROUPS_QUICKPAGE_MANAGER_TITLE');
+            $menuTitle = $params->get('page_title', '');
+            $this->pageTitle .= empty($menuTitle)? $defaultPageTitle : $menuTitle;
+        }
 
         parent::display($tpl);
     }
@@ -241,24 +238,24 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
         $surname = THM_GroupsHelperProfile::getAttributeValue(JFactory::getUser()->id, 2);
         $menuID = JFactory::getApplication()->input->getInt('Itemid', 0);
 
-        $qpURL = 'index.php?option=com_thm_groups&view=singlearticle';
-        $qpURL .= "&id=$item->id&nameqp=$item->alias&userID=$userID&name=$surname";
-        $qpRoute = JRoute::_($qpURL, false);
-        $titleAttribs = array('title' => JText::_('COM_THM_GROUPS_VIEW'));
-        $titleLink= JHTML::_('link', $qpRoute, $item->title, $titleAttribs);
-
-
-        $editText = '<span class="icon-edit"></span>';
         $returnURL = base64_encode("index.php?option=com_thm_groups&view=quickpage_manager&Itemid=$menuID");
         $editURL = 'index.php?option=com_content&task=article.edit';
         $editURL .= "&Itemid=$menuID'&a_id=$item->id&return=$returnURL";
         $editRoute = JRoute::_($editURL);
-        $editAttribs = array('title' => JText::_('COM_THM_GROUPS_EDIT'), 'class' => 'jgrid');
-        $editLink = JHTML::_('link', $editRoute, $editText, $editAttribs);
+        $titleAttribs = array('title' => JText::_('COM_THM_GROUPS_EDIT'));
+        $titleLink= JHTML::_('link', $editRoute, $item->title, $titleAttribs);
+
+
+        $viewText = '<span class="icon-eye-open"></span>';
+        $qpURL = 'index.php?option=com_thm_groups&view=singlearticle';
+        $qpURL .= "&id=$item->id&nameqp=$item->alias&userID=$userID&name=$surname";
+        $qpRoute = JRoute::_($qpURL, false);
+        $editAttribs = array('title' => JText::_('COM_THM_GROUPS_VIEW'), 'class' => 'jgrid');
+        $editLink = JHTML::_('link', $qpRoute, $viewText, $editAttribs);
 
         $category = "<div class='small'>" . JText::_('JCATEGORY') . ": " . $item->category_title . "</div>";
 
-        return  $titleLink . $editLink . $category;;
+        return  $titleLink . $editLink . $category;
     }
 
     /**

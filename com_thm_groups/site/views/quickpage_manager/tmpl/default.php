@@ -20,7 +20,7 @@ defined('_JEXEC') or die;
           name="adminForm" xmlns="http://www.w3.org/1999/html">
         <div class="page-header">
             <h2 class="groups-toolbar">
-                <?php echo JText::_('COM_THM_GROUPS_QUICKPAGE_MANAGER_TITLE'); ?>
+                <?php echo $this->pageTitle; ?>
             </h2>
         </div>
         <div class="toolbar">
