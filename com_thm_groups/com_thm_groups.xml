@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<extension type="component" version=".0" method="upgrade">
+<extension type="component" version="3.0" method="upgrade">
     <name>COM_THM_GROUPS</name>
     <creationDate>March 2016</creationDate>
     <author>THM iCampus</author>
@@ -28,6 +28,7 @@
         <folder>controllers</folder>
         <folder>css</folder>
         <folder>helpers</folder>
+        <folder>icons</folder>
         <folder>images</folder>
         <folder>img</folder>
         <filename>index.html</filename>
