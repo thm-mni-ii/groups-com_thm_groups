@@ -20,4 +20,8 @@ DROP TABLE IF EXISTS
     `#__thm_groups_text`,
     `#__thm_groups_text_extra`,
     `#__thm_groups_textfield`,
-    `#__thm_groups_textfield_extra`;
+    `#__thm_groups_textfield_extra`,
+    `#__thm_quickpages_featured`,
+    `#__thm_quickpages_map`;
+
+SET foreign_key_checks = 1;

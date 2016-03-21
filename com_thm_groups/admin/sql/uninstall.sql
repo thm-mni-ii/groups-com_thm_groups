@@ -18,4 +18,6 @@ DROP TABLE IF EXISTS
             `#__thm_groups_profile_attribute`,
             `#__thm_groups_settings`;
 
+SET foreign_key_checks = 1;
+
 

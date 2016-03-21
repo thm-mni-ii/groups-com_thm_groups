@@ -17,6 +17,8 @@ DROP TABLE IF EXISTS
 `#__thm_groups_profile_attribute`,
 `#__thm_groups_settings`;
 
+SET foreign_key_checks = 1;
+
 CREATE TABLE IF NOT EXISTS `#__thm_groups_users` (
   `id`          INT(11)    NOT NULL AUTO_INCREMENT,
   `published`   TINYINT(1) NULL,
