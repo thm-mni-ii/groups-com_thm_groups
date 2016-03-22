@@ -118,6 +118,28 @@ class THM_GroupsHelperProfile
     }
 
     /**
+     * Creates the name with title to be displayed
+     *
+     * @param   int  $userID  the user id
+     *
+     * @return  string  the profile name
+     */
+    public static function getDisplayNameWithTitle($userID)
+    {
+        $profile = self::getProfile($userID);
+        $displayNameWithTitle = '';
+        $displayNameWithTitle .= (!empty($profile['Titel']) AND !empty($profile['Titel']['value']))?
+            $profile['Titel']['value'] . ' ' : '';
+        $displayNameWithTitle .= (!empty($profile['Vorname']) AND !empty($profile['Vorname']['value']))?
+            $profile['Vorname']['value'] . ' ' : '';
+        $displayNameWithTitle .= (!empty($profile['Nachname']) AND !empty($profile['Nachname']['value']))?
+            $profile['Nachname']['value'] . ' ' : '';
+        $displayNameWithTitle .= (!empty($profile['Posttitel']) AND !empty($profile['Posttitel']['value']))?
+            $profile['Posttitel']['value'] : '';
+        return $displayNameWithTitle;
+    }
+
+    /**
      * Creates the name to be displayed
      *
      * @param   int  $userID  the user id
@@ -128,16 +150,13 @@ class THM_GroupsHelperProfile
     {
         $profile = self::getProfile($userID);
         $displayName = '';
-        $displayName .= (!empty($profile['Titel']) AND !empty($profile['Titel']['value']))?
-            $profile['Titel']['value'] . ' ' : '';
         $displayName .= (!empty($profile['Vorname']) AND !empty($profile['Vorname']['value']))?
             $profile['Vorname']['value'] . ' ' : '';
         $displayName .= (!empty($profile['Nachname']) AND !empty($profile['Nachname']['value']))?
             $profile['Nachname']['value'] . ' ' : '';
-        $displayName .= (!empty($profile['Posttitel']) AND !empty($profile['Posttitel']['value']))?
-            $profile['Posttitel']['value'] : '';
         return $displayName;
     }
+
 
     /**
      * Retrieves the profile information of the user. Optionally filtered against a profile template associated with a
@@ -291,4 +310,5 @@ class THM_GroupsHelperProfile
             return 1;
         }
     }
+
 }

@@ -288,6 +288,6 @@ class THM_GroupsViewProfile extends JViewLegacy
      */
     public function getDisplayName()
     {
-        return THM_GroupsHelperProfile::getDisplayName($this->userID);
+        return THM_GroupsHelperProfile::getDisplayNameWithTitle($this->userID);
     }
 }
