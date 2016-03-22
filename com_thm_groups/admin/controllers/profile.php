@@ -94,8 +94,15 @@ class THM_GroupsControllerProfile extends THM_GroupsControllerProfile_Edit_Contr
             return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
         }
 
-        // Set the model
-        $model = $this->getModel('profile');
+        $success = $this->getModel('profile')->batch();
+        if ($success)
+        {
+            $this->setMessage(JText::_('JLIB_APPLICATION_SUCCESS_BATCH'));
+        }
+        else
+        {
+            $this->setMessage(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_FAILED', $model->getError()), 'warning');
+        }
 
         // Batch messages are added to the application in the model.
         $this->setRedirect(JRoute::_('index.php?option=com_thm_groups&view=profile_manager', false));
@@ -163,12 +170,12 @@ class THM_GroupsControllerProfile extends THM_GroupsControllerProfile_Edit_Contr
         $success = $model->toggle('publish');
         if ($success)
         {
-            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
             $type = 'message';
         }
         else
         {
-            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
             $type = 'error';
         }
         $this->setRedirect("index.php?option=com_thm_groups&view=profile_manager", $msg, $type);
@@ -183,12 +190,12 @@ class THM_GroupsControllerProfile extends THM_GroupsControllerProfile_Edit_Contr
         $success = $model->toggle('unpublish');
         if ($success)
         {
-            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
             $type = 'message';
         }
         else
         {
-            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
             $type = 'error';
         }
         $this->setRedirect("index.php?option=com_thm_groups&view=profile_manager", $msg, $type);
@@ -208,12 +215,12 @@ class THM_GroupsControllerProfile extends THM_GroupsControllerProfile_Edit_Contr
         $success = $model->toggle('unpublish');
         if ($success)
         {
-            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
             $type = 'message';
         }
         else
         {
-            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
             $type = 'error';
         }
         $this->setRedirect("index.php?option=com_thm_groups&view=profile_manager", $msg, $type);
@@ -230,12 +237,12 @@ class THM_GroupsControllerProfile extends THM_GroupsControllerProfile_Edit_Contr
         $success = $model->toggle();
         if ($success)
         {
-            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
             $type = 'message';
         }
         else
         {
-            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
             $type = 'error';
         }
         $this->setRedirect("index.php?option=com_thm_groups&view=profile_manager", $msg, $type);
@@ -252,19 +259,19 @@ class THM_GroupsControllerProfile extends THM_GroupsControllerProfile_Edit_Contr
         $success = $model->deleteRoleInGroupByUser();
         if ($success)
         {
-            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
             $type = 'message';
         }
         else
         {
-            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
             $type = 'error';
         }
         $this->setRedirect("index.php?option=com_thm_groups&view=profile_manager", $msg, $type);
     }
 
     /**
-     * Deletes all roles in a group by a user id
+     * Deletes all roles in a group by user ID
      *
      * @return void
      */
@@ -274,12 +281,12 @@ class THM_GroupsControllerProfile extends THM_GroupsControllerProfile_Edit_Contr
         $success = $model->deleteAllRolesInGroupByUser();
         if ($success)
         {
-            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
             $type = 'message';
         }
         else
         {
-            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
             $type = 'error';
         }
         $this->setRedirect("index.php?option=com_thm_groups&view=profile_manager", $msg, $type);

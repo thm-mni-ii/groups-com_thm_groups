@@ -89,7 +89,7 @@ class THM_GroupsViewProfile_Manager extends THM_CoreViewList
             // Instantiate a new JLayoutFile instance and render the batch button
 
             $html = "<button data-toggle='modal' data-target='#collapseModal' class='btn btn-small'>";
-            $html .= "<i class='icon-user-plus' title='$title'></i> $title</button>";
+            $html .= "<i class='icon-new' title='$title'></i> $title</button>";
             $bar->appendButton('Custom', $html, 'batch');
 
             $image = 'options';
