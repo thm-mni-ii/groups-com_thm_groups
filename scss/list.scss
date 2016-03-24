@@ -1,0 +1,85 @@
+@import '../../lib_thm_core/scss/variables';
+@import '../../lib_thm_core/scss/icons';
+
+.thm_groups-list {
+
+  font-family: $font-family;
+
+  li {
+    list-style-type: none;
+  }
+
+  .list-container {
+
+    .alphabet-container, .alphabet-list {
+      display: inline-block;
+      text-align: center;
+    }
+
+    .alphabet-container {
+      margin-bottom: 15px;
+      width: 100%;
+    }
+
+    .alphabet-list {
+
+      border: $border;
+      margin-bottom: 0;
+
+      li {
+        display: inline-block;
+        margin-left: 0;
+        padding: 8px 6px;
+      }
+
+      .letter-enabled, .letter-disabled {
+        display: inline;
+        font-size: 14px;
+      }
+
+      .letter-disabled {
+        color: $grey-25;
+       }
+
+      .letter-enabled {
+        font-weight: bold;
+      }
+    }
+
+    .profiles-container li.letter {
+      text-align:center;
+      width:16px;
+      line-height: 16px;
+      padding:3px;
+      margin:0;
+      font-weight:bold;
+      background-color: #4a5c66;
+      color:#fff;
+    }
+  }
+}
+/*
+.thmgroups-list ul {
+  margin:0 0 7px 0;
+}
+
+.thmgroups-list ul li{
+  padding:3px 0 3px 0;
+  margin:0;
+}
+
+.thmgroups-list ul li.letter {
+  border: 1px solid #4a5c66;
+  text-align:center;
+  width:16px;
+  line-height: 16px;
+  padding:3px;
+  margin:0;
+  font-weight:bold;
+  background-color: #4a5c66;
+  color:#fff;
+}
+
+.letter {
+  padding:5px;
+}*/

@@ -4,21 +4,17 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @name        THMGroupsModelList
- * @description THMGroupsModelList file from com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
- * @author      Markus Kaiser,  <markus.kaiser@mni.thm.de>
- * @author      Daniel Bellof,  <daniel.bellof@mni.thm.de>
- * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
- * @author      Alexander Boll, <alexander.boll@mni.thm.de>
- * @author      Peter May,      <peter.may@mni.thm.de>
  * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
+ * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
-jimport('joomla.application.component.model');
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/group.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
 jimport('joomla.filesystem.path');
 
 /**
@@ -26,7 +22,6 @@ jimport('joomla.filesystem.path');
  *
  * @category  Joomla.Component.Site
  * @package   com_thm_groups.site
- * @link      www.thm.de
  */
 class THM_GroupsModelList extends JModelLegacy
 {
@@ -41,61 +36,75 @@ class THM_GroupsModelList extends JModelLegacy
     }
 
     /**
-     * Method to get view
-     *
-     * @return view
-     */
-    public function getView()
-    {
-        return $this->getHead() . $this->getList();
-    }
-
-    /**
-     * Method to get view parameters
-     *
-     * @return params
-     */
-    public function getViewParams()
-    {
-        $mainframe = Jfactory::getApplication();
-        return $mainframe->getParams();
-    }
-
-    /**
      * Method to get group number
      *
      * @return groupid
      */
     public function getGroupNumber()
     {
-        $params = $this->getViewParams();
-        return $params->get('selGroup');
+        return JFactory::getApplication()->getParams()->get('selGroup');
     }
 
-    /**
-     * Method to get show mode
-     *
-     * @return showmode
-     */
-    public function getShowMode()
+    public function getProfilesByLetter($groupID)
     {
-        $params = $this->getViewParams();
-        return $params->get('showAll');
-    }
+        $dbo = JFactory::getDBO();
+        $query = $dbo->getQuery(true);
 
-    /**
-     * Method to get title
-     *
-     * @return String
-     */
-    public function getTitle()
-    {
-        $retString = '';
-        $groupid   = $this->getGroupNumber();
-        if ($this->getTitleState($groupid))
+        $query->select("DISTINCT user.id AS id, sname.value as surname");
+        $query->select("fname.value as forename");
+        $query->select("allAttr.published as published");
+        $query->select("user.injoomla as injoomla");
+        $query->select("pretitle.value as title");
+        $query->select("posttitle.value as posttitle");
+        $query->from("#__thm_groups_usergroups_roles as groups");
+        $query->leftJoin("#__thm_groups_users_usergroups_roles AS userRoles ON groups.ID = userRoles.usergroups_rolesID");
+        $query->leftJoin("#__thm_groups_users AS user ON user.id = userRoles.usersID");
+        $query->leftJoin("#__thm_groups_users_attribute AS allAttr ON allAttr.usersID = user.id");
+        $query->leftJoin("#__thm_groups_users_attribute AS sname ON sname.usersID = user.id AND sname.attributeID = 2");
+        $query->leftJoin("#__thm_groups_users_attribute AS fname ON fname.usersID = user.id AND fname.attributeID = 1");
+        $query->leftJoin("#__thm_groups_users_attribute AS pretitle ON pretitle.usersID = user.id AND pretitle.attributeID = '5'");
+        $query->leftJoin("#__thm_groups_users_attribute AS posttitle ON posttitle.usersID = user.id AND posttitle.attributeID = '7'");
+        $query->where("allAttr.published = 1");
+        $query->where("user.published = 1");
+
+        $query->where("groups.usergroupsID = " . $groupID);
+        $query->order("surname");
+        $dbo->setQuery((string) $query);
+
+        try
         {
-            $retString .= $this->getTitleGroup($groupid);
+            $items = $dbo->loadObjectList();
         }
-        return $retString;
+        catch (Exception $exc)
+        {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            return array();
+        }
+
+        $profiles = array();
+        foreach ($items as $profile)
+        {
+            $letter = strtoupper(substr($profile->surname, 0, 1));
+            switch ($letter)
+            {
+                case 'Ä':
+                    $letter = 'A';
+                    break;
+                case 'Ö':
+                    $letter = 'A';
+                    break;
+                case 'Ü':
+                    $letter = 'A';
+                    break;
+                default:
+                    break;
+            }
+            if (!array_key_exists($letter, $profiles))
+            {
+                $profiles[$letter] = array();
+            }
+            $profiles[$letter][] = $profile;
+        }
+        return $profiles;
     }
 }

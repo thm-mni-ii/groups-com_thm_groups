@@ -59,16 +59,6 @@
                 <option value="2">COM_THM_GROUPS_NACHNAME</option>
                 <option value="3">COM_THM_GROUPS_LIST_VIEW_PARAM_POSTTITLE</option>
             </field>
-            <field
-                name="showLinks"
-                type="checkboxes"
-                label="COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_LABEL"
-                multiple="true"
-                required="true"
-                description="COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_DESCRIPTION">
-                <option value="1">COM_THM_GROUPS_VORNAME</option>
-                <option value="2">COM_THM_GROUPS_NACHNAME</option>
-            </field>
         </fieldset>
         <fieldset name="advanced">
                     <field
