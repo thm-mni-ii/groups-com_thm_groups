@@ -72,15 +72,15 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_static_type` (
   ENGINE = INNODB;
 
 INSERT INTO `#__thm_groups_static_type` (`id`, `name`, `description`) VALUES
-  (1, 'TEXT', 'Text description'),
-  (2, 'TEXTFIELD', 'Textfield description'),
-  (3, 'LINK', 'Link description'),
-  (4, 'PICTURE', 'Picture description'),
-  (5, 'MULTISELECT', 'Multiselect description'),
-  (6, 'TABLE', 'Table description'),
-  (7, 'NUMBER', 'Number description '),
-  (8, 'DATE', 'Date description'),
-  (9, 'TEMPLATE', 'Template description');
+  (1, 'TEXT', ''),
+  (2, 'TEXTFIELD', ''),
+  (3, 'LINK', ''),
+  (4, 'PICTURE', ''),
+  (5, 'MULTISELECT', ''),
+  (6, 'TABLE', ''),
+  (7, 'NUMBER', ''),
+  (8, 'DATE', ''),
+  (9, 'TEMPLATE', '');
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_dynamic_type` (
   `id`            INT(11)      NOT NULL AUTO_INCREMENT,
@@ -96,6 +96,17 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_dynamic_type` (
   UNIQUE INDEX `name_UNIQUE` (`name` ASC)
 )
   ENGINE = InnoDB;
+
+INSERT INTO `#__thm_groups_dynamic_type` (`id`, `name`, `static_typeID`, `description`, `options`) VALUES
+  (1, 'TEXT', 1, '', '{"length":40}'),
+  (2, 'TEXTFIELD', 2, '', '{"length":120}'),
+  (3, 'LINK', 3, '', '{}'),
+  (4, 'PICTURE', 4, '', '{"filename":"anonym.jpg", "path":"/images/com_thm_groups/profile"}'),
+  (5, 'MULTISELECT', 5, '', '{}'),
+  (6, 'TABLE', 6, '', '{}'),
+  (7, 'NUMBER', 7, '', '{}'),
+  (8, 'DATE', 8, '', '{}'),
+  (9, 'TEMPLATE', 9, '', '{}');
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_attribute` (
   `id`             INT(11)      NOT NULL AUTO_INCREMENT,
@@ -113,6 +124,13 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_attribute` (
 )
   ENGINE = InnoDB
   AUTO_INCREMENT =100;
+
+INSERT INTO `#__thm_groups_attribute` (`id`, `name`, `dynamic_typeID`, `description`, `options`) VALUES
+  (1, 'Vorname', 1, '', '{"length":40, "required":false}'),
+  (2, 'Nachname', 1, '', '{"length":40, "required":false}'),
+  (4, 'Email', 1, '', '{"length":40, "required":false}'),
+  (5, 'Titel', 1, '', '{"length":15, "required":false}'),
+  (7, 'Posttitel', 1, '', '{"length":15, "required":false}');
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_users_attribute` (
   `ID`          INT(11)    NOT NULL AUTO_INCREMENT,
@@ -136,7 +154,11 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_roles` (
   PRIMARY KEY (`id`)
 )
   ENGINE = InnoDB
-  AUTO_INCREMENT =5;
+  AUTO_INCREMENT = 5;
+INSERT INTO `#__thm_groups_roles` (`id`, `name`) VALUES
+  (1, 'Mitglied'),
+  (2, 'Manager'),
+  (3, 'Administrator');
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_usergroups_roles` (
   `ID`           INT(11)          NOT NULL AUTO_INCREMENT,
@@ -176,6 +198,9 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_profile` (
 )
   ENGINE = InnoDB;
 
+INSERT INTO `#__thm_groups_profile` (`id`, `name`, `order`) VALUES
+  (1, 'Standard', 1);
+
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attribute` (
   `ID`          INT(11) NOT NULL AUTO_INCREMENT,
   `profileID`   INT(11) NOT NULL,
@@ -191,6 +216,13 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attribute` (
     ON DELETE CASCADE
 )
   ENGINE = InnoDB;
+
+INSERT INTO `#__thm_groups_profile_attribute` (`ID`, `profileID`, `attributeID`, `order`, `params`) VALUES
+  (1, 1, 1, 2, '{ "label":true, "wrap":true}'),
+  (2, 1, 2, 3, '{ "label":true, "wrap":true}'),
+  (3, 1, 4, 5, '{ "label":true, "wrap":true}'),
+  (4, 1, 5, 1, '{ "label":true, "wrap":true}'),
+  (5, 1, 7, 4, '{ "label":true, "wrap":true}');
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_usergroups` (
   `ID`           INT(11)          NOT NULL AUTO_INCREMENT,

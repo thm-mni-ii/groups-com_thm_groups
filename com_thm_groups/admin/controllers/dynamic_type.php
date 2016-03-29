@@ -15,6 +15,7 @@
 defined('_JEXEC') or die;
 jimport('joomla.application.component.controller');
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/static_type.php';
 
 /**
  * THMGroupsControllerDynamic_Type_Manager class for component com_thm_groups
@@ -99,7 +100,7 @@ class THM_GroupsControllerDynamic_Type extends JControllerLegacy
     }
 
     /**
-     * Deletes the selected category and redirects to the category manager
+     * Deletes selected dynamic types
      *
      * @return void
      */
@@ -111,17 +112,31 @@ class THM_GroupsControllerDynamic_Type extends JControllerLegacy
             return;
         }
 
-        $model = $this->getModel('dynamic_type');
+        $doNotDelete = array(TEXT, TEXTFIELD, LINK, PICTURE, MULTISELECT, TABLE, NUMBER, DATE, TEMPLATE);
+        $ids = JFactory::getApplication()->input->get('cid', array(), 'array');
+        $idsToDelete = array_diff($ids, $doNotDelete);
 
-        if ($model->delete())
+        $redirectURL = 'index.php?option=com_thm_groups&view=dynamic_type_manager';
+        if (empty($idsToDelete))
+        {
+            $msg = JText::_("COM_THM_GROUPS_CANT_DELETE_ERROR");
+            $type = 'warning';
+            $this->setRedirect($redirectURL, $msg, $type);
+            return;
+        }
+
+        $success = $this->getModel('dynamic_type')->delete($idsToDelete);
+        if ($success)
         {
             $msg = JText::_('COM_THM_GROUPS_DELETE_SUCCESS');
+            $type = 'message';
         }
         else
         {
             $msg = JText::_('COM_THM_GROUPS_DELETE_ERROR');
+            $type = 'error';
         }
-        $this->setRedirect("index.php?option=com_thm_groups&view=dynamic_type_manager", $msg);
+        $this->setRedirect($redirectURL, $msg, $type);
     }
 
     /**

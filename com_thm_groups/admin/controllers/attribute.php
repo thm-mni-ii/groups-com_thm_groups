@@ -15,6 +15,12 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
+define('VORNAME', 1);
+define('NACHNAME', 2);
+define('EMAIL', 4);
+define('TITEL', 5);
+define('POSTTITEL', 7);
+
 jimport('joomla.application.component.controller');
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
 
@@ -208,7 +214,7 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
     }
 
     /**
-     * Deletes the selected attribute from the database
+     * Deletes selected attributes
      *
      * @return void
      */
@@ -220,17 +226,31 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
             return;
         }
 
-        $model = $this->getModel('attribute');
+        $doNotDelete = array(VORNAME, NACHNAME, EMAIL, TITEL, POSTTITEL);
+        $ids = JFactory::getApplication()->input->get('cid', array(), 'array');
+        $idsToDelete = array_diff($ids, $doNotDelete);
 
-        if ($model->delete())
+        $redirectURL = 'index.php?option=com_thm_groups&view=attribute_manager';
+        if (empty($idsToDelete))
+        {
+            $msg = JText::_("COM_THM_GROUPS_CANT_DELETE_ERROR");
+            $type = 'warning';
+            $this->setRedirect($redirectURL, $msg, $type);
+            return;
+        }
+
+        $success = $this->getModel('attribute')->delete($idsToDelete);
+        if ($success)
         {
             $msg = JText::_('COM_THM_GROUPS_DELETE_SUCCESS');
+            $type = 'message';
         }
         else
         {
             $msg = JText::_('COM_THM_GROUPS_DELETE_ERROR');
+            $type = 'error';
         }
-        $this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager', $msg);
+        $this->setRedirect($redirectURL, $msg, $type);
     }
 
     /**

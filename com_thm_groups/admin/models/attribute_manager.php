@@ -11,6 +11,13 @@
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
+
+define('VORNAME', 1);
+define('NACHNAME', 2);
+define('EMAIL', 4);
+define('TITEL', 5);
+define('POSTTITEL', 7);
+
 jimport('thm_core.list.model');
 
 /**
@@ -100,6 +107,7 @@ class THM_GroupsModelAttribute_Manager extends THM_CoreModelList
             return $return;
         }
 
+        $doNotDelete = array(VORNAME, NACHNAME, EMAIL, TITEL, POSTTITEL);
         $index = 0;
         $return['attributes'] = array('class' => 'ui-sortable');
         foreach ($items as $item)
@@ -137,13 +145,17 @@ class THM_GroupsModelAttribute_Manager extends THM_CoreModelList
 
             $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
             $return[$index][1] = $item->id;
+
+            $iconClass = "'icon-lock hasTooltip' title='" . JHtml::tooltipText($item->name, "COM_THM_GROUPS_CANT_DELETE_PREDEFINED_ELEMENT") . "'";
+            $name = in_array($item->id, $doNotDelete) ? "<span class=$iconClass></span>" . $item->name : $item->name;
+
             if (JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
             {
-                $return[$index][2] = JHtml::_('link', $url, $item->name);
+                $return[$index][2] = JHtml::_('link', $url, $name);
             }
             else
             {
-                $return[$index][2] = $item->name;
+                $return[$index][2] = $name;
             }
             $return[$index][3] = $this->getToggle($item->id, $item->published, 'attribute', '', 'published');
             $return[$index][4] = $item->dynamic_type_name;
@@ -169,7 +181,7 @@ class THM_GroupsModelAttribute_Manager extends THM_CoreModelList
         $headers['id'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'attribute.id', $direction, $ordering);
         $headers['attribute'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ATTRIBUTE_NAME', 'attribute.name', $direction, $ordering);
         $headers['published'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ATTRIBUTE_PUBLISHED', 'attribute.published', $direction, $ordering);
-        $headers['dynamic'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_DYNAMIC_TYPE_NAME', 'dynamic.name', $direction, $ordering);
+        $headers['dynamic'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_DYNAMIC_TYPE', 'dynamic.name', $direction, $ordering);
         $headers['description'] = JText::_('COM_THM_GROUPS_DESCRIPTION');
 
         return $headers;

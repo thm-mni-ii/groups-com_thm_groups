@@ -12,6 +12,7 @@
  */
 
 defined('_JEXEC') or die;
+
 jimport('joomla.application.component.model');
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
@@ -83,34 +84,28 @@ class THM_GroupsModelDynamic_Type extends JModelLegacy
     }
 
     /**
-     * Delete element from list
+     * Deletes selected dynamic types from the db
      *
-     * @return bool|mixed
+     * @param   array  $idsToDelete  IDs of items which should be deleted
+     *
+     * @return  mixed  true on success, otherwise false
      */
-    public function delete()
+    public function delete($idsToDelete)
     {
-        $ids = JFactory::getApplication()->input->get('cid', array(), 'array');
         $dbo = JFactory::getDbo();
-
         $query = $dbo->getQuery(true);
-
-        $conditions = array(
-            $dbo->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')',
-        );
-
-        $query->delete($dbo->quoteName('#__thm_groups_dynamic_type'));
-        $query->where($conditions);
-
+        $query->delete('#__thm_groups_dynamic_type');
+        $query->where('id IN (' . join(',', $idsToDelete) . ')');
         $dbo->setQuery($query);
-        $result = $dbo->execute();
 
-        // Joomla 3.x Error handling style
-        if ($dbo->getErrorNum())
+        try
         {
-            JFactory::getApplication()->enqueueMessage($dbo->getErrorMsg(), 'error');
+            return $dbo->execute();
+        }
+        catch (Exception $exception)
+        {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
             return false;
         }
-
-        return $result;
     }
 }

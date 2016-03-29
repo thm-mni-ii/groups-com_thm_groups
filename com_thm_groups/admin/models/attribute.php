@@ -53,7 +53,6 @@ class THM_GroupsModelAttribute extends JModelLegacy
             $query = $dbo->getQuery(true);
             $columns = array('usersID', 'attributeID', 'published');
 
-            // $id->id this is stupid...
             $values = array($id, $attributeID, 0);
             $query
                 ->insert($dbo->qn('#__thm_groups_users_attribute'))
@@ -264,7 +263,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
         }
         catch (Exception $exception)
         {
-            JFactory::getApplication()->enqueueMessage($exception, 'error');
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
             return false;
         }
 
@@ -272,28 +271,29 @@ class THM_GroupsModelAttribute extends JModelLegacy
     }
 
     /**
-     * Delete item
+     * Deletes selected attributes from the db
      *
-     * @return mixed
+     * @param   array  $idsToDelete  IDs of items which should be deleted
+     *
+     * @return  mixed  true on success, otherwise false
      */
-    public function delete()
+    public function delete($idsToDelete)
     {
-        $ids = JFactory::getApplication()->input->get('cid', array(), 'array');
-
         $dbo = JFactory::getDbo();
-
         $query = $dbo->getQuery(true);
-
-        $conditions = array(
-            $dbo->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')',
-        );
-
-        $query->delete($dbo->quoteName('#__thm_groups_attribute'));
-        $query->where($conditions);
-
+        $query->delete('#__thm_groups_attribute');
+        $query->where('id IN (' . implode(',', $idsToDelete) . ')');
         $dbo->setQuery($query);
 
-        return $dbo->execute();
+        try
+        {
+            return $dbo->execute();
+        }
+        catch (Exception $exception)
+        {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            return false;
+        }
     }
 
     /**

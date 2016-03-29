@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fieldset name="details" addfieldpath="/administrator/components/com_thm_groups/models/fields">
+    <fieldset name="details"
+              addfieldpath="/libraries/thm_core/fields">
         <field name="id"
                type="hidden"/>
         <field name="name"
@@ -9,11 +10,14 @@
                size="40"
                label="COM_THM_GROUPS_NAME"
                required="true"/>
-        <field name="dynamic_typeID"
-               type="dynamic"
-               label="COM_THM_GROUPS_DYNAMIC_TYPE_NAME"
-               description="COM_THM_GROUPS_ATTRIBUTE_EDIT_DYNAMIC_TYPE_DESC"
-               required="true" />
+        <field  name="dynamic_typeID"
+                type="genericlist"
+                valueColumn="id"
+                textColumn="name"
+                table="thm_groups_dynamic_type"
+                label="COM_THM_GROUPS_DYNAMIC_TYPE"
+                description="COM_THM_GROUPS_DYNAMIC_TYPE_DESC"
+                required="true"/>
         <field name="validate"
                type="radio"
                class="btn-group btn-group-yesno"

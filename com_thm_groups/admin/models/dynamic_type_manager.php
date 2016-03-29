@@ -12,6 +12,7 @@
  */
 defined('_JEXEC') or die;
 jimport('thm_core.list.model');
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/static_type.php';
 
 /**
  * THMGroupsModelDynamic_Types_Manager class for component com_thm_groups
@@ -124,6 +125,7 @@ class THM_GroupsModelDynamic_Type_Manager extends THM_CoreModelList
             return $return;
         }
 
+        $doNotDelete = array(TEXT, TEXTFIELD, LINK, PICTURE, MULTISELECT, TABLE, NUMBER, DATE, TEMPLATE);
         $index = 0;
         foreach ($items as $item)
         {
@@ -132,13 +134,17 @@ class THM_GroupsModelDynamic_Type_Manager extends THM_CoreModelList
 
             $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
             $return[$index][1] = $item->id;
+
+            $iconClass = "'icon-lock hasTooltip' title='" . JHtml::tooltipText($item->name, "COM_THM_GROUPS_CANT_DELETE_PREDEFINED_ELEMENT") . "'";
+            $name = in_array($item->id, $doNotDelete) ? "<span class=$iconClass></span>" . $item->name : $item->name;
+
             if (JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
             {
-                $return[$index][2] = JHtml::_('link', $url, $item->name);
+                $return[$index][2] = JHtml::_('link', $url, $name);
             }
             else
             {
-                $return[$index][2] = $item->name;
+                $return[$index][2] = $name;
             }
 
             $return[$index][3] = $item->static_type_name;
@@ -162,8 +168,8 @@ class THM_GroupsModelDynamic_Type_Manager extends THM_CoreModelList
         $headers = array();
         $headers['checkbox'] = '';
         $headers['id'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'dynamic.id', $direction, $ordering);
-        $headers['dynamic'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_DYNAMIC_TYPE_NAME', 'dynamic.name', $direction, $ordering);
-        $headers['static'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_STATIC_TYPE_NAME', 'static.name', $direction, $ordering);
+        $headers['dynamic'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_DYNAMIC_TYPE', 'dynamic.name', $direction, $ordering);
+        $headers['static'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_STATIC_TYPE', 'static.name', $direction, $ordering);
         $headers['regularExpression'] = JText::_('COM_THM_GROUPS_REGULAR_EXPRESSION');
         $headers['description'] = JText::_('COM_THM_GROUPS_DESCRIPTION');
 

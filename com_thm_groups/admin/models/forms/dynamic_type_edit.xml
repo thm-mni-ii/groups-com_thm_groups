@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fieldset name="details"
-            addfieldpath="/administrator/components/com_thm_groups/models/fields">
+              addfieldpath="/libraries/thm_core/fields">
         <field name="id"
                type="hidden"/>
         <field name="name"
@@ -11,11 +11,14 @@
                label="Name"
                description=""
                required="true"/>
-        <field name="static_typeID"
-               type="static"
-               label="Static type"
-               description=""
-               required="true"/>
+        <field  name="static_typeID"
+                type="genericlist"
+                valueColumn="id"
+                textColumn="name"
+                table="thm_groups_static_type"
+                label="COM_THM_GROUPS_STATIC_TYPE"
+                description="COM_THM_GROUPS_STATIC_TYPE_DESC"
+                required="true"/>
         <field name="regex"
                type="regex"
                label="Regex"

@@ -16,7 +16,9 @@ define('LINK', 3);
 define('PICTURE', 4);
 define('MULTISELECT', 5);
 define('TABLE', 6);
-define('TEMPLATE', 7);
+define('NUMBER', 7);
+define('DATE', 8);
+define('TEMPLATE', 9);
 
 /**
  * Class providing options
@@ -51,9 +53,9 @@ class THM_GroupsHelperStatic_Type
                 $options->path = '/images/com_thm_groups/profile';
                 break;
             case MULTISELECT:
-                break;
             case TABLE:
-                break;
+            case NUMBER:
+            case DATE:
             case TEMPLATE:
                 break;
         }
