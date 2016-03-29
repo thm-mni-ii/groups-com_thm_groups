@@ -64,7 +64,8 @@ foreach ($profilesArray as $letter => $profiles)
             $totalLettersOutput++;
 
             // A little more complicated then it should be because of associative array use
-            $next = array_shift(array_slice($this->profiles, $totalLettersOutput, 1));
+            $temp = array_slice($this->profiles, $totalLettersOutput, 1);
+            $next = array_shift($temp);
             $nextSize = count($next);
         }
 
