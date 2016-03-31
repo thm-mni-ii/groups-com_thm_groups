@@ -34,8 +34,15 @@ class THM_GroupsModelProfile extends JModelItem
     public function __construct()
     {
         $input = JFactory::getApplication()->input;
+        $profileID = $input->getint('userID', 0);
+        $published = empty($profileID)? false : THM_GroupsHelperProfile::isPublished($profileID);
+        if (!$published)
+        {
+            $exc = new Exception(JText::_('COM_THM_GROUPS_PROFILE_NOT_FOUND'), '404');
+            JErrorPage::render($exc);
+        }
+        $this->profileID = $profileID;
         $this->groupID = $input->getint('groupID', 1);
-        $this->userID = $input->getint('userID', 0);
         parent::__construct();
     }
 

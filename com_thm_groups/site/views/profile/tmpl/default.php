@@ -17,7 +17,7 @@ $profile = $this->profile;
 <div class="item-page template-<?php echo $this->templateName; ?>">
     <meta content="de-DE" itemprop="inLanguage">
     <div class="page-header">
-        <h2><?php echo THM_GroupsHelperProfile::getDisplayNameWithTitle($this->userID); ?></h2>
+        <h2><?php echo THM_GroupsHelperProfile::getDisplayNameWithTitle($this->profileID); ?></h2>
     </div>
     <div class="toolbar">
         <?php echo $this->getEditLink('class="btn btn-toolbar-thm"'); ?>

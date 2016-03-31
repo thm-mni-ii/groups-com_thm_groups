@@ -311,4 +311,32 @@ class THM_GroupsHelperProfile
         }
     }
 
+    /**
+     * Checks whether the given user profile is present and published
+     * 
+     * @param   int  $profileID  the profile id
+     * 
+     * @return  bool  true if the profile exists and is published
+     */
+    public static function isPublished($profileID)
+    {
+        $dbo = JFactory::getDBO();
+        $query = $dbo->getQuery(true);
+
+        $query->select("published");
+        $query->from("#__thm_groups_users");
+        $query->where("id = '$profileID'");
+        $dbo->setQuery((string) $query);
+
+        try
+        {
+            return  $dbo->loadResult();
+        }
+        catch (Exception $exc)
+        {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            return false;
+        }
+    }
+
 }

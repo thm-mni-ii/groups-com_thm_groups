@@ -27,6 +27,8 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
  */
 class THM_GroupsViewProfile extends JViewLegacy
 {
+    public $profileID;
+
     protected $links;
 
     public $templateName;
@@ -195,9 +197,9 @@ class THM_GroupsViewProfile extends JViewLegacy
     public function display($tpl = null)
     {
         $this->model = $this->getModel();
-        $this->userID = $this->model->userID;
+        $this->profileID = $this->model->profileID;
         $this->groupID =$this->model->groupID;
-        $this->canEdit =  THM_GroupsHelperComponent::canEditProfile($this->userID, $this->groupID);
+        $this->canEdit =  THM_GroupsHelperComponent::canEditProfile($this->profileID, $this->groupID);
         $this->menuID = JFactory::getApplication()->input->get('Itemid', 0);
         $this->profile = $this->get('Item');
 
@@ -205,7 +207,7 @@ class THM_GroupsViewProfile extends JViewLegacy
         $this->templateName = JFilterOutput::stringURLSafe($templateName);
 
         // Adds the user name to the breadcrumb
-        JFactory::getApplication()->getPathway()->addItem(THM_GroupsHelperProfile::getDisplayName($this->userID), '');
+        JFactory::getApplication()->getPathway()->addItem(THM_GroupsHelperProfile::getDisplayName($this->profileID), '');
 
         $this->modifyDocument();
         parent::display($tpl);
@@ -223,13 +225,13 @@ class THM_GroupsViewProfile extends JViewLegacy
         $editLink = "";
         if ($this->canEdit)
         {
-            $fullName = JFactory::getUser($this->userID)->get('name');
+            $fullName = JFactory::getUser($this->profileID)->get('name');
             $nameArray = explode(" ", $fullName);
             $lastName = array_key_exists(1, $nameArray)? $nameArray[1] : "";
 
             $lastName = trim($lastName);
             $path = "index.php?option=com_thm_groups&view=profile_edit";
-            $path .= "&groupID=$this->groupID&userID=$this->userID&name=$lastName&Itemid=$this->menuID";
+            $path .= "&groupID=$this->groupID&userID=$this->profileID&name=$lastName&Itemid=$this->menuID";
             $url = JRoute::_($path);
             $text = '<span class="icon-edit"></span> '. JText::_('COM_THM_GROUPS_EDIT');
             $editLink .= JHtml::_('link', $url, $text, $attributes);
@@ -288,6 +290,6 @@ class THM_GroupsViewProfile extends JViewLegacy
      */
     public function getDisplayName()
     {
-        return THM_GroupsHelperProfile::getDisplayNameWithTitle($this->userID);
+        return THM_GroupsHelperProfile::getDisplayNameWithTitle($this->profileID);
     }
 }
