@@ -56,6 +56,6 @@ class THM_GroupsModelProfile extends JModelItem
      */
     public function getItem($pk = null)
     {
-        return THM_GroupsHelperProfile::getProfile($this->userID, $this->groupID);
+        return THM_GroupsHelperProfile::getProfile($this->profileID, $this->groupID);
     }
 }

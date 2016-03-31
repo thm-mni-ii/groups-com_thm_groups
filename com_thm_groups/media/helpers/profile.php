@@ -170,12 +170,12 @@ class THM_GroupsHelperProfile
     public static function getProfile($userID, $groupID = null)
     {
         $profileID = THM_GroupsHelperProfile::getProfileIDByGroupID($groupID);
-        $attributes = THM_GroupsHelperProfile::getProfileData($userID, $profileID);
+        $attributes = THM_GroupsHelperProfile::getProfileData($userID, $profileID, true);
 
+        $profile = array();
         foreach ($attributes as $attribute)
         {
             $name = $attribute['name'];
-            $profile[$name] = array();
             $profile[$name]['attributeID'] = $attribute['structid'];
             $profile[$name]['type'] = $attribute['type'];
             if (!empty($attribute['options']))
