@@ -93,9 +93,11 @@ class THM_GroupsHelperProfile
     {
         $dbo = JFactory::getDbo();
         $query = $dbo->getQuery(true);
-        $query->select('usergroupsID');
+        $query->select('gr.usergroupsID');
         $query->from('#__thm_groups_usergroups_roles as gr');
         $query->innerJoin('#__thm_groups_users_usergroups_roles as ugr on ugr.usergroups_rolesID = gr.id');
+        $query->innerJoin('#__thm_groups_profile_usergroups as ug ON gr.usergroupsID = ug.usergroupsID');
+        $query->innerJoin('#__thm_groups_profile as t ON ug.profileID = t.id');
         $query->where("ugr.usersID = '$userID'");
 
         // TODO: make these categories configurable
@@ -106,7 +108,8 @@ class THM_GroupsHelperProfile
         {
             // TODO: add select field for the profile where the user/admin can select a default group
             // There can be more than one, but we are only interested in the first one right now
-            return $dbo->loadResult();
+            $groupID = $dbo->loadResult();
+            return empty($groupID)? 0 : $groupID;
         }
         catch (Exception $exc)
         {

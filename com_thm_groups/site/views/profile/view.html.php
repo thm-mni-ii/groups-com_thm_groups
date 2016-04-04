@@ -198,7 +198,7 @@ class THM_GroupsViewProfile extends JViewLegacy
     {
         $this->model = $this->getModel();
         $this->profileID = $this->model->profileID;
-        $this->groupID =$this->model->groupID;
+        $this->groupID = $this->model->groupID;
         $this->canEdit =  THM_GroupsHelperComponent::canEditProfile($this->profileID, $this->groupID);
         $this->menuID = JFactory::getApplication()->input->get('Itemid', 0);
         $this->profile = $this->get('Item');
