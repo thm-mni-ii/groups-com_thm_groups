@@ -324,7 +324,6 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
         {
             $userid = $user['id'];
             $name = $user['name'];
-            $login = $user['username'];
             $email = $user['email'];
             $groups = explode(',', $user['groups']);
 
@@ -355,7 +354,7 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
                 return false;
             }
 
-            $arr_attribute = array(1, 2, 3 ,4);
+            $arr_attribute = array(1, 2 ,4);
             $attribute_query = $db->getQuery(true);
             $attribute_query
                 ->select('id')
@@ -369,10 +368,9 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
             $query = $db->getQuery(true);
 
             $query
-                ->insert("#__thm_groups_users_attribute (usersID, attributeID, value,published)")
+                ->insert("#__thm_groups_users_attribute (usersID, attributeID, value, published)")
                 ->values(" $userid , 1 , '" . ucfirst($firstName) . "',1")
                 ->values(" $userid , 2 , '" . ucfirst($lastName) . "',1")
-                ->values(" $userid , 3 , '" . $login . "',1")
                 ->values(" $userid , 4 , '" . $email . "',1");
 
             foreach ($attributes AS $attribute)
