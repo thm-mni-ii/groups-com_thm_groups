@@ -175,9 +175,6 @@ class THM_GroupsModelProfile_Edit_Model extends THM_CoreModelEdit
             {
                 unlink(realpath(JPATH_ROOT . $filePath . 'fullRes' . DIRECTORY_SEPARATOR . $fileName));
             }
-
-            // Delete thumbs
-            $this->deleteThumbs($fileName, $filePath);
         }
 
         return;
@@ -216,51 +213,6 @@ class THM_GroupsModelProfile_Edit_Model extends THM_CoreModelEdit
             JErrorPage::render($exc);
         }
         return $attributeDefault;
-    }
-
-    /**
-     * Deletes all thumbnails that have the same name like the uploaded image, to avoid dead images on server.
-     * For generated image-file names the separator have to be different from '_' because this function compares
-     * of equality till the underscore and deletes all matches.
-     * For example 'filename-RANDOMNUMBER_48x64.jpg' would not be deleted.
-     *
-     * @param   string  $filename  The filename of the uploaded image
-     * @param   string  $path      the file path
-     *
-     * @return  void  removes saved pictures from the file system
-     */
-    protected function deleteThumbs($filename, $path)
-    {
-        foreach (scandir(JPATH_ROOT . $path . 'thumbs' . DIRECTORY_SEPARATOR) as $folderPic)
-        {
-            if ($folderPic === '.' || $folderPic === '..')
-            {
-                continue;
-            }
-
-            /**
-             * Get the filename till the '_width-height.extension' part and check if its part of the saved filename
-             * in database. If the file name is found it gets removed from the folder.
-             */
-            $dimensionsPosition = strrpos($folderPic, '_');
-            $length = strlen($folderPic);
-
-            /**
-             * TODO: This probably works because PHP will probably implicitly do an intval on a boolean false if the
-             * string is not found. However mixing types is very sloppy.
-             */
-            $thumbFileName = substr($folderPic, 0, - ($length - $dimensionsPosition));
-
-            // TODO: Doesn't the substr reduce the string to the name? Can they not be directly compared?
-            if (strpos($filename, $thumbFileName) === 0)
-            {
-                // Delete thumbnail if exists
-                if (file_exists(realpath(JPATH_ROOT . $path . 'thumbs' . DIRECTORY_SEPARATOR . $folderPic)))
-                {
-                    unlink(realpath(JPATH_ROOT . $path . 'thumbs' . DIRECTORY_SEPARATOR . $folderPic));
-                }
-            }
-        }
     }
 
     /**
