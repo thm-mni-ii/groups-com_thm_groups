@@ -31,6 +31,12 @@ $profile = $this->profile;
     }
 ?>
     </div>
+<?php
+    if (JComponentHelper::getParams('com_thm_groups')->get('backButtonForProfile') == 1)
+    {
+        echo '<input type="button" class="btn btn-thm" value="' . JText::_("COM_THM_GROUPS_BACK_BUTTON")  . '" onclick="window.history.back()">';
+    }
+?>
 </div>
 
 
