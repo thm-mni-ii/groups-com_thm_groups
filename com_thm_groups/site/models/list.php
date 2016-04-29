@@ -84,17 +84,18 @@ class THM_GroupsModelList extends JModelLegacy
         $profiles = array();
         foreach ($items as $profile)
         {
-            $letter = strtoupper(substr($profile->surname, 0, 1));
+            // Normal substring messes up special characters
+            $letter = strtoupper(mb_substr($profile->surname, 0, 1));
             switch ($letter)
             {
                 case 'Ä':
                     $letter = 'A';
                     break;
                 case 'Ö':
-                    $letter = 'A';
+                    $letter = 'O';
                     break;
                 case 'Ü':
-                    $letter = 'A';
+                    $letter = 'U';
                     break;
                 default:
                     break;

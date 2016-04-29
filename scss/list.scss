@@ -46,40 +46,22 @@
       }
     }
 
-    .profiles-container li.letter {
-      text-align:center;
-      width:16px;
-      line-height: 16px;
-      padding:3px;
-      margin:0;
-      font-weight:bold;
+    .profiles-container .letter {
       background-color: #4a5c66;
-      color:#fff;
+      color: $foreground;
+      display: inline-block;
+      font-weight:bold;
+      line-height: 16px;
+      margin:0;
+      padding:3px;
+      text-align:center;
+      vertical-align: top;
+      width:16px;
+    }
+
+    .profiles-container .profiles {
+      display: inline-block;
+      width: calc(100% - 22px);
     }
   }
 }
-/*
-.thmgroups-list ul {
-  margin:0 0 7px 0;
-}
-
-.thmgroups-list ul li{
-  padding:3px 0 3px 0;
-  margin:0;
-}
-
-.thmgroups-list ul li.letter {
-  border: 1px solid #4a5c66;
-  text-align:center;
-  width:16px;
-  line-height: 16px;
-  padding:3px;
-  margin:0;
-  font-weight:bold;
-  background-color: #4a5c66;
-  color:#fff;
-}
-
-.letter {
-  padding:5px;
-}*/

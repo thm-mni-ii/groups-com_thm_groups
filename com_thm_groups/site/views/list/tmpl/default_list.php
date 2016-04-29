@@ -26,7 +26,8 @@ else
 $columns = $this->params->get('columnCount', 3);
 
 // TODO: make this configurable
-$maxColumnSize = ceil(($totalUsers) / $columns) + $tolerance;
+$columnSize = ceil(($totalUsers) / $columns);
+$maxColumnSize = $columnSize + $tolerance;
 
 $currentProfilesCount = 0;
 $currentRowCount = 1;
@@ -46,9 +47,8 @@ foreach ($profilesArray as $letter => $profiles)
         $showLetter = ($currentProfilesCount == 0 OR ($currentRowCount == 1 AND $currentProfilesCount));
         if ($showLetter)
         {
-            echo '<ul>';
-            echo '<li class="letter">' . $letter . '</li>';
-            echo '<li><ul>';
+            echo '<div class="letter">' . $letter . '</div>';
+            echo '<div class="profiles"><ul>';
         }
 
         echo '<li>';
@@ -57,9 +57,14 @@ foreach ($profilesArray as $letter => $profiles)
 
         $currentProfilesCount++;
         $letterDone = $currentProfilesCount == count($profiles);
+        $maxRowsReached = $maxColumnSize == $currentRowCount;
+        if ($letterDone OR $maxRowsReached)
+        {
+            echo '</ul></div>';
+        }
+
         if ($letterDone)
         {
-            echo '</ul></li></ul>';
             $currentProfilesCount = 0;
             $totalLettersOutput++;
 
@@ -72,8 +77,9 @@ foreach ($profilesArray as $letter => $profiles)
         $currentRowCount++;
         $totalRowsOutput++;
         $rowsAvailable = $maxColumnSize - $currentRowCount;
-        $startNextLetter = (!empty($nextSize) AND $nextSize < $rowsAvailable);
-        $maxRowsReached = $maxColumnSize == $currentRowCount;
+        $nextFitsInColumn = (!empty($nextSize) AND $nextSize <= $rowsAvailable);
+        $nextBreaksWell = (!empty($nextSize) AND $nextSize >= $tolerance * 2);
+        $startNextLetter = (($nextFitsInColumn OR $nextBreaksWell) AND $rowsAvailable >= $tolerance);
         $done = $totalLettersOutput == count($this->profiles);
         if (($letterDone AND !$startNextLetter) OR $maxRowsReached OR $done)
         {
