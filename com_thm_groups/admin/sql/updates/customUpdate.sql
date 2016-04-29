@@ -49,17 +49,6 @@ WHEN 1
   THEN 1
 END;
 
-INSERT INTO `#__thm_groups_dynamic_type` (`id`, `name`, `regex`, `static_typeID`, `description`, `options`) VALUES
-  (1, 'TEXT', '', 1, 'DESCRIPTION TEXT', ''),
-  (2, 'TEXTFIELD', '', 2, 'DESCRIPTION TEXTFILED', ''),
-  (3, 'LINK', '', 3, 'DESCRIPTION LINK', ''),
-  (4, 'PICTURE', '', 4, 'DESCRIPTION PITCUTRE', ''),
-  (5, 'MULTISELECT', '', 5, 'DESCRIPTION MULTISELECT', ''),
-  (6, 'TABLE', '', 6, 'DESCRIPTION TABLES', ''),
-  (7, 'NUMBER', '', 7, 'DESCRIPTION NUMBER', ''),
-  (8, 'DATE', '', 8, 'DESCRIPTION DATE', ''),
-  (9, 'TEMPLATE', '', 9, 'DESCRIPTION TEMPLATE', '');
-
 INSERT INTO `#__thm_groups_attribute` (`id`, `dynamic_typeID`, `name`)
   SELECT
     struct.id    AS id,
@@ -67,7 +56,8 @@ INSERT INTO `#__thm_groups_attribute` (`id`, `dynamic_typeID`, `name`)
     struct.field AS name
   FROM `#__thm_groups_structure` AS struct
     JOIN `#__thm_groups_dynamic_type` AS dyntype
-      ON struct.type = dyntype.name;
+      ON struct.type = dyntype.name
+  WHERE struct.id NOT IN (1,2,3,4,5,7);
 
 INSERT INTO `#__thm_groups_users_attribute` (`usersID`, `attributeID`, `value`, `published`)
   SELECT
@@ -164,17 +154,6 @@ INSERT INTO `#__thm_groups_users_usergroups_roles` (`usersID`, `usergroups_roles
   FROM `#__thm_groups_usergroups_roles` AS a
     JOIN `#__thm_groups_groups_map` AS map ON a.rolesID = map.rid AND a.usergroupsID = map.gid
     JOIN `#__users` AS b ON map.uid = b.id;
-
-INSERT INTO `#__thm_groups_profile` (`id`, `name`, `order`) VALUES
-  (1, 'Standard', 1);
-
-INSERT INTO `#__thm_groups_profile_attribute` (`profileID`, `attributeID`, `order`, `params`)
-  SELECT
-    1,
-    structitem.id    AS attributeID,
-    structitem.order AS `order`,
-    '{ "label" : true, "wrap" : true}'
-  FROM `#__thm_groups_structure` AS structitem;
 
 UPDATE `#__thm_groups_attribute` a, `#__thm_groups_structure` s
 SET a.ordering = s.order, a.published = 1

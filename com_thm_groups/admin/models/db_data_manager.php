@@ -14,10 +14,9 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modeladmin');
 require_once JPATH_COMPONENT_ADMINISTRATOR . '/install.php';
 require_once JPATH_COMPONENT_ADMINISTRATOR . '/update.php';
-// test
 
 /**
- *
+ * THM_GroupsModelDB_Data_Manager class for handling of migration actions
  *
  * @category    Joomla.Component.Admin
  * @package     thm_groups
@@ -35,33 +34,27 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
      */
     public function execute()
     {
-        $jinput = JFactory::getApplication()->input;
-
-        // array with action command
-        $action = $jinput->get('migration_action', array(), 'array');
+        $action = JFactory::getApplication()->input->get('migration_action', array(), 'array');
 
         switch ($action[0])
         {
-            case 'install_example_data':
-                self::installExampleData();
-                break;
             case 'copy_data_from_joomla25_thm_groups_tables':
-                self::restoreData(true, 'customUpdate.sql');
+                $success = self::restoreData(true, 'customUpdate.sql');
                 break;
             case 'copy_data_for_w_page_from_joomla25_thm_groups_tables':
-                self::restoreData(false, 'customUpdateForW.sql');
+                $success = self::restoreData(false, 'customUpdateForW.sql');
                 break;
-            case 'fix_tables':
-                self::fixTables();
+            case 'sync_users':
+                $success = self::syncUsers();
                 break;
             case 'convert_tables_in_new_textfields':
-                self::convertTablesInTextFields();
+                $success = self::convertTablesInTextFields();
                 break;
             default:
-                return false;
+                $success = true;
         }
 
-        return true;
+        return $success;
     }
 
     /**
@@ -83,18 +76,33 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
      */
     private static function convertTablesInTextFields()
     {
+        $dbo = JFactory::getDbo();
+        $dbo->transactionStart();
+
         $tableStructures = self::getTableStructures();
-        if (self::createNewTextFieldFromTableStructure($tableStructures))
+
+        // There is no structures of the type TABLE to process
+        if (empty($tableStructures))
         {
+            $dbo->transactionCommit();
             return true;
         }
 
-        JFactory::getApplication()->enqueueMessage('DB_Data_Manager -> convertTablesInTextFields', 'error');
-        return false;
+        $tableStructuresCreated = self::createNewTextFieldFromTableStructure($tableStructures);
+
+        if (empty($tableStructuresCreated))
+        {
+            $dbo->transactionRollback();
+            return false;
+        }
+
+        $dbo->transactionCommit();
+
+        return true;
     }
 
     /**
-     * Creates TEXTFIELD Attributes from the table types
+     * Creates TEXTFIELD attributes from the table types
      *
      * @param   array  $tableStructures  Array with all structures from type TABLE
      *
@@ -102,57 +110,83 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
      */
     private static function createNewTextFieldFromTableStructure($tableStructures)
     {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        $values = array();
-        $header = '';
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
 
         foreach ($tableStructures as $structure)
         {
-            $query
-                ->insert("#__thm_groups_attribute (dynamic_typeID, name, options, published)");
+            $query->insert("#__thm_groups_attribute (dynamic_typeID, name, options, published)");
+
             // 2 as dynamicType, because by update it's a standard value for TEXTFIELD
-            $value = array(2, $db->q($structure->field . 'COPY'), $db->q('{ "length" : "80", "required" : "false" }'), 1);
-            $query
-                ->values(implode(',', $value));
-            $db->setQuery($query);
+            $value = array(2, $dbo->q($structure->field . 'COPY'), $dbo->q('{ "length" : "80", "required" : "false" }'), 1);
+            $query->values(implode(',', $value));
+            $dbo->setQuery($query);
+
             try
             {
-                $db->execute();
+                $dbo->execute();
             }
-            catch (Exception $e)
+            catch (Exception $exception)
             {
-                JFactory::getApplication()->enqueueMessage('createNewTextFieldFromTableStructure ' . $e->getMessage(), 'error');
+                JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
                 return false;
             }
-            $attrID = $db->insertid();
 
-            // Get rows from table #__thm_groups_table
-            $tableContent = self::getTableContent($structure->id);
+            $attrID = $dbo->insertid();
+
             $header = self::getTableHeader($structure->id);
-            foreach($tableContent as $table)
+            $tableContent = self::getTableContent($structure->id);
+
+            if (empty($tableContent) OR empty($header))
             {
-                if (!empty($table->value) && $table->value != '[]' && $table->userid != 0)
+                continue;
+            }
+
+            foreach ($tableContent as $table)
+            {
+                $validTable = !empty($table->value) && $table->value != '[]';
+                $validUser = $table->userid != 0;
+
+                if ($validTable && $validUser)
                 {
                     $newTableContent = self::convertTableContent($header, $table->value);
-                    $query = $db->getQuery(true);
-                    $query
-                        ->insert('#__thm_groups_users_attribute (usersID, attributeID, value, published)');
-                    $value = array($table->userid, $attrID, $db->q($newTableContent), $table->publish);
-                    $query
-                        ->values(implode(',', $value));
-                    $db->setQuery($query);
-                    try
-                    {
-                        $db->execute();
-                    }
-                    catch (Exception $e)
-                    {
-                        JFactory::getApplication()->enqueueMessage('createNewTextFieldFromTableStructure #2 ' . $e->getMessage(), 'error');
-                        return false;
-                    }
+                    self::saveNewTableContentForUser($table->userid, $attrID, $dbo->q($newTableContent), $table->publish);
                 }
             }
+        }
+
+        return true;
+    }
+
+    /**
+     * Saves the new, converted to HTML, tables for users which had previously structures of the type TABLE
+     *
+     * @param   int     $userID           User ID
+     * @param   int     $attrID           New attribute ID
+     * @param   string  $newTableContent  HTML Table
+     * @param   int     $publish          0 or 1
+     *
+     * @return  bool  true on success, false otherwise
+     */
+    private static function saveNewTableContentForUser($userID, $attrID, $newTableContent, $publish)
+    {
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+
+        $query->insert('#__thm_groups_users_attribute');
+        $query->columns('usersID, attributeID, value, published');
+        $value = array($userID, $attrID, $dbo->q($newTableContent), $publish);
+        $query->values(implode(',', $value));
+        $dbo->setQuery($query);
+
+        try
+        {
+            $dbo->execute();
+        }
+        catch (Exception $exception)
+        {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            return false;
         }
 
         return true;
@@ -163,7 +197,7 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
      *
      * @param   int  $structID  structure ID
      *
-     * @return  object
+     * @return  object on success, false otherwise
      */
     private static function getTableHeader($structID)
     {
@@ -176,7 +210,15 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
             ->where("structid = $structID");
         $db->setQuery($query);
 
-        return $db->loadObject();
+        try
+        {
+            return $db->loadObject();
+        }
+        catch (Exception $exception)
+        {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            return false;
+        }
     }
 
     /**
@@ -184,34 +226,46 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
      *
      * @param   object  $tableHeader   Object with header string semicolon separated
      *
-     * @param   json    $tableContent  JSON string with table's content
+     * @param   string  $tableContent  JSON string with table's content
      *
      * @return  string  New table representation
      */
     private static function convertTableContent($tableHeader, $tableContent)
     {
-        $head = explode(';', $tableHeader->value);
-        $arrValue = json_decode($tableContent);
         $newContent = '<table class="table table-striped">';
         $newContent .= '<thead>';
         $newContent .= '<tr>';
+        $head = explode(';', $tableHeader->value);
 
-        foreach($head as $headItem)
+        if (empty($head))
+        {
+            return '';
+        }
+
+        foreach ($head as $headItem)
+        {
             $newContent .= "<th>$headItem</th>";
+        }
 
         $newContent .= '</tr>';
         $newContent .= '</thead>';
-
         $newContent .= '<tbody>';
-        foreach($arrValue as $row)
+
+        $arrValue = json_decode($tableContent);
+
+        foreach ($arrValue as $row)
         {
             $newContent .= '<tr>';
             foreach ($row as $rowItem)
+            {
                 $newContent .= '<td>' . $rowItem . '</td>';
+            }
             $newContent .= '</tr>';
         }
+
         $newContent .= '</tbody>';
         $newContent .= '</table>';
+
         return $newContent;
     }
 
@@ -220,39 +274,55 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
      *
      * @param   int  $structID  TABLE-Structure ID
      *
-     * @return ObjectList
+     * @return  array on success, false otherwise
      */
     private static function getTableContent($structID)
     {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
 
         $query
             ->select('userid, structid, value, publish')
             ->from('#__thm_groups_table')
             ->where("structid = $structID");
 
-        $db->setQuery($query);
-        return $db->loadObjectList();
+        $dbo->setQuery($query);
+
+        try
+        {
+            return $dbo->loadObjectList();
+        }
+        catch (Exception $exception)
+        {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            return false;
+        }
     }
 
     /**
      * Returns all structures of type TABLE
      *
-     * @return ObjectList
+     * @return  array on success, false otherwise
      */
     private static function getTableStructures()
     {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
 
-        // Get all structures of type TABLE
         $query
             ->select('id, field, type, `order`')
             ->from('#__thm_groups_structure')
             ->where('type LIKE "TABLE"');
-        $db->setQuery($query);
-        return $db->loadObjectList();
+        $dbo->setQuery($query);
+        try
+        {
+            return $dbo->loadObjectList();
+        }
+        catch (Exception $exception)
+        {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            return false;
+        }
     }
 
     /**
@@ -268,43 +338,48 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
      *
      * @return  bool   true on success, false otherwise
      *
-     * @throws Exception
      */
-    private static function fixTables()
+    private static function syncUsers()
     {
-        $idsAndGroups = self::getUserIDsAndGroups();
-        if(!empty($idsAndGroups))
+        $idsAndGroups = self::getUsersIDsAndGroups();
+
+        if(empty($idsAndGroups))
         {
-            if(self::copyUserData($idsAndGroups))
-            {
-                return true;
-            }
+            return false;
         }
 
-        JFactory::getApplication()->enqueueMessage('DB_Data_Manager -> fixTables', 'error');
-        return false;
+        return self::copyUserData($idsAndGroups);
     }
 
     /**
      * Retrieves user IDs and groups
      *
-     * @return AssocList
+     * @return  array  on success, false otherwise
      */
-    private static function getUserIDsAndGroups()
+    private static function getUsersIDsAndGroups()
     {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
 
         $query
-            ->select('a.id, a.name, a.username, a.email, group_concat(c.group_id) AS groups')
+            ->select('a.id, a.name, a.username, a.email, a.block, group_concat(c.group_id) AS groups')
             ->from('#__users AS a')
             ->leftJoin('#__thm_groups_users AS b ON a.id = b.id')
             ->innerJoin('#__user_usergroup_map AS c ON a.id = c.user_id')
             ->where('b.id is NULL')
             ->group('a.id');
 
-        $db->setQuery($query);
-        return $db->loadAssocList();
+        $dbo->setQuery($query);
+
+        try
+        {
+            return $dbo->loadAssocList();
+        }
+        catch (Exception $exception)
+        {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            return false;
+        }
     }
 
     /**
@@ -318,13 +393,19 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
      */
     private static function copyUserData($users)
     {
-        $db = JFactory::getDbo();
+        $dbo = JFactory::getDbo();
 
         foreach ($users as $user)
         {
+            $dbo->transactionStart();
+
             $userid = $user['id'];
             $name = $user['name'];
             $email = $user['email'];
+
+            /* Joomla show a user if he is not blocked, "groups" show him if he is published.
+               So we have to invert the logic from blocked to published */
+            $userPublished = $user['block'] == 0 ? 1 : 0;
             $groups = explode(',', $user['groups']);
 
             // Cut the Name
@@ -337,60 +418,78 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
             array_pop($namesplit);
             $firstName = implode(" ", $nameArray);
 
-            $query = $db->getQuery(true);
+            $query = $dbo->getQuery(true);
             $query
                 ->insert("`#__thm_groups_users` (`id`, `published`, `injoomla`, `canEdit`)")
-                ->values("'" . $userid . "', '0', '1', '0'");
+                ->values("'$userid', '$userPublished', '1', '0'");
 
-            $db->setQuery($query);
+            $dbo->setQuery($query);
 
             try
             {
-                $db->execute();
+                $dbo->execute();
             }
-            catch (Exception $e)
+            catch (Exception $exception)
             {
-                JFactory::getApplication()->enqueueMessage('copyUserData #1 ' . $e->getMessage(), 'error');
+                $dbo->transactionRollback();
+                JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
                 return false;
             }
 
-            $arr_attribute = array(1, 2 ,4);
-            $attribute_query = $db->getQuery(true);
+            $arr_attribute = array(1, 2, 4);
+            $attribute_query = $dbo->getQuery(true);
             $attribute_query
                 ->select('id')
                 ->from('#__thm_groups_attribute')
                 ->where('id NOT IN (' . implode(",", $arr_attribute) . ')');
-            $db->setQuery($attribute_query);
+            $dbo->setQuery($attribute_query);
 
-            $attributes = $db->loadObjectList();
+            try
+            {
+                $attributes = $dbo->loadObjectList();
+            }
+            catch (Exception $exception)
+            {
+                JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+                return false;
+            }
 
-            // Update InnoDB
-            $query = $db->getQuery(true);
-
+            $query = $dbo->getQuery(true);
             $query
                 ->insert("#__thm_groups_users_attribute (usersID, attributeID, value, published)")
                 ->values(" $userid , 1 , '" . ucfirst($firstName) . "',1")
                 ->values(" $userid , 2 , '" . ucfirst($lastName) . "',1")
                 ->values(" $userid , 4 , '" . $email . "',1");
 
-            foreach ($attributes AS $attribute)
+            if (!empty($attributes))
             {
-                $query->values("$userid , $attribute->id , ' ', 0");
+                foreach ($attributes AS $attribute)
+                {
+                    $query->values("$userid , $attribute->id , ' ', 0");
+                }
             }
 
-            $db->setQuery($query);
+            $dbo->setQuery($query);
 
             try
             {
-                $db->execute();
+                $dbo->execute();
             }
-            catch (Exception $e)
+            catch (Exception $exception)
             {
-                JFactory::getApplication()->enqueueMessage('copyUserData #2 ' . $e->getMessage(), 'error');
+                $dbo->transactionRollback();
+                JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
                 return false;
             }
 
-            self::insertUserGroups($userid, $groups);
+            $userGroupsInserted = self::insertUserGroups($userid, $groups);
+            if (!$userGroupsInserted)
+            {
+                $dbo->transactionRollback();
+                return false;
+            }
+
+            $dbo->transactionCommit();
         }
 
         return true;
@@ -399,89 +498,122 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
     /**
      * Method to insert the User groups
      *
-     * @param   int    $user_id      User id
+     * @param   int    $userID      User id
      *
-     * @param   array  $user_groups  User groups
+     * @param   array  $userGroups  User groups
      *
-     * @return void
+     * @return  bool   true on success, false otherwise
      */
-    public function insertUserGroups($user_id, $user_groups)
+    private function insertUserGroups($userID, $userGroups)
     {
-        $db = JFactory::getDBO();
-        $userGroups_ID_List = array();
-        foreach ($user_groups as $index => $value )
+        $dbo = JFactory::getDBO();
+        $userGroupsIDList = array();
+
+        foreach ($userGroups as $index => $value )
         {
-            $query = $db->getQuery(true);
-            $query->select("ID AS id")
+            $query = $dbo->getQuery(true);
+            $query
+                ->select("ID AS id")
                 ->from("#__thm_groups_usergroups_roles")
                 ->where("rolesID = 1")
                 ->where("usergroupsID =" . $value);
-            $db->setQuery($query);
-            $groups_roles_id = $db->loadObject()->id;
-            if (empty($groups_roles_id))
-            {
-                $insertGroups_query = $db->getQuery(true);
-                $insertGroups_query->insert("#__thm_groups_usergroups_roles (usergroupsID,rolesID)");
-                $insertGroups_query->values("$value, 1");
-                $db->setQuery($insertGroups_query);
-                $db->execute();
-                $groups_roles_id = $db->insertid();
-            }
-            $userGroups_ID_List[] = $groups_roles_id;
-        }
+            $dbo->setQuery($query);
 
-        if ($userGroups_ID_List)
-        {
-            $set_User_groups = $db->getQuery(true);
-            $set_User_groups->insert('#__thm_groups_users_usergroups_roles (usersID, usergroups_rolesID)');
-            foreach ($userGroups_ID_List as $id => $value)
-            {
-                $set_User_groups->values("$user_id, $value");
-            }
-            $db->setQuery($set_User_groups);
             try
             {
-                $db->execute();
+                $groupsRolesID = $dbo->loadObject()->id;
             }
-            catch (Exception $e)
+            catch (Exception $exception)
             {
-                JFactory::getApplication()->enqueueMessage('insertUserGroups ' . $e->getMessage(), 'error');
+                JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+                return false;
+            }
+
+            if (empty($groupsRolesID))
+            {
+                $insertGroupsQuery = $dbo->getQuery(true);
+                $insertGroupsQuery->insert("#__thm_groups_usergroups_roles (usergroupsID,rolesID)");
+                $insertGroupsQuery->values("$value, 1");
+                $dbo->setQuery($insertGroupsQuery);
+
+                try
+                {
+                    $dbo->execute();
+                }
+                catch (Exception $exception)
+                {
+                    JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+                    return false;
+                }
+
+                $groupsRolesID = $dbo->insertid();
+            }
+            $userGroupsIDList[] = $groupsRolesID;
+        }
+
+        if (!empty($userGroupsIDList))
+        {
+            $setUserGroupsQuery = $dbo->getQuery(true);
+            $setUserGroupsQuery->insert('#__thm_groups_users_usergroups_roles');
+            $setUserGroupsQuery->columns('usersID, usergroups_rolesID');
+
+            foreach ($userGroupsIDList as $id => $value)
+            {
+                $setUserGroupsQuery->values("$userID, $value");
+            }
+            $dbo->setQuery($setUserGroupsQuery);
+
+            try
+            {
+                $dbo->execute();
+            }
+            catch (Exception $exception)
+            {
+                JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+                return false;
             }
         }
+
+        return true;
     }
 
     /**
+     * Processes and migrates structures and user data from the old THM Groups component for joomla 2.5
+     *
      * @param   bool    $fixCategoriesTable  Fix an old bug with categories for quickpages
      *
      * @param   string  $scriptName          SQL-Script which will be launched, e.g. "customUpdate.sql", place script in /admin/sql/updates/
      *
-     * @return  bool   true on success, false otherwise
-     *
-     * @throws  Exception
+     * @return  bool    true on success, false otherwise
      */
     private static function restoreData($fixCategoriesTable = true, $scriptName)
     {
+        $dbo = JFactory::getDbo();
+        $dbo->transactionStart();
+
         if ($fixCategoriesTable)
         {
-            if (self::fixCategoriesTable()
-                && self::copyData($scriptName)
-                && THM_Groups_Update_Script::update())
+            $tablesFixed = self::fixCategoriesTable();
+            if (!$tablesFixed)
             {
-                return true;
+                $dbo->transactionRollback();
+                return false;
             }
         }
-        else
+
+        // TODO better names for both, functions and variables
+        $dataCopied = self::runUpdateSQLScript($scriptName);
+        $updateCompleted = THM_Groups_Update_Script::update();
+
+        if (!$dataCopied OR !$updateCompleted)
         {
-            if (self::copyData($scriptName)
-                && THM_Groups_Update_Script::update())
-            {
-                return true;
-            }
+            $dbo->transactionRollback();
+            return false;
         }
 
+        $dbo->transactionCommit();
 
-        JFactory::getApplication()->enqueueMessage('DB_Data_Manager -> Restore Data', 'error');
-        return false;
+        return true;
     }
 
     /**
@@ -492,26 +624,57 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
      */
     private static function fixCategoriesTable()
     {
-        $db = JFactory::getDbo();
+        $dbo = JFactory::getDbo();
 
         // Get QP main category
-        $query = $db->getQuery(true);
+        $query = $dbo->getQuery(true);
         $query
             ->select('id')
             ->from('#__categories')
             ->where('path = "persoenliche-seiten" OR path = "quickpages"');
-        $db->setQuery($query);
-        $mainCat = $db->loadObject();
+        $dbo->setQuery($query);
+
+        try
+        {
+            $mainCat = $dbo->loadObject();
+        }
+        catch (Exception $exception)
+        {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            return false;
+        }
+
+        // TODO check two conditions, because not sure if only "empty($mainCat->id)" is ok
+        if (empty($mainCat) OR empty($mainCat->id))
+        {
+            JFactory::getApplication()->enqueueMessage('Quickpages root category is not found.', 'error');
+            return false;
+        }
 
         // Get all qp users categories
-        $query = $db->getQuery(true);
+        $query = $dbo->getQuery(true);
         $query
             ->select('id, path')
             ->from('#__categories')
             ->where("parent_id = $mainCat->id")
             ->where('published = 1');
-        $db->setQuery($query);
-        $categories = $db->loadObjectList();
+        $dbo->setQuery($query);
+
+        try
+        {
+            $categories = $dbo->loadObjectList();
+        }
+        catch (Exception $exception)
+        {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            return false;
+        }
+
+        // No categories to process
+        if (empty($categories))
+        {
+            return true;
+        }
 
         foreach ($categories as $cat)
         {
@@ -526,292 +689,23 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
             $userID = $temp[count($temp) - 1];
 
             // Change create_user_id for all qp categories
-            $query = $db->getQuery(true);
+            $query = $dbo->getQuery(true);
             $query
                 ->update('#__categories')
                 ->set("created_user_id = $userID")
                 ->from('#__categories')
                 ->where("id = $cat->id");
-            $db->setQuery($query);
+            $dbo->setQuery($query);
 
             try
             {
-                $db->execute();
+                $dbo->execute();
             }
-            catch (Exception $e)
+            catch (Exception $exception)
             {
-                JFactory::getApplication()->enqueueMessage('fixCategoriesTable ' . $e->getMessage(), 'error');
+                JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
                 return false;
             }
-        }
-        return true;
-    }
-
-    /**
-     * Installs example data
-     *
-     * @return  bool   true on success, false otherwise
-     */
-    private static function installExampleData()
-    {
-        if (self::createExampleDynamicTypes()
-            && self::createExampleAttributes()
-            && self::createExampleRoles()
-            && self::createExampleProfiles()
-            && self::createExampleProfileAttributes()
-            && THM_Groups_Install_Script::install())
-        {
-            return true;
-        }
-
-        JFactory::getApplication()->enqueueMessage('DB_Data_Manager -> Install Example Data', 'error');
-        return false;
-    }
-
-    /**
-     * Creates example dynamic types
-     *
-     * @return  bool   true on success, false otherwise
-     *
-     * @throws Exception
-     */
-    private static function createExampleDynamicTypes()
-    {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-
-        /* INSERT INTO '#__thm_groups_dynamic_type' ('id', 'static_typeID', 'name', 'regex', 'options') VALUES
-           (1, 1, 'Name', '^[0-9a-zA-Z������]+$', '{ "length" : "40" }'),
-           (2, 1, 'Email', '^([0-9a-zA-Z\\\\.]+)@(([\\\\w]|\\\\.\\\\w)+)\\\\.(\\\\w+)$', '{ "length" : "40" }'),
-           (3, 3, 'Website', '(http|ftp|https:\\\\/\\\\/){0,1}[\\\\w\\\\-_]+(\\\\.[\\\\w\\\\-_]+)+([\\\\w\\\\-\\\\.,@?^=%&amp;:/~\\\\+#]*[\\\\w\\\\-\\\\@?^=%&amp;/~\\\\+#])?', '{}'),*/
-
-        $columns = array('id', 'static_typeID', 'name', 'options');
-        $values[] = array(1, 1, $db->q('Name'), $db->q('{ "length" : "40" }'));
-        $values[] = array(2, 1, $db->q('Email'), $db->q('{ "length" : "40" }'));
-        $values[] = array(3, 3, $db->q('Website'), $db->q('{}'));
-        $query
-            ->insert('#__thm_groups_dynamic_type')
-            ->columns($db->qn($columns));
-
-        foreach($values as $value)
-        {
-            $query
-                ->values(implode(',', $value));
-        }
-
-        $db->setQuery($query);
-
-        try
-        {
-            $db->execute();
-        }
-        catch (Exception $e)
-        {
-            JFactory::getApplication()->enqueueMessage('createExampleDynamicTypes ' . $e->getMessage(), 'error');
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Creates example attributes
-     *
-     * @return  bool   true on success, false otherwise
-     *
-     * @throws Exception
-     */
-    private static function createExampleAttributes()
-    {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        /* INSERT INTO '#__thm_groups_attribute' ('id', 'name', 'dynamic_typeID', 'options') VALUES
-            (1, 'Vorname', 1, '{ "length" : "40", "required" : "true" }'),
-            (2, 'Nachname', 1, '{ "length" : "40", "required" : "true" }'),
-            (3, 'Username', 1, '{ "length" : "40", "required" : "true" }'),
-            (4, 'Email', 2, '{ "length" : "40", "required" : "true" }'),
-            (5, 'Titel', 1, '{ "length" : "40", "required" : "true" }'),
-            (6, 'Posttitel', 1, '{ "length" : "40", "required" : "true" }'),
-            (7, 'Website', 3, '{"required" : "true"}')*/
-
-        $columns = array('id', 'name', 'dynamic_typeID', 'published', 'ordering', 'options');
-        $values[] = array(1, $db->q('Vorname'), 1, 1, 1, $db->q('{ "length" : "40", "required" : "true" }'));
-        $values[] = array(2, $db->q('Nachname'), 1, 1, 2, $db->q('{ "length" : "40", "required" : "true" }'));
-        $values[] = array(4, $db->q('Email'), 2, 1, 4, $db->q('{ "length" : "40", "required" : "true" }'));
-        $values[] = array(5, $db->q('Titel'), 1, 1, 5, $db->q('{ "length" : "40", "required" : "true" }'));
-        $values[] = array(6, $db->q('Posttitel'), 1, 1, 6, $db->q('{ "length" : "40", "required" : "true" }'));
-        $values[] = array(7, $db->q('Website'), 3, 1, 7, $db->q('{"required" : "true"}'));
-        $query
-            ->insert('#__thm_groups_attribute')
-            ->columns($db->qn($columns));
-
-        foreach($values as $value)
-        {
-            $query
-                ->values(implode(',', $value));
-        }
-
-        $db->setQuery($query);
-
-        try
-        {
-            $db->execute();
-        }
-        catch (Exception $e)
-        {
-            JFactory::getApplication()->enqueueMessage('createExampleAttributes ' . $e->getMessage(), 'error');
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Creates example roles
-     *
-     * @return  bool   true on success, false otherwise
-     *
-     * @throws Exception
-     */
-    private static function createExampleRoles()
-    {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-
-        /* INSERT INTO '#__thm_groups_roles' ('id', 'name') VALUES
-            (1, 'Mitglied'),
-            (2, 'Moderator'),
-            (3, 'Role1'),
-            (4, 'Role2'),
-            (5, 'Role3');*/
-
-        $columns = array('id', 'name');
-        $values[] = array(1, $db->q('Mitglied'));
-        $values[] = array(2, $db->q('Moderator'));
-        $values[] = array(3, $db->q('Role1'));
-        $values[] = array(4, $db->q('Role2'));
-        $values[] = array(5, $db->q('Role3'));
-        $query
-            ->insert('#__thm_groups_roles')
-            ->columns($db->qn($columns));
-
-        foreach($values as $value)
-        {
-            $query
-                ->values(implode(',', $value));
-        }
-
-        $db->setQuery($query);
-
-        try
-        {
-            $db->execute();
-        }
-        catch (Exception $e)
-        {
-            JFactory::getApplication()->enqueueMessage('createExampleRoles ' . $e->getMessage(), 'error');
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Creates example profiles
-     *
-     * @return  bool   true on success, false otherwise
-     *
-     * @throws Exception
-     */
-    private static function createExampleProfiles()
-    {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-
-        /* INSERT INTO '#__thm_groups_profile' ('id', 'name', 'order') VALUES
-            (1, 'Standard', 1),
-            (2, 'Mitarbeiter', 2),
-            (3, 'Professor', 3),
-            (4, 'Dozent', 4);*/
-
-        $columns = array('id', 'name', 'order');
-        $values[] = array(1, $db->q('Standard'), 1);
-        $values[] = array(2, $db->q('Mitarbeiter'), 2);
-        $values[] = array(3, $db->q('Professor'), 3);
-        $values[] = array(4, $db->q('Dozent'), 4);
-        $query
-            ->insert('#__thm_groups_profile')
-            ->columns($db->qn($columns));
-
-        foreach($values as $value)
-        {
-            $query
-                ->values(implode(',', $value));
-        }
-
-        $db->setQuery($query);
-
-        try
-        {
-            $db->execute();
-        }
-        catch (Exception $e)
-        {
-            JFactory::getApplication()->enqueueMessage('createExampleProfiles ' . $e->getMessage(), 'error');
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Creates example attributes for profile
-     *
-     * @return  bool   true on success, false otherwise
-     *
-     * @throws Exception
-     */
-    private static function createExampleProfileAttributes()
-    {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        /* INSERT INTO '#__thm_groups_profile_attribute' ('ID', 'profileID', 'attributeID', 'order', 'params') VALUES
-            (1, 1, 1, 1, '{ "label" : true, "wrap" : true}'),
-            (2, 1, 2, 2, '{ "label" : true, "wrap" : true}'),
-            (3, 1, 3, 3, '{ "label" : true, "wrap" : true}'),
-            (4, 1, 4, 4, '{ "label" : true, "wrap" : true}'),
-            (5, 1, 5, 5, '{ "label" : true, "wrap" : true}'),
-            (6, 1, 6, 6, '{ "label" : true, "wrap" : true}'),
-            (7, 1, 7, 7, '{ "label" : true, "wrap" : true}');*/
-
-        $columns = array('ID', 'profileID', 'attributeID', 'order', 'params');
-        $values[] = array(1, 1, 1, 1, $db->q('{ "label" : true, "wrap" : true}'));
-        $values[] = array(2, 1, 2, 2, $db->q('{ "label" : true, "wrap" : true}'));
-        $values[] = array(3, 1, 3, 3, $db->q('{ "label" : true, "wrap" : true}'));
-        $values[] = array(4, 1, 4, 4, $db->q('{ "label" : true, "wrap" : true}'));
-        $values[] = array(5, 1, 5, 5, $db->q('{ "label" : true, "wrap" : true}'));
-        $values[] = array(6, 1, 6, 6, $db->q('{ "label" : true, "wrap" : true}'));
-        $values[] = array(7, 1, 7, 7, $db->q('{ "label" : true, "wrap" : true}'));
-        $query
-            ->insert('#__thm_groups_profile_attribute')
-            ->columns($db->qn($columns));
-
-        $db->setQuery($query);
-
-        foreach($values as $value)
-        {
-            $query
-                ->values(implode(',', $value));
-        }
-
-        try
-        {
-            $db->execute();
-        }
-        catch (Exception $e)
-        {
-            JFactory::getApplication()->enqueueMessage('createExampleProfileAttributes ' . $e->getMessage(), 'error');
-            return false;
         }
 
         return true;
@@ -824,14 +718,13 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
      *
      * @return  bool   true on success, false otherwise
      */
-    private static function copyData($scriptName)
+    private static function runUpdateSQLScript($scriptName)
     {
-        $db = JFactory::getDbo();
+        $dbo = JFactory::getDbo();
         $buffer = file_get_contents(JPATH_COMPONENT_ADMINISTRATOR . '/sql/updates/' . $scriptName);
         if ($buffer === false)
         {
-            JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_READBUFFER'), JLog::WARNING, 'jerror');
-
+            JFactory::getApplication()->enqueueMessage(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_READBUFFER'), 'error');
             return false;
         }
         // Create an array of queries from the sql file
@@ -844,12 +737,15 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
 
             if ($query != '' && $query{0} != '#')
             {
-                $db->setQuery($query);
+                $dbo->setQuery($query);
 
-                if (!$db->execute())
+                try
                 {
-                    JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)), JLog::WARNING, 'jerror');
-
+                    $dbo->execute();
+                }
+                catch (Exception $exception)
+                {
+                    JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
                     return false;
                 }
             }
