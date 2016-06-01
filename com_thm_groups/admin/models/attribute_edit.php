@@ -80,28 +80,25 @@ class THM_GroupsModelAttribute_Edit extends THM_CoreModelEdit
         $name = $this->get('name');
         $resource = str_replace('_edit', '', $name);
         $task = $input->getCmd('task', "$resource.add");
-        $resourceID = $input->getInt('id', 0);
+        $resourceArray = $input->get('cid', array(), 'array');
+        $resourceID = empty($resourceArray)? $input->getInt('id', 0) : $resourceArray[0];
 
-        // Edit can only be explicitly called from the list view or implicitly with an id over a URL
-        $edit = (($task == "$resource.edit")  OR $resourceID > 0);
-        if ($edit)
+        $add = (($task != "$resource.edit") AND empty($resourceID));
+        if ($add)
         {
-            if (!empty($resourceID))
-            {
-                $item = $this->getItem($resourceID);
-                $options = json_decode($item->options);
-                if (!empty($options))
-                {
-                    if (isset($options->required))
-                        $item->validate = $options->required === false ? 0 : 1;
-                }
-
-                return $item;
-            }
-
-            $resourceIDs = $input->get('cid',  null, 'array');
-            return $this->getItem($resourceIDs[0]);
+            return $this->getItem(0);
         }
-        return $this->getItem(0);
+
+        $item = $this->getItem($resourceID);
+        $options = json_decode($item->options);
+        if (!empty($options))
+        {
+            $item->validate = empty($options->required)? 0 : 1;
+            if (!empty($options->icon))
+            {
+                $item->iconpicker = $options->icon;
+            }
+        }
+        return $item;
     }
 }

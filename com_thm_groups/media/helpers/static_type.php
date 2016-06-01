@@ -37,7 +37,7 @@ class THM_GroupsHelperStatic_Type
      */
     public static function getOption($staticTypeID)
     {
-        $options = new stdClass();
+        $options = new stdClass;
         switch ($staticTypeID)
         {
             case TEXT:
@@ -46,17 +46,9 @@ class THM_GroupsHelperStatic_Type
             case TEXTFIELD:
                 $options->length = 120;
                 break;
-            case LINK:
-                break;
             case PICTURE:
                 $options->filename = 'anonym.jpg';
                 $options->path = '/images/com_thm_groups/profile';
-                break;
-            case MULTISELECT:
-            case TABLE:
-            case NUMBER:
-            case DATE:
-            case TEMPLATE:
                 break;
         }
 

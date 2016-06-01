@@ -186,38 +186,24 @@ class THM_GroupsModelAttribute extends JModelLegacy
     public function save()
     {
         $data = JFactory::getApplication()->input->get('jform', array(), 'array');
-        $required = (bool) $data['validate'];
         $staticTypeID = $this->getStaticTypeIDByDynTypeID($data['dynamic_typeID']);
-        $defOptions = THM_GroupsHelperStatic_Type::getOption($staticTypeID);
+        $options = THM_GroupsHelperStatic_Type::getOption($staticTypeID);
+        $dbo = JFactory::getDbo();
 
-        $options = new stdClass();
         switch ($staticTypeID)
         {
             case TEXT:
-                $options->length = (int) $data['length'];
-                $options->required = $required;
-                break;
             case TEXTFIELD:
-                $options->length = (int) $data['length'];
-                $options->required = $required;
-                break;
-            case PICTURE:
-                // Save always default values, because pictures are placed now only in /images/com_thm_groups/profile
-                $options->path = $defOptions->path;
-                $options->filename = $defOptions->filename;
-                $options->required = $required;
-                break;
-            case LINK:
-            case MULTISELECT:
-            case TABLE:
-            case TEMPLATE:
-                $options->required = $required;
-                break;
+                $options->length = empty($data['length'])? $options->length : (int) $data['length'];
+            default:
+                $options->required = isset($data['validate'])? (bool)$data['validate'] : false;
+                if (!empty($data['iconpicker']))
+                {
+                    $options->icon = $data['iconpicker'];
+                }
+                $data['options'] = json_encode($options);
+                $data['description'] = empty($data['description'])? " " : $dbo->escape($data['description']);
         }
-
-        $data['options'] = (!empty($options)) ? json_encode($options) : $data['options'];
-        $dbo = JFactory::getDbo();
-        $data['description'] = $dbo->escape($data['description']);
 
         $dbo->transactionStart();
 
@@ -230,11 +216,8 @@ class THM_GroupsModelAttribute extends JModelLegacy
             $dbo->transactionRollback();
             return false;
         }
-        else
-        {
-            $dbo->transactionCommit();
-            return $attribute->id;
-        }
+        $dbo->transactionCommit();
+        return $attribute->id;
     }
 
     /**
