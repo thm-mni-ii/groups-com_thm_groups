@@ -11,11 +11,7 @@
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
-
-define('PUBLISH', 1);
-define('UNPUBLISH', 0);
-define('ARCHIVE', 2);
-define('TRASH', -2);
+require_once JPATH_SITE . '/media/com_thm_groups/helpers/quickpage.php';
 
 /**
  * THM_GroupsModelQuickpage class for component com_thm_groups
@@ -25,7 +21,6 @@ define('TRASH', -2);
  */
 class THM_GroupsModelQuickpage extends JModelLegacy
 {
-
     /**
      * The event to trigger after changing the published state of the data.
      *
@@ -64,32 +59,7 @@ class THM_GroupsModelQuickpage extends JModelLegacy
     }
 
     /**
-     * Method which checks user edit state permissions for the quickpage.
-     *
-     * @param   int  $qpID  the id of the quickpage
-     *
-     * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
-     *
-     */
-    protected function canEditState($qpID)
-    {
-        // Check admin rights before descending into the mud
-        $user = JFactory::getUser();
-        $isAdmin = ($user->authorise('core.admin', 'com_content') OR $user->authorise('core.admin', 'com_thm_groups'));
-        if ($isAdmin)
-        {
-            return true;
-        }
-
-        // TODO: Would it be possible for a person of the same group to edit the state of 'my' article?
-        return JFactory::getUser()->authorise('core.edit.state', "com_content.article.$qpID");
-    }
-
-    /**
      * Method to change the published state of one or more records.
-     *
-     * @param   array    &$pks   A list of the primary keys to change.
-     * @param   integer  $value  The value of the published state.
      *
      * @return  boolean  True on success.
      *
@@ -108,7 +78,7 @@ class THM_GroupsModelQuickpage extends JModelLegacy
         }
 
         $qpID = $qpIDs[0];
-        if (!$this->canEditState($qpID))
+        if (!THM_GroupsHelperQuickpage::canEditState($qpID))
         {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_NOT_ALLOWED'), 'error');
             return;
@@ -160,7 +130,7 @@ class THM_GroupsModelQuickpage extends JModelLegacy
             $table->load((int) $pk);
 
             // Access checks.
-            if (!$this->canEditState($table))
+            if (!THM_GroupsHelperQuickpage::canEditState($table))
             {
                 // Prune items that you can't change.
                 unset($pks[$i]);
@@ -213,8 +183,6 @@ class THM_GroupsModelQuickpage extends JModelLegacy
     /**
      * Toggles quickpage attributes
      *
-     * @param   String  $action  publish/unpublish
-     *
      * @return  boolean  true on success, otherwise false
      */
     public function toggle()
@@ -249,7 +217,7 @@ class THM_GroupsModelQuickpage extends JModelLegacy
         $query = $dbo->getQuery(true);
         $tableName = '#__thm_groups_users_content';
 
-        $qpExists = $this->quickpageExists($qpID);
+        $qpExists = THM_GroupsHelperQuickpage::quickpageExists($qpID);
         if ($qpExists)
         {
             $query->update($tableName)->where("contentID = '$qpID'");
@@ -271,6 +239,8 @@ class THM_GroupsModelQuickpage extends JModelLegacy
             $query->insert('#__thm_groups_users_content')->columns(array('usersID', 'contentID', 'featured', 'published'));
 
             $values = array(JFactory::getUser()->id, $qpID);
+            Joomla\Utilities\ArrayHelper::toInteger($values);
+
             switch ($attribute)
             {
                 case 'featured':
@@ -298,34 +268,5 @@ class THM_GroupsModelQuickpage extends JModelLegacy
         }
 
         return empty($success)? false : true;
-    }
-
-
-    /**
-     * Checks if an article were previously featured or published for modules
-     *
-     * @param   int  $qpID  the id of the quickpage
-     *
-     * @return  bool  true if the quickpage already exists, otherwise false
-     */
-    public function quickpageExists($qpID)
-    {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-
-        $query
-            ->select('*')
-            ->from('#__thm_groups_users_content')
-            ->where('contentID = ' . (int) $qpID);
-        $db->setQuery($query);
-
-        $result = $db->loadObject();
-
-        if (empty($result) || $result == null)
-        {
-            return false;
-        }
-
-        return true;
     }
 }

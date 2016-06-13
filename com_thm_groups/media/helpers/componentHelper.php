@@ -68,6 +68,11 @@ class THM_GroupsHelperComponent
             $viewName == 'attribute_manager'
         );
         JHtmlSidebar::addEntry(
+            JText::_('COM_THM_GROUPS_QUICKPAGE_CONTENT_MANAGER'),
+            'index.php?option=com_thm_groups&view=quickpage_content_manager',
+            $viewName == 'quickpage_content_manager'
+        );
+        JHtmlSidebar::addEntry(
             JText::_('COM_THM_GROUPS_PLUGIN_MANAGER'),
             'index.php?option=com_thm_groups&view=plugin_manager',
             $viewName == 'plugin_manager'
