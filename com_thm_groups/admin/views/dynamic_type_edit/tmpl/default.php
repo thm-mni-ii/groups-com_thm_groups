@@ -11,6 +11,6 @@
  * @link        www.thm.de
  */
 defined('_JEXEC') or die ('Restricted access');
-jimport('thm_core.edit.basictemplate');
-THM_CoreTemplateBasic::render($this);
+require_once JPATH_ROOT . '/media/com_thm_groups/templates/edit_basic.php';
+THM_GroupsEditTemplateBasic::render($this);
 ?>

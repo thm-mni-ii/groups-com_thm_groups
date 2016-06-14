@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fields name="filter"  addfieldpath="/libraries/thm_core/fields">
+    <fields name="filter" addfieldpath="/media/com_thm_groups/fields">
         <field
                 name="search"
                 type="text"
@@ -9,13 +9,13 @@
         />
         <field
                 name="checkbox"
-                type="checkall" />
+                type="checkall"/>
         <field
                 name="published"
                 type="list"
                 label="COM_THM_GROUPS_PUBLISHED"
                 onchange="this.form.submit();"
-                >
+        >
             <option value="">COM_THM_GROUPS_ALL</option>
             <option value="1">JYES</option>
             <option value="0">JNO</option>
@@ -25,7 +25,7 @@
                 type="list"
                 label="COM_THM_GROUPS_PUBLISHED"
                 onchange="this.form.submit();"
-                >
+        >
             <option value="">JALL</option>
             <option value="1">JYES</option>
             <option value="0">JNO</option>
@@ -35,7 +35,7 @@
                 type="list"
                 label="COM_THM_GROUPS_PUBLISHED"
                 onchange="this.form.submit();"
-                >
+        >
             <option value="">JALL</option>
             <option value="1">JYES</option>
             <option value="0">JNO</option>
@@ -45,18 +45,18 @@
 
     <fields name="list">
         <field addfieldpath="/administrator/com_thm_groups/models/fields"
-                name="groupID"
-                type="usermanagergroup"
-                label="COM_THM_GROUPS_GROUPS_FILTER"
-                onchange="this.form.submit();"
-                >
+               name="groupID"
+               type="usermanagergroup"
+               label="COM_THM_GROUPS_GROUPS_FILTER"
+               onchange="this.form.submit();"
+        >
         </field>
         <field addfieldpath="/administrator/com_thm_groups/models/fields"
-                name="roleID"
-                type="usermanagerrole"
-                label="COM_THM_GROUPS_ROLES_FILTER"
-                onchange="this.form.submit();"
-                >
+               name="roleID"
+               type="usermanagerrole"
+               label="COM_THM_GROUPS_ROLES_FILTER"
+               onchange="this.form.submit();"
+        >
         </field>
 
         <field
@@ -67,8 +67,8 @@
                 label="COM_CONTENT_LIST_LIMIT"
                 description="COM_CONTENT_LIST_LIMIT_DESC"
                 onchange="this.form.submit();"
-                />
+        />
 
-        <field name="u_id" type="hidden" default="" />
+        <field name="u_id" type="hidden" default=""/>
     </fields>
 </form>

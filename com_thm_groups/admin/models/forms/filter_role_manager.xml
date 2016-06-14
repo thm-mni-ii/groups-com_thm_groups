@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fields name="filter" addfieldpath="/libraries/thm_core/fields">
+    <fields name="filter" addfieldpath="/media/com_thm_groups/fields">
         <field
                 name="search"
                 type="text"
@@ -8,11 +8,11 @@
                 hint="JSEARCH_FILTER"
         />
         <field addfieldpath="/administrator/com_thm_groups/models/fields"
-                name="groups"
-                type="group"
-                label="COM_THM_GROUPS_GROUPS_FILTER"
-                onchange="this.form.submit();"
-                >
+               name="groups"
+               type="group"
+               label="COM_THM_GROUPS_GROUPS_FILTER"
+               onchange="this.form.submit();"
+        >
         </field>
     </fields>
     <fields name="list">
@@ -24,6 +24,6 @@
                 label="COM_CONTENT_LIST_LIMIT"
                 description="COM_CONTENT_LIST_LIMIT_DESC"
                 onchange="this.form.submit();"
-                />
+        />
     </fields>
 </form>

@@ -21,18 +21,18 @@ jimport('joomla.application.component.table');
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
  *
- * @todo  Should this have a component prefix?
- * @todo  Alter the database structure profile => template
+ * @todo        Should this have a component prefix?
+ * @todo        Alter the database structure profile => template
  */
 class TableTemplate extends JTable
 {
-    /**
-     * Constructor function for the class representing the monitors table
-     *
-     * @param   JDatabase  &$dbo  A database connector object
-     */
-    public function __construct(&$dbo)
-    {
-        parent::__construct('#__thm_groups_profile', 'id', $dbo);
-    }
+	/**
+	 * Constructor function for the class representing the monitors table
+	 *
+	 * @param   JDatabase &$dbo A database connector object
+	 */
+	public function __construct(&$dbo)
+	{
+		parent::__construct('#__thm_groups_profile', 'id', $dbo);
+	}
 }

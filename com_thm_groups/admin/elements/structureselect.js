@@ -6,8 +6,7 @@
  * @link     http://www.thm.de
  */
 
-
- /**
+/**
  * Ersetzt an der angebenen Stelle ein Zeichen im String.
  *
  * @str    Die Zeichenkette in der ein Zeichen ersetzt werden soll
@@ -15,19 +14,22 @@
  * @char   Das neue Zeichen
  * @return Die neue Zeichenkette
  */
-function replaceCharAt(str, index, char) {
+function replaceCharAt(str, index, char)
+{
     var newStr = "";
     for (var i = 0; i < str.length; i++)
     {
-        if (i == index) {
+        if (i == index)
+        {
             newStr += char;
-        } else {
+        }
+        else
+        {
             newStr += str.charAt(i);
         }
     }
     return newStr;
 }
-
 
 /**
  * Schaltet eine angefuegte Attributinformation um.
@@ -35,46 +37,50 @@ function replaceCharAt(str, index, char) {
  * @elementId                Id des zu bearbeitenden Elements
  * @additionalAttributeIndex Index des angefuegtes Attributs
  */
-function switchAdditionalAttribute(elementId, additionalAttributeIndex) {
+function switchAdditionalAttribute(elementId, additionalAttributeIndex)
+{
     var value = document.getElementById(elementId).value;
     var attrNameIndex = value.length - additionalAttributeIndex;
-    if (value.charAt(attrNameIndex) == "1") {
+    if (value.charAt(attrNameIndex) == "1")
+    {
         //value[attrNameIndex] = '0';
         value = replaceCharAt(value.toString(), attrNameIndex, "0");
-    } else {
+    }
+    else
+    {
         //value[attrNameIndex] = '1';
         value = replaceCharAt(value.toString(), attrNameIndex, "1");
     }
     document.getElementById(elementId).value = value;
 }
 
-
 /**
  * Schaltet die angefuegte Attributinformation "Attributname anzeigen" um.
  *
  * @elementId Id des zu bearbeitenden Elements
  */
-function switchAttributeName(elementId) {
+function switchAttributeName(elementId)
+{
     switchAdditionalAttribute(elementId, 2);
 }
-
 
 /**
  * Schaltet die angefuegte Attributinformation "Zeilenumbruch nach Anzeige" um.
  *
  * @elementId Id des zu bearbeitenden Elements
  *///
-function switchAttributeWrap(elementId) {
+function switchAttributeWrap(elementId)
+{
     switchAdditionalAttribute(elementId, 1);
 }
-
 
 /**
  * Aktiviert/Deaktiviert die angefuegten Attribute.
  *
  * @elementId Id des Hauptelements
  *///
-function switchEnablingAdditionalAttr(elementId) {
+function switchEnablingAdditionalAttr(elementId)
+{
     var disabled = !document.getElementById(elementId).checked;
     document.getElementById(elementId + "ShowName").disabled = disabled;
     document.getElementById(elementId + "WrapAfter").disabled = disabled;

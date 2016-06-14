@@ -21,256 +21,264 @@ require_once JPATH_SITE . '/media/com_thm_groups/helpers/quickpage.php';
 class THM_GroupsModelQuickpage_Content extends JModelLegacy
 {
 
-    /**
-     * Sets published or featured attributes of quickpages to 1
-     *
-     * @param   array   $cid        Array with quickpages IDs
-     * @param   string  $attribute  Attribute to save, 'published' or 'featured'
-     *
-     * @return  mixed  integer on success, false otherwise
-     */
-    public function activate($cid, $attribute)
-    {
-        $app = JFactory::getApplication();
+	/**
+	 * Sets published or featured attributes of quickpages to 1
+	 *
+	 * @param   array  $cid       Array with quickpages IDs
+	 * @param   string $attribute Attribute to save, 'published' or 'featured'
+	 *
+	 * @return  mixed  integer on success, false otherwise
+	 */
+	public function activate($cid, $attribute)
+	{
+		$app = JFactory::getApplication();
 
-        // Should never occur
-        if (empty($cid))
-        {
-            $app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'notice');
-            return false;
-        }
+		// Should never occur
+		if (empty($cid))
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'notice');
 
-        $successCount = 0;
-        foreach ($cid as $id)
-        {
-            $success = $this->updateQuickpageSpecificState($id, $attribute, 1);
-            if ($success)
-            {
-                $successCount++;
-            }
-        }
+			return false;
+		}
 
-        return $successCount;
-    }
+		$successCount = 0;
+		foreach ($cid as $id)
+		{
+			$success = $this->updateQuickpageSpecificState($id, $attribute, 1);
+			if ($success)
+			{
+				$successCount++;
+			}
+		}
 
-    /**
-     * Sets published or featured attribute of quickpages to 0
-     *
-     * @param   array   $cid        Array with quickpages IDs
-     * @param   string  $attribute  Attribute to save, 'published' or 'featured'
-     *
-     * @return  mixed  integer on success, false otherwise
-     */
-    public function deactivate($cid, $attribute)
-    {
-        $app = JFactory::getApplication();
+		return $successCount;
+	}
 
-        // Should never occur
-        if (empty($cid))
-        {
-            $app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'notice');
-            return false;
-        }
+	/**
+	 * Sets published or featured attribute of quickpages to 0
+	 *
+	 * @param   array  $cid       Array with quickpages IDs
+	 * @param   string $attribute Attribute to save, 'published' or 'featured'
+	 *
+	 * @return  mixed  integer on success, false otherwise
+	 */
+	public function deactivate($cid, $attribute)
+	{
+		$app = JFactory::getApplication();
 
-        $successCount = 0;
-        foreach ($cid as $id)
-        {
-            $success = $this->updateQuickpageSpecificState($id, $attribute, 0);
-            if ($success)
-            {
-                $successCount++;
-            }
-        }
+		// Should never occur
+		if (empty($cid))
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'notice');
 
-        return $successCount;
-    }
+			return false;
+		}
 
-    /**
-     * Method to change the published state (table '#__content') of one quickpages.
-     *
-     * @return  boolean  true on success, false otherwise
-     */
-    public function publish()
-    {
-        $app = JFactory::getApplication();
-        $input = $app->input;
-        $qpIDs = $input->get('cid', array(), 'array');
-        Joomla\Utilities\ArrayHelper::toInteger($qpIDs);
+		$successCount = 0;
+		foreach ($cid as $id)
+		{
+			$success = $this->updateQuickpageSpecificState($id, $attribute, 0);
+			if ($success)
+			{
+				$successCount++;
+			}
+		}
 
-        // Should never occur
-        if (empty($qpIDs))
-        {
-            $app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'notice');
-            return false;
-        }
+		return $successCount;
+	}
 
-        $task = $input->getCmd('task');
-        $table = $this->getTable('Content', 'JTable');
-        $value = constant(strtoupper(str_replace('quickpage_content.', '', $task)));
+	/**
+	 * Method to change the published state (table '#__content') of one quickpages.
+	 *
+	 * @return  boolean  true on success, false otherwise
+	 */
+	public function publish()
+	{
+		$app   = JFactory::getApplication();
+		$input = $app->input;
+		$qpIDs = $input->get('cid', array(), 'array');
+		Joomla\Utilities\ArrayHelper::toInteger($qpIDs);
 
-        $qpID = $qpIDs[0];
-        if (!THM_GroupsHelperQuickpage::canEditState($qpID))
-        {
-            $app->enqueueMessage(JText::_('COM_THM_GROUPS_NOT_ALLOWED'), 'error');
-            return false;
-        }
+		// Should never occur
+		if (empty($qpIDs))
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'notice');
 
-        // Attempt to change the state of the records.
-        $success = $table->publish($qpID, $value, JFactory::getUser()->id);
-        if (!$success)
-        {
-            $app->enqueueMessage(JText::_('COM_THM_GROUPS_STATE_FAIL'), 'error');
-            return false;
-        }
+			return false;
+		}
 
-        return true;
-    }
+		$task  = $input->getCmd('task');
+		$table = $this->getTable('Content', 'JTable');
+		$value = constant(strtoupper(str_replace('quickpage_content.', '', $task)));
 
-    /**
-     * Toggles quickpage attributes like 'published' and 'featured'
-     *
-     * @param  array  $cid  Array with quickpages IDs
-     *
-     * @return  mixed  integer on success, otherwise false
-     */
-    public function toggle($cid)
-    {
-        $app = JFactory::getApplication();
-        $input = $app->input;
+		$qpID = $qpIDs[0];
+		if (!THM_GroupsHelperQuickpage::canEditState($qpID))
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NOT_ALLOWED'), 'error');
 
-        // If array is empty, the toggle button was clicked
-        if (empty($cid))
-        {
-            $qpID = $input->getInt('id', 0);
+			return false;
+		}
 
-            if (empty($qpID))
-            {
-                $app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'warning');
-                return false;
-            }
+		// Attempt to change the state of the records.
+		$success = $table->publish($qpID, $value, JFactory::getUser()->id);
+		if (!$success)
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_STATE_FAIL'), 'error');
 
-            $cid = array($qpID);
-        }
-        else
-        {
-            Joomla\Utilities\ArrayHelper::toInteger($cid);
-        }
+			return false;
+		}
 
-        $attribute = $input->getString('attribute', '');
-        $allowedAttributes = array('featured', 'published');
-        $invalidAttribute = (empty($attribute) OR !in_array($attribute, $allowedAttributes));
+		return true;
+	}
 
-        // Should only occur by url manipulation, general error
-        if ($invalidAttribute)
-        {
-            $app->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
-            return false;
-        }
+	/**
+	 * Toggles quickpage attributes like 'published' and 'featured'
+	 *
+	 * @param  array $cid Array with quickpages IDs
+	 *
+	 * @return  mixed  integer on success, otherwise false
+	 */
+	public function toggle($cid)
+	{
+		$app   = JFactory::getApplication();
+		$input = $app->input;
 
-        // Invert value according to the implementation
-        $value = $input->getInt('value', 1) ? 0 : 1;
+		// If array is empty, the toggle button was clicked
+		if (empty($cid))
+		{
+			$qpID = $input->getInt('id', 0);
 
-        // Process multiple ids
-        $successCount = 0;
-        foreach ($cid as $id)
-        {
+			if (empty($qpID))
+			{
+				$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'warning');
 
-            $success = $this->updateQuickpageSpecificState($id, $attribute, $value);
-            if ($success)
-            {
-                $successCount++;
-            }
-        }
+				return false;
+			}
 
-        return $successCount;
-    }
+			$cid = array($qpID);
+		}
+		else
+		{
+			Joomla\Utilities\ArrayHelper::toInteger($cid);
+		}
 
-    /**
-     * Checks if quickpage exists and executes a corresponded query
-     *
-     * @param   int     $qpID       ID of the quickpage
-     * @param   string  $attribute  Attribute to change, published or featured
-     * @param   int     $value      Value to save, 0 or 1
-     *
-     * @return  mixed
-     */
-    private function updateQuickpageSpecificState($qpID, $attribute, $value)
-    {
-        $dbo = JFactory::getDbo();
-        $query = $dbo->getQuery(true);
-        $tableName = '#__thm_groups_users_content';
+		$attribute         = $input->getString('attribute', '');
+		$allowedAttributes = array('featured', 'published');
+		$invalidAttribute  = (empty($attribute) OR !in_array($attribute, $allowedAttributes));
 
-        $qpExists = THM_GroupsHelperQuickpage::quickpageExists($qpID);
+		// Should only occur by url manipulation, general error
+		if ($invalidAttribute)
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
 
-        if ($qpExists)
-        {
-            $query->update($tableName)->where("contentID = '$qpID'");
+			return false;
+		}
 
-            switch ($attribute)
-            {
-                case 'featured':
-                    $query->set("featured = '$value'");
-                    break;
-                case 'published':
-                    $query->set("published = '$value'");
-                    break;
-            }
-        }
+		// Invert value according to the implementation
+		$value = $input->getInt('value', 1) ? 0 : 1;
 
-        // TODO: There is no synch plugin or event. This block is necessary to synch group attributes with content
-        else
-        {
-            $query->insert('#__thm_groups_users_content')->columns(array('usersID', 'contentID', 'featured', 'published'));
+		// Process multiple ids
+		$successCount = 0;
+		foreach ($cid as $id)
+		{
 
-            // Use create_by of the content
-            $values = array($this->getAuthorID($qpID), $qpID);
-            Joomla\Utilities\ArrayHelper::toInteger($values);
+			$success = $this->updateQuickpageSpecificState($id, $attribute, $value);
+			if ($success)
+			{
+				$successCount++;
+			}
+		}
 
-            switch ($attribute)
-            {
-                case 'featured':
-                    $values[] = $value;
-                    $values[] = 0;
-                    break;
-                case 'published':
-                    $values[] = 0;
-                    $values[] = $value;
-                    break;
-            }
-            $query->values(implode(',', $values));
-        }
+		return $successCount;
+	}
 
-        $dbo->setQuery((string) $query);
+	/**
+	 * Checks if quickpage exists and executes a corresponded query
+	 *
+	 * @param   int    $qpID      ID of the quickpage
+	 * @param   string $attribute Attribute to change, published or featured
+	 * @param   int    $value     Value to save, 0 or 1
+	 *
+	 * @return  mixed
+	 */
+	private function updateQuickpageSpecificState($qpID, $attribute, $value)
+	{
+		$dbo       = JFactory::getDbo();
+		$query     = $dbo->getQuery(true);
+		$tableName = '#__thm_groups_users_content';
 
-        try
-        {
-            $success = $dbo->execute();
-        }
-        catch (Exception $exception)
-        {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-            return false;
-        }
+		$qpExists = THM_GroupsHelperQuickpage::quickpageExists($qpID);
 
-        return $success;
-    }
+		if ($qpExists)
+		{
+			$query->update($tableName)->where("contentID = '$qpID'");
 
-    /**
-     * Returns author's ID of the quickpage
-     *
-     * @param   int  $qpID  Quickpage ID
-     *
-     * @return  int on success, null otherwise
-     */
-    private function getAuthorID($qpID)
-    {
-        $article = JTable::getInstance("content");
-        $article->load($qpID);
-        if (empty($article))
-        {
-            return JFactory::getUser()->id;
-        }
+			switch ($attribute)
+			{
+				case 'featured':
+					$query->set("featured = '$value'");
+					break;
+				case 'published':
+					$query->set("published = '$value'");
+					break;
+			}
+		}
 
-        return $article->get('created_by');
-    }
+		// TODO: There is no synch plugin or event. This block is necessary to synch group attributes with content
+		else
+		{
+			$query->insert('#__thm_groups_users_content')->columns(array('usersID', 'contentID', 'featured', 'published'));
+
+			// Use create_by of the content
+			$values = array($this->getAuthorID($qpID), $qpID);
+			Joomla\Utilities\ArrayHelper::toInteger($values);
+
+			switch ($attribute)
+			{
+				case 'featured':
+					$values[] = $value;
+					$values[] = 0;
+					break;
+				case 'published':
+					$values[] = 0;
+					$values[] = $value;
+					break;
+			}
+			$query->values(implode(',', $values));
+		}
+
+		$dbo->setQuery((string) $query);
+
+		try
+		{
+			$success = $dbo->execute();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+			return false;
+		}
+
+		return $success;
+	}
+
+	/**
+	 * Returns author's ID of the quickpage
+	 *
+	 * @param   int $qpID Quickpage ID
+	 *
+	 * @return  int on success, null otherwise
+	 */
+	private function getAuthorID($qpID)
+	{
+		$article = JTable::getInstance("content");
+		$article->load($qpID);
+		if (empty($article))
+		{
+			return JFactory::getUser()->id;
+		}
+
+		return $article->get('created_by');
+	}
 }

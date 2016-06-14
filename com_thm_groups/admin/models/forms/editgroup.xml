@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fieldset>
-        <field  id="groupinfo"
-                name="groupinfo"
-                type="editor"
-                class="inputbox"
+        <field id="groupinfo"
+               name="groupinfo"
+               type="editor"
+               class="inputbox"
         />
     </fieldset>
 </form>

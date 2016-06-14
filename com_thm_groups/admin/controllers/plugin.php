@@ -7,10 +7,10 @@
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsControllerPlugin
  * @description THMGroupsControllerPlugin class from com_thm_groups
- * @author      Florian Kolb,	<florian.kolb@mni.thm.de>
- * @author      Henrik Huller,	<henrik.huller@mni.thm.de>
- * @author      Julia Krauskopf,	<julia.krauskopf@mni.thm.de>
- * @author      Paul Meier, 	<paul.meier@mni.thm.de>
+ * @author      Florian Kolb,    <florian.kolb@mni.thm.de>
+ * @author      Henrik Huller,    <henrik.huller@mni.thm.de>
+ * @author      Julia Krauskopf,    <julia.krauskopf@mni.thm.de>
+ * @author      Paul Meier,    <paul.meier@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
@@ -32,107 +32,107 @@ class THM_GroupsControllerPlugin extends JControllerLegacy
 	/**
 	 * Constructor
 	 */
-	public function __construct() 
+	public function __construct()
 	{
 		parent::__construct();
 	}
-	
+
 	/**
 	 * Edit the selected plugin/plugins
-	 * 
+	 *
 	 * @return error
 	 */
-	public function edit() 
+	public function edit()
 	{
-		if (! JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
+		if (!JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
 		{
 			return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
-		} 
-		else 
+		}
+		else
 		{
-		$this->input->set('view', 'plugin_edit');
-		$this->input->set('hidemainmenu', 1);
-		parent::display();
+			$this->input->set('view', 'plugin_edit');
+			$this->input->set('hidemainmenu', 1);
+			parent::display();
 		}
 	}
-	
+
 	/**
 	 * Enable the selected plugin/plugins
-	 * 
+	 *
 	 * @return void
 	 */
 	public function enable()
 	{
-		$model = $this->getModel('plugin');
+		$model   = $this->getModel('plugin');
 		$success = $model->enable();
-		$msg = '';
-		
+		$msg     = '';
+
 		if ($success)
 		{
 			$msg = JText::_('COM_THM_GROUPS_DATA_ENABLED');
 			$this->setRedirect('index.php?option=com_thm_groups&view=plugin_manager', $msg);
 		}
-		else 
+		else
 		{
 			$msg = JText::_('COM_THM_GROUPS_ENABLED_ERROR');
 			$this->setRedirect('index.php?option=com_thm_groups&view=plugin_manager' . $success, $msg);
 		}
 	}
-	
+
 	/**
 	 * Disable the selected plugin/plugins
-	 * 
+	 *
 	 * @return void
 	 */
 	public function disable()
 	{
-		$model = $this->getModel('plugin');
+		$model   = $this->getModel('plugin');
 		$success = $model->disable();
-		$msg = '';
-		
+		$msg     = '';
+
 		if ($success)
 		{
 			$msg = JText::_('COM_THM_GROUPS_DATA_DISABLED');
 			$this->setRedirect('index.php?option=com_thm_groups&view=plugin_manager', $msg);
-		} 
+		}
 		else
 		{
-			$msg = JText::_ ('COM_THM_GROUPS_DISABLED_ERROR');
+			$msg = JText::_('COM_THM_GROUPS_DISABLED_ERROR');
 			$this->setRedirect('index.php?option=com_thm_groups&view=plugin_manager' . $success, $msg);
 		}
 	}
-	
+
 	/**
 	 * Enable or disable the plugin with the toogle switch
-	 * 
+	 *
 	 * @return void
 	 */
-	public function toggle() 
+	public function toggle()
 	{
 		$model = $this->getModel('plugin');
-		$a = -1;
-		
+		$a     = -1;
+
 		// Referenzierter parameter;
 		$success = $model->toggle($a);
-		$msg = '';
-		
-		if ($success) 
+		$msg     = '';
+
+		if ($success)
 		{
-			if ($a == 0) 
+			if ($a == 0)
 			{
-				
+
 				$msg = JText::_('COM_THM_GROUPS_DATA_DISABLED');
 				$this->setRedirect('index.php?option=com_thm_groups&view=plugin_manager', $msg);
-			
-			} 
-			else 
+
+			}
+			else
 			{
-				
+
 				$msg = JText::_('COM_THM_GROUPS_DATA_ENABLED');
 				$this->setRedirect('index.php?option=com_thm_groups&view=plugin_manager', $msg);
 			}
-		} 
-		else 
+		}
+		else
 		{
 			$msg = JText::_('COM_THM_GROUPS_DISABLED_ERROR');
 			$this->setRedirect('index.php?option=com_thm_groups&view=plugin_manager' . $success, $msg);

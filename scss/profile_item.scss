@@ -7,8 +7,8 @@ div.item-page {
 
     float: left;
 
-    h2{
-    display: inline-block;
+    h2 {
+      display: inline-block;
     }
   }
 
@@ -16,7 +16,7 @@ div.item-page {
     float: right;
   }
 
-  .profile{
+  .profile {
     clear: both;
   }
 
@@ -33,7 +33,7 @@ div.item-page {
       color: $foreground;
       border: $foreground 1px solid;
 
-      span:before{
+      span:before {
         color: $foreground;
       }
     }
@@ -95,7 +95,7 @@ div.template-standard {
     width: calc(30% - 40px);
   }
 
-  .anschrift-container{
+  .anschrift-container {
     margin-bottom: 20px;
     width: calc(70% - 40px);
   }
@@ -107,7 +107,7 @@ div.template-standard {
     width: 100%;
   }
 
-  .anschrift-container + div{
+  .anschrift-container + div {
 
     padding-top: 15px;
 
@@ -211,8 +211,7 @@ div.template-mni {
     display: none;
   }
 
-  .field-container, .field-row
-  {
+  .field-container, .field-row {
     max-width: 70%;
   }
 

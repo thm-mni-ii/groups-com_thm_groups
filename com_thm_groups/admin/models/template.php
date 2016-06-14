@@ -23,365 +23,378 @@ require_once JPATH_COMPONENT . '/assets/helpers/database_compare_helper.php';
  */
 class THM_GroupsModelTemplate extends JModelLegacy
 {
-    /**
-     * Method to perform batch operations on an item or a set of items.
-     * TODO make generic function which handle all types of batch operations
-     *
-     * @return  boolean  Returns true on success, false on failure.
-     *
-     */
-    public function batch()
-    {
-        $input = JFactory::getApplication()->input;
+	/**
+	 * Method to perform batch operations on an item or a set of items.
+	 * TODO make generic function which handle all types of batch operations
+	 *
+	 * @return  boolean  Returns true on success, false on failure.
+	 *
+	 */
+	public function batch()
+	{
+		$input = JFactory::getApplication()->input;
 
-        // Array with action command
-        $action = $input->get('batch_action', array(), 'array');
-        $groupIDs = $input->get('batch_id', array(), 'array');
-        $rawProfileIDs  = $input->get('cid', array(), 'array');
+		// Array with action command
+		$action        = $input->get('batch_action', array(), 'array');
+		$groupIDs      = $input->get('batch_id', array(), 'array');
+		$rawProfileIDs = $input->get('cid', array(), 'array');
 
-        // Sanitize group ids.
-        $profileIDs = array_unique($rawProfileIDs);
-        Joomla\Utilities\ArrayHelper::toInteger($profileIDs);
+		// Sanitize group ids.
+		$profileIDs = array_unique($rawProfileIDs);
+		Joomla\Utilities\ArrayHelper::toInteger($profileIDs);
 
-        // Remove any values of zero.
-        $zeroIndex = array_search(0, $profileIDs, true);
-        if ($zeroIndex !== false)
-        {
-            unset($profileIDs[$zeroIndex]);
-        }
+		// Remove any values of zero.
+		$zeroIndex = array_search(0, $profileIDs, true);
+		if ($zeroIndex !== false)
+		{
+			unset($profileIDs[$zeroIndex]);
+		}
 
-        if (empty($profileIDs))
-        {
-            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'warning');
-            return false;
-        }
+		if (empty($profileIDs))
+		{
+			JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'warning');
 
-        $done = false;
-        if (!empty($groupIDs))
-        {
-            $cmd = $action[0];
+			return false;
+		}
 
-            if (!$this->batchProfile($groupIDs, $profileIDs, $cmd))
-            {
-                return false;
-            }
+		$done = false;
+		if (!empty($groupIDs))
+		{
+			$cmd = $action[0];
 
-            $done = true;
-        }
+			if (!$this->batchProfile($groupIDs, $profileIDs, $cmd))
+			{
+				return false;
+			}
 
-        if (!$done)
-        {
-            JFactory::getApplication()->enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'), 'error');
-            return false;
-        }
+			$done = true;
+		}
 
-        // Clear the cache
-        $this->cleanCache();
+		if (!$done)
+		{
+			JFactory::getApplication()->enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'), 'error');
 
-        return true;
-    }
+			return false;
+		}
 
-    /**
-     * Perform batch operations
-     *
-     * @param   array   $groupIDs    The role IDs which assignments are being edited
-     * @param   array   $profileIDs  An array of group IDs on which to operate
-     * @param   string  $action       The action to perform
-     *
-     * @return  boolean  True on success, false on failure
-     *
-     */
-    public function batchProfile($groupIDs, $profileIDs, $action)
-    {
-        Joomla\Utilities\ArrayHelper::toInteger($groupIDs);
-        Joomla\Utilities\ArrayHelper::toInteger($profileIDs);
+		// Clear the cache
+		$this->cleanCache();
 
-        if ($action == 'del')
-        {
-            return $this->batchDelete($groupIDs, $profileIDs);
-        }
-        return $this->batchAssociation($groupIDs, $profileIDs);
-    }
+		return true;
+	}
 
-    /**
-     * Associates groups with the selected profile templates
-     *
-     * @param   array  $groupIDs    the ids of the groups to be associated
-     * @param   array  $templateIDs  the ids of the profiles to which the groups are to be associated
-     *
-     * @return  bool  true on success, otherwise false
-     */
-    private function batchAssociation($groupIDs, $templateIDs)
-    {
-        $query = $this->_db->getQuery(true);
+	/**
+	 * Perform batch operations
+	 *
+	 * @param   array  $groupIDs   The role IDs which assignments are being edited
+	 * @param   array  $profileIDs An array of group IDs on which to operate
+	 * @param   string $action     The action to perform
+	 *
+	 * @return  boolean  True on success, false on failure
+	 *
+	 */
+	public function batchProfile($groupIDs, $profileIDs, $action)
+	{
+		Joomla\Utilities\ArrayHelper::toInteger($groupIDs);
+		Joomla\Utilities\ArrayHelper::toInteger($profileIDs);
 
-        // First, we need to check if the role is already assigned to a group
-        $query->select('profileID, usergroupsID');
-        $query->from('#__thm_groups_profile_usergroups');
-        $query->where('profileID IN (' . implode(',', $templateIDs) . ')');
-        $query->order('profileID');
+		if ($action == 'del')
+		{
+			return $this->batchDelete($groupIDs, $profileIDs);
+		}
 
-        $this->_db->setQuery((string) $query);
+		return $this->batchAssociation($groupIDs, $profileIDs);
+	}
 
-        try
-        {
-            $templateGroups = $this->_db->loadObjectList();
-        }
-        catch (Exception $exc)
-        {
-            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
-            return false;
-        }
+	/**
+	 * Associates groups with the selected profile templates
+	 *
+	 * @param   array $groupIDs    the ids of the groups to be associated
+	 * @param   array $templateIDs the ids of the profiles to which the groups are to be associated
+	 *
+	 * @return  bool  true on success, otherwise false
+	 */
+	private function batchAssociation($groupIDs, $templateIDs)
+	{
+		$query = $this->_db->getQuery(true);
 
-        // Build an array with unique templates and their associated groups
-        $templates = array();
-        foreach ($templateGroups as $templateGroup)
-        {
-            $templates[$templateGroup->profileID][] = (int) $templateGroup->usergroupsID;
-        }
+		// First, we need to check if the role is already assigned to a group
+		$query->select('profileID, usergroupsID');
+		$query->from('#__thm_groups_profile_usergroups');
+		$query->where('profileID IN (' . implode(',', $templateIDs) . ')');
+		$query->order('profileID');
 
-        // Contains groups and roles to insert in DB
-        $insertValues = array();
-        foreach ($templateIDs as $templateID)
-        {
-            foreach ($groupIDs as $groupID)
-            {
-                $insertValues[$templateID][] = $groupID;
-            }
-        }
+		$this->_db->setQuery((string) $query);
 
-        // Removes groups already associated in the manner requested
-        THM_GroupsHelperDatabase_Compare::filterInsertValues($insertValues, $templates);
+		try
+		{
+			$templateGroups = $this->_db->loadObjectList();
+		}
+		catch (Exception $exc)
+		{
+			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-        // All associations to be created already exist
-        if (empty($insertValues))
-        {
-            return true;
-        }
+			return false;
+		}
 
-        $query = $this->_db->getQuery(true);
-        $query->insert('#__thm_groups_profile_usergroups');
-        $query->columns(array($this->_db->quoteName('profileID'), $this->_db->quoteName('usergroupsID')));
+		// Build an array with unique templates and their associated groups
+		$templates = array();
+		foreach ($templateGroups as $templateGroup)
+		{
+			$templates[$templateGroup->profileID][] = (int) $templateGroup->usergroupsID;
+		}
 
-        $processingNeeded = false;
-        foreach ($insertValues as $templateID => $groups)
-        {
-            if (empty($groups))
-            {
-                continue;
-            }
-            foreach ($groups as $groupID)
-            {
-                $query->values($templateID . ',' . $groupID);
-            }
-            $processingNeeded = true;
-        }
+		// Contains groups and roles to insert in DB
+		$insertValues = array();
+		foreach ($templateIDs as $templateID)
+		{
+			foreach ($groupIDs as $groupID)
+			{
+				$insertValues[$templateID][] = $groupID;
+			}
+		}
 
-        // If there are no roles to process, throw an error to notify the user
-        if (!$processingNeeded)
-        {
-            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ASSOCIATIONS_ALREADY_EXIST'), 'message');
-            return true;
-        }
+		// Removes groups already associated in the manner requested
+		THM_GroupsHelperDatabase_Compare::filterInsertValues($insertValues, $templates);
 
-        $this->_db->setQuery((string) $query);
+		// All associations to be created already exist
+		if (empty($insertValues))
+		{
+			return true;
+		}
 
-        try
-        {
-            $this->_db->execute();
-        }
-        catch (Exception $exc)
-        {
-            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
-            return false;
-        }
-        return true;
-    }
+		$query = $this->_db->getQuery(true);
+		$query->insert('#__thm_groups_profile_usergroups');
+		$query->columns(array($this->_db->quoteName('profileID'), $this->_db->quoteName('usergroupsID')));
 
-    /**
-     * Removes the association of groups with the selected profile templates
-     *
-     * @param   array  $groupIDs    the ids of the groups whose associations are to be removed
-     * @param   array  $profileIDs  the ids of the profiles from which the associations are to be removed
-     *
-     * @return  bool  true on success, otherwise false
-     */
-    private function batchDelete($groupIDs, $profileIDs)
-    {
-        $query = $this->_db->getQuery(true);
+		$processingNeeded = false;
+		foreach ($insertValues as $templateID => $groups)
+		{
+			if (empty($groups))
+			{
+				continue;
+			}
+			foreach ($groups as $groupID)
+			{
+				$query->values($templateID . ',' . $groupID);
+			}
+			$processingNeeded = true;
+		}
 
-        // Remove groups from the profile
-        $query->delete('#__thm_groups_profile_usergroups');
-        $query->where('profileID' . ' IN (' . implode(',', $profileIDs) . ')');
-        $query->where('usergroupsID' . ' IN (' . implode(',', $groupIDs) . ')');
+		// If there are no roles to process, throw an error to notify the user
+		if (!$processingNeeded)
+		{
+			JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ASSOCIATIONS_ALREADY_EXIST'), 'message');
 
-        $this->_db->setQuery((string) $query);
+			return true;
+		}
 
-        try
-        {
-            $this->_db->execute();
-        }
-        catch (RuntimeException $e)
-        {
-            JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
-            return false;
-        }
-        return true;
-    }
+		$this->_db->setQuery((string) $query);
 
-    /**
-     * Delete item
-     *
-     * @return mixed
-     */
-    public function delete()
-    {
-        $ids = JFactory::getApplication()->input->get('cid', array(), 'array');
+		try
+		{
+			$this->_db->execute();
+		}
+		catch (Exception $exc)
+		{
+			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-        $query = $this->_db->getQuery(true);
+			return false;
+		}
 
-        $conditions = array(
-            $this->_db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')',
-        );
+		return true;
+	}
 
-        $query->delete($this->_db->quoteName('#__thm_groups_profile'));
-        $query->where($conditions);
+	/**
+	 * Removes the association of groups with the selected profile templates
+	 *
+	 * @param   array $groupIDs   the ids of the groups whose associations are to be removed
+	 * @param   array $profileIDs the ids of the profiles from which the associations are to be removed
+	 *
+	 * @return  bool  true on success, otherwise false
+	 */
+	private function batchDelete($groupIDs, $profileIDs)
+	{
+		$query = $this->_db->getQuery(true);
 
-        $this->_db->setQuery($query);
+		// Remove groups from the profile
+		$query->delete('#__thm_groups_profile_usergroups');
+		$query->where('profileID' . ' IN (' . implode(',', $profileIDs) . ')');
+		$query->where('usergroupsID' . ' IN (' . implode(',', $groupIDs) . ')');
 
-        return $result = $this->_db->execute();
-    }
+		$this->_db->setQuery((string) $query);
 
-    /**
-     * Deletes a group from a profile by clicking on
-     * delete icon near profile name
-     *
-     * @return bool
-     *
-     * @throws Exception
-     */
-    public function deleteGroup()
-    {
-        $input = JFactory::getApplication()->input;
+		try
+		{
+			$this->_db->execute();
+		}
+		catch (RuntimeException $e)
+		{
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
 
-        $profileID = $input->getInt('p_id');
-        $groupID = $input->getInt('g_id');
+			return false;
+		}
 
-        $query = $this->_db->getQuery(true);
-        $query
-            ->delete('#__thm_groups_profile_usergroups')
-            ->where("profileID = '$profileID'")
-            ->where("usergroupsID = '$groupID'");
-        $this->_db->setQuery((string) $query);
+		return true;
+	}
 
-        try
-        {
-            $this->_db->execute();
-        }
-        catch (Exception $exc)
-        {
-            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
-            return false;
-        }
+	/**
+	 * Delete item
+	 *
+	 * @return mixed
+	 */
+	public function delete()
+	{
+		$ids = JFactory::getApplication()->input->get('cid', array(), 'array');
 
-        return true;
-    }
+		$query = $this->_db->getQuery(true);
 
-    /**
-     * Get the last order position of a profile
-     *
-     * @return Integer
-     */
-    public function getLastPosition()
-    {
-        $query = $this->_db->getQuery(true);
+		$conditions = array(
+			$this->_db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')',
+		);
 
-        $query
-            ->select(" MAX(`order`)  as 'order'")
-            ->from('#__thm_groups_profile');
+		$query->delete($this->_db->quoteName('#__thm_groups_profile'));
+		$query->where($conditions);
 
-        $this->_db->setQuery($query);
-        $lastPosition = $this->_db->loadObject();
+		$this->_db->setQuery($query);
 
-        return $lastPosition->order;
-    }
+		return $result = $this->_db->execute();
+	}
 
-    /**
-     * Saves the profile templates
-     *
-     * @param   bool  $new  whether or not the template should explicitly be saved as a new entry
-     *
-     * @return  bool true on success, otherwise false
-     */
-    public function save($new = false)
-    {
-        $this->_db->transactionStart();
-        $input = JFactory::getApplication()->input;
-        $data = $input->get('jform', array(), 'array');
+	/**
+	 * Deletes a group from a profile by clicking on
+	 * delete icon near profile name
+	 *
+	 * @return bool
+	 *
+	 * @throws Exception
+	 */
+	public function deleteGroup()
+	{
+		$input = JFactory::getApplication()->input;
 
-        if ($new)
-        {
-            $data['id'] = '';
-        }
+		$profileID = $input->getInt('p_id');
+		$groupID   = $input->getInt('g_id');
 
-        $templateID = intval($data['id']);
-        $attributeList = $input->get('attributeList', '', 'string');
-        $attributeJSON = (array) json_decode($attributeList);
+		$query = $this->_db->getQuery(true);
+		$query
+			->delete('#__thm_groups_profile_usergroups')
+			->where("profileID = '$profileID'")
+			->where("usergroupsID = '$groupID'");
+		$this->_db->setQuery((string) $query);
 
-        if ($templateID == 0)
-        {
-            $data['order'] = $this->getLastPosition() + 1;
-        }
-        $template = JTable::getInstance('Template', 'Table');
+		try
+		{
+			$this->_db->execute();
+		}
+		catch (Exception $exc)
+		{
+			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-        $success = $template->save($data);
+			return false;
+		}
 
-        if (!$success)
-        {
-            $this->_db->transactionRollback();
-            return false;
-        }
+		return true;
+	}
 
-        $this->_db->transactionCommit();
+	/**
+	 * Get the last order position of a profile
+	 *
+	 * @return Integer
+	 */
+	public function getLastPosition()
+	{
+		$query = $this->_db->getQuery(true);
 
-        if (!empty($attributeJSON))
-        {
-            $deleteQuery = $this->_db->getQuery(true);
-            $deleteQuery->delete('#__thm_groups_profile_attribute');
-            $deleteQuery->where('profileID =' . $template->id);
-            $this->_db->setQuery($deleteQuery);
+		$query
+			->select(" MAX(`order`)  as 'order'")
+			->from('#__thm_groups_profile');
 
-            try
-            {
-                $this->_db->execute();
-            }
-            catch (Exception $exc)
-            {
-                JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
-                return $template->id;
-            }
+		$this->_db->setQuery($query);
+		$lastPosition = $this->_db->loadObject();
 
-            $putQuery = $this->_db->getQuery(true);
-            $putQuery->insert('#__thm_groups_profile_attribute');
-            $columns = array('profileID', 'attributeID', 'order', 'params');
+		return $lastPosition->order;
+	}
 
-            // TODO This quoteName has to be here because 'order' is an sql keyword. => Alter column name!
-            $putQuery->columns($this->_db->quoteName($columns));
-            foreach ($attributeJSON as $index => $value )
-            {
-                $attributeID = intval($index);
-                $order = intval($value->order);
-                $params = json_encode($value->params);
-                $putQuery->values("'$template->id', '$attributeID', '$order', '$params'");
-            }
+	/**
+	 * Saves the profile templates
+	 *
+	 * @param   bool $new whether or not the template should explicitly be saved as a new entry
+	 *
+	 * @return  bool true on success, otherwise false
+	 */
+	public function save($new = false)
+	{
+		$this->_db->transactionStart();
+		$input = JFactory::getApplication()->input;
+		$data  = $input->get('jform', array(), 'array');
 
-            $this->_db->setQuery($putQuery);
-            $success = $this->_db->execute();
-            if (!$success)
-            {
-                return false;
-            }
-        }
-        return $template->id;
-    }
+		if ($new)
+		{
+			$data['id'] = '';
+		}
+
+		$templateID    = intval($data['id']);
+		$attributeList = $input->get('attributeList', '', 'string');
+		$attributeJSON = (array) json_decode($attributeList);
+
+		if ($templateID == 0)
+		{
+			$data['order'] = $this->getLastPosition() + 1;
+		}
+		$template = JTable::getInstance('Template', 'Table');
+
+		$success = $template->save($data);
+
+		if (!$success)
+		{
+			$this->_db->transactionRollback();
+
+			return false;
+		}
+
+		$this->_db->transactionCommit();
+
+		if (!empty($attributeJSON))
+		{
+			$deleteQuery = $this->_db->getQuery(true);
+			$deleteQuery->delete('#__thm_groups_profile_attribute');
+			$deleteQuery->where('profileID =' . $template->id);
+			$this->_db->setQuery($deleteQuery);
+
+			try
+			{
+				$this->_db->execute();
+			}
+			catch (Exception $exc)
+			{
+				JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+
+				return $template->id;
+			}
+
+			$putQuery = $this->_db->getQuery(true);
+			$putQuery->insert('#__thm_groups_profile_attribute');
+			$columns = array('profileID', 'attributeID', 'order', 'params');
+
+			// TODO This quoteName has to be here because 'order' is an sql keyword. => Alter column name!
+			$putQuery->columns($this->_db->quoteName($columns));
+			foreach ($attributeJSON as $index => $value)
+			{
+				$attributeID = intval($index);
+				$order       = intval($value->order);
+				$params      = json_encode($value->params);
+				$putQuery->values("'$template->id', '$attributeID', '$order', '$params'");
+			}
+
+			$this->_db->setQuery($putQuery);
+			$success = $this->_db->execute();
+			if (!$success)
+			{
+				return false;
+			}
+		}
+
+		return $template->id;
+	}
 }

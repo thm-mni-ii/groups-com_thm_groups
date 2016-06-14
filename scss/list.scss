@@ -39,7 +39,7 @@
 
       .letter-disabled {
         color: $grey-25;
-       }
+      }
 
       .letter-enabled {
         font-weight: bold;
@@ -50,13 +50,13 @@
       background-color: #4a5c66;
       color: $foreground;
       display: inline-block;
-      font-weight:bold;
+      font-weight: bold;
       line-height: 16px;
-      margin:0;
-      padding:3px;
-      text-align:center;
+      margin: 0;
+      padding: 3px;
+      text-align: center;
       vertical-align: top;
-      width:16px;
+      width: 16px;
     }
 
     .profiles-container .profiles {

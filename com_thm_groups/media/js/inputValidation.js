@@ -10,7 +10,8 @@
  * @return null
  **/
 
-jQuery(document).ready(function(){
+jQuery(document).ready(function ()
+{
     validateAll();
 });
 
@@ -19,9 +20,10 @@ function validateAll()
     var form = document.forms['adminForm'];
     var controls = form.elements;
 
-    for (var i= 0; i < controls.length; i++)
+    for (var i = 0; i < controls.length; i++)
     {
-        if ( (typeof(controls[i].onchange) == 'undefined' ) || (controls[i].onchange == null) ) {
+        if ((typeof(controls[i].onchange) == 'undefined' ) || (controls[i].onchange == null))
+        {
             continue;
         }
         else
@@ -31,7 +33,6 @@ function validateAll()
     }
 }
 
-
 function disable()
 {
     var buttons = document.getElementsByClassName('btn-small');
@@ -39,16 +40,18 @@ function disable()
     var controls = form.elements;
     var disable = false;
 
-    for (var i= 0; i < controls.length; i++)
+    for (var i = 0; i < controls.length; i++)
     {
-        if ( (typeof(controls[i].onchange) == 'undefined' ) || (controls[i].onchange == null) ) {
+        if ((typeof(controls[i].onchange) == 'undefined' ) || (controls[i].onchange == null))
+        {
             continue;
         }
         else
         {
             var data = controls[i].getAttribute('data');
             var req = controls[i].getAttribute('data-req');
-            if ((data == 'invalid') && (req == 'true')){
+            if ((data == 'invalid') && (req == 'true'))
+            {
                 disable = true;
                 break;
             }
@@ -56,15 +59,16 @@ function disable()
     }
 
     // Disable only all save-buttons except cancel-button
-    if (disable){
-        for (var i=0;i<buttons.length-1;i++)
+    if (disable)
+    {
+        for (var i = 0; i < buttons.length - 1; i++)
         {
             buttons[i].disabled = true;
         }
     }
     else
     {
-        for (var i=0;i<buttons.length;i++)
+        for (var i = 0; i < buttons.length; i++)
         {
             buttons[i].disabled = false;
         }
@@ -88,7 +92,7 @@ function validateInput(regex, inputField)
     }
     else
     {
-        document.getElementById(inputField + "_message").innerHTML="";
+        document.getElementById(inputField + "_message").innerHTML = "";
         field.setAttribute('data', 'invalid');
         if (field.getAttribute('data-req') != 'false')
         {
@@ -105,6 +109,7 @@ function validateInput(regex, inputField)
  *
  * @return   String  str  Relaced String
  **/
-function escapeRegExp(str) {
+function escapeRegExp(str)
+{
     return str.replace("\\", "\\\\");
 }

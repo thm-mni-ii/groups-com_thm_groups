@@ -11,7 +11,7 @@
  */
 
 defined('_JEXEC') or die;
-jimport('thm_core.edit.model');
+require_once JPATH_ROOT . '/media/com_thm_groups/models/edit.php';
 
 
 /**
@@ -21,15 +21,15 @@ jimport('thm_core.edit.model');
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
  */
-class THM_GroupsModelRole_Edit extends THM_CoreModelEdit
+class THM_GroupsModelRole_Edit extends THM_GroupsModelEdit
 {
-    /**
-     * Constructor.
-     *
-     * @param   array  $config  An optional associative array of configuration settings.
-     */
-    public function __construct($config = array())
-    {
-        parent::__construct($config);
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param   array $config An optional associative array of configuration settings.
+	 */
+	public function __construct($config = array())
+	{
+		parent::__construct($config);
+	}
 }

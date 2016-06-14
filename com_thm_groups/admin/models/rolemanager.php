@@ -24,80 +24,81 @@ jimport('joomla.application.component.modellist');
 class THMGroupsModelRolemanager extends JModelList
 {
 
-    /**
-     * Method to populate
-     *
-     * @param   string  $ordering   An optional ordering field.
-     * @param   string  $direction  An optional direction (asc|desc).
-     *
-     * @return  void  sets state attributes
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    protected function populateState($ordering = null, $direction = null)
-    {
-        // List state information.
-        parent::populateState('rname', 'asc');
-    }
+	/**
+	 * Method to populate
+	 *
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
+	 *
+	 * @return  void  sets state attributes
+	 *
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+	 */
+	protected function populateState($ordering = null, $direction = null)
+	{
+		// List state information.
+		parent::populateState('rname', 'asc');
+	}
 
-    /**
-     * Method to get list query
-     *
-     * @return  object  the JDatabaseQuery object
-     */
-    protected function getListQuery()
-    {
-        // Create a new query object.
-        $orderCol	= $this->state->get('list.ordering');
-        $orderDirn	= $this->state->get('list.direction');
+	/**
+	 * Method to get list query
+	 *
+	 * @return  object  the JDatabaseQuery object
+	 */
+	protected function getListQuery()
+	{
+		// Create a new query object.
+		$orderCol  = $this->state->get('list.ordering');
+		$orderDirn = $this->state->get('list.direction');
 
-        $db = JFactory::getDBO();
-        /*
-        $query = "select id,name as rname from #__thm_groups_roles";
-        $query .= " ORDER BY $orderCol $orderDirn";
-        */
-        $query = $db->getQuery(true);
-        $query->select('`id`, `name` AS rname');
-        $query->from($db->qn('#__thm_groups_roles'));
-        $query->order("$orderCol $orderDirn");
-        return $query;
-    }
+		$db = JFactory::getDBO();
+		/*
+		$query = "select id,name as rname from #__thm_groups_roles";
+		$query .= " ORDER BY $orderCol $orderDirn";
+		*/
+		$query = $db->getQuery(true);
+		$query->select('`id`, `name` AS rname');
+		$query->from($db->qn('#__thm_groups_roles'));
+		$query->order("$orderCol $orderDirn");
 
-    /**
-     * Delete role
-     *
-     * @param   String  $rid  RoleID
-     *
-     * @return	null
-     */
-    public function delRole($rid)
-    {
-        $db = JFactory::getDBO();
+		return $query;
+	}
 
-        if ($rid == 1 || $rid == 2)
-        {
-            return;
-        }
-        else
-        {
-            /*
-                $query = "DELETE FROM #__thm_groups_roles WHERE id=" . $rid;
-            */
-            $query = $db->getQuery(true);
-            $query->from($db->qn('#__thm_groups_roles'));
-            $query->delete();
-            $query->where('id = ' . $rid);
-            $db->setQuery($query);
-            $db->Query();
-            /*
-                $query = "DELETE FROM #__thm_groups_groups_map WHERE rid=" . $rid;
-            */
-            $query = $db->getQuery(true);
-            $query->from($db->qn('#__thm_groups_groups_map'));
-            $query->delete();
-            $query->where('id = ' . $rid);
-            $db->setQuery($query);
-            $db->Query();
-        }
-    }
+	/**
+	 * Delete role
+	 *
+	 * @param   String $rid RoleID
+	 *
+	 * @return    null
+	 */
+	public function delRole($rid)
+	{
+		$db = JFactory::getDBO();
+
+		if ($rid == 1 || $rid == 2)
+		{
+			return;
+		}
+		else
+		{
+			/*
+				$query = "DELETE FROM #__thm_groups_roles WHERE id=" . $rid;
+			*/
+			$query = $db->getQuery(true);
+			$query->from($db->qn('#__thm_groups_roles'));
+			$query->delete();
+			$query->where('id = ' . $rid);
+			$db->setQuery($query);
+			$db->Query();
+			/*
+				$query = "DELETE FROM #__thm_groups_groups_map WHERE rid=" . $rid;
+			*/
+			$query = $db->getQuery(true);
+			$query->from($db->qn('#__thm_groups_groups_map'));
+			$query->delete();
+			$query->where('id = ' . $rid);
+			$db->setQuery($query);
+			$db->Query();
+		}
+	}
 }

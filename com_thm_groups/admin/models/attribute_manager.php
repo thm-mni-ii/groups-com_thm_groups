@@ -18,7 +18,7 @@ define('EMAIL', 4);
 define('TITEL', 5);
 define('POSTTITEL', 7);
 
-jimport('thm_core.list.model');
+require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
 
 /**
  * THM_GroupsModelAttribute_Manager class for component com_thm_groups
@@ -27,294 +27,297 @@ jimport('thm_core.list.model');
  * @package   com_thm_groups.admin
  * @link      www.thm.de
  */
-class THM_GroupsModelAttribute_Manager extends THM_CoreModelList
+class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
 {
 
-    protected $defaultOrdering = 'attribute.id';
+	protected $defaultOrdering = 'attribute.id';
 
-    protected $defaultDirection = 'ASC';
+	protected $defaultDirection = 'ASC';
 
-    /**
-     * Constructor
-     *
-     * @param   array  $config  The config
-     */
-    public function __construct($config = array())
-    {
+	/**
+	 * Constructor
+	 *
+	 * @param   array $config The config
+	 */
+	public function __construct($config = array())
+	{
 
-        // If change here, change then in default_head
-        $config['filter_fields'] = array(
-            'attribute.id',
-            'attribute.name',
-            'dynamic.name'
-        );
+		// If change here, change then in default_head
+		$config['filter_fields'] = array(
+			'attribute.id',
+			'attribute.name',
+			'dynamic.name'
+		);
 
-        parent::__construct($config);
-    }
+		parent::__construct($config);
+	}
 
-    /**
-     * Method to build an SQL query to load the list data.
-     *
-     * @return      string  An SQL query
-     */
-    protected function getListQuery()
-    {
-        $dbo = JFactory::getDBO();
-        $query = $dbo->getQuery(true);
+	/**
+	 * Method to build an SQL query to load the list data.
+	 *
+	 * @return      string  An SQL query
+	 */
+	protected function getListQuery()
+	{
+		$dbo   = JFactory::getDBO();
+		$query = $dbo->getQuery(true);
 
-        $query
-            ->select('attribute.id')
-            ->select('attribute.name')
-            ->select('dynamic.name as dynamic_type_name')
-            ->select('attribute.options')
-            ->select('attribute.published')
-            ->select('attribute.ordering')
-            ->select('attribute.description')
-            ->from('#__thm_groups_attribute AS attribute')
-            ->innerJoin('#__thm_groups_dynamic_type AS dynamic ON attribute.dynamic_typeID = dynamic.id');
+		$query
+			->select('attribute.id')
+			->select('attribute.name')
+			->select('dynamic.name as dynamic_type_name')
+			->select('attribute.options')
+			->select('attribute.published')
+			->select('attribute.ordering')
+			->select('attribute.description')
+			->from('#__thm_groups_attribute AS attribute')
+			->innerJoin('#__thm_groups_dynamic_type AS dynamic ON attribute.dynamic_typeID = dynamic.id');
 
 
-        $this->setIDFilter($query, 'attribute.published', array('filter.published'));
+		$this->setIDFilter($query, 'attribute.published', array('filter.published'));
 
-        $search = $this->getState('filter.search');
-        if (!empty($search))
-        {
-            $query->where("(attribute.name LIKE '%" . implode("%' OR attribute.name LIKE '%", explode(' ', $search)) . "%')");
-        }
+		$search = $this->getState('filter.search');
+		if (!empty($search))
+		{
+			$query->where("(attribute.name LIKE '%" . implode("%' OR attribute.name LIKE '%", explode(' ', $search)) . "%')");
+		}
 
-        $dynamic = $this->getState('filter.dynamic');
-        if (!empty($dynamic) && $dynamic != '*')
-        {
-            $query->where("attribute.dynamic_typeID = '$dynamic'");
-        }
+		$dynamic = $this->getState('filter.dynamic');
+		if (!empty($dynamic) && $dynamic != '*')
+		{
+			$query->where("attribute.dynamic_typeID = '$dynamic'");
+		}
 
-        $this->setOrdering($query);
+		$this->setOrdering($query);
 
-        return $query;
-    }
+		return $query;
+	}
 
-    /**
-     * Function to feed the data in the table body correctly to the list view
-     *
-     * @return array consisting of items in the body
-     */
-    public function getItems()
-    {
-        $items = parent::getItems();
-        $return = array();
-        if (empty($items))
-        {
-            return $return;
-        }
+	/**
+	 * Function to feed the data in the table body correctly to the list view
+	 *
+	 * @return array consisting of items in the body
+	 */
+	public function getItems()
+	{
+		$items  = parent::getItems();
+		$return = array();
+		if (empty($items))
+		{
+			return $return;
+		}
 
-        $doNotDelete = array(VORNAME, NACHNAME, EMAIL, TITEL, POSTTITEL);
-        $index = 0;
-        $return['attributes'] = array('class' => 'ui-sortable');
-        foreach ($items as $item)
-        {
-            // TODO check user rights to sort attributes
-            // $canChange = $this->hasUserRightTo('EditState', $item);
-            $canChange = true;
-            $listOrder = $this->state->get('list.ordering');
-            $saveOrder = $listOrder == 'attribute.ordering';
-            $iconClass = '';
-            if (!$canChange)
-            {
-                $iconClass = ' inactive';
-            }
-            elseif (!$saveOrder)
-            {
-                $iconClass = ' inactive tip-top hasTooltip';
-            }
+		$doNotDelete          = array(VORNAME, NACHNAME, EMAIL, TITEL, POSTTITEL);
+		$index                = 0;
+		$return['attributes'] = array('class' => 'ui-sortable');
+		foreach ($items as $item)
+		{
+			// TODO check user rights to sort attributes
+			// $canChange = $this->hasUserRightTo('EditState', $item);
+			$canChange = true;
+			$listOrder = $this->state->get('list.ordering');
+			$saveOrder = $listOrder == 'attribute.ordering';
+			$iconClass = '';
+			if (!$canChange)
+			{
+				$iconClass = ' inactive';
+			}
+			elseif (!$saveOrder)
+			{
+				$iconClass = ' inactive tip-top hasTooltip';
+			}
 
-            $order = '';
+			$order = '';
 
-            if ($canChange && $saveOrder)
-            {
-                $order = '<input type="text" style="display:none" name="order[]" size="5" value="'
-                    . $item->ordering . '" class="width-20 text-area-order " />';
-            }
+			if ($canChange && $saveOrder)
+			{
+				$order = '<input type="text" style="display:none" name="order[]" size="5" value="'
+					. $item->ordering . '" class="width-20 text-area-order " />';
+			}
 
-            $url = "index.php?option=com_thm_groups&view=attribute_edit&id=$item->id";
-            $return[$index] = array();
+			$url            = "index.php?option=com_thm_groups&view=attribute_edit&id=$item->id";
+			$return[$index] = array();
 
-            $return[$index]['attributes'] = array( 'class' => 'order nowrap center', 'id' => $item->id);
-            $return[$index]['ordering']['attributes'] = array( 'class' => "order nowrap center", 'style' => "width: 40px;");
-            $return[$index]['ordering']['value']
-                = "<span class='sortable-handler$iconClass'><i class='icon-menu'></i></span>" . $order;
+			$return[$index]['attributes']             = array('class' => 'order nowrap center', 'id' => $item->id);
+			$return[$index]['ordering']['attributes'] = array('class' => "order nowrap center", 'style' => "width: 40px;");
+			$return[$index]['ordering']['value']
+			                                          = "<span class='sortable-handler$iconClass'><i class='icon-menu'></i></span>" . $order;
 
-            $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
-            $return[$index][1] = $item->id;
+			$return[$index][0] = JHtml::_('grid.id', $index, $item->id);
+			$return[$index][1] = $item->id;
 
-            $iconClass = "'icon-lock hasTooltip' title='" . JHtml::tooltipText($item->name, "COM_THM_GROUPS_CANT_DELETE_PREDEFINED_ELEMENT") . "'";
-            $name = in_array($item->id, $doNotDelete) ? "<span class=$iconClass></span>" . $item->name : $item->name;
+			$iconClass = "'icon-lock hasTooltip' title='" . JHtml::tooltipText($item->name, "COM_THM_GROUPS_CANT_DELETE_PREDEFINED_ELEMENT") . "'";
+			$name      = in_array($item->id, $doNotDelete) ? "<span class=$iconClass></span>" . $item->name : $item->name;
 
-            if (JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
-            {
-                $return[$index][2] = JHtml::_('link', $url, $name);
-            }
-            else
-            {
-                $return[$index][2] = $name;
-            }
-            $return[$index][3] = $this->getToggle($item->id, $item->published, 'attribute', '', 'published');
-            $return[$index][4] = $item->dynamic_type_name;
-            $return[$index][5] = $item->description;
-            $index++;
-        }
-        return $return;
-    }
+			if (JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
+			{
+				$return[$index][2] = JHtml::_('link', $url, $name);
+			}
+			else
+			{
+				$return[$index][2] = $name;
+			}
+			$return[$index][3] = $this->getToggle($item->id, $item->published, 'attribute', '', 'published');
+			$return[$index][4] = $item->dynamic_type_name;
+			$return[$index][5] = $item->description;
+			$index++;
+		}
 
-    /**
-     * Function to get table headers
-     *
-     * @return array including headers
-     */
-    public function getHeaders()
-    {
-        $ordering = $this->state->get('list.ordering');
-        $direction = $this->state->get('list.direction');
+		return $return;
+	}
 
-        $headers = array();
-        $headers['order'] =  JHtml::_('searchtools.sort', '', 'attribute.ordering', $direction, $ordering , null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2');
-        $headers['checkbox'] = '';
-        $headers['id'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'attribute.id', $direction, $ordering);
-        $headers['attribute'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ATTRIBUTE_NAME', 'attribute.name', $direction, $ordering);
-        $headers['published'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ATTRIBUTE_PUBLISHED', 'attribute.published', $direction, $ordering);
-        $headers['dynamic'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_DYNAMIC_TYPE', 'dynamic.name', $direction, $ordering);
-        $headers['description'] = JText::_('COM_THM_GROUPS_DESCRIPTION');
+	/**
+	 * Function to get table headers
+	 *
+	 * @return array including headers
+	 */
+	public function getHeaders()
+	{
+		$ordering  = $this->state->get('list.ordering');
+		$direction = $this->state->get('list.direction');
 
-        return $headers;
-    }
+		$headers                = array();
+		$headers['order']       = JHtml::_('searchtools.sort', '', 'attribute.ordering', $direction, $ordering, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2');
+		$headers['checkbox']    = '';
+		$headers['id']          = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'attribute.id', $direction, $ordering);
+		$headers['attribute']   = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ATTRIBUTE_NAME', 'attribute.name', $direction, $ordering);
+		$headers['published']   = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ATTRIBUTE_PUBLISHED', 'attribute.published', $direction, $ordering);
+		$headers['dynamic']     = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_DYNAMIC_TYPE', 'dynamic.name', $direction, $ordering);
+		$headers['description'] = JText::_('COM_THM_GROUPS_DESCRIPTION');
 
-    /**
-     * populates State
-     *
-     * @param   null  $ordering   ?
-     * @param   null  $direction  ?
-     *
-     * @return void
-     */
-    protected function populateState($ordering = null, $direction = null)
-    {
-        $app = JFactory::getApplication();
+		return $headers;
+	}
 
-        // Adjust the context to support modal layouts.
-        if ($layout = $app->input->get('layout'))
-        {
-            $this->context .= '.' . $layout;
-        }
+	/**
+	 * populates State
+	 *
+	 * @param   null $ordering  ?
+	 * @param   null $direction ?
+	 *
+	 * @return void
+	 */
+	protected function populateState($ordering = null, $direction = null)
+	{
+		$app = JFactory::getApplication();
 
-        $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
-        $this->setState('filter.search', $search);
+		// Adjust the context to support modal layouts.
+		if ($layout = $app->input->get('layout'))
+		{
+			$this->context .= '.' . $layout;
+		}
 
-        $static = $app->getUserStateFromRequest($this->context . '.filter.static', 'filter_static');
-        $this->setState('filter.dynamic', $static);
+		$search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
 
-        parent::populateState("attribute.id", "ASC");
-    }
+		$static = $app->getUserStateFromRequest($this->context . '.filter.static', 'filter_static');
+		$this->setState('filter.dynamic', $static);
 
-    /**
-     * Deletes pictures from folder
-     *
-     * @param   Object  $attribute  Object of attribute
-     *
-     * @return  boolean
-     */
-    private function deletePictures($attribute)
-    {
-        // Get all Pictures from attribute
-        $dbo = JFactory::getDbo();
+		parent::populateState("attribute.id", "ASC");
+	}
 
-        $usersAttributeQuery = $dbo->getQuery(true);
-        $usersAttributeQuery->select($dbo->qn(array('ID', 'value', 'attributeID')))
-            ->from($dbo->qn('#__thm_groups_users_attribute'))
-            ->where($dbo->qn('attributeID') . ' = ' . $attribute->id . '');
-        $dbo->setQuery($usersAttributeQuery);
-        $pictures = $dbo->loadObjectList();
+	/**
+	 * Deletes pictures from folder
+	 *
+	 * @param   Object $attribute Object of attribute
+	 *
+	 * @return  boolean
+	 */
+	private function deletePictures($attribute)
+	{
+		// Get all Pictures from attribute
+		$dbo = JFactory::getDbo();
 
-        // Get path
-        $path = json_decode($attribute->options)->path;
+		$usersAttributeQuery = $dbo->getQuery(true);
+		$usersAttributeQuery->select($dbo->qn(array('ID', 'value', 'attributeID')))
+			->from($dbo->qn('#__thm_groups_users_attribute'))
+			->where($dbo->qn('attributeID') . ' = ' . $attribute->id . '');
+		$dbo->setQuery($usersAttributeQuery);
+		$pictures = $dbo->loadObjectList();
 
-        // Delete files
-        if (($path != null) || ($path != false))
-        {
-            foreach (scandir($path) as $folderPic)
-            {
-                foreach ($pictures as $pic)
-                {
-                    $picName = $pic->value;
-                    //var_dump($picName, $folderPic);
-                    if ($folderPic == $picName)
-                    {
-                        unlink($path . $folderPic);
-                    }
+		// Get path
+		$path = json_decode($attribute->options)->path;
 
-                }
-            }
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+		// Delete files
+		if (($path != null) || ($path != false))
+		{
+			foreach (scandir($path) as $folderPic)
+			{
+				foreach ($pictures as $pic)
+				{
+					$picName = $pic->value;
+					//var_dump($picName, $folderPic);
+					if ($folderPic == $picName)
+					{
+						unlink($path . $folderPic);
+					}
 
-    /**
-     * Deletes attribute from database and removes all related
-     * entries from users_attribute
-     *
-     * @return bool
-     */
-    public function delete()
-    {
-        $jinput = JFactory::getApplication()->input;
-        $postVariables = $jinput->post->getArray(array());
-        $attributeID = $postVariables['cid'][0];
+				}
+			}
 
-        $dbo = JFactory::getDbo();
-        $query = $dbo->getQuery(true);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
-        // Remove related pictures from folder:
-        $query->select('*')
-              ->from($dbo->qn('#__thm_groups_attribute'))
-              ->where('id = ' . (int) $attributeID);
-        $dbo->setQuery($query);
-        $attribute = $dbo->loadObject();
+	/**
+	 * Deletes attribute from database and removes all related
+	 * entries from users_attribute
+	 *
+	 * @return bool
+	 */
+	public function delete()
+	{
+		$jinput        = JFactory::getApplication()->input;
+		$postVariables = $jinput->post->getArray(array());
+		$attributeID   = $postVariables['cid'][0];
 
-        if ($this->deletePictures($attribute))
-        {
-            // Delete attribute from database:
-            $query = $dbo->getQuery(true);
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
-            $query->delete($dbo->qn('#__thm_groups_attribute'))
-                ->where($dbo->qn('id') . ' = ' . $attributeID);
+		// Remove related pictures from folder:
+		$query->select('*')
+			->from($dbo->qn('#__thm_groups_attribute'))
+			->where('id = ' . (int) $attributeID);
+		$dbo->setQuery($query);
+		$attribute = $dbo->loadObject();
 
-            $dbo->setQuery($query);
+		if ($this->deletePictures($attribute))
+		{
+			// Delete attribute from database:
+			$query = $dbo->getQuery(true);
 
-            $result = $dbo->execute();
+			$query->delete($dbo->qn('#__thm_groups_attribute'))
+				->where($dbo->qn('id') . ' = ' . $attributeID);
 
-            if (!$result)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-        else
-        {
-            return false;
-        }
-    }
-    /**
-     * Returns custom hidden fields for page
-     *
-     * @return array
-     */
-    public function getHiddenFields()
-    {
-        return array();
-    }
+			$dbo->setQuery($query);
+
+			$result = $dbo->execute();
+
+			if (!$result)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	/**
+	 * Returns custom hidden fields for page
+	 *
+	 * @return array
+	 */
+	public function getHiddenFields()
+	{
+		return array();
+	}
 }

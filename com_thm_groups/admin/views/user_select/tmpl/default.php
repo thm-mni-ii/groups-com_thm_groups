@@ -11,5 +11,5 @@
  */
 
 defined("_JEXEC") or die;
-jimport('thm_core.list.modal');
-THM_CoreTemplateModalList::render($this);
+require_once JPATH_ROOT . '/media/com_thm_groups/templates/list_modal.php';
+THM_GroupsTemplateList_Modal::render($this);

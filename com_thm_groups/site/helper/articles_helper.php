@@ -22,34 +22,35 @@ defined('_JEXEC') or die;
  */
 class ArticleHelper
 {
-    /**
-     * Returns state of article
-     *
-     * @param   Int  $a_id  article id
-     *
-     * @return  boolean
-     */
-    public static function isArticleFeatured($a_id)
-    {
-        $db = JFactory::getDbo();
-        $isFeaturedQuery = $db->getQuery(true);
+	/**
+	 * Returns state of article
+	 *
+	 * @param   Int $a_id article id
+	 *
+	 * @return  boolean
+	 */
+	public static function isArticleFeatured($a_id)
+	{
+		$db              = JFactory::getDbo();
+		$isFeaturedQuery = $db->getQuery(true);
 
-        $isFeaturedQuery
-            ->select('*')
-            ->from('#__thm_groups_users_content')
-            ->where('contentID = ' . $db->quote($a_id));
-        $db->setQuery((string) $isFeaturedQuery);
+		$isFeaturedQuery
+			->select('*')
+			->from('#__thm_groups_users_content')
+			->where('contentID = ' . $db->quote($a_id));
+		$db->setQuery((string) $isFeaturedQuery);
 
-        try
-        {
-            $result = $db->loadObject();
-        }
-        catch (Exception $exception)
-        {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-            return false;
-        }
+		try
+		{
+			$result = $db->loadObject();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-        return $result;
-    }
+			return false;
+		}
+
+		return $result;
+	}
 }

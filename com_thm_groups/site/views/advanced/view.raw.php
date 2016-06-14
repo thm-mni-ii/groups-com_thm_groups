@@ -13,7 +13,7 @@
  */
 
 jimport('joomla.application.component.view');
-jimport('thm_groups.view.lib_thm_groups_listview');
+require_once JPATH_ROOT . "/media/com_thm_groups/views/groups_list.php";
 
 JHTML::_('behavior.mootools');
 JHTML::_('behavior.framework', true);
@@ -24,42 +24,42 @@ JHTML::_('behavior.framework', true);
  * @category  Joomla.Component.Site
  * @package   thm_groups
  * @link      www.thm.de
-*/
+ */
 class THM_GroupsViewAdvanced extends JViewLegacy
 {
 
-    /**
-     * Method to get extra
-     *
-     * @param   String  $tpl  template
-     *
-     * @return void
-     *
-     * @see JView::display()
-     */
-    public function display($tpl = null)
-    {
-        $app  = JFactory::getApplication()->input;
+	/**
+	 * Method to get extra
+	 *
+	 * @param   String $tpl template
+	 *
+	 * @return void
+	 *
+	 * @see JView::display()
+	 */
+	public function display($tpl = null)
+	{
+		$app = JFactory::getApplication()->input;
 
-        $task = $app->get('task');
-        $this->$task();
-    }
+		$task = $app->get('task');
+		$this->$task();
+	}
 
 
-    /**
-     * Search a Groups of User for one Letter
-     *
-     * @return String $result a groups of user for one Letter
-     */
-    public function notify()
-    {
-        $app  = JFactory::getApplication()->input;
-        $itemId = $app->get('Itemid', false, 'post');
+	/**
+	 * Search a Groups of User for one Letter
+	 *
+	 * @return String $result a groups of user for one Letter
+	 */
+	public function notify()
+	{
+		$app    = JFactory::getApplication()->input;
+		$itemId = $app->get('Itemid', false, 'post');
 
-        // Notify Preview Observer
-        $model = $this->getmodel('advanced');
-        $token = $model->notifyPreviewObserver($itemId);
+		// Notify Preview Observer
+		$model = $this->getmodel('advanced');
+		$token = $model->notifyPreviewObserver($itemId);
 
-        echo $token;
-    }
+		echo $token;
+	}
 }

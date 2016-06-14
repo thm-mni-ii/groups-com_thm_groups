@@ -11,20 +11,21 @@
  */
 ?>
 <div itemtype="http://schema.org/Article" itemscope="" class="thm_groups-list">
-    <meta content="de-DE" itemprop="inLanguage">
-    <div class="page-header">
-        <?php echo "<h2>" . $this->title . "</h2>"; ?>
-    </div>
-    <div itemprop="articleBody" class="list-container">
-        <?php
-        if ($this->params->get('showAll') == 1) {
-            echo $this->loadTemplate('list');
-            
-        }
-        else
-        {
-            echo $this->loadTemplate('letter');
-        }
-        ?>
-    </div>
+	<meta content="de-DE" itemprop="inLanguage">
+	<div class="page-header">
+		<?php echo "<h2>" . $this->title . "</h2>"; ?>
+	</div>
+	<div itemprop="articleBody" class="list-container">
+		<?php
+		if ($this->params->get('showAll') == 1)
+		{
+			echo $this->loadTemplate('list');
+
+		}
+		else
+		{
+			echo $this->loadTemplate('letter');
+		}
+		?>
+	</div>
 </div>

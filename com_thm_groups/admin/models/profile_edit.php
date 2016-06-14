@@ -24,7 +24,7 @@ require_once JPATH_SITE . '/media/com_thm_groups/models/profile_edit_model.php';
  */
 class THM_GroupsModelProfile_Edit extends THM_GroupsModelProfile_Edit_Model
 {
-    /**
-     * Outsourced to /media/models/profile_edit_model.php
-     */
+	/**
+	 * Outsourced to /media/models/profile_edit_model.php
+	 */
 }

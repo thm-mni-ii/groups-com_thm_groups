@@ -21,252 +21,260 @@ require_once JPATH_SITE . '/media/com_thm_groups/helpers/quickpage.php';
  */
 class THM_GroupsModelQuickpage extends JModelLegacy
 {
-    /**
-     * The event to trigger after changing the published state of the data.
-     *
-     * @var    string
-     * @since  12.2
-     */
-    protected $event_change_state = null;
+	/**
+	 * The event to trigger after changing the published state of the data.
+	 *
+	 * @var    string
+	 * @since  12.2
+	 */
+	protected $event_change_state = null;
 
-    /**
-     * Maps events to plugin groups.
-     *
-     * @var array
-     */
-    protected $events_map = null;
+	/**
+	 * Maps events to plugin groups.
+	 *
+	 * @var array
+	 */
+	protected $events_map = null;
 
-    /**
-     * Constructor.
-     *
-     * @param   array  $config  An optional associative array of configuration settings.
-     *
-     * @see     JModelLegacy
-     * @since   12.2
-     */
-    public function __construct($config = array())
-    {
-        parent::__construct($config);
+	/**
+	 * Constructor.
+	 *
+	 * @param   array $config An optional associative array of configuration settings.
+	 *
+	 * @see     JModelLegacy
+	 * @since   12.2
+	 */
+	public function __construct($config = array())
+	{
+		parent::__construct($config);
 
-        if (isset($config['event_change_state']))
-        {
-            $this->event_change_state = $config['event_change_state'];
-        }
-        elseif (empty($this->event_change_state))
-        {
-            $this->event_change_state = 'onContentChangeState';
-        }
-    }
+		if (isset($config['event_change_state']))
+		{
+			$this->event_change_state = $config['event_change_state'];
+		}
+		elseif (empty($this->event_change_state))
+		{
+			$this->event_change_state = 'onContentChangeState';
+		}
+	}
 
-    /**
-     * Method to change the published state of one or more records.
-     *
-     * @return  boolean  True on success.
-     *
-     */
-    public function publish()
-    {
-        $app = JFactory::getApplication();
-        $input = $app->input;
-        $qpIDs = Joomla\Utilities\ArrayHelper::toInteger($input->get('cid', array(), 'array'));
+	/**
+	 * Method to change the published state of one or more records.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 */
+	public function publish()
+	{
+		$app   = JFactory::getApplication();
+		$input = $app->input;
+		$qpIDs = Joomla\Utilities\ArrayHelper::toInteger($input->get('cid', array(), 'array'));
 
-        // Should never occur
-        if (empty($qpIDs))
-        {
-            $app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'notice');
-            return;
-        }
+		// Should never occur
+		if (empty($qpIDs))
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'notice');
 
-        $qpID = $qpIDs[0];
-        if (!THM_GroupsHelperQuickpage::canEditState($qpID))
-        {
-            $app->enqueueMessage(JText::_('COM_THM_GROUPS_NOT_ALLOWED'), 'error');
-            return;
-        }
+			return;
+		}
 
-        $task = $input->getCmd('task');
-        $value = constant(strtoupper(str_replace('quickpage.', '', $task)));
+		$qpID = $qpIDs[0];
+		if (!THM_GroupsHelperQuickpage::canEditState($qpID))
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NOT_ALLOWED'), 'error');
 
-        JTable::addIncludePath(JPATH_ROOT . '/libraries/legacy/table');
-        $table = $this->getTable('Content', 'JTable');
+			return;
+		}
 
-        // Attempt to change the state of the records.
-        $success = $table->publish($qpID, $value, JFactory::getUser()->id);
-        if (!$success)
-        {
-            $app->enqueueMessage(JText::_('COM_THM_GROUPS_STATE_FAIL'), 'error');
-            return false;
-        }
-        return true;
-    }
+		$task  = $input->getCmd('task');
+		$value = constant(strtoupper(str_replace('quickpage.', '', $task)));
 
-    /**
-     * Saves the manually set order of records.
-     *
-     * @param   array    $pks    An array of primary key ids.
-     * @param   integer  $order  +1 or -1
-     *
-     * @return  mixed
-     *
-     */
-    public function saveorder($pks = null, $order = null)
-    {
-        JTable::addIncludePath(JPATH_ROOT . '/libraries/legacy/table');
-        $table = $this->getTable('Content', 'JTable');
-        $tableClassName = get_class($table);
-        $contentType = new JUcmType;
-        $type = $contentType->getTypeByTable($tableClassName);
-        $tagsObserver = $table->getObserverOfClass('JTableObserverTags');
-        $conditions = array();
+		JTable::addIncludePath(JPATH_ROOT . '/libraries/legacy/table');
+		$table = $this->getTable('Content', 'JTable');
 
-        if (empty($pks))
-        {
-            return JError::raiseWarning(500, JText::_('COM_THM_GROUPS_NO_ITEMS_SELECTED'));
-        }
+		// Attempt to change the state of the records.
+		$success = $table->publish($qpID, $value, JFactory::getUser()->id);
+		if (!$success)
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_STATE_FAIL'), 'error');
 
-        // Update ordering values
-        foreach ($pks as $i => $pk)
-        {
-            $table->load((int) $pk);
+			return false;
+		}
 
-            // Access checks.
-            if (!THM_GroupsHelperQuickpage::canEditState($table))
-            {
-                // Prune items that you can't change.
-                unset($pks[$i]);
-                JLog::add(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
-            }
-            elseif ($table->ordering != $order[$i])
-            {
-                $table->ordering = $order[$i];
+		return true;
+	}
 
-                if (!$table->store())
-                {
-                    $this->setError($table->getError());
-                    return false;
-                }
+	/**
+	 * Saves the manually set order of records.
+	 *
+	 * @param   array   $pks   An array of primary key ids.
+	 * @param   integer $order +1 or -1
+	 *
+	 * @return  mixed
+	 *
+	 */
+	public function saveorder($pks = null, $order = null)
+	{
+		JTable::addIncludePath(JPATH_ROOT . '/libraries/legacy/table');
+		$table          = $this->getTable('Content', 'JTable');
+		$tableClassName = get_class($table);
+		$contentType    = new JUcmType;
+		$type           = $contentType->getTypeByTable($tableClassName);
+		$tagsObserver   = $table->getObserverOfClass('JTableObserverTags');
+		$conditions     = array();
 
-                // Remember to reorder within position and client_id
-                $condition = $this->getReorderConditions($table);
-                $found = false;
+		if (empty($pks))
+		{
+			return JError::raiseWarning(500, JText::_('COM_THM_GROUPS_NO_ITEMS_SELECTED'));
+		}
 
-                foreach ($conditions as $cond)
-                {
-                    if ($cond[1] == $condition)
-                    {
-                        $found = true;
-                        break;
-                    }
-                }
+		// Update ordering values
+		foreach ($pks as $i => $pk)
+		{
+			$table->load((int) $pk);
 
-                if (!$found)
-                {
-                    $key = $table->getKeyName();
-                    $conditions[] = array($table->$key, $condition);
-                }
-            }
-        }
+			// Access checks.
+			if (!THM_GroupsHelperQuickpage::canEditState($table))
+			{
+				// Prune items that you can't change.
+				unset($pks[$i]);
+				JLog::add(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+			}
+			elseif ($table->ordering != $order[$i])
+			{
+				$table->ordering = $order[$i];
 
-        // Execute reorder for each category.
-        foreach ($conditions as $cond)
-        {
-            $table->load($cond[0]);
-            $table->reorder($cond[1]);
-        }
+				if (!$table->store())
+				{
+					$this->setError($table->getError());
 
-        // Clear the component's cache
-        $this->cleanCache();
+					return false;
+				}
 
-        return true;
-    }
+				// Remember to reorder within position and client_id
+				$condition = $this->getReorderConditions($table);
+				$found     = false;
 
-    /**
-     * Toggles quickpage attributes
-     *
-     * @return  boolean  true on success, otherwise false
-     */
-    public function toggle()
-    {
-        $app = JFactory::getApplication();
-        $input = $app->input;
+				foreach ($conditions as $cond)
+				{
+					if ($cond[1] == $condition)
+					{
+						$found = true;
+						break;
+					}
+				}
 
-        $qpID = $input->getInt('id', 0);
+				if (!$found)
+				{
+					$key          = $table->getKeyName();
+					$conditions[] = array($table->$key, $condition);
+				}
+			}
+		}
 
-        // Should only occur by url manipulation, but has validity
-        if (empty($qpID))
-        {
-            $app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'warning');
-            return;
-        }
+		// Execute reorder for each category.
+		foreach ($conditions as $cond)
+		{
+			$table->load($cond[0]);
+			$table->reorder($cond[1]);
+		}
 
-        $attribute = $input->getString('attribute', '');
-        $allowedAttributes = array('featured', 'published');
-        $invalidAttribute = (empty($attribute) OR !in_array($attribute, $allowedAttributes));
+		// Clear the component's cache
+		$this->cleanCache();
 
-        // Should only occur by url manipulation, general error
-        if ($invalidAttribute)
-        {
-            $app->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
-            return;
-        }
+		return true;
+	}
 
-        $value = $input->getBool('value', false);
+	/**
+	 * Toggles quickpage attributes
+	 *
+	 * @return  boolean  true on success, otherwise false
+	 */
+	public function toggle()
+	{
+		$app   = JFactory::getApplication();
+		$input = $app->input;
 
-        // TODO: Create a table class to take care of this
-        $dbo = JFactory::getDbo();
-        $query = $dbo->getQuery(true);
-        $tableName = '#__thm_groups_users_content';
+		$qpID = $input->getInt('id', 0);
 
-        $qpExists = THM_GroupsHelperQuickpage::quickpageExists($qpID);
-        if ($qpExists)
-        {
-            $query->update($tableName)->where("contentID = '$qpID'");
+		// Should only occur by url manipulation, but has validity
+		if (empty($qpID))
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'warning');
 
-            switch ($attribute)
-            {
-                case 'featured':
-                    $query->set("featured = '$value'");
-                    break;
-                case 'published':
-                    $query->set("published = '$value'");
-                    break;
-            }
-        }
+			return;
+		}
 
-        // TODO: There is no synch plugin or event. This block is necessary to synch group attributes with content
-        else
-        {
-            $query->insert('#__thm_groups_users_content')->columns(array('usersID', 'contentID', 'featured', 'published'));
+		$attribute         = $input->getString('attribute', '');
+		$allowedAttributes = array('featured', 'published');
+		$invalidAttribute  = (empty($attribute) OR !in_array($attribute, $allowedAttributes));
 
-            $values = array(JFactory::getUser()->id, $qpID);
-            Joomla\Utilities\ArrayHelper::toInteger($values);
+		// Should only occur by url manipulation, general error
+		if ($invalidAttribute)
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
 
-            switch ($attribute)
-            {
-                case 'featured':
-                    $values[] = $value;
-                    $values[] = 0;
-                    break;
-                case 'published':
-                    $values[] = 0;
-                    $values[] = $value;
-                    break;
-            }
-            $query->values(implode(',', $values));
-        }
+			return;
+		}
 
-        $dbo->setQuery((string) $query);
+		$value = $input->getBool('value', false);
 
-        try
-        {
-            $success = $dbo->execute();
-        }
-        catch (Exception $exc)
-        {
-            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
-            return false;
-        }
+		// TODO: Create a table class to take care of this
+		$dbo       = JFactory::getDbo();
+		$query     = $dbo->getQuery(true);
+		$tableName = '#__thm_groups_users_content';
 
-        return empty($success)? false : true;
-    }
+		$qpExists = THM_GroupsHelperQuickpage::quickpageExists($qpID);
+		if ($qpExists)
+		{
+			$query->update($tableName)->where("contentID = '$qpID'");
+
+			switch ($attribute)
+			{
+				case 'featured':
+					$query->set("featured = '$value'");
+					break;
+				case 'published':
+					$query->set("published = '$value'");
+					break;
+			}
+		}
+
+		// TODO: There is no synch plugin or event. This block is necessary to synch group attributes with content
+		else
+		{
+			$query->insert('#__thm_groups_users_content')->columns(array('usersID', 'contentID', 'featured', 'published'));
+
+			$values = array(JFactory::getUser()->id, $qpID);
+			Joomla\Utilities\ArrayHelper::toInteger($values);
+
+			switch ($attribute)
+			{
+				case 'featured':
+					$values[] = $value;
+					$values[] = 0;
+					break;
+				case 'published':
+					$values[] = 0;
+					$values[] = $value;
+					break;
+			}
+			$query->values(implode(',', $values));
+		}
+
+		$dbo->setQuery((string) $query);
+
+		try
+		{
+			$success = $dbo->execute();
+		}
+		catch (Exception $exc)
+		{
+			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+
+			return false;
+		}
+
+		return empty($success) ? false : true;
+	}
 }

@@ -13,7 +13,7 @@
  */
 
 jimport('joomla.application.component.view');
-jimport('thm_groups.view.lib_thm_groups_listview');
+require_once JPATH_ROOT . "/media/com_thm_groups/views/groups_list.php";
 
 
 /**
@@ -22,48 +22,48 @@ jimport('thm_groups.view.lib_thm_groups_listview');
  * @category  Joomla.Component.Site
  * @package   thm_groups
  * @link      www.thm.de
-*/
+ */
 class THM_GroupsViewList extends JViewLegacy
 {
 
-    /**
-     * Method to get extra
-     *
-     * @param   String  $tpl  template
-     *
-     * @return void
-     *
-     * @see JView::display()
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function display($tpl = null)
-    {
-        $app = JFactory::getApplication()->input;
-        $task = $app->get('task');
-        $this->$task();
-    }
+	/**
+	 * Method to get extra
+	 *
+	 * @param   String $tpl template
+	 *
+	 * @return void
+	 *
+	 * @see JView::display()
+	 *
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+	 */
+	public function display($tpl = null)
+	{
+		$app  = JFactory::getApplication()->input;
+		$task = $app->get('task');
+		$this->$task();
+	}
 
 
-    /**
-     * Search a Groups of User for one Letter
-     *
-     * @return String $result a groups of user for one Letter
-     */
-    public function getUserAlphabet()
-    {
-        $app = JFactory::getApplication()->input;
-        $gid = $app->get('gid');
-        $letter = $app->getString('letter');
-        $column = $app->getString('column');
-        $paramLinkTarget = $app->getString('paramLinkTarget');
-        $orderAttr = $app->getString('orderAttr');
-        $showstructure = $app->getString('showStructure');
-        $arrshowstructure = explode(",", $showstructure);
-        $linkElement = explode(",", $app->getString('linkElement'));
-        $oldattribut = $app->getString('oldattribut');
+	/**
+	 * Search a Groups of User for one Letter
+	 *
+	 * @return String $result a groups of user for one Letter
+	 */
+	public function getUserAlphabet()
+	{
+		$app              = JFactory::getApplication()->input;
+		$gid              = $app->get('gid');
+		$letter           = $app->getString('letter');
+		$column           = $app->getString('column');
+		$paramLinkTarget  = $app->getString('paramLinkTarget');
+		$orderAttr        = $app->getString('orderAttr');
+		$showstructure    = $app->getString('showStructure');
+		$arrshowstructure = explode(",", $showstructure);
+		$linkElement      = explode(",", $app->getString('linkElement'));
+		$oldattribut      = $app->getString('oldattribut');
 
 
-        echo THMLibThmListview::getUserForLetter($gid, $column, $letter, $paramLinkTarget, $orderAttr, $arrshowstructure, $linkElement, $oldattribut);
-    }
+		echo THM_Listview::getUserForLetter($gid, $column, $letter, $paramLinkTarget, $orderAttr, $arrshowstructure, $linkElement, $oldattribut);
+	}
 }

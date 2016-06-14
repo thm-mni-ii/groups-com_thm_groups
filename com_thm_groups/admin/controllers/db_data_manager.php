@@ -25,32 +25,32 @@ jimport('joomla.application.component.controller');
  */
 class THM_GroupsControllerDB_Data_Manager extends JControllerLegacy
 {
-    /**
-     * constructor (registers additional tasks to methods)
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+	/**
+	 * constructor (registers additional tasks to methods)
+	 *
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+	}
 
-    public function run()
-    {
-        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+	public function run()
+	{
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        // Set the model
-        $model = $this->getModel('DB_Data_Manager', '', array());
+		// Set the model
+		$model = $this->getModel('DB_Data_Manager', '', array());
 
-        // Preset the redirect
-        $this->setRedirect(JRoute::_('index.php?option=com_thm_groups&view=thm_groups'));
+		// Preset the redirect
+		$this->setRedirect(JRoute::_('index.php?option=com_thm_groups&view=thm_groups'));
 
-        if ($model->execute())
-        {
-            $this->setMessage(JText::_('JLIB_APPLICATION_SUCCESS_BATCH'));
-        }
-        else
-        {
-            $this->setMessage(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_FAILED', $model->getError()), 'warning');
-        }
-    }
+		if ($model->execute())
+		{
+			$this->setMessage(JText::_('JLIB_APPLICATION_SUCCESS_BATCH'));
+		}
+		else
+		{
+			$this->setMessage(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_FAILED', $model->getError()), 'warning');
+		}
+	}
 }

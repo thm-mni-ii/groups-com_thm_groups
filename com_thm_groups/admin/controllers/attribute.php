@@ -34,281 +34,282 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
  */
 class THM_GroupsControllerAttribute extends JControllerLegacy
 {
-    /**
-     * Constructor (registers additional tasks to methods)
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+	/**
+	 * Constructor (registers additional tasks to methods)
+	 *
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+	}
 
-    /**
-     * Display task
-     *
-     * @param   boolean  $cachable   ?
-     * @param   boolean  $urlparams  the urlparams
-     *
-     * @return void
-     */
-    public function display($cachable = false, $urlparams = false)
-    {
-        // Call parent behavior
-        parent::display($cachable);
-    }
+	/**
+	 * Display task
+	 *
+	 * @param   boolean $cachable  ?
+	 * @param   boolean $urlparams the urlparams
+	 *
+	 * @return void
+	 */
+	public function display($cachable = false, $urlparams = false)
+	{
+		// Call parent behavior
+		parent::display($cachable);
+	}
 
-    /**
-     * Adding
-     *
-     * @return mixed
-     */
-    public function add()
-    {
-        $canEdit = THM_GroupsHelperComponent::canEdit();
-        if (!$canEdit)
-        {
-            return;
-        }
+	/**
+	 * Adding
+	 *
+	 * @return mixed
+	 */
+	public function add()
+	{
+		$canEdit = THM_GroupsHelperComponent::canEdit();
+		if (!$canEdit)
+		{
+			return;
+		}
 
-        $this->setRedirect("index.php?option=com_thm_groups&view=attribute_edit&id=0");
-    }
+		$this->setRedirect("index.php?option=com_thm_groups&view=attribute_edit&id=0");
+	}
 
-    /**
-     * Apply - Save button
-     *
-     * @return void
-     */
-    public function apply()
-    {
-        $canEdit = THM_GroupsHelperComponent::canEdit();
-        if (!$canEdit)
-        {
-            return;
-        }
+	/**
+	 * Apply - Save button
+	 *
+	 * @return void
+	 */
+	public function apply()
+	{
+		$canEdit = THM_GroupsHelperComponent::canEdit();
+		if (!$canEdit)
+		{
+			return;
+		}
 
-        $model = $this->getModel('attribute');
-        $success = $model->save();
-        $rowsCreated = $model->createEmptyRowsForAllUsers($success);
+		$model       = $this->getModel('attribute');
+		$success     = $model->save();
+		$rowsCreated = $model->createEmptyRowsForAllUsers($success);
 
-        if ($rowsCreated)
-        {
-            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&id=' . $success, $msg);
-        }
-        else
-        {
-            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&id=0', $msg);
+		if ($rowsCreated)
+		{
+			$msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
+			$this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&id=' . $success, $msg);
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+			$this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&id=0', $msg);
 
-        }
-    }
+		}
+	}
 
-    /**
-     * Edit
-     *
-     * @return void
-     */
-    public function edit()
-    {
-        $canEdit = THM_GroupsHelperComponent::canEdit();
-        if (!$canEdit)
-        {
-            return;
-        }
+	/**
+	 * Edit
+	 *
+	 * @return void
+	 */
+	public function edit()
+	{
+		$canEdit = THM_GroupsHelperComponent::canEdit();
+		if (!$canEdit)
+		{
+			return;
+		}
 
-        $this->input->set('view', 'attribute_edit');
-        $this->input->set('hidemainmenu', 1);
-        parent::display();
-    }
+		$this->input->set('view', 'attribute_edit');
+		$this->input->set('hidemainmenu', 1);
+		parent::display();
+	}
 
-    /**
-     * Cancel
-     *
-     * @param   Integer  $key  contains the key
-     *
-     * @return void
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function cancel($key = null)
-    {
-        $canEdit = THM_GroupsHelperComponent::canEdit();
-        if (!$canEdit)
-        {
-            return;
-        }
+	/**
+	 * Cancel
+	 *
+	 * @param   Integer $key contains the key
+	 *
+	 * @return void
+	 *
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+	 */
+	public function cancel($key = null)
+	{
+		$canEdit = THM_GroupsHelperComponent::canEdit();
+		if (!$canEdit)
+		{
+			return;
+		}
 
-        $this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager');
-    }
+		$this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager');
+	}
 
-    /**
-     * Save&Close button
-     *
-     * @param   Integer  $key     contain key
-     * @param   String   $urlVar  contain url
-     *
-     * @return void
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function save($key = null, $urlVar = null)
-    {
-        $canEdit = THM_GroupsHelperComponent::canEdit();
-        if (!$canEdit)
-        {
-            return;
-        }
+	/**
+	 * Save&Close button
+	 *
+	 * @param   Integer $key    contain key
+	 * @param   String  $urlVar contain url
+	 *
+	 * @return void
+	 *
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+	 */
+	public function save($key = null, $urlVar = null)
+	{
+		$canEdit = THM_GroupsHelperComponent::canEdit();
+		if (!$canEdit)
+		{
+			return;
+		}
 
-        $model = $this->getModel('attribute');
-        $success = $model->save();
+		$model   = $this->getModel('attribute');
+		$success = $model->save();
 
-        if ($success)
-        {
-            $rowsCreated = $model->createEmptyRowsForAllUsers($success);
+		if ($success)
+		{
+			$rowsCreated = $model->createEmptyRowsForAllUsers($success);
 
-            if ($rowsCreated)
-            {
-                $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-                $this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager', $msg);
-            }
-            else
-            {
-                $msg = JText::_('COM_THM_GROUPS_SAVE_ATTRIBUTE_EMPTY_ROWS_ERROR');
-                $this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager&id=' . $success, $msg);
-            }
-        }
-        else
-        {
-            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager$id=' . $success, $msg);
-        }
-    }
+			if ($rowsCreated)
+			{
+				$msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
+				$this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager', $msg);
+			}
+			else
+			{
+				$msg = JText::_('COM_THM_GROUPS_SAVE_ATTRIBUTE_EMPTY_ROWS_ERROR');
+				$this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager&id=' . $success, $msg);
+			}
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+			$this->setRedirect('index.php?option=com_thm_groups&view=attribute_manager$id=' . $success, $msg);
+		}
+	}
 
-    /**
-     * Saves the selected attribute and redirects to a new page
-     * to create a new attribute
-     *
-     * @return void
-     */
-    public function save2new()
-    {
-        $canEdit = THM_GroupsHelperComponent::canEdit();
-        if (!$canEdit)
-        {
-            return;
-        }
+	/**
+	 * Saves the selected attribute and redirects to a new page
+	 * to create a new attribute
+	 *
+	 * @return void
+	 */
+	public function save2new()
+	{
+		$canEdit = THM_GroupsHelperComponent::canEdit();
+		if (!$canEdit)
+		{
+			return;
+		}
 
-        $model = $this->getModel('attribute');
+		$model = $this->getModel('attribute');
 
-        $success = $model->save();
-        if ($success)
-        {
-            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&id=0', $msg);
-        }
-        else
-        {
-            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-            $this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&id=0', $msg);
-        }
-    }
+		$success = $model->save();
+		if ($success)
+		{
+			$msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
+			$this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&id=0', $msg);
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+			$this->setRedirect('index.php?option=com_thm_groups&view=attribute_edit&id=0', $msg);
+		}
+	}
 
-    /**
-     * Deletes selected attributes
-     *
-     * @return void
-     */
-    public function delete()
-    {
-        $canEdit = THM_GroupsHelperComponent::canEdit();
-        if (!$canEdit)
-        {
-            return;
-        }
+	/**
+	 * Deletes selected attributes
+	 *
+	 * @return void
+	 */
+	public function delete()
+	{
+		$canEdit = THM_GroupsHelperComponent::canEdit();
+		if (!$canEdit)
+		{
+			return;
+		}
 
-        $doNotDelete = array(VORNAME, NACHNAME, EMAIL, TITEL, POSTTITEL);
-        $ids = JFactory::getApplication()->input->get('cid', array(), 'array');
-        $idsToDelete = array_diff($ids, $doNotDelete);
+		$doNotDelete = array(VORNAME, NACHNAME, EMAIL, TITEL, POSTTITEL);
+		$ids         = JFactory::getApplication()->input->get('cid', array(), 'array');
+		$idsToDelete = array_diff($ids, $doNotDelete);
 
-        $redirectURL = 'index.php?option=com_thm_groups&view=attribute_manager';
-        if (empty($idsToDelete))
-        {
-            $msg = JText::_("COM_THM_GROUPS_CANT_DELETE_ERROR");
-            $type = 'warning';
-            $this->setRedirect($redirectURL, $msg, $type);
-            return;
-        }
+		$redirectURL = 'index.php?option=com_thm_groups&view=attribute_manager';
+		if (empty($idsToDelete))
+		{
+			$msg  = JText::_("COM_THM_GROUPS_CANT_DELETE_ERROR");
+			$type = 'warning';
+			$this->setRedirect($redirectURL, $msg, $type);
 
-        $success = $this->getModel('attribute')->delete($idsToDelete);
-        if ($success)
-        {
-            $msg = JText::_('COM_THM_GROUPS_DELETE_SUCCESS');
-            $type = 'message';
-        }
-        else
-        {
-            $msg = JText::_('COM_THM_GROUPS_DELETE_ERROR');
-            $type = 'error';
-        }
-        $this->setRedirect($redirectURL, $msg, $type);
-    }
+			return;
+		}
 
-    /**
-     * Toggles category behaviour properties
-     *
-     * @return void
-     */
-    public function toggle()
-    {
-        $canEdit = THM_GroupsHelperComponent::canEdit();
-        if (!$canEdit)
-        {
-            return;
-        }
+		$success = $this->getModel('attribute')->delete($idsToDelete);
+		if ($success)
+		{
+			$msg  = JText::_('COM_THM_GROUPS_DELETE_SUCCESS');
+			$type = 'message';
+		}
+		else
+		{
+			$msg  = JText::_('COM_THM_GROUPS_DELETE_ERROR');
+			$type = 'error';
+		}
+		$this->setRedirect($redirectURL, $msg, $type);
+	}
 
-        $model = $this->getModel('attribute');
-        $success = $model->toggle();
-        if ($success)
-        {
-            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
-            $type = 'message';
-        }
-        else
-        {
-            $msg = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
-            $type = 'error';
-        }
-        $this->setRedirect("index.php?option=com_thm_groups&view=attribute_manager", $msg, $type);
-    }
+	/**
+	 * Toggles category behaviour properties
+	 *
+	 * @return void
+	 */
+	public function toggle()
+	{
+		$canEdit = THM_GroupsHelperComponent::canEdit();
+		if (!$canEdit)
+		{
+			return;
+		}
 
-    /**
-     * Method to save the submitted ordering values for records via AJAX.
-     *
-     * @return  void
-     *
-     */
-    public function saveOrderAjax()
-    {
-        // Get the input
-        $pks = $this->input->post->get('cid', array(), 'array');
-        $order = $this->input->post->get('order', array(), 'array');
+		$model   = $this->getModel('attribute');
+		$success = $model->toggle();
+		if ($success)
+		{
+			$msg  = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_SUCCESS');
+			$type = 'message';
+		}
+		else
+		{
+			$msg  = JText::_('COM_THM_GROUPS_MESSAGE_SAVE_FAIL');
+			$type = 'error';
+		}
+		$this->setRedirect("index.php?option=com_thm_groups&view=attribute_manager", $msg, $type);
+	}
 
-        // Sanitize the input
-        Joomla\Utilities\ArrayHelper::toInteger($pks);
-        Joomla\Utilities\ArrayHelper::toInteger($order);
+	/**
+	 * Method to save the submitted ordering values for records via AJAX.
+	 *
+	 * @return  void
+	 *
+	 */
+	public function saveOrderAjax()
+	{
+		// Get the input
+		$pks   = $this->input->post->get('cid', array(), 'array');
+		$order = $this->input->post->get('order', array(), 'array');
 
-        // Get the model
-        $model = $this->getModel('attribute');
+		// Sanitize the input
+		Joomla\Utilities\ArrayHelper::toInteger($pks);
+		Joomla\Utilities\ArrayHelper::toInteger($order);
 
-        // Save the ordering
-        $return = $model->saveorder($pks, $order);
+		// Get the model
+		$model = $this->getModel('attribute');
 
-        if ($return)
-        {
-            echo "1";
-        }
+		// Save the ordering
+		$return = $model->saveorder($pks, $order);
 
-        // Close the application
-        JFactory::getApplication()->close();
-    }
+		if ($return)
+		{
+			echo "1";
+		}
+
+		// Close the application
+		JFactory::getApplication()->close();
+	}
 }

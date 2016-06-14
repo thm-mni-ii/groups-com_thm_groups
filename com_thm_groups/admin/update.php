@@ -13,11 +13,11 @@
 defined('_JEXEC') or die;
 if (!defined('_JEXEC'))
 {
-    define('_JEXEC', 1);
+	define('_JEXEC', 1);
 }
 if (!defined('DS'))
 {
-    define('DS', DIRECTORY_SEPARATOR);
+	define('DS', DIRECTORY_SEPARATOR);
 }
 
 /**
@@ -30,267 +30,272 @@ if (!defined('DS'))
 class THM_Groups_Update_Script
 {
 
-    /**
-     * Update script for THM Groups
-     *
-     * If THM Groups will be updated the script copies old data from old tables
-     *
-     * @return  bool   true on success, false otherwise
-     */
-    public static function update()
-    {
-        $pictureOptionsMigrated = self::migratePictureOptions();
-        $tableOptionsMigrated = self::migrateTableOptions();
-        $textOptionsMigrated = self::migrateTextOptions();
-        $textFieldOptionsMigrated = self::migrateTextFieldOptions();
+	/**
+	 * Update script for THM Groups
+	 *
+	 * If THM Groups will be updated the script copies old data from old tables
+	 *
+	 * @return  bool   true on success, false otherwise
+	 */
+	public static function update()
+	{
+		$pictureOptionsMigrated   = self::migratePictureOptions();
+		$tableOptionsMigrated     = self::migrateTableOptions();
+		$textOptionsMigrated      = self::migrateTextOptions();
+		$textFieldOptionsMigrated = self::migrateTextFieldOptions();
 
-        if ($pictureOptionsMigrated AND $tableOptionsMigrated AND $textOptionsMigrated AND $textFieldOptionsMigrated)
-        {
-            return true;
-        }
+		if ($pictureOptionsMigrated AND $tableOptionsMigrated AND $textOptionsMigrated AND $textFieldOptionsMigrated)
+		{
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    /**
-     * Copies picture information from the old table structure
-     *
-     * @return  bool   true on success, false otherwise
-     */
-    private static function migratePictureOptions()
-    {
-        $dbo = JFactory::getDbo();
-        $query = $dbo->getQuery(true);
+	/**
+	 * Copies picture information from the old table structure
+	 *
+	 * @return  bool   true on success, false otherwise
+	 */
+	private static function migratePictureOptions()
+	{
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
-        $query
-            ->select('structid, value AS filename, path')
-            ->from('#__thm_groups_picture_extra');
+		$query
+			->select('structid, value AS filename, path')
+			->from('#__thm_groups_picture_extra');
 
-        $dbo->setQuery($query);
+		$dbo->setQuery($query);
 
-        try
-        {
-            $listOptions = $dbo->loadObjectList();
-        }
-        catch (Exception $exception)
-        {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-            return false;
-        }
+		try
+		{
+			$listOptions = $dbo->loadObjectList();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-        if (empty($listOptions))
-        {
-            return true;
-        }
+			return false;
+		}
 
-        $newJsonOptions = array();
+		if (empty($listOptions))
+		{
+			return true;
+		}
 
-        foreach ($listOptions as $option)
-        {
-            $temp = clone($option);
-            unset($temp->structid);
-            $temp->path = '/images/com_thm_groups/profile/';
-            $temp->filename = 'anonym.jpg';
-            $newJsonOptions[$option->structid] = json_encode($temp);
-        }
+		$newJsonOptions = array();
 
-        $optionsMigrated = self::updateStructureItemOptions($newJsonOptions);
-        if ($optionsMigrated)
-        {
-            return true;
-        }
+		foreach ($listOptions as $option)
+		{
+			$temp = clone($option);
+			unset($temp->structid);
+			$temp->path                        = '/images/com_thm_groups/profile/';
+			$temp->filename                    = 'anonym.jpg';
+			$newJsonOptions[$option->structid] = json_encode($temp);
+		}
 
-        return false;
-    }
+		$optionsMigrated = self::updateStructureItemOptions($newJsonOptions);
+		if ($optionsMigrated)
+		{
+			return true;
+		}
 
-    /**
-     * Copies table values from the old table structure
-     *
-     * @return  bool  true on success, false otherwise
-     */
-    private static function migrateTableOptions()
-    {
-        $dbo = JFactory::getDbo();
-        $query = $dbo->getQuery(true);
+		return false;
+	}
 
-        $query
-            ->select('structid, value')
-            ->from('#__thm_groups_table_extra');
+	/**
+	 * Copies table values from the old table structure
+	 *
+	 * @return  bool  true on success, false otherwise
+	 */
+	private static function migrateTableOptions()
+	{
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
-        $dbo->setQuery($query);
+		$query
+			->select('structid, value')
+			->from('#__thm_groups_table_extra');
 
-        try
-        {
-            $listOptions = $dbo->loadObjectList();
-        }
-        catch (Exception $exception)
-        {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-            return false;
-        }
+		$dbo->setQuery($query);
 
-        if (empty($listOptions))
-        {
-            return true;
-        }
+		try
+		{
+			$listOptions = $dbo->loadObjectList();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-        $newJsonOptions = array();
+			return false;
+		}
 
-        foreach ($listOptions as $option)
-        {
-            $temp = clone($option);
-            unset($temp->structid);
-            $newJsonOptions[$option->structid] = json_encode($temp);
-        }
+		if (empty($listOptions))
+		{
+			return true;
+		}
 
-        $optionsMigrated = self::updateStructureItemOptions($newJsonOptions);
-        if ($optionsMigrated)
-        {
-            return true;
-        }
+		$newJsonOptions = array();
 
-        return false;
-    }
+		foreach ($listOptions as $option)
+		{
+			$temp = clone($option);
+			unset($temp->structid);
+			$newJsonOptions[$option->structid] = json_encode($temp);
+		}
 
-    /**
-     * Copies text values from the old table structure
-     *
-     * @return  bool   true on success, false otherwise
-     */
-    private static function migrateTextOptions()
-    {
-        $dbo = JFactory::getDbo();
-        $query = $dbo->getQuery(true);
+		$optionsMigrated = self::updateStructureItemOptions($newJsonOptions);
+		if ($optionsMigrated)
+		{
+			return true;
+		}
 
-        $query
-            ->select('structid, value AS length')
-            ->from('#__thm_groups_text_extra');
+		return false;
+	}
 
-        $dbo->setQuery($query);
+	/**
+	 * Copies text values from the old table structure
+	 *
+	 * @return  bool   true on success, false otherwise
+	 */
+	private static function migrateTextOptions()
+	{
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
-        try
-        {
-            $listOptions = $dbo->loadObjectList();
-        }
-        catch (Exception $exception)
-        {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-            return false;
-        }
+		$query
+			->select('structid, value AS length')
+			->from('#__thm_groups_text_extra');
 
-        if (empty($listOptions))
-        {
-            return true;
-        }
+		$dbo->setQuery($query);
 
-        $newJsonOptions = array();
+		try
+		{
+			$listOptions = $dbo->loadObjectList();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-        foreach ($listOptions as $option)
-        {
-            $temp = clone($option);
-            unset($temp->structid);
-            $temp->required = "false";
-            $newJsonOptions[$option->structid] = json_encode($temp);
-        }
+			return false;
+		}
 
-        $optionsMigrated = self::updateStructureItemOptions($newJsonOptions);
-        if ($optionsMigrated)
-        {
-            return true;
-        }
+		if (empty($listOptions))
+		{
+			return true;
+		}
 
-        return false;
-    }
+		$newJsonOptions = array();
 
-    /**
-     * Copies text-field values from the old table structure
-     *
-     * @return  bool   true on success, false otherwise
-     */
-    private static function migrateTextFieldOptions()
-    {
-        $dbo = JFactory::getDbo();
-        $query = $dbo->getQuery(true);
+		foreach ($listOptions as $option)
+		{
+			$temp = clone($option);
+			unset($temp->structid);
+			$temp->required                    = "false";
+			$newJsonOptions[$option->structid] = json_encode($temp);
+		}
 
-        $query
-            ->select('structid, value AS length')
-            ->from('#__thm_groups_textfield_extra');
+		$optionsMigrated = self::updateStructureItemOptions($newJsonOptions);
+		if ($optionsMigrated)
+		{
+			return true;
+		}
 
-        $dbo->setQuery($query);
+		return false;
+	}
 
-        try
-        {
-            $listOptions = $dbo->loadObjectList();
-        }
-        catch (Exception $exception)
-        {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-            return false;
-        }
+	/**
+	 * Copies text-field values from the old table structure
+	 *
+	 * @return  bool   true on success, false otherwise
+	 */
+	private static function migrateTextFieldOptions()
+	{
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
-        if (empty($listOptions))
-        {
-            return true;
-        }
+		$query
+			->select('structid, value AS length')
+			->from('#__thm_groups_textfield_extra');
 
-        $newJsonOptions = array();
+		$dbo->setQuery($query);
 
-        foreach ($listOptions as $option)
-        {
-            $test = clone($option);
-            unset($test->structid);
-            $test->required = "false";
-            $newJsonOptions[$option->structid] = json_encode($test);
-        }
+		try
+		{
+			$listOptions = $dbo->loadObjectList();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-        $optionsMigrated = self::updateStructureItemOptions($newJsonOptions);
-        if ($optionsMigrated)
-        {
-            return true;
-        }
+			return false;
+		}
 
-        return false;
-    }
+		if (empty($listOptions))
+		{
+			return true;
+		}
 
-    /**
-     * Generic function which saves data from old tables into the new tables
-     *
-     * @param   array  $options  An array with options to save
-     *
-     * @return  bool   true on success, false otherwise
-     *
-     * @throws Exception
-     */
-    private static function updateStructureItemOptions($options)
-    {
-        // No options to migrate, it's not an error, just continue
-        if (empty($options))
-        {
-            return true;
-        }
+		$newJsonOptions = array();
 
-        $dbo = JFactory::getDbo();
+		foreach ($listOptions as $option)
+		{
+			$test = clone($option);
+			unset($test->structid);
+			$test->required                    = "false";
+			$newJsonOptions[$option->structid] = json_encode($test);
+		}
 
-        foreach ($options as $key => $option)
-        {
-            $query = $dbo->getQuery(true);
-            $query
-                ->update('#__thm_groups_attribute')
-                ->set("`options` = '" . $option . "'")
-                ->where("`id` = '" . $key . "'");
-            $dbo->setQuery($query);
+		$optionsMigrated = self::updateStructureItemOptions($newJsonOptions);
+		if ($optionsMigrated)
+		{
+			return true;
+		}
 
-            try
-            {
-                $dbo->execute();
-            }
-            catch (Exception $exception)
-            {
-                JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-                return false;
-            }
-        }
+		return false;
+	}
 
-        return true;
-    }
+	/**
+	 * Generic function which saves data from old tables into the new tables
+	 *
+	 * @param   array $options An array with options to save
+	 *
+	 * @return  bool   true on success, false otherwise
+	 *
+	 * @throws Exception
+	 */
+	private static function updateStructureItemOptions($options)
+	{
+		// No options to migrate, it's not an error, just continue
+		if (empty($options))
+		{
+			return true;
+		}
+
+		$dbo = JFactory::getDbo();
+
+		foreach ($options as $key => $option)
+		{
+			$query = $dbo->getQuery(true);
+			$query
+				->update('#__thm_groups_attribute')
+				->set("`options` = '" . $option . "'")
+				->where("`id` = '" . $key . "'");
+			$dbo->setQuery($query);
+
+			try
+			{
+				$dbo->execute();
+			}
+			catch (Exception $exception)
+			{
+				JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+				return false;
+			}
+		}
+
+		return true;
+	}
 }

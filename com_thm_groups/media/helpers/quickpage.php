@@ -24,91 +24,93 @@ define('TRASH', -2);
 class THM_GroupsHelperQuickpage
 {
 
-    /**
-     * Method which checks user edit state permissions for the quickpage.
-     *
-     * @param   int  $qpID  the id of the quickpage
-     *
-     * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
-     *
-     */
-    public static function canEditState($qpID)
-    {
-        // Check admin rights before descending into the mud
-        $user = JFactory::getUser();
-        $isAdmin = ($user->authorise('core.admin', 'com_content') OR $user->authorise('core.admin', 'com_thm_groups'));
-        if ($isAdmin)
-        {
-            return true;
-        }
+	/**
+	 * Method which checks user edit state permissions for the quickpage.
+	 *
+	 * @param   int $qpID the id of the quickpage
+	 *
+	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
+	 *
+	 */
+	public static function canEditState($qpID)
+	{
+		// Check admin rights before descending into the mud
+		$user    = JFactory::getUser();
+		$isAdmin = ($user->authorise('core.admin', 'com_content') OR $user->authorise('core.admin', 'com_thm_groups'));
+		if ($isAdmin)
+		{
+			return true;
+		}
 
-        // TODO: Would it be possible for a person of the same group to edit the state of 'my' article?
-        return JFactory::getUser()->authorise('core.edit.state', "com_content.article.$qpID");
-    }
+		// TODO: Would it be possible for a person of the same group to edit the state of 'my' article?
+		return JFactory::getUser()->authorise('core.edit.state', "com_content.article.$qpID");
+	}
 
-    /**
-     * Gets the user's quickpage category id according to their user id
-     *
-     * @param   int  $userID  the user id
-     *
-     * @return  mixed  int on successful query, null if the query failed, 0 on exception or if user is empty
-     */
-    public static function getQPCategoryID($userID)
-    {
-        if (empty($userID))
-        {
-            return 0;
-        }
+	/**
+	 * Gets the user's quickpage category id according to their user id
+	 *
+	 * @param   int $userID the user id
+	 *
+	 * @return  mixed  int on successful query, null if the query failed, 0 on exception or if user is empty
+	 */
+	public static function getQPCategoryID($userID)
+	{
+		if (empty($userID))
+		{
+			return 0;
+		}
 
-        $dbo = JFactory::getDBO();
-        $query = $dbo->getQuery(true);
+		$dbo   = JFactory::getDBO();
+		$query = $dbo->getQuery(true);
 
-        $query->select('qpCats.categoriesID');
-        $query->from('#__thm_groups_users_categories AS qpCats');
-        $query->innerJoin('#__categories AS contentCats ON contentCats.id = qpCats.categoriesID');
-        $query->where("qpCats.usersID = '$userID'");
-        $query->where("contentCats.extension = 'com_content'");
-        $dbo->setQuery((string) $query);
+		$query->select('qpCats.categoriesID');
+		$query->from('#__thm_groups_users_categories AS qpCats');
+		$query->innerJoin('#__categories AS contentCats ON contentCats.id = qpCats.categoriesID');
+		$query->where("qpCats.usersID = '$userID'");
+		$query->where("contentCats.extension = 'com_content'");
+		$dbo->setQuery((string) $query);
 
-        try
-        {
-            return $dbo->loadResult();
-        }
-        catch (Exception $exc)
-        {
-            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
-            return 0;
-        }
-    }
+		try
+		{
+			return $dbo->loadResult();
+		}
+		catch (Exception $exc)
+		{
+			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-    /**
-     * Checks if an article were previously featured or published for modules
-     *
-     * @param   int  $qpID  the id of the quickpage
-     *
-     * @return  bool  true if the quickpage already exists, otherwise false
-     */
-    public static function quickpageExists($qpID)
-    {
-        $dbo = JFactory::getDbo();
-        $query = $dbo->getQuery(true);
+			return 0;
+		}
+	}
 
-        $query
-            ->select('*')
-            ->from('#__thm_groups_users_content')
-            ->where('contentID = ' . (int) $qpID);
-        $dbo->setQuery($query);
+	/**
+	 * Checks if an article were previously featured or published for modules
+	 *
+	 * @param   int $qpID the id of the quickpage
+	 *
+	 * @return  bool  true if the quickpage already exists, otherwise false
+	 */
+	public static function quickpageExists($qpID)
+	{
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
-        try
-        {
-            $result = $dbo->loadObject();
-        }
-        catch (Exception $exception)
-        {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-            return false;
-        }
+		$query
+			->select('*')
+			->from('#__thm_groups_users_content')
+			->where('contentID = ' . (int) $qpID);
+		$dbo->setQuery($query);
 
-        return empty($result) ? false : true;
-    }
+		try
+		{
+			$result = $dbo->loadObject();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+			return false;
+		}
+
+		return empty($result) ? false : true;
+	}
 }

@@ -1,7 +1,8 @@
 /**
  * Created by Peter on 25.02.2015.
  */
-function getRegex(){
+function getRegex()
+{
     var selected = document.getElementById('jform_regex_select').options[document.getElementById('jform_regex_select').selectedIndex].value;
 
     /**
@@ -21,7 +22,8 @@ function getRegex(){
 
 }
 
-function reloadTypeRegexOptions(selectedID, isActType){
+function reloadTypeRegexOptions(selectedID, isActType)
+{
     document.getElementById("jform_regex").disabled = false;
 
     if (!isActType)
@@ -30,12 +32,13 @@ function reloadTypeRegexOptions(selectedID, isActType){
     }
 
     jQuery.ajax({
-        type: "POST",
-        url: "index.php?option=com_thm_groups&controller=dynamic_type_edit&task=" +
-        "dynamic_type_edit.reloadTypeRegexOptions&selectedID=" + selectedID +"",
-        datatype: "HTML"
-    })
-        .success(function(response){
+            type: "POST",
+            url: "index.php?option=com_thm_groups&controller=dynamic_type_edit&task=" +
+            "dynamic_type_edit.reloadTypeRegexOptions&selectedID=" + selectedID + "",
+            datatype: "HTML"
+        })
+        .success(function (response)
+        {
             document.getElementById("regexSelectField").innerHTML = response;
         });
 }

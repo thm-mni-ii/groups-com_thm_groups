@@ -19,10 +19,10 @@
  */
 
 // Unfortunately these have nothing to do with the attribute IDS
-define ('PRETITLE', 0);
-define ('FORENAME', 1);
-define ('SURNAME', 2);
-define ('POSTTITLE', 3);
+define('PRETITLE', 0);
+define('FORENAME', 1);
+define('SURNAME', 2);
+define('POSTTITLE', 3);
 
 /**
  * THMGroupsViewList class for component com_thm_groups
@@ -33,190 +33,192 @@ define ('POSTTITLE', 3);
  */
 class THM_GroupsViewList extends JViewLegacy
 {
-    public $model = null;
+	public $model = null;
 
-    public $params = array();
+	public $params = array();
 
-    public $groupID = 0;
+	public $groupID = 0;
 
-    public $profileLink = '';
+	public $profileLink = '';
 
-    public $title = '';
+	public $title = '';
 
-    public $profiles = array();
+	public $profiles = array();
 
-    public $letterProfiles = array();
+	public $letterProfiles = array();
 
-    /**
-     * Creates a link to the parametrized profile target using the profile name
-     *
-     * @param   object  $profile  object with user profile information
-     *
-     * @return  string  the HTML output for the profile link
-     */
-    public function getProfileLink($profile)
-    {
-        $attributeOrder = empty($this->params['orderingAttributes'])?
-            array() : explode(",", $this->params['orderingAttributes']);
-        Joomla\Utilities\ArrayHelper::toInteger($attributeOrder);
-        $attributeOrder = array_flip($attributeOrder);
-        ksort($attributeOrder);
+	/**
+	 * Creates a link to the parametrized profile target using the profile name
+	 *
+	 * @param   object $profile object with user profile information
+	 *
+	 * @return  string  the HTML output for the profile link
+	 */
+	public function getProfileLink($profile)
+	{
+		$attributeOrder = empty($this->params['orderingAttributes']) ?
+			array() : explode(",", $this->params['orderingAttributes']);
+		Joomla\Utilities\ArrayHelper::toInteger($attributeOrder);
+		$attributeOrder = array_flip($attributeOrder);
+		ksort($attributeOrder);
 
-        $attributes = $this->params['showstructure'];
-        Joomla\Utilities\ArrayHelper::toInteger($attributes);
+		$attributes = $this->params['showstructure'];
+		Joomla\Utilities\ArrayHelper::toInteger($attributes);
 
-        foreach ($attributeOrder AS $key => $value)
-        {
-            if (!in_array($value, $attributes))
-            {
-                unset($attributeOrder[$key]);
-            }
-        }
+		foreach ($attributeOrder AS $key => $value)
+		{
+			if (!in_array($value, $attributes))
+			{
+				unset($attributeOrder[$key]);
+			}
+		}
 
-        $menuID = JFactory::getApplication()->input->get('Itemid', 0);
-        $linkTarget = "index.php?option=com_thm_groups&Itemid=$menuID";
+		$menuID     = JFactory::getApplication()->input->get('Itemid', 0);
+		$linkTarget = "index.php?option=com_thm_groups&Itemid=$menuID";
 
-        // When a user is clicked should parameters be passed to the profile module or should the profile view open
-        switch ($this->params['linkTarget'])
-        {
-            case "profile":
-                $linkTarget .= '&view=profile';
-                break;
-            case "module":
-            default:
-                $linkTarget .= '&view=list';
-        }
+		// When a user is clicked should parameters be passed to the profile module or should the profile view open
+		switch ($this->params['linkTarget'])
+		{
+			case "profile":
+				$linkTarget .= '&view=profile';
+				break;
+			case "module":
+			default:
+				$linkTarget .= '&view=list';
+		}
 
-        $displayedText = '';
+		$displayedText = '';
 
-        // Write name
-        foreach ($attributeOrder as $index => $attribute)
-        {
-            switch ($attribute)
-            {
-                case PRETITLE:
-                    $displayedText .= $profile->title . ' ';
-                    break;
-                case FORENAME:
-                    $displayedText .= $profile->forename . ' ';
-                    break;
-                case 2:
-                    $forenameIndex = array_search(FORENAME, $attributeOrder);
-                    $displayedText .= $profile->surname;
-                    $naturalOrder = $index > $forenameIndex;
-                    $forenameExists = !empty($profile->forename);
-                    $displayedText .= ($naturalOrder OR !$forenameExists)? ' ' : ', ';
-                    break;
-                case 3:
-                    $displayedText .= $profile->posttitle . ' ';
-                    break;
-            }
-        }
+		// Write name
+		foreach ($attributeOrder as $index => $attribute)
+		{
+			switch ($attribute)
+			{
+				case PRETITLE:
+					$displayedText .= $profile->title . ' ';
+					break;
+				case FORENAME:
+					$displayedText .= $profile->forename . ' ';
+					break;
+				case 2:
+					$forenameIndex = array_search(FORENAME, $attributeOrder);
+					$displayedText .= $profile->surname;
+					$naturalOrder   = $index > $forenameIndex;
+					$forenameExists = !empty($profile->forename);
+					$displayedText .= ($naturalOrder OR !$forenameExists) ? ' ' : ', ';
+					break;
+				case 3:
+					$displayedText .= $profile->posttitle . ' ';
+					break;
+			}
+		}
 
-        $url = "$linkTarget&userID=$profile->id&groupID=$this->groupID&name=" . trim($profile->surname);
-        return JHtml::link(JRoute::_($url), $displayedText);
-    }
+		$url = "$linkTarget&userID=$profile->id&groupID=$this->groupID&name=" . trim($profile->surname);
 
-    /**
-     * Method to get display
-     *
-     * @param   Object  $tpl  template
-     *
-     * @return void
-     */
-    public function display($tpl = null)
-    {
-        $app = JFactory::getApplication();
+		return JHtml::link(JRoute::_($url), $displayedText);
+	}
 
-        // Calling this first ensures helpers are loaded
-        $this->model = $this->getModel();
+	/**
+	 * Method to get display
+	 *
+	 * @param   Object $tpl template
+	 *
+	 * @return void
+	 */
+	public function display($tpl = null)
+	{
+		$app = JFactory::getApplication();
 
-        $this->params = $app->getParams();
-        $this->groupID = $this->model->getGroupNumber();
+		// Calling this first ensures helpers are loaded
+		$this->model = $this->getModel();
 
-        $menuID = $app->input->get('Itemid', 0);
-        $this->profileLink = "index.php?option=com_thm_groups&Itemid=$menuID";
+		$this->params  = $app->getParams();
+		$this->groupID = $this->model->getGroupNumber();
 
-        // When a user is clicked should parameters be passed to the profile module or should the profile view open
-        switch ($this->params['linkTarget'])
-        {
-            case "profile":
-                $this->profileLink .= '&view=profile';
-                break;
-            case "module":
-            default:
-                $this->profileLink .= '&view=list';
-        }
+		$menuID            = $app->input->get('Itemid', 0);
+		$this->profileLink = "index.php?option=com_thm_groups&Itemid=$menuID";
 
-        // Sizing attributes
-        $this->totalUsers = THM_GroupsHelperGroup::getUserCount($this->groupID);
-        $columns = $this->params->get('columnCount', 4);
-        $this->maxColumnSize = ceil(($this->totalUsers) / $columns);
+		// When a user is clicked should parameters be passed to the profile module or should the profile view open
+		switch ($this->params['linkTarget'])
+		{
+			case "profile":
+				$this->profileLink .= '&view=profile';
+				break;
+			case "module":
+			default:
+				$this->profileLink .= '&view=list';
+		}
 
-        // Title handling
-        $heading = $this->params->get('page_heading', '');
-        $title = $this->params->get('page_title', JText::_('COM_THM_GROUPS_LIST_TITLE'));
-        $this->title = empty($heading)? $title: $heading;
+		// Sizing attributes
+		$this->totalUsers    = THM_GroupsHelperGroup::getUserCount($this->groupID);
+		$columns             = $this->params->get('columnCount', 4);
+		$this->maxColumnSize = ceil(($this->totalUsers) / $columns);
 
-        $this->profiles = $this->model->getProfilesByLetter($this->groupID);
-        $this->setPathway();
-        $this->modifyDocument();
-        parent::display($tpl);
-    }
+		// Title handling
+		$heading     = $this->params->get('page_heading', '');
+		$title       = $this->params->get('page_title', JText::_('COM_THM_GROUPS_LIST_TITLE'));
+		$this->title = empty($heading) ? $title : $heading;
 
-    /**
-     * Alters the breadcrumbs to reflect user profile selection
-     * 
-     * @return  void
-     */
-    private function setPathway()
-    {
-        $app = JFactory::getApplication();
-        $userID = $app->input->getInt('userID', 0);
+		$this->profiles = $this->model->getProfilesByLetter($this->groupID);
+		$this->setPathway();
+		$this->modifyDocument();
+		parent::display($tpl);
+	}
 
-        if (empty($userID))
-        {
-            return;
-        }
+	/**
+	 * Alters the breadcrumbs to reflect user profile selection
+	 *
+	 * @return  void
+	 */
+	private function setPathway()
+	{
+		$app    = JFactory::getApplication();
+		$userID = $app->input->getInt('userID', 0);
 
-        $pathway = $app->getPathway();
-        $name = THM_GroupsHelperProfile::getDisplayName($userID);
-        $pathway->addItem($name, '');
-    }
+		if (empty($userID))
+		{
+			return;
+		}
 
-    /**
-     * Adds css and javascript files to the document
-     *
-     * @return  void  modifies the document
-     */
-    private function modifyDocument()
-    {
-        $document = JFactory::getDocument();
-        $document->addStyleSheet('media/com_thm_groups/css/list.css');
-        JHtml::_('bootstrap.framework');
-    }
+		$pathway = $app->getPathway();
+		$name    = THM_GroupsHelperProfile::getDisplayName($userID);
+		$pathway->addItem($name, '');
+	}
 
-    /**
-     * Translates various umlaut encodings to the corresponding HTML Entities
-     * 
-     * @param   string  $text  the text to be processed
-     * 
-     * @return  string  the text with HTML umlaut encodings
-     */
-    public function umlaut2HTML($text)
-    {
-        $text = str_replace("Ãƒâ€“", "&Ouml;", $text);
-        $text = str_replace("ÃƒÂ¶", "&ouml;", $text);
-        $text = str_replace("Ãƒâ€ž", "&Auml;", $text);
-        $text = str_replace("ÃƒÂ¤", "&auml;", $text);
-        $text = str_replace("ÃƒÅ“", "&Uuml;", $text);
-        $text = str_replace("ÃƒÂ¼", "&uuml;", $text);
-        $text = str_replace("ÃƒÆ’Ã‚Â¶", "&Ouml;", $text);
-        $text = str_replace("ÃƒÆ’Ã‚Â¶", "&ouml;", $text);
-        $text = str_replace("ÃƒÆ’Ã‚Â¤", "&auml;", $text);
-        $text = str_replace("ÃƒÆ’Ã‚Â¤", "&Auml;", $text);
-        $text = str_replace("ÃƒÆ’Ã‚Â¼", "&uuml;", $text);
-        $text = str_replace("ÃƒÆ’Ã‚Â¼", "&Uuml;", $text);
-        return $text;
-    }
+	/**
+	 * Adds css and javascript files to the document
+	 *
+	 * @return  void  modifies the document
+	 */
+	private function modifyDocument()
+	{
+		$document = JFactory::getDocument();
+		$document->addStyleSheet('media/com_thm_groups/css/list.css');
+		JHtml::_('bootstrap.framework');
+	}
+
+	/**
+	 * Translates various umlaut encodings to the corresponding HTML Entities
+	 *
+	 * @param   string $text the text to be processed
+	 *
+	 * @return  string  the text with HTML umlaut encodings
+	 */
+	public function umlaut2HTML($text)
+	{
+		$text = str_replace("Ãƒâ€“", "&Ouml;", $text);
+		$text = str_replace("ÃƒÂ¶", "&ouml;", $text);
+		$text = str_replace("Ãƒâ€ž", "&Auml;", $text);
+		$text = str_replace("ÃƒÂ¤", "&auml;", $text);
+		$text = str_replace("ÃƒÅ“", "&Uuml;", $text);
+		$text = str_replace("ÃƒÂ¼", "&uuml;", $text);
+		$text = str_replace("ÃƒÆ’Ã‚Â¶", "&Ouml;", $text);
+		$text = str_replace("ÃƒÆ’Ã‚Â¶", "&ouml;", $text);
+		$text = str_replace("ÃƒÆ’Ã‚Â¤", "&auml;", $text);
+		$text = str_replace("ÃƒÆ’Ã‚Â¤", "&Auml;", $text);
+		$text = str_replace("ÃƒÆ’Ã‚Â¼", "&uuml;", $text);
+		$text = str_replace("ÃƒÆ’Ã‚Â¼", "&Uuml;", $text);
+
+		return $text;
+	}
 }

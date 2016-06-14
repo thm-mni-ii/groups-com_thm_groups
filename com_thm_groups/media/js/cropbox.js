@@ -16,15 +16,15 @@ function bindImageCropper(element, attrID, uID)
         {
             imageBox: '#' + element + '_imageBox',
             thumbBox: '#' + element + '_thumbBox',
-            spinner:  '#' + element + '_spinner'
+            spinner: '#' + element + '_spinner'
         }
-        ,cropper = new cropbox(options)
-        ,filename = null
+        , cropper = new cropbox(options)
+        , filename = null
         ;
 
     var isInList = false;
 
-    for (var i=0; i<cropboxEventElements.length; i++)
+    for (var i = 0; i < cropboxEventElements.length; i++)
     {
         if (cropboxEventElements[i] == element)
         {
@@ -32,15 +32,17 @@ function bindImageCropper(element, attrID, uID)
         }
     }
 
-    if(isInList == false)
+    if (isInList == false)
     {
         // Add element to event listener list to prevent multiple bindings
         cropboxEventElements.push(element);
 
-        document.querySelector('#jform_' + element).addEventListener('change', function(){
+        document.querySelector('#jform_' + element).addEventListener('change', function ()
+        {
             var reader = new FileReader();
 
-            reader.onload = function(e) {
+            reader.onload = function (e)
+            {
                 options.imgSrc = e.target.result;
                 cropper = new cropbox(options);
             }
@@ -54,7 +56,8 @@ function bindImageCropper(element, attrID, uID)
         });
 
         // Bind save action to 'Normal upload' button
-        document.querySelector('#' + element + '_saveNormal').addEventListener('click', function() {
+        document.querySelector('#' + element + '_saveNormal').addEventListener('click', function ()
+        {
 
             // Get file data from <input>
             var file = document.getElementById('jform_' + element).files[0];
@@ -65,20 +68,22 @@ function bindImageCropper(element, attrID, uID)
             jQf.ajax({
                 type: "POST",
                 url: "index.php?option=com_thm_groups&controller=profile&task=profile.saveCropped&tmpl=component&id="
-                + uID + "&element=" + element + "&attrID=" + attrID +"&filename="
+                + uID + "&element=" + element + "&attrID=" + attrID + "&filename="
                 + filename + "",
                 data: fd,
                 dataType: 'html',
                 processData: false,
                 contentType: false
-            }).success(function(response) {
+            }).success(function (response)
+            {
                 document.getElementById(element + "_IMG").innerHTML = response;
                 jQf('#' + element + "_Modal").modal('toggle');
             });
         });
 
         // Bind save action to 'Upload cropped' button
-        document.querySelector('#' + element + '_saveChanges').addEventListener('click', function(){
+        document.querySelector('#' + element + '_saveChanges').addEventListener('click', function ()
+        {
 
             // Get current picture
             var blob = cropper.getBlob();
@@ -89,19 +94,21 @@ function bindImageCropper(element, attrID, uID)
             jQf.ajax({
                 type: "POST",
                 url: "index.php?option=com_thm_groups&controller=profile&task=profile.saveCropped&tmpl=component&id="
-                + uID + "&element=" + element + "&attrID=" + attrID +"&filename="
+                + uID + "&element=" + element + "&attrID=" + attrID + "&filename="
                 + filename + "",
                 data: fd,
                 dataType: 'html',
                 processData: false,
                 contentType: false
-            }).success(function(response) {
+            }).success(function (response)
+            {
                 document.getElementById(element + "_IMG").innerHTML = response;
                 jQf('#' + element + "_Modal").modal('toggle');
             });
         });
 
-        document.querySelector('#'+ element + '_switch').addEventListener('click', function(){
+        document.querySelector('#' + element + '_switch').addEventListener('click', function ()
+        {
             var box = document.getElementById(element + '_thumbBox');
 
             // Get old values:
@@ -114,22 +121,26 @@ function bindImageCropper(element, attrID, uID)
             box.style.width = height;
         });
 
-        document.querySelector('#'+ element + '_btnZoomIn').addEventListener('click', function(){
+        document.querySelector('#' + element + '_btnZoomIn').addEventListener('click', function ()
+        {
             cropper.zoomIn();
         });
-        document.querySelector('#'+ element + '_btnZoomOut').addEventListener('click', function(){
+        document.querySelector('#' + element + '_btnZoomOut').addEventListener('click', function ()
+        {
             cropper.zoomOut();
         });
     }
 }
 
-function deletePic(name, attributeID, userID) {
+function deletePic(name, attributeID, userID)
+{
     jQf.ajax({
         type: "POST",
         url: "index.php?option=com_thm_groups&task=profile.deletePicture&tmpl=component&userID="
         + userID + "&attrID=" + attributeID + "&tmpl=component",
         datatype: "HTML"
-    }).success(function (response) {
+    }).success(function (response)
+    {
         jQf("#" + name + "_IMG").html('');
         jQf("#jform_" + name + "_hidden").val('');
     });
@@ -138,17 +149,18 @@ function deletePic(name, attributeID, userID) {
 /* Notice: cropbox works with the chopped image shown in the preview box, not the actual image file
  * as a result the cropped image can be considered like a snipped from a screen-shot that is converted into a blob.
  */
-var cropbox = function(options){
+var cropbox = function (options)
+{
     var el = document.querySelector(options.imageBox),
         obj =
         {
-            state : {},
-            ratio : 1,
-            options : options,
-            imageBox : el,
-            thumbBox : el.querySelector(options.thumbBox),
-            spinner : el.querySelector(options.spinner),
-            image : new Image(),
+            state: {},
+            ratio: 1,
+            options: options,
+            imageBox: el,
+            thumbBox: el.querySelector(options.thumbBox),
+            spinner: el.querySelector(options.spinner),
+            image: new Image(),
             getDataURL: function ()
             {
                 var width = this.thumbBox.clientWidth,
@@ -156,8 +168,8 @@ var cropbox = function(options){
                     canvas = document.createElement("canvas"),
                     dim = el.style.backgroundPosition.split(' '),
                     size = el.style.backgroundSize.split(' '),
-                    dx = parseInt(dim[0]) - el.clientWidth/2 + width/2,
-                    dy = parseInt(dim[1]) - el.clientHeight/2 + height/2,
+                    dx = parseInt(dim[0]) - el.clientWidth / 2 + width / 2,
+                    dy = parseInt(dim[1]) - el.clientHeight / 2 + height / 2,
                     dw = parseInt(size[0]),
                     dh = parseInt(size[1]),
                     sh = parseInt(this.image.height),
@@ -166,7 +178,7 @@ var cropbox = function(options){
                 if (this.ratio < 0.5)
                 {
                     // Smooth image quality when zoomed out:
-                    var ctx=canvas.getContext("2d");
+                    var ctx = canvas.getContext("2d");
 
                     /// step 1
                     var oc = document.createElement('canvas'),
@@ -200,63 +212,77 @@ var cropbox = function(options){
 
                 return imageData;
             },
-            getBlob: function()
+            getBlob: function ()
             {
                 var imageData = this.getDataURL();
-                var b64 = imageData.replace('data:image/png;base64,','');
+                var b64 = imageData.replace('data:image/png;base64,', '');
                 var binary = atob(b64);
                 var array = [];
-                for (var i = 0; i < binary.length; i++) {
+                for (var i = 0; i < binary.length; i++)
+                {
                     array.push(binary.charCodeAt(i));
                 }
-                return  new Blob([new Uint8Array(array)], {type: 'image/png'});
+                return new Blob([new Uint8Array(array)], {type: 'image/png'});
             },
             zoomIn: function ()
             {
-                this.ratio*=1.1;
+                this.ratio *= 1.1;
                 setBackground();
             },
             zoomOut: function ()
             {
-                this.ratio*=0.5;
+                this.ratio *= 0.5;
                 setBackground();
             }
         },
-        attachEvent = function(node, event, cb)
+        attachEvent = function (node, event, cb)
         {
             if (node.attachEvent)
-                node.attachEvent('on'+event, cb);
-            else if (node.addEventListener)
-                node.addEventListener(event, cb);
-        },
-        detachEvent = function(node, event, cb)
-        {
-            if(node.detachEvent) {
-                node.detachEvent('on'+event, cb);
+            {
+                node.attachEvent('on' + event, cb);
             }
-            else if(node.removeEventListener) {
+            else if (node.addEventListener)
+            {
+                node.addEventListener(event, cb);
+            }
+        },
+        detachEvent = function (node, event, cb)
+        {
+            if (node.detachEvent)
+            {
+                node.detachEvent('on' + event, cb);
+            }
+            else if (node.removeEventListener)
+            {
                 node.removeEventListener(event, render);
             }
         },
-        stopEvent = function (e) {
-            if(window.event) e.cancelBubble = true;
-            else e.stopImmediatePropagation();
-        },
-        setBackground = function()
+        stopEvent = function (e)
         {
-            var w =  parseInt(obj.image.width)*obj.ratio;
-            var h =  parseInt(obj.image.height)*obj.ratio;
+            if (window.event)
+            {
+                e.cancelBubble = true;
+            }
+            else
+            {
+                e.stopImmediatePropagation();
+            }
+        },
+        setBackground = function ()
+        {
+            var w = parseInt(obj.image.width) * obj.ratio;
+            var h = parseInt(obj.image.height) * obj.ratio;
 
             var pw = (el.clientWidth - w) / 2;
             var ph = (el.clientHeight - h) / 2;
 
             el.setAttribute('style',
                 'background-image: url(' + obj.image.src + '); ' +
-                'background-size: ' + w +'px ' + h + 'px; ' +
+                'background-size: ' + w + 'px ' + h + 'px; ' +
                 'background-position: ' + pw + 'px ' + ph + 'px; ' +
                 'background-repeat: no-repeat');
         },
-        imgMouseDown = function(e)
+        imgMouseDown = function (e)
         {
             stopEvent(e);
 
@@ -264,7 +290,7 @@ var cropbox = function(options){
             obj.state.mouseX = e.clientX;
             obj.state.mouseY = e.clientY;
         },
-        imgMouseMove = function(e)
+        imgMouseMove = function (e)
         {
             stopEvent(e);
 
@@ -278,38 +304,42 @@ var cropbox = function(options){
                 var bgX = x + parseInt(bg[0]);
                 var bgY = y + parseInt(bg[1]);
 
-                el.style.backgroundPosition = bgX +'px ' + bgY + 'px';
+                el.style.backgroundPosition = bgX + 'px ' + bgY + 'px';
 
                 obj.state.mouseX = e.clientX;
                 obj.state.mouseY = e.clientY;
             }
         },
-        imgMouseUp = function(e)
+        imgMouseUp = function (e)
         {
             stopEvent(e);
             obj.state.dragable = false;
         },
-        zoomImage = function(e)
+        zoomImage = function (e)
         {
-            var evt=window.event || e;
-            var delta=evt.detail? evt.detail*(-120) : evt.wheelDelta;
-            delta > -120 ? obj.ratio*=1.1 : obj.ratio*=0.9;
+            var evt = window.event || e;
+            var delta = evt.detail ? evt.detail * (-120) : evt.wheelDelta;
+            delta > -120 ? obj.ratio *= 1.1 : obj.ratio *= 0.9;
             setBackground();
         }
 
     obj.spinner.style.display = 'block';
-    obj.image.onload = function() {
+    obj.image.onload = function ()
+    {
         obj.spinner.style.display = 'none';
         setBackground();
 
         attachEvent(el, 'mousedown', imgMouseDown);
         attachEvent(el, 'mousemove', imgMouseMove);
         attachEvent(document.body, 'mouseup', imgMouseUp);
-        var mousewheel = (/Firefox/i.test(navigator.userAgent))? 'DOMMouseScroll' : 'mousewheel';
+        var mousewheel = (/Firefox/i.test(navigator.userAgent)) ? 'DOMMouseScroll' : 'mousewheel';
         attachEvent(el, mousewheel, zoomImage);
     };
     obj.image.src = options.imgSrc;
-    attachEvent(el, 'DOMNodeRemoved', function(){detachEvent(document.body, 'DOMNodeRemoved', imgMouseUp)});
+    attachEvent(el, 'DOMNodeRemoved', function ()
+    {
+        detachEvent(document.body, 'DOMNodeRemoved', imgMouseUp)
+    });
 
     return obj;
 };

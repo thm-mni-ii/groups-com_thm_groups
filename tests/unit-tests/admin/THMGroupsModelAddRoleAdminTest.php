@@ -1,20 +1,20 @@
 <?php
 /**
- *@category Joomla component
+ * @category    Joomla component
  *
- *@package     THM_Groups
+ * @package     THM_Groups
  *
- *@subpackage  com_thm_groups
- *@name        THMGroupsModelAddRoleAdminTest
- *@description THMGroupsModelAddRoleAdminTest from com_thm_groups
- *@author      Dennis Priefer, dennis.priefer@mni.thm.de
- *@author      Niklas Simonis, niklas.simonis@mni.thm.de
+ * @subpackage  com_thm_groups
+ * @name        THMGroupsModelAddRoleAdminTest
+ * @description THMGroupsModelAddRoleAdminTest from com_thm_groups
+ * @author      Dennis Priefer, dennis.priefer@mni.thm.de
+ * @author      Niklas Simonis, niklas.simonis@mni.thm.de
  *
- *@copyright   2012 TH Mittelhessen
+ * @copyright   2012 TH Mittelhessen
  *
- *@license     GNU GPL v.2
- *@link        www.thm.de
- *@version     3.0
+ * @license     GNU GPL v.2
+ * @link        www.thm.de
+ * @version     3.0
  */
 
 require_once JPATH_BASE . '/administrator/components/com_thm_groups/models/addrole.php';
@@ -65,10 +65,10 @@ class THMGroupsModelAddRoleAdminTest extends PHPUnit_Framework_TestCase
 		$array['role_name'] = 'THMGroupsTestSuite';
 		JRequest::set($array, 'post');
 
-		$result = $this->instance->store();
+		$result   = $this->instance->store();
 		$expected = true;
 
-		$db = JFactory::getDBO();
+		$db    = JFactory::getDBO();
 		$query = "DELETE FROM #__thm_groups_roles WHERE name = 'THMGroupsTestSuite'";
 		$db->setQuery($query);
 		if ($db->query())

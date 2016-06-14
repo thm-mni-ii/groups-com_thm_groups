@@ -1,6 +1,6 @@
 <?php
 
-require_once JPATH_BASE.'/components/com_thm_groups/helper/thm_groups_pictransform.php';
+require_once JPATH_BASE . '/components/com_thm_groups/helper/thm_groups_pictransform.php';
 
 class PicTransformTest extends PHPUnit_Framework_TestCase
 {

@@ -6,7 +6,7 @@ div.manager-page {
 
     float: left;
 
-    h2{
+    h2 {
       display: inline-block;
     }
   }
@@ -25,7 +25,7 @@ div.manager-page {
     margin-bottom: 20px;
     padding: 4px 8px;
 
-    span:before{
+    span:before {
       color: $foreground;
     }
 
@@ -34,7 +34,7 @@ div.manager-page {
       color: $background-grey;
       border: $border;
 
-      span:before{
+      span:before {
         color: $background-grey;
       }
     }
@@ -46,8 +46,7 @@ div.manager-page {
     border: $border;
     border-radius: 0;
 
-    .dropdown-toggle
-    {
+    .dropdown-toggle {
       text-align: left;
       width: 140px;
 
@@ -69,8 +68,7 @@ div.manager-page {
       padding: 0;
     }
 
-    li
-    {
+    li {
 
       margin: 0;
 
@@ -89,14 +87,13 @@ div.manager-page {
     margin-right: 5px;
   }
 
-  .btn-column
-  {
+  .btn-column {
     text-align: center;
     width: 40px;
   }
 
   th span:before {
-      color: $foreground;
+    color: $foreground;
   }
 
   td span.status-container {
@@ -116,8 +113,7 @@ div.manager-page {
     }
   }
 
-  td a:nth-child(2)
-  {
+  td a:nth-child(2) {
     margin-left: 8px;
   }
 

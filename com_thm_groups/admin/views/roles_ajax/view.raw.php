@@ -11,6 +11,7 @@
  */
 defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
+
 /**
  * Class loading persistent data into the view context
  *
@@ -21,26 +22,26 @@ jimport('joomla.application.component.view');
  */
 class THM_GroupsViewRoles_Ajax extends JViewLegacy
 {
-    /**
-     * loads model data into view context
-     *
-     * @param   string  $tpl  the name of the template to be used
-     *
-     * @return void
-     * 
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function display($tpl = null)
-    {
-        $model = $this->getModel();
-        $success = $model->getRolesOfGroup();
-        if ($success)
-        {
-            echo json_encode($success);
-        }
-        else
-        {
-            echo 'ERROR';
-        }
-    }
+	/**
+	 * loads model data into view context
+	 *
+	 * @param   string $tpl the name of the template to be used
+	 *
+	 * @return void
+	 *
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+	 */
+	public function display($tpl = null)
+	{
+		$model   = $this->getModel();
+		$success = $model->getRolesOfGroup();
+		if ($success)
+		{
+			echo json_encode($success);
+		}
+		else
+		{
+			echo 'ERROR';
+		}
+	}
 }

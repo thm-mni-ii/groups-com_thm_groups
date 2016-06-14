@@ -1,6 +1,6 @@
 <?php
 
-require_once JPATH_BASE.'/components/com_thm_groups/views/list/view.html.php';
+require_once JPATH_BASE . '/components/com_thm_groups/views/list/view.html.php';
 
 class THMGroupsViewListTest extends PHPUnit_Framework_TestCase
 {
@@ -10,20 +10,22 @@ class THMGroupsViewListTest extends PHPUnit_Framework_TestCase
 	// called before the test functions will be executed
 	// this function is defined in PHPUnit_TestCase and overwritten
 	// here
-	function setUp() {
+	function setUp()
+	{
 		$this->instance = new THMGroupsViewList();
 	}
 
 	// called after the test functions are executed
 	// this function is defined in PHPUnit_TestCase and overwritten
 	// here
-	function tearDown() {
+	function tearDown()
+	{
 		// "benutztes" Objekt entfernen
 		$this->instance = null;
 		// tearDown der Elternklasse aufrufen
 		parent::tearDown();
 	}
-	
+
 
 	/*
 	// test the display($tpl = null)

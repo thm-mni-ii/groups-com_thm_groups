@@ -27,7 +27,7 @@
       color: $foreground;
       border: $foreground 1px solid;
 
-      span:before{
+      span:before {
         color: $foreground;
       }
     }
@@ -160,40 +160,39 @@
         height: 230px;
         padding: 0;
 
-        .crop-container
-        {
+        .crop-container {
           height: 100%;
           margin: auto;
           padding: 0 5px;
           width: 50%;
 
-          .imageBox
-          {
+          .imageBox {
             position: relative;
             height: 220px;
             width: 100%;
             min-width: 150px;
-            border:1px solid #aaa;
+            border: 1px solid #aaa;
             background: #fff;
             overflow: hidden;
             background-repeat: no-repeat;
-            cursor:move;
+            cursor: move;
 
-            .thumbBox
-            {
+            .thumbBox {
               position: absolute;
               width: 150px;
               height: 200px;
               margin: auto;
-              top: 0; left: 0; bottom: 0; right: 0;
+              top: 0;
+              left: 0;
+              bottom: 0;
+              right: 0;
               box-sizing: border-box;
               border: 1px solid rgb(102, 102, 102);
               box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
               background: none repeat scroll 0% 0% transparent;
             }
 
-            .spinner
-            {
+            .spinner {
               position: absolute;
               top: 0;
               left: 0;
@@ -201,7 +200,7 @@
               right: 0;
               text-align: center;
               line-height: 400px;
-              background: rgba(0,0,0,0.7);
+              background: rgba(0, 0, 0, 0.7);
             }
           }
         }

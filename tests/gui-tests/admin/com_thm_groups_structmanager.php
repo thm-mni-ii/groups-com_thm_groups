@@ -1,67 +1,85 @@
 <?php
-class ComThmGroupsStructManager extends JoomlaSeleniumTest {
 
-    // Add Entry
-    public function testLinkAddEntryAvailable() {
-        $this->performBackendLogin ();
+class ComThmGroupsStructManager extends JoomlaSeleniumTest
+{
 
-        $this->click ( "link=Structuremanager" );
-        $this->waitForPageToLoad ( "30000" );
+	// Add Entry
+	public function testLinkAddEntryAvailable()
+	{
+		$this->performBackendLogin();
 
-        try {
-            $this->assertTrue ( $this->isElementPresent ( "link=Add Entry" ) );
-        } catch ( PHPUnit_Framework_AssertionFailedError $e ) {
-            array_push ( $this->verificationErrors, 'Button "Add Entry" does not exist' );
-        }
+		$this->click("link=Structuremanager");
+		$this->waitForPageToLoad("30000");
 
-        $this->performBackendLogout ();
-    }
+		try
+		{
+			$this->assertTrue($this->isElementPresent("link=Add Entry"));
+		}
+		catch (PHPUnit_Framework_AssertionFailedError $e)
+		{
+			array_push($this->verificationErrors, 'Button "Add Entry" does not exist');
+		}
 
-    // Edit Entry
-    public function testLinkEditEntryAvailable() {
-        $this->performBackendLogin ();
+		$this->performBackendLogout();
+	}
 
-        $this->click ( "link=Structuremanager" );
-        $this->waitForPageToLoad ( "30000" );
+	// Edit Entry
+	public function testLinkEditEntryAvailable()
+	{
+		$this->performBackendLogin();
 
-        try {
-            $this->assertTrue ( $this->isElementPresent ( "link=Edit Entry" ) );
-        } catch ( PHPUnit_Framework_AssertionFailedError $e ) {
-            array_push ( $this->verificationErrors, 'Button "Edit Entry" does not exist!' );
-        }
+		$this->click("link=Structuremanager");
+		$this->waitForPageToLoad("30000");
 
-        $this->performBackendLogout ();
-    }
+		try
+		{
+			$this->assertTrue($this->isElementPresent("link=Edit Entry"));
+		}
+		catch (PHPUnit_Framework_AssertionFailedError $e)
+		{
+			array_push($this->verificationErrors, 'Button "Edit Entry" does not exist!');
+		}
 
-    // Delete Entry
-    public function testLinkDeleteEntryAvailable() {
-        $this->performBackendLogin ();
+		$this->performBackendLogout();
+	}
 
-        $this->click ( "link=Structuremanager" );
-        $this->waitForPageToLoad ( "30000" );
+	// Delete Entry
+	public function testLinkDeleteEntryAvailable()
+	{
+		$this->performBackendLogin();
 
-        try {
-            $this->assertTrue ( $this->isElementPresent ( "link=Delete" ) );
-        } catch ( PHPUnit_Framework_AssertionFailedError $e ) {
-            array_push ( $this->verificationErrors, 'Button "Delete Entry" does not exist!' );
-        }
+		$this->click("link=Structuremanager");
+		$this->waitForPageToLoad("30000");
 
-        $this->performBackendLogout ();
-    }
+		try
+		{
+			$this->assertTrue($this->isElementPresent("link=Delete"));
+		}
+		catch (PHPUnit_Framework_AssertionFailedError $e)
+		{
+			array_push($this->verificationErrors, 'Button "Delete Entry" does not exist!');
+		}
 
-    // Options
-    public function testLinkOptionsAvailable() {
-        $this->performBackendLogin ();
+		$this->performBackendLogout();
+	}
 
-        $this->click ( "link=Structuremanager" );
-        $this->waitForPageToLoad ( "30000" );
+	// Options
+	public function testLinkOptionsAvailable()
+	{
+		$this->performBackendLogin();
 
-        try {
-            $this->assertTrue ( $this->isElementPresent ( "link=Options" ) );
-        } catch ( PHPUnit_Framework_AssertionFailedError $e ) {
-            array_push ( $this->verificationErrors, 'Button "Options" does not exist!' );
-        }
+		$this->click("link=Structuremanager");
+		$this->waitForPageToLoad("30000");
 
-        $this->performBackendLogout ();
-    }
+		try
+		{
+			$this->assertTrue($this->isElementPresent("link=Options"));
+		}
+		catch (PHPUnit_Framework_AssertionFailedError $e)
+		{
+			array_push($this->verificationErrors, 'Button "Options" does not exist!');
+		}
+
+		$this->performBackendLogout();
+	}
 }

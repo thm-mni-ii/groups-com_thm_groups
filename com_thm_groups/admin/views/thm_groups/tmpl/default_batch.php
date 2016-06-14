@@ -15,10 +15,10 @@ defined('_JEXEC') or die;
 
 // Create the copy/move options.
 $options = array(
-    JHtml::_('select.option', 'copy_data_from_joomla25_thm_groups_tables', JText::_('COM_THM_GROUPS_COPY_OLD_DATA')),
-    JHtml::_('select.option', 'copy_data_for_w_page_from_joomla25_thm_groups_tables', JText::_('COM_THM_GROUPS_COPY_OLD_DATA_FOR_W')),
-    JHtml::_('select.option', 'sync_users', JText::_('COM_THM_GROUPS_SYNC_USERS')),
-    JHtml::_('select.option', 'convert_tables_in_new_textfields', JText::_('COM_THM_GROUPS_CONVERT_TABLES_IN_NEW_TEXTFIELDS'))
+	JHtml::_('select.option', 'copy_data_from_joomla25_thm_groups_tables', JText::_('COM_THM_GROUPS_COPY_OLD_DATA')),
+	JHtml::_('select.option', 'copy_data_for_w_page_from_joomla25_thm_groups_tables', JText::_('COM_THM_GROUPS_COPY_OLD_DATA_FOR_W')),
+	JHtml::_('select.option', 'sync_users', JText::_('COM_THM_GROUPS_SYNC_USERS')),
+	JHtml::_('select.option', 'convert_tables_in_new_textfields', JText::_('COM_THM_GROUPS_CONVERT_TABLES_IN_NEW_TEXTFIELDS'))
 );
 
 JHtml::_('formbehavior.chosen', 'select');

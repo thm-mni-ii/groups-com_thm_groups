@@ -1,4 +1,5 @@
 <?php
+
 class ComThmGroupsAdministrationHomeEnGb extends JoomlaSeleniumTest
 {
 	public function testThmGroupsLinkAvailable()
@@ -49,4 +50,5 @@ class ComThmGroupsAdministrationHomeEnGb extends JoomlaSeleniumTest
 		$this->performBackendLogout();
 	}
 }
+
 ?>

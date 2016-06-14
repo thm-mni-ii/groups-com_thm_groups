@@ -1,131 +1,157 @@
 <?php
-class ComThmGroupsStructManagerAddEntry extends JoomlaSeleniumTest {
 
-    // Save
-    public function testLinkSaveAvailable() {
-        $this->performBackendLogin ();
+class ComThmGroupsStructManagerAddEntry extends JoomlaSeleniumTest
+{
 
-        $this->click ( "link=Structuremanager" );
-        $this->waitForPageToLoad ( "30000" );
-        $this->click ( "link=Add Entry" );
-        $this->waitForPageToLoad ( "30000" );
+	// Save
+	public function testLinkSaveAvailable()
+	{
+		$this->performBackendLogin();
 
-        try {
-            $this->assertTrue ( $this->isElementPresent ( "link=Save" ) );
-        } catch ( PHPUnit_Framework_AssertionFailedError $e ) {
-            array_push ( $this->verificationErrors, 'Button "Save" does not exist!' );
-        }
+		$this->click("link=Structuremanager");
+		$this->waitForPageToLoad("30000");
+		$this->click("link=Add Entry");
+		$this->waitForPageToLoad("30000");
 
-        $this->click ( "link=Close" );
-        $this->waitForPageToLoad ( "30000" );
+		try
+		{
+			$this->assertTrue($this->isElementPresent("link=Save"));
+		}
+		catch (PHPUnit_Framework_AssertionFailedError $e)
+		{
+			array_push($this->verificationErrors, 'Button "Save" does not exist!');
+		}
 
-        $this->performBackendLogout ();
-    }
+		$this->click("link=Close");
+		$this->waitForPageToLoad("30000");
 
-    // Save & Close
-    public function testLinkSaveAndCloseAvailable() {
-        $this->performBackendLogin ();
+		$this->performBackendLogout();
+	}
 
-        $this->click ( "link=Structuremanager" );
-        $this->waitForPageToLoad ( "30000" );
-        $this->click ( "link=Add Entry" );
-        $this->waitForPageToLoad ( "30000" );
+	// Save & Close
+	public function testLinkSaveAndCloseAvailable()
+	{
+		$this->performBackendLogin();
 
-        try {
-            $this->assertTrue ( $this->isElementPresent ( "link=Save & Close" ) );
-        } catch ( PHPUnit_Framework_AssertionFailedError $e ) {
-            array_push ( $this->verificationErrors, 'Button "Save & Close" does not exist!' );
-        }
+		$this->click("link=Structuremanager");
+		$this->waitForPageToLoad("30000");
+		$this->click("link=Add Entry");
+		$this->waitForPageToLoad("30000");
 
-        $this->click ( "link=Close" );
-        $this->waitForPageToLoad ( "30000" );
+		try
+		{
+			$this->assertTrue($this->isElementPresent("link=Save & Close"));
+		}
+		catch (PHPUnit_Framework_AssertionFailedError $e)
+		{
+			array_push($this->verificationErrors, 'Button "Save & Close" does not exist!');
+		}
 
-        $this->performBackendLogout ();
-    }
+		$this->click("link=Close");
+		$this->waitForPageToLoad("30000");
 
-    // Save & New
-    public function testLinkSaveAndNewAvailable() {
-        $this->performBackendLogin ();
+		$this->performBackendLogout();
+	}
 
-        $this->click ( "link=Structuremanager" );
-        $this->waitForPageToLoad ( "30000" );
-        $this->click ( "link=Add Entry" );
-        $this->waitForPageToLoad ( "30000" );
+	// Save & New
+	public function testLinkSaveAndNewAvailable()
+	{
+		$this->performBackendLogin();
 
-        try {
-            $this->assertTrue ( $this->isElementPresent ( "link=Save & New" ) );
-        } catch ( PHPUnit_Framework_AssertionFailedError $e ) {
-            array_push ( $this->verificationErrors, 'Button "Save & New" does not exist!' );
-        }
+		$this->click("link=Structuremanager");
+		$this->waitForPageToLoad("30000");
+		$this->click("link=Add Entry");
+		$this->waitForPageToLoad("30000");
 
-        $this->click ( "link=Close" );
-        $this->waitForPageToLoad ( "30000" );
+		try
+		{
+			$this->assertTrue($this->isElementPresent("link=Save & New"));
+		}
+		catch (PHPUnit_Framework_AssertionFailedError $e)
+		{
+			array_push($this->verificationErrors, 'Button "Save & New" does not exist!');
+		}
 
-        $this->performBackendLogout ();
-    }
+		$this->click("link=Close");
+		$this->waitForPageToLoad("30000");
 
-    // Close
-    public function testLinkCloseAvailable() {
-        $this->performBackendLogin ();
+		$this->performBackendLogout();
+	}
 
-        $this->click ( "link=Structuremanager" );
-        $this->waitForPageToLoad ( "30000" );
-        $this->click ( "link=Add Entry" );
-        $this->waitForPageToLoad ( "30000" );
+	// Close
+	public function testLinkCloseAvailable()
+	{
+		$this->performBackendLogin();
 
-        try {
-            $this->assertTrue ( $this->isElementPresent ( "link=Close" ) );
-        } catch ( PHPUnit_Framework_AssertionFailedError $e ) {
-            array_push ( $this->verificationErrors, 'Button "Close" does not exist!' );
-        }
+		$this->click("link=Structuremanager");
+		$this->waitForPageToLoad("30000");
+		$this->click("link=Add Entry");
+		$this->waitForPageToLoad("30000");
 
-        $this->click ( "link=Close" );
-        $this->waitForPageToLoad ( "30000" );
+		try
+		{
+			$this->assertTrue($this->isElementPresent("link=Close"));
+		}
+		catch (PHPUnit_Framework_AssertionFailedError $e)
+		{
+			array_push($this->verificationErrors, 'Button "Close" does not exist!');
+		}
 
-        $this->performBackendLogout ();
-    }
+		$this->click("link=Close");
+		$this->waitForPageToLoad("30000");
 
-    // Field Fieldname
-    public function testFieldFieldnameAvailable() {
-        $this->performBackendLogin ();
+		$this->performBackendLogout();
+	}
 
-        $this->click ( "link=Structuremanager" );
-        $this->waitForPageToLoad ( "30000" );
-        $this->click ( "link=Add Entry" );
-        $this->waitForPageToLoad ( "30000" );
+	// Field Fieldname
+	public function testFieldFieldnameAvailable()
+	{
+		$this->performBackendLogin();
 
-        // Name of structure
-        try {
-            $this->assertTrue ( $this->isElementPresent ( "id=name" ) );
-        } catch ( PHPUnit_Framework_AssertionFailedError $e ) {
-            array_push ( $this->verificationErrors, "Element with id=name does not exist!" );
-        }
+		$this->click("link=Structuremanager");
+		$this->waitForPageToLoad("30000");
+		$this->click("link=Add Entry");
+		$this->waitForPageToLoad("30000");
 
-        $this->click ( "link=Close" );
-        $this->waitForPageToLoad ( "30000" );
+		// Name of structure
+		try
+		{
+			$this->assertTrue($this->isElementPresent("id=name"));
+		}
+		catch (PHPUnit_Framework_AssertionFailedError $e)
+		{
+			array_push($this->verificationErrors, "Element with id=name does not exist!");
+		}
 
-        $this->performBackendLogout ();
-    }
+		$this->click("link=Close");
+		$this->waitForPageToLoad("30000");
 
-    // Field Type
-    public function testFieldTypeAvailable(){
-        $this->performBackendLogin ();
+		$this->performBackendLogout();
+	}
 
-        $this->click ( "link=Structuremanager" );
-        $this->waitForPageToLoad ( "30000" );
-        $this->click ( "link=Add Entry" );
-        $this->waitForPageToLoad ( "30000" );
+	// Field Type
+	public function testFieldTypeAvailable()
+	{
+		$this->performBackendLogin();
 
-        // Type of structure
-        try {
-            $this->assertEquals ( "date,link,multiselect,number,picture,table,text,textfield", implode ( ',', $this->getSelectOptions ( "id=relation" ) ) );
-        } catch ( PHPUnit_Framework_AssertionFailedError $e ) {
-            array_push ( $this->verificationErrors, "Dropdown Error!" );
-        }
+		$this->click("link=Structuremanager");
+		$this->waitForPageToLoad("30000");
+		$this->click("link=Add Entry");
+		$this->waitForPageToLoad("30000");
 
-        $this->click ( "link=Close" );
-        $this->waitForPageToLoad ( "30000" );
+		// Type of structure
+		try
+		{
+			$this->assertEquals("date,link,multiselect,number,picture,table,text,textfield", implode(',', $this->getSelectOptions("id=relation")));
+		}
+		catch (PHPUnit_Framework_AssertionFailedError $e)
+		{
+			array_push($this->verificationErrors, "Dropdown Error!");
+		}
 
-        $this->performBackendLogout ();
-    }
+		$this->click("link=Close");
+		$this->waitForPageToLoad("30000");
+
+		$this->performBackendLogout();
+	}
 }

@@ -13,5 +13,5 @@
 
 // No direct access to this file
 defined('_JEXEC') or die;
-jimport('thm_core.list.template');
-THM_CoreTemplateList::render($this);
+require_once JPATH_ROOT . '/media/com_thm_groups/templates/list.php';
+THM_GroupsTemplateList::render($this);

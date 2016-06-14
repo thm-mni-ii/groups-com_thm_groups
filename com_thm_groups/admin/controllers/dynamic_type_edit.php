@@ -28,59 +28,59 @@ jimport('thm_groups.assets.elements.explorer');
 class THM_GroupsControllerDynamic_Type_Edit extends JControllerLegacy
 {
 
-    /**
-     * Constructor
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+	/**
+	 * Constructor
+	 *
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+	}
 
-    /**
-     * Reloads the regex options when a static type is chosen in the
-     * edit view
-     *
-     * @return void
-     */
-    public function reloadTypeRegexOptions()
-    {
-        $mainframe = Jfactory::getApplication();
-        $selected = $mainframe->input->get('selectedID');
-        $model = $this->getModel('dynamic_type_edit');
+	/**
+	 * Reloads the regex options when a static type is chosen in the
+	 * edit view
+	 *
+	 * @return void
+	 */
+	public function reloadTypeRegexOptions()
+	{
+		$mainframe = Jfactory::getApplication();
+		$selected  = $mainframe->input->get('selectedID');
+		$model     = $this->getModel('dynamic_type_edit');
 
-        $regexOptions = $model->getRegexOptions($selected);
+		$regexOptions = $model->getRegexOptions($selected);
 
-        if ($regexOptions != null)
-        {
-            echo $regexOptions;
-        }
+		if ($regexOptions != null)
+		{
+			echo $regexOptions;
+		}
 
-        $mainframe->close();
-    }
+		$mainframe->close();
+	}
 
-    /**
-     * Generates output for inputfields of additonal values for
-     * the dynamic type, based on its static type accessed via ajax request.
-     *
-     * @throws Exception
-     * @return void
-     */
-    public function getTypeOptions()
-    {
-        try
-        {
-            $app = Jfactory::getApplication();
-            $selected = $app->input->get('selected');
-            $isActType = $app->input->get('isActType');
+	/**
+	 * Generates output for inputfields of additonal values for
+	 * the dynamic type, based on its static type accessed via ajax request.
+	 *
+	 * @throws Exception
+	 * @return void
+	 */
+	public function getTypeOptions()
+	{
+		try
+		{
+			$app       = Jfactory::getApplication();
+			$selected  = $app->input->get('selected');
+			$isActType = $app->input->get('isActType');
 
-            $result = $this->getModel('dynamic_type_edit')->getFieldOptions($selected, $isActType);
+			$result = $this->getModel('dynamic_type_edit')->getFieldOptions($selected, $isActType);
 
-            echo $result;
-        }
-        catch(Exception $e)
-        {
-            echo $e;
-        }
-    }
+			echo $result;
+		}
+		catch (Exception $e)
+		{
+			echo $e;
+		}
+	}
 }

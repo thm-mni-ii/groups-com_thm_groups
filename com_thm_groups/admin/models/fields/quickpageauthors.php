@@ -24,67 +24,68 @@ jimport('thm_groups.data.lib_thm_groups_quickpages');
 class JFormFieldQuickpageauthors extends JFormFieldList
 {
 
-    protected $type = 'quickpageauthors';
+	protected $type = 'quickpageauthors';
 
-    /**
-     * Cached array of the category items.
-     *
-     * @var    array
-     */
-    protected static $options = array();
+	/**
+	 * Cached array of the category items.
+	 *
+	 * @var    array
+	 */
+	protected static $options = array();
 
-    /**
-     * Returns a list of all Quickpages authors, even they don't have
-     * articles in their categories
-     *
-     * @return  mixed  array on success, otherwise false
-     */
-    public function getQPAuthors()
-    {
-        $dbo = JFactory::getDbo();
-        $query = $dbo->getQuery(true);
+	/**
+	 * Returns a list of all Quickpages authors, even they don't have
+	 * articles in their categories
+	 *
+	 * @return  mixed  array on success, otherwise false
+	 */
+	public function getQPAuthors()
+	{
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
-        $rootCategory = THMLibThmQuickpages::getQuickpagesRootCategory();
-        $query
-            ->select('users.id, users.name')
-            ->from('#__users AS users')
-            ->leftJoin('#__categories AS cat on cat.created_user_id = users.id')
-            ->where("cat.parent_id = $rootCategory")
-            ->where("cat.published = 1")
-            ->order('users.name')
-            ->group('users.id');
+		$rootCategory = THMLibThmQuickpages::getQuickpagesRootCategory();
+		$query
+			->select('users.id, users.name')
+			->from('#__users AS users')
+			->leftJoin('#__categories AS cat on cat.created_user_id = users.id')
+			->where("cat.parent_id = $rootCategory")
+			->where("cat.published = 1")
+			->order('users.name')
+			->group('users.id');
 
-        $dbo->setQuery($query);
+		$dbo->setQuery($query);
 
-        try
-        {
-            return $dbo->loadAssocList();
-        }
-        catch (Exception $exception)
-        {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-            return false;
-        }
-    }
+		try
+		{
+			return $dbo->loadAssocList();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-    /**
-     * Method to get the options to populate to populate list
-     *
-     * @return  array  The field option objects.
-     *
-     */
-    protected function getOptions()
-    {
-        $options = array();
+			return false;
+		}
+	}
 
-        $arrayOfModerators = $this->getQPAuthors();
+	/**
+	 * Method to get the options to populate to populate list
+	 *
+	 * @return  array  The field option objects.
+	 *
+	 */
+	protected function getOptions()
+	{
+		$options = array();
 
-        // Convert array to options
-        foreach ($arrayOfModerators as $key => $value)
-        {
-            $options[] = JHTML::_('select.option', $value['id'], $value['name']);
-        }
+		$arrayOfModerators = $this->getQPAuthors();
 
-        return array_merge(parent::getOptions(), $options);
-    }
+		// Convert array to options
+		foreach ($arrayOfModerators as $key => $value)
+		{
+			$options[] = JHTML::_('select.option', $value['id'], $value['name']);
+		}
+
+		return array_merge(parent::getOptions(), $options);
+	}
 }

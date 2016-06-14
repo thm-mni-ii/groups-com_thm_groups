@@ -15,37 +15,37 @@
 defined('_JEXEC') or die;
 $logoURL = 'administrator/components/com_thm_groups/assets/images/THM_Groups.png';
 $attribs = array('class' => 'thm_groups_main_image');
-$image = JHtml::_('image', $logoURL, JText::_('COM_THM_GROUPS'), $attribs);
+$image   = JHtml::_('image', $logoURL, JText::_('COM_THM_GROUPS'), $attribs);
 ?>
 <div id="j-sidebar-container" class="span2"><?php echo $this->sidebar; ?></div>
 <div id="j-main-container" class="span10">
-    <div class="span5 form-vertical">
-        <?php echo $image; ?>
-        <?php echo JText::_("COM_THM_GROUPS_HOME_DESC"); ?>
-    </div>
-    <div class="span5 form-vertical">
-        Add resource information here!
-    </div>
+	<div class="span5 form-vertical">
+		<?php echo $image; ?>
+		<?php echo JText::_("COM_THM_GROUPS_HOME_DESC"); ?>
+	</div>
+	<div class="span5 form-vertical">
+		Add resource information here!
+	</div>
 </div>
-<form action="index.php" id="adminForm"  method="post"
+<form action="index.php" id="adminForm" method="post"
       name="adminForm" xmlns="http://www.w3.org/1999/html">
-    <?php
-    // Load html for popup
-    if (isset($this->batch) && !empty($this->batch))
-    {
-        foreach ($this->batch as $name => $path)
-        {
-            if (file_exists($path))
-            {
-                echo $this->loadTemplate($name);
-            }
-        }
-    }
-    ?>
-    <input type="hidden" name="task" value="" />
-    <input type="hidden" name="boxchecked" value="0" />
-    <input type="hidden" name="option" value="<?php echo JFactory::getApplication()->input->get('option'); ?>" />
-    <input type="hidden" name="view" value="<?php echo $this->get('name'); ?>" />
-    <?php echo JHtml::_('form.token');?>
+	<?php
+	// Load html for popup
+	if (isset($this->batch) && !empty($this->batch))
+	{
+		foreach ($this->batch as $name => $path)
+		{
+			if (file_exists($path))
+			{
+				echo $this->loadTemplate($name);
+			}
+		}
+	}
+	?>
+	<input type="hidden" name="task" value=""/>
+	<input type="hidden" name="boxchecked" value="0"/>
+	<input type="hidden" name="option" value="<?php echo JFactory::getApplication()->input->get('option'); ?>"/>
+	<input type="hidden" name="view" value="<?php echo $this->get('name'); ?>"/>
+	<?php echo JHtml::_('form.token'); ?>
 </form>
 

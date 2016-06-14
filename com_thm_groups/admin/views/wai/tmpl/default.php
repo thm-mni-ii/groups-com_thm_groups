@@ -14,19 +14,16 @@
  *
  */
 defined('_JEXEC') or die ('Restricted access');
-require_once JPATH_ROOT . DS . 'components' . DS . 'com_thm_groups' . DS . 'helper' . DS . 'helper_wai.php';
+require_once JPATH_ROOT . "/media/com_thm_groups/helpers/wai.php";
+JHtml::_('jquery.framework');
 
-// THM Groups library path
-
-$library_path = JURI::root() . 'libraries/thm_groups';
-
-$lang = JFactory::getLanguage();
-$lang->load('com_thm_groups', JPATH_ADMINISTRATOR);
+// TODO: CHECK IF LANG STILL WORK
+//$lang = JFactory::getLanguage();
+//$lang->load('com_thm_groups', JPATH_ADMINISTRATOR);
 
 $document = JFactory::getDocument();
-$document->addScript($library_path . '/assets/js/wai/functions.js');
-$document->addScript($library_path . '/assets/js/jquery-1.9.1.min.js');
-$document->addStyleSheet($library_path . '/assets/css/wai/wai.css');
+$document->addScript(JPATH_ROOT . "/media/com_thm_groups/js/wai.js");
+$document->addStyleSheet(JPATH_ROOT . "/media/com_thm_groups/css/wai.css");
 
 $helper = new THMGroupsModelWai;
 $helper->getKeyword();
@@ -34,57 +31,57 @@ $helper->getKeyword();
 ?>
 
 <h2>
-    <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_MEMBERSHIP')?>
+	<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_MEMBERSHIP') ?>
 </h2>
 <div id="left">
-    <?php echo $helper->getInput(); ?>
-    <h3>
+	<?php echo $helper->getInput(); ?>
+	<h3>
         <span class="hasTip"
-            title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_DESCRIPTION'); ?>>
+              title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS_DESCRIPTION'); ?>>
             <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_PARAMETERS'); ?>
         </span>
-    </h3>
-    <table width="100%" align="center">
-        <tr>
+	</h3>
+	<table width="100%" align="center">
+		<tr>
 
-            <td class="key" align="left"><input type="checkbox" id="showList"
-                name="showList" value="showlist"><span class="hasTip"
-                title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_LIST_DESC'); ?>>
+			<td class="key" align="left"><input type="checkbox" id="showList"
+			                                    name="showList" value="showlist"><span class="hasTip"
+			                                                                           title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_LIST_DESC'); ?>>
                 <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_LIST'); ?>
             </span>
-            </td>
-        </tr>
-        <tr>
-            <td><input type="checkbox" id="showAdvanced" name="showAdvanced"
-                value="showadvanced"><span class="hasTip"
-                title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_ADVANCED_DESC'); ?>>
+			</td>
+		</tr>
+		<tr>
+			<td><input type="checkbox" id="showAdvanced" name="showAdvanced"
+			           value="showadvanced"><span class="hasTip"
+			                                      title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_ADVANCED_DESC'); ?>>
                 <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_ADVANCED'); ?>
             </span>
-            </td>
-        </tr>
-        <tr>
-            <td><input type="checkbox" id="showSmallview" name="showSmallview"
-                value="showsmallview"><span class="hasTip"
-                title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_SMALLVIEW_DESC'); ?>>
+			</td>
+		</tr>
+		<tr>
+			<td><input type="checkbox" id="showSmallview" name="showSmallview"
+			           value="showsmallview"><span class="hasTip"
+			                                       title=<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_SMALLVIEW_DESC'); ?>>
                 <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_SHOW_SMALLVIEW'); ?>
             </span>
-            </td>
-        </tr>
-    </table>
+			</td>
+		</tr>
+	</table>
 </div>
 <div id="right">
-    <h3>
-        <?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_DISPOSITION')?>
-    </h3>
-    <br /> <input type="radio" id="hor" name="group1"
-        value="horizontal"> Horizontal <br> <input type="radio" id="ver"
-        name="group1" value="vertical"> Vertical
+	<h3>
+		<?php echo JText::_('COM_THM_GROUPS_EDITORS_XTD_WAI_DISPOSITION') ?>
+	</h3>
+	<br/> <input type="radio" id="hor" name="group1"
+	             value="horizontal"> Horizontal <br> <input type="radio" id="ver"
+	                                                        name="group1" value="vertical"> Vertical
 
 </div>
 <div id="THM_Plugin_Members_AddButton">
-    <button onclick="insertOptions();">
-        <?php echo JText::_('COM_THM_GROUPS_ADD'); ?>
-    </button>
+	<button onclick="insertOptions();">
+		<?php echo JText::_('COM_THM_GROUPS_ADD'); ?>
+	</button>
 </div>
 
 

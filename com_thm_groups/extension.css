@@ -12,7 +12,7 @@
     margin-left: 5px;
 }
 
-.mod_gs_site div:not(:last-child){
+.mod_gs_site div:not(:last-child) {
     float: none;
     vertical-align: top;
 }
@@ -57,7 +57,7 @@
     vertical-align: middle;
 }
 
-.mod_gs_input_text,.mod_gs_input_file,.mod_gs_input_submit {
+.mod_gs_input_text, .mod_gs_input_file, .mod_gs_input_submit {
     font-size: 1em;
     width: 98%;
 }
@@ -147,7 +147,7 @@ ul.gs_advtable_right {
     font-size: 14px;
 }
 
-#gssite input,#gssite textarea {
+#gssite input, #gssite textarea {
     width: 226px;
 }
 

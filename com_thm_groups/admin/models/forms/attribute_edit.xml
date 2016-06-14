@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fieldset name="details"
-              addfieldpath="/libraries/thm_core/fields">
+              addfieldpath="/media/com_thm_groups/fields">
         <field name="id"
                type="hidden"/>
         <field name="name"
@@ -10,14 +10,14 @@
                size="40"
                label="COM_THM_GROUPS_NAME"
                required="true"/>
-        <field  name="dynamic_typeID"
-                type="genericlist"
-                valueColumn="id"
-                textColumn="name"
-                table="thm_groups_dynamic_type"
-                label="COM_THM_GROUPS_DYNAMIC_TYPE"
-                description="COM_THM_GROUPS_DYNAMIC_TYPE_DESC"
-                required="true"/>
+        <field name="dynamic_typeID"
+               type="genericlist"
+               valueColumn="id"
+               textColumn="name"
+               table="thm_groups_dynamic_type"
+               label="COM_THM_GROUPS_DYNAMIC_TYPE"
+               description="COM_THM_GROUPS_DYNAMIC_TYPE_DESC"
+               required="true"/>
         <field name="validate"
                type="radio"
                class="btn-group btn-group-yesno"
@@ -33,7 +33,7 @@
                label="COM_THM_GROUPS_DESCRIPTION"
                rows="10"
                cols="5"
-               required="false" />
+               required="false"/>
         <field name="extra_options_lbl"
                type="spacer"
                label="COM_THM_GROUPS_ADDITIONAL"

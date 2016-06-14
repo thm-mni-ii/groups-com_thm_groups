@@ -23,277 +23,285 @@ require_once JPATH_COMPONENT . '/assets/helpers/database_compare_helper.php';
  */
 class THM_GroupsModelRole extends JModelLegacy
 {
-    /**
-     * saves the dynamic types
-     *
-     * @return bool true on success, otherwise false
-     */
-    public function save()
-    {
-        $data = JFactory::getApplication()->input->get('jform', array(), 'array');
+	/**
+	 * saves the dynamic types
+	 *
+	 * @return bool true on success, otherwise false
+	 */
+	public function save()
+	{
+		$data = JFactory::getApplication()->input->get('jform', array(), 'array');
 
-        $table = JTable::getInstance('roles', 'thm_groupsTable');
-        $table->save($data);
+		$table = JTable::getInstance('roles', 'thm_groupsTable');
+		$table->save($data);
 
-        return $table->id;
-    }
+		return $table->id;
+	}
 
-    /**
-     * Delete item
-     *
-     * @return mixed
-     */
-    public function delete()
-    {
-        $ids = JFactory::getApplication()->input->get('cid', array(), 'array');
+	/**
+	 * Delete item
+	 *
+	 * @return mixed
+	 */
+	public function delete()
+	{
+		$ids = JFactory::getApplication()->input->get('cid', array(), 'array');
 
-        $db = JFactory::getDbo();
+		$db = JFactory::getDbo();
 
-        $query = $db->getQuery(true);
+		$query = $db->getQuery(true);
 
-        $conditions = array(
-            $db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')',
-        );
+		$conditions = array(
+			$db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')',
+		);
 
-        $query->delete($db->quoteName('#__thm_groups_roles'));
-        $query->where($conditions);
+		$query->delete($db->quoteName('#__thm_groups_roles'));
+		$query->where($conditions);
 
-        $db->setQuery($query);
+		$db->setQuery($query);
 
-        return $result = $db->execute();
-    }
+		return $result = $db->execute();
+	}
 
-    /**
-     * Deletes a group from a role
-     *
-     * @return bool
-     * @throws Exception
-     */
-    public function deleteGroup()
-    {
-        $input = JFactory::getApplication()->input;
+	/**
+	 * Deletes a group from a role
+	 *
+	 * @return bool
+	 * @throws Exception
+	 */
+	public function deleteGroup()
+	{
+		$input = JFactory::getApplication()->input;
 
-        $roleID = $input->getInt('r_id');
-        $groupID = $input->getInt('g_id');
+		$roleID  = $input->getInt('r_id');
+		$groupID = $input->getInt('g_id');
 
-        $query = $this->_db->getQuery(true);
-        $query
-            ->delete('#__thm_groups_usergroups_roles')
-            ->where("rolesID = '$roleID'")
-            ->where("usergroupsID = '$groupID'");
-        $this->_db->setQuery((string)$query);
+		$query = $this->_db->getQuery(true);
+		$query
+			->delete('#__thm_groups_usergroups_roles')
+			->where("rolesID = '$roleID'")
+			->where("usergroupsID = '$groupID'");
+		$this->_db->setQuery((string) $query);
 
-        try
-        {
-            $this->_db->execute();
-        }
-        catch (Exception $exc)
-        {
-            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
-            return false;
-        }
+		try
+		{
+			$this->_db->execute();
+		}
+		catch (Exception $exc)
+		{
+			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-        return true;
-    }
+			return false;
+		}
 
-    /**
-     * Method to perform batch operations on an item or a set of items.
-     *
-     * @return  boolean  Returns true on success, false on failure.
-     *
-     */
-    public function batch()
-    {
-        $jinput = JFactory::getApplication()->input;
+		return true;
+	}
 
-        // array with action command
-        $action = $jinput->post->get('batch_action', array(), 'array');
+	/**
+	 * Method to perform batch operations on an item or a set of items.
+	 *
+	 * @return  boolean  Returns true on success, false on failure.
+	 *
+	 */
+	public function batch()
+	{
+		$jinput = JFactory::getApplication()->input;
 
-        // an array of group ids
-        $gid = $jinput->post->get('batch_id', array(), 'array');
+		// array with action command
+		$action = $jinput->post->get('batch_action', array(), 'array');
 
-        // an array of role ids
-        $cid  = $jinput->post->get('cid', array(), 'array');
+		// an array of group ids
+		$gid = $jinput->post->get('batch_id', array(), 'array');
 
-        // Sanitize role ids.
-        $pks = array_unique($cid);
-        JArrayHelper::toInteger($pks);
+		// an array of role ids
+		$cid = $jinput->post->get('cid', array(), 'array');
 
-        // Remove any values of zero.
-        if (array_search(0, $pks, true))
-        {
-            unset($pks[array_search(0, $pks, true)]);
-        }
+		// Sanitize role ids.
+		$pks = array_unique($cid);
+		JArrayHelper::toInteger($pks);
 
-        if (empty($pks))
-        {
-            $this->setError(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'));
+		// Remove any values of zero.
+		if (array_search(0, $pks, true))
+		{
+			unset($pks[array_search(0, $pks, true)]);
+		}
 
-            return false;
-        }
+		if (empty($pks))
+		{
+			$this->setError(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'));
 
-        $done = false;
+			return false;
+		}
 
-        if (!empty($gid))
-        {
-            $cmd = $action[0];
+		$done = false;
 
-            if (!$this->batchRole($gid, $pks, $cmd))
-            {
-                return false;
-            }
+		if (!empty($gid))
+		{
+			$cmd = $action[0];
 
-            $done = true;
-        }
+			if (!$this->batchRole($gid, $pks, $cmd))
+			{
+				return false;
+			}
 
-        if (!$done)
-        {
-            $this->setError(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
+			$done = true;
+		}
 
-            return false;
-        }
+		if (!$done)
+		{
+			$this->setError(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
 
-        // Clear the cache
-        $this->cleanCache();
+			return false;
+		}
 
-        return true;
-    }
+		// Clear the cache
+		$this->cleanCache();
 
-    /**
-     * Perform batch operations
-     *
-     * @param   array    $group_ids  The group IDs which assignments are being edited
-     * @param   array    $role_ids   An array of role IDs on which to operate
-     * @param   string   $action     The action to perform
-     *
-     * @return  boolean  True on success, false on failure
-     *
-     */
-    public function batchRole($group_ids, $role_ids, $action)
-    {
-        // Get the DB object
-        $db = $this->getDbo();
+		return true;
+	}
 
-        JArrayHelper::toInteger($role_ids);
-        JArrayHelper::toInteger($group_ids);
+	/**
+	 * Perform batch operations
+	 *
+	 * @param   array  $group_ids The group IDs which assignments are being edited
+	 * @param   array  $role_ids  An array of role IDs on which to operate
+	 * @param   string $action    The action to perform
+	 *
+	 * @return  boolean  True on success, false on failure
+	 *
+	 */
+	public function batchRole($group_ids, $role_ids, $action)
+	{
+		// Get the DB object
+		$db = $this->getDbo();
 
-        switch ($action)
-        {
-            // Remove groups from a selected role
-            case 'del':
-                $doDelete = 'group';
-                break;
+		JArrayHelper::toInteger($role_ids);
+		JArrayHelper::toInteger($group_ids);
 
-            // Add groups to a selected role
-            case 'add':
-            default:
-                $doAssign = true;
-                break;
-        }
+		switch ($action)
+		{
+			// Remove groups from a selected role
+			case 'del':
+				$doDelete = 'group';
+				break;
 
-        // Remove the groups from the role if requested.
-        if (isset($doDelete))
-        {
-            $query = $db->getQuery(true);
+			// Add groups to a selected role
+			case 'add':
+			default:
+				$doAssign = true;
+				break;
+		}
 
-            // Remove groups from the roles
-            $query
-                ->delete('#__thm_groups_usergroups_roles')
-                ->where('rolesID' . ' IN (' . implode(',', $role_ids) . ')');
+		// Remove the groups from the role if requested.
+		if (isset($doDelete))
+		{
+			$query = $db->getQuery(true);
 
-            // Only remove groups from selected role
-            if ($doDelete == 'group')
-            {
-                $query->where('usergroupsID' . ' IN (' . implode(',', $group_ids) . ')');
-            }
+			// Remove groups from the roles
+			$query
+				->delete('#__thm_groups_usergroups_roles')
+				->where('rolesID' . ' IN (' . implode(',', $role_ids) . ')');
 
-            $db->setQuery($query);
+			// Only remove groups from selected role
+			if ($doDelete == 'group')
+			{
+				$query->where('usergroupsID' . ' IN (' . implode(',', $group_ids) . ')');
+			}
 
-            try
-            {
-                $db->execute();
-            }
-            catch (RuntimeException $e)
-            {
-                $this->setError($e->getMessage());
+			$db->setQuery($query);
 
-                return false;
-            }
-        }
+			try
+			{
+				$db->execute();
+			}
+			catch (RuntimeException $e)
+			{
+				$this->setError($e->getMessage());
 
-        // Assign the groups to the roles if requested.
-        if (isset($doAssign))
-        {
-            $query = $db->getQuery(true);
+				return false;
+			}
+		}
 
-            // First, we need to check if the group is already assigned to a role
-            $query
-                ->select('usergroupsID, rolesID')
-                ->from($db->quoteName('#__thm_groups_usergroups_roles'))
-                ->where($db->quoteName('rolesID') . ' IN (' . implode(',', $role_ids) . ')')
-                ->order('rolesID');
+		// Assign the groups to the roles if requested.
+		if (isset($doAssign))
+		{
+			$query = $db->getQuery(true);
 
-            $db->setQuery($query);
-            $groups_roles = $db->loadObjectList();
+			// First, we need to check if the group is already assigned to a role
+			$query
+				->select('usergroupsID, rolesID')
+				->from($db->quoteName('#__thm_groups_usergroups_roles'))
+				->where($db->quoteName('rolesID') . ' IN (' . implode(',', $role_ids) . ')')
+				->order('rolesID');
 
-            // Contains groups and roles from db
-            $dataFromDB = array();
-            foreach($groups_roles as $group_role)
-            {
-                $dataFromDB[$group_role->usergroupsID][] = (int) $group_role->rolesID;
-            }
+			$db->setQuery($query);
+			$groups_roles = $db->loadObjectList();
 
-            // Build the values clause for the assignment query.
-            $query->clear();
-            $groups = false;
+			// Contains groups and roles from db
+			$dataFromDB = array();
+			foreach ($groups_roles as $group_role)
+			{
+				$dataFromDB[$group_role->usergroupsID][] = (int) $group_role->rolesID;
+			}
 
-            // Contains groups and roles to insert in DB
-            $insertValues = array();
-            foreach($group_ids as $gid)
-            {
-                foreach($role_ids as $rid)
-                {
-                    $insertValues[$gid][] = $rid;
-                }
-            }
+			// Build the values clause for the assignment query.
+			$query->clear();
+			$groups = false;
 
-            // filter values before insert
-            THM_GroupsHelperDatabase_Compare::filterInsertValues($insertValues, $dataFromDB);
+			// Contains groups and roles to insert in DB
+			$insertValues = array();
+			foreach ($group_ids as $gid)
+			{
+				foreach ($role_ids as $rid)
+				{
+					$insertValues[$gid][] = $rid;
+				}
+			}
 
-            // prepare insert values
-            if(!empty($insertValues)) {
-                foreach ($insertValues as $key => $values) {
-                    if(!empty($values))
-                    {
-                        foreach ($values as $rid) {
-                            $query->values($key . ',' . $rid);
-                        }
-                        $groups = true;
-                    }
-                }
+			// filter values before insert
+			THM_GroupsHelperDatabase_Compare::filterInsertValues($insertValues, $dataFromDB);
 
-                // If we have no roles to process, throw an error to notify the user
-                if (!$groups) {
-                    $this->setError(JText::_('COM_THM_GROUPS_ERROR_NO_ADDITIONS'));
+			// prepare insert values
+			if (!empty($insertValues))
+			{
+				foreach ($insertValues as $key => $values)
+				{
+					if (!empty($values))
+					{
+						foreach ($values as $rid)
+						{
+							$query->values($key . ',' . $rid);
+						}
+						$groups = true;
+					}
+				}
 
-                    return false;
-                }
+				// If we have no roles to process, throw an error to notify the user
+				if (!$groups)
+				{
+					$this->setError(JText::_('COM_THM_GROUPS_ERROR_NO_ADDITIONS'));
 
-                $query->insert($db->quoteName('#__thm_groups_usergroups_roles'))
-                    ->columns(array($db->quoteName('usergroupsID'), $db->quoteName('rolesID')));
-                $db->setQuery($query);
+					return false;
+				}
 
-                try {
-                    $db->execute();
-                } catch (RuntimeException $e) {
-                    $this->setError($e->getMessage());
+				$query->insert($db->quoteName('#__thm_groups_usergroups_roles'))
+					->columns(array($db->quoteName('usergroupsID'), $db->quoteName('rolesID')));
+				$db->setQuery($query);
 
-                    return false;
-                }
-            }
-        }
+				try
+				{
+					$db->execute();
+				}
+				catch (RuntimeException $e)
+				{
+					$this->setError($e->getMessage());
 
-        return true;
-    }
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
 
 }

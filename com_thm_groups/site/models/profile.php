@@ -3,7 +3,7 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
- * @name		THMGroupsModelProfile
+ * @name        THMGroupsModelProfile
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Dieudonne Timma, <dieudonne.timma.meyatchie@mni.thm.de>
@@ -23,39 +23,39 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
  */
 class THM_GroupsModelProfile extends JModelItem
 {
-    public $groupID;
+	public $groupID;
 
-    public $userID;
+	public $userID;
 
-    /**
-     * Constructor
-     *
-     */
-    public function __construct()
-    {
-        $input = JFactory::getApplication()->input;
-        $profileID = $input->getint('userID', 0);
-        $published = empty($profileID)? false : THM_GroupsHelperProfile::isPublished($profileID);
-        if (!$published)
-        {
-            $exc = new Exception(JText::_('COM_THM_GROUPS_PROFILE_NOT_FOUND'), '404');
-            JErrorPage::render($exc);
-        }
-        $this->profileID = $profileID;
-        $this->groupID = $input->getint('groupID', 1);
-        parent::__construct();
-    }
+	/**
+	 * Constructor
+	 *
+	 */
+	public function __construct()
+	{
+		$input     = JFactory::getApplication()->input;
+		$profileID = $input->getint('userID', 0);
+		$published = empty($profileID) ? false : THM_GroupsHelperProfile::isPublished($profileID);
+		if (!$published)
+		{
+			$exc = new Exception(JText::_('COM_THM_GROUPS_PROFILE_NOT_FOUND'), '404');
+			JErrorPage::render($exc);
+		}
+		$this->profileID = $profileID;
+		$this->groupID   = $input->getint('groupID', 1);
+		parent::__construct();
+	}
 
 
-    /**
-     * Method to get a single record.
-     *
-     * @param   integer  $pk  The id of the primary key.
-     *
-     * @return  mixed    Object on success, false on failure.
-     */
-    public function getItem($pk = null)
-    {
-        return THM_GroupsHelperProfile::getProfile($this->profileID, $this->groupID);
-    }
+	/**
+	 * Method to get a single record.
+	 *
+	 * @param   integer $pk The id of the primary key.
+	 *
+	 * @return  mixed    Object on success, false on failure.
+	 */
+	public function getItem($pk = null)
+	{
+		return THM_GroupsHelperProfile::getProfile($this->profileID, $this->groupID);
+	}
 }

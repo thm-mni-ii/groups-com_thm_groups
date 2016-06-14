@@ -14,7 +14,7 @@
  */
 
 // Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die( 'Restricted access' );
+defined('_JEXEC') or die('Restricted access');
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
 $lang = JFactory::getLanguage();
@@ -30,22 +30,22 @@ $lang->load('com_thm_groups', JPATH_ADMINISTRATOR);
 class JFormFieldPreviewButton extends JFormField
 {
 
-    /**
-     * Get Input Type Button to load Preview
-     *
-     * @return  string
-     */
-    public function getInput()
-    {
-        $library_path = JURI::root() . 'libraries/thm_groups';
-        $elements_path = JURI::root() . 'administrator/components/com_thm_groups/elements';
+	/**
+	 * Get Input Type Button to load Preview
+	 *
+	 * @return  string
+	 */
+	public function getInput()
+	{
+		//$library_path = JURI::root() . 'libraries/thm_groups';
+		$elements_path = JURI::root() . 'administrator/components/com_thm_groups/elements';
 
-        // Add script-code to the document head
-        $document = JFactory::getDocument();
-        $document->addScript($elements_path . '/previewbutton.js');
+		// Add script-code to the document head
+		$document = JFactory::getDocument();
+		$document->addScript($elements_path . '/previewbutton.js');
 
-        return '<input type="button" id="thm_groups_adv_view_preview_button" value="' . JText::_('COM_THM_GROUPS_PROFILE_CONTAINER_PREVIEW')
-                . '" onclick="ProfilePreview.open();" />';
-    }
+		return '<input type="button" id="thm_groups_adv_view_preview_button" value="' . JText::_('COM_THM_GROUPS_PROFILE_CONTAINER_PREVIEW')
+		. '" onclick="ProfilePreview.open();" />';
+	}
 
 }

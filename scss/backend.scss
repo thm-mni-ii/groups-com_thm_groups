@@ -1,7 +1,6 @@
 @import '../../lib_thm_core/scss/backend';
 
-.iconPicker
-{
+.iconPicker {
   white-space: normal !important; //needed for Firefox
 
   .iconName {
@@ -27,7 +26,7 @@
   .dropdown-menu {
     margin-bottom: 50px;
 
-    .selected{
+    .selected {
       background-color: $background-icon-list;
     }
   }

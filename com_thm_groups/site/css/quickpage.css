@@ -18,33 +18,58 @@ button:hover {
     border: 1px solid #aaa;
 }
 
-
 /* filter menus */
 
-fieldset#filter-bar { ; }
+fieldset#filter-bar {;
+}
 
-div.qp_filter_select { float: left; }
+div.qp_filter_select {
+    float: left;
+}
 
-div.qp_filter_search { float: right; }
+div.qp_filter_search {
+    float: right;
+}
 
-label.qp_filter_label { margin-right: 5px; }
-label.qp_filter_label:after { content: ":"; }
+label.qp_filter_label {
+    margin-right: 5px;
+}
 
-select.qp_inputbox { margin-right: 5px; }
-select.qp_inputbox:focus { border: none; }
+label.qp_filter_label:after {
+    content: ":";
+}
 
-input#filter_search { width: 100px; }
+select.qp_inputbox {
+    margin-right: 5px;
+}
 
+select.qp_inputbox:focus {
+    border: none;
+}
+
+input#filter_search {
+    width: 100px;
+}
 
 /* container between filter menu and list table */
-div.qp_clear { border-bottom: black; }
-
+div.qp_clear {
+    border-bottom: black;
+}
 
 /* Button to create article */
-span.qp_invisible_text { display: none; }
+span.qp_invisible_text {
+    display: none;
+}
 
-a.qp_icon_link { text-decoration: none; background-color: transparent; }
-a:hover.qp_icon_link { text-decoration: none; background: transparent !important; }
+a.qp_icon_link {
+    text-decoration: none;
+    background-color: transparent;
+}
+
+a:hover.qp_icon_link {
+    text-decoration: none;
+    background: transparent !important;
+}
 
 span.qp_icon_big {
     background-repeat: no-repeat;
@@ -64,7 +89,9 @@ span.qp_create_icon_disabled {
 
 /* -- JGRID STYLES ----------------------------- */
 
-.center { text-align: center; }
+.center {
+    text-align: center;
+}
 
 input.text-area-order {
     width: 30px;
@@ -81,38 +108,107 @@ a.saveorder {
     width: 16px;
 }
 
-a img{
+a img {
     border: 0;
 }
 
-
 /* grid table elements */
-a.jgrid:hover { text-decoration: none; background: transparent !important; }
+a.jgrid:hover {
+    text-decoration: none;
+    background: transparent !important;
+}
 
 .jgrid span.state {
     display: inline-block;
     height: 16px;
     width: 16px;
 }
-.jgrid span.text                { display: none; }
-.jgrid span.edit                { background-image: url(../img/quickpage/toolbar/icon-16-edit.png); width: 16px; height: 16px; }
-.jgrid span.edit_disabled       { background-image: url(../img/quickpage/toolbar/icon-16-edit.png); background-position: 0 -16px; width: 16px; height: 16px; }
-.jgrid span.publish             { background-image: url(../img/quickpage/tick.png);}
-.jgrid span.unpublish           { background-image: url(../img/quickpage/publish_x.png); }
-.jgrid span.archive             { background-image: url(../img/quickpage/menu/icon-16-archive.png); }
-.jgrid span.trash               { background-image: url(../img/quickpage/toolbar/icon-16-trash.png); width: 16px; height: 16px; }
-.jgrid span.trash_disabled      { background-image: url(../img/quickpage/toolbar/icon-16-trash.png); background-position: 0 -16px; width: 16px; height: 16px; }
-.jgrid span.default             { background-image: url(../img/quickpage/menu/icon-16-default.png); }
-.jgrid span.notdefault          { background-image: url(../img/quickpage/menu/icon-16-notdefault.png); }
-.jgrid span.checkedout          { background-image: url(../img/quickpage/checked_out.png); }
-.jgrid span.downarrow           { background-image: url(../img/quickpage/downarrow.png); background-repeat: no-repeat; }
-.jgrid span.downarrow_disabled  { background-image: url(../img/quickpage/downarrow0.png); background-position: 0 -12px; }
-.jgrid span.uparrow             { background-image: url(../img/quickpage/uparrow.png); background-repeat: no-repeat; }
-.jgrid span.uparrow_disabled    { background-image: url(../img/quickpage/uparrow0.png); background-position: 0 -12px; }
-.jgrid span.published           { background-image: url(../img/quickpage/publish_g.png); }
-.jgrid span.expired             { background-image: url(../img/quickpage/publish_r.png); }
-.jgrid span.pending             { background-image: url(../img/quickpage/publish_y.png); }
 
+.jgrid span.text {
+    display: none;
+}
+
+.jgrid span.edit {
+    background-image: url(../img/quickpage/toolbar/icon-16-edit.png);
+    width: 16px;
+    height: 16px;
+}
+
+.jgrid span.edit_disabled {
+    background-image: url(../img/quickpage/toolbar/icon-16-edit.png);
+    background-position: 0 -16px;
+    width: 16px;
+    height: 16px;
+}
+
+.jgrid span.publish {
+    background-image: url(../img/quickpage/tick.png);
+}
+
+.jgrid span.unpublish {
+    background-image: url(../img/quickpage/publish_x.png);
+}
+
+.jgrid span.archive {
+    background-image: url(../img/quickpage/menu/icon-16-archive.png);
+}
+
+.jgrid span.trash {
+    background-image: url(../img/quickpage/toolbar/icon-16-trash.png);
+    width: 16px;
+    height: 16px;
+}
+
+.jgrid span.trash_disabled {
+    background-image: url(../img/quickpage/toolbar/icon-16-trash.png);
+    background-position: 0 -16px;
+    width: 16px;
+    height: 16px;
+}
+
+.jgrid span.default {
+    background-image: url(../img/quickpage/menu/icon-16-default.png);
+}
+
+.jgrid span.notdefault {
+    background-image: url(../img/quickpage/menu/icon-16-notdefault.png);
+}
+
+.jgrid span.checkedout {
+    background-image: url(../img/quickpage/checked_out.png);
+}
+
+.jgrid span.downarrow {
+    background-image: url(../img/quickpage/downarrow.png);
+    background-repeat: no-repeat;
+}
+
+.jgrid span.downarrow_disabled {
+    background-image: url(../img/quickpage/downarrow0.png);
+    background-position: 0 -12px;
+}
+
+.jgrid span.uparrow {
+    background-image: url(../img/quickpage/uparrow.png);
+    background-repeat: no-repeat;
+}
+
+.jgrid span.uparrow_disabled {
+    background-image: url(../img/quickpage/uparrow0.png);
+    background-position: 0 -12px;
+}
+
+.jgrid span.published {
+    background-image: url(../img/quickpage/publish_g.png);
+}
+
+.jgrid span.expired {
+    background-image: url(../img/quickpage/publish_r.png);
+}
+
+.jgrid span.pending {
+    background-image: url(../img/quickpage/publish_y.png);
+}
 
 /* mainlist table */
 
@@ -131,7 +227,9 @@ table.qp_mainlist th {
     padding: 4px;
 }
 
-table.qp_mainlist td {padding-left: 8px;}
+table.qp_mainlist td {
+    padding-left: 8px;
+}
 
 table.qp_mainlist thead th {
     text-align: center;
@@ -164,7 +262,7 @@ table.qp_mainlist tbody tr {
 }
 
 table.qp_mainlist tbody tr.row0:hover td,
-table.qp_mainlist tbody tr.row1:hover td    {
+table.qp_mainlist tbody tr.row1:hover td {
     background-color: #e8f6fe;
 }
 
@@ -183,7 +281,7 @@ table.qp_mainlist tfoot tr {
     color: #333;
 }
 
-table.qp_mainlist tfoot td,table.qp_mainlist tfoot th {
+table.qp_mainlist tfoot td, table.qp_mainlist tfoot th {
     background-color: #f7f7f7;
     border-top: 1px solid #999;
     text-align: center;

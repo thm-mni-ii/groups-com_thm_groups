@@ -27,33 +27,33 @@ jimport('joomla.application.component.controller');
  */
 class THM_GroupsControllerQp_Categories extends JControllerLegacy
 {
-    /**
-     * constructor (registers additional tasks to methods)
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+	/**
+	 * constructor (registers additional tasks to methods)
+	 *
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+	}
 
-    /**
-     * Apply - Save button
-     *
-     * @return void
-     */
-    public function apply()
-    {
-        $model = $this->getModel('qp_categories');
-        $success = $model->save();
-        if ($success)
-        {
-            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-            $this->setRedirect('index.php?option=com_thm_groups&view=qp_categories&tmpl=component', $msg, 'message');
-        }
-        else
-        {
-            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-            $this->setRedirect('index.php?option=com_thm_groups&view=qp_categories&tmpl=component', $msg);
-        }
-    }
+	/**
+	 * Apply - Save button
+	 *
+	 * @return void
+	 */
+	public function apply()
+	{
+		$model   = $this->getModel('qp_categories');
+		$success = $model->save();
+		if ($success)
+		{
+			$msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
+			$this->setRedirect('index.php?option=com_thm_groups&view=qp_categories&tmpl=component', $msg, 'message');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+			$this->setRedirect('index.php?option=com_thm_groups&view=qp_categories&tmpl=component', $msg);
+		}
+	}
 }

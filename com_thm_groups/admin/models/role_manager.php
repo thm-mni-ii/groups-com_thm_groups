@@ -12,7 +12,7 @@
  */
 
 defined('_JEXEC') or die;
-jimport('thm_core.list.model');
+require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
 
 /**
  * Class loads form data to edit an entry.
@@ -21,168 +21,169 @@ jimport('thm_core.list.model');
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
  */
-class THM_GroupsModelRole_Manager extends THM_CoreModelList
+class THM_GroupsModelRole_Manager extends THM_GroupsModelList
 {
-    protected $defaultOrdering = 'a.id';
+	protected $defaultOrdering = 'a.id';
 
-    protected $defaultDirection = 'ASC';
+	protected $defaultDirection = 'ASC';
 
-    /**
-     * Method to build an SQL query to load the list data.
-     *
-     * @return      string  An SQL query
-     */
-    protected function getListQuery()
-    {
-        $db = JFactory::getDBO();
-        $query = $db->getQuery(true);
+	/**
+	 * Method to build an SQL query to load the list data.
+	 *
+	 * @return      string  An SQL query
+	 */
+	protected function getListQuery()
+	{
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
 
-        $query
-            ->select('a.id, a.name')
-            ->from('#__thm_groups_roles AS a')
-            ->leftJoin('#__thm_groups_usergroups_roles AS b ON a.id = b.rolesID')
-            ->group('a.id');
+		$query
+			->select('a.id, a.name')
+			->from('#__thm_groups_roles AS a')
+			->leftJoin('#__thm_groups_usergroups_roles AS b ON a.id = b.rolesID')
+			->group('a.id');
 
-        $this->setSearchFilter($query, array('a.name'));
-        $this->setIDFilter($query, 'b.usergroupsID', array('filter.groups'));
-        $this->setOrdering($query);
+		$this->setSearchFilter($query, array('a.name'));
+		$this->setIDFilter($query, 'b.usergroupsID', array('filter.groups'));
+		$this->setOrdering($query);
 
-        return $query;
-    }
+		return $query;
+	}
 
-    /**
-     * Function to feed the data in the table body correctly to the list view
-     *
-     * @return array consisting of items in the body
-     */
-    public function getItems()
-    {
-        $items = parent::getItems();
-        $return = array();
-        if (empty($items))
-        {
-            return $return;
-        }
+	/**
+	 * Function to feed the data in the table body correctly to the list view
+	 *
+	 * @return array consisting of items in the body
+	 */
+	public function getItems()
+	{
+		$items  = parent::getItems();
+		$return = array();
+		if (empty($items))
+		{
+			return $return;
+		}
 
-        $index = 0;
-        foreach ($items as $item)
-        {
-            $url = "index.php?option=com_thm_groups&view=role_edit&id=$item->id";
-            $return[$index] = array();
+		$index = 0;
+		foreach ($items as $item)
+		{
+			$url            = "index.php?option=com_thm_groups&view=role_edit&id=$item->id";
+			$return[$index] = array();
 
-            $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
-            $return[$index][1] = $item->id;
-            if (JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
-            {
-                $return[$index][2] = JHtml::_('link', $url, $item->name);
-            }
-            else
-            {
-                $return[$index][2] = $item->name;
-            }
-            $return[$index][3] = $this->getGroups($item->id);
-            $index++;
-        }
-        return $return;
-    }
+			$return[$index][0] = JHtml::_('grid.id', $index, $item->id);
+			$return[$index][1] = $item->id;
+			if (JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
+			{
+				$return[$index][2] = JHtml::_('link', $url, $item->name);
+			}
+			else
+			{
+				$return[$index][2] = $item->name;
+			}
+			$return[$index][3] = $this->getGroups($item->id);
+			$index++;
+		}
 
-    /**
-     * Function to get table headers
-     *
-     * @return array including headers
-     */
-    public function getHeaders()
-    {
-        $ordering = $this->state->get('list.ordering');
-        $direction = $this->state->get('list.direction');
+		return $return;
+	}
 
-        $headers = array();
-        $headers['checkbox'] = '';
-        $headers['id'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'r.id', $direction, $ordering);
-        $headers['name'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ROLE_NAME'), 'r.name', $direction, $ordering);
-        $headers['groups'] = JText::_('COM_THM_GROUPS_GROUPS');
+	/**
+	 * Function to get table headers
+	 *
+	 * @return array including headers
+	 */
+	public function getHeaders()
+	{
+		$ordering  = $this->state->get('list.ordering');
+		$direction = $this->state->get('list.direction');
 
-        return $headers;
-    }
+		$headers             = array();
+		$headers['checkbox'] = '';
+		$headers['id']       = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'r.id', $direction, $ordering);
+		$headers['name']     = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ROLE_NAME'), 'r.name', $direction, $ordering);
+		$headers['groups']   = JText::_('COM_THM_GROUPS_GROUPS');
 
-    /**
-     * populates State
-     *
-     * @param   null  $ordering   ?
-     * @param   null  $direction  ?
-     *
-     * @return void
-     */
-    protected function populateState($ordering = null, $direction = null)
-    {
-        $app = JFactory::getApplication();
+		return $headers;
+	}
 
-        // Adjust the context to support modal layouts.
-        if ($layout = $app->input->get('layout'))
-        {
-            $this->context .= '.' . $layout;
-        }
+	/**
+	 * populates State
+	 *
+	 * @param   null $ordering  ?
+	 * @param   null $direction ?
+	 *
+	 * @return void
+	 */
+	protected function populateState($ordering = null, $direction = null)
+	{
+		$app = JFactory::getApplication();
 
-        $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
-        $this->setState('filter.search', $search);
+		// Adjust the context to support modal layouts.
+		if ($layout = $app->input->get('layout'))
+		{
+			$this->context .= '.' . $layout;
+		}
 
-        parent::populateState("a.id", "ASC");
-    }
+		$search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
 
-    /**
-     * Returns all group of a role
-     *
-     * @param   Int  $rid  An id of the role
-     *
-     * @return  string     A string with all group comma separated
-     */
-    public function getGroups($rid)
-    {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
+		parent::populateState("a.id", "ASC");
+	}
 
-        $query
-            ->select('DISTINCT(ug.id), ug.title')
-            ->from('#__usergroups AS ug')
-            ->innerJoin('#__thm_groups_usergroups_roles AS ugr ON ug.id = ugr.usergroupsID')
-            ->where("ugr.rolesID = $rid")
-            ->order('ug.title ASC');
+	/**
+	 * Returns all group of a role
+	 *
+	 * @param   Int $rid An id of the role
+	 *
+	 * @return  string     A string with all group comma separated
+	 */
+	public function getGroups($rid)
+	{
+		$db    = JFactory::getDbo();
+		$query = $db->getQuery(true);
 
-        $db->setQuery($query);
-        $groups = $db->loadObjectList();
+		$query
+			->select('DISTINCT(ug.id), ug.title')
+			->from('#__usergroups AS ug')
+			->innerJoin('#__thm_groups_usergroups_roles AS ugr ON ug.id = ugr.usergroupsID')
+			->where("ugr.rolesID = $rid")
+			->order('ug.title ASC');
 
-        $return = array();
-        if (!empty($groups))
-        {
-            foreach ($groups as $group)
-            {
-                // Delete button
-                $deleteIcon = '<span class="icon-trash"></span>';
-                $deleteBtn = "<a href='javascript:deleteGroup(" . $rid . "," . $group->id . ")'>" . $deleteIcon . "</a>";
+		$db->setQuery($query);
+		$groups = $db->loadObjectList();
 
-                // Link to edit view of a group
-                $url = JRoute::_('index.php?option=com_users&task=group.edit&id=' . $group->id);
+		$return = array();
+		if (!empty($groups))
+		{
+			foreach ($groups as $group)
+			{
+				// Delete button
+				$deleteIcon = '<span class="icon-trash"></span>';
+				$deleteBtn  = "<a href='javascript:deleteGroup(" . $rid . "," . $group->id . ")'>" . $deleteIcon . "</a>";
 
-                $return[] = "<a href=$url>" . $group->title . "</a> " . $deleteBtn;
-            }
-        }
+				// Link to edit view of a group
+				$url = JRoute::_('index.php?option=com_users&task=group.edit&id=' . $group->id);
 
-        return implode(',<br /> ', $return);
-    }
+				$return[] = "<a href=$url>" . $group->title . "</a> " . $deleteBtn;
+			}
+		}
 
-    /**
-     * Returns hidden fields for page
-     *
-     * @return array
-     */
-    public function getHiddenFields()
-    {
-        $fields = array();
+		return implode(',<br /> ', $return);
+	}
 
-        // Hidden fields for deletion of one group at once
-        $fields[] = '<input type="hidden" name="g_id" value="">';
-        $fields[] = '<input type="hidden" name="r_id" value="">';
+	/**
+	 * Returns hidden fields for page
+	 *
+	 * @return array
+	 */
+	public function getHiddenFields()
+	{
+		$fields = array();
 
-        return $fields;
-    }
+		// Hidden fields for deletion of one group at once
+		$fields[] = '<input type="hidden" name="g_id" value="">';
+		$fields[] = '<input type="hidden" name="r_id" value="">';
+
+		return $fields;
+	}
 }

@@ -1,13 +1,16 @@
 var jq = jQuery.noConflict();
-jq(document).ready(function() {
+jq(document).ready(function ()
+{
 
     // by click on add button, save hidden value -> add
-    jq('#toolbar-new').on('click', function(){
+    jq('#toolbar-new').on('click', function ()
+    {
         jq('#list_action').val('add');
     });
 
     // by click on add button, save hidden value -> del
-    jq('#toolbar-unpublish').on('click', function(){
+    jq('#toolbar-unpublish').on('click', function ()
+    {
         jq('#list_action').val('del');
     });
 
@@ -18,8 +21,10 @@ jq(document).ready(function() {
     var checkedGroups = [];
 
     // get only checked checkboxes
-    parent.each(function(index){
-        if(jq(this).is(':checked')) {
+    parent.each(function (index)
+    {
+        if (jq(this).is(':checked'))
+        {
             checkedGroups.push(jq(this).val());
         }
     });

@@ -15,84 +15,84 @@
 defined('_JEXEC') or die;
 jimport('joomla.application.component.controller');
 
-$view = JRequest::getCmd('view');
+$view  = JRequest::getCmd('view');
 $input = JFactory::getApplication()->input;
-$task = $input->getCmd('task');
+$task  = $input->getCmd('task');
 $contr = $input->getCmd('controller');
 
 if ($view == "articles")
 {
-    jimport('thm_groups.data.lib_thm_groups_quickpages');
+	require_once JPATH_ROOT . "/media/com_thm_groups/data/thm_groups_quickpages_data.php";
 
-    // Get user object
-    $currUser = JFactory::getUser();
+	// Get user object
+	$currUser = JFactory::getUser();
 
-    $quickpageGlobalEnabled = THMLibThmQuickpages::isQuickpageEnabled();
+	$quickpageGlobalEnabled = THM_GroupsQuickpagesData::isQuickpageEnabled();
 
-    // Check if the user has Quickpage enabled
-    $userHasEnabledQuickpage = THMLibThmQuickpages::isQuickpageEnabledForUser($currUser->id);
+	// Check if the user has Quickpage enabled
+	$userHasEnabledQuickpage = THM_GroupsQuickpagesData::isQuickpageEnabledForUser($currUser->id);
 
-    // Check if one group from user has Quickpage enabled
-    $groupsHaveEnabledQuickpage = false;
-    $userGroups = THMLibThmQuickpages::getGroupsOfUser($currUser->id);
-    foreach ($userGroups as $groupID)
-    {
-        if (THMLibThmQuickpages::isQuickpageEnabledForGroup($groupID))
-        {
-            $groupsHaveEnabledQuickpage = true;
-        }
-    }
+	// Check if one group from user has Quickpage enabled
+	$groupsHaveEnabledQuickpage = false;
+	$userGroups                 = THM_GroupsQuickpagesData::getGroupsOfUser($currUser->id);
+	foreach ($userGroups as $groupID)
+	{
+		if (THM_GroupsQuickpagesData::isQuickpageEnabledForGroup($groupID))
+		{
+			$groupsHaveEnabledQuickpage = true;
+		}
+	}
 
-    // Access check.
-    if (!$userHasEnabledQuickpage || !$quickpageGlobalEnabled )
-    {
-        return JError::raiseWarning(404, JText::_('COM_THM_QUICKPAGES_NOT_ENABLED'));
-    }
+	// Access check.
+	if (!$userHasEnabledQuickpage || !$quickpageGlobalEnabled)
+	{
+		return JError::raiseWarning(404, JText::_('COM_THM_QUICKPAGES_NOT_ENABLED'));
+	}
 
 
-    if ($userHasEnabledQuickpage)
-    {
-        $profileData = THMLibThmQuickpages::getPageProfileDataByUserSession();
+	if ($userHasEnabledQuickpage)
+	{
+		$profileData = THM_GroupsQuickpagesData::getPageProfileDataByUserSession();
 
-        // Check if user's quickpage category exist and if not, create it
-        if (!THMLibThmQuickpages::existsQuickpageForProfile($profileData))
-        {
-            THMLibThmQuickpages::createQuickpageForProfile($profileData);
-        }
-    }
+		// Check if user's quickpage category exist and if not, create it
+		if (!THM_GroupsQuickpagesData::existsQuickpageForProfile($profileData))
+		{
+			THM_GroupsQuickpagesData::createQuickpageForProfile($profileData);
+		}
+	}
 
-    // Show quickpage control or redirect
-    if ($userHasEnabledQuickpage OR $groupsHaveEnabledQuickpage)
-    {
-        $controller = JControllerLegacy::getInstance('thm_groups');
+	// Show quickpage control or redirect
+	if ($userHasEnabledQuickpage OR $groupsHaveEnabledQuickpage)
+	{
+		$controller = JControllerLegacy::getInstance('thm_groups');
 
-        $controller->execute(JRequest::getCmd('task'));
+		$controller->execute(JRequest::getCmd('task'));
 
-        $controller->redirect();
-    }
+		$controller->redirect();
+	}
 }
-elseif($view == 'qp_categories')
+elseif ($view == 'qp_categories')
 {
-    $user = JFactory::getUser();
-    if ($user->authorise('core.create', 'com_content.category'))
-    {
-        $controller = JControllerLegacy::getInstance('thm_groups');
+	$user = JFactory::getUser();
+	if ($user->authorise('core.create', 'com_content.category'))
+	{
+		$controller = JControllerLegacy::getInstance('thm_groups');
 
-        $controller->execute(JRequest::getCmd('task'));
+		$controller->execute(JRequest::getCmd('task'));
 
-        $controller->redirect();
-    }
-    else
-    {
-        return JError::raiseWarning(404, JText::_("COM_THM_QUICKPAGES_NO_RIGHTS_TO_CREATE_CATEGORY"));
-    }
+		$controller->redirect();
+	}
+	else
+	{
+		return JError::raiseWarning(404, JText::_("COM_THM_QUICKPAGES_NO_RIGHTS_TO_CREATE_CATEGORY"));
+	}
 }
 else
 {
-        $controller = JControllerLegacy::getInstance('thm_groups');
+	$controller = JControllerLegacy::getInstance('thm_groups');
 
-        $controller->execute(JRequest::getCmd('task'));
+	$controller->execute(JRequest::getCmd('task'));
 
-        $controller->redirect();
+	$controller->redirect();
 }
 

@@ -12,7 +12,7 @@
  * @link        www.thm.de
  */
 // Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die( 'Restricted access' );
+defined('_JEXEC') or die('Restricted access');
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
 jimport('joomla.application.menu');
@@ -26,116 +26,114 @@ jimport('joomla.application.menu');
  */
 class JFormFieldRoleItemSelect extends JFormField
 {
-    /**
-     * Element name
-     *
-     * @return html
-     */
-    public function getInput()
-    {
-        $db = JFactory::getDBO();
-        $scriptDir = JURI::root() . 'administrator/components/com_thm_groups/elements/';
-        JHtml::_('jquery.framework', true, true);
-        JHtml::_('jquery.ui');
-        JHtml::_('jquery.ui', array('sortable'));
+	/**
+	 * Element name
+	 *
+	 * @return html
+	 */
+	public function getInput()
+	{
+		$db        = JFactory::getDBO();
+		$scriptDir = JURI::root() . 'administrator/components/com_thm_groups/elements/';
+		JHtml::_('jquery.framework', true, true);
+		JHtml::_('jquery.ui');
+		JHtml::_('jquery.ui', array('sortable'));
 
-        JHTML::script($scriptDir . 'roleitemselect.js');
-        JHtml::stylesheet($scriptDir . 'orderattributes.css');
-        $sortButtons = true;
-        $app  = JFactory::getApplication()->input;
-        // Add script-code to the document head
-       ;
-      //  JHTML::script('roleitemselect.js', $scriptDir, false);
-        $id = $app->get('cid');
-        if (isset($id))
-        {
-            $id = $id[0];
-        }
-        else
-        {
-            $id = $app->get('id');
-        }
-        if(isset($id))
-        {
-            $menuquery = $db->getQuery(true);
-            $menuquery->select("params");
-            $menuquery->from('#__menu');
-            $menuquery->where('id=' . $id);
-            $db->setQuery($menuquery);
-            $menulist = $db->loadObject();
+		JHTML::script($scriptDir . 'roleitemselect.js');
+		JHtml::stylesheet($scriptDir . 'orderattributes.css');
+		$sortButtons = true;
 
-            if (isset($menulist->params))
-            {
-                $paramsMenu = json_decode($menulist->params, true);
-            }
+		// Add script-code to the document head
+		$app = JFactory::getApplication()->input;
 
-            if (isset($paramsMenu['selGroup']))
-            {
-                $gid = $paramsMenu['selGroup'];
-            }
-            $arrParamRoles = explode(",", $this->value);
+		//  JHTML::script('roleitemselect.js', $scriptDir, false);
+		$id = $app->get('cid');
+		if (isset($id))
+		{
+			$id = $id[0];
+		}
+		else
+		{
+			$id = $app->get('id');
+		}
 
-          if (isset($gid))
-            {
+		if (isset($id))
+		{
+			$menuquery = $db->getQuery(true);
+			$menuquery->select("params");
+			$menuquery->from('#__menu');
+			$menuquery->where('id=' . $id);
+			$db->setQuery($menuquery);
+			$menulist = $db->loadObject();
 
-                    $querynewRole = $db->getQuery(true);
+			if (isset($menulist->params))
+			{
+				$paramsMenu = json_decode($menulist->params, true);
+			}
 
-                    $querynewRole->select("distinct A.rolesID as rid, B.name")
-                                ->from("#__thm_groups_usergroups_roles AS A")
-                                ->leftJoin("#__thm_groups_roles AS B ON A.rolesID = B.id")
-                                ->where("A.usergroupsID = " . $gid)
-                                ->where("A.rolesID NOT IN (" . implode(",", $arrParamRoles) . ")");
+			if (isset($paramsMenu['selGroup']))
+			{
+				$gid = $paramsMenu['selGroup'];
+			}
 
-                    $db->setQuery($querynewRole);
-                    $newroleList = $db->loadObjectList();
+			$arrParamRoles = explode(",", $this->value);
 
+			if (isset($gid))
+			{
+				$querynewRole = $db->getQuery(true);
 
-                foreach ($newroleList as $newrole)
-                {
+				$querynewRole->select("distinct A.rolesID as rid, B.name")
+					->from("#__thm_groups_usergroups_roles AS A")
+					->leftJoin("#__thm_groups_roles AS B ON A.rolesID = B.id")
+					->where("A.usergroupsID = " . $gid)
+					->where("A.rolesID NOT IN (" . implode(",", $arrParamRoles) . ")");
 
-                        array_push($arrParamRoles, $newrole->rid);
-                }
+				$db->setQuery($querynewRole);
+				$newroleList = $db->loadObjectList();
 
 
-
-                $queryRoles = $db->getQuery(true);
-
-                $queryRoles->select("distinct A.rolesID as rid, B.name");
-                $queryRoles->from("#__thm_groups_usergroups_roles AS A");
-                $queryRoles->leftJoin("#__thm_groups_roles AS B ON A.rolesID = B.id");
-                $queryRoles->where("A.usergroupsID =" . $gid);
-                $queryRoles->where("B.id IN (" . implode(",", $arrParamRoles) . ")");
-                $db->setQuery($queryRoles);
-
-                $listR = $db->loadObjectList();
+				foreach ($newroleList as $newrole)
+				{
+					array_push($arrParamRoles, $newrole->rid);
+				}
 
 
-                $html = '<ul id="paramsattr" class="listContent" name="' . $this->name . '">';
+				$queryRoles = $db->getQuery(true);
+
+				$queryRoles->select("distinct A.rolesID as rid, B.name");
+				$queryRoles->from("#__thm_groups_usergroups_roles AS A");
+				$queryRoles->leftJoin("#__thm_groups_roles AS B ON A.rolesID = B.id");
+				$queryRoles->where("A.usergroupsID =" . $gid);
+				$queryRoles->where("B.id IN (" . implode(",", $arrParamRoles) . ")");
+				$db->setQuery($queryRoles);
+
+				$listR = $db->loadObjectList();
 
 
-                foreach ($arrParamRoles as $sortedRole)
-                {
+				$html = '<ul id="paramsattr" class="listContent" name="' . $this->name . '">';
 
-                    foreach ($listR as $roleRow)
-                    {
-                        if ($roleRow->rid == $sortedRole)
-                        {
-                            $html .=  '<li id="item"  class="listItem" value="' . $roleRow->rid . '" >' .
-                                $roleRow->name . '</li>';
-                        }
 
-                    }
+				foreach ($arrParamRoles as $sortedRole)
+				{
+					foreach ($listR as $roleRow)
+					{
+						if ($roleRow->rid == $sortedRole)
+						{
+							$html .= '<li id="item"  class="listItem" value="' . $roleRow->rid . '" >' .
+								$roleRow->name . '</li>';
+						}
+					}
+				}
 
-                }
-                $html .= '</ul>';
+				$html .= '</ul>';
 
-                $html .= '<input type="hidden" name="' . $this->name . '" id="sortedgrouproles" value="' . $this->value . '" />';
+				$html .= '<input type="hidden" name="' . $this->name . '" id="sortedgrouproles" value="' . $this->value . '" />';
 
-                return $html;
-            }
-        }
+				return $html;
+			}
+		}
 
-            return "<p style='color: #e78f08'><strong >COM_THM_GROUPS_ROLE_WARNING</strong></p>";
+		return "<p style='color: #e78f08'><strong >COM_THM_GROUPS_ROLE_WARNING</strong></p>";
 
-    }
+	}
 }

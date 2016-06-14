@@ -1,43 +1,48 @@
 /**
- * @category	Web Programming Weeks WS2013/2014: TH Mittelhessen
- * @package		com_thm_groups
- * @author		Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
- * @author		Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
- * @license		http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @link		http://www.thm.de
+ * @category    Web Programming Weeks WS2013/2014: TH Mittelhessen
+ * @package        com_thm_groups
+ * @author        Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
+ * @author        Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
+ * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
+ * @link        http://www.thm.de
  */
 
-
- /**
+/**
  * Show Preview
  *
  * @todo   Backup database table row of current id
  * @todo   restore database table row from backup and delete backup
  */
-var thmGroupsProfilePreview = function() {
+var thmGroupsProfilePreview = function ()
+{
 
     var self = this;
     var itemId;
     var token;
 
     // Get current Item ID
-    this.getItemId = function() {
+    this.getItemId = function ()
+    {
         itemId = $('#jform_id').val();
-        if (typeof itemId === 'undefined') {
+        if (typeof itemId === 'undefined')
+        {
             return false;
         }
         return itemId;
     }
 
     // Get Token
-    this.getToken = function() {
+    this.getToken = function ()
+    {
         return token;
     }
 
     // Set Token
-    this.setToken = function(value) {
+    this.setToken = function (value)
+    {
         // Validate token
-        if (value.length === 32) {
+        if (value.length === 32)
+        {
             token = value;
             return true;
         }
@@ -45,14 +50,17 @@ var thmGroupsProfilePreview = function() {
     }
 
     // Delete Token
-    this.deleteToken = function() {
+    this.deleteToken = function ()
+    {
         token = false;
     }
 
     // Open Profile Preview
-    this.open = function() {
+    this.open = function ()
+    {
 
-        if (this.getItemId() === false) {
+        if (this.getItemId() === false)
+        {
             alert('An unexpected error occured!\nNo Item-ID found!');
         }
 
@@ -69,10 +77,12 @@ var thmGroupsProfilePreview = function() {
 
         // Submit ID to Server
         url = '../index.php?option=com_thm_groups&view=advanced&format=raw&task=notify';
-        $.post(url, {Itemid: this.getItemId()}, function(token) {
+        $.post(url, {Itemid: this.getItemId()}, function (token)
+        {
 
             // Set token
-            if (self.setToken(token) !== true) {
+            if (self.setToken(token) !== true)
+            {
                 alert('An unexpected error occured!\nToken not valid!');
                 return;
             }
@@ -82,9 +92,11 @@ var thmGroupsProfilePreview = function() {
             form.find('input[name=task]').val('item.apply');
 
             url = false;
-            $.post(url, form.serialize(), function(data, textstatus, xhrReq) {
+            $.post(url, form.serialize(), function (data, textstatus, xhrReq)
+            {
                 var itemId = self.getItemId();
-                if (itemId == false) {
+                if (itemId == false)
+                {
                     var page = $(xhrReq.responseText);
                     itemId = $('#jform_id', page).val();
                 }

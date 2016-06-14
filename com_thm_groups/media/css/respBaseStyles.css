@@ -1,0 +1,331 @@
+/**
+* All responsive Styles for THM Groups Frontend
+* Included some Bootstrap 3 Grid-Features from
+* https://github.com/zirafa/bootstrap-grid-only
+* to enable the various column classes from BS3
+* in BS2. Inserted because Joomla3 does not support
+* BS3 in it's Core.
+**/
+html {
+  font-size: 16px !important;
+}
+body {
+  min-width: 200px !important;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+.thm_table_area {
+  width: 65%!important;
+  margin-top: 5px;
+}
+/*
+* Responsive Data Tables
+* https://css-tricks.com/responsive-data-tables/
+* Published April 27, 2011 by Chris Coyier
+*/
+@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+  #j-main-container .thm_table_area {
+    width: 100%!important;
+    /* Force table to not be like tables anymore */
+    /* Hide table headers (but not display: none;, for accessibility) */
+    /*
+  Label the data
+  You may have to generate them dynamically in php.
+  */
+  }
+  #j-main-container .thm_table_area table,
+  #j-main-container .thm_table_area thead,
+  #j-main-container .thm_table_area tbody,
+  #j-main-container .thm_table_area th,
+  #j-main-container .thm_table_area td,
+  #j-main-container .thm_table_area tr {
+    display: block;
+  }
+  #j-main-container .thm_table_area thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  #j-main-container .thm_table_area tr {
+    border: 1px solid #ccc;
+  }
+  #j-main-container .thm_table_area td {
+    /* Behave  like a "row" */
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 50%;
+  }
+  #j-main-container .thm_table_area td:before {
+    /* Now like a table header */
+    position: absolute;
+    /* Top/left values mimic padding */
+    top: 6px;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    font-weight: bold;
+  }
+}
+.gslistview {
+  width: 100% !important;
+  float: left !important;
+}
+@media screen and (max-width: 550px) {
+  .form-horizontal .controls {
+    margin-left: 0px !important;
+    float: left;
+    width: 100%;
+  }
+  .form-horizontal .control-label {
+    width: 100%;
+    text-align: left;
+  }
+  .form-horizontal input,
+  .form-horizontal textarea,
+  .form-horizontal select {
+    width: 60%;
+  }
+  .form-horizontal input[type="button"] {
+    width: 33.33333333%;
+    height: 44px;
+    float: left;
+  }
+  .form-horizontal input[type="checkbox"] {
+    width: 10%;
+    float: right;
+    margin-left: 0px!important;
+  }
+  .form-horizontal input[type="file"] {
+    width: 50%;
+  }
+  .form-horizontal .previewContainer {
+    width: 100%;
+  }
+  .form-horizontal .savePic {
+    width: 50%;
+  }
+  .form-horizontal .cropped_controls_wrapper {
+    width: 100%;
+  }
+  #user_header #header_left,
+  #user_header #header_right {
+    width: 50%;
+  }
+}
+@media (min-width: 481px) and (max-width: 769px) {
+  #content .col, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12,
+  .ym-wrapper .col, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {
+    float: left!important;
+  }
+  #content .col-sm-12,
+  .ym-wrapper .col-sm-12 {
+    width: 100%;
+  }
+  #content .col-sm-11,
+  .ym-wrapper .col-sm-11 {
+    width: 91.66666667%;
+  }
+  #content .col-sm-10,
+  .ym-wrapper .col-sm-10 {
+    width: 83.33333333%;
+  }
+  #content .col-sm-9,
+  .ym-wrapper .col-sm-9 {
+    width: 75%;
+  }
+  #content .col-sm-8,
+  .ym-wrapper .col-sm-8 {
+    width: 66.66666667%;
+  }
+  #content .col-sm-7,
+  .ym-wrapper .col-sm-7 {
+    width: 58.33333333%;
+  }
+  #content .col-sm-6,
+  .ym-wrapper .col-sm-6 {
+    width: 50%;
+  }
+  #content .col-sm-5,
+  .ym-wrapper .col-sm-5 {
+    width: 41.66666667%;
+  }
+  #content .col-sm-4,
+  .ym-wrapper .col-sm-4 {
+    width: 33.33333333%;
+  }
+  #content .col-sm-3,
+  .ym-wrapper .col-sm-3 {
+    width: 25%;
+  }
+  #content .col-sm-2,
+  .ym-wrapper .col-sm-2 {
+    width: 16.66666667%;
+  }
+  #content .col-sm-1,
+  .ym-wrapper .col-sm-1 {
+    width: 8.33333333%;
+  }
+  #content .col-sm-pull-12,
+  .ym-wrapper .col-sm-pull-12 {
+    right: 100%;
+  }
+  #content .col-sm-pull-11,
+  .ym-wrapper .col-sm-pull-11 {
+    right: 91.66666667%;
+  }
+  #content .col-sm-pull-10,
+  .ym-wrapper .col-sm-pull-10 {
+    right: 83.33333333%;
+  }
+  #content .col-sm-pull-9,
+  .ym-wrapper .col-sm-pull-9 {
+    right: 75%;
+  }
+  #content .col-sm-pull-8,
+  .ym-wrapper .col-sm-pull-8 {
+    right: 66.66666667%;
+  }
+  #content .col-sm-pull-7,
+  .ym-wrapper .col-sm-pull-7 {
+    right: 58.33333333%;
+  }
+  #content .col-sm-pull-6,
+  .ym-wrapper .col-sm-pull-6 {
+    right: 50%;
+  }
+  #content .col-sm-pull-5,
+  .ym-wrapper .col-sm-pull-5 {
+    right: 41.66666667%;
+  }
+  #content .col-sm-pull-4,
+  .ym-wrapper .col-sm-pull-4 {
+    right: 33.33333333%;
+  }
+  #content .col-sm-pull-3,
+  .ym-wrapper .col-sm-pull-3 {
+    right: 25%;
+  }
+  #content .col-sm-pull-2,
+  .ym-wrapper .col-sm-pull-2 {
+    right: 16.66666667%;
+  }
+  #content .col-sm-pull-1,
+  .ym-wrapper .col-sm-pull-1 {
+    right: 8.33333333%;
+  }
+  #content .col-sm-pull-0,
+  .ym-wrapper .col-sm-pull-0 {
+    right: auto;
+  }
+  #content .col-sm-push-12,
+  .ym-wrapper .col-sm-push-12 {
+    left: 100%;
+  }
+  #content .col-sm-push-11,
+  .ym-wrapper .col-sm-push-11 {
+    left: 91.66666667%;
+  }
+  #content .col-sm-push-10,
+  .ym-wrapper .col-sm-push-10 {
+    left: 83.33333333%;
+  }
+  #content .col-sm-push-9,
+  .ym-wrapper .col-sm-push-9 {
+    left: 75%;
+  }
+  #content .col-sm-push-8,
+  .ym-wrapper .col-sm-push-8 {
+    left: 66.66666667%;
+  }
+  #content .col-sm-push-7,
+  .ym-wrapper .col-sm-push-7 {
+    left: 58.33333333%;
+  }
+  #content .col-sm-push-6,
+  .ym-wrapper .col-sm-push-6 {
+    left: 50%;
+  }
+  #content .col-sm-push-5,
+  .ym-wrapper .col-sm-push-5 {
+    left: 41.66666667%;
+  }
+  #content .col-sm-push-4,
+  .ym-wrapper .col-sm-push-4 {
+    left: 33.33333333%;
+  }
+  #content .col-sm-push-3,
+  .ym-wrapper .col-sm-push-3 {
+    left: 25%;
+  }
+  #content .col-sm-push-2,
+  .ym-wrapper .col-sm-push-2 {
+    left: 16.66666667%;
+  }
+  #content .col-sm-push-1,
+  .ym-wrapper .col-sm-push-1 {
+    left: 8.33333333%;
+  }
+  #content .col-sm-push-0,
+  .ym-wrapper .col-sm-push-0 {
+    left: auto;
+  }
+  #content .col-sm-offset-12,
+  .ym-wrapper .col-sm-offset-12 {
+    margin-left: 100%;
+  }
+  #content .col-sm-offset-11,
+  .ym-wrapper .col-sm-offset-11 {
+    margin-left: 91.66666667%;
+  }
+  #content .col-sm-offset-10,
+  .ym-wrapper .col-sm-offset-10 {
+    margin-left: 83.33333333%;
+  }
+  #content .col-sm-offset-9,
+  .ym-wrapper .col-sm-offset-9 {
+    margin-left: 75%;
+  }
+  #content .col-sm-offset-8,
+  .ym-wrapper .col-sm-offset-8 {
+    margin-left: 66.66666667%;
+  }
+  #content .col-sm-offset-7,
+  .ym-wrapper .col-sm-offset-7 {
+    margin-left: 58.33333333%;
+  }
+  #content .col-sm-offset-6,
+  .ym-wrapper .col-sm-offset-6 {
+    margin-left: 50%;
+  }
+  #content .col-sm-offset-5,
+  .ym-wrapper .col-sm-offset-5 {
+    margin-left: 41.66666667%;
+  }
+  #content .col-sm-offset-4,
+  .ym-wrapper .col-sm-offset-4 {
+    margin-left: 33.33333333%;
+  }
+  #content .col-sm-offset-3,
+  .ym-wrapper .col-sm-offset-3 {
+    margin-left: 25%;
+  }
+  #content .col-sm-offset-2,
+  .ym-wrapper .col-sm-offset-2 {
+    margin-left: 16.66666667%;
+  }
+  #content .col-sm-offset-1,
+  .ym-wrapper .col-sm-offset-1 {
+    margin-left: 8.33333333%;
+  }
+  #content .col-sm-offset-0,
+  .ym-wrapper .col-sm-offset-0 {
+    margin-left: 0%;
+  }
+  #content .col-sm-6 {
+    margin: 0px 0px 0px 0px !important;
+  }
+}

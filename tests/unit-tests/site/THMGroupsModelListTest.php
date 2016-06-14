@@ -1,24 +1,26 @@
 <?php
 
-require_once JPATH_BASE.'/components/com_thm_groups/models/list.php';
+require_once JPATH_BASE . '/components/com_thm_groups/models/list.php';
 
 class THMGroupsModelListTest extends PHPUnit_Framework_TestCase
 {
 	protected $instance;
 
 	// PHPUnit_TestCase funtcion - overwritten
-	function setUp() {
+	function setUp()
+	{
 		$this->instance = new THMGroupsModelList();
 	}
 
 	// Kill instance
-	function tearDown() {
+	function tearDown()
+	{
 		// "benutztes" Objekt entfernen
 		$this->instance = null;
 		// tearDown der Elternklasse aufrufen
 		parent::tearDown();
 	}
-	
+
 	/*
 	 * No tests:
 	 * getGroupNumber -> cannot simulate Params
@@ -28,13 +30,14 @@ class THMGroupsModelListTest extends PHPUnit_Framework_TestCase
 	 * getTitle -> getGroupNumber
 	 * getDesc -> getGroupNumber
 	 */
-	
+
 	// tests getViewParams()
 	// sholud return an object with siteinfos
-	function testgetViewParams(){
-		$frameParams = Jfactory::getApplication(); ;
+	function testgetViewParams()
+	{
+		$frameParams = Jfactory::getApplication();;
 		$expected = $frameParams->getParams();
-	
+
 		$result = $this->instance->getViewParams();
 		$this->assertTrue($result == $expected);
 	}

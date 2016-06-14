@@ -12,24 +12,24 @@
                 type="list"
                 label="COM_THM_GROUPS_ENABLED"
                 onchange="this.form.submit();"
-                >
+        >
             <option value="">COM_THM_GROUPS_ALL</option>
             <option value="1">COM_THM_GROUPS_PLUGIN_MANAGER_ENABLED_OPTION</option>
             <option value="0">COM_THM_GROUPS_PLUGIN_MANAGER_DISABLED_OPTION</option>
         </field>
-                <field
+        <field
                 name="access"
                 type="list"
                 label="COM_THM_GROUPS_ACCESS"
                 onchange="this.form.submit();"
-                >
+        >
             <option value="">COM_THM_GROUPS_ALL</option>
             <option value="1">COM_THM_GROUPS_PLUGIN_MANAGER_PUBLIC</option>
             <option value="0">COM_THM_GROUPS_PLUGIN_MANAGER_PRIVATE</option>
         </field>
     </fields>
 
-	
+
     <fields name="list">
         <field
                 name="limit"
@@ -39,6 +39,6 @@
                 label="COM_CONTENT_LIST_LIMIT"
                 description="COM_CONTENT_LIST_LIMIT_DESC"
                 onchange="this.form.submit();"
-                />
+        />
     </fields>
 </form>

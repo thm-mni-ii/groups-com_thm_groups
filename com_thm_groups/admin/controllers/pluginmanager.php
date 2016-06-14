@@ -7,10 +7,10 @@
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsControllerPlugin
  * @description THMGroupsControllerPlugin class from com_thm_groups
- * @author      Florian Kolb,	<florian.kolb@mni.thm.de>
- * @author      Henrik Huller,	<henrik.huller@mni.thm.de>
- * @author      Julia Krauskopf,	<julia.krauskopf@mni.thm.de>
- * @author      Paul Meier, 	<paul.meier@mni.thm.de>
+ * @author      Florian Kolb,    <florian.kolb@mni.thm.de>
+ * @author      Henrik Huller,    <henrik.huller@mni.thm.de>
+ * @author      Julia Krauskopf,    <julia.krauskopf@mni.thm.de>
+ * @author      Paul Meier,    <paul.meier@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
@@ -32,12 +32,12 @@ jimport('joomla.application.component.controller');
  */
 class THM_GroupsControllerProfile extends JControllerLegacy
 {
-    /**
-     * constructor (registers additional tasks to methods)
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+	/**
+	 * constructor (registers additional tasks to methods)
+	 *
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+	}
 }

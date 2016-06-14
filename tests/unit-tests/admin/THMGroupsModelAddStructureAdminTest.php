@@ -1,20 +1,20 @@
 <?php
 /**
- *@category Joomla component
+ * @category    Joomla component
  *
- *@package     THM_Groups
+ * @package     THM_Groups
  *
- *@subpackage  com_thm_groups
- *@name        THMGroupsModelAddStructureAdminTest
- *@description THMGroupsModelAddStructureAdminTest from com_thm_groups
- *@author      Dennis Priefer, dennis.priefer@mni.thm.de
- *@author      Niklas Simonis, niklas.simonis@mni.thm.de
+ * @subpackage  com_thm_groups
+ * @name        THMGroupsModelAddStructureAdminTest
+ * @description THMGroupsModelAddStructureAdminTest from com_thm_groups
+ * @author      Dennis Priefer, dennis.priefer@mni.thm.de
+ * @author      Niklas Simonis, niklas.simonis@mni.thm.de
  *
- *@copyright   2012 TH Mittelhessen
+ * @copyright   2012 TH Mittelhessen
  *
- *@license     GNU GPL v.2
- *@link        www.thm.de
- *@version     3.0
+ * @license     GNU GPL v.2
+ * @link        www.thm.de
+ * @version     3.0
  */
 
 require_once JPATH_BASE . '/administrator/components/com_thm_groups/models/addstructure.php';
@@ -60,7 +60,7 @@ class THMGroupsModelAddStructureAdminTest extends PHPUnit_Framework_TestCase
 	 */
 	public function test_buildQuery()
 	{
-		$result = $this->instance->_buildQuery();
+		$result   = $this->instance->_buildQuery();
 		$expected = "SELECT ";
 		$this->assertContains($expected, $result);
 	}
@@ -69,7 +69,7 @@ class THMGroupsModelAddStructureAdminTest extends PHPUnit_Framework_TestCase
 	 * tests getData
 	 * function returns array
 	 * first object should be Type "Date"
-	 * 
+	 *
 	 * @return void
 	 */
 	public function testgetData()
@@ -88,13 +88,13 @@ class THMGroupsModelAddStructureAdminTest extends PHPUnit_Framework_TestCase
 	public function teststore()
 	{
 
-		$array['name'] = 'THMGroupsTestSuite';
+		$array['name']     = 'THMGroupsTestSuite';
 		$array['relation'] = 'TEXT';
 		JRequest::set($array, 'post');
 
 		$result = $this->instance->store();
-		$db = JFactory::getDBO();
-		$query = "DELETE FROM #__thm_groups_structure WHERE field = 'THMGroupsTestSuite'";
+		$db     = JFactory::getDBO();
+		$query  = "DELETE FROM #__thm_groups_structure WHERE field = 'THMGroupsTestSuite'";
 		$db->setQuery($query);
 		$db->query();
 

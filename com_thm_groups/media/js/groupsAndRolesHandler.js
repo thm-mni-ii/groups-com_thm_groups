@@ -5,15 +5,18 @@
 
 
 
-function addGroup() {
+function addGroup()
+{
     var selGroupId = document.getElementById('jformNewGroup').options[document.getElementById('jformNewGroup').selectedIndex].value;
     var selGroupName = document.getElementById('jformNewGroup').options[document.getElementById('jformNewGroup').selectedIndex].text;
     var hasGroup = checkGroup(selGroupId, selGroupName);
 
-    if (hasGroup == "true") {
+    if (hasGroup == "true")
+    {
         alert("User is allready in this group");
     }
-    else {
+    else
+    {
         jQuery("#groups").append(hasGroup);
 
     }
@@ -22,7 +25,8 @@ function addGroup() {
 /**
  * Adds SelectFields to new_xy-Group div
  **/
-function addRole(groupName, groupId, btnId) {
+function addRole(groupName, groupId, btnId)
+{
     var roleContainer = "new_" + groupName;
     var parentDiv = document.getElementById(roleContainer);
     var rolesDiv = document.getElementById('roles_' + groupName);
@@ -37,11 +41,14 @@ function addRole(groupName, groupId, btnId) {
         + "&counter=" + fields + "&rolesSaved=" + rolesSaved + "",
         async: false,
         datatype: "HTML"
-    }).success(function (response) {
-        if (response != "false") {
+    }).success(function (response)
+    {
+        if (response != "false")
+        {
             jQuery("#" + roleContainer).prepend(response);
         }
-        else {
+        else
+        {
             alert("Maximum amount of roles selected");
         }
     });
@@ -54,10 +61,12 @@ function addRole(groupName, groupId, btnId) {
  * @param   Integer  groupId  Id of group
  * @param   String   div      Div container
  **/
-function saveRoles(groupId, div) {
+function saveRoles(groupId, div)
+{
 }
 
-function checkGroup(groupId, selGroupName) {
+function checkGroup(groupId, selGroupName)
+{
     var res = null;
     jQuery.ajax({
         type: "POST",
@@ -65,7 +74,8 @@ function checkGroup(groupId, selGroupName) {
         + document.getElementById('jform_userID').value + "&groupId=" + groupId + "&groupName=" + selGroupName + "",
         async: false,
         datatype: "HTML"
-    }).success(function (response) {
+    }).success(function (response)
+    {
         //document.getElementById("groups").innerHTML = response;
         res = response;
     });
@@ -73,7 +83,8 @@ function checkGroup(groupId, selGroupName) {
     return res;
 }
 
-function checkRole() {
+function checkRole()
+{
 
 }
 
@@ -86,7 +97,8 @@ function checkRole() {
  *
  * @return null
  **/
-function addGroupAndRole(div, groupId, selFieldId) {
+function addGroupAndRole(div, groupId, selFieldId)
+{
     var selRoleId = document.getElementById(selFieldId).options[document.getElementById(selFieldId).selectedIndex].value;
     var selRoleName = document.getElementById(selFieldId).options[document.getElementById(selFieldId).selectedIndex].text;
     var res = null;
@@ -100,15 +112,18 @@ function addGroupAndRole(div, groupId, selFieldId) {
         async: false,
         datatype: "HTML"
 
-    }).success(function (response) {
+    }).success(function (response)
+    {
         res = response;
     });
 
-    if (res == "true") {
+    if (res == "true")
+    {
         window.location.hash = "groups";
         location.reload(true);
     }
-    else {
+    else
+    {
         alert("failure to add group/role");
     }
 }
