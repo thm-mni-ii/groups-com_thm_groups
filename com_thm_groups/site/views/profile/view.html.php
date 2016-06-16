@@ -95,12 +95,6 @@ class THM_GroupsViewProfile extends JViewLegacy
      */
     public function getLINK($name, $attribute)
     {
-        $hide = (empty($attribute['publish']) OR empty($attribute['value']));
-        if ($hide)
-        {
-            return '';
-        }
-
         $container = $this->getContainer($name, $attribute);
         $value = "<a href='" . htmlspecialchars_decode($attribute['value']) . "'>";
         $value .= htmlspecialchars_decode($attribute['value']) . "</a>";
@@ -129,12 +123,6 @@ class THM_GroupsViewProfile extends JViewLegacy
      */
     public function getPICTURE($name, $attribute)
     {
-        $hide = (empty($attribute['publish']) OR empty($attribute['value']));
-        if ($hide)
-        {
-            return '';
-        }
-
         $container = $this->getContainer($name, $attribute);
         $value = '';
         $hasImage = (!empty($attribute['value']));
@@ -156,12 +144,6 @@ class THM_GroupsViewProfile extends JViewLegacy
      */
     public function getTEXT($name, $attribute)
     {
-        $hide = (empty($attribute['publish']) OR empty($attribute['value']));
-        if ($hide)
-        {
-            return '';
-        }
-
         $container = $this->getContainer($name, $attribute);
         $value = $attribute['value'];
         return $container['start'] . $value . $container['end'];
@@ -176,12 +158,6 @@ class THM_GroupsViewProfile extends JViewLegacy
      */
     public function getTEXTFIELD($name, $attribute)
     {
-        $hide = (empty($attribute['publish']) OR empty($attribute['value']));
-        if ($hide)
-        {
-            return '';
-        }
-
         $container = $this->getContainer($name, $attribute);
         $value = htmlspecialchars_decode($attribute['value']);
         return $container['start'] . $value . $container['end'];

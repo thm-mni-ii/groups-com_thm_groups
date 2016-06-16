@@ -26,6 +26,17 @@ $profile = $this->profile;
 <?php
     foreach ($profile as $name => $attribute)
     {
+        if (empty($attribute['publish']) OR !isset($attribute['value']))
+        {
+            continue;
+        }
+
+        $value = trim($attribute['value']);
+        if (empty($value))
+        {
+            continue;
+        }
+
         $functionName = 'get' . $attribute['type'];
         echo $this->$functionName($name, $attribute);
     }

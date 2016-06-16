@@ -161,7 +161,6 @@ class THM_GroupsViewList extends JViewLegacy
         $this->profiles = $this->model->getProfilesByLetter($this->groupID);
         $this->setPathway();
         $this->modifyDocument();
-
         parent::display($tpl);
     }
 
