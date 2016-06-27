@@ -135,8 +135,9 @@ class Com_THM_GroupsInstallerScript
         $isDefPictureCopied = $this->copyDefaultPictureToImagesFolder();
         $isDefImgPathByDynTypesRewritten = $this->rewriteDefaultImagePathByDynamicTypes();
         $isDefImgPathByAttrsRewritten = $this->rewriteDefaultImagePathByAttributes();
+        $isAttributeEmailUpdated = $this->updateAttributeEmail();
 
-        $isOk = ($isImageFolderCreated AND $isDefPictureCopied AND $isDefImgPathByDynTypesRewritten AND $isDefImgPathByAttrsRewritten);
+        $isOk = ($isImageFolderCreated AND $isDefPictureCopied AND $isDefImgPathByDynTypesRewritten AND $isDefImgPathByAttrsRewritten AND $isAttributeEmailUpdated);
 
         if ($isOk)
         {
@@ -144,6 +145,164 @@ class Com_THM_GroupsInstallerScript
         }
 
         return false;
+    }
+
+    /**
+     * Changes dynamic type of the attribute Email
+     *
+     * @return  bool, true on success, otherwise false
+     *
+     * @throws Exception
+     */
+    private function updateAttributeEmail()
+    {
+        $dbo = JFactory::getDbo();
+        $dbo->transactionStart();
+
+        $dynTypes = $this->getDynamicTypes();
+        if (empty($dynTypes))
+        {
+            $dbo->transactionRollback();
+            return false;
+        }
+
+        $emailType = $this->findEmailDynamicType($dynTypes);
+        if (empty($emailType))
+        {
+            // Create email type from scratch
+            $insertedID = $this->createDynamicTypeEmail();
+            if (empty($insertedID))
+            {
+                $dbo->transactionRollback();
+                return false;
+            }
+
+            $success = $this->updateDynamicTypeIdOfAttributeEmail($insertedID);
+            if (!$success)
+            {
+                $dbo->transactionRollback();
+                return false;
+            }
+        }
+        else
+        {
+            $success = $this->updateDynamicTypeIdOfAttributeEmail($emailType->id);
+            if (!$success)
+            {
+                $dbo->transactionRollback();
+                return false;
+            }
+        }
+
+        $dbo->transactionCommit();
+        return true;
+    }
+
+    /**
+     * Creates dynamic type Email
+     *
+     * @return  mixed  integer on success, false otherwise
+     */
+    private function createDynamicTypeEmail()
+    {
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $values = array($dbo->quote('Email'), 1);
+        $query
+            ->insert('#__thm_groups_dynamic_type')
+            ->columns(array('name', 'static_typeID',))
+            ->values(implode(',', $values));
+        $dbo->setQuery($query);
+
+        try
+        {
+            $dbo->execute();
+        }
+        catch (Exception $exception)
+        {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            return false;
+        }
+
+        return $dbo->insertid();
+    }
+
+    /**
+     * Searches for dynamic type with title 'email'
+     *
+     * @param   array  $dynTypes  Array with dynamic type objects
+     *
+     * @return  object on success, null otherwise
+     */
+    private function findEmailDynamicType($dynTypes)
+    {
+        $emailType = null;
+        foreach ($dynTypes as $type)
+        {
+            if ('email' == strtolower($type->name))
+            {
+                $emailType = $type;
+            }
+        }
+
+        return $emailType;
+    }
+
+    /**
+     * Returns all dynamic types
+     *
+     * @return  mixed  array on success, false otherwise
+     */
+    private function getDynamicTypes()
+    {
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query
+            ->select('id, name')
+            ->from('#__thm_groups_dynamic_type');
+        $dbo->setQuery($query);
+
+        try
+        {
+            $dynTypes = $dbo->loadObjectList();
+        }
+        catch (Exception $exception)
+        {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            return false;
+        }
+
+        return $dynTypes;
+    }
+
+    /**
+     * Updates dynamic type of the attribute Email
+     *
+     * @param   int  $id  ID of a dynamic type with the title Emails
+     *
+     * @return  boolean  true on success, false otherwise
+     */
+    private function updateDynamicTypeIdOfAttributeEmail($id)
+    {
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query
+            ->update('#__thm_groups_attribute')
+            ->set("dynamic_TypeID = $id")
+            ->where('id = 4');
+        $dbo->setQuery($query);
+
+        try
+        {
+            $dbo->execute();
+        }
+        catch (Exception $exception)
+        {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            return false;
+        }
+
+        return true;
     }
 
     /**
