@@ -181,6 +181,7 @@ class THM_GroupsHelperProfile
             $name = $attribute['name'];
             $profile[$name]['attributeID'] = $attribute['structid'];
             $profile[$name]['type'] = $attribute['type'];
+            $profile[$name]['dyntype'] = $attribute['dyntype'];
             if (!empty($attribute['options']))
             {
                 $profile[$name]['options'] = (array)json_decode($attribute['options']);
@@ -220,7 +221,7 @@ class THM_GroupsHelperProfile
         $query = $dbo->getQuery(true);
 
         $select = 'DISTINCT a.id AS structid, a.name as name, a.options as options, a.description AS description, ';
-        $select .= 'd.options as dynOptions, d.description as dynDescription, d.regex as regex, ';
+        $select .= 'd.options as dynOptions, d.description as dynDescription, d.regex as regex, d.name as dyntype, ';
         $select .= 's.name as type, ';
         $select .= 'pa.params as params, pa.order, ';
         $select .= 'ua.usersID as id, ua.value, ua.published as publish ';

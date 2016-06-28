@@ -145,7 +145,15 @@ class THM_GroupsViewProfile extends JViewLegacy
     public function getTEXT($name, $attribute)
     {
         $container = $this->getContainer($name, $attribute);
-        $value = $attribute['value'];
+        switch (strtolower($attribute['dyntype']))
+        {
+            case 'email':
+                $value = JHtml::_('email.cloak', $attribute['value']);
+                break;
+            default:
+                $value = $attribute['value'];
+                break;
+        }
         return $container['start'] . $value . $container['end'];
     }
 
