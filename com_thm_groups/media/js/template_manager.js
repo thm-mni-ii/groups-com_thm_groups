@@ -13,7 +13,7 @@ $(document).ready(function ()
 
 function deleteGroup(groupId, profileId)
 {
-    document.getElementsByName('task')[0].value = "profile.deleteGroup";
+    document.getElementsByName('task')[0].value = "template.deleteGroup";
     document.getElementsByName('g_id')[0].value = groupId;
     document.getElementsByName('p_id')[0].value = profileId;
     document.adminForm.submit();

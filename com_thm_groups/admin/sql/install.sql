@@ -205,6 +205,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attribute` (
   `ID`          INT(11) NOT NULL AUTO_INCREMENT,
   `profileID`   INT(11) NOT NULL,
   `attributeID` INT(11) NOT NULL,
+  `published`   INT(3)  NOT NULL,
   `order`       INT(3)  NULL,
   `params`      TEXT    NULL,
   PRIMARY KEY (`ID`),
@@ -217,12 +218,12 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attribute` (
 )
   ENGINE = InnoDB;
 
-INSERT INTO `#__thm_groups_profile_attribute` (`ID`, `profileID`, `attributeID`, `order`, `params`) VALUES
-  (1, 1, 1, 2, '{ "label":true, "wrap":true}'),
-  (2, 1, 2, 3, '{ "label":true, "wrap":true}'),
-  (3, 1, 4, 5, '{ "label":true, "wrap":true}'),
-  (4, 1, 5, 1, '{ "label":true, "wrap":true}'),
-  (5, 1, 7, 4, '{ "label":true, "wrap":true}');
+INSERT INTO `#__thm_groups_profile_attribute` (`ID`, `profileID`, `attributeID`, `published`, `order`, `params`) VALUES
+  (1, 1, 1, 1, 2, '{ "showLabel":1, "showIcon":1, "wrap":1}'),
+  (2, 1, 2, 1, 3, '{ "showLabel":1, "showIcon":1, "wrap":1}'),
+  (3, 1, 4, 1, 5, '{ "showLabel":1, "showIcon":1, "wrap":1}'),
+  (4, 1, 5, 1, 1, '{ "showLabel":1, "showIcon":1, "wrap":1}'),
+  (5, 1, 7, 1, 4, '{ "showLabel":1, "showIcon":1, "wrap":1}');
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_usergroups` (
   `ID`           INT(11)          NOT NULL AUTO_INCREMENT,

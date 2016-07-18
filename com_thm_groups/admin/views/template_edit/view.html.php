@@ -11,6 +11,9 @@
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
+jimport('thm_core.edit.view');
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/template.php';
 require_once JPATH_ROOT . '/media/com_thm_groups/views/edit.php';
 
 /**
@@ -23,9 +26,7 @@ require_once JPATH_ROOT . '/media/com_thm_groups/views/edit.php';
 class THM_GroupsViewTemplate_Edit extends THM_GroupsViewEdit
 {
 
-	public $model;
-
-	public $profilid;
+	public $attributes;
 
 	/**
 	 * Loads model data into the view context
@@ -36,16 +37,41 @@ class THM_GroupsViewTemplate_Edit extends THM_GroupsViewEdit
 	 */
 	public function display($tpl = null)
 	{
-		$canCreate = JFactory::getUser()->authorise('core.create', 'com_thm_groups');
-		$canEdit   = JFactory::getUser()->authorise('core.create', 'com_thm_groups');
+		$user      = JFactory::getUser();
+		$canCreate = $user->authorise('core.create', 'com_thm_groups');
+		$canEdit   = $user->authorise('core.edit', 'com_thm_groups');
 		$hasAccess = ($canCreate OR $canEdit);
 		if (!$hasAccess)
 		{
 			return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 		}
 
-		$this->templateID = JFactory::getApplication()->input->getInt('id', 0);
-		$this->model      = $this->getModel();
+		$allAttributes = THM_GroupsHelperProfile::getAllAttributes();
+		$id    = JFactory::getApplication()->input->getInt('id', 0);
+		if (empty($id))
+		{
+			$this->attributes = $allAttributes;
+		}
+		else
+		{
+			$templateAttributes = THM_GroupsHelperTemplate::getTemplateAttributes($id);
+			$this->attributes   = THM_GroupsHelperTemplate::assignParametersToAttributes($allAttributes, $templateAttributes);
+			usort(
+				$this->attributes,
+				function ($a, $b)
+				{
+					if (isset($a->order) AND isset($b->order))
+					{
+						if ($a->order == $b->order)
+						{
+							return 0;
+						}
+
+						return ($a->order < $b->order) ? -1 : 1;
+					}
+				}
+			);
+		}
 
 		parent::display($tpl);
 	}
@@ -88,10 +114,33 @@ class THM_GroupsViewTemplate_Edit extends THM_GroupsViewEdit
 	protected function modifyDocument()
 	{
 		parent::modifyDocument();
-		JHtml::_('jquery.framework', true, true);
 		JHtml::_('jquery.ui');
-		JHtml::_('jquery.ui', array('sortable'));
-		JHtml::script(JURI::root() . 'media/jui/js/sortablelist.js');
-		JHTML::stylesheet(JURI::root() . 'media/jui/css/sortablelist.css');
+		JHtml::_('jquery.ui', ['sortable']);
+		JHtml::script(JUri::root() . 'media/jui/js/sortablelist.js');
+		JHtml::stylesheet(JUri::root() . 'media/jui/css/sortablelist.css');
+		JHtml::script(JUri::root() . 'media/com_thm_groups/js/template_edit.js');
+		JHtml::stylesheet(JUri::root() . 'media/com_thm_groups/css/template_edit.css');
+	}
+
+	/**
+	 * Renders radio button using radio layout
+	 *
+	 * @param   string $name         Radio button name
+	 * @param   object $attribute    Attribute object
+	 * @param   int    $defaultValue Value of radio button
+	 *
+	 * @return  string
+	 */
+	public function renderRadioBtn($name, $attribute, $defaultValue)
+	{
+		$data = [];
+		$data['id'] = 'jform_attributes_' . str_replace(' ', '', $attribute->id) . "_$name";
+		$data['name'] = "jform[attributes][$attribute->id][$name]";
+		$data['class'] = 'btn-group btn-group-yesno';
+		$data['default'] = $defaultValue;
+		$data['options'] = [['value' => 1, 'text' => 'JYES'], ['value' => 0, 'text' => 'JNO']];
+		$layout = new JLayoutFile('radio', $basePath = JPATH_ROOT . '/media/com_thm_groups/layouts/field');
+
+		return $layout->render($data);
 	}
 }

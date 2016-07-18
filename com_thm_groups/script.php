@@ -59,6 +59,7 @@ class Com_THM_GroupsInstallerScript
 	 * images/com_thm_groups/profile
 	 *
 	 * @return True on success
+	 *
 	 * @throws Exception
 	 */
 	public function copyDefaultPictureToImagesFolder()
@@ -116,6 +117,7 @@ class Com_THM_GroupsInstallerScript
 	 * Creates a folder com_thm_groups/profile
 	 *
 	 * @return True on success
+	 *
 	 * @throws Exception
 	 */
 	public function createImageFolder()
@@ -264,12 +266,12 @@ class Com_THM_GroupsInstallerScript
 	{
 		if ($type == 'update' || $type == 'install')
 		{
-			Jloader::import("THM_GroupsHelperChangeLog", JPATH_ROOT . "/media/com_thm_groups/helpers/");
-			$uri = JURI::root(true) . '/media/com_thm_groups/css/THMChangelogColoriser.css';
-
-			echo "<link rel='stylesheet' type='text/css' href='{$uri}' />";
-			echo THM_GroupsHelperChangeLog::colorise(dirname(__FILE__) . '/admin/CHANGELOG.php', true);
-			echo '<hr>';
+//			JLoader::import("THM_GroupsHelperChangeLog", JPATH_ROOT . "/media/com_thm_groups/helpers/");
+//			$uri = JUri::root(true) . '/media/com_thm_groups/css/THMChangelogColoriser.css';
+//
+//			echo "<link rel='stylesheet' type='text/css' href='{$uri}' />";
+//			echo THM_GroupsHelperChangeLog::colorise(dirname(__FILE__) . '/admin/CHANGELOG.php', true);
+//			echo '<hr>';
 		}
 	}
 
@@ -311,8 +313,10 @@ class Com_THM_GroupsInstallerScript
 			// Abort if the component being installed is not newer than the currently installed version
 			if (version_compare($this->release, $oldRelease, 'le'))
 			{
-				JError::raiseNotice(null, 'You want to install an old version of THM Groups: ' . $rel . ' -
-					this will not effect your installed version of THM Groups');
+				JError::raiseNotice(
+					null, 'You want to install an old version of THM Groups: ' . $rel . ' -
+					this will not effect your installed version of THM Groups'
+				);
 			}
 		}
 		else
@@ -332,6 +336,7 @@ class Com_THM_GroupsInstallerScript
 	 * Rewrites path option by all attributes of the static type PICTURE
 	 *
 	 * @return bool
+	 *
 	 * @throws Exception
 	 */
 	public function rewriteDefaultImagePathByAttributes()
@@ -356,7 +361,7 @@ class Com_THM_GroupsInstallerScript
 		{
 			foreach ($attrObjects as $attrObject)
 			{
-				$optObject           = new stdClass();
+				$optObject           = new stdClass;
 				$optObject->path     = $imagesPath;
 				$optObject->filename = $imageName;
 				$optObject->required = false;
@@ -388,6 +393,7 @@ class Com_THM_GroupsInstallerScript
 	 * Rewrites path option by all dynamic types of the static type PICTURE
 	 *
 	 * @return bool
+	 *
 	 * @throws Exception
 	 */
 	public function rewriteDefaultImagePathByDynamicTypes()
@@ -411,7 +417,7 @@ class Com_THM_GroupsInstallerScript
 		{
 			foreach ($dynTypeObjects as $dynTypeObject)
 			{
-				$optObject           = new stdClass();
+				$optObject           = new stdClass;
 				$optObject->path     = $imagesPath;
 				$optObject->filename = $imageName;
 
@@ -441,7 +447,7 @@ class Com_THM_GroupsInstallerScript
 	/**
 	 * Uninstall runs before any other action is taken (file removal or database processing).
 	 *
-	 * @param   $parent  is the class calling this method
+	 * @param   string $parent  is the class calling this method
 	 */
 	public function uninstall($parent)
 	{
@@ -451,9 +457,9 @@ class Com_THM_GroupsInstallerScript
 	/**
 	 * Update runs after the database scripts are executed. If the extension exists, then the update method is run.
 	 *
-	 * @param   $parent  is the class calling this method.
+	 * @param   string $parent is the class calling this method.
 	 *
-	 * @return  if this returns false, Joomla will abort the update and undo everything already done.
+	 * @return  bool if false, Joomla will abort the update and undo everything already done.
 	 */
 	public function update($parent)
 	{
@@ -472,15 +478,106 @@ class Com_THM_GroupsInstallerScript
 			return false;
 		}
 
-		$isImageFolderCreated            = $this->createImageFolder();
-		$isDefPictureCopied              = $this->copyDefaultPictureToImagesFolder();
+		$isImageFolderCreated = $this->createImageFolder();
+		$isDefPictureCopied = $this->copyDefaultPictureToImagesFolder();
 		$isDefImgPathByDynTypesRewritten = $this->rewriteDefaultImagePathByDynamicTypes();
-		$isDefImgPathByAttrsRewritten    = $this->rewriteDefaultImagePathByAttributes();
-		$isAttributeEmailUpdated         = $this->updateEmailAttribute();
+		$isDefImgPathByAttrsRewritten = $this->rewriteDefaultImagePathByAttributes();
+		$isAttributeEmailUpdated = $this->updateEmailAttribute();
+		$isTemplatesUpdated = $this->updateTemplatesToNewStructure();
 
-		$isOk = ($isImageFolderCreated AND $isDefPictureCopied AND $isDefImgPathByDynTypesRewritten AND $isDefImgPathByAttrsRewritten AND $isAttributeEmailUpdated);
+		$isOk = ($isImageFolderCreated
+				AND $isDefPictureCopied
+				AND $isDefImgPathByDynTypesRewritten
+				AND $isDefImgPathByAttrsRewritten
+				AND $isAttributeEmailUpdated
+				AND $isTemplatesUpdated
+		);
 
-		if ($isOk)
+		return $isOk ? true : false;
+	}
+
+	/**
+	 * Updates all profile templates' attributes to new structure
+	 *
+	 * @return  bool  true on success, false otherwise
+	 */
+	private function updateTemplatesToNewStructure()
+	{
+		$isOldStructureUsed = $this->isOldStructureTemplateTableUsed();
+		if ($isOldStructureUsed)
+		{
+			$dbo = JFactory::getDbo();
+			$dbo->transactionStart();
+			$query = $dbo->getQuery(true);
+			$query
+				->select('*')
+				->from('#__thm_groups_profile_attribute');
+			$dbo->setQuery($query);
+
+			$app = JFactory::getApplication();
+			try
+			{
+				$templateAttributes = $dbo->loadObjectList();
+			}
+			catch (Exception $exception)
+			{
+				$app->enqueueMessage(JText::_('COM_THM_GROUPS_TEMPLATE_MANAGER_ERROR_GET_TEMPLATE_ATTRIBUTES'), 'error');
+				$dbo->transactionRollback();
+				return false;
+			}
+			foreach ($templateAttributes as $attribute)
+			{
+				$oldParams = json_decode($attribute->params);
+				$newParams = new stdClass;
+				$newParams->showLabel = ((boolean) $oldParams->label) == true ? 1 : 0;
+				$newParams->showIcon = 1;
+				$newParams->wrap = ((boolean) $oldParams->wrap) == true ? 1 : 0;
+				$attribute->params = json_encode($newParams);
+				$attribute->published = 1;
+
+				JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_thm_groups/tables');
+				$profileAttribute = JTable::getInstance('Profile_Attribute', 'Table', []);
+				$success = $profileAttribute->save($attribute);
+				if (!$success)
+				{
+					$app->enqueueMessage(JText::sprintf('COM_THM_GROUPS_TEMPLATE_MANAGER_ERROR_UPDATE_TEMPLATE_ATTRIBUTE', $attribute->attributeID), 'error');
+					$dbo->transactionRollback();
+					return false;
+				}
+			}
+
+			$dbo->transactionCommit();
+			return true;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Checks if table has the old structure
+	 *
+	 * @return bool
+	 */
+	private function isOldStructureTemplateTableUsed()
+	{
+		$dbo = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
+		$query->select('*')
+			->from('#__thm_groups_profile_attribute');
+		$dbo->setQuery($query);
+
+		try
+		{
+			$firstAttribute = $dbo->loadObject();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_TEMPLATE_MANAGER_ERROR_GET_TEMPLATE_ATTRIBUTES'), 'error');
+			return false;
+		}
+
+		$params = json_decode($firstAttribute->params);
+		if (isset($params->label))
 		{
 			return true;
 		}

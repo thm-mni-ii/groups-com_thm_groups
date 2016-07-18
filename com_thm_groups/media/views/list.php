@@ -86,7 +86,7 @@ abstract class THM_GroupsViewList extends JViewLegacy
 	protected function modifyDocument()
 	{
 		$option   = JFactory::getApplication()->input->get('option');
-		$document = Jfactory::getDocument();
+		$document = JFactory::getDocument();
 		$document->addStyleSheet(JPATH_ROOT . "/media/com_thm_groups/fonts/iconfont.css");
 		$document->addStyleSheet($this->baseurl . "../../media/$option/css/backend.css");
 

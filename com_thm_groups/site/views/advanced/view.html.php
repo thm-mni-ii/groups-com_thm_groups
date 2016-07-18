@@ -44,13 +44,13 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$mainframe = Jfactory::getApplication();
-		$app       = JFactory::getApplication()->input;
-		$model     = $this->getmodel('advanced');
+		$app = JFactory::getApplication();
+		$input     = JFactory::getApplication()->input;
+		$model     = $this->getModel('advanced');
 
 		// Mainframe Parameter
-		$params        = $mainframe->getParams();
-		$userid        = $app->get('userID', 0);
+		$params        = $app->getParams();
+		$userid        = $input->get('userID', 0);
 		$pagetitle     = $params->get('page_title');
 		$showpagetitle = $params->get('show_page_heading');
 
@@ -63,11 +63,11 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 			$title = "";
 		}
 
-		$pathway = $mainframe->getPathway();
+		$pathway = $app->getPathway();
 
 		if ($userid)
 		{
-			$db    = JFactory::getDBO();
+			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->select('value');
 			$query->from($db->qn('#__thm_groups_users_attribute'));
@@ -76,13 +76,13 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
 			$db->setQuery($query);
 			$firstname = $db->loadObjectList();
-			$name      = $app->get('name', '') . ', ' . $firstname[0]->value;
+			$name      = $input->get('name', '') . ', ' . $firstname[0]->value;
 			$pathway->addItem($name, '');
 		}
 
 		$this->title     = $title;
-		$this->app       = $app;
-		$itemId          = $app->get('Itemid', 0, 'get');
+		$this->app       = $input;
+		$itemId          = $input->get('Itemid', 0, 'get');
 		$viewparams      = $model->getViewParams();
 		$this->params    = $viewparams;
 		$groupnumber     = $model->getGroupNumber();
@@ -114,7 +114,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 		$document->addStyleDeclaration($mycss);
 
 		// Notify Preview Observer
-		$token = $app->get('notifytoken', false);
+		$token = $input->get('notifytoken', false);
 
 		if (!empty($token))
 		{

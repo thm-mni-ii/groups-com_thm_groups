@@ -28,7 +28,6 @@ class THM_GroupsModelTemplate extends JModelLegacy
 	 * TODO make generic function which handle all types of batch operations
 	 *
 	 * @return  boolean  Returns true on success, false on failure.
-	 *
 	 */
 	public function batch()
 	{
@@ -91,7 +90,6 @@ class THM_GroupsModelTemplate extends JModelLegacy
 	 * @param   string $action     The action to perform
 	 *
 	 * @return  boolean  True on success, false on failure
-	 *
 	 */
 	public function batchProfile($groupIDs, $profileIDs, $action)
 	{
@@ -174,6 +172,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
 			{
 				continue;
 			}
+
 			foreach ($groups as $groupID)
 			{
 				$query->values($templateID . ',' . $groupID);
@@ -239,6 +238,34 @@ class THM_GroupsModelTemplate extends JModelLegacy
 	}
 
 	/**
+	 * Creates new template
+	 *
+	 * @param   string $templateName Template's name
+	 *
+	 * @return  mixed  int on success, false otherwise
+	 */
+	private function createTemplate($templateName)
+	{
+		$app                  = JFactory::getApplication();
+		$template             = $this->getTable();
+		$templateData         = [];
+		$templateData['name'] = $templateName;
+
+		$lastPosition          = (int) $this->getLastPosition();
+		$order                 = $lastPosition + 1;
+		$templateData['order'] = $order;
+		$success               = $template->save($templateData);
+		if (!$success)
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_TEMPLATE_ERROR_SAVE_TEMPLATE'), 'error');
+
+			return false;
+		}
+
+		return $template->id;
+	}
+
+	/**
 	 * Delete item
 	 *
 	 * @return mixed
@@ -300,101 +327,123 @@ class THM_GroupsModelTemplate extends JModelLegacy
 	/**
 	 * Get the last order position of a profile
 	 *
-	 * @return Integer
+	 * @return  int last position on success, 0 otherwise
 	 */
 	public function getLastPosition()
 	{
 		$query = $this->_db->getQuery(true);
 
 		$query
-			->select(" MAX(`order`)  as 'order'")
+			->select(" MAX(`order`)")
 			->from('#__thm_groups_profile');
 
 		$this->_db->setQuery($query);
-		$lastPosition = $this->_db->loadObject();
 
-		return $lastPosition->order;
+		try
+		{
+			$lastPosition = $this->_db->loadResult();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_TEMPLATE_ERROR_GET_LAST_POSITION'), 'warning');
+
+			return 0;
+		}
+
+		return $lastPosition;
+	}
+
+	/**
+	 * Prepares a single attribute for save
+	 *
+	 * @param   int   $templateID Template ID
+	 * @param   array $attribute  Array with attributes to save
+	 * @param   int   $order      Attribute's order
+	 *
+	 * @return  array
+	 */
+	private function prepareAttributeData($templateID, $attribute, $order)
+	{
+		$attributeData                = [];
+		$attributeData['ID']          = empty($attribute['ID']) ? '' : $attribute['ID'];
+		$attributeData['profileID']   = $templateID;
+		$attributeData['attributeID'] = isset($attribute['attribute_id']) ? (int) $attribute['attribute_id'] : 0;
+		$attributeData['published']   = isset($attribute['published']) ? (int) $attribute['published'] : 0;
+		$attributeData['order']       = $order;
+
+		$jsonParams              = [];
+		$jsonParams['showLabel'] = isset($attribute['show_label']) ? (int) $attribute['show_label'] : 0;
+		$jsonParams['showIcon']  = isset($attribute['show_icon']) ? (int) $attribute['show_icon'] : 0;
+		$jsonParams['wrap']      = isset($attribute['wrap']) ? (int) $attribute['wrap'] : 0;
+
+		$attributeData['params'] = json_encode($jsonParams);
+
+		return $attributeData;
 	}
 
 	/**
 	 * Saves the profile templates
 	 *
-	 * @param   bool $new whether or not the template should explicitly be saved as a new entry
-	 *
-	 * @return  bool true on success, otherwise false
+	 * @return  mixed int on success, false otherwise
 	 */
-	public function save($new = false)
+	public function save()
 	{
-		$this->_db->transactionStart();
-		$input = JFactory::getApplication()->input;
-		$data  = $input->get('jform', array(), 'array');
+		$app   = JFactory::getApplication();
+		$data  = $app->input->get('jform', array(), 'array');
 
-		if ($new)
+		$templateID = (int) $data['id'];
+		if (empty($templateID))
 		{
-			$data['id'] = '';
+			$templateName = isset($data['name']) ? (string) $data['name'] : '';
+			if (empty($templateName))
+			{
+				$app->enqueueMessage(JText::_('COM_THM_GROUPS_TEMPLATE_ERROR_NAME_EMPTY'), 'error');
+
+				return false;
+			}
+
+			$templateID = $this->createTemplate($templateName);
 		}
 
-		$templateID    = intval($data['id']);
-		$attributeList = $input->get('attributeList', '', 'string');
-		$attributeJSON = (array) json_decode($attributeList);
-
-		if ($templateID == 0)
+		if (empty($data['attributes']))
 		{
-			$data['order'] = $this->getLastPosition() + 1;
-		}
-		$template = JTable::getInstance('Template', 'Table');
-
-		$success = $template->save($data);
-
-		if (!$success)
-		{
-			$this->_db->transactionRollback();
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_TEMPLATE_ERROR_NO_ATTRIBUTES_PASSED'), 'error');
 
 			return false;
 		}
 
-		$this->_db->transactionCommit();
+		$success = $this->saveTemplateAttributes($data['attributes'], $templateID);
+		return $success ? $templateID : false;
+	}
 
-		if (!empty($attributeJSON))
+	/**
+	 * Saves template's attributes
+	 *
+	 * @param   array $data       Data to save
+	 * @param   int   $templateID Template ID
+	 *
+	 * @return  mixed
+	 */
+	private function saveTemplateAttributes($attributes, $templateID)
+	{
+		$app = JFactory::getApplication();
+		$index = 1;
+		foreach ($attributes as $attribute)
 		{
-			$deleteQuery = $this->_db->getQuery(true);
-			$deleteQuery->delete('#__thm_groups_profile_attribute');
-			$deleteQuery->where('profileID =' . $template->id);
-			$this->_db->setQuery($deleteQuery);
+			$attributeData = $this->prepareAttributeData($templateID, $attribute, $index);
+			$index++;
 
-			try
-			{
-				$this->_db->execute();
-			}
-			catch (Exception $exc)
-			{
-				JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+			$profileAttribute = $this->getTable('Profile_Attribute');
+			$success          = $profileAttribute->save($attributeData);
 
-				return $template->id;
-			}
-
-			$putQuery = $this->_db->getQuery(true);
-			$putQuery->insert('#__thm_groups_profile_attribute');
-			$columns = array('profileID', 'attributeID', 'order', 'params');
-
-			// TODO This quoteName has to be here because 'order' is an sql keyword. => Alter column name!
-			$putQuery->columns($this->_db->quoteName($columns));
-			foreach ($attributeJSON as $index => $value)
-			{
-				$attributeID = intval($index);
-				$order       = intval($value->order);
-				$params      = json_encode($value->params);
-				$putQuery->values("'$template->id', '$attributeID', '$order', '$params'");
-			}
-
-			$this->_db->setQuery($putQuery);
-			$success = $this->_db->execute();
 			if (!$success)
 			{
+				$app->enqueueMessage(JText::_('COM_THM_GROUPS_TEMPLATE_ERROR_SAVE_TEMPLATE_ATTRIBUTE'), 'error');
+
 				return false;
 			}
 		}
 
-		return $template->id;
+		return true;
 	}
 }

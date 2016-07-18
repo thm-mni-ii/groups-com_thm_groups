@@ -46,7 +46,7 @@ class THM_GroupsViewProfile extends JViewLegacy
 		$safeName    = JFilterOutput::stringURLSafe($name);
 		$paramsExist = !empty($attribute['params']);
 		$isDiv       = ($paramsExist AND !empty($attribute['params']['wrap']));
-		$showLabel   = (!$paramsExist OR !empty($attribute['params']['label']));
+
 		if ($isDiv)
 		{
 			$containerClass      = "field-container $safeName-container";
@@ -63,16 +63,13 @@ class THM_GroupsViewProfile extends JViewLegacy
 		$start = '';
 		$start .= '<div class="' . $containerClass . '">';
 
-		if ($showLabel)
-		{
-			$start .= '<div class="' . $labelContainerClass . '"><span>' . $name . '</span></div>';
-		}
+		$start = $this->getIconLabelOutput($attribute, $start, $name, $labelContainerClass);
 
 		$start .= '<div class="' . $valueClass . '">';
 
 		$end = '</div></div>';
 
-		return array('start' => $start, 'end' => $end);
+		return ['start' => $start, 'end' => $end];
 	}
 
 	/**
@@ -134,7 +131,7 @@ class THM_GroupsViewProfile extends JViewLegacy
 		if ($hasImage)
 		{
 			$imgOptions = $attribute['options'];
-			$path       = JURI::base() . $imgOptions['path'] . '/' . $attribute['value'];
+			$path       = JUri::base() . $imgOptions['path'] . '/' . $attribute['value'];
 			$value .= JHtml::image($path, 'Profilbild');
 		}
 
@@ -210,7 +207,7 @@ class THM_GroupsViewProfile extends JViewLegacy
 	/**
 	 * Gets a link to the profile edit view
 	 *
-	 * @params   mixed  $attributes  An associative array (or simple string) of attributes to add
+	 * @params   mixed $attributes An associative array (or simple string) of attributes to add
 	 *
 	 * @return  string  the Link HTML markup
 	 */
@@ -276,7 +273,7 @@ class THM_GroupsViewProfile extends JViewLegacy
 		$document->addStyleSheet('media/com_thm_groups/css/profile_item.css');
 		JHtml::_('bootstrap.framework');
 		JHtml::_('behavior.modal');
-		JHTML::_('behavior.modal', 'a.modal-button');
+		JHtml::_('behavior.modal', 'a.modal-button');
 	}
 
 	/**
@@ -287,5 +284,36 @@ class THM_GroupsViewProfile extends JViewLegacy
 	public function getDisplayName()
 	{
 		return THM_GroupsHelperProfile::getDisplayNameWithTitle($this->profileID);
+	}
+
+	/**
+	 * Checks icon and value and returns one of them
+	 *
+	 * @param   array  $attribute           Array with options for attribute
+	 * @param   string $output              String which contains icon or label
+	 * @param   string $name                Some necessary shit
+	 * @param   string $labelContainerClass Other necessary shit
+	 *
+	 * @return  string
+	 */
+	private function getIconLabelOutput($attribute, $output, $name, $labelContainerClass)
+	{
+		$paramsExist = !empty($attribute['params']);
+		$showIcon = (!$paramsExist OR !empty($attribute['params']['showIcon']));
+		$showLabel = (!$paramsExist OR !empty($attribute['params']['showLabel']));
+		$iconName = isset($attribute['options']['icon']) ? $attribute['options']['icon'] : '';
+
+		if ($showIcon AND !empty($iconName))
+		{
+			$output .= "<span class='$iconName'></span>";
+		}
+		elseif ($showLabel)
+		{
+			$output .= '<div class="' . $labelContainerClass . '"><span>' . $name . '</span></div>';
+
+			return $output;
+		}
+
+		return $output;
 	}
 }

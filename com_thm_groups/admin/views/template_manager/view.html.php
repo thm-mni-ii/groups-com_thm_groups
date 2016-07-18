@@ -55,11 +55,6 @@ class THM_GroupsViewTemplate_Manager extends THM_GroupsViewList
 
 		$this->groups = THM_GroupsHelperBatch::getGroupOptions();
 
-		JHtml::_('jquery.framework');
-
-		$document = JFactory::getDocument();
-		$document->addScript(JURI::root(true) . '/media/com_thm_groups/js/template_manager.js');
-
 		parent::display($tpl);
 	}
 
@@ -91,7 +86,7 @@ class THM_GroupsViewTemplate_Manager extends THM_GroupsViewList
 
 		if ($user->authorise('core.manage', 'com_thm_groups') && $user->authorise('core.edit', 'com_thm_groups'))
 		{
-			$bar = JToolBar::getInstance('toolbar');
+			$bar = JToolbar::getInstance('toolbar');
 			JHtml::_('bootstrap.modal', 'myModal');
 			$title = JText::_('COM_THM_GROUPS_BATCH_GROUPS');
 			$html  = "<button id='add_group_to_profile_btn' data-toggle='modal' data-target='#collapseModal' class='btn btn-small'>";
@@ -105,5 +100,17 @@ class THM_GroupsViewTemplate_Manager extends THM_GroupsViewList
 			JToolBarHelper::divider();
 			JToolBarHelper::preferences('com_thm_groups');
 		}
+	}
+
+	/**
+	 * Adds styles and scripts to the document
+	 *
+	 * @return  void  modifies the document
+	 */
+	protected function modifyDocument()
+	{
+		parent::modifyDocument();
+		JHtml::_('jquery.framework');
+		JHtml::script(JUri::root() . 'media/com_thm_groups/js/template_manager.js');
 	}
 }

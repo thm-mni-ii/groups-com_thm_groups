@@ -19,16 +19,15 @@
 class THM_GroupsHelperProfile
 {
 	/**
-	 *
 	 * Return all attributes with metadata
 	 *
 	 * Update of Joomla 3.3
 	 *
-	 * @return result
+	 * @return array
 	 */
 	public static function getAllAttributes()
 	{
-		$dbo   = JFactory::getDBO();
+		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
 
 		$query->select('A.id AS id, A.name AS field , A.options');
@@ -37,6 +36,7 @@ class THM_GroupsHelperProfile
 		$query->from('#__thm_groups_attribute AS A');
 		$query->leftJoin('#__thm_groups_dynamic_type AS B ON A.dynamic_typeID = B.id');
 		$query->leftJoin('#__thm_groups_static_type AS C ON  B.static_typeID = C.id');
+		$query->where("A.id <> '3'");
 		$query->order('A.id');
 		$dbo->setQuery($query);
 
@@ -164,7 +164,6 @@ class THM_GroupsHelperProfile
 		return $displayName;
 	}
 
-
 	/**
 	 * Retrieves the profile information of the user. Optionally filtered against a profile template associated with a
 	 * group.
@@ -176,10 +175,10 @@ class THM_GroupsHelperProfile
 	 */
 	public static function getProfile($userID, $groupID = null)
 	{
-		$profileID  = THM_GroupsHelperProfile::getProfileIDByGroupID($groupID);
-		$attributes = THM_GroupsHelperProfile::getProfileData($userID, $profileID, true);
+		$profileID  = self::getProfileIDByGroupID($groupID);
+		$attributes = self::getProfileData($userID, $profileID, true);
 
-		$profile = array();
+		$profile = [];
 		foreach ($attributes as $attribute)
 		{
 			$name                          = $attribute['name'];
@@ -190,10 +189,12 @@ class THM_GroupsHelperProfile
 			{
 				$profile[$name]['options'] = (array) json_decode($attribute['options']);
 			}
+
 			if (!empty($attribute['dynOptions']))
 			{
 				$profile[$name]['dyn_options'] = (array) json_decode($attribute['dynOptions']);
 			}
+
 			$profile[$name]['id']             = $attribute['id'];
 			$profile[$name]['value']          = $attribute['value'];
 			$profile[$name]['publish']        = $attribute['publish'];
@@ -203,10 +204,12 @@ class THM_GroupsHelperProfile
 			$profile[$name]['order']          = $attribute['order'];
 		}
 
-		uasort($profile, function ($a, $b)
-		{
-			return $a['order'] - $b['order'];
-		});
+		uasort(
+			$profile, function ($a, $b)
+			{
+				return $a['order'] - $b['order'];
+			}
+		);
 
 		return $profile;
 	}
@@ -222,7 +225,7 @@ class THM_GroupsHelperProfile
 	 */
 	public static function getProfileData($userID, $profileID = null, $onlyPublished = false)
 	{
-		$dbo   = JFactory::getDBO();
+		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
 
 		$select = 'DISTINCT a.id AS structid, a.name as name, a.options as options, a.description AS description, ';
@@ -249,6 +252,7 @@ class THM_GroupsHelperProfile
 			$query->where("ua.published = 1");
 		}
 
+		$query->where("pa.published = '1'");
 		$query->group("a.id");
 		$query->order("pa.order");
 
@@ -262,7 +266,7 @@ class THM_GroupsHelperProfile
 		{
 			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-			return array();
+			return [];
 		}
 	}
 
@@ -332,7 +336,7 @@ class THM_GroupsHelperProfile
 	 */
 	public static function isPublished($profileID)
 	{
-		$dbo   = JFactory::getDBO();
+		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
 
 		$query->select("published");
@@ -351,5 +355,4 @@ class THM_GroupsHelperProfile
 			return false;
 		}
 	}
-
 }

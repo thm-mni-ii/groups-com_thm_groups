@@ -14,6 +14,7 @@
 defined('_JEXEC') or die;
 require_once JPATH_ROOT . '/media/com_thm_groups/models/edit.php';
 require_once JPATH_ROOT . "/media/com_thm_groups/data/thm_groups_user_data.php";
+/** @noinspection MissingSinceTagDocInspection */
 
 
 /**
@@ -25,16 +26,6 @@ require_once JPATH_ROOT . "/media/com_thm_groups/data/thm_groups_user_data.php";
  */
 class THM_GroupsModelTemplate_Edit extends THM_GroupsModelEdit
 {
-	/**
-	 * Constructor.
-	 *
-	 * @param   array $config An optional associative array of configuration settings.
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
-
 	/**
 	 * Method to get a table object, load it if necessary. Can't be generalized because of irregular english plural
 	 * spelling. :(
@@ -49,7 +40,6 @@ class THM_GroupsModelTemplate_Edit extends THM_GroupsModelEdit
 	{
 		return JTable::getInstance($name, $prefix, $options);
 	}
-
 
 	/**
 	 * Method to load the form data
@@ -67,23 +57,21 @@ class THM_GroupsModelTemplate_Edit extends THM_GroupsModelEdit
 		return $this->getItem($id);
 	}
 
-
 	/**
 	 *  get the Attribut  for a profile
 	 *
 	 * @param   int $profilID The ID of a profile
 	 *
-	 * @return  Object
+	 * @return  mixed array on success, false otherwise
 	 */
 	public function getNoSelectAttribute($profilID)
 	{
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
+		$dbo = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 		if ($profilID == 0)
 		{
 			$query->select("A.id,A.name, A.description")
 				->from("#__thm_groups_attribute as A ");
-
 		}
 		else
 		{
@@ -91,31 +79,37 @@ class THM_GroupsModelTemplate_Edit extends THM_GroupsModelEdit
 				->from("#__thm_groups_attribute as A ")
 				->where(" A.id not in (select attributeID from #__thm_groups_profile_attribute as N where profileID =" . $profilID
 					. " order by N.order)");
-
 		}
-		$db->setQuery($query);
 
-		return $db->loadObjectList();
+		$dbo->setQuery($query);
+
+		try
+		{
+			return $dbo->loadObjectList();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+			return false;
+		}
 	}
 
-
+	// TODO REFACTOR
 	/**
-	 *  Transform a List of Attribute with Database format in
+	 * Transform a List of Attribute with Database format in
 	 * Json format
 	 *
 	 * @param   int $profilID The ID of a profile
 	 *
-	 * @return  Object
+	 * @return  mixed array on success, false otherwise
 	 */
 	public function getAllAttribute($profilID)
 	{
-		$db       = JFactory::getDBO();
-		$setParam = $db->getQuery(true);
-		$setParam = 'SET group_concat_max_len = 1000000000;';
-		$db->setQuery($setParam);
-		$db->execute();
-		$jsonquery = $db->getQuery(true);
-		$query     = $db->getQuery(true);
+		$dbo = JFactory::getDBO();
+		$dbo->setQuery('SET group_concat_max_len = 1000000000;');
+		$dbo->execute();
+		$jsonquery = $dbo->getQuery(true);
+		$query = $dbo->getQuery(true);
 		$query->select(" A.attributeID as attrid")
 			->select(" A.order as attrorder")
 			->select(" A.params as attrParam")
@@ -131,9 +125,16 @@ class THM_GroupsModelTemplate_Edit extends THM_GroupsModelEdit
             ',\"param\":',IF(attrParam IS NULL or attrParam = '', ' ', attrParam), '',
             '}'), '}') as json ")
 			->from('(' . $query . ')as result');
-		$db->setQuery($jsonquery);
+		$dbo->setQuery($jsonquery);
 
-		return $db->loadObjectList();
+		try
+		{
+			return $dbo->loadObjectList();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+			return false;
+		}
 	}
-
 }
