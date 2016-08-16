@@ -50,5 +50,4 @@ class THM_GroupsTemplateEdit_Basic
 		</form>
 		<?php
 	}
-
 }

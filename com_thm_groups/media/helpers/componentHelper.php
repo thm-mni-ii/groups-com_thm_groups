@@ -187,12 +187,13 @@ class THM_GroupsHelperComponent
 		$user               = JFactory::getUser();
 		$isSuperUser        = $user->authorise('core.admin');
 		$isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-		if (!$isSuperUser || !$isComponentManager)
+
+		if ($isSuperUser OR $isComponentManager)
 		{
-			return false;
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	/**
