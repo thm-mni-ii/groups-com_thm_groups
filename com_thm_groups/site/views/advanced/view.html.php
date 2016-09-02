@@ -643,7 +643,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
 									if (!empty($text))
 									{
-										if (stripos($text, '<li>') === false && stripos($text, '<table>') === false)
+										if (stripos($text, '<li>') === false && stripos($text, '<table') === false)
 										{
 											$text = nl2br($text);
 										}
