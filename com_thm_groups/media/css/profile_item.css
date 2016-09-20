@@ -47,7 +47,7 @@ a[href*="view=color_manager"]::before {
 .icon-organizer_subject_pools::before,
 a[href*="view=pool_manager"]::before {
   font-family: icomoon;
-  content: "\43"; }
+  content: "\44"; }
 
 .icon-organizer_rooms::before,
 a[href*="view=room_manager"]::before {
@@ -155,6 +155,10 @@ div.template-standard .anschrift-container + div {
     margin-bottom: 15px;
     padding-left: 20px;
     width: 100%; }
+div.template-standard .zur-person-container {
+  margin-top: 20px;
+  padding-left: 20px;
+  width: 100%; }
 div.template-standard .weitere-informationen-container {
   margin-top: 20px;
   padding-left: 20px;
@@ -198,6 +202,11 @@ div.template-standard .sprechzeiten-label:before {
   content: "\e927"; }
 div.template-standard .telefon-label:before {
   content: "\e260"; }
+div.template-standard .zur-person-label {
+  display: block;
+  margin-bottom: 8px;
+  text-align: left;
+  width: 100%; }
 div.template-standard .weitere-informationen-label {
   display: block;
   margin-bottom: 8px;

@@ -122,6 +122,12 @@ div.template-standard {
     }
   }
 
+  .zur-person-container {
+    margin-top: 20px;
+    padding-left: 20px;
+    width: 100%;
+  }
+
   .weitere-informationen-container {
     margin-top: 20px;
     padding-left: 20px;
@@ -187,6 +193,13 @@ div.template-standard {
 
   .telefon-label:before {
     content: "\e260";
+  }
+
+  .zur-person-label {
+    display: block;
+    margin-bottom: 8px;
+    text-align: left;
+    width: 100%;
   }
 
   .weitere-informationen-label {
