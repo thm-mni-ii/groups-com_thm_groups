@@ -44,9 +44,9 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$app = JFactory::getApplication();
-		$input     = JFactory::getApplication()->input;
-		$model     = $this->getModel('advanced');
+		$app   = JFactory::getApplication();
+		$input = JFactory::getApplication()->input;
+		$model = $this->getModel('advanced');
 
 		// Mainframe Parameter
 		$params        = $app->getParams();
@@ -535,23 +535,20 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
 			$tempcanEdit = (($User->id == $id && $componentparams->get('editownprofile', 0) == 1) || $canEdit);
 
-			// Jeder Benutzer kann sich selbst editieren
+			// Every user can edit himself
 			if ($tempcanEdit)
 			{
-				$attribs['title'] = 'bearbeiten';
+				$linkTitle = 'bearbeiten';
+				$data             = ['Itemid'  => $itemid,
+				                     'option'  => 'com_thm_groups',
+				                     'view'    => 'profile_edit',
+				                     'userID'  => $id,
+				                     'groupID' => $groupID,
+				                     'name'    => $lastName
+				];
 
-				// Daten fuer die EditForm
-				$option = $app_option;
-				$layout = $app_layout;
-				$view   = $app_view;
-				$path   = "index.php?option=com_thm_groups&view=profile_edit&layout=default&tmpl=component&Itemid=";
-				$gspart = '&groupID=' . $groupID;
-				$trim   = "&name=" . trim($lastName);
-				$asd    = "iframe";
-				$result .= "<a href='" . JRoute:: _(
-						$path . $itemid . '&userID=' . $id . $trim . $gspart)
-					. "' class='modal' rel='{size: {x: 1000, y: 600}, handler: \"iframe\", onClose: \"window.location.reload();\"}'>"
-					. JHTML:: image("components/com_thm_groups/img/edit.png", 'bearbeiten', $attribs) . "</a>";
+				$link = 'index.php?' . http_build_query($data);
+				$result .= JHtml::link(JRoute::_($link), JHtml::image("components/com_thm_groups/img/edit.png", $linkTitle));
 			}
 
 			$result .= "</div>";
