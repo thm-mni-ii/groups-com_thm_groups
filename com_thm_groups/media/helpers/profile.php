@@ -253,6 +253,7 @@ class THM_GroupsHelperProfile
 		}
 
 		$query->where("pa.published = '1'");
+		$query->where("a.published = '1'");
 		$query->group("a.id");
 		$query->order("pa.order");
 
