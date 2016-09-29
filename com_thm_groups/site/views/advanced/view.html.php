@@ -19,8 +19,6 @@
  * @link        www.thm.de
  */
 
-// require implode('/', array(JPATH_ROOT, 'components', 'com_thm_groups', 'helper', 'bootstrap_helper.php'));
-
 jimport('joomla.application.component.view');
 require_once JPATH_ROOT . "/media/com_thm_groups/data/thm_groups_data.php";
 JHtml::_('bootstrap.framework');
@@ -548,7 +546,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 				];
 
 				$link = 'index.php?' . http_build_query($data);
-				$result .= JHtml::link(JRoute::_($link), JHtml::image("components/com_thm_groups/img/edit.png", $linkTitle));
+				$result .= JHtml::link(JRoute::_($link), JHtml::image("media/com_thm_groups/images/edit.png", $linkTitle));
 			}
 
 			$result .= "</div>";

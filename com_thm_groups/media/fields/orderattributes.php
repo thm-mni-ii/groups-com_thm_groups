@@ -36,13 +36,13 @@ class JFormFieldOrderAttributes extends JFormField
 	public function getInput()
 	{
 		$orderSelect = '<div id="orderattr">';
-		$scriptDir   = JURI::root() . 'administrator/components/com_thm_groups/elements/';
+		$scriptDir   = JURI::root() . 'media/com_thm_groups/';
 		JHtml::_('jquery.framework', true, true);
 		JHtml::_('jquery.ui');
 		JHtml::_('jquery.ui', array('sortable'));
 
-		JHTML::script($scriptDir . 'orderattributes.js');
-		JHtml::stylesheet($scriptDir . 'orderattributes.css');
+		JHTML::script($scriptDir . 'js/orderattributes.js');
+		JHtml::stylesheet($scriptDir . 'css/orderattributes.css');
 
 		$tagname = $this->name;
 

@@ -12,7 +12,7 @@
 
 defined('_JEXEC') or die;
 jimport('joomla.application.component.modeladmin');
-require_once JPATH_COMPONENT . '/assets/helpers/database_compare_helper.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/database_compare_helper.php';
 
 /**
  * Class loads form data to edit an entry.

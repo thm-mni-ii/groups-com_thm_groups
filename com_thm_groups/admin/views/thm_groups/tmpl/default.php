@@ -13,7 +13,7 @@
  */
 
 defined('_JEXEC') or die;
-$logoURL = 'administrator/components/com_thm_groups/assets/images/THM_Groups.png';
+$logoURL = 'media/com_thm_groups/images/logo_THM_Groups.png';
 $attribs = array('class' => 'thm_groups_main_image');
 $image   = JHtml::_('image', $logoURL, JText::_('COM_THM_GROUPS'), $attribs);
 ?>

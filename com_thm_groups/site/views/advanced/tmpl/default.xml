@@ -12,7 +12,7 @@
                     description="COM_THM_GROUPS_SELECT_GROUP_DESC"
             />
             <field
-                    addfieldpath="/administrator/components/com_thm_groups/elements/"
+                    addfieldpath="/media/com_thm_groups/fields/"
                     name="roleid"
                     type="roleitemselect"
                     default="1"

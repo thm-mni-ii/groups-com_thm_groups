@@ -33,7 +33,6 @@
         <folder>helpers</folder>
         <folder>icons</folder>
         <folder>images</folder>
-        <folder>img</folder>
         <filename>index.html</filename>
         <folder>js</folder>
         <folder>layouts</folder>
@@ -44,9 +43,6 @@
 
     <files folder="site">
         <folder>controllers</folder>
-        <folder>css</folder>
-        <folder>helper</folder>
-        <folder>img</folder>
         <folder>models</folder>
         <folder>views</folder>
 
@@ -95,9 +91,7 @@
             <filename>CHANGELOG.php</filename>
             <filename>install.php</filename>
             <filename>update.php</filename>
-            <folder>assets</folder>
             <folder>controllers</folder>
-            <folder>elements</folder>
             <folder>models</folder>
             <folder>sql</folder>
             <folder>tables</folder>

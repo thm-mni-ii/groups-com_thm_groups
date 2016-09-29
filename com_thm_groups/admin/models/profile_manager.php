@@ -160,7 +160,7 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
 		$groupsAndRoles = $this->getUserGroupsAndRolesByUserId($userID);
 		$user           = JFactory::getUser();
 		$result         = "";
-		$imageURL       = JHtml::image(JURI::root() . 'administrator/components/com_thm_groups/assets/images/removeassignment.png', '', 'width=16px');
+		$imageURL       = JHtml::image(JURI::root() . 'media/com_thm_groups/images/removeassignment.png', '', 'width=16px');
 
 		// TODO add check if user SuperAdmin
 

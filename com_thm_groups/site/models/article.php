@@ -13,10 +13,7 @@
 
 // No direct access
 defined('_JEXEC') or die;
-
 jimport('joomla.application.component.modeladmin');
-
-require_once JPATH_COMPONENT . '/helper/content.php';
 
 /**
  * Item Model for an Article.

@@ -34,19 +34,17 @@ class JFormFieldRoleItemSelect extends JFormField
 	public function getInput()
 	{
 		$db        = JFactory::getDBO();
-		$scriptDir = JURI::root() . 'administrator/components/com_thm_groups/elements/';
+		$scriptDir = JURI::root() . 'media/com_thm_groups/';
 		JHtml::_('jquery.framework', true, true);
 		JHtml::_('jquery.ui');
 		JHtml::_('jquery.ui', array('sortable'));
 
-		JHTML::script($scriptDir . 'roleitemselect.js');
-		JHtml::stylesheet($scriptDir . 'orderattributes.css');
+		JHTML::script($scriptDir . 'js/roleitemselect.js');
+		JHtml::stylesheet($scriptDir . 'css/orderattributes.css');
 		$sortButtons = true;
 
 		// Add script-code to the document head
 		$app = JFactory::getApplication()->input;
-
-		//  JHTML::script('roleitemselect.js', $scriptDir, false);
 		$id = $app->get('cid');
 		if (isset($id))
 		{
