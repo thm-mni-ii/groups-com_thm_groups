@@ -24,16 +24,6 @@
 // Include Bootstrap
 JHtmlBootstrap::loadCSS();
 ?>
-<script>
-	$ = jQuery.noConflict();
-	$(document).ready(function ()
-	{
-		$('#sbox-btn-close').on('click', function ()
-		{
-			window.parent.location.reload();
-		});
-	});
-</script>
 <div id="title"><?php echo "<h2 class='contentheading'>" . $this->title . "</h2>" ?></div>
 <div id="thm_groups_profile_container_list" class="row-fluid">
 	<?php

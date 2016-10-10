@@ -718,24 +718,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 		// Truncate Long Info Text
 		if ($truncateLongInfo)
 		{
-			$result .= '<script type="text/javascript">
-                            jQuery(".thm_groups_profile_container_profile_read_more").click(
-                                function() {
-                                    jQuery(this).next().slideToggle();});
-                            jQuery("#openFrame").click(function(){
-                            jQuery("#thm_groups_profile").on("show", function () {});
-                            jQuery("#thm_groups_profile").modal({show:true})});
-
-                            function toogle(caller){
-                                if(caller.nextElementSibling.nextElementSibling.style.display == "none"){
-                                    caller.nextElementSibling.nextElementSibling.style.display = "inherit";
-                                }
-                                else
-                                {
-                                    caller.nextElementSibling.nextElementSibling.style.display = "none";
-                                }
-                            }
-                        </script>';
+			JFactory::getDocument()->addScript($this->baseurl . "/media/com_thm_groups/js/read_more.js");
 		}
 
 		return $result;
