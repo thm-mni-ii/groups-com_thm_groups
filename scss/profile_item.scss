@@ -18,6 +18,7 @@ div.item-page {
 
   .profile {
     clear: both;
+    position: relative;
   }
 
   button, a.btn {
@@ -85,19 +86,20 @@ div.template-standard {
 
   .bild-container, .anschrift-container {
     background-color: $background;
-    height: 200px;
     padding: 20px;
   }
 
   .bild-container {
-    clear: initial;
-    float: right;
-    width: calc(30% - 40px);
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 200px;
   }
 
   .anschrift-container {
     margin-bottom: 20px;
-    width: calc(70% - 40px);
+    width: calc(100% - 40px);
+    min-height: 200px;
   }
 
   .buero-container, .sprechzeiten-container, .email-container,
@@ -145,6 +147,7 @@ div.template-standard {
     font-size: 150%;
     padding: 5px 0;
     text-align: left;
+    padding-right: calc(30% - 40px);
   }
 
   .buero-label, .email-label, .fax-label, .homepage-label, .sprechzeiten-label, .telefon-label {
@@ -215,6 +218,7 @@ div.template-standard {
 
   .anschrift-value {
     display: block;
+    padding-right: calc(30% - 40px);
   }
 }
 

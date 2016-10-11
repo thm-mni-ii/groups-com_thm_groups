@@ -90,7 +90,8 @@ div.item-page .page-header {
 div.item-page .toolbar {
   float: right; }
 div.item-page .profile {
-  clear: both; }
+  clear: both;
+  position: relative; }
 div.item-page button, div.item-page a.btn {
   background-color: white;
   border: 1px solid #77858c;
@@ -131,15 +132,16 @@ div.template-standard .titel-container, div.template-standard .vorname-container
   display: none; }
 div.template-standard .bild-container, div.template-standard .anschrift-container {
   background-color: #f2f5f6;
-  height: 200px;
   padding: 20px; }
 div.template-standard .bild-container {
-  clear: initial;
-  float: right;
-  width: calc(30% - 40px); }
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 200px; }
 div.template-standard .anschrift-container {
   margin-bottom: 20px;
-  width: calc(70% - 40px); }
+  width: calc(100% - 40px);
+  min-height: 200px; }
 div.template-standard .buero-container, div.template-standard .sprechzeiten-container, div.template-standard .email-container,
 div.template-standard .telefon-container, div.template-standard .fax-container, div.template-standard .homepage-container {
   background-color: #dfeec8;
@@ -171,7 +173,8 @@ div.template-standard .anschrift-label {
   display: block;
   font-size: 150%;
   padding: 5px 0;
-  text-align: left; }
+  text-align: left;
+  padding-right: calc(30% - 40px); }
 div.template-standard .buero-label, div.template-standard .email-label, div.template-standard .fax-label, div.template-standard .homepage-label, div.template-standard .sprechzeiten-label, div.template-standard .telefon-label {
   /* use !important to prevent issues with browser extensions that change fonts */
   align: left;
@@ -215,7 +218,8 @@ div.template-standard .weitere-informationen-label {
 div.template-standard .bild-value {
   float: right; }
 div.template-standard .anschrift-value {
-  display: block; }
+  display: block;
+  padding-right: calc(30% - 40px); }
 
 div.template-mni .titel-container, div.template-mni .vorname-container, div.template-mni .nachname-container, div.template-mni .posttitel-container {
   display: none; }
