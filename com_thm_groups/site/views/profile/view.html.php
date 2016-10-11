@@ -152,22 +152,50 @@ class THM_GroupsViewProfile extends JViewLegacy
 		switch (strtolower($attribute['dyntype']))
 		{
 			case 'email':
-				$initial = true;
-				$value = '';
 				$emails = explode('|', $attribute['value']);
 
-				foreach ($emails as $email)
+
+				if (count($emails) === 1)
 				{
-					if (!$initial)
+					$value = JHtml::_('email.cloak', $attribute['value']);
+				}
+				else
+				{
+					$value = '<ul>';
+
+					foreach ($emails as $email)
 					{
-						$value .= ' | ';
+						$value .= '<li>' . JHtml::_('email.cloak', $email) . '</li>';
 					}
 
-					$initial = false;
-					$value .= JHtml::_('email.cloak', $email);
+					$value .= '</ul>';
 				}
 
 				break;
+
+			case 'telephone':
+			case 'fax':
+				$numbers = explode('|', $attribute['value']);
+
+
+				if (count($numbers) === 1)
+				{
+					$value = $attribute['value'];
+				}
+				else
+				{
+					$value = '<ul>';
+
+					foreach ($numbers as $number)
+					{
+						$value .= "<li>$number</li>";
+					}
+
+					$value = '</ul>';
+				}
+
+				break;
+
 			default:
 				$value = $attribute['value'];
 				break;
