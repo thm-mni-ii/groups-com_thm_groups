@@ -69,7 +69,7 @@ class THM_GroupsHelperBatch
 		$query->select($select);
 		$query->from('#__usergroups as a');
 		$query->leftJoin('#__usergroups AS b ON a.lft > b.lft AND a.rgt < b.rgt');
-		$query->innerJoin('#__thm_groups_usergroups_roles AS c ON a.id = c.usergroupsID');
+		$query->leftJoin('#__thm_groups_usergroups_roles AS c ON a.id = c.usergroupsID');
 		$query->where('a.id NOT IN  (1,2)');
 		$query->group('a.id, a.title, a.lft, a.rgt');
 		$query->order('a.lft ASC');

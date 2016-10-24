@@ -41,6 +41,13 @@ class THM_GroupsModelQuickpage_Content_Manager extends THM_CoreModelList
 		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
 
+		$rootCategory = THMLibThmQuickpages::getQuickpagesRootCategory();
+
+		if (empty($rootCategory))
+		{
+			return $query;
+		}
+
 		$contentSelect = 'content.id, content.title, content.alias, content.checked_out, content.checked_out_time, ';
 		$contentSelect .= 'content.catid, content.state, content.access, content.created, content.featured, ';
 		$contentSelect .= 'content.created_by, content.ordering, content.language, content.hits, content.publish_up, ';
@@ -66,7 +73,6 @@ class THM_GroupsModelQuickpage_Content_Manager extends THM_CoreModelList
 			$query->where("(content.title LIKE '%" . implode("%' OR content.title LIKE '%", explode(' ', $search)) . "%')");
 		}
 
-		$rootCategory = THMLibThmQuickpages::getQuickpagesRootCategory();
 		$query->where("cats.parent_id= '$rootCategory' ");
 
 		$userID = $this->getState('filter.author');
@@ -113,8 +119,20 @@ class THM_GroupsModelQuickpage_Content_Manager extends THM_CoreModelList
 	 */
 	public function getItems()
 	{
-		$items  = parent::getItems();
+		$rootCategory = THMLibThmQuickpages::getQuickpagesRootCategory();
+
 		$return = array();
+
+		if (!empty($rootCategory))
+		{
+			$items  = parent::getItems();
+		}
+		else
+		{
+			JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ROOT_CATEGORY_NOT_CONFIGURED'), 'notice');
+
+			return $return;
+		}
 
 		if (empty($items))
 		{

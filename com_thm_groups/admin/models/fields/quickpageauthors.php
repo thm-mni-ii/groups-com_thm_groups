@@ -78,6 +78,13 @@ class JFormFieldQuickpageauthors extends JFormFieldList
 	{
 		$options = array();
 
+		$rootCategory = THMLibThmQuickpages::getQuickpagesRootCategory();
+
+		if (empty($rootCategory))
+		{
+			return parent::getOptions();
+		}
+
 		$arrayOfModerators = $this->getQPAuthors();
 
 		// Convert array to options

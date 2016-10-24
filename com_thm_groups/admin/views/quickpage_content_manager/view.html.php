@@ -59,8 +59,9 @@ class THM_GroupsViewQuickpage_Content_Manager extends THM_CoreViewList
 		);
 
 		$user = JFactory::getUser();
+		$rootCategory = THMLibThmQuickpages::getQuickpagesRootCategory();
 
-		if ($user->authorise('core.manage', 'com_thm_groups'))
+		if ($user->authorise('core.manage', 'com_thm_groups') AND !empty($rootCategory))
 		{
 			JToolBarHelper::publishList('quickpage_content.qpPublish', 'COM_THM_GROUPS_PUBLISH');
 			JToolBarHelper::unpublishList('quickpage_content.qpUnpublish', 'COM_THM_GROUPS_UNPUBLISH');
