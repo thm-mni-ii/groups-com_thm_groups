@@ -48,7 +48,7 @@ class THM_GroupsModelDynamic_Type extends JModelLegacy
 				$options->length = empty($data['length']) ? $defOptions->length : (int) $data['length'];
 				break;
 			case PICTURE:
-				// Save always default values, because pictures are placed now only in /images/com_thm_groups/profile
+				// Save always default values, because pictures are placed now only in /images/com_thm_groups/profile/
 				$options->path     = $defOptions->path;
 				$options->filename = $defOptions->filename;
 				break;

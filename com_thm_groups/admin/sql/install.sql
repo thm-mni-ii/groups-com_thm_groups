@@ -101,7 +101,7 @@ INSERT INTO `#__thm_groups_dynamic_type` (`id`, `name`, `static_typeID`, `descri
   (1, 'TEXT', 1, '', '{"length":40}'),
   (2, 'TEXTFIELD', 2, '', '{"length":120}'),
   (3, 'LINK', 3, '', '{}'),
-  (4, 'PICTURE', 4, '', '{"filename":"anonym.jpg", "path":"/images/com_thm_groups/profile"}'),
+  (4, 'PICTURE', 4, '', '{"filename":"anonym.jpg", "path":"/images/com_thm_groups/profile/"}'),
   (5, 'MULTISELECT', 5, '', '{}'),
   (6, 'TABLE', 6, '', '{}'),
   (7, 'NUMBER', 7, '', '{}'),

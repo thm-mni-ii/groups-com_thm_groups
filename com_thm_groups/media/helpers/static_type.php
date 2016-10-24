@@ -28,6 +28,7 @@ define('TEMPLATE', 9);
  */
 class THM_GroupsHelperStatic_Type
 {
+
 	/**
 	 * Returns extra options like length or path for pictures for static types
 	 *
@@ -48,7 +49,7 @@ class THM_GroupsHelperStatic_Type
 				break;
 			case PICTURE:
 				$options->filename = 'anonym.jpg';
-				$options->path     = '/images/com_thm_groups/profile';
+				$options->path     = '/images/com_thm_groups/profile/';
 				break;
 		}
 
