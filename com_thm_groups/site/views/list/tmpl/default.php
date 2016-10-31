@@ -12,9 +12,13 @@
 ?>
 <div itemtype="http://schema.org/Article" itemscope="" class="thm_groups-list">
 	<meta content="de-DE" itemprop="inLanguage">
-	<div class="page-header">
-		<?php echo "<h2>" . $this->title . "</h2>"; ?>
-	</div>
+	<?php if ($this->params->get('show_title')) : ?>
+		<div class="page-header">
+			<h2 itemprop="headline">
+				<?php echo $this->escape($this->title); ?>
+			</h2>
+		</div>
+	<?php endif; ?>
 	<div itemprop="articleBody" class="list-container">
 		<?php
 		if ($this->params->get('showAll') == 1)
