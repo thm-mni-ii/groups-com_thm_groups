@@ -338,6 +338,7 @@ class THM_GroupsModelGroup extends JModelLegacy
 	}
 
 	// TODO delete group from joomla table
+
 	/**
 	 * Delete item
 	 *

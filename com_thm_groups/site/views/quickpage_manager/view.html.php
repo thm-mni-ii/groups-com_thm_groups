@@ -67,9 +67,9 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 		$showPageTitle   = $params->get('show_page_heading', 0);
 		if ($showPageTitle)
 		{
-			$defaultPageTitle = JText::_('COM_THM_GROUPS_QUICKPAGE_MANAGER_TITLE');
+			$defaultPageTitle = JText::_('COM_THM_GROUPS_QUICKPAGE_CONTENT_MANAGER');
 			$menuTitle        = $params->get('page_title', '');
-			$this->pageTitle .= empty($menuTitle) ? $defaultPageTitle : $menuTitle;
+			$this->pageTitle  .= empty($menuTitle) ? $defaultPageTitle : $menuTitle;
 		}
 
 		parent::display($tpl);
@@ -93,11 +93,11 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 			);
 
 			$attribs = array(
-				'title' => JText::_('COM_THM_QUICKPAGES_HTML_CREATE'),
+				'title' => JText::_('COM_THM_GROUPS_NEW_ARTICLE'),
 				'class' => 'btn'
 			);
 
-			$text = '<span class="icon-new"></span> ' . JText::_('COM_THM_GROUPS_QUICKPAGES_CREATE_NEW_ARTICLE');
+			$text = '<span class="icon-new"></span> ' . JText::_('COM_THM_GROUPS_NEW_ARTICLE');
 
 			return JHTML::_('link', $addURL, $text, $attribs);
 
@@ -105,7 +105,7 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 		else
 		{
 			return '<span class="qp_icon_big qp_create_icon_disabled"><span class="qp_invisible_text">' .
-			JText::_('COM_THM_GROUPS_QUICKPAGES_CREATE_NEW_ARTICLE') . '</span></span>';
+				JText::_('COM_THM_GROUPS_NEW_ARTICLE') . '</span></span>';
 		}
 	}
 
@@ -116,11 +116,11 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 	 */
 	public function getProfileButton()
 	{
-		$userID    = JFactory::getUser()->id;
-		$groupID   = THM_GroupsHelperProfile::getDefaultGroup(JFactory::getUser()->id, 2);
-		$surname   = THM_GroupsHelperProfile::getAttributeValue(JFactory::getUser()->id, 2);
-		$buttonURL = "index.php?view=profile&layout=default&userID=$userID&name=$surname";
-		$buttonURL .= empty($groupID) ? '' : "&groupID=$groupID";
+		$userID      = JFactory::getUser()->id;
+		$groupID     = THM_GroupsHelperProfile::getDefaultGroup(JFactory::getUser()->id, 2);
+		$surname     = THM_GroupsHelperProfile::getAttributeValue(JFactory::getUser()->id, 2);
+		$buttonURL   = "index.php?view=profile&layout=default&userID=$userID&name=$surname";
+		$buttonURL   .= empty($groupID) ? '' : "&groupID=$groupID";
 		$buttonRoute = JRoute::_($buttonURL);
 
 		$buttonText = '<span class="icon-user"></span>' . JText::_('COM_THM_GROUPS_MY_PROFILE');
@@ -239,17 +239,17 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 		$surname = THM_GroupsHelperProfile::getAttributeValue(JFactory::getUser()->id, 2);
 		$menuID  = JFactory::getApplication()->input->getInt('Itemid', 0);
 
-		$returnURL = base64_encode("index.php?option=com_thm_groups&view=quickpage_manager&Itemid=$menuID");
-		$editURL   = 'index.php?option=com_content&task=article.edit';
-		$editURL .= "&Itemid=$menuID'&a_id=$item->id&return=$returnURL";
+		$returnURL    = base64_encode("index.php?option=com_thm_groups&view=quickpage_manager&Itemid=$menuID");
+		$editURL      = 'index.php?option=com_content&task=article.edit';
+		$editURL      .= "&Itemid=$menuID'&a_id=$item->id&return=$returnURL";
 		$editRoute    = JRoute::_($editURL);
 		$titleAttribs = array('title' => JText::_('COM_THM_GROUPS_EDIT'));
 		$titleLink    = JHTML::_('link', $editRoute, $item->title, $titleAttribs);
 
 
-		$viewText = '<span class="icon-eye-open"></span>';
-		$qpURL    = 'index.php?option=com_thm_groups&view=singlearticle';
-		$qpURL .= "&id=$item->id&nameqp=$item->alias&userID=$userID&name=$surname";
+		$viewText    = '<span class="icon-eye-open"></span>';
+		$qpURL       = 'index.php?option=com_thm_groups&view=singlearticle';
+		$qpURL       .= "&id=$item->id&nameqp=$item->alias&userID=$userID&name=$surname";
 		$qpRoute     = JRoute::_($qpURL, false);
 		$editAttribs = array('title' => JText::_('COM_THM_GROUPS_VIEW'), 'class' => 'jgrid');
 		$editLink    = JHTML::_('link', $qpRoute, $viewText, $editAttribs);
@@ -293,8 +293,8 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 
 		$menuID = JFactory::getApplication()->input->getInt('Itemid', 0);
 		$url    = "index.php?option=com_thm_groups&task=quickpage.toggle&id=$id&value=$toggleValue&Itemid=$menuID";
-		$url .= empty($attribute) ? '' : "&attribute=$attribute";
-		$link = JHtml::_('link', $url, $icon, $attributes);
+		$url    .= empty($attribute) ? '' : "&attribute=$attribute";
+		$link   = JHtml::_('link', $url, $icon, $attributes);
 
 		return $link;
 	}

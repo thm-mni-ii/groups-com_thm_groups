@@ -47,7 +47,7 @@ class THM_GroupsViewTemplate_Edit extends THM_GroupsViewEdit
 		}
 
 		$allAttributes = THM_GroupsHelperProfile::getAllAttributes();
-		$id    = JFactory::getApplication()->input->getInt('id', 0);
+		$id            = JFactory::getApplication()->input->getInt('id', 0);
 		if (empty($id))
 		{
 			$this->attributes = $allAttributes;
@@ -133,13 +133,13 @@ class THM_GroupsViewTemplate_Edit extends THM_GroupsViewEdit
 	 */
 	public function renderRadioBtn($name, $attribute, $defaultValue)
 	{
-		$data = [];
-		$data['id'] = 'jform_attributes_' . str_replace(' ', '', $attribute->id) . "_$name";
-		$data['name'] = "jform[attributes][$attribute->id][$name]";
-		$data['class'] = 'btn-group btn-group-yesno';
+		$data            = [];
+		$data['id']      = 'jform_attributes_' . str_replace(' ', '', $attribute->id) . "_$name";
+		$data['name']    = "jform[attributes][$attribute->id][$name]";
+		$data['class']   = 'btn-group btn-group-yesno';
 		$data['default'] = $defaultValue;
 		$data['options'] = [['value' => 1, 'text' => 'JYES'], ['value' => 0, 'text' => 'JNO']];
-		$layout = new JLayoutFile('radio', $basePath = JPATH_ROOT . '/media/com_thm_groups/layouts/field');
+		$layout          = new JLayoutFile('radio', $basePath = JPATH_ROOT . '/media/com_thm_groups/layouts/field');
 
 		return $layout->render($data);
 	}

@@ -46,7 +46,7 @@ if ($view == "articles")
 	// Access check.
 	if (!$userHasEnabledQuickpage || !$quickpageGlobalEnabled)
 	{
-		return JError::raiseWarning(404, JText::_('COM_THM_QUICKPAGES_NOT_ENABLED'));
+		return JError::raiseWarning(404, JText::_('COM_THM_GROUPS_NO_ARTICLES_ENABLED'));
 	}
 
 
@@ -84,7 +84,7 @@ elseif ($view == 'qp_categories')
 	}
 	else
 	{
-		return JError::raiseWarning(404, JText::_("COM_THM_QUICKPAGES_NO_RIGHTS_TO_CREATE_CATEGORY"));
+		return JError::raiseWarning(404, JText::_("COM_THM_GROUPS_NOT_ALLOWED"));
 	}
 }
 else

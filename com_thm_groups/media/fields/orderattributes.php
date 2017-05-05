@@ -57,7 +57,7 @@ class JFormFieldOrderAttributes extends JFormField
 			array_push($arrOrderAtt, 4);
 		}
 
-		$orderSelect .= '<div id="nodroppable"  value="1" ><span>' . JText::_('LIB_THM_GROUPS_TITLE')
+		$orderSelect .= '<div id="nodroppable"  value="1" ><span>' . JText::_('COM_THM_GROUPS_TITLE')
 			. '</span></div>';
 
 		$orderSelect .= '<ul id="paramsattr" class="listContent" name="' . $tagname . '">';
@@ -82,10 +82,10 @@ class JFormFieldOrderAttributes extends JFormField
 				switch ($value)
 				{
 					case 2:
-						$orderSelect .= JText::_('LIB_THM_GROUPS_VORNAME');
+						$orderSelect .= JText::_('COM_THM_GROUPS_FORENAME');
 						break;
 					case 3:
-						$orderSelect .= JText::_('LIB_THM_GROUPS_NACHNAME');
+						$orderSelect .= JText::_('COM_THM_GROUPS_SURNAME');
 						break;
 				}
 				$orderSelect .= '</li>';
@@ -94,15 +94,15 @@ class JFormFieldOrderAttributes extends JFormField
 		else
 		{
 			// Initialize the selectbox if no params are saved
-			$orderSelect .= '<li value="3" id="item"  class="listItem" >' . JText::_('LIB_THM_GROUPS_NACHNAME')
+			$orderSelect .= '<li value="3" id="item"  class="listItem" >' . JText::_('COM_THM_GROUPS_SURNAME')
 				. '</li>';
-			$orderSelect .= '<li value="2" id="item"  class="listItem">' . JText::_('LIB_THM_GROUPS_VORNAME')
+			$orderSelect .= '<li value="2" id="item"  class="listItem">' . JText::_('COM_THM_GROUPS_FORENAME')
 				. '</li>';
-			$orderAtt = '1,3,2,4';
+			$orderAtt    = '1,3,2,4';
 		}
 		$orderSelect .= '</ul>';
 
-		$orderSelect .= '<div id="nodroppable" value="4"><span>' . JText::_('LIB_THM_GROUPS_POST_TITLE')
+		$orderSelect .= '<div id="nodroppable" value="4"><span>' . JText::_('COM_THM_GROUPS_POSTTITLE')
 			. '</span></div></div>';
 
 		$orderSelect .= '<input type="hidden" id="resultOrder" value= "' . $orderAtt . '" name="' . $tagname . '"/>';

@@ -9,5 +9,5 @@
  */
 function delRow(e)
 {
-    e.parentNode.parentNode.parentNode.removeChild(e.parentNode.parentNode);
+	e.parentNode.parentNode.parentNode.removeChild(e.parentNode.parentNode);
 }

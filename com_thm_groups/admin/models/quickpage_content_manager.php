@@ -125,7 +125,7 @@ class THM_GroupsModelQuickpage_Content_Manager extends THM_CoreModelList
 
 		if (!empty($rootCategory))
 		{
-			$items  = parent::getItems();
+			$items = parent::getItems();
 		}
 		else
 		{
@@ -183,7 +183,7 @@ class THM_GroupsModelQuickpage_Content_Manager extends THM_CoreModelList
 		$headers['title']     = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_TITLE', 'title', $direction, $ordering);
 		$headers['author']    = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_AUTHOR', 'author_name', $direction, $ordering);
 		$headers['published'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_PUBLISH', 'qp_published', $direction, $ordering);
-		$headers['featured']  = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_QUICKPAGE_MENU_DISPLAY', 'qp_featured', $direction, $ordering);
+		$headers['featured']  = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_PROFILE_MENU', 'qp_featured', $direction, $ordering);
 		$headers['status']    = JHtml::_('searchtools.sort', 'JSTATUS', 'content.state', $direction, $ordering);
 		$headers['id']        = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'content.id', $direction, $ordering);
 
@@ -219,11 +219,11 @@ class THM_GroupsModelQuickpage_Content_Manager extends THM_CoreModelList
 
 		$archived = $item->state == 2 ? true : false;
 		$action   = $archived ? 'unarchive' : 'archive';
-		$status .= JHtml::_('actionsdropdown.' . $action, 'cb' . $index, $controllerName);
+		$status   .= JHtml::_('actionsdropdown.' . $action, 'cb' . $index, $controllerName);
 
 		$trashed = $item->state == -2 ? true : false;
 		$action  = $trashed ? 'untrash' : 'trash';
-		$status .= JHtml::_('actionsdropdown.' . $action, 'cb' . $index, $controllerName);
+		$status  .= JHtml::_('actionsdropdown.' . $action, 'cb' . $index, $controllerName);
 
 		$status .= JHtml::_('actionsdropdown.render', JFactory::getDbo()->escape($item->title));
 		$status .= "</div>";

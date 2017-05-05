@@ -64,9 +64,9 @@
                     required="true"
                     description="COM_THM_GROUPS_LIST_VIEW_PARAM_SHOW_STRUCTURE_DESCRIPTION">
                 <option value="0">COM_THM_GROUPS_TITLE</option>
-                <option value="1">COM_THM_GROUPS_VORNAME</option>
-                <option value="2">COM_THM_GROUPS_NACHNAME</option>
-                <option value="3">COM_THM_GROUPS_LIST_VIEW_PARAM_POSTTITLE</option>
+                <option value="1">COM_THM_GROUPS_FORENAME</option>
+                <option value="2">COM_THM_GROUPS_SURNAME</option>
+                <option value="3">COM_THM_GROUPS_POSTTITLE</option>
             </field>
         </fieldset>
         <fieldset name="advanced">

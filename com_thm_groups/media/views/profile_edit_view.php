@@ -99,7 +99,7 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 		$button = '<button id="' . $name . '_del" class="btn image-button" ';
 		$button .= 'onclick="deletePic(\'' . $name . '\', \'' . $attributeID . '\', \'' . $userID . '\');" ';
 		$button .= 'type="button">';
-		$button .= '<span class="icon-delete"></span>' . JText::_('COM_THM_QUICKPAGES_TRASH');
+		$button .= '<span class="icon-delete"></span>' . JText::_('COM_THM_GROUPS_DELETE');
 		$button .= '</button>';
 
 		return $button;
@@ -270,11 +270,11 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 		$rowNumber++;
 
 		JFactory::getSession()->set($name . "_rowCount", $rowNumber);
-		$tableBody .= "</tbody>";
-		$table .= $tableHead . $tableBody . "</table>";
-		$add = '<div class="add-container">';
-		$add .= '<div class="add-label">Add row</div>';
-		$add .= '<div class="add-data">';
+		$tableBody   .= "</tbody>";
+		$table       .= $tableHead . $tableBody . "</table>";
+		$add         = '<div class="add-container">';
+		$add         .= '<div class="add-label">Add row</div>';
+		$add         .= '<div class="add-data">';
 		$columnCount = 1;
 
 		foreach ($tableData[0] as $title => $value)
@@ -291,7 +291,7 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 		$add .= 'Add to Table';
 		$add .= '</button>';
 
-		$add .= "</div>";
+		$add    .= "</div>";
 		$output = '<div class="table-container">' . $table . $add . '</div>';
 
 		return $output;
@@ -343,15 +343,15 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 		$relevant = (!empty($options) AND !empty($options->required));
 		$required = $relevant ? $options->required : '';
 		$html     = '<input type="text" ';
-		$html .= 'id="jform_' . $attribute['name'] . '" ';
-		$html .= 'name="jform[' . $attribute['name'] . '][value]" ';
-		$html .= 'class="hasTooltip" ';
-		$html .= 'data="" ';
-		$html .= 'data-original-title="' . $attribute['description'] . '" ';
-		$html .= 'data-placement="right" ';
-		$html .= 'data-req="' . $required . '" ';
-		$html .= 'onchange="validateInput(\'' . $attribute['regex'] . '\', \'jform_' . $attribute['name'] . '\')" ';
-		$html .= 'value="' . $attribute['value'] . '" />';
+		$html     .= 'id="jform_' . $attribute['name'] . '" ';
+		$html     .= 'name="jform[' . $attribute['name'] . '][value]" ';
+		$html     .= 'class="hasTooltip" ';
+		$html     .= 'data="" ';
+		$html     .= 'data-original-title="' . $attribute['description'] . '" ';
+		$html     .= 'data-placement="right" ';
+		$html     .= 'data-req="' . $required . '" ';
+		$html     .= 'onchange="validateInput(\'' . $attribute['regex'] . '\', \'jform_' . $attribute['name'] . '\')" ';
+		$html     .= 'value="' . $attribute['value'] . '" />';
 
 		return $html;
 	}

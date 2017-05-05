@@ -45,7 +45,7 @@ class JFormFieldRoleItemSelect extends JFormField
 
 		// Add script-code to the document head
 		$app = JFactory::getApplication()->input;
-		$id = $app->get('cid');
+		$id  = $app->get('cid');
 		if (isset($id))
 		{
 			$id = $id[0];

@@ -1,29 +1,28 @@
-#user_header
-{
+#user_header {
     height: 30px;
     width: 100%;
 }
-#header_left
-{
+
+#header_left {
     height: 30px;
     width: 500px;
     float: left;
 }
-#header_right
-{
+
+#header_right {
     float: left;
     text-align: right;
 }
-.edit_img
-{
+
+.edit_img {
     display: block;
-    max-width:500px;
-    max-height:240px;
+    max-width: 500px;
+    max-height: 240px;
     width: auto;
     height: auto;
 }
-.modal.fade
-{
+
+.modal.fade {
     z-index: -1050;
     top: -25%;
     -webkit-transition: opacity 0.3s linear, top 0.3s ease-out;
@@ -32,12 +31,12 @@
     -o-transition: opacity 0.3s linear, top 0.3s ease-out;
     transition: opacity 0.3s linear, top 0.3s ease-out;
 }
-.modal.fade.in
-{
+
+.modal.fade.in {
     z-index: 1050;
     top: 50%;
 }
-.chzn-container-multi
-{
+
+.chzn-container-multi {
     float: left;
 }

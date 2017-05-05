@@ -18,7 +18,7 @@ $session = JFactory::getSession();
 <script>jQf = jQuery.noConflict();</script>
 
 <form id="adminForm" name="adminForm" class="form-horizontal"
-      action="index.php?option=com_thm_groups" method="post" enctype="multipart/form-data">
+	  action="index.php?option=com_thm_groups" method="post" enctype="multipart/form-data">
 	<div class="form-horizontal">
 		<div id="user" class="tab-pane active">
 			<?php
@@ -30,9 +30,9 @@ $session = JFactory::getSession();
 			<div class='control-group'>
 				<div class='control-label'>
 					<label id='jform_<?php echo $name; ?>-lbl'
-					       class=''
-					       for='jform_<?php echo $name; ?>'
-					       aria-invalid='false'><?php echo $name; ?>
+						   class=''
+						   for='jform_<?php echo $name; ?>'
+						   aria-invalid='false'><?php echo $name; ?>
 					</label>
 				</div>
 				<div id='jform_<?php echo $name; ?>_box' class='controls'>

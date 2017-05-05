@@ -240,7 +240,7 @@ class THM_GroupsModelDB_Data_Manager extends JModelLegacy
 		$newContent = '<table class="table table-striped">';
 		$newContent .= '<thead>';
 		$newContent .= '<tr>';
-		$head = explode(';', $tableHeader->value);
+		$head       = explode(';', $tableHeader->value);
 
 		if (empty($head))
 		{

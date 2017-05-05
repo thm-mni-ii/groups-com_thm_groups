@@ -683,7 +683,7 @@ class THM_GroupsQuickpagesData
 			{
 				$needles['category']   = array_reverse($category->getPath());
 				$needles['categories'] = $needles['category'];
-				$link .= '&catid=' . $catid;
+				$link                  .= '&catid=' . $catid;
 			}
 		}
 

@@ -58,7 +58,7 @@ class THM_GroupsViewQuickpage_Content_Manager extends THM_CoreViewList
 			JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_QUICKPAGE_CONTENT_MANAGER'), 'quickpage_content_manager'
 		);
 
-		$user = JFactory::getUser();
+		$user         = JFactory::getUser();
 		$rootCategory = THMLibThmQuickpages::getQuickpagesRootCategory();
 
 		if ($user->authorise('core.manage', 'com_thm_groups') AND !empty($rootCategory))

@@ -114,8 +114,8 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_attribute` (
   `name`           VARCHAR(255) NOT NULL,
   `options`        TEXT         NULL,
   `description`    TEXT         NULL,
-  `published`      TINYINT(1)   DEFAULT 0,
-  `ordering`       TINYINT(1)   DEFAULT 0,
+  `published`      TINYINT(1)            DEFAULT 0,
+  `ordering`       TINYINT(1)            DEFAULT 0,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`dynamic_typeID`) REFERENCES `#__thm_groups_dynamic_type` (`id`)
     ON UPDATE CASCADE
@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_attribute` (
   UNIQUE INDEX `name_UNIQUE` (`name` ASC)
 )
   ENGINE = InnoDB
-  AUTO_INCREMENT =100;
+  AUTO_INCREMENT = 100;
 
 INSERT INTO `#__thm_groups_attribute` (`id`, `name`, `dynamic_typeID`, `description`, `options`) VALUES
   (1, 'Vorname', 1, '', '{"length":40, "required":false}'),

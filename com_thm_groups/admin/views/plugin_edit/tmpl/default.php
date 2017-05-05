@@ -26,11 +26,11 @@ defined('_JEXEC') or die; ?>
 	}
 </script>
 <form action="index.php?option=com_thm_groups&view=plugin_edit"
-      enctype="multipart/form-data"
-      method="post"
-      name="adminForm"
-      id="item-form"
-      class="form-horizontal">
+	  enctype="multipart/form-data"
+	  method="post"
+	  name="adminForm"
+	  id="item-form"
+	  class="form-horizontal">
 	<div class="form-horizontal">
 		<div class="span3">
 			<fieldset class="form-vertical">

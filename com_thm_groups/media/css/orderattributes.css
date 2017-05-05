@@ -1,34 +1,34 @@
 .listContent {
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-	width: 10%;
-	margin-bottom: 0.3em;
-	margin-top: 0.3em;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 10%;
+    margin-bottom: 0.3em;
+    margin-top: 0.3em;
 }
 
 .listContent li {
 
-	margin: 0 3px 3px 3px;
-	padding: 0.4em;
-	padding-left: 1.5em;
-	height: 18px;
-	width: 8.8em;
+    margin: 0 3px 3px 3px;
+    padding: 0.4em;
+    padding-left: 1.5em;
+    height: 18px;
+    width: 8.8em;
 }
 
 #item {
-	background: repeat-x scroll 50% 50% #e6e6e6;
-	border: 1px solid #d3d3d3;
-	color: #555555;
-	font-weight: normal;
+    background: repeat-x scroll 50% 50% #e6e6e6;
+    border: 1px solid #d3d3d3;
+    color: #555555;
+    font-weight: normal;
 }
 
 #nodroppable {
-	background: repeat-x scroll 50% 50% #e9eaed;;
-	border: 1px solid;
-	font-weight: normal;
-	clear: both;
-	width: 10.7em;
-	margin-left: 0.2em;
-	opacity: 0.35;
+    background: repeat-x scroll 50% 50% #e9eaed;;
+    border: 1px solid;
+    font-weight: normal;
+    clear: both;
+    width: 10.7em;
+    margin-left: 0.2em;
+    opacity: 0.35;
 }

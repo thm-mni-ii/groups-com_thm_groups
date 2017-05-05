@@ -100,7 +100,7 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
 		$headers             = array();
 		$headers['checkbox'] = '';
 		$headers['id']       = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'r.id', $direction, $ordering);
-		$headers['name']     = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ROLE_NAME'), 'r.name', $direction, $ordering);
+		$headers['name']     = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 'r.name', $direction, $ordering);
 		$headers['groups']   = JText::_('COM_THM_GROUPS_GROUPS');
 
 		return $headers;

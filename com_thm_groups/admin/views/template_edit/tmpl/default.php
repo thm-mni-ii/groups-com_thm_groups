@@ -13,7 +13,7 @@
 defined('_JEXEC') or die;
 ?>
 <form action="index.php?option=com_thm_groups" enctype="multipart/form-data" method="post" name="adminForm"
-      id="item-form" class="form-horizontal">
+	  id="item-form" class="form-horizontal">
 	<div class="form-horizontal">
 		<div class="span12">
 			<fieldset class="form-vertical">
@@ -27,22 +27,22 @@ defined('_JEXEC') or die;
 		<thead>
 		<tr>
 			<th><span class="hasTooltip"
-			          title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_ORDER', 'COM_THM_GROUPS_ORDER_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_ORDER'); ?></span>
+					  title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_ORDER', 'COM_THM_GROUPS_ORDER_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_ORDER'); ?></span>
 			</th>
 			<th><span class="hasTooltip"
-			          title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_LABEL', 'COM_THM_GROUPS_TEMPLATE_EDIT_LABEL_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_LABEL'); ?></span>
+					  title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_LABEL', 'COM_THM_GROUPS_TEMPLATE_EDIT_LABEL_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_LABEL'); ?></span>
 			</th>
 			<th><span class="hasTooltip"
-			          title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_PUBLISHED', 'COM_THM_GROUPS_TEMPLATE_EDIT_PUBLISHED_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_PUBLISHED'); ?></span>
+					  title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_PUBLISHED', 'COM_THM_GROUPS_TEMPLATE_EDIT_PUBLISHED_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_PUBLISHED'); ?></span>
 			</th>
 			<th><span class="hasTooltip"
-			          title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_SHOW_ICON', 'COM_THM_GROUPS_TEMPLATE_EDIT_SHOW_ICON_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_SHOW_ICON'); ?></span>
+					  title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_SHOW_ICON', 'COM_THM_GROUPS_TEMPLATE_EDIT_SHOW_ICON_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_SHOW_ICON'); ?></span>
 			</th>
 			<th><span class="hasTooltip"
-			          title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_SHOW_LABEL', 'COM_THM_GROUPS_TEMPLATE_EDIT_SHOW_LABEL_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_SHOW_LABEL'); ?></span>
+					  title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_SHOW_LABEL', 'COM_THM_GROUPS_TEMPLATE_EDIT_SHOW_LABEL_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_SHOW_LABEL'); ?></span>
 			</th>
 			<th><span class="hasTooltip"
-			          title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_WRAP', 'COM_THM_GROUPS_TEMPLATE_EDIT_WRAP_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_WRAP'); ?></span>
+					  title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_WRAP', 'COM_THM_GROUPS_TEMPLATE_EDIT_WRAP_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_WRAP'); ?></span>
 			</th>
 		</tr>
 		</thead>

@@ -1,67 +1,114 @@
 div.manager-page .page-header {
-  float: left; }
-  div.manager-page .page-header h2 {
-    display: inline-block; }
+    float: left;
+}
+
+div.manager-page .page-header h2 {
+    display: inline-block;
+}
+
 div.manager-page .toolbar {
-  display: inline-block;
-  float: right; }
+    display: inline-block;
+    float: right;
+}
+
 div.manager-page button, div.manager-page a.btn {
-  background-color: #4a5c66;
-  border: 2px solid white;
-  color: white;
-  margin-left: 10px;
-  margin-bottom: 20px;
-  padding: 4px 8px; }
-  div.manager-page button span:before, div.manager-page a.btn span:before {
-    color: white; }
-  div.manager-page button:hover, div.manager-page a.btn:hover {
+    background-color: #4a5c66;
+    border: 2px solid white;
+    color: white;
+    margin-left: 10px;
+    margin-bottom: 20px;
+    padding: 4px 8px;
+}
+
+div.manager-page button span:before, div.manager-page a.btn span:before {
+    color: white;
+}
+
+div.manager-page button:hover, div.manager-page a.btn:hover {
     background-color: white;
     color: #4a5c66;
-    border: 1px solid #77858c; }
-    div.manager-page button:hover span:before, div.manager-page a.btn:hover span:before {
-      color: #4a5c66; }
+    border: 1px solid #77858c;
+}
+
+div.manager-page button:hover span:before, div.manager-page a.btn:hover span:before {
+    color: #4a5c66;
+}
+
 div.manager-page .btn-group {
-  display: inline-block;
-  background-color: white;
-  border: 1px solid #77858c;
-  border-radius: 0; }
-  div.manager-page .btn-group .dropdown-toggle {
+    display: inline-block;
+    background-color: white;
+    border: 1px solid #77858c;
+    border-radius: 0;
+}
+
+div.manager-page .btn-group .dropdown-toggle {
     text-align: left;
-    width: 140px; }
-    div.manager-page .btn-group .dropdown-toggle span:before {
-      color: #394a59; }
-  div.manager-page .btn-group.open .dropdown-toggle, div.manager-page .btn-group a, div.manager-page .btn-group a:hover {
+    width: 140px;
+}
+
+div.manager-page .btn-group .dropdown-toggle span:before {
+    color: #394a59;
+}
+
+div.manager-page .btn-group.open .dropdown-toggle, div.manager-page .btn-group a, div.manager-page .btn-group a:hover {
     background-color: white;
     border: none;
     box-shadow: none;
     color: #394a59;
-    margin-bottom: 0; }
-  div.manager-page .btn-group ul {
+    margin-bottom: 0;
+}
+
+div.manager-page .btn-group ul {
     margin: 0;
-    padding: 0; }
-  div.manager-page .btn-group li {
-    margin: 0; }
-    div.manager-page .btn-group li a {
-      padding: 6px 10px; }
-      div.manager-page .btn-group li a:hover {
-        background: #dfe5e6; }
+    padding: 0;
+}
+
+div.manager-page .btn-group li {
+    margin: 0;
+}
+
+div.manager-page .btn-group li a {
+    padding: 6px 10px;
+}
+
+div.manager-page .btn-group li a:hover {
+    background: #dfe5e6;
+}
+
 div.manager-page [class^="icon-"], div.manager-page [class*=" icon-"] {
-  margin-right: 5px; }
+    margin-right: 5px;
+}
+
 div.manager-page .btn-column {
-  text-align: center;
-  width: 40px; }
+    text-align: center;
+    width: 40px;
+}
+
 div.manager-page th span:before {
-  color: white; }
+    color: white;
+}
+
 div.manager-page td span.status-container {
-  margin-right: 8px;
-  vertical-align: middle; }
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
 div.manager-page td span.green:before {
-  color: #409740; }
+    color: #409740;
+}
+
 div.manager-page td span.red:before {
-  color: #942a25; }
+    color: #942a25;
+}
+
 div.manager-page td a:nth-child(2) {
-  margin-left: 8px; }
+    margin-left: 8px;
+}
+
 div.manager-page .dropdown-menu {
-  border-radius: 0; }
+    border-radius: 0;
+}
+
 div.manager-page input[type="checkbox"] {
-  display: none; }
+    display: none;
+}

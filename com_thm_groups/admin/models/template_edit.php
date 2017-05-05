@@ -66,7 +66,7 @@ class THM_GroupsModelTemplate_Edit extends THM_GroupsModelEdit
 	 */
 	public function getNoSelectAttribute($profilID)
 	{
-		$dbo = JFactory::getDbo();
+		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
 		if ($profilID == 0)
 		{
@@ -90,11 +90,13 @@ class THM_GroupsModelTemplate_Edit extends THM_GroupsModelEdit
 		catch (Exception $exception)
 		{
 			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
 			return false;
 		}
 	}
 
 	// TODO REFACTOR
+
 	/**
 	 * Transform a List of Attribute with Database format in
 	 * Json format
@@ -109,7 +111,7 @@ class THM_GroupsModelTemplate_Edit extends THM_GroupsModelEdit
 		$dbo->setQuery('SET group_concat_max_len = 1000000000;');
 		$dbo->execute();
 		$jsonquery = $dbo->getQuery(true);
-		$query = $dbo->getQuery(true);
+		$query     = $dbo->getQuery(true);
 		$query->select(" A.attributeID as attrid")
 			->select(" A.order as attrorder")
 			->select(" A.params as attrParam")
@@ -134,6 +136,7 @@ class THM_GroupsModelTemplate_Edit extends THM_GroupsModelEdit
 		catch (Exception $exception)
 		{
 			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
 			return false;
 		}
 	}

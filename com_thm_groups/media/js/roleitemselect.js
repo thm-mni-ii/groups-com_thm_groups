@@ -15,21 +15,21 @@ jQuery.noConflict();
 
 jQuery(document).ready(function ()
 {
-    jQuery("#paramsattr").sortable({
-        stop: function (event, ui)
-        {
-            var listul = [];
-            jQuery('#paramsattr li').each(function ()
-            {
-                if (jQuery(this).val() != 0)
-                {
-                    listul.push(jQuery(this).val());
-                }
-            });
-            var result = listul.toString();
-            console.log(result);
-            jQuery("#sortedgrouproles").val(result);
-        }
-    });
+	jQuery("#paramsattr").sortable({
+		stop: function (event, ui)
+		{
+			var listul = [];
+			jQuery('#paramsattr li').each(function ()
+			{
+				if (jQuery(this).val() != 0)
+				{
+					listul.push(jQuery(this).val());
+				}
+			});
+			var result = listul.toString();
+			console.log(result);
+			jQuery("#sortedgrouproles").val(result);
+		}
+	});
 });
 

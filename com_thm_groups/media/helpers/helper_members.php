@@ -80,10 +80,10 @@ class THMGroupsModelMembers
 		}
 		$strucitems = self::getStrucktur();
 		$result     = '<table width= "50%" align="center"><tr>' .
-			'<th description = "Displays attributes">' . JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_ATTRIBUTE') . '</th>' .
-			'<th description = "Displays a label of an attribute ">' . JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_SHOW') . '</th>' .
-			'<th description = "Displays a value of a label">' . JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_NAME') . '</th>' .
-			'<th description = "Line break"> ' . JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_WRAP') . '</th>' .
+			'<th description = "Displays attributes">' . JText::_('COM_THM_GROUPS_ATTRIBUTE') . '</th>' .
+			'<th description = "Displays a label of an attribute ">' . JText::_('COM_THM_GROUPS_SHOW') . '</th>' .
+			'<th description = "Displays a value of a label">' . JText::_('COM_THM_GROUPS_NAME') . '</th>' .
+			'<th description = "Line break"> ' . JText::_('COM_THM_GROUPS_WRAP') . '</th>' .
 			'<tr></tr>' .
 			'<tr>' .
 			'<td></td>' .
@@ -187,7 +187,7 @@ class THMGroupsModelMembers
 		$list = $db->loadObjectList();
 
 		$html = '<select name="' . $this->name . '" id="sel" size="1" id="paramsdefault_user" class="styled">' . "<option value=''>"
-			. JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_CHOICE') . "</option>";
+			. JText::_('COM_THM_GROUPS_SELECT_USER') . "</option>";
 		foreach ($list as $user)
 		{
 			$sel = '';
@@ -257,7 +257,7 @@ class THMGroupsModelMembers
 		$list = $db->loadObjectList();
 
 		$html = '<select name="' . $name . '" id="' . $name . '" size="1" id="paramsdefault_user" class="styled">'
-			. "<option value=''>" . JText::_('COM_THM_GROUPS_EDITORS_XTD_MEMBERS_GROUPS_LIST') . "</option>";
+			. "<option value=''>" . JText::_('COM_THM_GROUPS_SELECT_GROUP') . "</option>";
 		foreach ($list as $group)
 		{
 			$sel = '';

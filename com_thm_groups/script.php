@@ -447,7 +447,7 @@ class Com_THM_GroupsInstallerScript
 	/**
 	 * Uninstall runs before any other action is taken (file removal or database processing).
 	 *
-	 * @param   string $parent  is the class calling this method
+	 * @param   string $parent is the class calling this method
 	 */
 	public function uninstall($parent)
 	{
@@ -478,19 +478,19 @@ class Com_THM_GroupsInstallerScript
 			return false;
 		}
 
-		$isImageFolderCreated = $this->createImageFolder();
-		$isDefPictureCopied = $this->copyDefaultPictureToImagesFolder();
+		$isImageFolderCreated            = $this->createImageFolder();
+		$isDefPictureCopied              = $this->copyDefaultPictureToImagesFolder();
 		$isDefImgPathByDynTypesRewritten = $this->rewriteDefaultImagePathByDynamicTypes();
-		$isDefImgPathByAttrsRewritten = $this->rewriteDefaultImagePathByAttributes();
-		$isAttributeEmailUpdated = $this->updateEmailAttribute();
-		$isTemplatesUpdated = $this->updateTemplatesToNewStructure();
+		$isDefImgPathByAttrsRewritten    = $this->rewriteDefaultImagePathByAttributes();
+		$isAttributeEmailUpdated         = $this->updateEmailAttribute();
+		$isTemplatesUpdated              = $this->updateTemplatesToNewStructure();
 
 		$isOk = ($isImageFolderCreated
-				AND $isDefPictureCopied
-				AND $isDefImgPathByDynTypesRewritten
-				AND $isDefImgPathByAttrsRewritten
-				AND $isAttributeEmailUpdated
-				AND $isTemplatesUpdated
+			AND $isDefPictureCopied
+			AND $isDefImgPathByDynTypesRewritten
+			AND $isDefImgPathByAttrsRewritten
+			AND $isAttributeEmailUpdated
+			AND $isTemplatesUpdated
 		);
 
 		return $isOk ? true : false;
@@ -523,30 +523,33 @@ class Com_THM_GroupsInstallerScript
 			{
 				$app->enqueueMessage(JText::_('COM_THM_GROUPS_TEMPLATE_MANAGER_ERROR_GET_TEMPLATE_ATTRIBUTES'), 'error');
 				$dbo->transactionRollback();
+
 				return false;
 			}
 			foreach ($templateAttributes as $attribute)
 			{
-				$oldParams = json_decode($attribute->params);
-				$newParams = new stdClass;
+				$oldParams            = json_decode($attribute->params);
+				$newParams            = new stdClass;
 				$newParams->showLabel = ((boolean) $oldParams->label) == true ? 1 : 0;
-				$newParams->showIcon = 1;
-				$newParams->wrap = ((boolean) $oldParams->wrap) == true ? 1 : 0;
-				$attribute->params = json_encode($newParams);
+				$newParams->showIcon  = 1;
+				$newParams->wrap      = ((boolean) $oldParams->wrap) == true ? 1 : 0;
+				$attribute->params    = json_encode($newParams);
 				$attribute->published = 1;
 
 				JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_thm_groups/tables');
 				$profileAttribute = JTable::getInstance('Profile_Attribute', 'Table', []);
-				$success = $profileAttribute->save($attribute);
+				$success          = $profileAttribute->save($attribute);
 				if (!$success)
 				{
 					$app->enqueueMessage(JText::sprintf('COM_THM_GROUPS_TEMPLATE_MANAGER_ERROR_UPDATE_TEMPLATE_ATTRIBUTE', $attribute->attributeID), 'error');
 					$dbo->transactionRollback();
+
 					return false;
 				}
 			}
 
 			$dbo->transactionCommit();
+
 			return true;
 		}
 
@@ -560,7 +563,7 @@ class Com_THM_GroupsInstallerScript
 	 */
 	private function isOldStructureTemplateTableUsed()
 	{
-		$dbo = JFactory::getDbo();
+		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
 		$query->select('*')
 			->from('#__thm_groups_profile_attribute');
@@ -573,6 +576,7 @@ class Com_THM_GroupsInstallerScript
 		catch (Exception $exception)
 		{
 			JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_TEMPLATE_MANAGER_ERROR_GET_TEMPLATE_ATTRIBUTES'), 'error');
+
 			return false;
 		}
 

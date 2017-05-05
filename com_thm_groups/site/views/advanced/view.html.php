@@ -377,19 +377,19 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 		switch ($paramLinkTarget)
 		{
 			case "module":
-				$path = "index.php?option=com_thm_groups&view=advanced&layout=list&Itemid=";
+				$path   = "index.php?option=com_thm_groups&view=advanced&layout=list&Itemid=";
 				$result .= "<a href="
 					. JRoute::_($path . $itemid . '&userID=' . $userID . '&name=' . trim($lastName) . '&groupID=' . $groupID)
 					. ">";
 				break;
 			case "profile":
-				$path = 'index.php?option=com_thm_groups&view=profile&layout=default';
+				$path   = 'index.php?option=com_thm_groups&view=profile&layout=default';
 				$result .= "<a href="
 					. JRoute::_($path . '&userID=' . $userID . '&name=' . trim($lastName) . '&groupID=' . $groupID)
 					. ">";
 				break;
 			default:
-				$path = "index.php?option=com_thm_groups&view=advanced&layout=list&Itemid=";
+				$path   = "index.php?option=com_thm_groups&view=advanced&layout=list&Itemid=";
 				$result .= "<a href="
 					. JRoute::_($path . $itemid . '&userID=' . $userID . '&name=' . trim($lastName) . '&groupID=' . $groupID)
 					. ">";
@@ -460,19 +460,19 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 				$rowCounter++;
 
 				$cssListRowClass = ($rowCounter % 2) ? '_odd' : '_even';
-				$result .= '<div class="thm_groups_profile_container_list_row' . $cssListRowClass . '">';
+				$result          .= '<div class="thm_groups_profile_container_list_row' . $cssListRowClass . '">';
 			}
 
 			// Open Coloumn Wrapper Tag - Only for float-attribute, now is easy to work with width:100%
 			if ($countOfColoumns == 1)
 			{
 				$cssListColoumnClass = '_full';
-				$result .= '<div class="thm_groups_profile_container_list_coloumn_wrapper' . $cssListColoumnClass . '">';
+				$result              .= '<div class="thm_groups_profile_container_list_coloumn_wrapper' . $cssListColoumnClass . '">';
 			}
 			else
 			{
 				$cssListColoumnClass = ($elementCounter % $countOfColoumns == 0) ? '_left' : '_right';
-				$result .= '<div class="thm_groups_profile_container_list_coloumn_wrapper '
+				$result              .= '<div class="thm_groups_profile_container_list_coloumn_wrapper '
 					. ' col_med_6_advanced col-sm-6 span6 thm_groups_profile_container_list_coloumn_wrapper' . $cssListColoumnClass . '">';
 			}
 
@@ -496,7 +496,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 				{
 					case "2":
 						$lastName = $memberhead->value;
-						$result .= "<div id='" . $lastName . "' style='visibility:hidden;'></div>";
+						$result   .= "<div id='" . $lastName . "' style='visibility:hidden;'></div>";
 						break;
 					default:
 						if ($memberhead->type == "PICTURE" && $picture == null && $memberhead->publish)
@@ -537,20 +537,20 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 			if ($tempcanEdit)
 			{
 				$linkTitle = 'bearbeiten';
-				$data             = ['Itemid'  => $itemid,
-				                     'option'  => 'com_thm_groups',
-				                     'view'    => 'profile_edit',
-				                     'userID'  => $id,
-				                     'groupID' => $groupID,
-				                     'name'    => $lastName
+				$data      = ['Itemid'  => $itemid,
+				              'option'  => 'com_thm_groups',
+				              'view'    => 'profile_edit',
+				              'userID'  => $id,
+				              'groupID' => $groupID,
+				              'name'    => $lastName
 				];
 
-				$link = 'index.php?' . http_build_query($data);
+				$link   = 'index.php?' . http_build_query($data);
 				$result .= JHtml::link(JRoute::_($link), JHtml::image("media/com_thm_groups/images/edit.png", $linkTitle));
 			}
 
 			$result .= "</div>";
-			$wrap = true;
+			$wrap   = true;
 
 			// Rest des Profils darstellen
 			$result .= "<div>";
@@ -676,7 +676,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 					}
 					else
 					{
-						$wrap = false;
+						$wrap   = false;
 						$result .= " ";
 					}
 				}

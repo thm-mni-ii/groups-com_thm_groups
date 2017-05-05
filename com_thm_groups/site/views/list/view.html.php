@@ -101,11 +101,11 @@ class THM_GroupsViewList extends JViewLegacy
 					$displayedText .= $profile->forename . ' ';
 					break;
 				case 2:
-					$forenameIndex = array_search(FORENAME, $attributeOrder);
-					$displayedText .= $profile->surname;
+					$forenameIndex  = array_search(FORENAME, $attributeOrder);
+					$displayedText  .= $profile->surname;
 					$naturalOrder   = $index > $forenameIndex;
 					$forenameExists = !empty($profile->forename);
-					$displayedText .= ($naturalOrder OR !$forenameExists) ? ' ' : ', ';
+					$displayedText  .= ($naturalOrder OR !$forenameExists) ? ' ' : ', ';
 					break;
 				case 3:
 					$displayedText .= $profile->posttitle . ' ';

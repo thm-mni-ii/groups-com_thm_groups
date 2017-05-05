@@ -2,36 +2,73 @@
 /* com_thm_groups                                                          */
 /******************************************************************************/
 
-.tip-wrap{ z-index: 99; }
+.tip-wrap {
+    z-index: 99;
+}
 
-.adminForm div.m{ padding: 5px; }
+.adminForm div.m {
+    padding: 5px;
+}
 
-.toolbar-close{ font-size: 1em; }
+.toolbar-close {
+    font-size: 1em;
+}
 
-.cpanel{ width: 100%; margin-top: 4px; }
+.cpanel {
+    width: 100%;
+    margin-top: 4px;
+}
 
-.thm_groups_label{ padding-right: 5px;}
+.thm_groups_label {
+    padding-right: 5px;
+}
 
-.thm_groups_check_column{ width: 10px; }
+.thm_groups_check_column {
+    width: 10px;
+}
 
-.thm_groups_search_div{ padding-right: 8px; }
+.thm_groups_search_div {
+    padding-right: 8px;
+}
 
-.icon-48-mni { background: url('../images/icon-48-mni.png') 0 0 no-repeat; }
+.icon-48-mni {
+    background: url('../images/icon-48-mni.png') 0 0 no-repeat;
+}
 
-.icon-48-logo { background: url('../images/logo_48x48.png') 0 0 no-repeat; }
+.icon-48-logo {
+    background: url('../images/logo_48x48.png') 0 0 no-repeat;
+}
 
-.icon-48-profile_manager { background: url('../images/profile_manager_48x48.png') 0 0 no-repeat; }
-.icon-48-groupmanager { background: url('../images/groupmanager_48x48.png') 0 0 no-repeat; }
-.icon-48-rolemanager { background: url('../images/rolemanager_48x48.png') 0 0 no-repeat; }
-.icon-48-structuremanager { background: url('../images/structuremanager_48x48.png') 0 0 no-repeat; }
+.icon-48-profile_manager {
+    background: url('../images/profile_manager_48x48.png') 0 0 no-repeat;
+}
+
+.icon-48-groupmanager {
+    background: url('../images/groupmanager_48x48.png') 0 0 no-repeat;
+}
+
+.icon-48-rolemanager {
+    background: url('../images/rolemanager_48x48.png') 0 0 no-repeat;
+}
+
+.icon-48-structuremanager {
+    background: url('../images/structuremanager_48x48.png') 0 0 no-repeat;
+}
 
 /*thm_groups view**********************************************************/
 
-.thm_groups_main{ padding: 5px; }
+.thm_groups_main {
+    padding: 5px;
+}
 
-.thm_groups_main_description{ font-size: 16px; padding-bottom: 8px; }
+.thm_groups_main_description {
+    font-size: 16px;
+    padding-bottom: 8px;
+}
 
-.thm_groups_main_linkdiv{ float: left; }
+.thm_groups_main_linkdiv {
+    float: left;
+}
 
 .icon-32-addassignment {
     background-image: url(../../assets/images/icon-32-addassignment.png);

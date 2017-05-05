@@ -38,7 +38,7 @@ class THM_GroupsTemplateList
 		?>
 		<div id="j-main-container" class="span10">
 			<form action="index.php?" id="adminForm" method="post"
-			      name="adminForm" xmlns="http://www.w3.org/1999/html">
+				  name="adminForm" xmlns="http://www.w3.org/1999/html">
 				<div class="searchArea">
 					<div class="js-stools clearfix">
 						<div class="clearfix">
@@ -66,7 +66,7 @@ class THM_GroupsTemplateList
 				<input type="hidden" name="task" value=""/>
 				<input type="hidden" name="boxchecked" value="0"/>
 				<input type="hidden" name="option"
-				       value="<?php echo JFactory::getApplication()->input->get('option'); ?>"/>
+					   value="<?php echo JFactory::getApplication()->input->get('option'); ?>"/>
 				<input type="hidden" name="view" value="<?php echo $view->get('name'); ?>"/>
 				<?php self::renderHiddenFields($view) ?>
 				<?php echo JHtml::_('form.token'); ?>
@@ -96,14 +96,14 @@ class THM_GroupsTemplateList
 		<div class="btn-wrapper input-append">
 			<?php echo $filters['filter_search']->input; ?>
 			<button type="submit" class="btn hasTooltip"
-			        title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_SUBMIT'); ?>">
+					title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_SUBMIT'); ?>">
 				<i class="icon-search"></i>
 			</button>
 		</div>
 		<div class="btn-wrapper">
 			<button type="button" class="btn hasTooltip js-stools-btn-clear"
-			        title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_CLEAR'); ?>"
-			        onclick="document.getElementById('filter_search').value='';">
+					title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_CLEAR'); ?>"
+					onclick="document.getElementById('filter_search').value='';">
 				<i class="icon-delete"></i>
 			</button>
 		</div>

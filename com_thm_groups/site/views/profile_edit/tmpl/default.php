@@ -17,7 +17,7 @@ $session = JFactory::getSession();
 <script xmlns="http://www.w3.org/1999/html">jQf = jQuery.noConflict();</script>
 
 <form id="adminForm" name="adminForm" class="form-horizontal"
-      action="index.php?option=com_thm_groups" method="post" enctype="multipart/form-data">
+	  action="index.php?option=com_thm_groups" method="post" enctype="multipart/form-data">
 	<div class="form-horizontal">
 		<?php echo $this->getToolbar(); ?>
 		<div class="field-container">
@@ -31,9 +31,9 @@ $session = JFactory::getSession();
 				<div class='control-group'>
 					<div class='control-label frontend'>
 						<label id='jform_<?php echo $name; ?>-lbl'
-						       class=''
-						       for='jform_<?php echo $name; ?>'
-						       aria-invalid='false'><?php echo $name; ?>
+							   class=''
+							   for='jform_<?php echo $name; ?>'
+							   aria-invalid='false'><?php echo $name; ?>
 						</label>
 					</div>
 					<div id='jform_<?php echo $name; ?>_box' class='controls'>

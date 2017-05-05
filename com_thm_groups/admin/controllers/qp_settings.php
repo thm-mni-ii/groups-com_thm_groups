@@ -84,7 +84,6 @@ class THM_GroupsControllerQp_Settings extends JControllerLegacy
 		}
 	}
 
-	// TODO change model name
 	/**
 	 * Redirects to the category manager view without making any persistent changes
 	 *

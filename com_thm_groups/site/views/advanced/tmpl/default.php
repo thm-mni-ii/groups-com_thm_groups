@@ -42,5 +42,5 @@ JHtmlBootstrap::loadCSS();
 		$this->app->getString('view'),
 		$this->truncateLongInfo
 	);
-?>
+	?>
 </div>

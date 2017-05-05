@@ -286,8 +286,8 @@ $user    = JFactory::getUser();
 					echo 'class="caption"' . ' title="' . htmlspecialchars($images->image_fulltext_caption) . '"';
 				}
 				?>
-				src="<?php echo htmlspecialchars($images->image_fulltext); ?>"
-				alt="<?php echo htmlspecialchars($images->image_fulltext_alt); ?>"/>
+					src="<?php echo htmlspecialchars($images->image_fulltext); ?>"
+					alt="<?php echo htmlspecialchars($images->image_fulltext_alt); ?>"/>
 		</div>
 		<?php
 	}

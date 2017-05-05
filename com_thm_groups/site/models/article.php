@@ -26,7 +26,7 @@ class THM_GroupsModelArticle extends JModelAdmin
 	/**
 	 * @var        string    The prefix to use with controller messages.
 	 */
-	protected $text_prefix = 'COM_THM_QUICKPAGES';
+	protected $text_prefix = 'COM_THM_GROUPS';
 
 
 	/**

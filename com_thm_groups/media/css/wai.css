@@ -1,21 +1,18 @@
-tr,td {
+tr, td {
     border: none !important;
 }
 
-#THM_left
-{
+#THM_left {
     position: relative !important;
     float: left !important;
 }
 
-#THM_right
-{
+#THM_right {
     position: relative !important;
     float: left !important;
 }
 
-#THM_Plugin_Members_AddButton
-{
+#THM_Plugin_Members_AddButton {
     position: absolute;
     right: 0px;
     bottom: 0px;
@@ -48,7 +45,7 @@ ul.tabs {
     position: relative;
 }
 
-.tabs li:hover,.vertical .tabs li:hover {
+.tabs li:hover, .vertical .tabs li:hover {
     color: #80ba24 !important;
     padding: 0 13px !important;
     background: #EEEEEE !important;
@@ -60,7 +57,7 @@ ul.tabs {
     background: #EEEEEE !important;
     padding: 0 13px 2px !important;
     border: 1px solid #D4D4D4 !important;
-    border-bottom: 1px solid 	#EEEEEE !important;
+    border-bottom: 1px solid #EEEEEE !important;
 }
 
 .box_tab {

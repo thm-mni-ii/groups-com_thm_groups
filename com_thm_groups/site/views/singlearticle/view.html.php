@@ -162,23 +162,23 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 			if ($start > 0)
 			{
 				$previewsPage = $start - 1;
-				$pageBrowser .= '<li><a href="' . JURI::base() . 'index.php?' . $url . 'start=' . $previewsPage . '"><< Zur&uuml;ck</a></li>';
+				$pageBrowser  .= '<li><a href="' . JURI::base() . 'index.php?' . $url . 'start=' . $previewsPage . '"><< Zur&uuml;ck</a></li>';
 			}
 			else
 			{
 			}
 			if ($start < count($parts) - 1)
 			{
-				$nextPage = $start + 1;
+				$nextPage    = $start + 1;
 				$pageBrowser .= '<li><a href="' . JURI::base() . 'index.php?' . $url . 'start=' . $nextPage . '">Weiter >></a></li>';
 			}
 			else
 			{
 			}
 			$pageBrowser .= '</ul></div>';
-			$toc   = '<div id="article-index"><ul>';
-			$count = 0;
-			$toc .= '<li><a class="toclink';
+			$toc         = '<div id="article-index"><ul>';
+			$count       = 0;
+			$toc         .= '<li><a class="toclink';
 			if ((empty($start) && empty($showall)) || (!empty($start) && $start == 0))
 			{
 				$toc .= " active";
@@ -188,7 +188,7 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 			}
 			$arrayTexts[$count] = $this->item->introtext;
 			$pagetitle          = $this->item->title;
-			$toc .= '" href="' . JURI::base() . 'index.php?' . $url . 'start='
+			$toc                .= '" href="' . JURI::base() . 'index.php?' . $url . 'start='
 				. $count . '">' . $pagetitle . '</a></li>';
 			$count++;
 			foreach ($parts as $part)
@@ -200,8 +200,8 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 					$arrayTexts[$count] = substr($part, $hrPos + 2);
 					$title              = str_replace('"', "", $hits[0]);
 					$title              = str_replace('title=', "", $title);
-					$toc .= '<li>';
-					$toc .= '<a class="toclink';
+					$toc                .= '<li>';
+					$toc                .= '<a class="toclink';
 					if (!empty($start) && $start == $count)
 					{
 						$toc .= " active";
@@ -226,8 +226,8 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 			else
 			{
 			}
-			$toc .= '" href="' . JURI::base() . 'index.php?' . $url . 'showall=1">Alle Seiten</a></li>';
-			$toc .= '</ul></div>';
+			$toc             .= '" href="' . JURI::base() . 'index.php?' . $url . 'showall=1">Alle Seiten</a></li>';
+			$toc             .= '</ul></div>';
 			$this->item->toc = $toc;
 			if ($showall != 1)
 			{

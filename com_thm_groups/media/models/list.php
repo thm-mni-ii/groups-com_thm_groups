@@ -268,8 +268,8 @@ abstract class THM_GroupsModelList extends JModelList
 
 		$option = $this->get('option');
 		$url    = "index.php?option=$option&task=" . $controller . ".toggle&id=" . $id . "&value=" . $value;
-		$url .= empty($attribute) ? '' : "&attribute=$attribute";
-		$link = JHtml::_('link', $url, $icon, $attributes);
+		$url    .= empty($attribute) ? '' : "&attribute=$attribute";
+		$link   = JHtml::_('link', $url, $icon, $attributes);
 
 		return '<div class="button-grp">' . $link . '</div>';
 	}

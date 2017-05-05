@@ -166,7 +166,7 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
 		$headers['ordering'] = JHtml::_('searchtools.sort', '', 'a.order', $direction, $ordering, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2');
 		$headers['checkbox'] = '';
 		$headers['id']       = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'id', $direction, $ordering);
-		$headers['name']     = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_PROFILE_MANAGER_NAME'), 'name', $direction, $ordering);
+		$headers['name']     = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 'name', $direction, $ordering);
 		$headers['groups']   = JText::_('COM_THM_GROUPS_PROFILE_MANAGER_GROUPS');
 		$headers['order']    = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_PROFILE_MANAGER_POSITION'), 'a.order', $direction, $ordering);
 

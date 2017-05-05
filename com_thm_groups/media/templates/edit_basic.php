@@ -35,11 +35,11 @@ class THM_GroupsTemplateEdit_Basic
 		?>
 
 		<form action="index.php?option=<?php echo $option; ?>"
-		      enctype="multipart/form-data"
-		      method="post"
-		      name="adminForm"
-		      id="item-form"
-		      class="form-horizontal">
+			  enctype="multipart/form-data"
+			  method="post"
+			  name="adminForm"
+			  id="item-form"
+			  class="form-horizontal">
 			<fieldset class="adminform"
 			">
 			<?php echo $view->form->renderFieldset('details'); ?>

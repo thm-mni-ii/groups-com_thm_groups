@@ -2,8 +2,8 @@
 <config>
     <fieldset
             name="general"
-            label="COM_THM_GROUPS_GENERAL_SETTINGS_TITLE"
-            description="COM_THM_GROUPS_GENERAL_SETTINGS_DESCRIPTION">
+            label="COM_THM_GROUPS_BASIC_SETTINGS_TITLE"
+            description="COM_THM_GROUPS_BASIC_SETTINGS_DESCRIPTION">
 
         <field
                 name="editownprofile"

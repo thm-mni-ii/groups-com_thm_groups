@@ -103,7 +103,7 @@ class THM_GroupsUserData extends THM_GroupsData
 			->where("A.usersID = " . $userID)
 			->where("A.attributeID = " . $attributeID);
 
-			$dbo->setQuery($query);
+		$dbo->setQuery($query);
 		try
 		{
 			return $dbo->loadObjectList();
@@ -125,7 +125,7 @@ class THM_GroupsUserData extends THM_GroupsData
 	{
 		try
 		{
-			$dbo    = JFactory::getDbo();
+			$dbo   = JFactory::getDbo();
 			$query = $dbo->getQuery(true);
 
 			$query
@@ -146,6 +146,7 @@ class THM_GroupsUserData extends THM_GroupsData
 	}
 
 	// TODO refactor
+
 	/**
 	 * Construct alle Attribut of a User, when selected Attributs are null,
 	 * return all Attributs
@@ -326,7 +327,7 @@ class THM_GroupsUserData extends THM_GroupsData
 	{
 		try
 		{
-			$dbo    = JFactory::getDbo();
+			$dbo   = JFactory::getDbo();
 			$query = $dbo->getQuery(true);
 
 			$query
@@ -359,7 +360,7 @@ class THM_GroupsUserData extends THM_GroupsData
 	{
 		try
 		{
-			$dbo    = JFactory::getDbo();
+			$dbo   = JFactory::getDbo();
 			$query = $dbo->getQuery(true);
 
 			$query
@@ -436,6 +437,7 @@ class THM_GroupsUserData extends THM_GroupsData
 	}
 
 	// TODO refactor
+
 	/**
 	 * Gets all structure from database,
 	 *
@@ -457,6 +459,7 @@ class THM_GroupsUserData extends THM_GroupsData
 	}
 
 	// TODO statischen Typ abfragen
+
 	/**
 	 * Gets options of attribute and dynamic type
 	 *
@@ -589,7 +592,7 @@ class THM_GroupsUserData extends THM_GroupsData
 	{
 		$user = JFactory::getUser();
 		$id   = $user->id;
-		$dbo   = JFactory::getDbo();
+		$dbo  = JFactory::getDbo();
 
 		$query = $dbo->getQuery(true);
 		$query->select('id');
@@ -617,7 +620,7 @@ class THM_GroupsUserData extends THM_GroupsData
 	public static function getUserName($userID)
 	{
 		$string = "Default string -> Error";
-		$dbo     = JFactory::getDbo();
+		$dbo    = JFactory::getDbo();
 		$query  = $dbo->getQuery(true);
 
 		$query
@@ -643,7 +646,7 @@ class THM_GroupsUserData extends THM_GroupsData
 	public static function getUserValueByAttributeID($userID, $attrID)
 	{
 		$return = 'database entry empty';
-		$dbo     = JFactory::getDbo();
+		$dbo    = JFactory::getDbo();
 		$query  = $dbo->getQuery(true);
 
 		$query

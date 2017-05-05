@@ -388,8 +388,8 @@ class THM_GroupsModelTemplate extends JModelLegacy
 	 */
 	public function save()
 	{
-		$app   = JFactory::getApplication();
-		$data  = $app->input->get('jform', array(), 'array');
+		$app  = JFactory::getApplication();
+		$data = $app->input->get('jform', array(), 'array');
 
 		$templateID = (int) $data['id'];
 		if (empty($templateID))
@@ -413,6 +413,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
 		}
 
 		$success = $this->saveTemplateAttributes($data['attributes'], $templateID);
+
 		return $success ? $templateID : false;
 	}
 
@@ -426,7 +427,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
 	 */
 	private function saveTemplateAttributes($attributes, $templateID)
 	{
-		$app = JFactory::getApplication();
+		$app   = JFactory::getApplication();
 		$index = 1;
 		foreach ($attributes as $attribute)
 		{

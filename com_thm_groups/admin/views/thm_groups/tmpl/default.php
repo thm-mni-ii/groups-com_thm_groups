@@ -28,7 +28,7 @@ $image   = JHtml::_('image', $logoURL, JText::_('COM_THM_GROUPS'), $attribs);
 	</div>
 </div>
 <form action="index.php" id="adminForm" method="post"
-      name="adminForm" xmlns="http://www.w3.org/1999/html">
+	  name="adminForm" xmlns="http://www.w3.org/1999/html">
 	<?php
 	// Load html for popup
 	if (isset($this->batch) && !empty($this->batch))

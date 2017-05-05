@@ -206,9 +206,9 @@ class THM_GroupsHelperProfile
 
 		uasort(
 			$profile, function ($a, $b)
-			{
-				return $a['order'] - $b['order'];
-			}
+		{
+			return $a['order'] - $b['order'];
+		}
 		);
 
 		return $profile;

@@ -180,7 +180,7 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
 		$headers['order']       = JHtml::_('searchtools.sort', '', 'attribute.ordering', $direction, $ordering, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2');
 		$headers['checkbox']    = '';
 		$headers['id']          = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'attribute.id', $direction, $ordering);
-		$headers['attribute']   = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ATTRIBUTE_NAME', 'attribute.name', $direction, $ordering);
+		$headers['attribute']   = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_NAME', 'attribute.name', $direction, $ordering);
 		$headers['published']   = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ATTRIBUTE_PUBLISHED', 'attribute.published', $direction, $ordering);
 		$headers['dynamic']     = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_DYNAMIC_TYPE', 'dynamic.name', $direction, $ordering);
 		$headers['description'] = JText::_('COM_THM_GROUPS_DESCRIPTION');

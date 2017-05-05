@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
 // Create the add/delete options.
 $options = array(
 	JHtml::_('select.option', 'add', JText::_('COM_THM_GROUPS_ADD')),
-	JHtml::_('select.option', 'del', JText::_('COM_THM_GROUPS_BATCH_DELETE')),
+	JHtml::_('select.option', 'del', JText::_('COM_THM_GROUPS_DELETE')),
 );
 
 JHtml::_('formbehavior.chosen', 'select');
@@ -47,7 +47,8 @@ JHtml::_('formbehavior.chosen', 'select');
 		</div>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" type="button" onclick="document.getElementById('batch-group-id').value=''" data-dismiss="modal">
+		<button class="btn" type="button" onclick="document.getElementById('batch-group-id').value=''"
+				data-dismiss="modal">
 			<?php echo JText::_('JCANCEL'); ?>
 		</button>
 		<button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('template.batch');">

@@ -97,7 +97,7 @@ class THM_GroupsViewProfile extends JViewLegacy
 	{
 		$container = $this->getContainer($name, $attribute);
 		$value     = "<a href='" . htmlspecialchars_decode($attribute['value']) . "'>";
-		$value .= htmlspecialchars_decode($attribute['value']) . "</a>";
+		$value     .= htmlspecialchars_decode($attribute['value']) . "</a>";
 
 		return $container['start'] . $value . $container['end'];
 	}
@@ -132,7 +132,7 @@ class THM_GroupsViewProfile extends JViewLegacy
 		{
 			$imgOptions = $attribute['options'];
 			$path       = JUri::base() . $imgOptions['path'] . '/' . $attribute['value'];
-			$value .= JHtml::image($path, 'Profilbild');
+			$value      .= JHtml::image($path, 'Profilbild');
 		}
 
 		return $container['start'] . $value . $container['end'];
@@ -264,9 +264,9 @@ class THM_GroupsViewProfile extends JViewLegacy
 
 			$lastName = trim($lastName);
 			$path     = "index.php?option=com_thm_groups&view=profile_edit";
-			$path .= "&groupID=$this->groupID&userID=$this->profileID&name=$lastName&Itemid=$this->menuID";
-			$url  = JRoute::_($path);
-			$text = '<span class="icon-edit"></span> ' . JText::_('COM_THM_GROUPS_EDIT');
+			$path     .= "&groupID=$this->groupID&userID=$this->profileID&name=$lastName&Itemid=$this->menuID";
+			$url      = JRoute::_($path);
+			$text     = '<span class="icon-edit"></span> ' . JText::_('COM_THM_GROUPS_EDIT');
 			$editLink .= JHtml::_('link', $url, $text, $attributes);
 		}
 
@@ -341,9 +341,9 @@ class THM_GroupsViewProfile extends JViewLegacy
 	private function getIconLabelOutput($attribute, $output, $name, $labelContainerClass)
 	{
 		$paramsExist = !empty($attribute['params']);
-		$showIcon = (!$paramsExist OR !empty($attribute['params']['showIcon']));
-		$showLabel = (!$paramsExist OR !empty($attribute['params']['showLabel']));
-		$iconName = isset($attribute['options']['icon']) ? $attribute['options']['icon'] : '';
+		$showIcon    = (!$paramsExist OR !empty($attribute['params']['showIcon']));
+		$showLabel   = (!$paramsExist OR !empty($attribute['params']['showLabel']));
+		$iconName    = isset($attribute['options']['icon']) ? $attribute['options']['icon'] : '';
 
 		if ($showIcon AND !empty($iconName))
 		{

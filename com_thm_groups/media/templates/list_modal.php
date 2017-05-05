@@ -34,7 +34,7 @@ class THM_GroupsTemplateList_Modal
 		?>
 		<div id="j-main-container">
 			<form action="index.php?" id="adminForm" method="post"
-			      name="adminForm" xmlns="http://www.w3.org/1999/html">
+				  name="adminForm" xmlns="http://www.w3.org/1999/html">
 				<div class="js-stools clearfix">
 					<div class="clearfix">
 						<div class="js-stools-container-bar">
@@ -58,7 +58,7 @@ class THM_GroupsTemplateList_Modal
 				<input type="hidden" name="task" value=""/>
 				<input type="hidden" name="boxchecked" value="0"/>
 				<input type="hidden" name="option"
-				       value="<?php echo JFactory::getApplication()->input->get('option'); ?>"/>
+					   value="<?php echo JFactory::getApplication()->input->get('option'); ?>"/>
 				<input type="hidden" name="view" value="<?php echo $view->get('name'); ?>"/>
 				<input type="hidden" name="tmpl" value="component"/>
 				<?php self::renderHiddenFields($view) ?>
@@ -89,13 +89,13 @@ class THM_GroupsTemplateList_Modal
 		<div class="btn-wrapper input-append">
 			<?php echo $filters['filter_search']->input; ?>
 			<button type="submit" class="btn hasTooltip"
-			        title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_SUBMIT'); ?>">
+					title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_SUBMIT'); ?>">
 				<i class="icon-search"></i>
 			</button>
 		</div>
 		<div class="btn-wrapper">
 			<button type="button" class="btn hasTooltip js-stools-btn-clear"
-			        title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_CLEAR'); ?>">
+					title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_CLEAR'); ?>">
 				<i class="icon-refresh"></i>
 				<?php echo JText::_('JSEARCH_RESET'); ?>
 			</button>

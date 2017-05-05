@@ -32,7 +32,7 @@ class QuickpageSettingsTemplateModal
 
 				<input type="hidden" name="task" value=""/>
 				<input type="hidden" name="option"
-				       value="<?php echo JFactory::getApplication()->input->get('option'); ?>"/>
+					   value="<?php echo JFactory::getApplication()->input->get('option'); ?>"/>
 				<input type="hidden" name="view" value="<?php echo $view->get('name'); ?>"/>
 				<input type="hidden" name="tmpl" value="component"/>
 				<?php echo JHtml::_('form.token'); ?>
