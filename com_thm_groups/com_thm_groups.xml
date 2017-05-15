@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension type="component" version="3.0" method="upgrade">
     <name>COM_THM_GROUPS</name>
-    <creationDate>October 2016</creationDate>
+    <creationDate>May 2017</creationDate>
     <author>THM iCampus</author>
     <authorUrl>http://www.thm.de</authorUrl>
-    <copyright>TH Mittelhessen 2016</copyright>
+    <copyright>TH Mittelhessen 2017</copyright>
     <license>GNU/GPL Version 2</license>
-    <version>3.6.35</version>
+    <version>3.6.36</version>
     <scriptfile>script.php</scriptfile>
     <install>
         <sql>
@@ -60,32 +60,25 @@
     <administration>
         <menu>COM_THM_GROUPS</menu>
         <submenu>
-            <menu alias="Dynamic Types" link="option=com_thm_groups&amp;view=dynamic_type_manager"
-                  view="dynamic_type_manager" alt="Dynamic Types">COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER
+            <menu alias="Dynamic Types" link="option=com_thm_groups&amp;view=dynamic_type_manager" view="dynamic_type_manager" alt="Dynamic Types">COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER
             </menu>
             <menu alias="Groups" link="option=com_thm_groups&amp;view=group_manager" view="group_manager" alt="Groups">
                 COM_THM_GROUPS_GROUP_MANAGER
             </menu>
-            <menu alias="Plugins" link="option=com_thm_groups&amp;view=plugin_manager" view="plugin_manager"
-                  alt="Plugins">COM_THM_GROUPS_PLUGIN_MANAGER
+            <menu alias="Plugins" link="option=com_thm_groups&amp;view=plugin_manager" view="plugin_manager" alt="Plugins">COM_THM_GROUPS_PLUGIN_MANAGER
             </menu>
-            <menu alias="Profiles" link="option=com_thm_groups&amp;view=profile_manager" view="profile_manager"
-                  alt="Profiles">COM_THM_GROUPS_PROFILE_MANAGER
+            <menu alias="Profiles" link="option=com_thm_groups&amp;view=profile_manager" view="profile_manager" alt="Profiles">COM_THM_GROUPS_PROFILE_MANAGER
             </menu>
-            <menu alias="Attributes" link="option=com_thm_groups&amp;view=attribute_manager" view="attribute_manager"
-                  alt="Attributes">COM_THM_GROUPS_ATTRIBUTE_MANAGER
+            <menu alias="Attributes" link="option=com_thm_groups&amp;view=attribute_manager" view="attribute_manager" alt="Attributes">COM_THM_GROUPS_ATTRIBUTE_MANAGER
             </menu>
-            <menu alias="Profile Content" link="option=com_thm_groups&amp;view=quickpage_content_manager"
-                  view="quickpage_content_manager" alt="Profile Content">COM_THM_GROUPS_QUICKPAGE_CONTENT_MANAGER
+            <menu alias="Profile Content" link="option=com_thm_groups&amp;view=quickpage_content_manager" view="quickpage_content_manager" alt="Profile Content">COM_THM_GROUPS_QUICKPAGE_CONTENT_MANAGER
             </menu>
-            <menu alias="Profile Templates" link="option=com_thm_groups&amp;view=template_manager"
-                  view="template_manager" alt="Profile Templates">COM_THM_GROUPS_TEMPLATE_MANAGER
+            <menu alias="Profile Templates" link="option=com_thm_groups&amp;view=template_manager" view="template_manager" alt="Profile Templates">COM_THM_GROUPS_TEMPLATE_MANAGER
             </menu>
             <menu alias="Roles" link="option=com_thm_groups&amp;view=role_manager" view="role_manager" alt="Roles">
                 COM_THM_GROUPS_ROLE_MANAGER
             </menu>
-            <menu alias="Static Types" link="option=com_thm_groups&amp;view=static_type_manager"
-                  view="static_type_manager" alt="Static Types">COM_THM_GROUPS_STATIC_TYPE_MANAGER
+            <menu alias="Static Types" link="option=com_thm_groups&amp;view=static_type_manager" view="static_type_manager" alt="Static Types">COM_THM_GROUPS_STATIC_TYPE_MANAGER
             </menu>
         </submenu>
 
