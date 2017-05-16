@@ -3,9 +3,10 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsModelQuickpage_Content_Manager
+ * @name        THM_GroupsModelQuickpage_Manager
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @author      James Antrim, <james.antrim@nm.thm.de>
+ * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -16,7 +17,7 @@ jimport('thm_groups.data.lib_thm_groups_quickpages');
 require_once JPATH_SITE . '/media/com_thm_groups/helpers/quickpage.php';
 
 /**
- * THM_GroupsModelQuickpage_Content_Manager is a class which deals with the information
+ * THM_GroupsModelQuickpage_Manager is a class which deals with the information
  * preparation for the administrator view. This view represents the user specific content/articles
  * named Quickpages.
  *
@@ -24,7 +25,7 @@ require_once JPATH_SITE . '/media/com_thm_groups/helpers/quickpage.php';
  * @package   com_thm_groups.admin
  * @link      www.thm.de
  */
-class THM_GroupsModelQuickpage_Content_Manager extends THM_CoreModelList
+class THM_GroupsModelQuickpage_Manager extends THM_CoreModelList
 {
 
 	protected $defaultOrdering = 'users.name';
@@ -139,10 +140,37 @@ class THM_GroupsModelQuickpage_Content_Manager extends THM_CoreModelList
 			return $return;
 		}
 
+		$generalOrder    = '<input type="text" style="display:none" name="order[]" size="5" ';
+		$generalOrder    .= 'value="XX" class="width-20 text-area-order " />';
+		$generalSortIcon = '<span class="sortable-handlerXXX"><i class="icon-menu"></i></span>';
+		$canSort         = JFactory::getUser()->authorise('core.edit', 'com_thm_groups');
+		$orderingActive = $this->state->get('list.ordering') == 'content.ordering';
+		$user = JFactory::getUser();
+
 		$index = 0;
 		foreach ($items as $item)
 		{
+			$canEdit = $user->authorise('core.edit', 'com_content.article.' . $item->id);
+			$iconClass = '';
+
+			if (!$canEdit)
+			{
+				$iconClass = ' inactive';
+			}
+			elseif (!$orderingActive)
+			{
+				$iconClass = ' inactive tip-top hasTooltip';
+			}
+
+			$specificOrder = ($canSort AND $orderingActive) ? str_replace('XX', $item->ordering, $generalOrder) : '';
+
 			$return[$index]    = array();
+
+			$return[$index]['attributes'] = array('class' => 'order nowrap center', 'id' => $item->id);
+
+			$return[$index]['ordering']['attributes'] = array('class' => "order nowrap center", 'style' => "width: 40px;");
+			$return[$index]['ordering']['value']      = str_replace('XXX', $iconClass, $generalSortIcon) . $specificOrder;
+
 			$return[$index][0] = JHtml::_('grid.id', $index, $item->id);
 
 			$canEdit = JFactory::getUser()->authorise('core.edit', 'com_content.article.' . $item->id);
@@ -157,8 +185,8 @@ class THM_GroupsModelQuickpage_Content_Manager extends THM_CoreModelList
 			}
 
 			$return[$index][2] = $item->author_name;
-			$return[$index][3] = $this->getToggle($item->id, $item->qp_published, 'quickpage_content', '', 'published');
-			$return[$index][4] = $this->getToggle($item->id, $item->qp_featured, 'quickpage_content', '', 'featured');
+			$return[$index][3] = $this->getToggle($item->id, $item->qp_published, 'quickpage', '', 'published');
+			$return[$index][4] = $this->getToggle($item->id, $item->qp_featured, 'quickpage', '', 'featured');
 			$return[$index][5] = $this->getStatusDropdown($index, $item);
 			$return[$index][6] = $item->id;
 
@@ -179,6 +207,7 @@ class THM_GroupsModelQuickpage_Content_Manager extends THM_CoreModelList
 		$direction = $this->state->get('list.direction');
 
 		$headers              = array();
+		$headers['order']     = JHtml::_('searchtools.sort', '', 'content.ordering', $direction, $ordering, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2');
 		$headers['checkbox']  = '';
 		$headers['title']     = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_TITLE', 'title', $direction, $ordering);
 		$headers['author']    = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_AUTHOR', 'author_name', $direction, $ordering);
@@ -212,7 +241,7 @@ class THM_GroupsModelQuickpage_Content_Manager extends THM_CoreModelList
 	{
 		$canChange = THM_GroupsHelperQuickpage::canEditState($item->id);
 
-		$controllerName = 'quickpage_content';
+		$controllerName = 'quickpage';
 
 		$status = '<div class="btn-group">';
 		$status .= JHtml::_('jgrid.published', $item->state, $index, "$controllerName.", $canChange, 'cb', $item->publish_up, $item->publish_down);

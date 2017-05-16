@@ -136,46 +136,6 @@ class Com_THM_GroupsInstallerScript
 	}
 
 	/**
-	 * Deletes recursively files
-	 *
-	 * @param   String $path path of admin and site part of component
-	 *
-	 * @return void
-	 */
-	private function deleteDir($path)
-	{
-		$it    = new RecursiveDirectoryIterator($path);
-		$files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
-
-		$doNotDeleteDirs = array();
-		array_push($doNotDeleteDirs, '.');
-		array_push($doNotDeleteDirs, '..');
-
-		foreach ($files as $file)
-		{
-			if (in_array($file->getFilename(), $doNotDeleteDirs))
-			{
-				continue;
-			}
-
-			if ($file->isDir())
-			{
-				if (strpos($file->getRealPath(), 'img') === false)
-				{
-					rmdir($file->getRealPath());
-				}
-			}
-			else
-			{
-				if (strpos($file->getRealPath(), 'img') === false)
-				{
-					unlink($file->getRealPath());
-				}
-			}
-		}
-	}
-
-	/**
 	 * Searches for dynamic type with title 'email'
 	 *
 	 * @param   array $dynTypes Array with dynamic type objects
@@ -288,45 +248,59 @@ class Com_THM_GroupsInstallerScript
 		echo '<hr>';
 
 		// Installing component manifest file version
-		$this->release   = $parent->get("manifest")->version;
-		$this->component = $parent->get("manifest")->name;
+		$manifestVersion = $parent->get("manifest")->version;
 
-		if ($type == 'update' && $this->component == "COM_THM_GROUPS")
+		if ($type == 'update')
 		{
 			require_once 'admin/update.php';
-			$oldRelease = $this->getParam('version');
-			$rel        = $oldRelease . ' &rArr; ' . $this->release;
+			$rel = $this->getParam('version') . ' &rArr; ' . $manifestVersion;
 
-			// For old versions before 3.5.0, deletes some unused files
-			if (version_compare($oldRelease, '3.5.0', 'le'))
+			$adminFiles = JFolder::files(JPATH_ADMINISTRATOR . '/components/com_thm_groups');
+
+			foreach ($adminFiles as $adminFile)
 			{
-				$admin = JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_thm_groups';
-				$site  = JPATH_ROOT . DS . 'components' . DS . 'com_thm_groups';
-
-				if (is_dir($admin) && is_dir($site))
-				{
-					self::deleteDir($admin);
-					self::deleteDir($site);
-				}
+				JFile::delete(JPATH_ADMINISTRATOR . '/components/com_thm_groups/' . $adminFile);
 			}
 
-			// Abort if the component being installed is not newer than the currently installed version
-			if (version_compare($this->release, $oldRelease, 'le'))
+			$adminFolders = JFolder::folders(JPATH_ADMINISTRATOR . '/components/com_thm_groups');
+
+			foreach ($adminFolders as $adminFolder)
 			{
-				JError::raiseNotice(
-					null, 'You want to install an old version of THM Groups: ' . $rel . ' -
-					this will not effect your installed version of THM Groups'
-				);
+				JFolder::delete(JPATH_ADMINISTRATOR . '/components/com_thm_groups/' . $adminFolder);
+			}
+
+			$siteFiles = JFolder::files(JPATH_SITE . '/components/com_thm_groups');
+
+			foreach ($siteFiles as $siteFile)
+			{
+				JFile::delete(JPATH_SITE . '/components/com_thm_groups/' . $siteFile);
+			}
+
+			$siteFolders = JFolder::folders(JPATH_SITE . '/components/com_thm_groups');
+
+			foreach ($siteFolders as $siteFolder)
+			{
+				JFolder::delete(JPATH_SITE . '/components/com_thm_groups/' . $siteFolder);
+			}
+
+			$mediaFiles = JFolder::files(JPATH_SITE . '/media/com_thm_groups');
+
+			foreach ($mediaFiles as $mediaFile)
+			{
+				JFile::delete(JPATH_SITE . '/media/com_thm_groups/' . $mediaFile);
+			}
+
+			$mediaFolders = JFolder::folders(JPATH_SITE . '/media/com_thm_groups');
+
+			foreach ($mediaFolders as $mediaFolder)
+			{
+				JFolder::delete(JPATH_SITE . '/media/com_thm_groups/' . $mediaFolder);
 			}
 		}
-		else
-		{
-			$rel = $this->release;
-		}
-
-		if ($type == 'install')
+		elseif ($type == 'install')
 		{
 			require_once 'admin/install.php';
+			$rel = $manifestVersion;
 		}
 
 		echo '<h1 align="center"><strong>THM Groups ' . strtoupper($type) . '<br/>' . $rel . '</strong></h1>';
@@ -442,16 +416,6 @@ class Com_THM_GroupsInstallerScript
 		}
 
 		return true;
-	}
-
-	/**
-	 * Uninstall runs before any other action is taken (file removal or database processing).
-	 *
-	 * @param   string $parent is the class calling this method
-	 */
-	public function uninstall($parent)
-	{
-		//echo '<p>' . JText::sprintf('COM_THM_GROUPS_DEINSTALL', $this->release) . '</p>';
 	}
 
 	/**

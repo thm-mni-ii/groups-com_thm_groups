@@ -13,8 +13,23 @@
 
 // No direct access to this file
 defined('_JEXEC') or die;
-?>
 
+$saveOrderingUrl = 'index.php?option=com_thm_groups&task=quickpage.saveOrderAjax&tmpl=component';
+JHtml::_('sortablelist.sortable', 'quickpage_manager-list', 'adminForm', null, $saveOrderingUrl);
+
+$orderingButton = JHtml::_(
+		'searchtools.sort',
+		'',
+		'content.ordering',
+		'ASC',
+		'content.ordering',
+		null,
+		'asc',
+		'JGRID_HEADING_ORDERING',
+		'icon-menu-2'
+);
+
+?>
 <div id="j-main-container" class="manager-page">
 	<form action="index.php" id="adminForm" method="post"
 		  name="adminForm" xmlns="http://www.w3.org/1999/html">
@@ -32,6 +47,8 @@ defined('_JEXEC') or die;
 				<thead>
 				<tr>
 					<th>
+						<?php echo $orderingButton; ?>
+					<th>
 						<?php echo JText::_('COM_THM_GROUPS_TITLE'); ?>
 					</th>
 					<th class="hasTip" title="<?php echo JText::_('COM_THM_GROUPS_STATUS_TIP') ?>">
@@ -43,13 +60,11 @@ defined('_JEXEC') or die;
 				</tr>
 				</thead>
 				<tbody class="ui-sortable">
-				<?php if (!empty($this->items)): ?>
 					<?php foreach ($this->items as $key => $item): ?>
-						<tr sortable-group-id="<?php echo $item->id; ?>" class="dndlist-sortable">
-							<?php echo $this->getRow($key, $item); ?>
-						</tr>
+					<tr class="order nowrap center dndlist-sortable" id="<?php echo $item->id; ?>">
+						<?php echo $this->getRow($key, $item); ?>
+					</tr>
 					<?php endforeach; ?>
-				<?php endif; ?>
 				</tbody>
 			</table>
 		</div>

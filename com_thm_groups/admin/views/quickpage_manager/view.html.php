@@ -3,8 +3,7 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsViewQuickpage_Content_Manager
- * @description THM_GroupsViewQuickpage_Content_Manager file from com_thm_groups
+ * @name        THM_GroupsViewQuickpage_Manager
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -15,13 +14,13 @@ defined('_JEXEC') or die;
 jimport('thm_core.list.view');
 
 /**
- * THM_GroupsViewQuickpage_Content_Manager class for component com_thm_groups
+ * THM_GroupsViewQuickpage_Manager class for component com_thm_groups
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.thm.de
  */
-class THM_GroupsViewQuickpage_Content_Manager extends THM_CoreViewList
+class THM_GroupsViewQuickpage_Manager extends THM_CoreViewList
 {
 
 	public $items;
@@ -55,7 +54,7 @@ class THM_GroupsViewQuickpage_Content_Manager extends THM_CoreViewList
 	protected function addToolbar()
 	{
 		JToolBarHelper::title(
-			JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_QUICKPAGE_CONTENT_MANAGER'), 'quickpage_content_manager'
+			JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_QUICKPAGE_MANAGER'), 'quickpage_manager'
 		);
 
 		$user         = JFactory::getUser();
@@ -63,11 +62,11 @@ class THM_GroupsViewQuickpage_Content_Manager extends THM_CoreViewList
 
 		if ($user->authorise('core.manage', 'com_thm_groups') AND !empty($rootCategory))
 		{
-			JToolBarHelper::publishList('quickpage_content.qpPublish', 'COM_THM_GROUPS_PUBLISH');
-			JToolBarHelper::unpublishList('quickpage_content.qpUnpublish', 'COM_THM_GROUPS_UNPUBLISH');
+			JToolBarHelper::publishList('quickpage.qpPublish', 'COM_THM_GROUPS_PUBLISH');
+			JToolBarHelper::unpublishList('quickpage.qpUnpublish', 'COM_THM_GROUPS_UNPUBLISH');
 
-			JToolBarHelper::publishList('quickpage_content.qpFeature', 'COM_THM_GROUPS_FEATURE');
-			JToolBarHelper::unpublishList('quickpage_content.qpUnfeature', 'COM_THM_GROUPS_UNFEATURE');
+			JToolBarHelper::publishList('quickpage.qpFeature', 'COM_THM_GROUPS_FEATURE');
+			JToolBarHelper::unpublishList('quickpage.qpUnfeature', 'COM_THM_GROUPS_UNFEATURE');
 		}
 
 		if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))

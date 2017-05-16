@@ -23,7 +23,6 @@ define('TRASH', -2);
  */
 class THM_GroupsHelperQuickpage
 {
-
 	/**
 	 * Method which checks user edit state permissions for the quickpage.
 	 *

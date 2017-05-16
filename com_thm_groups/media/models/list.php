@@ -1,24 +1,23 @@
 <?php
 /**
- * @category    Joomla library
- * @package     THM_Core
- * @subpackage  lib_thm_core.site
- * @name        THM_CoreModelList
- * @description Common template for list views
- * @author      James Antrim, <james.antrim@mni.thm.de>
+ * @category    Joomla component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.media
+ * @name        THM_GroupsModelList
+ * @author      James Antrim, <james.antrim@nm.thm.de>
  * @author      Ilja Michajlow, <Ilja.Michajlow@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 defined('_JEXEC') or die;
 
 /**
- * Class provides standardized output of list items
+ * Class creates a list of entries.
  *
- * @category    Joomla.Library
- * @package     thm_list
- * @subpackage  lib_thm_list.site
+ * @category    Joomla component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.media
  */
 abstract class THM_GroupsModelList extends JModelList
 {
@@ -37,17 +36,17 @@ abstract class THM_GroupsModelList extends JModelList
 	/**
 	 * Constructor. Uses parent constructor, then sets model actions.
 	 *
-	 * @param   Array $config Configuration  (default: Array)
+	 * @param array $config Configuration  (default: array)
 	 */
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
 
-		$option = $this->get('option');
-		$path   = JPATH_ROOT . "/media/$option/helpers/componentHelper.php";
-		$helper = str_replace('com_', '', $option) . 'HelperComponent';
+		$path = JPATH_ROOT . "/media/com_thm_groups/helpers/componentHelper.php";
+		/** @noinspection PhpIncludeInspection */
 		require_once $path;
-		$helper::addActions($this);
+
+		THM_GroupsHelperComponent::addActions($this);
 	}
 
 	/**
@@ -122,9 +121,9 @@ abstract class THM_GroupsModelList extends JModelList
 		{
 			$total = (int) $this->_db->loadResult();
 		}
-		catch (RuntimeException $e)
+		catch (RuntimeException $exc)
 		{
-			$this->setError($e->getMessage());
+			$this->setError($exc->getMessage());
 
 			return false;
 		}
@@ -138,8 +137,8 @@ abstract class THM_GroupsModelList extends JModelList
 	/**
 	 * Overwrites the JModelList populateState function
 	 *
-	 * @param   string $ordering  the column by which the table is should be ordered
-	 * @param   string $direction the direction in which this column should be ordered
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
 	 *
 	 * @return  void  sets object state variables
 	 *
@@ -181,7 +180,7 @@ abstract class THM_GroupsModelList extends JModelList
 	/**
 	 * Sets the ordering and direction filters should a valid full ordering request be made
 	 *
-	 * @param   object $list an array of list variables
+	 * @param array $list an array of list variables
 	 *
 	 * @return  void  sets state variables
 	 */
@@ -265,11 +264,9 @@ abstract class THM_GroupsModelList extends JModelList
 		$attributes['class'] = 'btn btn-micro hasTooltip';
 		$attributes['class'] .= empty($value) ? ' inactive' : '';
 
-
-		$option = $this->get('option');
-		$url    = "index.php?option=$option&task=" . $controller . ".toggle&id=" . $id . "&value=" . $value;
-		$url    .= empty($attribute) ? '' : "&attribute=$attribute";
-		$link   = JHtml::_('link', $url, $icon, $attributes);
+		$url  = "index.php?option=com_thm_groups&task=" . $controller . ".toggle&id=" . $id . "&value=" . $value;
+		$url  .= empty($attribute) ? '' : "&attribute=$attribute";
+		$link = JHtml::_('link', $url, $icon, $attributes);
 
 		return '<div class="button-grp">' . $link . '</div>';
 	}
@@ -429,6 +426,7 @@ abstract class THM_GroupsModelList extends JModelList
 	 */
 	protected function setLocalizedFilters(&$query, $filterNames)
 	{
+		/** @noinspection PhpIncludeInspection */
 		require_once JPATH_ROOT . '/media/com_thm_groups/helpers/language.php';
 		$tag = THM_GroupsHelperLanguage::getShortTag();
 		foreach ($filterNames AS $name)

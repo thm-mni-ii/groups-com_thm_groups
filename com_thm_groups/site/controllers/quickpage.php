@@ -1,32 +1,32 @@
 <?php
-
 /**
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
+ * @name        THM_GroupsControllerQuickpage
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @author      James Antrim, <james.antrim@nm.thm.de>
+ * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 
-// No direct access.
 defined('_JEXEC') or die;
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
 
 /**
- * Quickpage resource controller class
+ * Class provides access & validity checks, data manipulation function calls, and redirection
+ * for THM Groups associated content.
  *
  * @category  Joomla.Component.Site
- * @package   thm_groups
+ * @package   com_thm_groups.site
  */
 class THM_GroupsControllerQuickpage extends JControllerLegacy
 {
-	private $_baseURL = 'index.php?option=com_thm_groups';
-
 	protected $text_prefix = 'COM_THM_GROUPS';
 
 	/**
-	 * Constructor.
+	 * Constructor. Additionally maps function calls named after published states to the publish function.
 	 *
 	 * @param   array $config An optional associative array of configuration settings.
 	 *
@@ -36,51 +36,38 @@ class THM_GroupsControllerQuickpage extends JControllerLegacy
 	{
 		parent::__construct($config);
 
-		// TODO: rename to changeState
 		// All state tasks are handled by the publish function
 		$this->registerTask('unpublish', 'publish');
 		$this->registerTask('archive', 'publish');
 		$this->registerTask('trash', 'publish');
-	}
-
-	/**
-	 * Toggles quickpage boolean properties
-	 *
-	 * @todo  use standard joomla form instead of get, ie post for token validation
-	 *
-	 * @return void
-	 */
-	public function toggle()
-	{
-		$model = $this->getModel('quickpage');
-
-		// Access checks and output messages are in the model.
-		$model->toggle();
-
-		$menuID     = $this->input->getInt('Itemid', 0);
-		$forwardURL = $this->_baseURL . "&view=quickpage_manager&Itemid=$menuID";
-		$this->setRedirect(JRoute::_($forwardURL));
+		$this->registerTask('report', 'publish');
 	}
 
 	/**
 	 * Method to publish a list of items
 	 *
 	 * @return  void
-	 *
 	 */
 	public function publish()
 	{
 		// Check for request forgeries
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
-		$model = $this->getModel('quickpage');
+		$articleIDs = JFactory::getApplication()->input->get('cid', array(), 'array');
+		Joomla\Utilities\ArrayHelper::toInteger($articleIDs);
 
-		// Access checks and output messages are in the model.
-		$model->publish();
+		$statuses = array('publish' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
+		$task     = $this->getTask();
+		$status   = Joomla\Utilities\ArrayHelper::getValue($statuses, $task, 0, 'int');
+		$model    = $this->getModel('quickpage');
 
-		$menuID     = $this->input->getInt('Itemid', 0);
-		$forwardURL = $this->_baseURL . "&view=quickpage_manager&Itemid=$menuID";
-		$this->setRedirect(JRoute::_($forwardURL));
+		foreach ($articleIDs as $articleID)
+		{
+			$model->publish($articleID, $status);
+		}
+
+		$menuID = $this->input->getInt('Itemid', 0);
+		$this->setRedirect(JRoute::_("index.php?option=com_thm_groups&view=quickpage_manager&Itemid=$menuID"));
 	}
 
 	/**
@@ -113,5 +100,20 @@ class THM_GroupsControllerQuickpage extends JControllerLegacy
 		// Close the application
 		JFactory::getApplication()->close();
 	}
-}
 
+	/**
+	 * Toggles the state of a single binary quickapge attribute
+	 *
+	 * @return void
+	 */
+	public function toggle()
+	{
+		$model = $this->getModel('quickpage');
+
+		// Access checks and output messages are in the model.
+		$model->toggle();
+
+		$menuID     = $this->input->getInt('Itemid', 0);
+		$this->setRedirect(JRoute::_("index.php?option=com_thm_groups&view=quickpage_manager&Itemid=$menuID"));
+	}
+}

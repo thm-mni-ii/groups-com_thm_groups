@@ -65,11 +65,11 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 		$this->pageTitle = '';
 		$params          = JFactory::getApplication()->getParams();
 		$showPageTitle   = $params->get('show_page_heading', 0);
+
 		if ($showPageTitle)
 		{
-			$defaultPageTitle = JText::_('COM_THM_GROUPS_QUICKPAGE_CONTENT_MANAGER');
-			$menuTitle        = $params->get('page_title', '');
-			$this->pageTitle  .= empty($menuTitle) ? $defaultPageTitle : $menuTitle;
+			$this->pageTitle  .= empty($menuTitle) ?
+				JText::_('COM_THM_GROUPS_QUICKPAGE_MANAGER') : $params->get('page_title', '');
 		}
 
 		parent::display($tpl);
@@ -142,6 +142,11 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 	 */
 	public function getRow($key, $item)
 	{
+		$sort = '<td class="order nowrap center" style="width: 40px;">';
+		$sort .= '<span class="sortable-handler" style="cursor: move;"><i class="icon-menu"></i></span>';
+		$sort .= '<input type="text" style="display:none" name="order[]" size="5" value="5" class="width-20 text-area-order">';
+		$sort .= '</td>';
+
 		$title = '<td>' . $this->getTitle($item) . '</td>';
 
 		$published = '<td>';
@@ -153,7 +158,7 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 		$listed .= $this->getToggle($item->id, $item->qp_featured, 'featured');
 		$listed .= '</td>';
 
-		return $title . $published . $listed;
+		return $sort . $title . $published . $listed;
 	}
 
 	/**

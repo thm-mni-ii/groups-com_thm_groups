@@ -1,5 +1,5 @@
-@import '../../lib_thm_core/scss/variables';
-@import '../../lib_thm_core/scss/icons';
+@import 'variables';
+@import 'icons';
 
 .thm_groups-list {
 
@@ -48,7 +48,7 @@
 
     .profiles-container .letter {
       background-color: #4a5c66;
-      color: $foreground;
+      color: $foreground-color;
       display: inline-block;
       font-weight: bold;
       line-height: 16px;

@@ -6,7 +6,7 @@
  * @name        THM_GroupsModelQuickpage
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -21,46 +21,131 @@ require_once JPATH_SITE . '/media/com_thm_groups/helpers/quickpage.php';
  */
 class THM_GroupsModelQuickpage extends JModelLegacy
 {
-	protected $event_change_state = null;
+	/**
+	 * Sets published or featured attributes of THM Groups articles to 1
+	 *
+	 * @param   array  $articleID Array with THM Groups article IDs
+	 * @param   string $attribute Attribute to save, 'published' or 'featured'
+	 *
+	 * @return  mixed  integer on success, false otherwise
+	 */
+	public function activate($articleID, $attribute)
+	{
+		$app = JFactory::getApplication();
 
-	protected $events_map = null;
+		// Should never occur
+		if (empty($articleID))
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'notice');
+
+			return false;
+		}
+
+		$successCount = 0;
+		foreach ($articleID as $id)
+		{
+			$success = $this->updateQuickpageState($id, $attribute, 1);
+			if ($success)
+			{
+				$successCount++;
+			}
+		}
+
+		return $successCount;
+	}
 
 	/**
-	 * Constructor.
+	 * Sets published or featured attribute of groups articles to 0
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @param   array  $cid       Array with article IDs
+	 * @param   string $attribute Attribute to save, 'published' or 'featured'
+	 *
+	 * @return  mixed  integer on success, false otherwise
 	 */
-	public function __construct($config = array())
+	public function deactivate($cid, $attribute)
 	{
-		parent::__construct($config);
+		$app = JFactory::getApplication();
 
-		if (isset($config['event_change_state']))
+		// Should never occur
+		if (empty($cid))
 		{
-			$this->event_change_state = $config['event_change_state'];
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'notice');
+
+			return false;
 		}
-		elseif (empty($this->event_change_state))
+
+		$successCount = 0;
+
+		foreach ($cid as $id)
 		{
-			$this->event_change_state = 'onContentChangeState';
+			$success = $this->updateQuickpageState($id, $attribute, 0);
+
+			if ($success)
+			{
+				$successCount++;
+			}
 		}
+
+		return $successCount;
+	}
+
+	/**
+	 * Returns author's ID for the given article
+	 *
+	 * @param   int $articleID the id of the article being checked
+	 *
+	 * @return  mixed int on success, otherwise null
+	 */
+	private function getAuthorID($articleID)
+	{
+		$article = JTable::getInstance("content");
+		$article->load($articleID);
+
+		if (empty($article))
+		{
+			return JFactory::getUser()->id;
+		}
+
+		return $article->get('created_by');
+	}
+
+	/**
+	 * A protected method to get a set of ordering conditions.
+	 *
+	 * @param   object $table A record object.
+	 *
+	 * @return  array  An array of conditions to add to add to ordering queries.
+	 *
+	 * @since   1.6
+	 */
+	protected function getReorderConditions($table)
+	{
+		$condition   = array();
+		$condition[] = 'catid = ' . (int) $table->catid;
+
+		return $condition;
 	}
 
 	/**
 	 * Method to change the core published state of THM Groups articles.
 	 *
-	 * @param   int $articleID the id of the article
-	 * @param   int $status the value to be used for the published attribute
-	 *
 	 * @return  boolean  true on success, otherwise false
 	 */
-	public function publish($articleID, $status)
+	public function publish()
 	{
+		$app        = JFactory::getApplication();
+		$articleIDs = $app->input->get('cid', array(), 'array');
+		Joomla\Utilities\ArrayHelper::toInteger($articleIDs);
+
 		// Should never occur
-		if (empty($articleID))
+		if (empty($articleIDs))
 		{
-			return true;
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'notice');
+
+			return false;
 		}
 
-		$app = JFactory::getApplication();
+		$articleID = $articleIDs[0];
 
 		if (!THM_GroupsHelperQuickpage::canEditState($articleID))
 		{
@@ -69,11 +154,13 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 			return false;
 		}
 
+		$task = $app->input->getCmd('task');
 		JTable::addIncludePath(JPATH_ROOT . '/libraries/legacy/table');
 		$table = $this->getTable('Content', 'JTable');
+		$value = constant(strtoupper(str_replace('quickpage.', '', $task)));
 
 		// Attempt to change the state of the records.
-		$success = $table->publish($articleID, $status, JFactory::getUser()->id);
+		$success = $table->publish($articleID, $value, JFactory::getUser()->id);
 
 		if (!$success)
 		{
@@ -107,12 +194,14 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 		$user       = JFactory::getUser();
 
 		// Update ordering values
-		foreach ($pks as $i => $articleID)
+		foreach ($pks as $i => $pk)
 		{
-			$table->load((int) $articleID);
+			$table->load((int) $pk);
+
+			$canEditState = $user->authorise('core.edit.state', 'com_content.article.' . $pk);
 
 			// Access checks.
-			if (!THM_GroupsHelperQuickpage::canEditState($articleID))
+			if (!$canEditState)
 			{
 				// Prune items that you can't change.
 				unset($pks[$i]);
@@ -166,20 +255,32 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 	/**
 	 * Toggles THM Groups article attributes like 'published' and 'featured'
 	 *
-	 * @return  boolean  true on success, otherwise false
+	 * @param  array $cid Array with THM Groups article IDs
+	 *
+	 * @return  mixed  integer on success, otherwise false
 	 */
-	public function toggle()
+	public function toggle($cid)
 	{
 		$app   = JFactory::getApplication();
 		$input = $app->input;
 
-		$articleID = $input->getInt('id', 0);
-
-		if (empty($articleID))
+		// If array is empty, the toggle button was clicked
+		if (empty($cid))
 		{
-			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'warning');
+			$articleID = $input->getInt('id', 0);
 
-			return false;
+			if (empty($articleID))
+			{
+				$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'warning');
+
+				return false;
+			}
+
+			$cid = array($articleID);
+		}
+		else
+		{
+			Joomla\Utilities\ArrayHelper::toInteger($cid);
 		}
 
 		$attribute         = $input->getString('attribute', '');
@@ -194,11 +295,23 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 			return false;
 		}
 
-		$value = $input->getBool('value', false);
+		// Invert value according to the implementation
+		$value = $input->getInt('value', 1) ? 0 : 1;
 
-		$this->updateQuickpageState($articleID, $attribute, $value);
+		// Process multiple ids
+		$successCount = 0;
 
-		return true;
+		foreach ($cid as $id)
+		{
+			$success = $this->updateQuickpageState($id, $attribute, $value);
+
+			if ($success)
+			{
+				$successCount++;
+			}
+		}
+
+		return $successCount;
 	}
 
 	/**
@@ -238,7 +351,8 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 		{
 			$query->insert('#__thm_groups_users_content')->columns(array('usersID', 'contentID', 'featured', 'published'));
 
-			$values = array(JFactory::getUser()->id, $articleID);
+			// Use create_by of the content
+			$values = array($this->getAuthorID($articleID), $articleID);
 			Joomla\Utilities\ArrayHelper::toInteger($values);
 
 			switch ($attribute)
@@ -262,13 +376,13 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 		{
 			$success = $dbo->execute();
 		}
-		catch (Exception $exc)
+		catch (Exception $exception)
 		{
-			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
 			return false;
 		}
 
-		return empty($success) ? false : true;
+		return $success;
 	}
 }

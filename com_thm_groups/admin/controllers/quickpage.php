@@ -3,10 +3,10 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsControllerProfile
+ * @name        THM_GroupsControllerQuickpage
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -15,17 +15,18 @@ defined('_JEXEC') or die;
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
 
 /**
- * THM_GroupsControllerQuickpage_Content class for component com_thm_groups
+ * Class provides validity checks, data manipulation function calls, and redirection
+ * for THM Groups associated content.
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  */
-class THM_GroupsControllerQuickpage_Content extends JControllerAdmin
+class THM_GroupsControllerQuickpage extends JControllerAdmin
 {
 	protected $text_prefix = 'COM_THM_GROUPS';
 
 	/**
-	 * Method to publish a single item in the list, table '#__content'
+	 * Method to publish a single article
 	 *
 	 * @return  void
 	 */
@@ -34,102 +35,20 @@ class THM_GroupsControllerQuickpage_Content extends JControllerAdmin
 		// Check for request forgeries
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
-		// Get items to publish from the request.
-		$cid      = JFactory::getApplication()->input->get('cid', array(), 'array');
+		$articleIDs = JFactory::getApplication()->input->get('cid', array(), 'array');
+		Joomla\Utilities\ArrayHelper::toInteger($articleIDs);
+
 		$statuses = array('publish' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
 		$task     = $this->getTask();
-		$value    = Joomla\Utilities\ArrayHelper::getValue($statuses, $task, 0, 'int');
-		$success  = 0;
+		$status   = Joomla\Utilities\ArrayHelper::getValue($statuses, $task, 0, 'int');
+		$model    = $this->getModel('quickpage');
 
-		$model = $this->getModel('quickpage_content');
-
-		// Make sure the item ids are integers
-		Joomla\Utilities\ArrayHelper::toInteger($cid);
-
-		// Publish the items.
-		try
+		foreach ($articleIDs as $articleID)
 		{
-			$success = $model->publish($cid, $value);
-		}
-		catch (Exception $exception)
-		{
-			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+			$model->publish($articleID, $status);
 		}
 
-		$text = "";
-		if (!$success)
-		{
-			JFactory::getApplication()->enqueueMessage(JText::_($this->text_prefix . '_ARTICLE_FAILED_PUBLISHING'), 'error');
-		}
-		else
-		{
-			if ($value == 1)
-			{
-				$text = $this->text_prefix . '_ARTICLE_PUBLISHED';
-			}
-			elseif ($value == 0)
-			{
-				$text = $this->text_prefix . '_ARTICLE_UNPUBLISHED';
-			}
-			elseif ($value == 2)
-			{
-				$text = $this->text_prefix . '_ARTICLE_ARCHIVED';
-			}
-			else
-			{
-				$text = $this->text_prefix . '_ARTICLE_TRASHED';
-			}
-		}
-
-		$this->setMessage(JText::_($text));
-		$this->setRedirect("index.php?option=com_thm_groups&view=quickpage_content_manager");
-	}
-
-	/**
-	 * Toggles the state of a single item after click
-	 * on a toggle button in the list
-	 *
-	 * @return void
-	 */
-	public function toggle()
-	{
-		$canEdit = THM_GroupsHelperComponent::canEdit();
-		if (!$canEdit)
-		{
-			return;
-		}
-
-		$app     = JFactory::getApplication();
-		$input   = $app->input;
-		$cid     = $input->get('cid', array(), 'array');
-		$model   = $this->getModel('quickpage_content');
-		$success = 0;
-
-		try
-		{
-			$success = $model->toggle($cid);
-		}
-		catch (Exception $exception)
-		{
-			$app->enqueueMessage($exception->getMessage(), 'error');
-		}
-
-		$attribute = strtoupper($input->getString('attribute', ''));
-		$value     = $input->getInt('value', 1);
-
-		// $task = unpublished/unfeatured or published/featured
-		$task = $value === 1 ? 'UN' . $attribute : $attribute;
-
-		if ($success)
-		{
-			$this->setMessage(JText::_($this->text_prefix . '_ARTICLE_' . $task));
-		}
-		else
-		{
-			$this->setMessage(JText::_('COM_THM_GROUPS_SAVE_ERROR'), 'error');
-		}
-
-		$this->setRedirect("index.php?option=com_thm_groups&view=quickpage_content_manager");
+		$this->setRedirect("index.php?option=com_thm_groups&view=quickpage_manager");
 	}
 
 	/**
@@ -145,7 +64,7 @@ class THM_GroupsControllerQuickpage_Content extends JControllerAdmin
 			return;
 		}
 
-		$model   = $this->getModel('quickpage_content');
+		$model   = $this->getModel('quickpage');
 		$cid     = JFactory::getApplication()->input->get('cid', array(), 'array');
 		$success = 0;
 
@@ -171,7 +90,7 @@ class THM_GroupsControllerQuickpage_Content extends JControllerAdmin
 			$this->setMessage(JText::_('COM_THM_GROUPS_SAVE_ERROR'), 'error');
 		}
 
-		$this->setRedirect("index.php?option=com_thm_groups&view=quickpage_content_manager");
+		$this->setRedirect("index.php?option=com_thm_groups&view=quickpage_manager");
 	}
 
 	/**
@@ -187,7 +106,7 @@ class THM_GroupsControllerQuickpage_Content extends JControllerAdmin
 			return;
 		}
 
-		$model   = $this->getModel('quickpage_content');
+		$model   = $this->getModel('quickpage');
 		$cid     = JFactory::getApplication()->input->get('cid', array(), 'array');
 		$success = 0;
 
@@ -213,7 +132,7 @@ class THM_GroupsControllerQuickpage_Content extends JControllerAdmin
 			$this->setMessage(JText::_('COM_THM_GROUPS_SAVE_ERROR'), 'error');
 		}
 
-		$this->setRedirect("index.php?option=com_thm_groups&view=quickpage_content_manager");
+		$this->setRedirect("index.php?option=com_thm_groups&view=quickpage_manager");
 
 	}
 
@@ -230,7 +149,7 @@ class THM_GroupsControllerQuickpage_Content extends JControllerAdmin
 			return;
 		}
 
-		$model   = $this->getModel('quickpage_content');
+		$model   = $this->getModel('quickpage');
 		$cid     = JFactory::getApplication()->input->get('cid', array(), 'array');
 		$success = 0;
 
@@ -256,7 +175,7 @@ class THM_GroupsControllerQuickpage_Content extends JControllerAdmin
 			$this->setMessage(JText::_('COM_THM_GROUPS_SAVE_ERROR'), 'error');
 		}
 
-		$this->setRedirect("index.php?option=com_thm_groups&view=quickpage_content_manager");
+		$this->setRedirect("index.php?option=com_thm_groups&view=quickpage_manager");
 	}
 
 	/**
@@ -272,7 +191,7 @@ class THM_GroupsControllerQuickpage_Content extends JControllerAdmin
 			return;
 		}
 
-		$model   = $this->getModel('quickpage_content');
+		$model   = $this->getModel('quickpage');
 		$cid     = JFactory::getApplication()->input->get('cid', array(), 'array');
 		$success = 0;
 
@@ -298,6 +217,53 @@ class THM_GroupsControllerQuickpage_Content extends JControllerAdmin
 			$this->setMessage(JText::_('COM_THM_GROUPS_SAVE_ERROR'), 'error');
 		}
 
-		$this->setRedirect("index.php?option=com_thm_groups&view=quickpage_content_manager");
+		$this->setRedirect("index.php?option=com_thm_groups&view=quickpage_manager");
+	}
+
+	/**
+	 * Method to save the submitted ordering values for records via AJAX.
+	 *
+	 * @return  void
+	 *
+	 */
+	public function saveOrderAjax()
+	{
+		// Get the input
+		$pks   = $this->input->get('cid', array(), 'array');
+		$order = $this->input->get('order', array(), 'array');
+
+		// Sanitize the input
+		Joomla\Utilities\ArrayHelper::toInteger($pks);
+		Joomla\Utilities\ArrayHelper::toInteger($order);
+
+		// Get the model
+		$model = $this->getModel('quickpage');
+
+		// Save the ordering
+		$return = $model->saveorder($pks, $order);
+
+		if ($return)
+		{
+			echo "1";
+		}
+
+		// Close the application
+		JFactory::getApplication()->close();
+	}
+
+	/**
+	 * Toggles the state of a single binary quickapge attribute
+	 *
+	 * @return void
+	 */
+	public function toggle()
+	{
+		$model = $this->getModel('quickpage');
+
+		// Access checks and output messages are in the model.
+		$model->toggle();
+
+		$menuID     = $this->input->getInt('Itemid', 0);
+		$this->setRedirect(JRoute::_("index.php?option=com_thm_groups&view=quickpage_manager&Itemid=$menuID"));
 	}
 }

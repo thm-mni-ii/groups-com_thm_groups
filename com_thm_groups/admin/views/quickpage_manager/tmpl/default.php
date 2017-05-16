@@ -3,7 +3,7 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THMGroupsViewAttribute_Manager
+ * @name        THM_GroupsViewQuickpage_Manager
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2017 TH Mittelhessen
@@ -11,17 +11,15 @@
  * @link        www.thm.de
  */
 
-// No direct access to this file
 defined('_JEXEC') or die;
-require_once JPATH_ROOT . '/media/com_thm_groups/templates/list.php';
-
+jimport('thm_core.list.template');
 $listOrder      = $this->escape($this->state->get('list.ordering'));
 $listDirn       = $this->escape($this->state->get('list.direction'));
 
-if ($listOrder == 'attribute.ordering')
+if ($listOrder == 'content.ordering')
 {
-	$saveOrderingUrl = 'index.php?option=com_thm_groups&task=attribute.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'attribute_manager-list', 'adminForm', null, $saveOrderingUrl);
+	$saveOrderingUrl = 'index.php?option=com_thm_groups&task=quickpage.saveOrderAjax&tmpl=component';
+	JHtml::_('sortablelist.sortable', 'quickpage_manager-list', 'adminForm', null, $saveOrderingUrl);
 }
 
-THM_GroupsTemplateList::render($this);
+THM_CoreTemplateList::render($this);

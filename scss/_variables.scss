@@ -1,0 +1,119 @@
+//********************************************************************************************************************//
+// Colors                                                                                                             //
+//********************************************************************************************************************//
+
+// Greens
+$green-100: #80ba24;
+$green-75: #a0cb5b;
+$green-50: #bfdc91;
+$green-25: #dfeec8;
+
+// Greys
+$grey-100: #4a5c66;
+$grey-75: #77858c;
+$grey-50: #a4adb2;
+$grey-25: #d2d6d9;
+
+// Reds
+$red-100: #9c132e;
+$red-75: #b54e62;
+$red-50: #cd8996;
+$red-25: #e6c4cb;
+
+// Yellows
+$yellow-100: #f4aa00;
+$yellow-75: #f7bf40;
+$yellow-50: #f9d47f;
+$yellow-25: #fceabf;
+
+// Blues
+$blue-100: #002878;
+$blue-75: #405e9a;
+$blue-50: #7f93bb;
+$blue-25: #bfc9dd;
+
+// Backgrounds
+$thm: $green-100;
+$foreground-color: white;
+$background-color: #f2f5f6;
+$background-navigation-color: #dfe5e6;
+
+// 25 Green (active element highlighting / contact module)
+$background-green: $green-25;
+$background-contact: $green-25;
+$background-active: $green-25;
+
+// 50 Yellow (list/news modules)
+$background-yellow: $yellow-50;
+$background-list: $yellow-50;
+$background-news: $yellow-50;
+
+//75 Green (active element highlighting / backend iconpicker)
+$background-icon-list: $green-75;
+
+// 75 Red (list/menu modules)
+$background-red: $red-75;
+$background-menu: $red-75;
+
+// 75 Blue (event module)
+$background-blue: $blue-75;
+$background-events: $blue-75;
+
+// 100 Blue-Grey (footer, captions, buttons)
+$background-grey: $grey-100;
+$background-foot: $grey-100;
+
+// Backend Developed Extension Colors ********************************************************************************//
+
+// box-shadow default definition
+$shadow-color: $grey-50;
+
+// box-shadow definition for fieldset
+$shadow-color-fieldset: $thm;
+
+// background color for accordion
+$bg-color-panel: #ffffff;
+
+// color for hover in widget accordion?
+$bg-color-widget: $grey-100;
+
+// background color for table head (backend)
+$bg-table-head: $green-50;
+
+//********************************************************************************************************************//
+// Font Attributes                                                                                                    //
+//********************************************************************************************************************//
+
+$font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+$font-family-header: 'THM-Medium', Arial, Helvetica, sans-serif;
+$font: $font-family;
+$font-size: 13px;
+$font-size-em: 1.3em;
+$font-size-title: 20px;
+$font-size-list: 12px;
+$font-size-small: 11px;
+$font-size-note: 9px;
+$font-color: #394a59;
+$font-color-link: $red-100;
+$font-color-light: #ffffff;
+$font-color-title: $font-color;
+$line-height: 1.3;
+
+//********************************************************************************************************************//
+// Borders                                                                                                            //
+//********************************************************************************************************************//
+
+$border: 1px solid $grey-75;
+$border-color: $grey-75;
+$border-input: $border;
+$border-light: 1px solid $background-color;
+$border-table: $border;
+$border-thick: 2px solid $grey-100;
+$border-white: 1px solid white;
+
+//********************************************************************************************************************//
+// Breakpoints for Media Queries
+//********************************************************************************************************************//
+
+$mq-phone: 480px;
+$mq-tablet: 768px;

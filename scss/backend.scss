@@ -1,5 +1,261 @@
-@import '../../lib_thm_core/scss/backend';
 
+//Here divided main sections: navigation, content, toolbar -> new/edit
+@import 'variables';
+@import 'mixins';
+@import 'icons';
+
+//********************************************************************************************************************//
+// adjusting navigation
+//********************************************************************************************************************//
+.sidebar-nav {
+  color: $font-color;
+}
+
+.menu-spacer {
+  background-color: $background-navigation-color;
+  display: block;
+  font-size: 1.1rem;
+  margin: .3rem -2rem 0 -2rem;
+  padding: .3rem 1.6rem .3rem 2rem;
+  width: 100%;
+}
+
+.groups-logo, .groups-description {
+  font-size: .9rem;
+  margin-bottom: .6rem;
+}
+
+.action-group {
+  h1, h2, h3, h4, h5, h6 {
+    background-color: $background-navigation-color;
+    color: $font-color;
+    font-size: 1.3rem;
+    margin: .5rem 0;
+    padding: .5rem;
+  }
+}
+
+.action-item {
+
+  font-size: 1.1rem;
+  margin: 0 0 .5rem .5rem;
+
+  a[href*="_manager"]::before {
+    content: "";
+  }
+
+  &.quicklink {
+    font-size: 1.3rem;
+  }
+}
+
+//********************************************************************************************************************//
+// adjusting content
+//********************************************************************************************************************//
+
+// adjusting filter-header in table head and filters in search-area
+//********************************************************************************************************************//
+.searchArea a, thead a {
+  color: $background-grey;
+
+  &:hover {
+    color: $thm;
+  }
+}
+
+.js-stools-container-bar {
+  margin-bottom: 0.3rem;
+}
+
+// adjusting width of filters, overwriting styles of chosen
+.js-stools-field-filter, .js-stools-field-list {
+  display: inline-block;
+  max-width: 200px;
+
+  select {
+    width: auto;
+  }
+
+  span {
+    // needed to overwrite styles from jquery.searchtools.css
+    overflow: hidden !important;
+  }
+}
+
+.chzn-container {
+  max-width: inherit;
+}
+
+// adjusting tables
+//********************************************************************************************************************//
+.table-striped {
+  margin-top: 7px;
+  border-collapse: separate;
+  border-top: 1px solid #bbb;
+  @include border-radius(3px 3px 0 0);
+
+  // needed here to overwrite template
+  th:not(:first-child) {
+    padding-left: 0.2rem;
+  }
+}
+
+// adjusting table-head **********************************************************************************************//
+thead {
+  color: $background-grey;
+}
+
+th {
+  background: $bg-table-head;
+
+  &:first-child {
+    border-left: 1px solid #bbb;
+  }
+
+  &:last-child {
+    border-right: 1px solid #bbb;
+  }
+}
+
+tr:nth-child(1):not(:only-child) th {
+  padding-bottom: 0;
+
+  &:first-child {
+    span {
+      margin-left: 0.2rem;
+    }
+  }
+}
+
+tr:nth-last-child(1):not(:first-child) th {
+  border-top: none;
+  border-bottom: 1px solid #bbb;
+  padding-top: 0.1rem;
+}
+
+tr:nth-last-child(1) th {
+  &:first-child {
+    border-bottom-left-radius: 3px;
+  }
+  &:last-child {
+    border-bottom-right-radius: 3px;
+  }
+}
+
+// adjusting table body **********************************************************************************************//
+tbody tr:first-child td {
+  border-top-style: none;
+}
+
+//********************************************************************************************************************//
+// toolbar -> new/edit
+//********************************************************************************************************************//
+
+// adjusting style for file upload. Just needed for Chrome (Comparing with Firefox,IE)
+// beispielsweise in Stundenpläne -> Neu
+//********************************************************************************************************************//
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .controls input[type="file"] {
+    line-height: 0;
+    padding-top: 3px;
+  }
+}
+
+// view=**_edit
+.chzn-container-multi .chzn-choices li {
+  float: none;
+}
+
+// adjusting mapping
+// -> edit Subject Pools(Modulpool) -> Degree Programs and Module Pools (Studiengänge & Modulpools)
+//********************************************************************************************************************//
+#mapping, #mappings {
+  @media (min-width: 768px) {
+    .control-group:nth-of-type(1) {
+      width: 50%;
+      float: left;
+      .controls select {
+        width: 95%;
+      }
+    }
+
+    .control-group:nth-of-type(2) {
+      width: 50%;
+      float: right;
+      .controls select {
+        width: 95%;
+      }
+    }
+
+    .control-group:nth-of-type(3) {
+      clear: both;
+    }
+  }
+
+  table {
+    width: 98%;
+  }
+
+  thead {
+    tr:nth-child(1) th {
+      padding: 5px 0 5px 8px;
+    }
+    .thm_organizer_pools_ordering {
+      width: 200px;
+    }
+  }
+
+  tbody {
+    .child-order {
+      .btn-small {
+        padding: 1px 4px;
+        font-size: 12px;
+        line-height: 8px;
+      }
+
+      .text-area-order {
+        padding: 1px 2px;
+        text-align: center;
+        height: 14px;
+      }
+    }
+
+    .child-name {
+      padding-right: 30px;
+    }
+  }
+}
+
+//********************************************************************************************************************//
+// Media Queries for tables in Backend
+//********************************************************************************************************************//
+
+// for phone
+//********************************************************************************************************************//
+@include breakpoint($mq-phone) {
+  // for all tables. Just display the second column.
+  .table-striped {
+    @include displayAndHideColumns(2);
+  }
+  #quickpage_manager-list, #plugin_manager-list, #static_type_manager-list {
+    @include displayAndHideColumns(2, 3);
+  }
+  #role_manager-list {
+    @include displayAndHideColumns(3, 4);
+  }
+}
+
+// for tablet
+//********************************************************************************************************************//
+@include breakpoint($mq-tablet) {
+  // for all tables. Hide the last columns from the fifth column, so four columns are displayed
+  .table-striped {
+    @include hideColumns(5);
+  }
+}
+
+// icon picker
+//********************************************************************************************************************//
 .iconPicker {
   white-space: normal !important; //needed for Firefox
 

@@ -4,10 +4,8 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        JFormFieldRoleItemSelect
- * @description JFormFieldRoleItemSelect file from com_thm_groups
- * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
- * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @author      James Antrim, <james.antrim@nm.thm.de>
+ * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -41,7 +39,6 @@ class JFormFieldRoleItemSelect extends JFormField
 
 		JHTML::script($scriptDir . 'js/roleitemselect.js');
 		JHtml::stylesheet($scriptDir . 'css/orderattributes.css');
-		$sortButtons = true;
 
 		// Add script-code to the document head
 		$app = JFactory::getApplication()->input;
