@@ -174,6 +174,7 @@ function THM_groupsParseRoute($segments)
 
 		case 'profile':
 		case 'profile_edit':
+        case 'list':
 			parseProfileSegment($vars, end($segments));
 			break;
 

@@ -45,7 +45,6 @@
         <folder>controllers</folder>
         <folder>models</folder>
         <folder>views</folder>
-
         <filename>controller.php</filename>
         <filename>index.html</filename>
         <filename>router.php</filename>
