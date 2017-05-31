@@ -22,87 +22,87 @@ $doc->addStyleSheet(JURI::root(true) . '/media/com_thm_groups/css/THMChangelogCo
  */
 class THM_GroupsHelperChangeLog
 {
-	/**
-	 * Colorise a changelog by usind prefix of the changelog entries.
-	 *
-	 * Prefix:
-	 *  = - Skip/Comment will not be used in the result.
-	 *  + - added
-	 *  - - removed
-	 *  ~ - changed
-	 *  ! - important
-	 *  # - fixed
-	 *    - (without prefix) Will displayed normal.
-	 *
-	 * @param   String $file     Path to changelog.
-	 * @param   bool   $onlyLast Trigger to display only last changelog entry
-	 *
-	 * @return string The colorised HTML String
-	 */
-	public static function colorise($file, $onlyLast = false)
-	{
-		$ret   = '';
-		$lines = file($file);
+    /**
+     * Colorise a changelog by usind prefix of the changelog entries.
+     *
+     * Prefix:
+     *  = - Skip/Comment will not be used in the result.
+     *  + - added
+     *  - - removed
+     *  ~ - changed
+     *  ! - important
+     *  # - fixed
+     *    - (without prefix) Will displayed normal.
+     *
+     * @param   String $file     Path to changelog.
+     * @param   bool   $onlyLast Trigger to display only last changelog entry
+     *
+     * @return string The colorised HTML String
+     */
+    public static function colorise($file, $onlyLast = false)
+    {
+        $ret   = '';
+        $lines = file($file);
 
-		if (empty($lines))
-		{
-			return $ret;
-		}
+        if (empty($lines))
+        {
+            return $ret;
+        }
 
-		array_shift($lines);
+        array_shift($lines);
 
-		foreach ($lines as $line)
-		{
+        foreach ($lines as $line)
+        {
 
-			$line = trim($line);
-			if (empty($line))
-			{
-				continue;
-			}
-			$type = substr($line, 0, 1);
+            $line = trim($line);
+            if (empty($line))
+            {
+                continue;
+            }
+            $type = substr($line, 0, 1);
 
-			switch ($type)
-			{
-				case '=':
-					continue;
-				case '+':
-					$ret .= "\t" . '<li class="THM-iCampus-added"><span></span>' . htmlentities(trim(substr($line, 2))) . "</li>\n";
-					break;
+            switch ($type)
+            {
+                case '=':
+                    continue;
+                case '+':
+                    $ret .= "\t" . '<li class="THM-iCampus-added"><span></span>' . htmlentities(trim(substr($line, 2))) . "</li>\n";
+                    break;
 
-				case '-':
-					$ret .= "\t" . '<li class="THM-iCampus-removed"><span></span>' . htmlentities(trim(substr($line, 2))) . "</li>\n";
-					break;
+                case '-':
+                    $ret .= "\t" . '<li class="THM-iCampus-removed"><span></span>' . htmlentities(trim(substr($line, 2))) . "</li>\n";
+                    break;
 
-				case '~':
-					$ret .= "\t" . '<li class="THM-iCampus-changed"><span></span>' . htmlentities(trim(substr($line, 2))) . "</li>\n";
-					break;
+                case '~':
+                    $ret .= "\t" . '<li class="THM-iCampus-changed"><span></span>' . htmlentities(trim(substr($line, 2))) . "</li>\n";
+                    break;
 
-				case '!':
-					$ret .= "\t" . '<li class="THM-iCampus-important"><span></span>' . htmlentities(trim(substr($line, 2))) . "</li>\n";
-					break;
+                case '!':
+                    $ret .= "\t" . '<li class="THM-iCampus-important"><span></span>' . htmlentities(trim(substr($line, 2))) . "</li>\n";
+                    break;
 
-				case '#':
-					$ret .= "\t" . '<li class="THM-iCampus-fixed"><span></span>' . htmlentities(trim(substr($line, 2))) . "</li>\n";
-					break;
+                case '#':
+                    $ret .= "\t" . '<li class="THM-iCampus-fixed"><span></span>' . htmlentities(trim(substr($line, 2))) . "</li>\n";
+                    break;
 
-				default:
-					if (!empty($ret))
-					{
-						$ret .= "</ul>";
-						if ($onlyLast)
-						{
-							return $ret;
-						}
-					}
-					if (!$onlyLast)
-					{
-						$ret .= "<h3 class=\"THM-iCampus\">$line</h3>\n";
-					}
-					$ret .= "<ul class=\"THM-iCampus\">\n";
-					break;
-			}
-		}
+                default:
+                    if (!empty($ret))
+                    {
+                        $ret .= "</ul>";
+                        if ($onlyLast)
+                        {
+                            return $ret;
+                        }
+                    }
+                    if (!$onlyLast)
+                    {
+                        $ret .= "<h3 class=\"THM-iCampus\">$line</h3>\n";
+                    }
+                    $ret .= "<ul class=\"THM-iCampus\">\n";
+                    break;
+            }
+        }
 
-		return $ret;
-	}
+        return $ret;
+    }
 }

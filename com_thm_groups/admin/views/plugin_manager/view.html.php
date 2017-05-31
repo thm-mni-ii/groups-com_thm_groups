@@ -28,52 +28,52 @@ require_once JPATH_ROOT . '/media/com_thm_groups/views/list.php';
  */
 class THM_GroupsViewPlugin_Manager extends THM_GroupsViewList
 {
-	public $items;
+    public $items;
 
-	public $pagination;
+    public $pagination;
 
-	public $state;
+    public $state;
 
-	/**
-	 * Method to get display
-	 *
-	 * @param    String $tp1 template
-	 *
-	 * @return void
-	 */
-	public function display($tp1 = null)
-	{
-		if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
-		{
-			return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
-		}
+    /**
+     * Method to get display
+     *
+     * @param    String $tp1 template
+     *
+     * @return void
+     */
+    public function display($tp1 = null)
+    {
+        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
 
-		parent::display($tp1);
-	}
+        parent::display($tp1);
+    }
 
-	/**
-	 * Add Joomla ToolBar with edit, enable, disable options.
-	 *
-	 * @return void
-	 */
-	protected function addToolbar()
-	{
-		$user = JFactory::getUser();
+    /**
+     * Add Joomla ToolBar with edit, enable, disable options.
+     *
+     * @return void
+     */
+    protected function addToolbar()
+    {
+        $user = JFactory::getUser();
 
-		JToolBarHelper::title(
-			JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_PLUGIN_MANAGER'), 'plugin_manager'
-		);
+        JToolBarHelper::title(
+            JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_PLUGIN_MANAGER'), 'plugin_manager'
+        );
 
-		JToolBarHelper::editList('plugin.edit', 'COM_THM_GROUPS_EDIT');
-		JToolbarHelper::divider();
-		JToolbarHelper::publish('plugin.enable', 'COM_THM_GROUPS_PLUGIN_MANAGER_ENABLE', true);
-		JToolbarHelper::unpublish('plugin.disable', 'COM_THM_GROUPS_PLUGIN_MANAGER_DISABLE', true);
-		JToolbarHelper::spacer();
+        JToolBarHelper::editList('plugin.edit', 'COM_THM_GROUPS_EDIT');
+        JToolbarHelper::divider();
+        JToolbarHelper::publish('plugin.enable', 'COM_THM_GROUPS_PLUGIN_MANAGER_ENABLE', true);
+        JToolbarHelper::unpublish('plugin.disable', 'COM_THM_GROUPS_PLUGIN_MANAGER_DISABLE', true);
+        JToolbarHelper::spacer();
 
-		if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))
-		{
-			JToolBarHelper::divider();
-			JToolBarHelper::preferences('com_thm_groups');
-		}
-	}
+        if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))
+        {
+            JToolBarHelper::divider();
+            JToolBarHelper::preferences('com_thm_groups');
+        }
+    }
 }

@@ -28,24 +28,24 @@ $alphabet = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M
                   'U', 'V', 'W', 'X', 'Y', 'Z');
 foreach ($alphabet as $letter)
 {
-	echo '<li>';
-	if (array_key_exists($letter, $this->profiles))
-	{
-		$url = "$baseURL&letter=$letter";
-		echo JHtml::_('link', $url, $letter, $attributes);
-	}
-	else
-	{
-		echo '<span class="letter-disabled">' . $letter . '</span>';
-	}
-	echo '</li>';
+    echo '<li>';
+    if (array_key_exists($letter, $this->profiles))
+    {
+        $url = "$baseURL&letter=$letter";
+        echo JHtml::_('link', $url, $letter, $attributes);
+    }
+    else
+    {
+        echo '<span class="letter-disabled">' . $letter . '</span>';
+    }
+    echo '</li>';
 }
 echo '</ul></div>';
 
 $this->letterProfiles = array();
 if (array_key_exists($shownLetter, $this->profiles))
 {
-	$this->letterProfiles[$shownLetter] = $this->profiles[$shownLetter];
+    $this->letterProfiles[$shownLetter] = $this->profiles[$shownLetter];
 }
 
 echo $this->loadTemplate('list');

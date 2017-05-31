@@ -26,195 +26,195 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/static_type.php';
  */
 class THM_GroupsControllerDynamic_Type extends JControllerLegacy
 {
-	/**
-	 * constructor (registers additional tasks to methods)
-	 *
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
+    /**
+     * constructor (registers additional tasks to methods)
+     *
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
-	/**
-	 * Redirects to the dynamic_type_edit view for the creation of new element
-	 *
-	 * @return object
-	 */
-	public function add()
-	{
-		$canEdit = THM_GroupsHelperComponent::canEdit();
-		if (!$canEdit)
-		{
-			return;
-		}
+    /**
+     * Redirects to the dynamic_type_edit view for the creation of new element
+     *
+     * @return object
+     */
+    public function add()
+    {
+        $canEdit = THM_GroupsHelperComponent::canEdit();
+        if (!$canEdit)
+        {
+            return;
+        }
 
-		$this->setRedirect("index.php?option=com_thm_groups&view=dynamic_type_edit&id=0");
-	}
+        $this->setRedirect("index.php?option=com_thm_groups&view=dynamic_type_edit&id=0");
+    }
 
-	/**
-	 * Apply - Save button
-	 *
-	 * @return void
-	 */
-	public function apply()
-	{
-		$canEdit = THM_GroupsHelperComponent::canEdit();
-		if (!$canEdit)
-		{
-			return;
-		}
+    /**
+     * Apply - Save button
+     *
+     * @return void
+     */
+    public function apply()
+    {
+        $canEdit = THM_GroupsHelperComponent::canEdit();
+        if (!$canEdit)
+        {
+            return;
+        }
 
-		$model = $this->getModel('dynamic_type');
+        $model = $this->getModel('dynamic_type');
 
-		$success = $model->save();
-		if ($success)
-		{
-			$msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-			$this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_edit&id=' . $success, $msg);
-		}
-		else
-		{
-			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-			$this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_edit&id=0', $msg);
-		}
-	}
+        $success = $model->save();
+        if ($success)
+        {
+            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
+            $this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_edit&id=' . $success, $msg);
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+            $this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_edit&id=0', $msg);
+        }
+    }
 
-	/**
-	 * Redirects to the category manager view without making any persistent changes
-	 *
-	 * @param   Integer $key contains the key
-	 *
-	 * @return  void
-	 *
-	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-	 */
-	public function cancel($key = null)
-	{
-		$canEdit = THM_GroupsHelperComponent::canEdit();
-		if (!$canEdit)
-		{
-			return;
-		}
+    /**
+     * Redirects to the category manager view without making any persistent changes
+     *
+     * @param   Integer $key contains the key
+     *
+     * @return  void
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function cancel($key = null)
+    {
+        $canEdit = THM_GroupsHelperComponent::canEdit();
+        if (!$canEdit)
+        {
+            return;
+        }
 
-		$this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_manager');
-	}
+        $this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_manager');
+    }
 
-	/**
-	 * Deletes selected dynamic types
-	 *
-	 * @return void
-	 */
-	public function delete()
-	{
-		$canEdit = THM_GroupsHelperComponent::canEdit();
-		if (!$canEdit)
-		{
-			return;
-		}
+    /**
+     * Deletes selected dynamic types
+     *
+     * @return void
+     */
+    public function delete()
+    {
+        $canEdit = THM_GroupsHelperComponent::canEdit();
+        if (!$canEdit)
+        {
+            return;
+        }
 
-		$doNotDelete = array(TEXT, TEXTFIELD, LINK, PICTURE, MULTISELECT, TABLE, NUMBER, DATE, TEMPLATE);
-		$ids         = JFactory::getApplication()->input->get('cid', array(), 'array');
-		$idsToDelete = array_diff($ids, $doNotDelete);
+        $doNotDelete = array(TEXT, TEXTFIELD, LINK, PICTURE, MULTISELECT, TABLE, NUMBER, DATE, TEMPLATE);
+        $ids         = JFactory::getApplication()->input->get('cid', array(), 'array');
+        $idsToDelete = array_diff($ids, $doNotDelete);
 
-		$redirectURL = 'index.php?option=com_thm_groups&view=dynamic_type_manager';
-		if (empty($idsToDelete))
-		{
-			$msg  = JText::_("COM_THM_GROUPS_CANT_DELETE_ERROR");
-			$type = 'warning';
-			$this->setRedirect($redirectURL, $msg, $type);
+        $redirectURL = 'index.php?option=com_thm_groups&view=dynamic_type_manager';
+        if (empty($idsToDelete))
+        {
+            $msg  = JText::_("COM_THM_GROUPS_CANT_DELETE_ERROR");
+            $type = 'warning';
+            $this->setRedirect($redirectURL, $msg, $type);
 
-			return;
-		}
+            return;
+        }
 
-		$success = $this->getModel('dynamic_type')->delete($idsToDelete);
-		if ($success)
-		{
-			$msg  = JText::_('COM_THM_GROUPS_DELETE_SUCCESS');
-			$type = 'message';
-		}
-		else
-		{
-			$msg  = JText::_('COM_THM_GROUPS_DELETE_ERROR');
-			$type = 'error';
-		}
-		$this->setRedirect($redirectURL, $msg, $type);
-	}
+        $success = $this->getModel('dynamic_type')->delete($idsToDelete);
+        if ($success)
+        {
+            $msg  = JText::_('COM_THM_GROUPS_DELETE_SUCCESS');
+            $type = 'message';
+        }
+        else
+        {
+            $msg  = JText::_('COM_THM_GROUPS_DELETE_ERROR');
+            $type = 'error';
+        }
+        $this->setRedirect($redirectURL, $msg, $type);
+    }
 
-	/**
-	 * Redirects to the category_edit view for the editing of existing categories
-	 *
-	 * @return void
-	 */
-	public function edit()
-	{
-		$canEdit = THM_GroupsHelperComponent::canEdit();
-		if (!$canEdit)
-		{
-			return;
-		}
-		$this->input->set('view', 'dynamic_type_edit');
-		$this->input->set('hidemainmenu', 1);
-		parent::display();
-	}
+    /**
+     * Redirects to the category_edit view for the editing of existing categories
+     *
+     * @return void
+     */
+    public function edit()
+    {
+        $canEdit = THM_GroupsHelperComponent::canEdit();
+        if (!$canEdit)
+        {
+            return;
+        }
+        $this->input->set('view', 'dynamic_type_edit');
+        $this->input->set('hidemainmenu', 1);
+        parent::display();
+    }
 
-	/**
-	 * Save&Close button
-	 *
-	 * @param   Integer $key    contain key
-	 * @param   String  $urlVar contain url
-	 *
-	 * @return void
-	 *
-	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-	 */
-	public function save($key = null, $urlVar = null)
-	{
-		$canEdit = THM_GroupsHelperComponent::canEdit();
-		if (!$canEdit)
-		{
-			return;
-		}
+    /**
+     * Save&Close button
+     *
+     * @param   Integer $key    contain key
+     * @param   String  $urlVar contain url
+     *
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function save($key = null, $urlVar = null)
+    {
+        $canEdit = THM_GroupsHelperComponent::canEdit();
+        if (!$canEdit)
+        {
+            return;
+        }
 
-		$model = $this->getModel('dynamic_type');
+        $model = $this->getModel('dynamic_type');
 
-		$success = $model->save();
-		if ($success)
-		{
-			$msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-			$this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_manager', $msg);
-		}
-		else
-		{
-			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-			$this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_manager' . $success, $msg);
-		}
-	}
+        $success = $model->save();
+        if ($success)
+        {
+            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
+            $this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_manager', $msg);
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+            $this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_manager' . $success, $msg);
+        }
+    }
 
-	/**
-	 * Save2new
-	 *
-	 * @return void
-	 */
-	public function save2new()
-	{
-		$canEdit = THM_GroupsHelperComponent::canEdit();
-		if (!$canEdit)
-		{
-			return;
-		}
+    /**
+     * Save2new
+     *
+     * @return void
+     */
+    public function save2new()
+    {
+        $canEdit = THM_GroupsHelperComponent::canEdit();
+        if (!$canEdit)
+        {
+            return;
+        }
 
-		$model = $this->getModel('dynamic_type');
+        $model = $this->getModel('dynamic_type');
 
-		$success = $model->save();
-		if ($success)
-		{
-			$msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-			$this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_edit&id=0', $msg);
-		}
-		else
-		{
-			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-			$this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_edit&id=0', $msg);
-		}
-	}
+        $success = $model->save();
+        if ($success)
+        {
+            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
+            $this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_edit&id=0', $msg);
+        }
+        else
+        {
+            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+            $this->setRedirect('index.php?option=com_thm_groups&view=dynamic_type_edit&id=0', $msg);
+        }
+    }
 }

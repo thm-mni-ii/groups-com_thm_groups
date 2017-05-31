@@ -19,16 +19,16 @@
  */
 class THM_GroupsHelperLanguage
 {
-	/**
-	 * Retrieves the two letter language identifier
-	 *
-	 * @return  string
-	 */
-	public static function getShortTag()
-	{
-		$fullTag  = JFactory::getLanguage()->getTag();
-		$tagParts = explode('-', $fullTag);
+    /**
+     * Retrieves the two letter language identifier
+     *
+     * @return  string
+     */
+    public static function getShortTag()
+    {
+        $fullTag  = JFactory::getLanguage()->getTag();
+        $tagParts = explode('-', $fullTag);
 
-		return $tagParts[0];
-	}
+        return $tagParts[0];
+    }
 }

@@ -28,61 +28,61 @@ require_once JPATH_ROOT . '/media/com_thm_groups/views/list.php';
 class THM_GroupsViewDynamic_Type_Manager extends THM_GroupsViewList
 {
 
-	public $items;
+    public $items;
 
-	public $pagination;
+    public $pagination;
 
-	public $state;
+    public $state;
 
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object $tpl template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
-		{
-			return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
-		}
+    /**
+     * Method to get display
+     *
+     * @param   Object $tpl template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
+        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
 
-		parent::display($tpl);
-	}
+        parent::display($tpl);
+    }
 
-	/**
-	 * Add Joomla ToolBar with add edit delete options.
-	 *
-	 * @return void
-	 */
-	protected function addToolbar()
-	{
-		$user = JFactory::getUser();
+    /**
+     * Add Joomla ToolBar with add edit delete options.
+     *
+     * @return void
+     */
+    protected function addToolbar()
+    {
+        $user = JFactory::getUser();
 
-		JToolBarHelper::title(
-			JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER'), 'dynamic_type_manager'
-		);
+        JToolBarHelper::title(
+            JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER'), 'dynamic_type_manager'
+        );
 
-		if ($user->authorise('core.create', 'com_thm_groups'))
-		{
-			JToolBarHelper::addNew('dynamic_type.add', 'COM_THM_GROUPS_NEW', false);
-		}
+        if ($user->authorise('core.create', 'com_thm_groups'))
+        {
+            JToolBarHelper::addNew('dynamic_type.add', 'COM_THM_GROUPS_NEW', false);
+        }
 
-		if ($user->authorise('core.edit', 'com_thm_groups'))
-		{
-			JToolBarHelper::editList('dynamic_type.edit', 'COM_THM_GROUPS_EDIT');
-		}
+        if ($user->authorise('core.edit', 'com_thm_groups'))
+        {
+            JToolBarHelper::editList('dynamic_type.edit', 'COM_THM_GROUPS_EDIT');
+        }
 
-		if ($user->authorise('core.delete', 'com_thm_groups'))
-		{
-			JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM_DEPENDENCIES', 'dynamic_type.delete', 'JTOOLBAR_DELETE');
-		}
+        if ($user->authorise('core.delete', 'com_thm_groups'))
+        {
+            JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM_DEPENDENCIES', 'dynamic_type.delete', 'JTOOLBAR_DELETE');
+        }
 
-		if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))
-		{
-			JToolBarHelper::divider();
-			JToolBarHelper::preferences('com_thm_groups');
-		}
-	}
+        if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))
+        {
+            JToolBarHelper::divider();
+            JToolBarHelper::preferences('com_thm_groups');
+        }
+    }
 }

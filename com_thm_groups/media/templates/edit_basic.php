@@ -21,18 +21,18 @@
  */
 class THM_GroupsTemplateEdit_Basic
 {
-	/**
-	 * Method to create a list output
-	 *
-	 * @param   object &$view the view context calling the function
-	 *
-	 * @return void
-	 */
-	public static function render(&$view)
-	{
-		$option   = JFactory::getApplication()->input->get('option');
-		$resource = str_replace('_edit', '', $view->get('name'));
-		?>
+    /**
+     * Method to create a list output
+     *
+     * @param   object &$view the view context calling the function
+     *
+     * @return void
+     */
+    public static function render(&$view)
+    {
+        $option   = JFactory::getApplication()->input->get('option');
+        $resource = str_replace('_edit', '', $view->get('name'));
+        ?>
 
 		<form action="index.php?option=<?php echo $option; ?>"
 			  enctype="multipart/form-data"
@@ -42,12 +42,12 @@ class THM_GroupsTemplateEdit_Basic
 			  class="form-horizontal">
 			<fieldset class="adminform"
 			">
-			<?php echo $view->form->renderFieldset('details'); ?>
+            <?php echo $view->form->renderFieldset('details'); ?>
 			</fieldset>
-			<?php echo $view->form->getInput('id'); ?>
-			<?php echo JHtml::_('form.token'); ?>
+            <?php echo $view->form->getInput('id'); ?>
+            <?php echo JHtml::_('form.token'); ?>
 			<input type="hidden" name="task" value=""/>
 		</form>
-		<?php
-	}
+        <?php
+    }
 }

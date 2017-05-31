@@ -15,13 +15,13 @@
 defined('_JEXEC') or die;
 require_once JPATH_ROOT . '/media/com_thm_groups/templates/list.php';
 
-$listOrder      = $this->escape($this->state->get('list.ordering'));
-$listDirn       = $this->escape($this->state->get('list.direction'));
+$listOrder = $this->escape($this->state->get('list.ordering'));
+$listDirn  = $this->escape($this->state->get('list.direction'));
 
 if ($listOrder == 'attribute.ordering')
 {
-	$saveOrderingUrl = 'index.php?option=com_thm_groups&task=attribute.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'attribute_manager-list', 'adminForm', null, $saveOrderingUrl);
+    $saveOrderingUrl = 'index.php?option=com_thm_groups&task=attribute.saveOrderAjax&tmpl=component';
+    JHtml::_('sortablelist.sortable', 'attribute_manager-list', 'adminForm', null, $saveOrderingUrl);
 }
 
 THM_GroupsTemplateList::render($this);

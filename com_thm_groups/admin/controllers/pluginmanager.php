@@ -32,12 +32,12 @@ jimport('joomla.application.component.controller');
  */
 class THM_GroupsControllerProfile extends JControllerLegacy
 {
-	/**
-	 * constructor (registers additional tasks to methods)
-	 *
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
+    /**
+     * constructor (registers additional tasks to methods)
+     *
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 }

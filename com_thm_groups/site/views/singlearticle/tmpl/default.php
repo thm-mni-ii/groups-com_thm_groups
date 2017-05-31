@@ -102,7 +102,7 @@ if ($params->get('show_parent_category') && $this->item->parent_slug != '1{root'
 {
     echo '<dd class="parent-category-name">';
     $title = $this->escape($this->item->parent_title);
-    $url         = '<a href="' . JRoute::_(ContentHelperRoute::getCategoryRoute($this->item->parent_slug)) . '">' . $title . '</a>';
+    $url   = '<a href="' . JRoute::_(ContentHelperRoute::getCategoryRoute($this->item->parent_slug)) . '">' . $title . '</a>';
 
     if ($params->get('link_parent_category') and $this->item->parent_slug)
     {
@@ -120,7 +120,7 @@ if ($params->get('show_category'))
 {
     echo '<dd class="category-name">';
     $title = $this->escape($this->item->category_title);
-    $url         = '<a href="' . JRoute::_(ContentHelperRoute::getCategoryRoute($this->item->catslug)) . '">' . $title . '</a>';
+    $url   = '<a href="' . JRoute::_(ContentHelperRoute::getCategoryRoute($this->item->catslug)) . '">' . $title . '</a>';
 
     if ($params->get('link_category') and $this->item->catslug)
     {
@@ -183,12 +183,12 @@ if ($params->get('show_hits'))
 {
 
     echo '<dd class="hits">';
-         echo JText::sprintf('COM_THM_GROUPS_ARTICLE_HITS', $this->item->hits);
+    echo JText::sprintf('COM_THM_GROUPS_ARTICLE_HITS', $this->item->hits);
     echo '</dd>';
 
 }
 
- if ($useDefList)
+if ($useDefList)
 {
     echo '</dl>';
 }
@@ -198,13 +198,13 @@ if (isset ($this->item->toc))
     echo $this->item->toc;
 }
 
- if ($params->get('access-view'))
+if ($params->get('access-view'))
 {
     if (isset($images->image_fulltext) and !empty($images->image_fulltext))
     {
         $imgfloat = (empty($images->float_fulltext)) ? $params->get('float_fulltext') : $images->float_fulltext;
         echo '<div class="img-fulltext-' . htmlspecialchars($imgfloat) . '">';
-        $imageTip = $images->image_fulltext_caption?
+        $imageTip = $images->image_fulltext_caption ?
             'class="caption" title="' . htmlspecialchars($images->image_fulltext_caption) . '"' : '';
         $imageSrc = htmlspecialchars($images->image_fulltext);
         $imageAlt = htmlspecialchars($images->image_fulltext_alt);
@@ -213,7 +213,8 @@ if (isset ($this->item->toc))
     }
 
     if (!empty($this->item->pagination) AND $this->item->pagination
-        AND !$this->item->paginationposition AND !$this->item->paginationrelative)
+        AND !$this->item->paginationposition AND !$this->item->paginationrelative
+    )
     {
         echo $this->item->pagination;
     }

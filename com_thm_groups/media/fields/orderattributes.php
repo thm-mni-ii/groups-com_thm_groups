@@ -27,86 +27,86 @@ $lang->load('lib_thm_groups', JPATH_SITE);
  */
 class JFormFieldOrderAttributes extends JFormField
 {
-	/**
-	 * Element name
-	 *
-	 * @return html
-	 */
+    /**
+     * Element name
+     *
+     * @return html
+     */
 
-	public function getInput()
-	{
-		$orderSelect = '<div id="orderattr">';
-		$scriptDir   = JURI::root() . 'media/com_thm_groups/';
-		JHtml::_('jquery.framework', true, true);
-		JHtml::_('jquery.ui');
-		JHtml::_('jquery.ui', array('sortable'));
+    public function getInput()
+    {
+        $orderSelect = '<div id="orderattr">';
+        $scriptDir   = JURI::root() . 'media/com_thm_groups/';
+        JHtml::_('jquery.framework', true, true);
+        JHtml::_('jquery.ui');
+        JHtml::_('jquery.ui', array('sortable'));
 
-		JHTML::script($scriptDir . 'js/orderattributes.js');
-		JHtml::stylesheet($scriptDir . 'css/orderattributes.css');
+        JHTML::script($scriptDir . 'js/orderattributes.js');
+        JHtml::stylesheet($scriptDir . 'css/orderattributes.css');
 
-		$tagname = $this->name;
+        $tagname = $this->name;
 
-		// Get params of menu for the ordering of the attributes
-		$orderAtt = trim($this->value);
-
-
-		// Generate the Selectbox
-		$arrOrderAtt = explode(",", $orderAtt);
-		if (count($arrOrderAtt) < 4)
-		{
-			array_push($arrOrderAtt, 4);
-		}
-
-		$orderSelect .= '<div id="nodroppable"  value="1" ><span>' . JText::_('COM_THM_GROUPS_TITLE')
-			. '</span></div>';
-
-		$orderSelect .= '<ul id="paramsattr" class="listContent" name="' . $tagname . '">';
+        // Get params of menu for the ordering of the attributes
+        $orderAtt = trim($this->value);
 
 
-		// If the order Attributes param is used
-		if ($orderAtt)
-		{
-			foreach ($arrOrderAtt as $value)
-			{
-				switch ($value)
-				{
-					case 2:
-						$orderSelect .= '<li id="item"  class="listItem" value="' . $value . '" >';
-						break;
-					case 3:
-						$orderSelect .= '<li id="item"  class="listItem" value="' . $value . '" >';
-						break;
+        // Generate the Selectbox
+        $arrOrderAtt = explode(",", $orderAtt);
+        if (count($arrOrderAtt) < 4)
+        {
+            array_push($arrOrderAtt, 4);
+        }
 
-				}
+        $orderSelect .= '<div id="nodroppable"  value="1" ><span>' . JText::_('COM_THM_GROUPS_TITLE')
+            . '</span></div>';
 
-				switch ($value)
-				{
-					case 2:
-						$orderSelect .= JText::_('COM_THM_GROUPS_FORENAME');
-						break;
-					case 3:
-						$orderSelect .= JText::_('COM_THM_GROUPS_SURNAME');
-						break;
-				}
-				$orderSelect .= '</li>';
-			}
-		}
-		else
-		{
-			// Initialize the selectbox if no params are saved
-			$orderSelect .= '<li value="3" id="item"  class="listItem" >' . JText::_('COM_THM_GROUPS_SURNAME')
-				. '</li>';
-			$orderSelect .= '<li value="2" id="item"  class="listItem">' . JText::_('COM_THM_GROUPS_FORENAME')
-				. '</li>';
-			$orderAtt    = '1,3,2,4';
-		}
-		$orderSelect .= '</ul>';
+        $orderSelect .= '<ul id="paramsattr" class="listContent" name="' . $tagname . '">';
 
-		$orderSelect .= '<div id="nodroppable" value="4"><span>' . JText::_('COM_THM_GROUPS_POSTTITLE')
-			. '</span></div></div>';
 
-		$orderSelect .= '<input type="hidden" id="resultOrder" value= "' . $orderAtt . '" name="' . $tagname . '"/>';
+        // If the order Attributes param is used
+        if ($orderAtt)
+        {
+            foreach ($arrOrderAtt as $value)
+            {
+                switch ($value)
+                {
+                    case 2:
+                        $orderSelect .= '<li id="item"  class="listItem" value="' . $value . '" >';
+                        break;
+                    case 3:
+                        $orderSelect .= '<li id="item"  class="listItem" value="' . $value . '" >';
+                        break;
 
-		return $orderSelect;
-	}
+                }
+
+                switch ($value)
+                {
+                    case 2:
+                        $orderSelect .= JText::_('COM_THM_GROUPS_FORENAME');
+                        break;
+                    case 3:
+                        $orderSelect .= JText::_('COM_THM_GROUPS_SURNAME');
+                        break;
+                }
+                $orderSelect .= '</li>';
+            }
+        }
+        else
+        {
+            // Initialize the selectbox if no params are saved
+            $orderSelect .= '<li value="3" id="item"  class="listItem" >' . JText::_('COM_THM_GROUPS_SURNAME')
+                . '</li>';
+            $orderSelect .= '<li value="2" id="item"  class="listItem">' . JText::_('COM_THM_GROUPS_FORENAME')
+                . '</li>';
+            $orderAtt    = '1,3,2,4';
+        }
+        $orderSelect .= '</ul>';
+
+        $orderSelect .= '<div id="nodroppable" value="4"><span>' . JText::_('COM_THM_GROUPS_POSTTITLE')
+            . '</span></div></div>';
+
+        $orderSelect .= '<input type="hidden" id="resultOrder" value= "' . $orderAtt . '" name="' . $tagname . '"/>';
+
+        return $orderSelect;
+    }
 }

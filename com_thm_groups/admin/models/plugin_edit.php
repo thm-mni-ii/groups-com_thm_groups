@@ -27,29 +27,29 @@ require_once JPATH_ROOT . '/media/com_thm_groups/models/edit.php';
  */
 class THM_GroupsModelPlugin_Edit extends THM_GroupsModelEdit
 {
-	/**
-	 * Construct
-	 *
-	 * @param    array $config //TODO
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
+    /**
+     * Construct
+     *
+     * @param    array $config //TODO
+     */
+    public function __construct($config = array())
+    {
+        parent::__construct($config);
+    }
 
-	/**
-	 * Method to get a table object, load it if necessary. Can't be generalized because of irregular english plural
-	 * spelling. :(
-	 *
-	 * @param   string $name    The table name. Optional.
-	 * @param   string $prefix  The class prefix. Optional.
-	 * @param   array  $options Configuration array for model. Optional.
-	 *
-	 * @return  JTable object
-	 */
-	public function getTable($name = 'Plugin', $prefix = 'Table', $options = array())
-	{
-		return JTable::getInstance($name, $prefix, $options);
-	}
+    /**
+     * Method to get a table object, load it if necessary. Can't be generalized because of irregular english plural
+     * spelling. :(
+     *
+     * @param   string $name    The table name. Optional.
+     * @param   string $prefix  The class prefix. Optional.
+     * @param   array  $options Configuration array for model. Optional.
+     *
+     * @return  JTable object
+     */
+    public function getTable($name = 'Plugin', $prefix = 'Table', $options = array())
+    {
+        return JTable::getInstance($name, $prefix, $options);
+    }
 }
 

@@ -26,21 +26,21 @@ JHtmlBootstrap::loadCSS();
 ?>
 <div id="title"><?php echo "<h2 class='contentheading'>" . $this->title . "</h2>" ?></div>
 <div id="thm_groups_profile_container_list" class="row-fluid">
-	<?php
-	// Show Profiles
+    <?php
+    // Show Profiles
 
 
-	$countOfColoumns = $this->view + 1;
+    $countOfColoumns = $this->view + 1;
 
-	echo $this->showAllUserOfGroup(
-		$this->data,
-		$countOfColoumns,
-		$this->params->get('linkTarget'),
-		$this->canEdit, $this->groupID,
-		$this->itemid, $this->app->getString('option'),
-		$this->app->getString('layout'),
-		$this->app->getString('view'),
-		$this->truncateLongInfo
-	);
-	?>
+    echo $this->showAllUserOfGroup(
+        $this->data,
+        $countOfColoumns,
+        $this->params->get('linkTarget'),
+        $this->canEdit, $this->groupID,
+        $this->itemid, $this->app->getString('option'),
+        $this->app->getString('layout'),
+        $this->app->getString('view'),
+        $this->truncateLongInfo
+    );
+    ?>
 </div>

@@ -23,97 +23,97 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
  */
 class THM_GroupsControllerQuickpage extends JControllerLegacy
 {
-	protected $text_prefix = 'COM_THM_GROUPS';
+    protected $text_prefix = 'COM_THM_GROUPS';
 
-	/**
-	 * Constructor. Additionally maps function calls named after published states to the publish function.
-	 *
-	 * @param   array $config An optional associative array of configuration settings.
-	 *
-	 * @see     JController
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
+    /**
+     * Constructor. Additionally maps function calls named after published states to the publish function.
+     *
+     * @param   array $config An optional associative array of configuration settings.
+     *
+     * @see     JController
+     */
+    public function __construct($config = array())
+    {
+        parent::__construct($config);
 
-		// All state tasks are handled by the publish function
-		$this->registerTask('unpublish', 'publish');
-		$this->registerTask('archive', 'publish');
-		$this->registerTask('trash', 'publish');
-		$this->registerTask('report', 'publish');
-	}
+        // All state tasks are handled by the publish function
+        $this->registerTask('unpublish', 'publish');
+        $this->registerTask('archive', 'publish');
+        $this->registerTask('trash', 'publish');
+        $this->registerTask('report', 'publish');
+    }
 
-	/**
-	 * Method to publish a list of items
-	 *
-	 * @return  void
-	 */
-	public function publish()
-	{
-		// Check for request forgeries
-		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+    /**
+     * Method to publish a list of items
+     *
+     * @return  void
+     */
+    public function publish()
+    {
+        // Check for request forgeries
+        JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
-		$articleIDs = JFactory::getApplication()->input->get('cid', array(), 'array');
-		Joomla\Utilities\ArrayHelper::toInteger($articleIDs);
+        $articleIDs = JFactory::getApplication()->input->get('cid', array(), 'array');
+        Joomla\Utilities\ArrayHelper::toInteger($articleIDs);
 
-		$statuses = array('publish' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
-		$task     = $this->getTask();
-		$status   = Joomla\Utilities\ArrayHelper::getValue($statuses, $task, 0, 'int');
-		$model    = $this->getModel('quickpage');
+        $statuses = array('publish' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
+        $task     = $this->getTask();
+        $status   = Joomla\Utilities\ArrayHelper::getValue($statuses, $task, 0, 'int');
+        $model    = $this->getModel('quickpage');
 
-		foreach ($articleIDs as $articleID)
-		{
-			$model->publish($articleID, $status);
-		}
+        foreach ($articleIDs as $articleID)
+        {
+            $model->publish($articleID, $status);
+        }
 
-		$menuID = $this->input->getInt('Itemid', 0);
-		$this->setRedirect(JRoute::_("index.php?option=com_thm_groups&view=quickpage_manager&Itemid=$menuID"));
-	}
+        $menuID = $this->input->getInt('Itemid', 0);
+        $this->setRedirect(JRoute::_("index.php?option=com_thm_groups&view=quickpage_manager&Itemid=$menuID"));
+    }
 
-	/**
-	 * Method to save the submitted ordering values for records via AJAX.
-	 *
-	 * @return  void
-	 *
-	 */
-	public function saveOrderAjax()
-	{
-		// Get the input
-		$pks   = $this->input->get('cid', array(), 'array');
-		$order = $this->input->get('order', array(), 'array');
+    /**
+     * Method to save the submitted ordering values for records via AJAX.
+     *
+     * @return  void
+     *
+     */
+    public function saveOrderAjax()
+    {
+        // Get the input
+        $pks   = $this->input->get('cid', array(), 'array');
+        $order = $this->input->get('order', array(), 'array');
 
-		// Sanitize the input
-		Joomla\Utilities\ArrayHelper::toInteger($pks);
-		Joomla\Utilities\ArrayHelper::toInteger($order);
+        // Sanitize the input
+        Joomla\Utilities\ArrayHelper::toInteger($pks);
+        Joomla\Utilities\ArrayHelper::toInteger($order);
 
-		// Get the model
-		$model = $this->getModel('quickpage');
+        // Get the model
+        $model = $this->getModel('quickpage');
 
-		// Save the ordering
-		$return = $model->saveorder($pks, $order);
+        // Save the ordering
+        $return = $model->saveorder($pks, $order);
 
-		if ($return)
-		{
-			echo "1";
-		}
+        if ($return)
+        {
+            echo "1";
+        }
 
-		// Close the application
-		JFactory::getApplication()->close();
-	}
+        // Close the application
+        JFactory::getApplication()->close();
+    }
 
-	/**
-	 * Toggles the state of a single binary quickapge attribute
-	 *
-	 * @return void
-	 */
-	public function toggle()
-	{
-		$model = $this->getModel('quickpage');
+    /**
+     * Toggles the state of a single binary quickapge attribute
+     *
+     * @return void
+     */
+    public function toggle()
+    {
+        $model = $this->getModel('quickpage');
 
-		// Access checks and output messages are in the model.
-		$model->toggle();
+        // Access checks and output messages are in the model.
+        $model->toggle();
 
-		$menuID     = $this->input->getInt('Itemid', 0);
-		$this->setRedirect(JRoute::_("index.php?option=com_thm_groups&view=quickpage_manager&Itemid=$menuID"));
-	}
+        $menuID = $this->input->getInt('Itemid', 0);
+        $this->setRedirect(JRoute::_("index.php?option=com_thm_groups&view=quickpage_manager&Itemid=$menuID"));
+    }
 }

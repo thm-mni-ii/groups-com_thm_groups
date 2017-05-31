@@ -18,86 +18,86 @@
  */
 class THM_GroupsHelperTemplate
 {
-	/**
-	 * Returns array with attributes and assigned parameters
-	 *
-	 * @param   array $allAttributes      All attributes in THM Groups
-	 * @param   array $templateAttributes Attributes of a certain template
-	 *
-	 * @return  mixed  array on success, false otherwise
-	 */
-	public static function assignParametersToAttributes($allAttributes, $templateAttributes)
-	{
-		$app = JFactory::getApplication();
-		if (empty($allAttributes))
-		{
-			$app->enqueueMessage(JText::_('COM_THM_GROUPS_ATTRIBUTE_ERROR_NO_ATTRIBUTES'), 'error');
+    /**
+     * Returns array with attributes and assigned parameters
+     *
+     * @param   array $allAttributes      All attributes in THM Groups
+     * @param   array $templateAttributes Attributes of a certain template
+     *
+     * @return  mixed  array on success, false otherwise
+     */
+    public static function assignParametersToAttributes($allAttributes, $templateAttributes)
+    {
+        $app = JFactory::getApplication();
+        if (empty($allAttributes))
+        {
+            $app->enqueueMessage(JText::_('COM_THM_GROUPS_ATTRIBUTE_ERROR_NO_ATTRIBUTES'), 'error');
 
-			return false;
-		}
+            return false;
+        }
 
-		if (empty($templateAttributes))
-		{
-			$app->enqueueMessage(JText::_('COM_THM_GROUPS_TEMPLATE_ERROR_NO_ATTRIBUTES'), 'error');
+        if (empty($templateAttributes))
+        {
+            $app->enqueueMessage(JText::_('COM_THM_GROUPS_TEMPLATE_ERROR_NO_ATTRIBUTES'), 'error');
 
-			return false;
-		}
+            return false;
+        }
 
-		foreach ($allAttributes as $attribute)
-		{
-			foreach ($templateAttributes as $templateAttribute)
-			{
-				if ($attribute->id == $templateAttribute->attributeID)
-				{
-					if (!empty($templateAttribute->ID))
-					{
-						$attribute->ID = $templateAttribute->ID;
-					}
+        foreach ($allAttributes as $attribute)
+        {
+            foreach ($templateAttributes as $templateAttribute)
+            {
+                if ($attribute->id == $templateAttribute->attributeID)
+                {
+                    if (!empty($templateAttribute->ID))
+                    {
+                        $attribute->ID = $templateAttribute->ID;
+                    }
 
-					$attribute->published = $templateAttribute->published;
-					$attribute->order     = $templateAttribute->order;
-					$attribute->params    = $templateAttribute->params;
-				}
-			}
-		}
+                    $attribute->published = $templateAttribute->published;
+                    $attribute->order     = $templateAttribute->order;
+                    $attribute->params    = $templateAttribute->params;
+                }
+            }
+        }
 
-		return $allAttributes;
-	}
+        return $allAttributes;
+    }
 
-	/**
-	 * Returns all attributes with parameters of a template by its ID
-	 *
-	 * @param   int $templateID Template ID
-	 *
-	 * @return  mixed  array on success, false otherwise
-	 */
-	public static function getTemplateAttributes($templateID)
-	{
-		$app = JFactory::getApplication();
-		if (empty($templateID))
-		{
-			$app->enqueueMessage(JText::_('COM_THM_GROUPS_TEMPLATE_ERROR_NULL'), 'error');
+    /**
+     * Returns all attributes with parameters of a template by its ID
+     *
+     * @param   int $templateID Template ID
+     *
+     * @return  mixed  array on success, false otherwise
+     */
+    public static function getTemplateAttributes($templateID)
+    {
+        $app = JFactory::getApplication();
+        if (empty($templateID))
+        {
+            $app->enqueueMessage(JText::_('COM_THM_GROUPS_TEMPLATE_ERROR_NULL'), 'error');
 
-			return false;
-		}
+            return false;
+        }
 
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
-		$query
-			->select("*")
-			->from('#__thm_groups_profile_attribute')
-			->where("profileID = $templateID");
-		$dbo->setQuery($query);
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query
+            ->select("*")
+            ->from('#__thm_groups_profile_attribute')
+            ->where("profileID = $templateID");
+        $dbo->setQuery($query);
 
-		try
-		{
-			return $dbo->loadObjectList();
-		}
-		catch (Exception $exception)
-		{
-			$app->enqueueMessage(JText::_('COM_THM_GROUPS_TEMPLATE_MANAGER_ERROR_GET_TEMPLATE_ATTRIBUTES'), 'error');
+        try
+        {
+            return $dbo->loadObjectList();
+        }
+        catch (Exception $exception)
+        {
+            $app->enqueueMessage(JText::_('COM_THM_GROUPS_TEMPLATE_MANAGER_ERROR_GET_TEMPLATE_ATTRIBUTES'), 'error');
 
-			return false;
-		}
-	}
+            return false;
+        }
+    }
 }

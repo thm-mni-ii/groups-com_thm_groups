@@ -12,24 +12,24 @@
 ?>
 <div itemtype="http://schema.org/Article" itemscope="" class="thm_groups-list">
 	<meta content="de-DE" itemprop="inLanguage">
-	<?php if ($this->params->get('show_title')) : ?>
+    <?php if ($this->params->get('show_title')) : ?>
 		<div class="page-header">
 			<h2 itemprop="headline">
-				<?php echo $this->escape($this->title); ?>
+                <?php echo $this->escape($this->title); ?>
 			</h2>
 		</div>
-	<?php endif; ?>
+    <?php endif; ?>
 	<div itemprop="articleBody" class="list-container">
-		<?php
-		if ($this->params->get('showAll') == 1)
-		{
-			echo $this->loadTemplate('list');
+        <?php
+        if ($this->params->get('showAll') == 1)
+        {
+            echo $this->loadTemplate('list');
 
-		}
-		else
-		{
-			echo $this->loadTemplate('letter');
-		}
-		?>
+        }
+        else
+        {
+            echo $this->loadTemplate('letter');
+        }
+        ?>
 	</div>
 </div>

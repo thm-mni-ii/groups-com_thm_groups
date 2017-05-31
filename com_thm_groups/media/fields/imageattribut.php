@@ -28,28 +28,28 @@ $lang->load('lib_thm_groups', JPATH_SITE);
  */
 class JFormFieldImageattribut extends JFormField
 {
-	/**
-	 * Element name
-	 *
-	 * @var        string
-	 * @return  html
-	 */
-	public function getInput()
-	{
-		$name    = $this->name;
-		$default = array("66", "auto");
-		$value   = (count($this->value) == 2) ? $this->value : $default;
-		$out     = array();
-		$class   = $this->element['class'] ? ' class=" checkboxes ' . (string) $this->element['class'] . '" ' : ' class="checkboxes"';
-		$out[]   = '<fieldset id="' . $this->name . '" ' . $class . '>';
-		$out[]   = '<table><tr>';
-		$out[]   = '<td><input type ="text"  default="66" id ="' . $name . 'width" name = "' . $name
-			. '[0]" value = "' . $value[0] . '" size = "8"/></td><td> * <td>';
-		$out[]   = ' <td><input type ="text" default="auto" id ="' . $name . 'height" name = "' . $name
-			. '[1]" value = "' . $value[1] . '" size = "8"/> </td>';
-		$out[]   = '</table></fieldset>';
+    /**
+     * Element name
+     *
+     * @var        string
+     * @return  html
+     */
+    public function getInput()
+    {
+        $name    = $this->name;
+        $default = array("66", "auto");
+        $value   = (count($this->value) == 2) ? $this->value : $default;
+        $out     = array();
+        $class   = $this->element['class'] ? ' class=" checkboxes ' . (string) $this->element['class'] . '" ' : ' class="checkboxes"';
+        $out[]   = '<fieldset id="' . $this->name . '" ' . $class . '>';
+        $out[]   = '<table><tr>';
+        $out[]   = '<td><input type ="text"  default="66" id ="' . $name . 'width" name = "' . $name
+            . '[0]" value = "' . $value[0] . '" size = "8"/></td><td> * <td>';
+        $out[]   = ' <td><input type ="text" default="auto" id ="' . $name . 'height" name = "' . $name
+            . '[1]" value = "' . $value[1] . '" size = "8"/> </td>';
+        $out[]   = '</table></fieldset>';
 
-		return implode($out);
+        return implode($out);
 
-	}
+    }
 }

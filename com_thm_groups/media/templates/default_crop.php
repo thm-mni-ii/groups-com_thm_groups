@@ -21,7 +21,7 @@ $attributeID = $this->attributeID;
 				<div class="header-title">
 					<h3 id='modal-title'>
 						<span class="icon-upload"></span>
-						<?php echo JText::_('COM_THM_GROUPS_PICTURE_UPLOAD_DIALOGUE'); ?>
+                        <?php echo JText::_('COM_THM_GROUPS_PICTURE_UPLOAD_DIALOGUE'); ?>
 					</h3>
 					<button type='button' class='close' data-dismiss='modal' aria-label='Close'>
 						<span aria-hidden='true'><span class="icon-remove"></span></span>
