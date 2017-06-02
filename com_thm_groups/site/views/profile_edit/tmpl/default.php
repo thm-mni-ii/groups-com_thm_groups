@@ -14,7 +14,7 @@ jimport('joomla.html.editor');
 
 $session = JFactory::getSession();
 ?>
-<script xmlns="http://www.w3.org/1999/html">jQf = jQuery.noConflict();</script>
+<script type="text/javascript">jQf = jQuery.noConflict();</script>
 
 <form id="adminForm" name="adminForm" class="form-horizontal"
 	  action="index.php?option=com_thm_groups" method="post" enctype="multipart/form-data">

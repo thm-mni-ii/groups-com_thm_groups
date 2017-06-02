@@ -23,79 +23,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/database_compare_helper
  */
 class THM_GroupsModelRole extends JModelLegacy
 {
-    /**
-     * saves the dynamic types
-     *
-     * @return bool true on success, otherwise false
-     */
-    public function save()
-    {
-        $data = JFactory::getApplication()->input->get('jform', array(), 'array');
-
-        $table = JTable::getInstance('roles', 'thm_groupsTable');
-        $table->save($data);
-
-        return $table->id;
-    }
-
-    /**
-     * Delete item
-     *
-     * @return mixed
-     */
-    public function delete()
-    {
-        $ids = JFactory::getApplication()->input->get('cid', array(), 'array');
-
-        $db = JFactory::getDbo();
-
-        $query = $db->getQuery(true);
-
-        $conditions = array(
-            $db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')',
-        );
-
-        $query->delete($db->quoteName('#__thm_groups_roles'));
-        $query->where($conditions);
-
-        $db->setQuery($query);
-
-        return $result = $db->execute();
-    }
-
-    /**
-     * Deletes a group from a role
-     *
-     * @return bool
-     * @throws Exception
-     */
-    public function deleteGroup()
-    {
-        $input = JFactory::getApplication()->input;
-
-        $roleID  = $input->getInt('r_id');
-        $groupID = $input->getInt('g_id');
-
-        $query = $this->_db->getQuery(true);
-        $query
-            ->delete('#__thm_groups_usergroups_roles')
-            ->where("rolesID = '$roleID'")
-            ->where("usergroupsID = '$groupID'");
-        $this->_db->setQuery((string) $query);
-
-        try
-        {
-            $this->_db->execute();
-        }
-        catch (Exception $exc)
-        {
-            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
-
-            return false;
-        }
-
-        return true;
-    }
 
     /**
      * Method to perform batch operations on an item or a set of items.
@@ -304,4 +231,154 @@ class THM_GroupsModelRole extends JModelLegacy
         return true;
     }
 
+    /**
+     * Delete item
+     *
+     * @return mixed
+     */
+    public function delete()
+    {
+        $ids = JFactory::getApplication()->input->get('cid', array(), 'array');
+
+        $db = JFactory::getDbo();
+
+        $query = $db->getQuery(true);
+
+        $conditions = array(
+            $db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')',
+        );
+
+        $query->delete($db->quoteName('#__thm_groups_roles'));
+        $query->where($conditions);
+
+        $db->setQuery($query);
+
+        return $result = $db->execute();
+    }
+
+    /**
+     * Deletes a group from a role
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function deleteGroup()
+    {
+        $input = JFactory::getApplication()->input;
+
+        $roleID  = $input->getInt('r_id');
+        $groupID = $input->getInt('g_id');
+
+        $query = $this->_db->getQuery(true);
+        $query
+            ->delete('#__thm_groups_usergroups_roles')
+            ->where("rolesID = '$roleID'")
+            ->where("usergroupsID = '$groupID'");
+        $this->_db->setQuery((string) $query);
+
+        try
+        {
+            $this->_db->execute();
+        }
+        catch (Exception $exc)
+        {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * saves the dynamic types
+     *
+     * @return bool true on success, otherwise false
+     */
+    public function save()
+    {
+        $data = JFactory::getApplication()->input->get('jform', array(), 'array');
+
+        $table = JTable::getInstance('roles', 'thm_groupsTable');
+        $table->save($data);
+
+        return $table->id;
+    }
+
+    /**
+     * Saves the manually set order of records.
+     *
+     * @param   array   $pks   An array of primary key ids.
+     * @param   integer $order +1 or -1
+     *
+     * @return  mixed
+     *
+     */
+    public function saveorder($pks = null, $order = null)
+    {
+        JTable::addIncludePath(JPATH_ROOT . '/administrator/components/com_thm_groups/tables/');
+        $table = $this->getTable('Roles', 'Table');
+
+        $conditions = array();
+
+        if (empty($pks))
+        {
+            return JError::raiseWarning(500, JText::_('COM_THM_GROUPS_NO_ITEMS_SELECTED'));
+        }
+
+        $canManage =  JFactory::getUser()->authorise('core.manage', 'com_thm_groups');
+        if (!$canManage)
+        {
+            return JError::raiseWarning(500, JText::_('JLIB_RULES_NOT_ALLOWED'));
+        }
+
+        // Update ordering values
+        foreach ($pks as $i => $pk)
+        {
+            $table->load((int) $pk);
+
+            if ($table->ordering != $order[$i])
+            {
+                $table->ordering = $order[$i];
+
+                if (!$table->store())
+                {
+                    $this->setError($table->getError());
+
+                    return false;
+                }
+
+                // Remember to reorder within position and client_id
+                $condition = $this->getReorderConditions($table);
+                $found     = false;
+
+                foreach ($conditions as $cond)
+                {
+                    if ($cond[1] == $condition)
+                    {
+                        $found = true;
+                        break;
+                    }
+                }
+
+                if (!$found)
+                {
+                    $key          = $table->getKeyName();
+                    $conditions[] = array($table->$key, $condition);
+                }
+            }
+        }
+
+        // Execute reorder for each category.
+        foreach ($conditions as $cond)
+        {
+            $table->load($cond[0]);
+            $table->reorder($cond[1]);
+        }
+
+        // Clear the component's cache
+        $this->cleanCache();
+
+        return true;
+    }
 }

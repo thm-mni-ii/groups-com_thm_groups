@@ -24,8 +24,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
  */
 class THM_GroupsViewTHM_Groups extends JViewLegacy
 {
-    public $batch;
-
     /**
      * Method to get display
      *
@@ -40,12 +38,8 @@ class THM_GroupsViewTHM_Groups extends JViewLegacy
             return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
         }
 
-        JHtml::_('behavior.tooltip');
-        $document = JFactory::getDocument();
-        $document->addStyleSheet("/media/com_thm_groups/fonts/iconfont.css");
-
-        // Set path for pop up template
-        $this->batch = array('batch' => JPATH_COMPONENT_ADMINISTRATOR . '/views/thm_groups/tmpl/default_batch.php');
+        JHtml::_('bootstrap.tooltip');
+        JFactory::getDocument()->addStyleSheet(JUri::root() . "media/com_thm_groups/fonts/iconfont.css");
 
         THM_GroupsHelperComponent::addSubmenu($this);
 
@@ -62,25 +56,9 @@ class THM_GroupsViewTHM_Groups extends JViewLegacy
     protected function addToolBar()
     {
         JToolBarHelper::title(JText::_('COM_THM_GROUPS'), 'logo');
-        $user = JFactory::getUser();
-        if ($user->authorise('core.admin', 'com_thm_groups'))
+
+        if (JFactory::getUser()->authorise('core.admin', 'com_thm_groups'))
         {
-
-            // Get the toolbar object instance
-            $bar    = JToolBar::getInstance('toolbar');
-            $name   = 'collapseModal';
-            $doTask = 'openPopUp';
-            $text   = JText::_('COM_THM_GROUPS_MIGRATION_OPTIONS');
-
-            // Joomla uses old bootstrap 2.3.2 icons (see http://getbootstrap.com/2.3.2/base-css.html#icons)
-            $class = 'icon-wrench';
-
-            // You can find layout and its' parameters in /layout/joomla/toolbar/popup.php
-            $layout = new JLayoutFile('joomla.toolbar.popup');
-
-            $html = $layout->render(array('name' => $name, 'doTask' => $doTask, 'text' => $text, 'class' => $class));
-            $bar->appendButton('Custom', $html, 'batch');
-
             JToolBarHelper::divider();
             JToolBarHelper::preferences('com_thm_groups');
         }

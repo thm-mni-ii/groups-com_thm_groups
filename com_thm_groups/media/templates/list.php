@@ -37,8 +37,7 @@ class THM_GroupsTemplateList
         $filters = $view->filterForm->getGroup('filter');
         ?>
 		<div id="j-main-container" class="span10">
-			<form action="index.php?" id="adminForm" method="post"
-				  name="adminForm" xmlns="http://www.w3.org/1999/html">
+			<form action="index.php?" id="adminForm" method="post" name="adminForm">
 				<div class="searchArea">
 					<div class="js-stools clearfix">
 						<div class="clearfix">

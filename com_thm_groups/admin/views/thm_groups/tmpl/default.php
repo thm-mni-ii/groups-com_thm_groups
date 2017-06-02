@@ -27,21 +27,7 @@ $image   = JHtml::_('image', $logoURL, JText::_('COM_THM_GROUPS'), $attribs);
 		Add resource information here!
 	</div>
 </div>
-<form action="index.php" id="adminForm" method="post"
-	  name="adminForm" xmlns="http://www.w3.org/1999/html">
-    <?php
-    // Load html for popup
-    if (isset($this->batch) && !empty($this->batch))
-    {
-        foreach ($this->batch as $name => $path)
-        {
-            if (file_exists($path))
-            {
-                echo $this->loadTemplate($name);
-            }
-        }
-    }
-    ?>
+<form action="index.php" id="adminForm" method="post" name="adminForm">
 	<input type="hidden" name="task" value=""/>
 	<input type="hidden" name="boxchecked" value="0"/>
 	<input type="hidden" name="option" value="<?php echo JFactory::getApplication()->input->get('option'); ?>"/>

@@ -34,9 +34,9 @@ abstract class THM_GroupsModelList extends JModelList
     public $actions = null;
 
     /**
-     * Constructor. Uses parent constructor, then sets model actions.
+     * Constructor.
      *
-     * @param array $config Configuration  (default: array)
+     * @param   array  $config  An optional associative array of configuration settings.
      */
     public function __construct($config = array())
     {

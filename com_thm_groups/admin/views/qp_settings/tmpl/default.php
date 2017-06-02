@@ -25,7 +25,7 @@ class QuickpageSettingsTemplateModal
     public static function render(&$view)
     {
         ?>
-		<form action="index.php?" id="adminForm" method="post" name="adminForm" xmlns="http://www.w3.org/1999/html">
+		<form action="index.php?" id="adminForm" method="post" name="adminForm">
 			<div id="j-main-container">
                 <?php echo $view->form->renderFieldset('category'); ?>
 				<div class="clr"></div>

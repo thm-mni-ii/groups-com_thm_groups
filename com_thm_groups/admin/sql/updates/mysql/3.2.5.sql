@@ -1,1 +1,0 @@
-UPDATE `#__thm_groups_text` SET publish=0 WHERE structid=3;

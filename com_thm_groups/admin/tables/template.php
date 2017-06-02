@@ -20,9 +20,6 @@ jimport('joomla.application.component.table');
  * @category    Joomla.Component.Admin
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
- *
- * @todo        Should this have a component prefix?
- * @todo        Alter the database structure profile => template
  */
 class TableTemplate extends JTable
 {

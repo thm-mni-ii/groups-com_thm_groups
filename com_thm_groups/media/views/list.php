@@ -87,8 +87,8 @@ abstract class THM_GroupsViewList extends JViewLegacy
     {
         $option   = JFactory::getApplication()->input->get('option');
         $document = JFactory::getDocument();
-        $document->addStyleSheet(JPATH_ROOT . "/media/com_thm_groups/fonts/iconfont.css");
-        $document->addStyleSheet($this->baseurl . "../../media/$option/css/backend.css");
+        $document->addStyleSheet(JUri::root() . "/media/com_thm_groups/fonts/iconfont.css");
+        $document->addStyleSheet(JUri::root() . "/media/com_thm_groups/css/backend.css");
 
         JHtml::_('bootstrap.tooltip');
         JHtml::_('behavior.multiselect');

@@ -31,8 +31,7 @@ $orderingButton = JHtml::_(
 
 ?>
 <div id="j-main-container" class="manager-page">
-	<form action="index.php" id="adminForm" method="post"
-		  name="adminForm" xmlns="http://www.w3.org/1999/html">
+	<form action="index.php" id="adminForm" method="post" name="adminForm">
 		<div class="page-header">
 			<h2 class="groups-toolbar">
                 <?php echo $this->pageTitle; ?>

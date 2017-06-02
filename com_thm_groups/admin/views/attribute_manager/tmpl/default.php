@@ -16,7 +16,6 @@ defined('_JEXEC') or die;
 require_once JPATH_ROOT . '/media/com_thm_groups/templates/list.php';
 
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
 
 if ($listOrder == 'attribute.ordering')
 {
