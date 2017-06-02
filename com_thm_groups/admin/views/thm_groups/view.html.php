@@ -24,43 +24,43 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
  */
 class THM_GroupsViewTHM_Groups extends JViewLegacy
 {
-    /**
-     * Method to get display
-     *
-     * @param   Object $tpl template
-     *
-     * @return void
-     */
-    public function display($tpl = null)
-    {
-        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
-        {
-            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
-        }
+	/**
+	 * Method to get display
+	 *
+	 * @param   Object $tpl template
+	 *
+	 * @return void
+	 */
+	public function display($tpl = null)
+	{
+		if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
+		{
+			return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+		}
 
-        JHtml::_('bootstrap.tooltip');
-        JFactory::getDocument()->addStyleSheet(JUri::root() . "media/com_thm_groups/fonts/iconfont.css");
+		JHtml::_('bootstrap.tooltip');
+		JFactory::getDocument()->addStyleSheet(JUri::root() . "media/com_thm_groups/fonts/iconfont.css");
 
-        THM_GroupsHelperComponent::addSubmenu($this);
+		THM_GroupsHelperComponent::addSubmenu($this);
 
-        $this->addToolBar();
+		$this->addToolBar();
 
-        parent::display($tpl);
-    }
+		parent::display($tpl);
+	}
 
-    /**
-     * creates a joomla administratoristrative tool bar
-     *
-     * @return void
-     */
-    protected function addToolBar()
-    {
-        JToolBarHelper::title(JText::_('COM_THM_GROUPS'), 'logo');
+	/**
+	 * creates a joomla administratoristrative tool bar
+	 *
+	 * @return void
+	 */
+	protected function addToolBar()
+	{
+		JToolBarHelper::title(JText::_('COM_THM_GROUPS'), 'logo');
 
-        if (JFactory::getUser()->authorise('core.admin', 'com_thm_groups'))
-        {
-            JToolBarHelper::divider();
-            JToolBarHelper::preferences('com_thm_groups');
-        }
-    }
+		if (JFactory::getUser()->authorise('core.admin', 'com_thm_groups'))
+		{
+			JToolBarHelper::divider();
+			JToolBarHelper::preferences('com_thm_groups');
+		}
+	}
 }

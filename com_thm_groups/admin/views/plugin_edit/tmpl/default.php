@@ -34,14 +34,14 @@ defined('_JEXEC') or die; ?>
 	<div class="form-horizontal">
 		<div class="span3">
 			<fieldset class="form-vertical">
-                <?php
-                echo $this->form->renderField('name');
-                echo $this->form->renderField('extension_id');
-                ?>
+				<?php
+				echo $this->form->renderField('name');
+				echo $this->form->renderField('extension_id');
+				?>
 			</fieldset>
 		</div>
 	</div>
-    <?php echo $this->form->getInput('extension_id'); ?>
-    <?php echo JHtml::_('form.token'); ?>
+	<?php echo $this->form->getInput('extension_id'); ?>
+	<?php echo JHtml::_('form.token'); ?>
 	<input type="hidden" name="task" value=""/>
 </form>

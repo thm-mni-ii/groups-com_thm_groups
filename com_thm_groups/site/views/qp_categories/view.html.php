@@ -25,29 +25,29 @@ JHtml::_('jquery.framework');
 class THM_GroupsViewQP_Categories extends JViewLegacy
 {
 
-    /**
-     * loads data into view output context and initiates functions creating html
-     * elements
-     *
-     * @param   string $tpl the template to be used
-     *
-     * @return void
-     */
-    public function display($tpl = null)
-    {
-        $user = JFactory::getUser();
+	/**
+	 * loads data into view output context and initiates functions creating html
+	 * elements
+	 *
+	 * @param   string $tpl the template to be used
+	 *
+	 * @return void
+	 */
+	public function display($tpl = null)
+	{
+		$user = JFactory::getUser();
 
-        $this->form = $this->get('Form');
+		$this->form = $this->get('Form');
 
-        parent::display($tpl);
-    }
+		parent::display($tpl);
+	}
 
-    function getToolbar()
-    {
-        jimport('cms.html.toolbar');
-        $bar = new JToolBar('toolbar');
-        $bar->appendButton('Standard', 'apply', 'Save', 'qp_categories.apply', false);
+	function getToolbar()
+	{
+		jimport('cms.html.toolbar');
+		$bar = new JToolBar('toolbar');
+		$bar->appendButton('Standard', 'apply', 'Save', 'qp_categories.apply', false);
 
-        return $bar->render();
-    }
+		return $bar->render();
+	}
 }

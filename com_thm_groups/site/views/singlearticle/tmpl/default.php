@@ -27,262 +27,262 @@ echo '<div class="item-page' . $this->pageclass_sfx . '">';
 
 if ($this->params->get('show_page_heading'))
 {
-    echo '<h1>' . $this->escape($this->params->get('page_heading')) . '</h1>';
+	echo '<h1>' . $this->escape($this->params->get('page_heading')) . '</h1>';
 }
 
 if (!empty($this->item->pagination) AND $this->item->pagination && !$this->item->paginationposition && $this->item->paginationrelative)
 {
-    echo $this->item->pagination;
+	echo $this->item->pagination;
 }
 
 if ($params->get('show_title'))
 {
-    echo '<h2>';
+	echo '<h2>';
 
-    if ($params->get('link_titles') && !empty($this->item->readmore_link))
-    {
-        echo '<a href="' . $this->item->readmore_link . '">' . $this->escape($this->item->title) . '</a>';
-    }
-    else
-    {
-        echo $this->escape($this->item->title);
-    }
+	if ($params->get('link_titles') && !empty($this->item->readmore_link))
+	{
+		echo '<a href="' . $this->item->readmore_link . '">' . $this->escape($this->item->title) . '</a>';
+	}
+	else
+	{
+		echo $this->escape($this->item->title);
+	}
 
-    echo '</h2>';
+	echo '</h2>';
 }
 
 if ($canEdit || $params->get('show_print_icon') || $params->get('show_email_icon'))
 {
-    echo '<ul class="actions">';
+	echo '<ul class="actions">';
 
-    if (!$this->print)
-    {
-        if ($params->get('show_print_icon'))
-        {
-            echo '<li class="print-icon">' . JHtml::_('icon.print_popup', $this->item, $params) . '</li>';
-        }
+	if (!$this->print)
+	{
+		if ($params->get('show_print_icon'))
+		{
+			echo '<li class="print-icon">' . JHtml::_('icon.print_popup', $this->item, $params) . '</li>';
+		}
 
-        if ($params->get('show_email_icon'))
-        {
+		if ($params->get('show_email_icon'))
+		{
 
-            echo '<li class="email-icon">' . JHtml::_('icon.email', $this->item, $params) . '</li>';
-        }
+			echo '<li class="email-icon">' . JHtml::_('icon.email', $this->item, $params) . '</li>';
+		}
 
-        if ($canEdit)
-        {
-            echo '<li class="edit-icon">' . JHtml::_('icon.edit', $this->item, $params) . '</li>';
-        }
-    }
-    else
-    {
-        echo '<li>' . JHtml::_('icon.print_screen', $this->item, $params) . '</li>';
-    }
+		if ($canEdit)
+		{
+			echo '<li class="edit-icon">' . JHtml::_('icon.edit', $this->item, $params) . '</li>';
+		}
+	}
+	else
+	{
+		echo '<li>' . JHtml::_('icon.print_screen', $this->item, $params) . '</li>';
+	}
 
-    echo '</ul>';
+	echo '</ul>';
 }
 
 if (!$params->get('show_intro'))
 {
-    echo $this->item->event->afterDisplayTitle;
+	echo $this->item->event->afterDisplayTitle;
 }
 
 echo $this->item->event->beforeDisplayContent;
 
 $useDefList = (($params->get('show_author')) or ($params->get('show_category')) or ($params->get('show_parent_category'))
-    or ($params->get('show_create_date')) or ($params->get('show_modify_date')) or ($params->get('show_publish_date'))
-    or ($params->get('show_hits')));
+	or ($params->get('show_create_date')) or ($params->get('show_modify_date')) or ($params->get('show_publish_date'))
+	or ($params->get('show_hits')));
 
 if ($useDefList)
 {
-    echo '<dl class="article-info">';
-    echo '<dt class="article-info-term">' . JText::_('COM_THM_GROUPS_ARTICLE_INFO') . '</dt>';
+	echo '<dl class="article-info">';
+	echo '<dt class="article-info-term">' . JText::_('COM_THM_GROUPS_ARTICLE_INFO') . '</dt>';
 }
 
 if ($params->get('show_parent_category') && $this->item->parent_slug != '1{root')
 {
-    echo '<dd class="parent-category-name">';
-    $title = $this->escape($this->item->parent_title);
-    $url   = '<a href="' . JRoute::_(ContentHelperRoute::getCategoryRoute($this->item->parent_slug)) . '">' . $title . '</a>';
+	echo '<dd class="parent-category-name">';
+	$title = $this->escape($this->item->parent_title);
+	$url   = '<a href="' . JRoute::_(ContentHelperRoute::getCategoryRoute($this->item->parent_slug)) . '">' . $title . '</a>';
 
-    if ($params->get('link_parent_category') and $this->item->parent_slug)
-    {
-        echo JText::sprintf('COM_THM_GROUPS_PARENT', $url);
-    }
-    else
-    {
-        echo JText::sprintf('COM_THM_GROUPS_PARENT', $title);
-    }
+	if ($params->get('link_parent_category') and $this->item->parent_slug)
+	{
+		echo JText::sprintf('COM_THM_GROUPS_PARENT', $url);
+	}
+	else
+	{
+		echo JText::sprintf('COM_THM_GROUPS_PARENT', $title);
+	}
 
-    echo '</dd>';
+	echo '</dd>';
 }
 
 if ($params->get('show_category'))
 {
-    echo '<dd class="category-name">';
-    $title = $this->escape($this->item->category_title);
-    $url   = '<a href="' . JRoute::_(ContentHelperRoute::getCategoryRoute($this->item->catslug)) . '">' . $title . '</a>';
+	echo '<dd class="category-name">';
+	$title = $this->escape($this->item->category_title);
+	$url   = '<a href="' . JRoute::_(ContentHelperRoute::getCategoryRoute($this->item->catslug)) . '">' . $title . '</a>';
 
-    if ($params->get('link_category') and $this->item->catslug)
-    {
-        echo JText::sprintf('COM_THM_GROUPS_CATEGORY', $url);
-    }
-    else
-    {
-        echo JText::sprintf('COM_THM_GROUPS_CATEGORY', $title);
-    }
+	if ($params->get('link_category') and $this->item->catslug)
+	{
+		echo JText::sprintf('COM_THM_GROUPS_CATEGORY', $url);
+	}
+	else
+	{
+		echo JText::sprintf('COM_THM_GROUPS_CATEGORY', $title);
+	}
 
-    echo '</dd>';
+	echo '</dd>';
 }
 
 if ($params->get('show_create_date'))
 {
-    echo '<dd class="create">';
-    echo JText::sprintf('COM_THM_GROUPS_CREATED_DATE_ON', JHtml::_('date', $this->item->created, JText::_('DATE_FORMAT_LC2')));
-    echo '</dd>';
+	echo '<dd class="create">';
+	echo JText::sprintf('COM_THM_GROUPS_CREATED_DATE_ON', JHtml::_('date', $this->item->created, JText::_('DATE_FORMAT_LC2')));
+	echo '</dd>';
 }
 
 if ($params->get('show_modify_date'))
 {
-    echo '<dd class="modified">';
-    echo JText::sprintf('COM_THM_GROUPS_LAST_UPDATED', JHtml::_('date', $this->item->modified, JText::_('DATE_FORMAT_LC2')));
-    echo '</dd>';
+	echo '<dd class="modified">';
+	echo JText::sprintf('COM_THM_GROUPS_LAST_UPDATED', JHtml::_('date', $this->item->modified, JText::_('DATE_FORMAT_LC2')));
+	echo '</dd>';
 }
 
 if ($params->get('show_publish_date'))
 {
-    echo '<dd class="published">';
-    echo JText::sprintf('COM_THM_GROUPS_PUBLISHED_DATE_ON', JHtml::_('date', $this->item->publish_up, JText::_('DATE_FORMAT_LC2')));
-    echo '</dd>';
+	echo '<dd class="published">';
+	echo JText::sprintf('COM_THM_GROUPS_PUBLISHED_DATE_ON', JHtml::_('date', $this->item->publish_up, JText::_('DATE_FORMAT_LC2')));
+	echo '</dd>';
 }
 
 if ($params->get('show_author') && !empty($this->item->author))
 {
-    echo '<dd class="createdby">';
-    $author = $this->item->created_by_alias ? $this->item->created_by_alias : $this->item->author;
+	echo '<dd class="createdby">';
+	$author = $this->item->created_by_alias ? $this->item->created_by_alias : $this->item->author;
 
-    if (!empty($this->item->contactid) && $params->get('link_author') == true)
-    {
-        $needle  = 'index.php?option=com_contact&view=contact&id=' . $this->item->contactid;
-        $menu    = JFactory::getApplication()->getMenu();
-        $item    = $menu->getItems('link', $needle, true);
-        $cntlink = !empty($item) ? $needle . '&Itemid=' . $item->id : $needle;
+	if (!empty($this->item->contactid) && $params->get('link_author') == true)
+	{
+		$needle  = 'index.php?option=com_contact&view=contact&id=' . $this->item->contactid;
+		$menu    = JFactory::getApplication()->getMenu();
+		$item    = $menu->getItems('link', $needle, true);
+		$cntlink = !empty($item) ? $needle . '&Itemid=' . $item->id : $needle;
 
-        echo JText::sprintf('COM_THM_GROUPS_WRITTEN_BY', JHtml::_('link', JRoute::_($cntlink), $author));
+		echo JText::sprintf('COM_THM_GROUPS_WRITTEN_BY', JHtml::_('link', JRoute::_($cntlink), $author));
 
-    }
-    else
-    {
-        echo JText::sprintf('COM_THM_GROUPS_WRITTEN_BY', $author);
-    }
+	}
+	else
+	{
+		echo JText::sprintf('COM_THM_GROUPS_WRITTEN_BY', $author);
+	}
 
-    echo '</dd>';
+	echo '</dd>';
 
 }
 
 if ($params->get('show_hits'))
 {
 
-    echo '<dd class="hits">';
-    echo JText::sprintf('COM_THM_GROUPS_ARTICLE_HITS', $this->item->hits);
-    echo '</dd>';
+	echo '<dd class="hits">';
+	echo JText::sprintf('COM_THM_GROUPS_ARTICLE_HITS', $this->item->hits);
+	echo '</dd>';
 
 }
 
 if ($useDefList)
 {
-    echo '</dl>';
+	echo '</dl>';
 }
 
 if (isset ($this->item->toc))
 {
-    echo $this->item->toc;
+	echo $this->item->toc;
 }
 
 if ($params->get('access-view'))
 {
-    if (isset($images->image_fulltext) and !empty($images->image_fulltext))
-    {
-        $imgfloat = (empty($images->float_fulltext)) ? $params->get('float_fulltext') : $images->float_fulltext;
-        echo '<div class="img-fulltext-' . htmlspecialchars($imgfloat) . '">';
-        $imageTip = $images->image_fulltext_caption ?
-            'class="caption" title="' . htmlspecialchars($images->image_fulltext_caption) . '"' : '';
-        $imageSrc = htmlspecialchars($images->image_fulltext);
-        $imageAlt = htmlspecialchars($images->image_fulltext_alt);
-        echo '<img ' . $imageTip . ' src="' . $imageSrc . '" alt="' . $imageAlt . '"/>';
-        echo '</div>';
-    }
+	if (isset($images->image_fulltext) and !empty($images->image_fulltext))
+	{
+		$imgfloat = (empty($images->float_fulltext)) ? $params->get('float_fulltext') : $images->float_fulltext;
+		echo '<div class="img-fulltext-' . htmlspecialchars($imgfloat) . '">';
+		$imageTip = $images->image_fulltext_caption ?
+			'class="caption" title="' . htmlspecialchars($images->image_fulltext_caption) . '"' : '';
+		$imageSrc = htmlspecialchars($images->image_fulltext);
+		$imageAlt = htmlspecialchars($images->image_fulltext_alt);
+		echo '<img ' . $imageTip . ' src="' . $imageSrc . '" alt="' . $imageAlt . '"/>';
+		echo '</div>';
+	}
 
-    if (!empty($this->item->pagination) AND $this->item->pagination
-        AND !$this->item->paginationposition AND !$this->item->paginationrelative
-    )
-    {
-        echo $this->item->pagination;
-    }
+	if (!empty($this->item->pagination) AND $this->item->pagination
+		AND !$this->item->paginationposition AND !$this->item->paginationrelative
+	)
+	{
+		echo $this->item->pagination;
+	}
 
-    echo $this->item->text;
+	echo $this->item->text;
 
-    if (!empty($this->item->pagination) AND $this->item->pagination AND $this->item->paginationposition AND !$this->item->paginationrelative)
-    {
-        echo $this->item->pagination;
-    }
+	if (!empty($this->item->pagination) AND $this->item->pagination AND $this->item->paginationposition AND !$this->item->paginationrelative)
+	{
+		echo $this->item->pagination;
+	}
 
 
-    if (isset($urls) AND ((!empty($urls->urls_position) AND ($urls->urls_position == '1')) OR ($params->get('urls_position') == '1')))
-    {
-        echo $this->loadTemplate('links');
-    }
+	if (isset($urls) AND ((!empty($urls->urls_position) AND ($urls->urls_position == '1')) OR ($params->get('urls_position') == '1')))
+	{
+		echo $this->loadTemplate('links');
+	}
 }
 elseif ($params->get('show_noauth') == true and $user->get('guest'))
 {
-    echo $this->item->introtext;
+	echo $this->item->introtext;
 
-    if ($params->get('show_readmore') && $this->item->fulltext != null)
-    {
-        $link1 = JRoute::_('index.php?option=com_users&view=login');
-        $link  = new JURI($link1);
+	if ($params->get('show_readmore') && $this->item->fulltext != null)
+	{
+		$link1 = JRoute::_('index.php?option=com_users&view=login');
+		$link  = new JURI($link1);
 
-        echo '<p class="readmore">';
-        echo '<a href="' . $link . '">';
-        $attribs = json_decode($this->item->attribs);
+		echo '<p class="readmore">';
+		echo '<a href="' . $link . '">';
+		$attribs = json_decode($this->item->attribs);
 
-        if ($attribs->alternative_readmore == null)
-        {
-            echo JText::_('COM_THM_GROUPS_REGISTER_TO_READ_MORE');
-        }
-        elseif ($readMore = $this->item->alternative_readmore)
-        {
-            echo $readMore;
+		if ($attribs->alternative_readmore == null)
+		{
+			echo JText::_('COM_THM_GROUPS_REGISTER_TO_READ_MORE');
+		}
+		elseif ($readMore = $this->item->alternative_readmore)
+		{
+			echo $readMore;
 
-            if ($params->get('show_readmore_title', 0) != 0)
-            {
-                echo JHtml::_('string.truncate', ($this->item->title), $params->get('readmore_limit'));
-            }
-        }
-        elseif ($params->get('show_readmore_title', 0) == 0)
-        {
-            echo JText::sprintf('COM_THM_GROUPS_READ_MORE_TITLE');
-        }
-        else
-        {
-            echo JText::_('COM_THM_GROUPS_READ_MORE');
-            echo JHtml::_('string.truncate', ($this->item->title), $params->get('readmore_limit'));
-        }
+			if ($params->get('show_readmore_title', 0) != 0)
+			{
+				echo JHtml::_('string.truncate', ($this->item->title), $params->get('readmore_limit'));
+			}
+		}
+		elseif ($params->get('show_readmore_title', 0) == 0)
+		{
+			echo JText::sprintf('COM_THM_GROUPS_READ_MORE_TITLE');
+		}
+		else
+		{
+			echo JText::_('COM_THM_GROUPS_READ_MORE');
+			echo JHtml::_('string.truncate', ($this->item->title), $params->get('readmore_limit'));
+		}
 
-        echo '</a>';
-        echo '</p>';
-    }
+		echo '</a>';
+		echo '</p>';
+	}
 }
 
 if (!empty($this->item->pagination) AND $this->item->pagination AND $this->item->paginationposition AND $this->item->paginationrelative)
 {
-    echo $this->item->pagination;
+	echo $this->item->pagination;
 }
 
 echo $this->item->event->afterDisplayContent;
 
 if (JComponentHelper::getParams('com_thm_groups')->get('backButtonForQuickpages') == 1)
 {
-    echo '<input type="button" class="btn btn-thm" value="' . JText::_("COM_THM_GROUPS_BACK_BUTTON") . '" onclick="window.history.back()">';
+	echo '<input type="button" class="btn btn-thm" value="' . JText::_("COM_THM_GROUPS_BACK_BUTTON") . '" onclick="window.history.back()">';
 }
 
 echo '</div>';

@@ -33,463 +33,463 @@ jimport('joomla.filesystem.path');
 class THM_GroupsModelAdvanced extends JModelLegacy
 {
 
-    /**
-     * DAO
-     *
-     */
-    protected $db;
+	/**
+	 * DAO
+	 *
+	 */
+	protected $db;
 
-    /**
-     * Constructor
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->db = JFactory::getDBO();
-    }
+	/**
+	 * Constructor
+	 *
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+		$this->db = JFactory::getDBO();
+	}
 
-    /**
-     * Returns the correct view template
-     *
-     * @return string
-     */
-    public function getView()
-    {
-        return $this->getHead() . $this->getList();
-    }
+	/**
+	 * Returns the correct view template
+	 *
+	 * @return string
+	 */
+	public function getView()
+	{
+		return $this->getHead() . $this->getList();
+	}
 
-    /**
-     * Get View parameters
-     *
-     * @return Object Parameter object
-     */
-    public function getViewParams()
-    {
-        $mainframe = Jfactory::getApplication();
+	/**
+	 * Get View parameters
+	 *
+	 * @return Object Parameter object
+	 */
+	public function getViewParams()
+	{
+		$mainframe = Jfactory::getApplication();
 
-        return $mainframe->getParams();
-    }
+		return $mainframe->getParams();
+	}
 
-    /**
-     * Get Group number
-     *
-     * @return integer Group number
-     */
-    public function getGroupNumber()
-    {
-        $params = $this->getViewParams();
+	/**
+	 * Get Group number
+	 *
+	 * @return integer Group number
+	 */
+	public function getGroupNumber()
+	{
+		$params = $this->getViewParams();
 
-        return $params->get('selGroup');
-    }
+		return $params->get('selGroup');
+	}
 
-    /**
-     * Print object
-     *
-     * @param   string $topic  Topic
-     * @param   string $object Object
-     *
-     * @return void
-     */
-    public function printObject($topic = '', $object = '')
-    {
-        if (!empty ($topic))
-        {
-            $topic = "<div class='com_gs_topic'>$topic</div>";
-        }
-        echo "<div>$topic$object</div>";
-    }
+	/**
+	 * Print object
+	 *
+	 * @param   string $topic  Topic
+	 * @param   string $object Object
+	 *
+	 * @return void
+	 */
+	public function printObject($topic = '', $object = '')
+	{
+		if (!empty ($topic))
+		{
+			$topic = "<div class='com_gs_topic'>$topic</div>";
+		}
+		echo "<div>$topic$object</div>";
+	}
 
-    /**
-     * Get image output
-     *
-     * @param   string $path Path
-     * @param   string $text Text
-     * @param   string $cssc CSS class
-     *
-     * @return string
-     */
-    public function getImage($path, $text, $cssc)
-    {
-        return JHTML::image(
-            "modules/mod_thm_groups/$path",
-            $text,
-            array(
-                'class' => $cssc
-            )
-        );
-    }
+	/**
+	 * Get image output
+	 *
+	 * @param   string $path Path
+	 * @param   string $text Text
+	 * @param   string $cssc CSS class
+	 *
+	 * @return string
+	 */
+	public function getImage($path, $text, $cssc)
+	{
+		return JHTML::image(
+			"modules/mod_thm_groups/$path",
+			$text,
+			array(
+				'class' => $cssc
+			)
+		);
+	}
 
-    /**
-     * Get unsorted roles of a specific group
-     *
-     * @param   integer $gid Group id
-     *
-     * @return  array    Array with all roles of group with $gid
-     */
-    public function getUnsortedRoles($gid)
-    {
+	/**
+	 * Get unsorted roles of a specific group
+	 *
+	 * @param   integer $gid Group id
+	 *
+	 * @return  array    Array with all roles of group with $gid
+	 */
+	public function getUnsortedRoles($gid)
+	{
 
-        return THM_GroupsData::getRoles($gid);
-    }
+		return THM_GroupsData::getRoles($gid);
+	}
 
-    /**
-     * Method to check if user can edit
-     *
-     * @param Integer $groupid Group Id
-     *
-     * @return database object
-     */
-    public function canEdit($groupid)
-    {
-        $groupid = $this->getGroupNumber();
-        $user    = JFactory::getUser();
-        if ($user->authorise('core.admin', 'com_thm_groups'))
-        {
-            return true;
-        }
-        if (THM_GroupsUserData::getModerator($groupid))
-        {
-            return true;
-        }
+	/**
+	 * Method to check if user can edit
+	 *
+	 * @param Integer $groupid Group Id
+	 *
+	 * @return database object
+	 */
+	public function canEdit($groupid)
+	{
+		$groupid = $this->getGroupNumber();
+		$user    = JFactory::getUser();
+		if ($user->authorise('core.admin', 'com_thm_groups'))
+		{
+			return true;
+		}
+		if (THM_GroupsUserData::getModerator($groupid))
+		{
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    /**
-     * Get all attribute types
-     *
-     * @return  Object
-     */
-    public function getTypes()
-    {
-        $db    = JFactory::getDBO();
-        $query = $db->getQuery(true);
+	/**
+	 * Get all attribute types
+	 *
+	 * @return  Object
+	 */
+	public function getTypes()
+	{
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
 
-        $query->select('C.name AS type')
-            ->from('#__thm_groups_attribute AS A')
-            ->leftJoin('#__thm_groups_dynamic_type AS B ON A.dynamic_typeID = B.id')
-            ->leftJoin('#__thm_groups_static_type AS C ON  B.static_typeID = C.id')
-            ->order('A.id');
+		$query->select('C.name AS type')
+			->from('#__thm_groups_attribute AS A')
+			->leftJoin('#__thm_groups_dynamic_type AS B ON A.dynamic_typeID = B.id')
+			->leftJoin('#__thm_groups_static_type AS C ON  B.static_typeID = C.id')
+			->order('A.id');
 
-        $db->setQuery($query);
+		$db->setQuery($query);
 
-        return $db->loadObjectList();
-    }
+		return $db->loadObjectList();
+	}
 
-    /**
-     * Returns array with every group members and related attribute. The group is predefined as view parameter
-     *
-     * TODO when all Group have a Profil, put them here
-     * @return  array  array with group members and related user attributes
-     */
-    public function getData()
-    {
-        // Contains the number of the group, e.g. 10
-        $groupid = $this->getGroupNumber();
-        $params  = $this->getViewParams();
+	/**
+	 * Returns array with every group members and related attribute. The group is predefined as view parameter
+	 *
+	 * TODO when all Group have a Profil, put them here
+	 * @return  array  array with group members and related user attributes
+	 */
+	public function getData()
+	{
+		// Contains the number of the group, e.g. 10
+		$groupid = $this->getGroupNumber();
+		$params  = $this->getViewParams();
 
-        $sortedRoles = $params->get('roleid');
-        $data        = array();
-        if ($sortedRoles == "")
-        {
-            $arrSortedRoles = $this->getUnsortedRoles($groupid);
-        }
-        else
-        {
-            $arrSortedRoles = explode(",", $sortedRoles);
-        }
+		$sortedRoles = $params->get('roleid');
+		$data        = array();
+		if ($sortedRoles == "")
+		{
+			$arrSortedRoles = $this->getUnsortedRoles($groupid);
+		}
+		else
+		{
+			$arrSortedRoles = explode(",", $sortedRoles);
+		}
 
-        $userList  = THM_GroupsData::getMitglieder($groupid, $arrSortedRoles);
-        $profileid = THM_GroupsData::getGroupsProfile($groupid);
+		$userList  = THM_GroupsData::getMitglieder($groupid, $arrSortedRoles);
+		$profileid = THM_GroupsData::getGroupsProfile($groupid);
 
-        foreach ($userList as $users)
-        {
-            foreach ($users as $uid)
-            {
-                $userData   = THM_GroupsUserData::getUserProfileInfo($uid, $profileid);
-                $data[$uid] = $userData;
-            }
-        }
+		foreach ($userList as $users)
+		{
+			foreach ($users as $uid)
+			{
+				$userData   = THM_GroupsUserData::getUserProfileInfo($uid, $profileid);
+				$data[$uid] = $userData;
+			}
+		}
 
-        return $data;
-    }
+		return $data;
+	}
 
-    /**
-     * Get attribute structure
-     *
-     * @return  ObjectList  Objectlist with defined structure of attributes
-     */
-    public function getStructure()
-    {
-        $query = $this->db->getQuery(true);
+	/**
+	 * Get attribute structure
+	 *
+	 * @return  ObjectList  Objectlist with defined structure of attributes
+	 */
+	public function getStructure()
+	{
+		$query = $this->db->getQuery(true);
 
-        $query->select('*');
-        $query->from('#__thm_groups_structure AS a');
-        $query->order('a.order');
+		$query->select('*');
+		$query->from('#__thm_groups_structure AS a');
+		$query->order('a.order');
 
-        $this->db->setQuery($query);
+		$this->db->setQuery($query);
 
-        return $this->db->loadObjectList();
-    }
+		return $this->db->loadObjectList();
+	}
 
-    /**
-     * Get Data for table view
-     *
-     * @return  array    Two-dimensional array with group members (left and right)
-     */
-    public function getDataTable()
-    {
-        $memberleft  = array();
-        $memberright = array();
-        $index       = 0;
-        $_data       = $this->getData();
-        if (!empty($_data))
-        {
-            foreach ($_data as $key => $member)
-            {
-                if ($index == 0)
-                {
-                    $memberleft[$key] = $member;
-                    $index++;
-                }
-                else
-                {
-                    $memberright[$key] = $member;
-                    $index--;
-                }
-            }
-        }
+	/**
+	 * Get Data for table view
+	 *
+	 * @return  array    Two-dimensional array with group members (left and right)
+	 */
+	public function getDataTable()
+	{
+		$memberleft  = array();
+		$memberright = array();
+		$index       = 0;
+		$_data       = $this->getData();
+		if (!empty($_data))
+		{
+			foreach ($_data as $key => $member)
+			{
+				if ($index == 0)
+				{
+					$memberleft[$key] = $member;
+					$index++;
+				}
+				else
+				{
+					$memberright[$key] = $member;
+					$index--;
+				}
+			}
+		}
 
-        $_data          = array();
-        $_data['left']  = $memberleft;
-        $_data['right'] = $memberright;
+		$_data          = array();
+		$_data['left']  = $memberleft;
+		$_data['right'] = $memberright;
 
-        return $_data;
-    }
+		return $_data;
+	}
 
-    /**
-     * Get the Param for the view
-     *
-     * @return  number   The number of the view
-     */
-    public function getAdvancedView()
-    {
-        $params = $this->getViewParams();
-        $view   = $params->get('advancedview');
-        if (!isset($view))
-        {
-            $view = 0;
-        }
+	/**
+	 * Get the Param for the view
+	 *
+	 * @return  number   The number of the view
+	 */
+	public function getAdvancedView()
+	{
+		$params = $this->getViewParams();
+		$view   = $params->get('advancedview');
+		if (!isset($view))
+		{
+			$view = 0;
+		}
 
-        return $view;
-    }
-
-
-    /**
-     * Get Auto Increment Value of Database Table
-     *
-     * @param   String $dbTable Database Table Name
-     *
-     * @author    Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
-     * @author    Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
-     *
-     * @return  int   Value of Autoincrement
-     */
-    public function getAutoIncrementValue($dbTable)
-    {
-        $sql   = "SHOW TABLE STATUS LIKE '" . $this->db->getPrefix() . $dbTable . "';";
-        $query = $this->db->getQuery(true);
-        $this->db->setQuery($sql);
-        $result = $this->db->loadAssoc();
-
-        if (empty($result) || !isset($result['Auto_increment']))
-        {
-            return false;
-        }
-
-        return $result['Auto_increment'];
-    }
+		return $view;
+	}
 
 
-    /**
-     * Save Preview Data
-     *
-     * @param   Mixed $data Data
-     *
-     * @author    Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
-     * @author    Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
-     *
-     * @return  String  Token
-     */
-    public function savePreviewData($data = false)
-    {
-        $session = JSession::getInstance('none', array());
+	/**
+	 * Get Auto Increment Value of Database Table
+	 *
+	 * @param   String $dbTable Database Table Name
+	 *
+	 * @author    Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
+	 * @author    Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
+	 *
+	 * @return  int   Value of Autoincrement
+	 */
+	public function getAutoIncrementValue($dbTable)
+	{
+		$sql   = "SHOW TABLE STATUS LIKE '" . $this->db->getPrefix() . $dbTable . "';";
+		$query = $this->db->getQuery(true);
+		$this->db->setQuery($sql);
+		$result = $this->db->loadAssoc();
 
-        // Create Token (md5 - Token must have 32 chars)
-        $tokenKey = 'db::thm_groups_menu_row';
-        $token    = md5($tokenKey . microtime() . mt_rand(0, 255));
+		if (empty($result) || !isset($result['Auto_increment']))
+		{
+			return false;
+		}
 
-        $session->set($token, $data);
-
-        return $token;
-    }
-
-
-    /**
-     * Load Preview Data
-     *
-     * @param   String $token Token
-     *
-     * @author    Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
-     * @author    Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
-     *
-     * @return  Mixed  $data  Data
-     */
-    public function loadPreviewData($token = false)
-    {
-        $session = JSession::getInstance('none', array());
-
-        return $session->get($token, false);
-    }
+		return $result['Auto_increment'];
+	}
 
 
-    /**
-     * Delete Preview Data
-     *
-     * @param   String $token Token
-     *
-     * @author    Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
-     * @author    Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
-     *
-     * @return  Mixed  $data  Data
-     */
-    public function deletePreviewData($token = false)
-    {
-        $session = JSession::getInstance('none', array());
-        $session->clear($token);
-    }
+	/**
+	 * Save Preview Data
+	 *
+	 * @param   Mixed $data Data
+	 *
+	 * @author    Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
+	 * @author    Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
+	 *
+	 * @return  String  Token
+	 */
+	public function savePreviewData($data = false)
+	{
+		$session = JSession::getInstance('none', array());
+
+		// Create Token (md5 - Token must have 32 chars)
+		$tokenKey = 'db::thm_groups_menu_row';
+		$token    = md5($tokenKey . microtime() . mt_rand(0, 255));
+
+		$session->set($token, $data);
+
+		return $token;
+	}
 
 
-    /**
-     * Preview Observer - Store/Restore Menu Row
-     *
-     * @param   int    $id    Item ID (optional)
-     * @param   string $token md5 Hash (optional)
-     *
-     * @author    Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
-     * @author    Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
-     *
-     * @return  bool OR string (token)
-     */
-    public function notifyPreviewObserver($id = false, $token = false)
-    {
-        if (!is_numeric($id))
-        {
-            return false;
-        }
+	/**
+	 * Load Preview Data
+	 *
+	 * @param   String $token Token
+	 *
+	 * @author    Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
+	 * @author    Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
+	 *
+	 * @return  Mixed  $data  Data
+	 */
+	public function loadPreviewData($token = false)
+	{
+		$session = JSession::getInstance('none', array());
 
-        $itemId  = $id;
-        $dbTable = 'menu';
+		return $session->get($token, false);
+	}
 
-        // Store Mode
-        if ($token === false)
-        {
-            // Get current Auto Increment
-            $autoIncrement = $this->getAutoIncrementValue($dbTable);
 
-            // Item will be updated for preview
-            if (!empty($itemId))
-            {
-                $itemStatus = 'edit';
+	/**
+	 * Delete Preview Data
+	 *
+	 * @param   String $token Token
+	 *
+	 * @author    Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
+	 * @author    Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
+	 *
+	 * @return  Mixed  $data  Data
+	 */
+	public function deletePreviewData($token = false)
+	{
+		$session = JSession::getInstance('none', array());
+		$session->clear($token);
+	}
 
-                $query = $this->db->getQuery(true);
-                $query->select('*');
-                $query->from('#__' . $dbTable);
-                $query->where('id = ' . $this->db->quote($itemId));
-                $this->db->setQuery($query);
-                $row = $this->db->loadAssoc();
-            }
-            // A new item will be created for preview
-            else
-            {
-                $itemStatus = 'new';
-                $row        = false;
-            }
 
-            // Save Data and return Token
-            $data = array('itemStatus' => $itemStatus, 'itemId' => $itemId, 'autoIncrement' => $autoIncrement, 'row' => $row);
+	/**
+	 * Preview Observer - Store/Restore Menu Row
+	 *
+	 * @param   int    $id    Item ID (optional)
+	 * @param   string $token md5 Hash (optional)
+	 *
+	 * @author    Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
+	 * @author    Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
+	 *
+	 * @return  bool OR string (token)
+	 */
+	public function notifyPreviewObserver($id = false, $token = false)
+	{
+		if (!is_numeric($id))
+		{
+			return false;
+		}
 
-            return $this->savePreviewData($data);
-        }
-        // Restore Mode
-        elseif (strlen($token) === 32)
-        {
-            // Load Data by Token
-            $cacheData = $this->loadPreviewData($token);
+		$itemId  = $id;
+		$dbTable = 'menu';
 
-            if (empty($cacheData) || !isset($cacheData['itemStatus']))
-            {
-                return false;
-            }
+		// Store Mode
+		if ($token === false)
+		{
+			// Get current Auto Increment
+			$autoIncrement = $this->getAutoIncrementValue($dbTable);
 
-            // Restore edited item
-            if ($cacheData['itemStatus'] == 'edit' && $itemId == $cacheData['itemId'])
-            {
-                $query = $this->db->getQuery(true);
-                $query->update($this->db->getPrefix() . $dbTable);
-                foreach ($cacheData['row'] AS $key => $value)
-                {
-                    $query->set($key . ' = ' . $this->db->quote($value));
-                }
-                $query->where('id = ' . $this->db->quote($itemId));
-                $this->db->setQuery($query);
-                $this->db->execute();
-            }
-            // Delete new (preview) item and decrease Auto Increment value if possible
-            elseif ($cacheData['itemStatus'] == 'new' && $itemId >= $cacheData['autoIncrement'])
-            {
-                try
-                {
-                    $this->db->transactionStart();
+			// Item will be updated for preview
+			if (!empty($itemId))
+			{
+				$itemStatus = 'edit';
 
-                    $autoIncrementOld = $cacheData['autoIncrement'];
-                    $autoIncrementNew = $this->getAutoIncrementValue($dbTable);
+				$query = $this->db->getQuery(true);
+				$query->select('*');
+				$query->from('#__' . $dbTable);
+				$query->where('id = ' . $this->db->quote($itemId));
+				$this->db->setQuery($query);
+				$row = $this->db->loadAssoc();
+			}
+			// A new item will be created for preview
+			else
+			{
+				$itemStatus = 'new';
+				$row        = false;
+			}
 
-                    if ($autoIncrementOld >= $autoIncrementNew)
-                    {
-                        throw new Exception('An unexpected error occured!\nAuto Increment Value mismatch!');
-                    }
+			// Save Data and return Token
+			$data = array('itemStatus' => $itemStatus, 'itemId' => $itemId, 'autoIncrement' => $autoIncrement, 'row' => $row);
 
-                    // Delete new item
-                    $query = $this->db->getQuery(true);
-                    $query->delete($this->db->getPrefix() . $dbTable);
-                    $query->where('id = ' . $this->db->quote($itemId));
-                    $this->db->setQuery($query);
-                    $this->db->execute();
+			return $this->savePreviewData($data);
+		}
+		// Restore Mode
+		elseif (strlen($token) === 32)
+		{
+			// Load Data by Token
+			$cacheData = $this->loadPreviewData($token);
 
-                    // Decrease Auto Increment Value
-                    if ($autoIncrementOld + 1 == $autoIncrementNew)
-                    {
-                        $query = $this->db->getQuery(true);
-                        $this->db->setQuery("ALTER TABLE " . $this->db->getPrefix() . $dbTable . " AUTO_INCREMENT = $autoIncrementOld");
-                        $this->db->execute();
-                    }
+			if (empty($cacheData) || !isset($cacheData['itemStatus']))
+			{
+				return false;
+			}
 
-                    $this->db->transactionCommit();
-                }
-                catch (Exception $e)
-                {
-                    $this->db->transactionRollback();
-                }
-            }
+			// Restore edited item
+			if ($cacheData['itemStatus'] == 'edit' && $itemId == $cacheData['itemId'])
+			{
+				$query = $this->db->getQuery(true);
+				$query->update($this->db->getPrefix() . $dbTable);
+				foreach ($cacheData['row'] AS $key => $value)
+				{
+					$query->set($key . ' = ' . $this->db->quote($value));
+				}
+				$query->where('id = ' . $this->db->quote($itemId));
+				$this->db->setQuery($query);
+				$this->db->execute();
+			}
+			// Delete new (preview) item and decrease Auto Increment value if possible
+			elseif ($cacheData['itemStatus'] == 'new' && $itemId >= $cacheData['autoIncrement'])
+			{
+				try
+				{
+					$this->db->transactionStart();
 
-            $this->deletePreviewData($token);
+					$autoIncrementOld = $cacheData['autoIncrement'];
+					$autoIncrementNew = $this->getAutoIncrementValue($dbTable);
 
-            return true;
-        }
+					if ($autoIncrementOld >= $autoIncrementNew)
+					{
+						throw new Exception('An unexpected error occured!\nAuto Increment Value mismatch!');
+					}
 
-        return false;
-    }
+					// Delete new item
+					$query = $this->db->getQuery(true);
+					$query->delete($this->db->getPrefix() . $dbTable);
+					$query->where('id = ' . $this->db->quote($itemId));
+					$this->db->setQuery($query);
+					$this->db->execute();
+
+					// Decrease Auto Increment Value
+					if ($autoIncrementOld + 1 == $autoIncrementNew)
+					{
+						$query = $this->db->getQuery(true);
+						$this->db->setQuery("ALTER TABLE " . $this->db->getPrefix() . $dbTable . " AUTO_INCREMENT = $autoIncrementOld");
+						$this->db->execute();
+					}
+
+					$this->db->transactionCommit();
+				}
+				catch (Exception $e)
+				{
+					$this->db->transactionRollback();
+				}
+			}
+
+			$this->deletePreviewData($token);
+
+			return true;
+		}
+
+		return false;
+	}
 
 }

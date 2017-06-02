@@ -27,88 +27,88 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/static_type.php';
  */
 class THM_GroupsModelDynamic_Type extends JModelLegacy
 {
-    /**
-     * Save element of dynamic types
-     *
-     * @return bool true on success, otherwise false
-     */
-    public function save()
-    {
-        $data         = JFactory::getApplication()->input->get('jform', array(), 'array');
-        $staticTypeID = $data['static_typeID'];
-        $defOptions   = THM_GroupsHelperStatic_Type::getOption($staticTypeID);
+	/**
+	 * Save element of dynamic types
+	 *
+	 * @return bool true on success, otherwise false
+	 */
+	public function save()
+	{
+		$data         = JFactory::getApplication()->input->get('jform', array(), 'array');
+		$staticTypeID = $data['static_typeID'];
+		$defOptions   = THM_GroupsHelperStatic_Type::getOption($staticTypeID);
 
-        $options = new stdClass();
-        switch ($staticTypeID)
-        {
-            case TEXT:
-                $options->length = empty($data['length']) ? $defOptions->length : (int) $data['length'];
-                break;
-            case TEXTFIELD:
-                $options->length = empty($data['length']) ? $defOptions->length : (int) $data['length'];
-                break;
-            case PICTURE:
-                // Save always default values, because pictures are placed now only in /images/com_thm_groups/profile/
-                $options->path     = $defOptions->path;
-                $options->filename = $defOptions->filename;
-                break;
-            case LINK:
-            case MULTISELECT:
-            case TABLE:
-            case TEMPLATE:
-                $options = $defOptions;
-                break;
-        }
+		$options = new stdClass();
+		switch ($staticTypeID)
+		{
+			case TEXT:
+				$options->length = empty($data['length']) ? $defOptions->length : (int) $data['length'];
+				break;
+			case TEXTFIELD:
+				$options->length = empty($data['length']) ? $defOptions->length : (int) $data['length'];
+				break;
+			case PICTURE:
+				// Save always default values, because pictures are placed now only in /images/com_thm_groups/profile/
+				$options->path     = $defOptions->path;
+				$options->filename = $defOptions->filename;
+				break;
+			case LINK:
+			case MULTISELECT:
+			case TABLE:
+			case TEMPLATE:
+				$options = $defOptions;
+				break;
+		}
 
-        $data['options']     = json_encode($options);
-        $dbo                 = JFactory::getDbo();
-        $data['description'] = $dbo->escape($data['description']);
+		$data['options']     = json_encode($options);
+		$dbo                 = JFactory::getDbo();
+		$data['description'] = $dbo->escape($data['description']);
 
-        $dbo->transactionStart();
+		$dbo->transactionStart();
 
-        $dynamicType = $this->getTable();
+		$dynamicType = $this->getTable();
 
-        $success = $dynamicType->save($data);
+		$success = $dynamicType->save($data);
 
 
-        if (!$success)
-        {
-            $dbo->transactionRollback();
+		if (!$success)
+		{
+			$dbo->transactionRollback();
 
-            return false;
-        }
-        else
-        {
-            $dbo->transactionCommit();
+			return false;
+		}
+		else
+		{
+			$dbo->transactionCommit();
 
-            return $dynamicType->id;
-        }
-    }
+			return $dynamicType->id;
+		}
+	}
 
-    /**
-     * Deletes selected dynamic types from the db
-     *
-     * @param   array $idsToDelete IDs of items which should be deleted
-     *
-     * @return  mixed  true on success, otherwise false
-     */
-    public function delete($idsToDelete)
-    {
-        $dbo   = JFactory::getDbo();
-        $query = $dbo->getQuery(true);
-        $query->delete('#__thm_groups_dynamic_type');
-        $query->where('id IN (' . join(',', $idsToDelete) . ')');
-        $dbo->setQuery($query);
+	/**
+	 * Deletes selected dynamic types from the db
+	 *
+	 * @param   array $idsToDelete IDs of items which should be deleted
+	 *
+	 * @return  mixed  true on success, otherwise false
+	 */
+	public function delete($idsToDelete)
+	{
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
+		$query->delete('#__thm_groups_dynamic_type');
+		$query->where('id IN (' . join(',', $idsToDelete) . ')');
+		$dbo->setQuery($query);
 
-        try
-        {
-            return $dbo->execute();
-        }
-        catch (Exception $exception)
-        {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+		try
+		{
+			return $dbo->execute();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-            return false;
-        }
-    }
+			return false;
+		}
+	}
 }

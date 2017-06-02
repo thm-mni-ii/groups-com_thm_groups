@@ -17,9 +17,9 @@ defined('_JEXEC') or die;
 	<div class="form-horizontal">
 		<div class="span12">
 			<fieldset class="form-vertical">
-                <?php
-                echo $this->form->renderFieldSet('details');
-                ?>
+				<?php
+				echo $this->form->renderFieldSet('details');
+				?>
 			</fieldset>
 		</div>
 	</div>
@@ -47,15 +47,15 @@ defined('_JEXEC') or die;
 		</tr>
 		</thead>
 		<tbody>
-        <?php
-        if (!empty($this->attributes))
-        {
-            echo $this->loadTemplate('rows');
-        }
-        ?>
+		<?php
+		if (!empty($this->attributes))
+		{
+			echo $this->loadTemplate('rows');
+		}
+		?>
 		</tbody>
 	</table>
-    <?php echo $this->form->getInput('id'); ?>
-    <?php echo JHtml::_('form.token'); ?>
+	<?php echo $this->form->getInput('id'); ?>
+	<?php echo JHtml::_('form.token'); ?>
 	<input type="hidden" name="task" value=""/>
 </form>

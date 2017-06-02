@@ -18,15 +18,15 @@ $saveOrderingUrl = 'index.php?option=com_thm_groups&task=quickpage.saveOrderAjax
 JHtml::_('sortablelist.sortable', 'quickpage_manager-list', 'adminForm', null, $saveOrderingUrl);
 
 $orderingButton = JHtml::_(
-    'searchtools.sort',
-    '',
-    'content.ordering',
-    'ASC',
-    'content.ordering',
-    null,
-    'asc',
-    'JGRID_HEADING_ORDERING',
-    'icon-menu-2'
+	'searchtools.sort',
+	'',
+	'content.ordering',
+	'ASC',
+	'content.ordering',
+	null,
+	'asc',
+	'JGRID_HEADING_ORDERING',
+	'icon-menu-2'
 );
 
 ?>
@@ -34,36 +34,36 @@ $orderingButton = JHtml::_(
 	<form action="index.php" id="adminForm" method="post" name="adminForm">
 		<div class="page-header">
 			<h2 class="groups-toolbar">
-                <?php echo $this->pageTitle; ?>
+				<?php echo $this->pageTitle; ?>
 			</h2>
 		</div>
 		<div class="toolbar">
-            <?php echo $this->getNewButton(); ?>
-            <?php echo $this->getProfileButton(); ?>
+			<?php echo $this->getNewButton(); ?>
+			<?php echo $this->getProfileButton(); ?>
 		</div>
 		<div class="thm_table_area">
 			<table class="table table-striped" id="quickpage_manager-list">
 				<thead>
 				<tr>
 					<th>
-                        <?php echo $orderingButton; ?>
+						<?php echo $orderingButton; ?>
 					<th>
-                        <?php echo JText::_('COM_THM_GROUPS_TITLE'); ?>
+						<?php echo JText::_('COM_THM_GROUPS_TITLE'); ?>
 					</th>
 					<th class="hasTip" title="<?php echo JText::_('COM_THM_GROUPS_STATUS_TIP') ?>">
-                        <?php echo JText::_('COM_THM_GROUPS_STATUS'); ?>
+						<?php echo JText::_('COM_THM_GROUPS_STATUS'); ?>
 					</th>
 					<th class="hasTip btn-column" title="<?php echo JText::_('COM_THM_GROUPS_MENU_TIP') ?>">
-                        <?php echo JText::_('COM_THM_GROUPS_MENU'); ?>
+						<?php echo JText::_('COM_THM_GROUPS_MENU'); ?>
 					</th>
 				</tr>
 				</thead>
 				<tbody class="ui-sortable">
-                <?php foreach ($this->items as $key => $item): ?>
+				<?php foreach ($this->items as $key => $item): ?>
 					<tr class="order nowrap center dndlist-sortable" id="<?php echo $item->id; ?>">
-                        <?php echo $this->getRow($key, $item); ?>
+						<?php echo $this->getRow($key, $item); ?>
 					</tr>
-                <?php endforeach; ?>
+				<?php endforeach; ?>
 				</tbody>
 			</table>
 		</div>
@@ -72,6 +72,6 @@ $orderingButton = JHtml::_(
 		<input type="hidden" name="option" value="com_thm_groups"/>
 		<input type="hidden" name="view" value="quickpage_manager"/>
 		<input type="hidden" name="Itemid" value="<?php echo $this->menuID; ?>"/>
-        <?php echo JHtml::_('form.token'); ?>
+		<?php echo JHtml::_('form.token'); ?>
 	</form>
 </div>

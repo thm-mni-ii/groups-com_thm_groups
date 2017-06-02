@@ -14,13 +14,13 @@ jimport('joomla.application.component.table');
 class THM_GroupsTableRoles extends JTable
 {
 
-    /**
-     * Constructor function for the class representing the monitors table
-     *
-     * @param   JDatabase &$dbo A database connector object
-     */
-    public function __construct(&$dbo)
-    {
-        parent::__construct('#__thm_groups_roles', 'id', $dbo);
-    }
+	/**
+	 * Constructor function for the class representing the monitors table
+	 *
+	 * @param   JDatabase &$dbo A database connector object
+	 */
+	public function __construct(&$dbo)
+	{
+		parent::__construct('#__thm_groups_roles', 'id', $dbo);
+	}
 }

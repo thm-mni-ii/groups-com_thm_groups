@@ -24,308 +24,308 @@ jimport('joomla.application.component.controller');
  */
 class THM_GroupsControllerGroup extends JControllerForm
 {
-    /**
-     * constructor (registers additional tasks to methods)
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+	/**
+	 * constructor (registers additional tasks to methods)
+	 *
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+	}
 
-    /**
-     * Redirects to the group_edit view for the creation of new element
-     *
-     * @return object
-     */
-    public function add()
-    {
-        if (!JFactory::getUser()->authorise('core.create', 'com_thm_groups'))
-        {
-            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
-        }
+	/**
+	 * Redirects to the group_edit view for the creation of new element
+	 *
+	 * @return object
+	 */
+	public function add()
+	{
+		if (!JFactory::getUser()->authorise('core.create', 'com_thm_groups'))
+		{
+			return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+		}
 
-        $this->setRedirect("index.php?option=com_users&view=group&layout=edit");
+		$this->setRedirect("index.php?option=com_users&view=group&layout=edit");
 
-        parent::display();
-    }
+		parent::display();
+	}
 
-    /**
-     * Add/Delete moderator button
-     *
-     * @return void
-     */
-    public function editModerator()
-    {
-        $model   = $this->getModel('group');
-        $success = $model->editModerator();
-        if ($success)
-        {
-            $msg  = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-            $type = 'message';
-        }
-        else
-        {
-            $this->setMessage(JText::sprintf('COM_THM_GROUPS_SAVE_ERROR', $model->getError()), 'warning');
-        }
-        $this->setRedirect("index.php?option=com_thm_groups&view=user_select&tmpl=component", $msg, $type);
-    }
+	/**
+	 * Add/Delete moderator button
+	 *
+	 * @return void
+	 */
+	public function editModerator()
+	{
+		$model   = $this->getModel('group');
+		$success = $model->editModerator();
+		if ($success)
+		{
+			$msg  = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
+			$type = 'message';
+		}
+		else
+		{
+			$this->setMessage(JText::sprintf('COM_THM_GROUPS_SAVE_ERROR', $model->getError()), 'warning');
+		}
+		$this->setRedirect("index.php?option=com_thm_groups&view=user_select&tmpl=component", $msg, $type);
+	}
 
-    /**
-     * Trash icon for moderator
-     *
-     * @return void
-     */
-    public function deleteModerator()
-    {
-        $model   = $this->getModel('group');
-        $success = $model->deleteModerator();
-        if ($success)
-        {
-            $msg  = JText::_('COM_THM_GROUPS_DELETED');
-            $type = 'message';
-        }
-        else
-        {
-            $this->setMessage(JText::sprintf('COM_THM_GROUPS_SAVE_ERROR', $model->getError()), 'warning');
-        }
-        $this->setRedirect("index.php?option=com_thm_groups&view=group_manager", $msg, $type);
-    }
+	/**
+	 * Trash icon for moderator
+	 *
+	 * @return void
+	 */
+	public function deleteModerator()
+	{
+		$model   = $this->getModel('group');
+		$success = $model->deleteModerator();
+		if ($success)
+		{
+			$msg  = JText::_('COM_THM_GROUPS_DELETED');
+			$type = 'message';
+		}
+		else
+		{
+			$this->setMessage(JText::sprintf('COM_THM_GROUPS_SAVE_ERROR', $model->getError()), 'warning');
+		}
+		$this->setRedirect("index.php?option=com_thm_groups&view=group_manager", $msg, $type);
+	}
 
-    /**
-     * Trash icon for role
-     *
-     * @return void
-     */
-    public function deleteRole()
-    {
-        $model   = $this->getModel('group');
-        $success = $model->deleteRole();
-        if ($success)
-        {
-            $msg  = JText::_('COM_THM_GROUPS_DELETED');
-            $type = 'message';
-        }
-        else
-        {
-            $this->setMessage(JText::sprintf('COM_THM_GROUPS_SAVE_ERROR', $model->getError()), 'warning');
-        }
-        $this->setRedirect("index.php?option=com_thm_groups&view=group_manager", $msg, $type);
-    }
+	/**
+	 * Trash icon for role
+	 *
+	 * @return void
+	 */
+	public function deleteRole()
+	{
+		$model   = $this->getModel('group');
+		$success = $model->deleteRole();
+		if ($success)
+		{
+			$msg  = JText::_('COM_THM_GROUPS_DELETED');
+			$type = 'message';
+		}
+		else
+		{
+			$this->setMessage(JText::sprintf('COM_THM_GROUPS_SAVE_ERROR', $model->getError()), 'warning');
+		}
+		$this->setRedirect("index.php?option=com_thm_groups&view=group_manager", $msg, $type);
+	}
 
-    /**
-     * Trash icon for profile
-     *
-     * @return void
-     */
-    public function deleteProfile()
-    {
-        $model   = $this->getModel('group');
-        $success = $model->deleteProfile();
-        if ($success)
-        {
-            $msg  = JText::_('COM_THM_GROUPS_DELETED');
-            $type = 'message';
-        }
-        else
-        {
-            $this->setMessage(JText::sprintf('COM_THM_GROUPS_SAVE_ERROR', $model->getError()), 'warning');
-        }
-        $this->setRedirect("index.php?option=com_thm_groups&view=group_manager", $msg, $type);
-    }
+	/**
+	 * Trash icon for profile
+	 *
+	 * @return void
+	 */
+	public function deleteProfile()
+	{
+		$model   = $this->getModel('group');
+		$success = $model->deleteProfile();
+		if ($success)
+		{
+			$msg  = JText::_('COM_THM_GROUPS_DELETED');
+			$type = 'message';
+		}
+		else
+		{
+			$this->setMessage(JText::sprintf('COM_THM_GROUPS_SAVE_ERROR', $model->getError()), 'warning');
+		}
+		$this->setRedirect("index.php?option=com_thm_groups&view=group_manager", $msg, $type);
+	}
 
-    /**
-     * Apply - Save button
-     *
-     * @return void
-     */
-    public function apply()
-    {
-        $model   = $this->getModel('group');
-        $success = $model->save();
-        if ($success)
-        {
-            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-            $this->setRedirect('index.php?option=com_thm_groups&view=group_edit&id=' . $success, $msg);
-        }
-        else
-        {
-            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-            $this->setRedirect('index.php?option=com_thm_groups&view=group_edit&id=0', $msg);
-        }
-    }
+	/**
+	 * Apply - Save button
+	 *
+	 * @return void
+	 */
+	public function apply()
+	{
+		$model   = $this->getModel('group');
+		$success = $model->save();
+		if ($success)
+		{
+			$msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
+			$this->setRedirect('index.php?option=com_thm_groups&view=group_edit&id=' . $success, $msg);
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+			$this->setRedirect('index.php?option=com_thm_groups&view=group_edit&id=0', $msg);
+		}
+	}
 
-    /**
-     * Method to run batch operations.
-     *
-     * @param   object $model The model.
-     *
-     * @return  boolean  True on success, false on failure
-     *
-     */
-    public function batch($model = null)
-    {
-        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+	/**
+	 * Method to run batch operations.
+	 *
+	 * @param   object $model The model.
+	 *
+	 * @return  boolean  True on success, false on failure
+	 *
+	 */
+	public function batch($model = null)
+	{
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        // Set the model
-        $model = $this->getModel('group', '', array());
+		// Set the model
+		$model = $this->getModel('group', '', array());
 
-        // Preset the redirect
-        $this->setRedirect(JRoute::_('index.php?option=com_thm_groups&view=group_manager' . $this->getRedirectToListAppend(), false));
+		// Preset the redirect
+		$this->setRedirect(JRoute::_('index.php?option=com_thm_groups&view=group_manager' . $this->getRedirectToListAppend(), false));
 
-        if ($model->batch())
-        {
-            $this->setMessage(JText::_('JLIB_APPLICATION_SUCCESS_BATCH'));
-        }
-        else
-        {
-            $this->setMessage(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_FAILED', $model->getError()), 'warning');
-        }
-    }
+		if ($model->batch())
+		{
+			$this->setMessage(JText::_('JLIB_APPLICATION_SUCCESS_BATCH'));
+		}
+		else
+		{
+			$this->setMessage(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_FAILED', $model->getError()), 'warning');
+		}
+	}
 
-    /**
-     * Method to run batch operations.
-     *
-     * @param   object $model The model.
-     *
-     * @return  boolean  True on success, false on failure
-     *
-     */
-    public function batchProfile($model = null)
-    {
-        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+	/**
+	 * Method to run batch operations.
+	 *
+	 * @param   object $model The model.
+	 *
+	 * @return  boolean  True on success, false on failure
+	 *
+	 */
+	public function batchProfile($model = null)
+	{
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        // Set the model
-        $model = $this->getModel('group', '', array());
+		// Set the model
+		$model = $this->getModel('group', '', array());
 
-        // Preset the redirect
-        $this->setRedirect(JRoute::_('index.php?option=com_thm_groups&view=group_manager' . $this->getRedirectToListAppend(), false));
+		// Preset the redirect
+		$this->setRedirect(JRoute::_('index.php?option=com_thm_groups&view=group_manager' . $this->getRedirectToListAppend(), false));
 
-        if ($model->batchProfile())
-        {
-            $this->setMessage(JText::_('JLIB_APPLICATION_SUCCESS_BATCH'));
-        }
-        else
-        {
-            $this->setMessage(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_FAILED', $model->getError()), 'warning');
-        }
-    }
+		if ($model->batchProfile())
+		{
+			$this->setMessage(JText::_('JLIB_APPLICATION_SUCCESS_BATCH'));
+		}
+		else
+		{
+			$this->setMessage(JText::sprintf('JLIB_APPLICATION_ERROR_BATCH_FAILED', $model->getError()), 'warning');
+		}
+	}
 
-    /**
-     * Redirects to the group manager view without making any persistent changes
-     *
-     * @param   Integer $key contains the key
-     *
-     * @return  void
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function cancel($key = null)
-    {
-        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
-        {
-            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
-        }
+	/**
+	 * Redirects to the group manager view without making any persistent changes
+	 *
+	 * @param   Integer $key contains the key
+	 *
+	 * @return  void
+	 *
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+	 */
+	public function cancel($key = null)
+	{
+		if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
+		{
+			return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+		}
 
-        $this->setRedirect('index.php?option=com_thm_groups&view=group_manager');
-    }
+		$this->setRedirect('index.php?option=com_thm_groups&view=group_manager');
+	}
 
-    /**
-     * Deletes the selected group and redirects to the group manager
-     *
-     * @return void
-     */
-    public function delete()
-    {
-        $model = $this->getModel('group');
+	/**
+	 * Deletes the selected group and redirects to the group manager
+	 *
+	 * @return void
+	 */
+	public function delete()
+	{
+		$model = $this->getModel('group');
 
-        if ($model->delete())
-        {
-            $msg = JText::_('COM_THM_GROUPS_DELETE_SUCCESS');
-        }
-        else
-        {
-            $msg = JText::_('COM_THM_GROUPS_DELETE_ERROR');
-        }
-        $this->setRedirect("index.php?option=com_thm_groups&view=group_manager", $msg);
+		if ($model->delete())
+		{
+			$msg = JText::_('COM_THM_GROUPS_DELETE_SUCCESS');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_GROUPS_DELETE_ERROR');
+		}
+		$this->setRedirect("index.php?option=com_thm_groups&view=group_manager", $msg);
 
-    }
+	}
 
-    /**
-     * Redirects to the group_edit view for the editing of existing groups
-     *
-     * @return void
-     */
-    public function editGroup()
-    {
+	/**
+	 * Redirects to the group_edit view for the editing of existing groups
+	 *
+	 * @return void
+	 */
+	public function editGroup()
+	{
 
-        if (!JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
-        {
-            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
-        }
+		if (!JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
+		{
+			return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+		}
 
-        $app = JFactory::getApplication();
-        $ids = $app->input->get('cid', array(), 'array');
+		$app = JFactory::getApplication();
+		$ids = $app->input->get('cid', array(), 'array');
 
-        JArrayHelper::toInteger($ids);
+		JArrayHelper::toInteger($ids);
 
-        // Input->get because id is in url
-        $id = (empty($ids)) ? $app->input->get->getInt('id') : $ids[0];
+		// Input->get because id is in url
+		$id = (empty($ids)) ? $app->input->get->getInt('id') : $ids[0];
 
-        if (!empty($id))
-        {
-            $url = JRoute::_("index.php?option=com_users&view=group&layout=edit&id=$id", false);
-            $this->setRedirect($url);
-        }
+		if (!empty($id))
+		{
+			$url = JRoute::_("index.php?option=com_users&view=group&layout=edit&id=$id", false);
+			$this->setRedirect($url);
+		}
 
-        parent::display();
-    }
+		parent::display();
+	}
 
-    /**
-     * Save&Close button
-     *
-     * @param   Integer $key    contain key
-     * @param   String  $urlVar contain url
-     *
-     * @return void
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function save($key = null, $urlVar = null)
-    {
-        $model   = $this->getModel('group');
-        $success = $model->save();
-        if ($success)
-        {
-            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-            $this->setRedirect('index.php?option=com_thm_groups&view=group_manager', $msg);
-        }
-        else
-        {
-            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-            $this->setRedirect('index.php?option=com_thm_groups&view=group_manager' . $success, $msg);
-        }
-    }
+	/**
+	 * Save&Close button
+	 *
+	 * @param   Integer $key    contain key
+	 * @param   String  $urlVar contain url
+	 *
+	 * @return void
+	 *
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+	 */
+	public function save($key = null, $urlVar = null)
+	{
+		$model   = $this->getModel('group');
+		$success = $model->save();
+		if ($success)
+		{
+			$msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
+			$this->setRedirect('index.php?option=com_thm_groups&view=group_manager', $msg);
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+			$this->setRedirect('index.php?option=com_thm_groups&view=group_manager' . $success, $msg);
+		}
+	}
 
-    /**
-     * Save2new
-     *
-     * @return void
-     */
-    public function save2new()
-    {
-        $model = $this->getModel('group');
+	/**
+	 * Save2new
+	 *
+	 * @return void
+	 */
+	public function save2new()
+	{
+		$model = $this->getModel('group');
 
-        $success = $model->save();
-        if ($success)
-        {
-            $msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-            $this->setRedirect('index.php?option=com_thm_groups&view=group_edit&id=0', $msg);
-        }
-        else
-        {
-            $msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-            $this->setRedirect('index.php?option=com_thm_groups&view=group_edit&id=0', $msg);
-        }
-    }
+		$success = $model->save();
+		if ($success)
+		{
+			$msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
+			$this->setRedirect('index.php?option=com_thm_groups&view=group_edit&id=0', $msg);
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+			$this->setRedirect('index.php?option=com_thm_groups&view=group_edit&id=0', $msg);
+		}
+	}
 }

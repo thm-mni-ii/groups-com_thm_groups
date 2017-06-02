@@ -15,8 +15,8 @@ defined('_JEXEC') or die;
 
 // Create the add/delete options.
 $options = array(
-    JHtml::_('select.option', 'add', JText::_('COM_THM_GROUPS_ADD')),
-    JHtml::_('select.option', 'del', JText::_('COM_THM_GROUPS_DELETE')),
+	JHtml::_('select.option', 'add', JText::_('COM_THM_GROUPS_ADD')),
+	JHtml::_('select.option', 'del', JText::_('COM_THM_GROUPS_DELETE')),
 );
 
 JHtml::_('formbehavior.chosen', 'select');
@@ -31,28 +31,28 @@ JHtml::_('formbehavior.chosen', 'select');
 		<div class="row-fluid">
 			<div id="batch-choose-action" class="combo control-group">
 				<label id="batch-choose-action-lbl" class="control-label" for="batch-choose-action">
-                    <?php echo JText::_('COM_THM_GROUPS_BATCH_PROFILE') ?>
+					<?php echo JText::_('COM_THM_GROUPS_BATCH_PROFILE') ?>
 				</label>
 			</div>
 			<div id="batch-choose-action" class="combo controls">
 				<div class="control-group">
 					<select name="batch_id[]" id="batch-profile-id">
 						<option value=""><?php echo JText::_('JSELECT') ?></option>
-                        <?php echo JHtml::_('select.options', $this->profiles); ?>
+						<?php echo JHtml::_('select.options', $this->profiles); ?>
 					</select>
 				</div>
 			</div>
 			<div class="control-group radio">
-                <?php echo JHtml::_('select.radiolist', $options, 'batch_action', '', 'value', 'text', 'add') ?>
+				<?php echo JHtml::_('select.radiolist', $options, 'batch_action', '', 'value', 'text', 'add') ?>
 			</div>
 		</div>
 	</div>
 	<div class="modal-footer">
 		<button class="btn" type="button" onclick="document.id('batch-profile-id').value=''" data-dismiss="modal">
-            <?php echo JText::_('JCANCEL'); ?>
+			<?php echo JText::_('JCANCEL'); ?>
 		</button>
 		<button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('group.batchProfile');">
-            <?php echo JText::_('JGLOBAL_BATCH_PROCESS'); ?>
+			<?php echo JText::_('JGLOBAL_BATCH_PROCESS'); ?>
 		</button>
 	</div>
 </div>

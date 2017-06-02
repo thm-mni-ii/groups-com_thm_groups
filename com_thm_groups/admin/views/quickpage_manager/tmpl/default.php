@@ -18,8 +18,8 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 
 if ($listOrder == 'content.ordering')
 {
-    $saveOrderingUrl = 'index.php?option=com_thm_groups&task=quickpage.saveOrderAjax&tmpl=component';
-    JHtml::_('sortablelist.sortable', 'quickpage_manager-list', 'adminForm', null, $saveOrderingUrl);
+	$saveOrderingUrl = 'index.php?option=com_thm_groups&task=quickpage.saveOrderAjax&tmpl=component';
+	JHtml::_('sortablelist.sortable', 'quickpage_manager-list', 'adminForm', null, $saveOrderingUrl);
 }
 
 THM_CoreTemplateList::render($this);

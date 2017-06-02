@@ -27,132 +27,132 @@ jimport('joomla.application.component.modeladmin');
 class THM_GroupsModelPlugin extends JModelLegacy
 {
 
-    /**
-     * Not implemented yet
-     *
-     * @return void
-     */
-    public function edit()
-    {
+	/**
+	 * Not implemented yet
+	 *
+	 * @return void
+	 */
+	public function edit()
+	{
 
-    }
+	}
 
-    /**
-     * Method to enable plugins
-     *
-     * @param    unknown $cid all extensionIDs from the pluginmanager
-     *
-     * @return boolean true or false for selected plugin
-     */
+	/**
+	 * Method to enable plugins
+	 *
+	 * @param    unknown $cid all extensionIDs from the pluginmanager
+	 *
+	 * @return boolean true or false for selected plugin
+	 */
 
-    public function enable($cid)
-    {
-        $db = JFactory::getDbo();
+	public function enable($cid)
+	{
+		$db = JFactory::getDbo();
 
-        if ($cid == null)
-        {
+		if ($cid == null)
+		{
 
-            $cid = JRequest::getVar('cid', array(), 'post', 'array');
+			$cid = JRequest::getVar('cid', array(), 'post', 'array');
 
-            JArrayHelper::toInteger($cid);
+			JArrayHelper::toInteger($cid);
 
-        }
-        else
-        {
-            $cid = array($cid);
-        }
+		}
+		else
+		{
+			$cid = array($cid);
+		}
 
-        // Ab hier alles beim alten
-        $cids = implode('\',\'', $cid);
+		// Ab hier alles beim alten
+		$cids = implode('\',\'', $cid);
 
-        $query = $db->getQuery(true);
-        $query->update($db->qn('#__extensions'));
-        $query->set('enabled = "1"');
-        $query->where("extension_id IN  ( '" . $cids . "' )");
+		$query = $db->getQuery(true);
+		$query->update($db->qn('#__extensions'));
+		$query->set('enabled = "1"');
+		$query->where("extension_id IN  ( '" . $cids . "' )");
 
-        $db->setQuery($query);
+		$db->setQuery($query);
 
-        if ($db->query())
-        {
-            $result = true;
-        }
-        else
-        {
-            $result = false;
-        }
+		if ($db->query())
+		{
+			$result = true;
+		}
+		else
+		{
+			$result = false;
+		}
 
-        return $result;
-    }
+		return $result;
+	}
 
-    /**
-     * Method to disable the plugins
-     *
-     * @param    unknown $cid all extensionIDs from the pluginmanager
-     *
-     * @return    boolean  true or false for selected plugins
-     */
+	/**
+	 * Method to disable the plugins
+	 *
+	 * @param    unknown $cid all extensionIDs from the pluginmanager
+	 *
+	 * @return    boolean  true or false for selected plugins
+	 */
 
-    public function disable($cid)
-    {
+	public function disable($cid)
+	{
 
-        $db = JFactory::getDbo();
+		$db = JFactory::getDbo();
 
-        if ($cid == null)
-        {
+		if ($cid == null)
+		{
 
-            $cid = JRequest::getVar('cid', array(), 'post', 'array');
+			$cid = JRequest::getVar('cid', array(), 'post', 'array');
 
-            JArrayHelper::toInteger($cid);
+			JArrayHelper::toInteger($cid);
 
-        }
-        else
-        {
-            $cid = array($cid);
-        }
+		}
+		else
+		{
+			$cid = array($cid);
+		}
 
-        // Ab hier alles beim alten
-        $cids = implode('\',\'', $cid);
+		// Ab hier alles beim alten
+		$cids = implode('\',\'', $cid);
 
-        $query = $db->getQuery(true);
-        $query->update($db->qn('#__extensions'));
-        $query->set('enabled = "0"');
-        $query->where("extension_id IN  ( '" . $cids . "' )");
+		$query = $db->getQuery(true);
+		$query->update($db->qn('#__extensions'));
+		$query->set('enabled = "0"');
+		$query->where("extension_id IN  ( '" . $cids . "' )");
 
-        $db->setQuery($query);
+		$db->setQuery($query);
 
-        if ($db->query())
-        {
-            $result = true;
-        }
-        else
-        {
-            $result = false;
-        }
+		if ($db->query())
+		{
+			$result = true;
+		}
+		else
+		{
+			$result = false;
+		}
 
-        return $result;
-    }
+		return $result;
+	}
 
-    /**
-     * Toggle switch method to enable or disable a plugin
-     *
-     * @param    unknown &$val Value for the toggleswitch
-     *
-     * @return boolean
-     */
-    public function toggle(&$val)
-    {
+	/**
+	 * Toggle switch method to enable or disable a plugin
+	 *
+	 * @param    unknown &$val Value for the toggleswitch
+	 *
+	 * @return boolean
+	 */
+	public function toggle(&$val)
+	{
 
-        $val = JRequest::getVar('value');
+		$val = JRequest::getVar('value');
 
-        $id = JRequest::getVar('id');
+		$id = JRequest::getVar('id');
 
-        if ($val == 1)
-        {
-            return $this->disable($id);
-        }
-        else
-        {
-            return $this->enable($id);
-        }
-    }
+		if ($val == 1)
+		{
+			return $this->disable($id);
+		}
+		else
+		{
+			return $this->enable($id);
+		}
+	}
 }

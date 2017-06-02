@@ -25,43 +25,43 @@ require_once JPATH_ROOT . "/media/com_thm_groups/data/thm_groups_quickpages_data
 class THM_GroupsModelQp_Categories extends JModelForm
 {
 
-    /**
-     * Method to get the record form.
-     *
-     * @param   array   $data     Data for the form.
-     * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
-     *
-     * @return mixed A JForm object on success, false on failure
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function getForm($data = array(), $loadData = true)
-    {
-        $form = $this->loadForm('com_thm_groups.qp_categories', 'qp_categories', array());
+	/**
+	 * Method to get the record form.
+	 *
+	 * @param   array   $data     Data for the form.
+	 * @param   boolean $loadData True if the form is to load its own data (default case), false if not.
+	 *
+	 * @return mixed A JForm object on success, false on failure
+	 *
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+	 */
+	public function getForm($data = array(), $loadData = true)
+	{
+		$form = $this->loadForm('com_thm_groups.qp_categories', 'qp_categories', array());
 
-        if (empty($form))
-        {
-            return false;
-        }
+		if (empty($form))
+		{
+			return false;
+		}
 
-        return $form;
-    }
+		return $form;
+	}
 
-    /**
-     * Creates a new category to a user quickpages root category
-     *
-     * @return bool
-     * @throws Exception
-     */
-    public function save()
-    {
-        $input    = JFactory::getApplication()->input;
-        $uid      = JFactory::getUser()->id;
-        $catTitle = $input->get('qp_name', '', 'STRING');
+	/**
+	 * Creates a new category to a user quickpages root category
+	 *
+	 * @return bool
+	 * @throws Exception
+	 */
+	public function save()
+	{
+		$input    = JFactory::getApplication()->input;
+		$uid      = JFactory::getUser()->id;
+		$catTitle = $input->get('qp_name', '', 'STRING');
 
-        THM_GroupsQuickpagesData::createQuickpageSubcategoryForProfile($uid, $catTitle);
+		THM_GroupsQuickpagesData::createQuickpageSubcategoryForProfile($uid, $catTitle);
 
-        // TODO check if a category was successfully added
-        return true;
-    }
+		// TODO check if a category was successfully added
+		return true;
+	}
 }

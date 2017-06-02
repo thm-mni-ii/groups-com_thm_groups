@@ -20,34 +20,34 @@ $profile = $this->profile;
 		<h2><?php echo THM_GroupsHelperProfile::getDisplayNameWithTitle($this->profileID); ?></h2>
 	</div>
 	<div class="toolbar">
-        <?php echo $this->getEditLink('class="btn btn-toolbar-thm"'); ?>
+		<?php echo $this->getEditLink('class="btn btn-toolbar-thm"'); ?>
 	</div>
 	<div class="profile">
-        <?php
-        foreach ($profile as $name => $attribute)
-        {
-            if (empty($attribute['publish']) OR !isset($attribute['value']))
-            {
-                continue;
-            }
+		<?php
+		foreach ($profile as $name => $attribute)
+		{
+			if (empty($attribute['publish']) OR !isset($attribute['value']))
+			{
+				continue;
+			}
 
-            $value = trim($attribute['value']);
-            if (empty($value))
-            {
-                continue;
-            }
+			$value = trim($attribute['value']);
+			if (empty($value))
+			{
+				continue;
+			}
 
-            $functionName = 'get' . $attribute['type'];
-            echo $this->$functionName($name, $attribute);
-        }
-        ?>
+			$functionName = 'get' . $attribute['type'];
+			echo $this->$functionName($name, $attribute);
+		}
+		?>
 	</div>
-    <?php
-    if (JComponentHelper::getParams('com_thm_groups')->get('backButtonForProfile') == 1)
-    {
-        echo '<input type="button" class="btn btn-thm" value="' . JText::_("COM_THM_GROUPS_BACK_BUTTON") . '" onclick="window.history.back()">';
-    }
-    ?>
+	<?php
+	if (JComponentHelper::getParams('com_thm_groups')->get('backButtonForProfile') == 1)
+	{
+		echo '<input type="button" class="btn btn-thm" value="' . JText::_("COM_THM_GROUPS_BACK_BUTTON") . '" onclick="window.history.back()">';
+	}
+	?>
 </div>
 
 

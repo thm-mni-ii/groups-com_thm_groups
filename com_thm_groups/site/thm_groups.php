@@ -22,77 +22,77 @@ $contr = $input->getCmd('controller');
 
 if ($view == "articles")
 {
-    require_once JPATH_ROOT . "/media/com_thm_groups/data/thm_groups_quickpages_data.php";
+	require_once JPATH_ROOT . "/media/com_thm_groups/data/thm_groups_quickpages_data.php";
 
-    // Get user object
-    $currUser = JFactory::getUser();
+	// Get user object
+	$currUser = JFactory::getUser();
 
-    $quickpageGlobalEnabled = THM_GroupsQuickpagesData::isQuickpageEnabled();
+	$quickpageGlobalEnabled = THM_GroupsQuickpagesData::isQuickpageEnabled();
 
-    // Check if the user has Quickpage enabled
-    $userHasEnabledQuickpage = THM_GroupsQuickpagesData::isQuickpageEnabledForUser($currUser->id);
+	// Check if the user has Quickpage enabled
+	$userHasEnabledQuickpage = THM_GroupsQuickpagesData::isQuickpageEnabledForUser($currUser->id);
 
-    // Check if one group from user has Quickpage enabled
-    $groupsHaveEnabledQuickpage = false;
-    $userGroups                 = THM_GroupsQuickpagesData::getGroupsOfUser($currUser->id);
-    foreach ($userGroups as $groupID)
-    {
-        if (THM_GroupsQuickpagesData::isQuickpageEnabledForGroup($groupID))
-        {
-            $groupsHaveEnabledQuickpage = true;
-        }
-    }
+	// Check if one group from user has Quickpage enabled
+	$groupsHaveEnabledQuickpage = false;
+	$userGroups                 = THM_GroupsQuickpagesData::getGroupsOfUser($currUser->id);
+	foreach ($userGroups as $groupID)
+	{
+		if (THM_GroupsQuickpagesData::isQuickpageEnabledForGroup($groupID))
+		{
+			$groupsHaveEnabledQuickpage = true;
+		}
+	}
 
-    // Access check.
-    if (!$userHasEnabledQuickpage || !$quickpageGlobalEnabled)
-    {
-        return JError::raiseWarning(404, JText::_('COM_THM_GROUPS_NO_ARTICLES_ENABLED'));
-    }
+	// Access check.
+	if (!$userHasEnabledQuickpage || !$quickpageGlobalEnabled)
+	{
+		return JError::raiseWarning(404, JText::_('COM_THM_GROUPS_NO_ARTICLES_ENABLED'));
+	}
 
 
-    if ($userHasEnabledQuickpage)
-    {
-        $profileData = THM_GroupsQuickpagesData::getPageProfileDataByUserSession();
+	if ($userHasEnabledQuickpage)
+	{
+		$profileData = THM_GroupsQuickpagesData::getPageProfileDataByUserSession();
 
-        // Check if user's quickpage category exist and if not, create it
-        if (!THM_GroupsQuickpagesData::existsQuickpageForProfile($profileData))
-        {
-            THM_GroupsQuickpagesData::createQuickpageForProfile($profileData);
-        }
-    }
+		// Check if user's quickpage category exist and if not, create it
+		if (!THM_GroupsQuickpagesData::existsQuickpageForProfile($profileData))
+		{
+			THM_GroupsQuickpagesData::createQuickpageForProfile($profileData);
+		}
+	}
 
-    // Show quickpage control or redirect
-    if ($userHasEnabledQuickpage OR $groupsHaveEnabledQuickpage)
-    {
-        $controller = JControllerLegacy::getInstance('thm_groups');
+	// Show quickpage control or redirect
+	if ($userHasEnabledQuickpage OR $groupsHaveEnabledQuickpage)
+	{
+		$controller = JControllerLegacy::getInstance('thm_groups');
 
-        $controller->execute(JRequest::getCmd('task'));
+		$controller->execute(JRequest::getCmd('task'));
 
-        $controller->redirect();
-    }
+		$controller->redirect();
+	}
 }
 elseif ($view == 'qp_categories')
 {
-    $user = JFactory::getUser();
-    if ($user->authorise('core.create', 'com_content.category'))
-    {
-        $controller = JControllerLegacy::getInstance('thm_groups');
+	$user = JFactory::getUser();
+	if ($user->authorise('core.create', 'com_content.category'))
+	{
+		$controller = JControllerLegacy::getInstance('thm_groups');
 
-        $controller->execute(JRequest::getCmd('task'));
+		$controller->execute(JRequest::getCmd('task'));
 
-        $controller->redirect();
-    }
-    else
-    {
-        return JError::raiseWarning(404, JText::_("COM_THM_GROUPS_NOT_ALLOWED"));
-    }
+		$controller->redirect();
+	}
+	else
+	{
+		return JError::raiseWarning(404, JText::_("COM_THM_GROUPS_NOT_ALLOWED"));
+	}
 }
 else
 {
-    $controller = JControllerLegacy::getInstance('thm_groups');
+	$controller = JControllerLegacy::getInstance('thm_groups');
 
-    $controller->execute(JRequest::getCmd('task'));
+	$controller->execute(JRequest::getCmd('task'));
 
-    $controller->redirect();
+	$controller->redirect();
 }
 

@@ -22,14 +22,14 @@ $lang->load('plg_editors-xtd_plg_thm_groups_editors_xtd_members', JPATH_PLUGINS 
  */
 function getUsers()
 {
-    $db    = JFactory::getDbo();
-    $query = $db->getQuery(true);
-    $query
-        ->select('id, name')
-        ->from('#__users');
-    $db->setQuery($query);
+	$db    = JFactory::getDbo();
+	$query = $db->getQuery(true);
+	$query
+		->select('id, name')
+		->from('#__users');
+	$db->setQuery($query);
 
-    return $db->loadObjectList();
+	return $db->loadObjectList();
 }
 
 /**
@@ -39,14 +39,14 @@ function getUsers()
  */
 function getGroups()
 {
-    $db    = JFactory::getDbo();
-    $query = $db->getQuery(true);
-    $query
-        ->select('id, title')
-        ->from('#__usergroups');
-    $db->setQuery($query);
+	$db    = JFactory::getDbo();
+	$query = $db->getQuery(true);
+	$query
+		->select('id, title')
+		->from('#__usergroups');
+	$db->setQuery($query);
 
-    return $db->loadObjectList();
+	return $db->loadObjectList();
 }
 
 
@@ -57,14 +57,14 @@ function getGroups()
  */
 function getProfiles()
 {
-    $db    = JFactory::getDbo();
-    $query = $db->getQuery(true);
-    $query
-        ->select('id, name')
-        ->from('#__thm_groups_profile');
-    $db->setQuery($query);
+	$db    = JFactory::getDbo();
+	$query = $db->getQuery(true);
+	$query
+		->select('id, name')
+		->from('#__thm_groups_profile');
+	$db->setQuery($query);
 
-    return $db->loadObjectList();
+	return $db->loadObjectList();
 }
 
 
@@ -75,17 +75,17 @@ function getProfiles()
  */
 function createSelectFieldUsers()
 {
-    $users = getUsers();
+	$users = getUsers();
 
-    foreach ($users as $user)
-    {
-        $options[] = JHTML::_('select.option', $user->id, $user->name);
-    }
+	foreach ($users as $user)
+	{
+		$options[] = JHTML::_('select.option', $user->id, $user->name);
+	}
 
 
-    $dropdown = JHTML::_('select.genericList', $options, 'uid', 'class="chosen-select " multiple style="width:400px;"', 'value', 'text', -1);
+	$dropdown = JHTML::_('select.genericList', $options, 'uid', 'class="chosen-select " multiple style="width:400px;"', 'value', 'text', -1);
 
-    return $dropdown;
+	return $dropdown;
 }
 
 /**
@@ -95,17 +95,17 @@ function createSelectFieldUsers()
  */
 function createSelectFieldGroups()
 {
-    $groups = getGroups();
+	$groups = getGroups();
 
-    foreach ($groups as $group)
-    {
-        $options[] = JHTML::_('select.option', $group->id, $group->title);
-    }
+	foreach ($groups as $group)
+	{
+		$options[] = JHTML::_('select.option', $group->id, $group->title);
+	}
 
 
-    $dropdown = JHTML::_('select.genericList', $options, 'gid', 'class="chosen-select "  style="width:400px;"', 'value', 'text', -1);
+	$dropdown = JHTML::_('select.genericList', $options, 'gid', 'class="chosen-select "  style="width:400px;"', 'value', 'text', -1);
 
-    return $dropdown;
+	return $dropdown;
 }
 
 /**
@@ -115,16 +115,16 @@ function createSelectFieldGroups()
  */
 function createSelectFieldProfiles()
 {
-    $profiles = getProfiles();
+	$profiles = getProfiles();
 
-    foreach ($profiles as $profile)
-    {
-        $options[] = JHTML::_('select.option', $profile->id, $profile->name);
-    }
+	foreach ($profiles as $profile)
+	{
+		$options[] = JHTML::_('select.option', $profile->id, $profile->name);
+	}
 
-    $dropdown = JHTML::_('select.genericList', $options, 'pid', 'class="chosen-select "  style="width:400px;"', 'value', 'text', -1);
+	$dropdown = JHTML::_('select.genericList', $options, 'pid', 'class="chosen-select "  style="width:400px;"', 'value', 'text', -1);
 
-    return $dropdown;
+	return $dropdown;
 }
 
 /**
@@ -136,39 +136,39 @@ function createSelectFieldProfiles()
 function createSelectFieldParamsUsers()
 {
 
-    $db    = JFactory::getDbo();
-    $query = $db->getQuery(true);
-    $query
-        ->select(array('title,params'))
-        ->from('#__modules')
-        ->where('published=1 AND module LIKE \'%mod_thm_groups_members%\'');
+	$db    = JFactory::getDbo();
+	$query = $db->getQuery(true);
+	$query
+		->select(array('title,params'))
+		->from('#__modules')
+		->where('published=1 AND module LIKE \'%mod_thm_groups_members%\'');
 
-    $db->setQuery($query);
+	$db->setQuery($query);
 
-    $result = $db->loadObjectList();
+	$result = $db->loadObjectList();
 
-    $titles = $result;
+	$titles = $result;
 
-    foreach ($titles as $title)
-    {
-        $params = $title->params;
-        $from   = array('{', '"', ':');
-        $to     = array('', '', '=');
+	foreach ($titles as $title)
+	{
+		$params = $title->params;
+		$from   = array('{', '"', ':');
+		$to     = array('', '', '=');
 
-        $paramsARC = str_replace($from, $to, $params);
-        $suffix    = null;
+		$paramsARC = str_replace($from, $to, $params);
+		$suffix    = null;
 
-        if (preg_match("/suffix[^,]*/", $paramsARC, $match))
-        {
-            parse_str($match[0]);
+		if (preg_match("/suffix[^,]*/", $paramsARC, $match))
+		{
+			parse_str($match[0]);
 
-        }
-        $options[] = JHTML::_('select.option', $suffix, $title->title);
-    }
+		}
+		$options[] = JHTML::_('select.option', $suffix, $title->title);
+	}
 
-    $dropdown = JHTML::_('select.genericList', $options, 'suffixUsers', 'class="chosen-select "  style="width:400px;"', 'value', 'text', -1);
+	$dropdown = JHTML::_('select.genericList', $options, 'suffixUsers', 'class="chosen-select "  style="width:400px;"', 'value', 'text', -1);
 
-    return $dropdown;
+	return $dropdown;
 }
 
 /**
@@ -179,38 +179,38 @@ function createSelectFieldParamsUsers()
 function createSelectFieldParamsGroups()
 {
 
-    $db    = JFactory::getDbo();
-    $query = $db->getQuery(true);
-    $query
-        ->select(array('title,params'))
-        ->from('#__modules')
-        ->where('module LIKE \'%mod_thm_groups_members%\'');
+	$db    = JFactory::getDbo();
+	$query = $db->getQuery(true);
+	$query
+		->select(array('title,params'))
+		->from('#__modules')
+		->where('module LIKE \'%mod_thm_groups_members%\'');
 
-    $db->setQuery($query);
+	$db->setQuery($query);
 
-    $result = $db->loadObjectList();
+	$result = $db->loadObjectList();
 
-    $titles = $result;
+	$titles = $result;
 
-    foreach ($titles as $title)
-    {
-        $params = $title->params;
-        $from   = array('{', '"', ':');
-        $to     = array('', '', '=');
+	foreach ($titles as $title)
+	{
+		$params = $title->params;
+		$from   = array('{', '"', ':');
+		$to     = array('', '', '=');
 
-        $paramsARC = str_replace($from, $to, $params);
+		$paramsARC = str_replace($from, $to, $params);
 
-        $suffix = null;
+		$suffix = null;
 
-        if (preg_match("/suffix[^,]*/", $paramsARC, $match))
-        {
-            parse_str($match[0]);
+		if (preg_match("/suffix[^,]*/", $paramsARC, $match))
+		{
+			parse_str($match[0]);
 
-        }
-        $options[] = JHTML::_('select.option', $suffix, $title->title);
-    }
+		}
+		$options[] = JHTML::_('select.option', $suffix, $title->title);
+	}
 
-    $dropdown = JHTML::_('select.genericList', $options, 'suffixGroups', 'class="chosen-select "  style="width:400px;"', 'value', 'text', -1);
+	$dropdown = JHTML::_('select.genericList', $options, 'suffixGroups', 'class="chosen-select "  style="width:400px;"', 'value', 'text', -1);
 
-    return $dropdown;
+	return $dropdown;
 }

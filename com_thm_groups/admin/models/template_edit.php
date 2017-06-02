@@ -26,118 +26,118 @@ require_once JPATH_ROOT . "/media/com_thm_groups/data/thm_groups_user_data.php";
  */
 class THM_GroupsModelTemplate_Edit extends THM_GroupsModelEdit
 {
-    /**
-     * Method to get a table object, load it if necessary. Can't be generalized because of irregular english plural
-     * spelling. :(
-     *
-     * @param   string $name    The table name. Optional.
-     * @param   string $prefix  The class prefix. Optional.
-     * @param   array  $options Configuration array for model. Optional.
-     *
-     * @return  JTable object
-     */
-    public function getTable($name = 'Template', $prefix = 'Table', $options = array())
-    {
-        return JTable::getInstance($name, $prefix, $options);
-    }
+	/**
+	 * Method to get a table object, load it if necessary. Can't be generalized because of irregular english plural
+	 * spelling. :(
+	 *
+	 * @param   string $name    The table name. Optional.
+	 * @param   string $prefix  The class prefix. Optional.
+	 * @param   array  $options Configuration array for model. Optional.
+	 *
+	 * @return  JTable object
+	 */
+	public function getTable($name = 'Template', $prefix = 'Table', $options = array())
+	{
+		return JTable::getInstance($name, $prefix, $options);
+	}
 
-    /**
-     * Method to load the form data
-     *
-     * @return  Object
-     */
-    protected function loadFormData()
-    {
-        $app = JFactory::getApplication();
-        $ids = $app->input->get('cid', array(), 'array');
+	/**
+	 * Method to load the form data
+	 *
+	 * @return  Object
+	 */
+	protected function loadFormData()
+	{
+		$app = JFactory::getApplication();
+		$ids = $app->input->get('cid', array(), 'array');
 
-        // Input->get because id is in url
-        $id = (empty($ids)) ? $app->input->get->get('id') : $ids[0];
+		// Input->get because id is in url
+		$id = (empty($ids)) ? $app->input->get->get('id') : $ids[0];
 
-        return $this->getItem($id);
-    }
+		return $this->getItem($id);
+	}
 
-    /**
-     *  get the Attribut  for a profile
-     *
-     * @param   int $profilID The ID of a profile
-     *
-     * @return  mixed array on success, false otherwise
-     */
-    public function getNoSelectAttribute($profilID)
-    {
-        $dbo   = JFactory::getDbo();
-        $query = $dbo->getQuery(true);
-        if ($profilID == 0)
-        {
-            $query->select("A.id,A.name, A.description")
-                ->from("#__thm_groups_attribute as A ");
-        }
-        else
-        {
-            $query->select("A.id,A.name, A.description")
-                ->from("#__thm_groups_attribute as A ")
-                ->where(" A.id not in (select attributeID from #__thm_groups_profile_attribute as N where profileID =" . $profilID
-                    . " order by N.order)");
-        }
+	/**
+	 *  get the Attribut  for a profile
+	 *
+	 * @param   int $profilID The ID of a profile
+	 *
+	 * @return  mixed array on success, false otherwise
+	 */
+	public function getNoSelectAttribute($profilID)
+	{
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
+		if ($profilID == 0)
+		{
+			$query->select("A.id,A.name, A.description")
+				->from("#__thm_groups_attribute as A ");
+		}
+		else
+		{
+			$query->select("A.id,A.name, A.description")
+				->from("#__thm_groups_attribute as A ")
+				->where(" A.id not in (select attributeID from #__thm_groups_profile_attribute as N where profileID =" . $profilID
+					. " order by N.order)");
+		}
 
-        $dbo->setQuery($query);
+		$dbo->setQuery($query);
 
-        try
-        {
-            return $dbo->loadObjectList();
-        }
-        catch (Exception $exception)
-        {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+		try
+		{
+			return $dbo->loadObjectList();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-            return false;
-        }
-    }
+			return false;
+		}
+	}
 
-    // TODO REFACTOR
+	// TODO REFACTOR
 
-    /**
-     * Transform a List of Attribute with Database format in
-     * Json format
-     *
-     * @param   int $profilID The ID of a profile
-     *
-     * @return  mixed array on success, false otherwise
-     */
-    public function getAllAttribute($profilID)
-    {
-        $dbo = JFactory::getDBO();
-        $dbo->setQuery('SET group_concat_max_len = 1000000000;');
-        $dbo->execute();
-        $jsonquery = $dbo->getQuery(true);
-        $query     = $dbo->getQuery(true);
-        $query->select(" A.attributeID as attrid")
-            ->select(" A.order as attrorder")
-            ->select(" A.params as attrParam")
-            ->select(" B.name as attrname")
-            ->from(" #__thm_groups_profile_attribute as A ")
-            ->leftJoin("#__thm_groups_attribute as B on B.id = A.attributeID")
-            ->where("A.profileID = " . $profilID)
-            ->order("A.order");
+	/**
+	 * Transform a List of Attribute with Database format in
+	 * Json format
+	 *
+	 * @param   int $profilID The ID of a profile
+	 *
+	 * @return  mixed array on success, false otherwise
+	 */
+	public function getAllAttribute($profilID)
+	{
+		$dbo = JFactory::getDBO();
+		$dbo->setQuery('SET group_concat_max_len = 1000000000;');
+		$dbo->execute();
+		$jsonquery = $dbo->getQuery(true);
+		$query     = $dbo->getQuery(true);
+		$query->select(" A.attributeID as attrid")
+			->select(" A.order as attrorder")
+			->select(" A.params as attrParam")
+			->select(" B.name as attrname")
+			->from(" #__thm_groups_profile_attribute as A ")
+			->leftJoin("#__thm_groups_attribute as B on B.id = A.attributeID")
+			->where("A.profileID = " . $profilID)
+			->order("A.order");
 
-        $jsonquery->select("CONCAT('{',GROUP_CONCAT('\"',attrid,'\"' , ':{',
+		$jsonquery->select("CONCAT('{',GROUP_CONCAT('\"',attrid,'\"' , ':{',
             '\"name\":','\"',attrname,'\"' ,
             ',\"order\":','\"',attrorder,'\"' ,
             ',\"param\":',IF(attrParam IS NULL or attrParam = '', ' ', attrParam), '',
             '}'), '}') as json ")
-            ->from('(' . $query . ')as result');
-        $dbo->setQuery($jsonquery);
+			->from('(' . $query . ')as result');
+		$dbo->setQuery($jsonquery);
 
-        try
-        {
-            return $dbo->loadObjectList();
-        }
-        catch (Exception $exception)
-        {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+		try
+		{
+			return $dbo->loadObjectList();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-            return false;
-        }
-    }
+			return false;
+		}
+	}
 }

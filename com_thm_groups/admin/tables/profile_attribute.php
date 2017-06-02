@@ -14,13 +14,13 @@ jimport('joomla.application.component.table');
 class TableProfile_Attribute extends JTable
 {
 
-    /**
-     * Constructor function for the class representing the profile attributes table
-     *
-     * @param   JDatabase &$dbo A database connector object
-     */
-    public function __construct(&$dbo)
-    {
-        parent::__construct('#__thm_groups_profile_attribute', 'ID', $dbo);
-    }
+	/**
+	 * Constructor function for the class representing the profile attributes table
+	 *
+	 * @param   JDatabase &$dbo A database connector object
+	 */
+	public function __construct(&$dbo)
+	{
+		parent::__construct('#__thm_groups_profile_attribute', 'ID', $dbo);
+	}
 }

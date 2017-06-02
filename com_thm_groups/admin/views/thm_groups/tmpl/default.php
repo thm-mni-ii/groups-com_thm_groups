@@ -20,8 +20,8 @@ $image   = JHtml::_('image', $logoURL, JText::_('COM_THM_GROUPS'), $attribs);
 <div id="j-sidebar-container" class="span2"><?php echo $this->sidebar; ?></div>
 <div id="j-main-container" class="span10">
 	<div class="span5 form-vertical">
-        <?php echo $image; ?>
-        <?php echo JText::_("COM_THM_GROUPS_HOME_DESC"); ?>
+		<?php echo $image; ?>
+		<?php echo JText::_("COM_THM_GROUPS_HOME_DESC"); ?>
 	</div>
 	<div class="span5 form-vertical">
 		Add resource information here!
@@ -32,6 +32,6 @@ $image   = JHtml::_('image', $logoURL, JText::_('COM_THM_GROUPS'), $attribs);
 	<input type="hidden" name="boxchecked" value="0"/>
 	<input type="hidden" name="option" value="<?php echo JFactory::getApplication()->input->get('option'); ?>"/>
 	<input type="hidden" name="view" value="<?php echo $this->get('name'); ?>"/>
-    <?php echo JHtml::_('form.token'); ?>
+	<?php echo JHtml::_('form.token'); ?>
 </form>
 

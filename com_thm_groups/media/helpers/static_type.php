@@ -29,30 +29,30 @@ define('TEMPLATE', 9);
 class THM_GroupsHelperStatic_Type
 {
 
-    /**
-     * Returns extra options like length or path for pictures for static types
-     *
-     * @param   Int $staticTypeID Static type ID
-     *
-     * @return  stdClass
-     */
-    public static function getOption($staticTypeID)
-    {
-        $options = new stdClass;
-        switch ($staticTypeID)
-        {
-            case TEXT:
-                $options->length = 40;
-                break;
-            case TEXTFIELD:
-                $options->length = 120;
-                break;
-            case PICTURE:
-                $options->filename = 'anonym.jpg';
-                $options->path     = '/images/com_thm_groups/profile/';
-                break;
-        }
+	/**
+	 * Returns extra options like length or path for pictures for static types
+	 *
+	 * @param   Int $staticTypeID Static type ID
+	 *
+	 * @return  stdClass
+	 */
+	public static function getOption($staticTypeID)
+	{
+		$options = new stdClass;
+		switch ($staticTypeID)
+		{
+			case TEXT:
+				$options->length = 40;
+				break;
+			case TEXTFIELD:
+				$options->length = 120;
+				break;
+			case PICTURE:
+				$options->filename = 'anonym.jpg';
+				$options->path     = '/images/com_thm_groups/profile/';
+				break;
+		}
 
-        return $options;
-    }
+		return $options;
+	}
 }

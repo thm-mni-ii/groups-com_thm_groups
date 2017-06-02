@@ -26,24 +26,24 @@ JHtml::_('formbehavior.chosen', 'select');
  */
 class THM_GroupsViewPlugin_Members_Select extends JViewLegacy
 {
-    /**
-     * Method to get display
-     *
-     * @param   Object $tpl template
-     *
-     * @return void
-     */
-    public function display($tpl = null)
-    {
-        $lang = JFactory::getLanguage();
-        $lang->load('plg_editors-xtd_plg_thm_groups_editors_xtd_members', JPATH_PLUGINS . "/editors-xtd/plg_thm_groups_editors_xtd_members/", $lang->getTag(), true);
-        JText::script('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_ALERT_USERS');
-        JText::script('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_ALERT_SUFFIX');
-        JText::script('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_ALERT_GROUPS');
-        JText::script('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_ALERT_PID');
+	/**
+	 * Method to get display
+	 *
+	 * @param   Object $tpl template
+	 *
+	 * @return void
+	 */
+	public function display($tpl = null)
+	{
+		$lang = JFactory::getLanguage();
+		$lang->load('plg_editors-xtd_plg_thm_groups_editors_xtd_members', JPATH_PLUGINS . "/editors-xtd/plg_thm_groups_editors_xtd_members/", $lang->getTag(), true);
+		JText::script('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_ALERT_USERS');
+		JText::script('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_ALERT_SUFFIX');
+		JText::script('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_ALERT_GROUPS');
+		JText::script('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_ALERT_PID');
 
-        $ename  = 'jform_articletext';
-        $script = "
+		$ename  = 'jform_articletext';
+		$script = "
             function hasClass(element, cls) {
                 return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
             }
@@ -91,10 +91,10 @@ class THM_GroupsViewPlugin_Members_Select extends JViewLegacy
             }
         ";
 
-        JFactory::getDocument()->addScriptDeclaration($script);
-        $plugin = JPluginHelper::getPlugin('editors-xtd', 'plg_thm_groups_editors_xtd_members');
-        $params = new JRegistry($plugin->params);
+		JFactory::getDocument()->addScriptDeclaration($script);
+		$plugin = JPluginHelper::getPlugin('editors-xtd', 'plg_thm_groups_editors_xtd_members');
+		$params = new JRegistry($plugin->params);
 
-        parent::display($tpl);
-    }
+		parent::display($tpl);
+	}
 }

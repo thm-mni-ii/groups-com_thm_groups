@@ -23,16 +23,16 @@ jimport('joomla.application.component.controller');
  */
 class THM_GroupsController extends JControllerLegacy
 {
-    /**
-     * Method to display admincenter
-     *
-     * @param   boolean $cachable  cachable
-     * @param   boolean $urlparams url param
-     *
-     * @return void
-     */
-    public function display($cachable = false, $urlparams = false)
-    {
-        parent::display($cachable, $urlparams);
-    }
+	/**
+	 * Method to display admincenter
+	 *
+	 * @param   boolean $cachable  cachable
+	 * @param   boolean $urlparams url param
+	 *
+	 * @return void
+	 */
+	public function display($cachable = false, $urlparams = false)
+	{
+		parent::display($cachable, $urlparams);
+	}
 }
