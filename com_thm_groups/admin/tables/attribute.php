@@ -11,7 +11,7 @@ jimport('joomla.application.component.table');
  * @subpackage  com_thm_groups.admin
  * @link        www.thm.de
  */
-class TableAttribute extends JTable
+class THM_GroupsTableAttribute extends JTable
 {
 
 	/**

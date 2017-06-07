@@ -12,9 +12,8 @@
  */
 
 defined('_JEXEC') or die;
-jimport('thm_core.list.template');
+
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
 
 if ($listOrder == 'content.ordering')
 {
@@ -22,4 +21,5 @@ if ($listOrder == 'content.ordering')
 	JHtml::_('sortablelist.sortable', 'quickpage_manager-list', 'adminForm', null, $saveOrderingUrl);
 }
 
-THM_CoreTemplateList::render($this);
+require_once JPATH_ROOT . '/media/com_thm_groups/templates/list.php';
+THM_GroupsTemplateList::render($this);

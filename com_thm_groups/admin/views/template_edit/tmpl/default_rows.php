@@ -56,7 +56,7 @@ foreach ($this->attributes as $key => $attribute)
 			<?php
 			echo $attribute->field;
 			echo "<input type='hidden' name='jform[attributes][$attribute->id][attribute]' value='$attribute->field' />";
-			echo "<input type='hidden' name='jform[attributes][$attribute->id][attribute_id]' value='$attribute->id' />";
+			echo "<input type='hidden' name='jform[attributes][$attribute->id][attributeID]' value='$attribute->id' />";
 			if (!empty($attribute->ID))
 			{
 				echo "<input type='hidden' name='jform[attributes][$attribute->id][ID]' value='$attribute->ID' />";

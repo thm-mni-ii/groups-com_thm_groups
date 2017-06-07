@@ -76,14 +76,6 @@ class THM_Groups_Install_Script
 			return false;
 		}
 
-		// If there are no users in Joomla
-		if (empty($users))
-		{
-			JFactory::getApplication()->enqueueMessage('There are no users in Joomla', 'error');
-
-			return false;
-		}
-
 		if (self::copyUserId($users) && self::copyUserAttributes($users))
 		{
 			return true;

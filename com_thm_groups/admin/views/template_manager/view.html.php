@@ -65,27 +65,14 @@ class THM_GroupsViewTemplate_Manager extends THM_GroupsViewList
 	 */
 	protected function addToolbar()
 	{
-		$user = JFactory::getUser();
-
 		JToolBarHelper::title(JText::_('COM_THM_GROUPS_TEMPLATE_MANAGER_TITLE'), 'template_manager');
 
-		if ($user->authorise('core.create', 'com_thm_groups'))
+		if (JFactory::getUser()->authorise('core.admin', 'com_thm_groups'))
 		{
 			JToolBarHelper::addNew('template.add', 'COM_THM_GROUPS_NEW', false);
-		}
-
-		if ($user->authorise('core.edit', 'com_thm_groups'))
-		{
 			JToolBarHelper::editList('template.edit', 'COM_THM_GROUPS_EDIT');
-		}
-
-		if ($user->authorise('core.delete', 'com_thm_groups'))
-		{
 			JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM_DEPENDENCIES', 'template.delete', 'JTOOLBAR_DELETE');
-		}
 
-		if ($user->authorise('core.manage', 'com_thm_groups') && $user->authorise('core.edit', 'com_thm_groups'))
-		{
 			$bar = JToolbar::getInstance('toolbar');
 			JHtml::_('bootstrap.modal', 'myModal');
 			$title = JText::_('COM_THM_GROUPS_BATCH_GROUPS');
@@ -93,10 +80,6 @@ class THM_GroupsViewTemplate_Manager extends THM_GroupsViewList
 			$html  .= "<i class='icon-users' title='$title'></i> $title</button>";
 
 			$bar->appendButton('Custom', $html, 'batch');
-		}
-
-		if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))
-		{
 			JToolBarHelper::divider();
 			JToolBarHelper::preferences('com_thm_groups');
 		}

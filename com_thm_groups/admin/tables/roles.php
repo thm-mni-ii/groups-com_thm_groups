@@ -1,4 +1,15 @@
 <?php
+/**
+ * @category    Joomla component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.admin
+ * @name        TableTemplate
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @author      James Antrim, <james.antrim@nm.thm.de>
+ * @copyright   2016 TH Mittelhessen
+ * @license     GNU GPL v.2
+ * @link        www.thm.de
+ */
 
 defined('_JEXEC') or die;
 jimport('joomla.application.component.table');
@@ -9,11 +20,9 @@ jimport('joomla.application.component.table');
  * @category    Joomla.Component.Admin
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
- * @link        www.thm.de
  */
 class THM_GroupsTableRoles extends JTable
 {
-
 	/**
 	 * Constructor function for the class representing the monitors table
 	 *

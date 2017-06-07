@@ -21,7 +21,7 @@ jimport('joomla.application.component.table');
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
  */
-class TableTemplate extends JTable
+class THM_GroupsTableTemplate extends JTable
 {
 	/**
 	 * Constructor function for the class representing the monitors table

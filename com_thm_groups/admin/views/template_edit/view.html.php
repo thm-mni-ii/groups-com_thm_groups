@@ -48,6 +48,7 @@ class THM_GroupsViewTemplate_Edit extends THM_GroupsViewEdit
 
 		$allAttributes = THM_GroupsHelperProfile::getAllAttributes();
 		$id            = JFactory::getApplication()->input->getInt('id', 0);
+
 		if (empty($id))
 		{
 			$this->attributes = $allAttributes;
@@ -60,14 +61,14 @@ class THM_GroupsViewTemplate_Edit extends THM_GroupsViewEdit
 				$this->attributes,
 				function ($a, $b)
 				{
-					if (isset($a->order) AND isset($b->order))
+					if (isset($a->ordering) AND isset($b->ordering))
 					{
-						if ($a->order == $b->order)
+						if ($a->ordering == $b->ordering)
 						{
 							return 0;
 						}
 
-						return ($a->order < $b->order) ? -1 : 1;
+						return ($a->ordering < $b->ordering) ? -1 : 1;
 					}
 				}
 			);

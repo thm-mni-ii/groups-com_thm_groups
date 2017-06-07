@@ -36,7 +36,7 @@ class THM_GroupsModelTemplate_Edit extends THM_GroupsModelEdit
 	 *
 	 * @return  JTable object
 	 */
-	public function getTable($name = 'Template', $prefix = 'Table', $options = array())
+	public function getTable($name = 'Template', $prefix = 'THM_GroupsTable', $options = array())
 	{
 		return JTable::getInstance($name, $prefix, $options);
 	}

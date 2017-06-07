@@ -23,167 +23,197 @@ require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
  */
 class THM_GroupsModelRole_Manager extends THM_GroupsModelList
 {
-    protected $defaultOrdering = 'a.id';
+	protected $defaultOrdering = 'roles.id';
 
-    protected $defaultDirection = 'ASC';
+	protected $defaultDirection = 'ASC';
 
-    /**
-     * Method to build an SQL query to load the list data.
-     *
-     * @return      string  An SQL query
-     */
-    protected function getListQuery()
-    {
-        $db    = JFactory::getDBO();
-        $query = $db->getQuery(true);
+	/**
+	 * Method to build an SQL query to load the list data.
+	 *
+	 * @return      string  An SQL query
+	 */
+	protected function getListQuery()
+	{
+		$dbo   = JFactory::getDBO();
+		$query = $dbo->getQuery(true);
 
-        $query
-            ->select('a.id, a.name')
-            ->from('#__thm_groups_roles AS a')
-            ->leftJoin('#__thm_groups_usergroups_roles AS b ON a.id = b.rolesID')
-            ->group('a.id');
+		$query
+			->select('roles.id, roles.name, roles.ordering')
+			->from('#__thm_groups_roles AS roles')
+			->leftJoin('#__thm_groups_usergroups_roles AS ugAssoc ON roles.id = ugAssoc.rolesID')
+			->group('roles.id');
 
-        $this->setSearchFilter($query, array('a.name'));
-        $this->setIDFilter($query, 'b.usergroupsID', array('filter.groups'));
-        $this->setOrdering($query);
+		$this->setSearchFilter($query, array('roles.name'));
+		$this->setIDFilter($query, 'ugAssoc.usergroupsID', array('filter.groups'));
+		$this->setOrdering($query);
 
-        return $query;
-    }
+		return $query;
+	}
 
-    /**
-     * Function to feed the data in the table body correctly to the list view
-     *
-     * @return array consisting of items in the body
-     */
-    public function getItems()
-    {
-        $items  = parent::getItems();
-        $return = array();
-        if (empty($items))
-        {
-            return $return;
-        }
+	/**
+	 * Function to feed the data in the table body correctly to the list view
+	 *
+	 * @return array consisting of items in the body
+	 */
+	public function getItems()
+	{
+		$items  = parent::getItems();
+		$return = array();
 
-        $index = 0;
-        foreach ($items as $item)
-        {
-            $url            = "index.php?option=com_thm_groups&view=role_edit&id=$item->id";
-            $return[$index] = array();
+		if (empty($items))
+		{
+			return $return;
+		}
 
-            $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
-            $return[$index][1] = $item->id;
-            if (JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
-            {
-                $return[$index][2] = JHtml::_('link', $url, $item->name);
-            }
-            else
-            {
-                $return[$index][2] = $item->name;
-            }
-            $return[$index][3] = $this->getGroups($item->id);
-            $index++;
-        }
+		$url             = "index.php?option=com_thm_groups&view=role_edit&id=";
+		$generalOrder    = '<input type="text" style="display:none" name="order[]" size="5" ';
+		$generalOrder    .= 'value="XX" class="width-20 text-area-order " />';
+		$generalSortIcon = '<span class="sortable-handlerXXX"><i class="icon-menu"></i></span>';
+		$canManage       = JFactory::getUser()->authorise('core.edit', 'com_thm_groups');
+		$index           = 0;
+		$tempOrdering    = 1;
 
-        return $return;
-    }
+		foreach ($items as $item)
+		{
+			$orderingActive = $this->state->get('list.ordering') == 'roles.ordering';
+			$iconClass      = '';
 
-    /**
-     * Function to get table headers
-     *
-     * @return array including headers
-     */
-    public function getHeaders()
-    {
-        $ordering  = $this->state->get('list.ordering');
-        $direction = $this->state->get('list.direction');
+			if (!$canManage)
+			{
+				$iconClass = ' inactive';
+			}
+			elseif (!$orderingActive)
+			{
+				$iconClass = ' inactive tip-top hasTooltip';
+			}
 
-        $headers             = array();
-        $headers['checkbox'] = '';
-        $headers['id']       = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'r.id', $direction, $ordering);
-        $headers['name']     = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 'r.name', $direction, $ordering);
-        $headers['groups']   = JText::_('COM_THM_GROUPS_GROUPS');
+			if (empty($item->ordering))
+			{
+				$orderingValue = $tempOrdering;
+				$tempOrdering++;
+			}
+			else
+			{
+				$orderingValue = $item->ordering;
+			}
 
-        return $headers;
-    }
+			$specificOrder = ($canManage AND $orderingActive) ? str_replace('XX', $orderingValue, $generalOrder) : '';
 
-    /**
-     * populates State
-     *
-     * @param   null $ordering  ?
-     * @param   null $direction ?
-     *
-     * @return void
-     */
-    protected function populateState($ordering = null, $direction = null)
-    {
-        $app = JFactory::getApplication();
+			$return[$index] = array();
 
-        // Adjust the context to support modal layouts.
-        if ($layout = $app->input->get('layout'))
-        {
-            $this->context .= '.' . $layout;
-        }
+			$return[$index]['attributes'] = array('class' => 'order nowrap center', 'id' => $item->id);
 
-        $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
-        $this->setState('filter.search', $search);
+			$return[$index]['ordering']['attributes'] = array('class' => "order nowrap center", 'style' => "width: 40px;");
+			$return[$index]['ordering']['value']      = str_replace('XXX', $iconClass, $generalSortIcon) . $specificOrder;
 
-        parent::populateState("a.id", "ASC");
-    }
+			$return[$index][0] = JHtml::_('grid.id', $index, $item->id);
+			$return[$index][1] = $item->id;
+			$return[$index][2] = ($canManage) ? JHtml::_('link', $url . $item->id, $item->name) : $item->name;
+			$return[$index][3] = $this->getGroups($item->id);
+			$index++;
+		}
 
-    /**
-     * Returns all group of a role
-     *
-     * @param   Int $rid An id of the role
-     *
-     * @return  string     A string with all group comma separated
-     */
-    public function getGroups($rid)
-    {
-        $db    = JFactory::getDbo();
-        $query = $db->getQuery(true);
+		return $return;
+	}
 
-        $query
-            ->select('DISTINCT(ug.id), ug.title')
-            ->from('#__usergroups AS ug')
-            ->innerJoin('#__thm_groups_usergroups_roles AS ugr ON ug.id = ugr.usergroupsID')
-            ->where("ugr.rolesID = $rid")
-            ->order('ug.title ASC');
+	/**
+	 * Function to get table headers
+	 *
+	 * @return array including headers
+	 */
+	public function getHeaders()
+	{
+		$ordering  = $this->state->get('list.ordering');
+		$direction = $this->state->get('list.direction');
 
-        $db->setQuery($query);
-        $groups = $db->loadObjectList();
+		$headers             = array();
+		$headers['order']    = JHtml::_('searchtools.sort', '', 'roles.ordering', $direction, $ordering, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2');
+		$headers['checkbox'] = '';
+		$headers['id']       = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'roles.id', $direction, $ordering);
+		$headers['name']     = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 'roles.name', $direction, $ordering);
+		$headers['groups']   = JText::_('COM_THM_GROUPS_GROUPS');
 
-        $return = array();
-        if (!empty($groups))
-        {
-            foreach ($groups as $group)
-            {
-                // Delete button
-                $deleteIcon = '<span class="icon-trash"></span>';
-                $deleteBtn  = "<a href='javascript:deleteGroup(" . $rid . "," . $group->id . ")'>" . $deleteIcon . "</a>";
+		return $headers;
+	}
 
-                // Link to edit view of a group
-                $url = JRoute::_('index.php?option=com_users&task=group.edit&id=' . $group->id);
+	/**
+	 * populates State
+	 *
+	 * @param   null $ordering  ?
+	 * @param   null $direction ?
+	 *
+	 * @return void
+	 */
+	protected function populateState($ordering = null, $direction = null)
+	{
+		$app = JFactory::getApplication();
 
-                $return[] = "<a href=$url>" . $group->title . "</a> " . $deleteBtn;
-            }
-        }
+		// Adjust the context to support modal layouts.
+		if ($layout = $app->input->get('layout'))
+		{
+			$this->context .= '.' . $layout;
+		}
 
-        return implode(',<br /> ', $return);
-    }
+		$search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
 
-    /**
-     * Returns hidden fields for page
-     *
-     * @return array
-     */
-    public function getHiddenFields()
-    {
-        $fields = array();
+		parent::populateState("roles.id", "ASC");
+	}
 
-        // Hidden fields for deletion of one group at once
-        $fields[] = '<input type="hidden" name="g_id" value="">';
-        $fields[] = '<input type="hidden" name="r_id" value="">';
+	/**
+	 * Returns all group of a role
+	 *
+	 * @param   Int $rid An id of the role
+	 *
+	 * @return  string     A string with all group comma separated
+	 */
+	public function getGroups($rid)
+	{
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
-        return $fields;
-    }
+		$query
+			->select('DISTINCT(ug.id), ug.title')
+			->from('#__usergroups AS ug')
+			->innerJoin('#__thm_groups_usergroups_roles AS ugr ON ug.id = ugr.usergroupsID')
+			->where("ugr.rolesID = $rid")
+			->order('ug.title ASC');
+
+		$dbo->setQuery($query);
+		$groups = $dbo->loadObjectList();
+
+		$return = array();
+		if (!empty($groups))
+		{
+			foreach ($groups as $group)
+			{
+				// Delete button
+				$deleteIcon = '<span class="icon-trash"></span>';
+				$deleteBtn  = "<a href='javascript:deleteGroup(" . $rid . "," . $group->id . ")'>" . $deleteIcon . "</a>";
+
+				// Link to edit view of a group
+				$url = JRoute::_('index.php?option=com_users&task=group.edit&id=' . $group->id);
+
+				$return[] = "<a href=$url>" . $group->title . "</a> " . $deleteBtn;
+			}
+		}
+
+		return implode(',<br /> ', $return);
+	}
+
+	/**
+	 * Returns hidden fields for page
+	 *
+	 * @return array
+	 */
+	public function getHiddenFields()
+	{
+		$fields = array();
+
+		// Hidden fields for deletion of one group at once
+		$fields[] = '<input type="hidden" name="g_id" value="">';
+		$fields[] = '<input type="hidden" name="r_id" value="">';
+
+		return $fields;
+	}
 }

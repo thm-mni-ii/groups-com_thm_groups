@@ -55,7 +55,7 @@ class THM_GroupsHelperTemplate
 					}
 
 					$attribute->published = $templateAttribute->published;
-					$attribute->order     = $templateAttribute->order;
+					$attribute->ordering     = $templateAttribute->ordering;
 					$attribute->params    = $templateAttribute->params;
 				}
 			}

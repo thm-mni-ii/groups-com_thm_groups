@@ -96,7 +96,6 @@
             <filename>config.xml</filename>
             <filename>CHANGELOG.php</filename>
             <filename>install.php</filename>
-            <filename>update.php</filename>
             <folder>controllers</folder>
             <folder>models</folder>
             <folder>sql</folder>

@@ -68,24 +68,12 @@ class THM_GroupsViewRole_Manager extends THM_GroupsViewList
 
 		JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_ROLE_MANAGER'), 'role_manager');
 
-		if ($user->authorise('core.create', 'com_thm_groups'))
+		if (JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
 		{
 			JToolBarHelper::addNew('role.add');
-		}
-
-		if ($user->authorise('core.edit', 'com_thm_groups'))
-		{
 			JToolBarHelper::editList('role.editRole');
-		}
-
-		if ($user->authorise('core.delete', 'com_thm_groups'))
-		{
 			JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM', 'role.delete', 'JTOOLBAR_DELETE');
-		}
 
-		// Add a batch button
-		if ($user->authorise('core.manage', 'com_thm_groups') && $user->authorise('core.edit', 'com_thm_groups'))
-		{
 			JHtml::_('bootstrap.modal', 'collapseModal');
 			$title = JText::_('COM_THM_GROUPS_ROLE_MANAGER_BATCH');
 

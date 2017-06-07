@@ -373,7 +373,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
 	public function saveorder($pks = null, $order = null)
 	{
 		JTable::addIncludePath(JPATH_ROOT . '/administrator/components/com_thm_groups/tables/');
-		$table = $this->getTable('Attribute', 'Table');
+		$table = $this->getTable('Attribute', 'THM_GroupsTable');
 
 		$conditions = array();
 
@@ -404,25 +404,6 @@ class THM_GroupsModelAttribute extends JModelLegacy
 
 					return false;
 				}
-
-				// Remember to reorder within position and client_id
-				$condition = $this->getReorderConditions($table);
-				$found     = false;
-
-				foreach ($conditions as $cond)
-				{
-					if ($cond[1] == $condition)
-					{
-						$found = true;
-						break;
-					}
-				}
-
-				if (!$found)
-				{
-					$key          = $table->getKeyName();
-					$conditions[] = array($table->$key, $condition);
-				}
 			}
 		}
 
@@ -437,19 +418,6 @@ class THM_GroupsModelAttribute extends JModelLegacy
 		$this->cleanCache();
 
 		return true;
-	}
-
-	/**
-	 * A protected method to get a set of ordering conditions.
-	 *
-	 * @param   JTable $table A JTable object.
-	 *
-	 * @return  array  An array of conditions to add to ordering queries.
-	 *
-	 */
-	protected function getReorderConditions($table)
-	{
-		return array();
 	}
 
 	/**

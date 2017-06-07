@@ -291,11 +291,9 @@ class THM_GroupsControllerAttribute extends JControllerLegacy
 	public function saveOrderAjax()
 	{
 		// Get the input
-		$pks   = $this->input->post->get('cid', array(), 'array');
-		$order = $this->input->post->get('order', array(), 'array');
-
-		// Sanitize the input
+		$pks   = $this->input->get('cid', array(), 'array');
 		Joomla\Utilities\ArrayHelper::toInteger($pks);
+		$order = array_keys($pks);
 		Joomla\Utilities\ArrayHelper::toInteger($order);
 
 		// Get the model

@@ -169,8 +169,6 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
 		}
 
 		$url          = "index.php?option=com_thm_groups&view=attribute_edit&id=";
-		$generalOrder = '<input type="text" style="display:none" name="order[]" size="5" ';
-		$generalOrder .= 'value="XX" class="width-20 text-area-order " />';
 		$sortIcon     = '<span class="sortable-handlerXXX"><i class="icon-menu"></i></span>';
 		$generalLock  = '<span class="icon-lock hasTooltip" title="XXXX"></span>';
 		$doNotDelete  = array(VORNAME, NACHNAME, EMAIL, TITEL, POSTTITEL);
@@ -185,9 +183,12 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
 			$return[$index]               = array();
 			$return[$index]['attributes'] = array('class' => 'order nowrap center', 'id' => $item->id);
 
+			$return[$index]['ordering']['attributes'] = array('class' => "order nowrap center", 'style' => "width: 40px;");
+
 			if (!$groupsAdmin)
 			{
-				$return[$index]['ordering'] = '';
+				$iconClass = ' inactive';
+				$return[$index]['ordering']['value']      = str_replace('XXX', $iconClass, $sortIcon);
 				$return[$index][0]          = '';
 				$return[$index][1]          = $item->id;
 				$return[$index][2]          = $item->name;
@@ -204,10 +205,7 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
 					$iconClass = ' inactive tip-top hasTooltip';
 				}
 
-				$specificOrder = ($groupsAdmin AND $orderingActive) ? str_replace('XX', $item->ordering, $generalOrder) : '';
-
-				$return[$index]['ordering']['attributes'] = array('class' => "order nowrap center", 'style' => "width: 40px;");
-				$return[$index]['ordering']['value']      = str_replace('XXX', $iconClass, $sortIcon) . $specificOrder;
+				$return[$index]['ordering']['value']      = str_replace('XXX', $iconClass, $sortIcon);
 				$return[$index][0]                        = JHtml::_('grid.id', $index, $item->id);
 				$return[$index][1]                        = $item->id;
 				$lock                                     = '';

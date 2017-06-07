@@ -317,7 +317,7 @@ class THM_GroupsModelRole extends JModelLegacy
 	public function saveorder($pks = null, $order = null)
 	{
 		JTable::addIncludePath(JPATH_ROOT . '/administrator/components/com_thm_groups/tables/');
-		$table = $this->getTable('Roles', 'Table');
+		$table = $this->getTable('Roles', 'THM_GroupsTable');
 
 		$conditions = array();
 
@@ -346,25 +346,6 @@ class THM_GroupsModelRole extends JModelLegacy
 					$this->setError($table->getError());
 
 					return false;
-				}
-
-				// Remember to reorder within position and client_id
-				$condition = $this->getReorderConditions($table);
-				$found     = false;
-
-				foreach ($conditions as $cond)
-				{
-					if ($cond[1] == $condition)
-					{
-						$found = true;
-						break;
-					}
-				}
-
-				if (!$found)
-				{
-					$key          = $table->getKeyName();
-					$conditions[] = array($table->$key, $condition);
 				}
 			}
 		}
