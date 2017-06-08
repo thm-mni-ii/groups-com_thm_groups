@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<extension type="component" version="3.0" method="upgrade">
+<extension type="component" version="3.*" method="upgrade">
     <name>COM_THM_GROUPS</name>
     <creationDate>June 2017</creationDate>
     <author>THM iCampus</author>
@@ -89,7 +89,6 @@
             <filename>config.xml</filename>
             <filename>CHANGELOG.php</filename>
             <filename>install.php</filename>
-            <folder>controllers</folder>
             <folder>models</folder>
             <folder>sql</folder>
             <folder>tables</folder>
