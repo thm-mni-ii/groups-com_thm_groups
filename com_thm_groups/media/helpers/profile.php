@@ -10,6 +10,8 @@
  * @link        www.thm.de
  */
 
+require_once "group.php";
+
 /**
  * Class providing helper functions for batch select options
  *
@@ -19,35 +21,37 @@
 class THM_GroupsHelperProfile
 {
 	/**
-	 * Return all attributes with metadata
+	 * Retrieves all available attributes with information about their dynamic and static types.
 	 *
-	 * Update of Joomla 3.3
-	 *
-	 * @return array
+	 * @return array the attribute information, empty if nothing could be found or an error occurred
 	 */
 	public static function getAllAttributes()
 	{
 		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
 
-		$query->select('A.id AS id, A.name AS field , A.options');
-		$query->select('B.options AS dyn_options');
-		$query->select('C.name AS type');
-		$query->from('#__thm_groups_attribute AS A');
-		$query->leftJoin('#__thm_groups_dynamic_type AS B ON A.dynamic_typeID = B.id');
-		$query->leftJoin('#__thm_groups_static_type AS C ON  B.static_typeID = C.id');
-		$query->where("A.id <> '3'");
-		$query->order('A.id');
+		$query->select('attribute.id AS id, attribute.name AS field , attribute.options');
+		$query->select('dynType.options AS dyn_options');
+		$query->select('statType.name AS type');
+		$query->from('#__thm_groups_attribute AS attribute');
+		$query->leftJoin('#__thm_groups_dynamic_type AS dynType ON attribute.dynamic_typeID = dynType.id');
+		$query->leftJoin('#__thm_groups_static_type AS statType ON  dynType.static_typeID = statType.id');
+		$query->where("attribute.id <> '3'");
+		$query->order('attribute.id');
 		$dbo->setQuery($query);
 
 		try
 		{
-			return $dbo->loadObjectList();
+			$attributes = $dbo->loadAssocList();
 		}
 		catch (Exception $exc)
 		{
-			JErrorPage::render($exc);
+			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+
+			return array();
 		}
+
+		return empty($attributes) ? array() : $attributes;
 	}
 
 	/**
@@ -60,18 +64,18 @@ class THM_GroupsHelperProfile
 	 */
 	public static function getAttributeValue($profileID, $attributeID)
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
 		$query->select('value')->from('#__thm_groups_users_attribute');
 		$query->where("attributeID = '$attributeID'");
 		$query->where("usersID = '$profileID'");
 
-		$db->setQuery($query);
+		$dbo->setQuery($query);
 
 		try
 		{
-			$result = $db->loadResult();
+			$result = $dbo->loadResult();
 		}
 		catch (Exception $exc)
 		{
@@ -86,11 +90,11 @@ class THM_GroupsHelperProfile
 	/**
 	 * Gets the default group id for the user
 	 *
-	 * @param   int $userID the user's profile information
+	 * @param   int $profileID the user's profile information
 	 *
 	 * @return  string  the profile name
 	 */
-	public static function getDefaultGroup($userID)
+	public static function getDefaultGroup($profileID)
 	{
 		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
@@ -99,11 +103,11 @@ class THM_GroupsHelperProfile
 		$query->innerJoin('#__thm_groups_users_usergroups_roles as ugr on ugr.usergroups_rolesID = gr.id');
 		$query->innerJoin('#__thm_groups_profile_usergroups as ug ON gr.usergroupsID = ug.usergroupsID');
 		$query->innerJoin('#__thm_groups_profile as t ON ug.profileID = t.id');
-		$query->where("ugr.usersID = '$userID'");
+		$query->where("ugr.usersID = '$profileID'");
 
 		// TODO: make these categories configurable
 		$query->where("gr.usergroupsID NOT IN ('1','2')");
-		$dbo->setQuery((string) $query);
+		$dbo->setQuery($query);
 
 		try
 		{
@@ -123,107 +127,40 @@ class THM_GroupsHelperProfile
 	}
 
 	/**
-	 * Creates the name with title to be displayed
-	 *
-	 * @param   int $userID the user id
-	 *
-	 * @return  string  the profile name
-	 */
-	public static function getDisplayNameWithTitle($userID)
-	{
-		$profile              = self::getProfile($userID);
-		$displayNameWithTitle = '';
-		$displayNameWithTitle .= (!empty($profile['Titel']) AND !empty($profile['Titel']['value'])) ?
-			$profile['Titel']['value'] . ' ' : '';
-		$displayNameWithTitle .= (!empty($profile['Vorname']) AND !empty($profile['Vorname']['value'])) ?
-			$profile['Vorname']['value'] . ' ' : '';
-		$displayNameWithTitle .= (!empty($profile['Nachname']) AND !empty($profile['Nachname']['value'])) ?
-			$profile['Nachname']['value'] . ' ' : '';
-		$displayNameWithTitle .= (!empty($profile['Posttitel']) AND !empty($profile['Posttitel']['value'])) ?
-			$profile['Posttitel']['value'] : '';
-
-		return $displayNameWithTitle;
-	}
-
-	/**
 	 * Creates the name to be displayed
 	 *
-	 * @param   int $userID the user id
+	 * @param   int  $profileID the user id
+	 * @param   bool $withTitle whether the titles should be displayed
 	 *
 	 * @return  string  the profile name
 	 */
-	public static function getDisplayName($userID)
+	public static function getDisplayName($profileID, $withTitle = false)
 	{
-		$profile     = self::getProfile($userID);
-		$displayName = '';
-		$displayName .= (!empty($profile['Vorname']) AND !empty($profile['Vorname']['value'])) ?
-			$profile['Vorname']['value'] . ' ' : '';
-		$displayName .= (!empty($profile['Nachname']) AND !empty($profile['Nachname']['value'])) ?
-			$profile['Nachname']['value'] . ' ' : '';
+		$profile = self::getProfile($profileID);
+		$indexes = $withTitle ? [5, 1, 2, 7] : [1, 2];
+		$text    = '';
 
-		return $displayName;
-	}
-
-	/**
-	 * Retrieves the profile information of the user. Optionally filtered against a profile template associated with a
-	 * group.
-	 *
-	 * @param   int $userID  the user id
-	 * @param   int $groupID the group id
-	 *
-	 * @return  mixed    Object on success, false on failure.
-	 */
-	public static function getProfile($userID, $groupID = null)
-	{
-		$profileID  = self::getProfileIDByGroupID($groupID);
-		$attributes = self::getProfileData($userID, $profileID, true);
-
-		$profile = [];
-		foreach ($attributes as $attribute)
+		foreach ($indexes as $index)
 		{
-			$name                          = $attribute['name'];
-			$profile[$name]['attributeID'] = $attribute['structid'];
-			$profile[$name]['type']        = $attribute['type'];
-			$profile[$name]['dyntype']     = $attribute['dyntype'];
-			if (!empty($attribute['options']))
+			if (!empty($profile[$index]) AND !empty($profile[$index]['value']))
 			{
-				$profile[$name]['options'] = (array) json_decode($attribute['options']);
+				$text .= "{$profile[$index]['value']} ";
 			}
-
-			if (!empty($attribute['dynOptions']))
-			{
-				$profile[$name]['dyn_options'] = (array) json_decode($attribute['dynOptions']);
-			}
-
-			$profile[$name]['id']             = $attribute['id'];
-			$profile[$name]['value']          = $attribute['value'];
-			$profile[$name]['publish']        = $attribute['publish'];
-			$profile[$name]['description']    = $attribute['description'];
-			$profile[$name]['dynDescription'] = $attribute['dynDescription'];
-			$profile[$name]['params']         = (array) json_decode($attribute['params']);
-			$profile[$name]['order']          = $attribute['order'];
 		}
 
-		uasort(
-			$profile, function ($a, $b)
-		{
-			return $a['order'] - $b['order'];
-		}
-		);
-
-		return $profile;
+		return $text;
 	}
 
 	/**
 	 * Gets all user attributes, optionally filtering according to a profile template and the attribute pubished status.
 	 *
-	 * @param   int  $userID        the user ID
-	 * @param   int  $profileID     the profile ID
+	 * @param   int  $profileID     the user ID
+	 * @param   int  $templateID    the profile ID
 	 * @param   bool $onlyPublished whether or not attributes should be filtered according to their published status
 	 *
 	 * @return  array  array of arrays with profile information
 	 */
-	public static function getProfileData($userID, $profileID = null, $onlyPublished = false)
+	public static function getProfile($profileID, $templateID = null, $onlyPublished = false)
 	{
 		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
@@ -231,7 +168,7 @@ class THM_GroupsHelperProfile
 		$select = 'DISTINCT a.id AS structid, a.name as name, a.options as options, a.description AS description, ';
 		$select .= 'd.options as dynOptions, d.description as dynDescription, d.regex as regex, d.name as dyntype, ';
 		$select .= 's.name as type, ';
-		$select .= 'pa.params as params, pa.order, ';
+		$select .= 'pa.params as params, pa.ordering, ';
 		$select .= 'ua.usersID as id, ua.value, ua.published as publish ';
 
 		$query->select($select);
@@ -240,11 +177,11 @@ class THM_GroupsHelperProfile
 		$query->innerJoin('#__thm_groups_static_type AS s ON s.id = d.static_typeID');
 		$query->innerJoin('#__thm_groups_profile_attribute AS pa ON pa.attributeID = a.id');
 		$query->innerJoin('#__thm_groups_profile AS p ON  p.id = pa.profileID');
-		$query->leftJoin("#__thm_groups_users_attribute AS ua ON ua.attributeID = a.id AND ua.usersID ='$userID'");
+		$query->leftJoin("#__thm_groups_users_attribute AS ua ON ua.attributeID = a.id AND ua.usersID ='$profileID'");
 
-		if (!empty($profileID))
+		if (!empty($templateID))
 		{
-			$query->where("p.id = '$profileID'");
+			$query->where("p.id = '$templateID'");
 		}
 
 		if ($onlyPublished == true)
@@ -255,13 +192,13 @@ class THM_GroupsHelperProfile
 		$query->where("pa.published = '1'");
 		$query->where("a.published = '1'");
 		$query->group("a.id");
-		$query->order("pa.order");
+		$query->order("pa.ordering");
 
 		$dbo->setQuery($query);
 
 		try
 		{
-			return $dbo->loadAssocList();
+			$profile = $dbo->loadAssocList('structid');
 		}
 		catch (Exception $exc)
 		{
@@ -269,6 +206,15 @@ class THM_GroupsHelperProfile
 
 			return [];
 		}
+
+		foreach ($profile as $attributeID => $attribute)
+		{
+			$profile[$attributeID]['dynOptions'] = empty($attribute['dynOptions']) ? [] : json_decode($attribute['dynOptions'], true);
+			$profile[$attributeID]['options']    = empty($attribute['options']) ? [] : json_decode($attribute['options'], true);
+			$profile[$attributeID]['params']     = empty($attribute['params']) ? [] : json_decode($attribute['params'], true);
+		}
+
+		return $profile;
 	}
 
 	/**
@@ -343,7 +289,7 @@ class THM_GroupsHelperProfile
 		$query->select("published");
 		$query->from("#__thm_groups_users");
 		$query->where("id = '$profileID'");
-		$dbo->setQuery((string) $query);
+		$dbo->setQuery($query);
 
 		try
 		{

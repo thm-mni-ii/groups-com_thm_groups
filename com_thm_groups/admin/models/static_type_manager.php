@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsModelStatic_Type_Manager
- * @description THMGroupsModelStatic_Type_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -51,8 +50,7 @@ class THM_GroupsModelStatic_Type_Manager extends THM_GroupsModelList
 	 */
 	protected function getListQuery()
 	{
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
+		$query = $this->_db->getQuery(true);
 
 		$query
 			->select('id, name, description')
@@ -65,10 +63,6 @@ class THM_GroupsModelStatic_Type_Manager extends THM_GroupsModelList
 		}
 
 		$this->setOrdering($query);
-
-		/*echo "<pre>";
-		echo $query;
-		echo "</pre>";*/
 
 		return $query;
 	}
@@ -111,7 +105,7 @@ class THM_GroupsModelStatic_Type_Manager extends THM_GroupsModelList
 		$direction = $this->state->get('list.direction');
 
 		$headers   = array();
-		$headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'id', $direction, $ordering);
+		$headers[] = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'id', $direction, $ordering);
 		$headers[] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 'name', $direction, $ordering);
 		$headers[] = JText::_('COM_THM_GROUPS_DESCRIPTION');
 

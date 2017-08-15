@@ -12,9 +12,7 @@
  */
 
 defined('_JEXEC') or die;
-jimport('joomla.application.component.modeladmin');
-jimport('joomla.filesystem.folder');
-jimport('joomla.filesystem.file');
+
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/static_type.php';
 
 /**
@@ -26,9 +24,15 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/static_type.php';
  */
 class THM_GroupsModelAttribute extends JModelLegacy
 {
+	// Standard immutable attribute ids
+	const FORENAME = 1;
+	const SURNAME = 2;
+	const EMAIL = 4;
+	const TITLE = 5;
+	const POSTTITLE = 7;
 
 	/**
-	 * Creates empty database entries for all users for the new created attribute
+	 * Generates a row for this attribute's value for all existing user profiles
 	 *
 	 * @param   int $attributeID An id of a new created attribute
 	 *
@@ -36,38 +40,109 @@ class THM_GroupsModelAttribute extends JModelLegacy
 	 *
 	 * @throws Exception
 	 */
-	public function createEmptyRowsForAllUsers($attributeID)
+	private function addProfileAttribute($attributeID)
 	{
-		$dbo                = JFactory::getDbo();
-		$ids                = $this->getUserIDs();
-		$usersWithAttribute = $this->getUserIDsByAttributeID($attributeID);
-		$ids                = $this->filterIDs($ids, $usersWithAttribute);
+		$allProfileIDs        = $this->getProfileIDs();
+		$associatedProfileIDs = $this->getAssocProfileIDs($attributeID);
+		$unAssocProfileIDs    = array_diff($allProfileIDs, $associatedProfileIDs);
 
 		/*
 		 * Create database entry for created attribute with empty value for all users
 		 * It will be used in profile_edit view
 		 * If you find a better solution, you replace it
 		 */
-		foreach ($ids as $id)
-		{
-			$query   = $dbo->getQuery(true);
-			$columns = array('usersID', 'attributeID', 'published');
+		$query = $this->_db->getQuery(true);
+		$query->insert('#__thm_groups_users_attribute')->columns('usersID, attributeID, published');
 
-			$values = array($id, $attributeID, 0);
-			$query
-				->insert($dbo->qn('#__thm_groups_users_attribute'))
-				->columns($dbo->qn($columns))
-				->values(implode(',', $values));
-			$dbo->setQuery($query);
+		foreach ($unAssocProfileIDs as $profileID)
+		{
+			$query->values("'$profileID','$attributeID', '0'");
+		}
+
+		$this->_db->setQuery($query);
+
+		try
+		{
+			$this->_db->execute();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Deletes selected attributes from the db. Protected attributes are automatically removed from the selection.
+	 *
+	 * @return  mixed  true on success, otherwise false
+	 */
+	public function delete()
+	{
+		$app = JFactory::getApplication();
+
+		if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups'))
+		{
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
+
+			return false;
+		}
+
+		$doNotDelete = array(self::FORENAME, self::SURNAME, self::EMAIL, self::TITLE, self::POSTTITLE);
+		$selected    = $app->input->get('cid', array(), 'array');
+		Joomla\Utilities\ArrayHelper::toInteger($selected);
+		$attributeIDs = array_diff($selected, $doNotDelete);
+
+		$selectQuery = $this->_db->getQuery(true);
+		$selectQuery->select('*')->from('#__thm_groups_attribute');
+
+		$deleteQuery = $this->_db->getQuery(true);
+		$deleteQuery->delete('#__thm_groups_attribute');
+
+		foreach ($attributeIDs as $attributeID)
+		{
+			$selectQuery->clear('where');
+			$selectQuery->where("id = '$attributeID'");
+
+			$this->_db->setQuery($selectQuery);
 
 			try
 			{
-				$dbo->execute();
+				$attribute = $this->_db->loadAssoc();
 			}
 			catch (Exception $exception)
 			{
 				JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+				continue;
+			}
 
+			if ($this->deletePictures($attribute))
+			{
+				$deleteQuery->clear('where');
+				$deleteQuery->where("id = '$attributeID'");
+				$this->_db->setQuery($deleteQuery);
+
+				try
+				{
+					$success = $this->_db->execute();
+				}
+				catch (Exception $exception)
+				{
+					JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+					return false;
+				}
+
+				if (!$success)
+				{
+					return false;
+				}
+			}
+			else
+			{
 				return false;
 			}
 		}
@@ -76,46 +151,55 @@ class THM_GroupsModelAttribute extends JModelLegacy
 	}
 
 	/**
-	 * Filters user IDs and exclude IDs, which already have
-	 * an attribute
+	 * Deletes pictures associated with an attribute
 	 *
-	 * @param   array $ids    An array with all user IDs
-	 * @param   array $badIDs An array with user IDs, which have an attribute
+	 * @param   array $attribute Object of attribute
 	 *
-	 * @return array
+	 * @return  boolean true on success, otherwise false
 	 */
-	public function filterIDs($ids, $badIDs)
+	private function deletePictures($attribute)
 	{
-		$idsToSave    = array();
-		$idsNotToSave = array();
+		$query = $this->_db->getQuery(true);
+		$query->select('ID, value, attributeID')
+			->from('#__thm_groups_users_attribute')
+			->where("attributeID = '{$attribute['id']}'");
+		$this->_db->setQuery($query);
 
-		// Prepare ids for search
-		foreach ($ids as $id)
+		try
 		{
-			array_push($idsToSave, $id->id);
+			$pictures = $this->_db->loadAssocList();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+			return false;
 		}
 
-		// Prepare ids for search
-		foreach ($badIDs as $id)
+		// Get path
+		$options = json_decode($attribute['options']);
+
+		if (empty($options->path))
 		{
-			array_push($idsNotToSave, $id->usersID);
+			return true;
 		}
 
-		// Search ids and if founded then delete
-		foreach ($idsToSave as $key => $id)
+		foreach (scandir($options->path) as $file)
 		{
-			if (array_search($id, $idsNotToSave) !== false)
+			foreach ($pictures as $picture)
 			{
-				unset($idsToSave[$key]);
+				if ($file == $picture['value'])
+				{
+					unlink($options->path . $file);
+				}
 			}
 		}
 
-		return $idsToSave;
+		return true;
 	}
 
 	/**
-	 * Returns all user IDs which have an attribute with
-	 * the $attributeID
+	 * Returns all profile IDs which are associated with the given attribute ID
 	 *
 	 * @param   int $attributeID An attribute id
 	 *
@@ -123,20 +207,15 @@ class THM_GroupsModelAttribute extends JModelLegacy
 	 *
 	 * @throws Exception
 	 */
-	public function getUserIDsByAttributeID($attributeID)
+	private function getAssocProfileIDs($attributeID)
 	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
-
-		$query
-			->select('usersID')
-			->from('#__thm_groups_users_attribute')
-			->where("attributeID = $attributeID");
-		$dbo->setQuery($query);
+		$query = $this->_db->getQuery(true);
+		$query->select('usersID')->from('#__thm_groups_users_attribute')->where("attributeID = $attributeID");
+		$this->_db->setQuery($query);
 
 		try
 		{
-			$result = $dbo->loadObjectList();
+			$result = $this->_db->loadColumn();
 		}
 		catch (Exception $exception)
 		{
@@ -155,20 +234,15 @@ class THM_GroupsModelAttribute extends JModelLegacy
 	 *
 	 * @throws Exception
 	 */
-	public function getUserIDs()
+	private function getProfileIDs()
 	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
-
-		$query
-			->select('id')
-			->from($dbo->qn('#__thm_groups_users'));
-
-		$dbo->setQuery($query);
+		$query = $this->_db->getQuery(true);
+		$query->select('id')->from('#__thm_groups_users');
+		$this->_db->setQuery($query);
 
 		try
 		{
-			$ids = $dbo->loadObjectList();
+			$profileIDs = $this->_db->loadColumn();
 		}
 		catch (Exception $exception)
 		{
@@ -177,49 +251,69 @@ class THM_GroupsModelAttribute extends JModelLegacy
 			return false;
 		}
 
-		return $ids;
+		return $profileIDs;
 	}
 
 	/**
 	 * Saves the attribute
 	 *
-	 * @return bool true on success, otherwise false
+	 * @return mixed int attribute id on success, otherwise bool false
 	 */
 	public function save()
 	{
-		$data         = JFactory::getApplication()->input->get('jform', array(), 'array');
-		$staticTypeID = $this->getStaticTypeIDByDynTypeID($data['dynamic_typeID']);
-		$options      = THM_GroupsHelperStatic_Type::getOption($staticTypeID);
-		$dbo          = JFactory::getDbo();
+		$app = JFactory::getApplication();
 
-		switch ($staticTypeID)
+		if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups'))
 		{
-			case TEXT:
-			case TEXTFIELD:
-				$options->length = empty($data['length']) ? $options->length : (int) $data['length'];
-			default:
-				$options->required = isset($data['validate']) ? (bool) $data['validate'] : false;
-				if (!empty($data['iconpicker']))
-				{
-					$options->icon = $data['iconpicker'];
-				}
-				$data['options']     = json_encode($options);
-				$data['description'] = empty($data['description']) ? " " : $dbo->escape($data['description']);
-		}
-
-		$dbo->transactionStart();
-
-		$attribute = $this->getTable();
-
-		$success = $attribute->save($data);
-
-		if (!$success)
-		{
-			$dbo->transactionRollback();
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
 			return false;
 		}
-		$dbo->transactionCommit();
+
+
+		$data         = $app->input->get('jform', array(), 'array');
+		$staticTypeID = $this->getStaticTypeIDByDynTypeID($data['dynamic_typeID']);
+		$options      = THM_GroupsHelperStatic_Type::getOption($staticTypeID);
+
+		if ($staticTypeID === 1 OR $staticTypeID === 2)
+		{
+			$options->length = empty($data['length']) ? $options->length : (int) $data['length'];
+		}
+
+		$options->required = isset($data['validate']) ? (bool) $data['validate'] : false;
+
+		if (!empty($data['iconpicker']))
+		{
+			$options->icon = $data['iconpicker'];
+		}
+
+		$data['options']     = json_encode($options);
+		$data['description'] = empty($data['description']) ? "" : $this->_db->escape($data['description']);
+
+		$this->_db->transactionStart();
+
+		$attribute      = $this->getTable('Attribute', 'THM_GroupsTable');
+		$attributeSaved = $attribute->save($data);
+
+		if (!$attributeSaved)
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'error');
+			$this->_db->transactionRollback();
+
+			return false;
+		}
+
+		$attributeAdded = $this->addProfileAttribute($attribute->id);
+
+		if (!$attributeAdded)
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'error');
+			$this->_db->transactionRollback();
+
+			return false;
+		}
+
+		$this->_db->transactionCommit();
 
 		return $attribute->id;
 	}
@@ -227,26 +321,25 @@ class THM_GroupsModelAttribute extends JModelLegacy
 	/**
 	 * Returns a static type ID of a dynamic type by its ID
 	 *
-	 * @param   Int $dynTypeID dynamic type ID
+	 * @param   int $dynTypeID dynamic type ID
 	 *
-	 * @return Int On success, else false
+	 * @return int On success, else false
 	 *
 	 * @throws Exception
 	 */
-	public function getStaticTypeIDByDynTypeID($dynTypeID)
+	private function getStaticTypeIDByDynTypeID($dynTypeID)
 	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
+		$query = $this->_db->getQuery(true);
 
 		$query
 			->select('static_typeID')
 			->from('#__thm_groups_dynamic_type')
 			->where('id = ' . (int) $dynTypeID);
-		$dbo->setQuery($query);
+		$this->_db->setQuery($query);
 
 		try
 		{
-			$result = $dbo->loadResult();
+			$result = $this->_db->loadResult();
 		}
 		catch (Exception $exception)
 		{
@@ -259,41 +352,21 @@ class THM_GroupsModelAttribute extends JModelLegacy
 	}
 
 	/**
-	 * Deletes selected attributes from the db
-	 *
-	 * @param   array $idsToDelete IDs of items which should be deleted
-	 *
-	 * @return  mixed  true on success, otherwise false
-	 */
-	public function delete($idsToDelete)
-	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
-		$query->delete('#__thm_groups_attribute');
-		$query->where('id IN (' . implode(',', $idsToDelete) . ')');
-		$dbo->setQuery($query);
-
-		try
-		{
-			return $dbo->execute();
-		}
-		catch (Exception $exception)
-		{
-			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-
-			return false;
-		}
-	}
-
-	/**
-	 * Toggles the attribute
-	 *
-	 * @param   String $action publish/unpublish
+	 * Toggles binary attribute attribute values.
 	 *
 	 * @return  boolean  true on success, otherwise false
 	 */
-	public function toggle($action = null)
+	public function toggle()
 	{
+		$app = JFactory::getApplication();
+
+		if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups'))
+		{
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
+
+			return false;
+		}
+
 		$input = JFactory::getApplication()->input;
 
 		// Get array of ids if divers users selected
@@ -309,7 +382,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
 		}
 		else
 		{
-			JArrayHelper::toInteger($cid);
+			Joomla\Utilities\ArrayHelper::toInteger($cid);
 			$id = implode(',', $cid);
 		}
 
@@ -332,8 +405,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
 				break;
 		}
 
-		$dbo   = JFactory::getDBO();
-		$query = $dbo->getQuery(true);
+		$query = $this->_db->getQuery(true);
 
 		$query
 			->update('#__thm_groups_attribute')
@@ -347,11 +419,11 @@ class THM_GroupsModelAttribute extends JModelLegacy
 				break;
 		}
 
-		$dbo->setQuery((string) $query);
+		$this->_db->setQuery($query);
 
 		try
 		{
-			return (bool) $dbo->execute();
+			return (bool) $this->_db->execute();
 		}
 		catch (Exception $exception)
 		{
@@ -364,74 +436,50 @@ class THM_GroupsModelAttribute extends JModelLegacy
 	/**
 	 * Saves the manually set order of records.
 	 *
-	 * @param   array   $pks   An array of primary key ids.
-	 * @param   integer $order +1 or -1
+	 * @param   array $pks   An array of primary key ids.
+	 * @param   array $order the ordering values corresponding to the table keys
 	 *
-	 * @return  mixed
-	 *
+	 * @return bool true on success, otherwise false
 	 */
 	public function saveorder($pks = null, $order = null)
 	{
-		JTable::addIncludePath(JPATH_ROOT . '/administrator/components/com_thm_groups/tables/');
-		$table = $this->getTable('Attribute', 'THM_GroupsTable');
+		$app = JFactory::getApplication();
 
-		$conditions = array();
+		if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups'))
+		{
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
+
+			return false;
+		}
 
 		if (empty($pks))
 		{
-			return JError::raiseWarning(500, JText::_('COM_THM_GROUPS_NO_ITEMS_SELECTED'));
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEMS_SELECTED'), 'error');
+
+			return false;
 		}
+
+		$table = $this->getTable('Attribute', 'THM_GroupsTable');
 
 		// Update ordering values
 		foreach ($pks as $i => $pk)
 		{
 			$table->load((int) $pk);
 
-			// Access checks.
-			if (!$this->canEditState($table))
-			{
-				// Prune items that you can't change.
-				unset($pks[$i]);
-				JLog::add(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
-			}
-			elseif ($table->ordering != $order[$i])
+			if ($table->ordering != $order[$i])
 			{
 				$table->ordering = $order[$i];
 
 				if (!$table->store())
 				{
-					$this->setError($table->getError());
-
 					return false;
 				}
 			}
-		}
-
-		// Execute reorder for each category.
-		foreach ($conditions as $cond)
-		{
-			$table->load($cond[0]);
-			$table->reorder($cond[1]);
 		}
 
 		// Clear the component's cache
 		$this->cleanCache();
 
 		return true;
-	}
-
-	/**
-	 * Method to test whether a record can be deleted.
-	 *
-	 * @param   object $record A record object.
-	 *
-	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
-	 *
-	 */
-	protected function canEditState($record)
-	{
-		$user = JFactory::getUser();
-
-		return $user->authorise('core.edit.state', 'com_content');
 	}
 }

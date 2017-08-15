@@ -31,8 +31,6 @@ class JFormFieldIconPicker extends JFormField
 
 	/**
 	 * Method to instantiate the form field object.
-	 *
-	 * @param   JForm $form The form to attach to the form field object.
 	 */
 	public function __construct()
 	{

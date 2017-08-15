@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsViewUser_Select
- * @description view output file for user lists
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2

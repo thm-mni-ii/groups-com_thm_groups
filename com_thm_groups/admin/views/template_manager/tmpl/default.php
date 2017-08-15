@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsViewProfilemanager
- * @description THMGroupsViewProfilemanager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -14,7 +13,7 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-$listOrder       = $this->escape($this->state->get('list.ordering'));
+$listOrder = $this->escape($this->state->get('list.ordering'));
 
 if ($listOrder == 'p.ordering')
 {

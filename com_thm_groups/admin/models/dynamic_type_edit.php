@@ -11,9 +11,10 @@
  * @link        www.thm.de
  */
 
+use MongoDB\BSON\Type;
+
 defined('_JEXEC') or die;
 require_once JPATH_ROOT . '/media/com_thm_groups/models/edit.php';
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/static_type.php';
 
 /**
  * Class loads form data to edit an entry.
@@ -29,10 +30,10 @@ class THM_GroupsModelDynamic_Type_Edit extends THM_GroupsModelEdit
 	/**
 	 * Method to get the form
 	 *
-	 * @param   Array   $data     Data         (default: Array)
+	 * @param   array   $data     Data         (default: Array)
 	 * @param   Boolean $loadData Load data  (default: true)
 	 *
-	 * @return  A Form object
+	 * @return  object the form
 	 *
 	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
 	 */
@@ -55,7 +56,7 @@ class THM_GroupsModelDynamic_Type_Edit extends THM_GroupsModelEdit
 	 *
 	 * @return  JTable|mixed
 	 */
-	public function getTable($type = 'Dynamic_Type', $prefix = 'Table', $config = array())
+	public function getTable($type = 'Dynamic_Type', $prefix = 'THM_GroupsTable', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}
@@ -67,34 +68,39 @@ class THM_GroupsModelDynamic_Type_Edit extends THM_GroupsModelEdit
 	 */
 	protected function loadFormData()
 	{
-		$input      = JFactory::getApplication()->input;
-		$name       = $this->get('name');
-		$resource   = str_replace('_edit', '', $name);
-		$task       = $input->getCmd('task', "$resource.add");
-		$resourceID = $input->getInt('id', 0);
+		$input     = JFactory::getApplication()->input;
+		$task      = $input->getCmd('task', "dynamic_type.add");
+		$dynTypeID = $input->getInt('id', 0);
 
 		// Edit can only be explicitly called from the list view or implicitly with an id over a URL
-		$edit = (($task == "$resource.edit") OR $resourceID > 0);
+		$edit = (($task == "dynamic_type.edit") OR $dynTypeID > 0);
+
 		if ($edit)
 		{
-			if (!empty($resourceID))
+			if (empty($dynTypeID))
 			{
-				$item    = $this->getItem($resourceID);
-				$options = json_decode($item->options);
-				if (!empty($options))
+				$selected = $input->get('cid', array(), 'array');
+
+				if (empty($selected))
 				{
-					if (isset($options->required))
-					{
-						$item->validate = $options->required === false ? 0 : 1;
-					}
+					return $this->getItem(0);
 				}
 
-				return $item;
+				$dynTypeID = $selected[0];
 			}
 
-			$resourceIDs = $input->get('cid', null, 'array');
+			$item    = $this->getItem($dynTypeID);
+			$options = empty($item->options) ? '' : json_decode($item->options);
 
-			return $this->getItem($resourceIDs[0]);
+			if (!empty($options))
+			{
+				if (isset($options->required))
+				{
+					$item->validate = $options->required === false ? 0 : 1;
+				}
+			}
+
+			return $item;
 		}
 
 		return $this->getItem(0);

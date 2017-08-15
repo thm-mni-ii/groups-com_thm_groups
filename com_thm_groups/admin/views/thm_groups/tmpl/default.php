@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsViewTHMGroups
- * @description THMGroupsViewTHMGroups file from com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @authors     Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @copyright   2016 TH Mittelhessen

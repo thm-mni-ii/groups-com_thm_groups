@@ -1,0 +1,135 @@
+.contentheading {
+    word-wrap: break-word;
+}
+
+.advanced-container .role-heading {
+    background-color: #394a59;
+    color: white;
+    font-family: "THM-Medium", Arial, Helvetica, sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
+    margin-bottom: .8rem;
+    padding: .6rem .6rem .4rem .6rem;
+    text-transform: uppercase;
+}
+
+.advanced-container div.clearFix {
+    clear: both;
+}
+
+.advanced-container .row-container {
+    clear: both;
+    background-color: #f2f5f6;
+    margin-bottom: 1rem;
+    overflow: auto;
+}
+
+.advanced-container .profile-container {
+    float: left;
+    padding: .6rem;
+    width: calc(100% - 1.2rem);
+}
+
+.advanced-container .profile-container .attribute-inline, .advanced-container .profile-container .attribute-wrap, .advanced-container .profile-container .attribute-textfield, .advanced-container .profile-container .toggled-text-container {
+    float: left;
+}
+
+.advanced-container .profile-container .action-container, .advanced-container .profile-container .attribute-picture {
+    float: right;
+}
+
+.advanced-container .profile-container .attribute-textfield {
+    clear: both;
+}
+
+.advanced-container .profile-container .attribute-label, .advanced-container .profile-container .attribute-value {
+    float: left;
+}
+
+.advanced-container .profile-container .attribute-label > div, .advanced-container .profile-container .attribute-value > div {
+    min-height: 1.5rem;
+}
+
+.advanced-container .profile-container .attribute-inline, .advanced-container .profile-container .attribute-wrap, .advanced-container .profile-container .attribute-textfield {
+    margin-bottom: .4rem;
+}
+
+.advanced-container .profile-container .attribute-wrap {
+    clear: left;
+}
+
+.advanced-container .profile-container .attribute-wrap .attribute-iconed {
+    max-width: calc(100% - 1.5rem);
+}
+
+.advanced-container .profile-container .attribute-wrap .attribute-labeled {
+    max-width: calc(100% - 3rem);
+}
+
+.advanced-container .profile-container .attribute-textfield {
+    clear: both;
+}
+
+.advanced-container .profile-container .attribute-inline, .advanced-container .profile-container .attribute-name, .advanced-container .profile-container .attribute-title {
+    margin-right: .2rem;
+}
+
+.advanced-container .profile-container .attribute-label, .advanced-container .profile-container .attribute-alone {
+    margin-right: .4rem;
+}
+
+.advanced-container .profile-container .attribute-label-long {
+    width: 100%;
+}
+
+.advanced-container .profile-container .attribute-name, .advanced-container .profile-container .attribute-title {
+    display: inline-block;
+    float: left;
+    font-family: "THM-Regular";
+    font-size: 1rem;
+}
+
+.advanced-container .profile-container .attribute-title {
+    color: #394a59;
+}
+
+.advanced-container .profile-container .attribute-roles {
+    font-size: .8rem;
+    font-style: italic;
+}
+
+.advanced-container .profile-container img {
+    max-width: 66px;
+    display: block;
+}
+
+.advanced-container .profile-container .toggled-text-container {
+    background-color: white;
+    clear: both;
+    margin-top: .4rem;
+    padding: .4rem;
+}
+
+.advanced-container .profile-container .toggled-text-container ul, .advanced-container .profile-container .toggled-text-container ol, .advanced-container .profile-container .toggled-text-container table {
+    margin-bottom: 0;
+}
+
+.advanced-container .profile-container.half {
+    width: calc(50% - 1.2rem);
+}
+
+.advanced-container .profile-container.half .attribute-roles {
+    max-width: 16rem;
+}
+
+.advanced-container .toggled-text-link {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 480px) {
+    .advanced-container .profile-container.half {
+        clear: left;
+        width: calc(100% - 1.2rem);
+    }
+}

@@ -5,7 +5,6 @@
  * @package     THM_Groups_Tests
  * @subpackage  com_thm_groups.admin
  * @name        Testsuite
- * @description gui testsuite for com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Mariusz Homeniuk, <mariusz.homeniuk@mni.thm.de>
  * @copyright   2012 TH Mittelhessen

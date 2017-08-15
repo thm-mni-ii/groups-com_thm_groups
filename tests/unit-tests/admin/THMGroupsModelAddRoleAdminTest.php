@@ -6,7 +6,6 @@
  *
  * @subpackage  com_thm_groups
  * @name        THMGroupsModelAddRoleAdminTest
- * @description THMGroupsModelAddRoleAdminTest from com_thm_groups
  * @author      Dennis Priefer, dennis.priefer@mni.thm.de
  * @author      Niklas Simonis, niklas.simonis@mni.thm.de
  *

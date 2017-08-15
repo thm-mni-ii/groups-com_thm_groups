@@ -46,7 +46,8 @@ class THM_GroupsViewTemplate_Manager extends THM_GroupsViewList
 	{
 		if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
 		{
-			return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+			$exc = new Exception(JText::_('JLIB_RULES_NOT_ALLOWED'), 401);
+			JErrorPage::render($exc);
 		}
 
 		// Set batch template path
@@ -73,8 +74,7 @@ class THM_GroupsViewTemplate_Manager extends THM_GroupsViewList
 			JToolBarHelper::editList('template.edit', 'COM_THM_GROUPS_EDIT');
 			JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM_DEPENDENCIES', 'template.delete', 'JTOOLBAR_DELETE');
 
-			$bar = JToolbar::getInstance('toolbar');
-			JHtml::_('bootstrap.modal', 'myModal');
+			$bar   = JToolbar::getInstance('toolbar');
 			$title = JText::_('COM_THM_GROUPS_BATCH_GROUPS');
 			$html  = "<button id='add_group_to_profile_btn' data-toggle='modal' data-target='#collapseModal' class='btn btn-small'>";
 			$html  .= "<i class='icon-users' title='$title'></i> $title</button>";
@@ -93,7 +93,6 @@ class THM_GroupsViewTemplate_Manager extends THM_GroupsViewList
 	protected function modifyDocument()
 	{
 		parent::modifyDocument();
-		JHtml::_('jquery.framework');
 		JHtml::script(JUri::root() . 'media/com_thm_groups/js/template_manager.js');
 	}
 }

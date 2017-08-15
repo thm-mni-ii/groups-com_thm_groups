@@ -10,105 +10,85 @@
  **/
 var cropboxEventElements = [];
 
-function bindImageCropper(element, attrID, uID)
+function bindImageCropper(element, attributeID, uID)
 {
-	var options =
+	var options, cropper, filename = null, previousIndex = false;
+
+	options =
 		{
 			imageBox: '#' + element + '_imageBox',
 			thumbBox: '#' + element + '_thumbBox',
 			spinner: '#' + element + '_spinner'
-		}
-		, cropper = new cropbox(options)
-		, filename = null
-	;
+		};
 
-	var isInList = false;
+	cropper = new cropbox(options);
 
 	for (var i = 0; i < cropboxEventElements.length; i++)
 	{
-		if (cropboxEventElements[i] == element)
+		if (cropboxEventElements[i] === element)
 		{
-			isInList = true;
+			previousIndex = i;
 		}
 	}
 
-	if (isInList == false)
+	// No previous bind has occurred for the button
+	if (previousIndex === false)
 	{
 		// Add element to event listener list to prevent multiple bindings
 		cropboxEventElements.push(element);
 
-		document.querySelector('#jform_' + element).addEventListener('change', function ()
-		{
+		document.querySelector('#jform_' + element).addEventListener('change', function () {
 			var reader = new FileReader();
 
-			reader.onload = function (e)
-			{
+			reader.onload = function (e) {
 				options.imgSrc = e.target.result;
 				cropper = new cropbox(options);
-			}
-
-			reader.readAsDataURL(this.files[0]);
+			};
 
 			var file = this.files[0];
+			reader.readAsDataURL(file);
+
 			filename = file.name;
-
-			this.files = [];
-		});
-
-		// Bind save action to 'Normal upload' button
-		document.querySelector('#' + element + '_saveNormal').addEventListener('click', function ()
-		{
-
-			// Get file data from <input>
-			var file = document.getElementById('jform_' + element).files[0];
-
-			var fd = new FormData();
-			fd.append('data', file);
-
-			jQf.ajax({
-				type: "POST",
-				url: "index.php?option=com_thm_groups&controller=profile&task=profile.saveCropped&tmpl=component&id="
-				+ uID + "&element=" + element + "&attrID=" + attrID + "&filename="
-				+ filename + "",
-				data: fd,
-				dataType: 'html',
-				processData: false,
-				contentType: false
-			}).success(function (response)
-			{
-				document.getElementById(element + "_IMG").innerHTML = response;
-				jQf('#' + element + "_Modal").modal('toggle');
-			});
 		});
 
 		// Bind save action to 'Upload cropped' button
-		document.querySelector('#' + element + '_saveChanges').addEventListener('click', function ()
-		{
+		document.querySelector('#' + element + '_saveChanges').addEventListener('click', function () {
 
 			// Get current picture
-			var blob = cropper.getBlob();
-			var fd = new FormData();
+			var blob = cropper.getBlob(),
+				fd = new FormData();
 			fd.append('fname', 'test.pic');
 			fd.append('data', blob);
 
-			jQf.ajax({
+			jQuery.ajax({
 				type: "POST",
-				url: "index.php?option=com_thm_groups&controller=profile&task=profile.saveCropped&tmpl=component&id="
-				+ uID + "&element=" + element + "&attrID=" + attrID + "&filename="
+				url: "index.php?option=com_thm_groups&controller=profile&task=profile.saveCropped&tmpl=component&profileID="
+				+ uID + "&element=" + element + "&attributeID=" + attributeID + "&filename="
 				+ filename + "",
 				data: fd,
 				dataType: 'html',
 				processData: false,
 				contentType: false
-			}).success(function (response)
-			{
-				document.getElementById(element + "_IMG").innerHTML = response;
-				jQf('#' + element + "_Modal").modal('toggle');
+			}).success(function (response) {
+				var fileType, value;
+
+				if (response)
+				{
+					document.getElementById(element + "_IMG").innerHTML = response;
+					jQuery('#' + element + "_Modal").modal('toggle');
+					fileType = filename.split('.').pop();
+					value = uID + '_' + attributeID + '.' + fileType;
+					jQuery("#jform_" + element + "_value").val(value);
+				}
+				else
+				{
+					jQuery("#" + element + "_IMG").html('');
+					jQuery("#jform_" + element + "_value").val('');
+				}
 			});
 		});
 
-		document.querySelector('#' + element + '_switch').addEventListener('click', function ()
-		{
+		document.querySelector('#' + element + '_switch').addEventListener('click', function () {
 			var box = document.getElementById(element + '_thumbBox');
 
 			// Get old values:
@@ -121,36 +101,35 @@ function bindImageCropper(element, attrID, uID)
 			box.style.width = height;
 		});
 
-		document.querySelector('#' + element + '_btnZoomIn').addEventListener('click', function ()
-		{
+		document.querySelector('#' + element + '_btnZoomIn').addEventListener('click', function () {
 			cropper.zoomIn();
 		});
-		document.querySelector('#' + element + '_btnZoomOut').addEventListener('click', function ()
-		{
+		document.querySelector('#' + element + '_btnZoomOut').addEventListener('click', function () {
 			cropper.zoomOut();
 		});
 	}
 }
 
-function deletePic(name, attributeID, userID)
+function deletePic(name, attributeID, profileID)
 {
-	jQf.ajax({
+	jQuery.ajax({
 		type: "POST",
-		url: "index.php?option=com_thm_groups&task=profile.deletePicture&tmpl=component&userID="
-		+ userID + "&attrID=" + attributeID + "&tmpl=component",
+		url: "index.php?option=com_thm_groups&task=profile.deletePicture&tmpl=component&profileID="
+		+ profileID + "&attributeID=" + attributeID + "&tmpl=component",
 		datatype: "HTML"
-	}).success(function (response)
-	{
-		jQf("#" + name + "_IMG").html('');
-		jQf("#jform_" + name + "_hidden").val('');
+	}).success(function (response) {
+		if (response === '')
+		{
+			jQuery("#" + name + "_IMG").html('');
+			jQuery("#jform_" + name + "_value").val('');
+		}
 	});
 }
 
 /* Notice: cropbox works with the chopped image shown in the preview box, not the actual image file
  * as a result the cropped image can be considered like a snipped from a screen-shot that is converted into a blob.
  */
-var cropbox = function (options)
-{
+var cropbox = function (options) {
 	var el = document.querySelector(options.imageBox),
 		obj =
 			{
@@ -161,8 +140,7 @@ var cropbox = function (options)
 				thumbBox: el.querySelector(options.thumbBox),
 				spinner: el.querySelector(options.spinner),
 				image: new Image(),
-				getDataURL: function ()
-				{
+				getDataURL: function () {
 					var width = this.thumbBox.clientWidth,
 						height = this.thumbBox.clientHeight,
 						canvas = document.createElement("canvas"),
@@ -173,7 +151,8 @@ var cropbox = function (options)
 						dw = parseInt(size[0]),
 						dh = parseInt(size[1]),
 						sh = parseInt(this.image.height),
-						sw = parseInt(this.image.width);
+						sw = parseInt(this.image.width),
+						imageData;
 
 					if (this.ratio < 0.5)
 					{
@@ -194,7 +173,7 @@ var cropbox = function (options)
 						canvas.height = height;
 						ctx.drawImage(oc, 0, 0, oc.width * 0.5, oc.height * 0.5,
 							parseInt(dx), parseInt(dy), dw, dh);
-						var imageData = canvas.toDataURL('image/png');
+						imageData = canvas.toDataURL('image/png');
 					}
 					else
 					{
@@ -206,14 +185,13 @@ var cropbox = function (options)
 
 						context.drawImage(this.image, 0, 0, sw, sh, parseInt(dx), parseInt(dy), dw, dh);
 
-						var imageData = canvas.toDataURL('image/png');
+						imageData = canvas.toDataURL('image/png');
 
 					}
 
 					return imageData;
 				},
-				getBlob: function ()
-				{
+				getBlob: function () {
 					var imageData = this.getDataURL();
 					var b64 = imageData.replace('data:image/png;base64,', '');
 					var binary = atob(b64);
@@ -224,19 +202,16 @@ var cropbox = function (options)
 					}
 					return new Blob([new Uint8Array(array)], {type: 'image/png'});
 				},
-				zoomIn: function ()
-				{
+				zoomIn: function () {
 					this.ratio *= 1.1;
 					setBackground();
 				},
-				zoomOut: function ()
-				{
+				zoomOut: function () {
 					this.ratio *= 0.5;
 					setBackground();
 				}
 			},
-		attachEvent = function (node, event, cb)
-		{
+		attachEvent = function (node, event, cb) {
 			if (node.attachEvent)
 			{
 				node.attachEvent('on' + event, cb);
@@ -246,8 +221,7 @@ var cropbox = function (options)
 				node.addEventListener(event, cb);
 			}
 		},
-		detachEvent = function (node, event, cb)
-		{
+		detachEvent = function (node, event, cb) {
 			if (node.detachEvent)
 			{
 				node.detachEvent('on' + event, cb);
@@ -257,8 +231,7 @@ var cropbox = function (options)
 				node.removeEventListener(event, render);
 			}
 		},
-		stopEvent = function (e)
-		{
+		stopEvent = function (e) {
 			if (window.event)
 			{
 				e.cancelBubble = true;
@@ -268,8 +241,7 @@ var cropbox = function (options)
 				e.stopImmediatePropagation();
 			}
 		},
-		setBackground = function ()
-		{
+		setBackground = function () {
 			var w = parseInt(obj.image.width) * obj.ratio;
 			var h = parseInt(obj.image.height) * obj.ratio;
 
@@ -282,16 +254,14 @@ var cropbox = function (options)
 				'background-position: ' + pw + 'px ' + ph + 'px; ' +
 				'background-repeat: no-repeat');
 		},
-		imgMouseDown = function (e)
-		{
+		imgMouseDown = function (e) {
 			stopEvent(e);
 
 			obj.state.dragable = true;
 			obj.state.mouseX = e.clientX;
 			obj.state.mouseY = e.clientY;
 		},
-		imgMouseMove = function (e)
-		{
+		imgMouseMove = function (e) {
 			stopEvent(e);
 
 			if (obj.state.dragable)
@@ -310,22 +280,18 @@ var cropbox = function (options)
 				obj.state.mouseY = e.clientY;
 			}
 		},
-		imgMouseUp = function (e)
-		{
+		imgMouseUp = function (e) {
 			stopEvent(e);
 			obj.state.dragable = false;
 		},
-		zoomImage = function (e)
-		{
+		zoomImage = function (e) {
 			var evt = window.event || e;
 			var delta = evt.detail ? evt.detail * (-120) : evt.wheelDelta;
 			delta > -120 ? obj.ratio *= 1.1 : obj.ratio *= 0.9;
 			setBackground();
-		}
+		};
 
-	obj.spinner.style.display = 'block';
-	obj.image.onload = function ()
-	{
+	obj.image.onload = function () {
 		obj.spinner.style.display = 'none';
 		setBackground();
 
@@ -335,9 +301,13 @@ var cropbox = function (options)
 		var mousewheel = (/Firefox/i.test(navigator.userAgent)) ? 'DOMMouseScroll' : 'mousewheel';
 		attachEvent(el, mousewheel, zoomImage);
 	};
-	obj.image.src = options.imgSrc;
-	attachEvent(el, 'DOMNodeRemoved', function ()
+
+	if (options.imgSrc !== undefined)
 	{
+		obj.image.src = options.imgSrc;
+	}
+
+	attachEvent(el, 'DOMNodeRemoved', function () {
 		detachEvent(document.body, 'DOMNodeRemoved', imgMouseUp)
 	});
 

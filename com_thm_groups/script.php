@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.general
  * @name        Script
- * @description Script file from com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
@@ -48,7 +47,7 @@ class Com_THM_GroupsInstallerScript
 	/**
 	 * Get a variable from the manifest file (actually, from the manifest cache).
 	 *
-	 * @param   String $name param what you need, for example version
+	 * @param   string $name param what you need, for example version
 	 */
 	public function getParam($name)
 	{
@@ -64,11 +63,11 @@ class Com_THM_GroupsInstallerScript
 	 *
 	 * @param   $parent  is the class calling this method.
 	 *
-	 * @return  if install returns false, Joomla will abort the install and undo everything already done.
+	 * @return  return if the installation succeeded, otherwise false.
 	 */
 	public function install($parent)
 	{
-		return $this->createImageFolder()? true : false;
+		return $this->createImageFolder();
 	}
 
 	/**
@@ -77,7 +76,7 @@ class Com_THM_GroupsInstallerScript
 	 * @param   $parent  is the class calling this method.
 	 * @param   $type    is the type of change (install, update or discover_install, not uninstall).
 	 *
-	 * @return  if preflight returns false, Joomla will abort the update and undo everything already done.
+	 * @return  void removes previously saved files and outputs version information
 	 */
 	public function preflight($type, $parent)
 	{

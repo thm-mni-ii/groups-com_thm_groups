@@ -16,7 +16,7 @@
                 label="COM_THM_GROUPS_PUBLISHED"
                 onchange="this.form.submit();"
         >
-            <option value="">COM_THM_GROUPS_ALL</option>
+            <option value="">JALL</option>
             <option value="1">JYES</option>
             <option value="0">JNO</option>
         </field>
@@ -69,6 +69,6 @@
                 onchange="this.form.submit();"
         />
 
-        <field name="u_id" type="hidden" default=""/>
+        <field name="profileID" type="hidden" default=""/>
     </fields>
 </form>

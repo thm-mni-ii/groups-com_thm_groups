@@ -4,8 +4,7 @@ var globalIndex = 0,
 	globalPlaceholder = "";
 
 //Foreach for array
-Array.prototype.foreach = function (callback)
-{
+Array.prototype.foreach = function (callback) {
 	for (var k = 0; k < this.length; k++)
 	{
 		callback(k, this[k]);
@@ -15,8 +14,7 @@ Array.prototype.foreach = function (callback)
 /*
  * Decides, edit an old placeholder or create a new placeholder
  */
-window.onload = function chooseStrategy()
-{
+window.onload = function chooseStrategy() {
 	if (checkContentForPlaceholder())
 	{
 		loadParametersFromPlaceholderToPopUp();
@@ -36,11 +34,11 @@ function checkContentForPlaceholder()
 
 	for (var i = index; i > 0; i--)
 	{
-		if (content.charAt(i) == "}")
+		if (content.charAt(i) === "}")
 		{
 			return false;
 		}
-		if (content.charAt(i) == "{")
+		if (content.charAt(i) === "{")
 		{
 			return true;
 		}
@@ -48,11 +46,11 @@ function checkContentForPlaceholder()
 
 	for (var j = index; j < content.length; j++)
 	{
-		if (content.charAt(j) == "{")
+		if (content.charAt(j) === "{")
 		{
 			return false;
 		}
-		if (content.charAt(i) == "}")
+		if (content.charAt(i) === "}")
 		{
 			return true;
 		}
@@ -139,22 +137,18 @@ function setCursorPosition(editor, index)
 
 function loadParametersFromPlaceholderToPopUp()
 {
-	var placeholder = "";
-	var ph_obj = "";
-	placeholder = cutPlaceholderFromContent();
+	var placeholder = cutPlaceholderFromContent();
 	console.log(placeholder);
 	parsePlaceholder(placeholder);
 }
 
 function parsePlaceholder(ph)
 {
-	var array = "";
-	array = ph.split(":");
+	var array = ph.split(":");
 
 	$("#sel").val(array[1]).attr("selected", true);
 
-	array.foreach(function (index, value)
-	{
+	array.foreach(function (index, value) {
 		switch (value)
 		{
 			case "showlist":
@@ -183,23 +177,15 @@ function parsePlaceholder(ph)
  */
 function cutPlaceholderFromContent()
 {
-	var editor_element = window.parent.tinyMCE.get('jform_articletext');
-	var index = getCursorPosition(editor_element);
-	var returnedValues = [];
-	var left = "";
-	var right = "";
-	var placeholder = "";
+	var editor_element, index, returnedValues, left, right, placeholder;
 
+	editor_element = window.parent.tinyMCE.get('jform_articletext');
+	index = getCursorPosition(editor_element);
 	returnedValues = findTextBeforeLeftBrace(index);
-
-	// returnedValues[0] = left part of placeholder
 	left = returnedValues[0];
-
-	// returnedValues[1] = new cursor position in editor
-	// right = findTextBeforeRightBrace(returnedValues[1]);
 	right = findTextBeforeRightBrace(index);
-
 	placeholder = left + right;
+
 	globalPlaceholder = placeholder;
 
 	return placeholder;
@@ -225,29 +211,22 @@ function setNewContentInEditor(content)
  */
 function findTextBeforeLeftBrace(index)
 {
-	var editor_element = window.parent.tinyMCE.get('jform_articletext');
-	var content = window.parent.tinyMCE.get('jform_articletext').getContent();
-	var left_reversed = "";
-	var left = "";
-	var returnValues = [];
+	var content = window.parent.tinyMCE.get('jform_articletext').getContent(),
+		left_reversed = "", left, returnValues = [];
 
 	for (var i = index - 1; i > 0; i--)
 	{
-		if (content.charAt(i) != "{")
+		if (content.charAt(i) !== "{")
 		{
 			left_reversed = left_reversed + content.charAt(i);
 		}
 		else
 		{
-			//!!!content = sliceContent(content, i, index);
 			window.globalLeftIndex = i;
 			break;
 		}
 	}
 
-//	setNewContentInEditor(content);
-
-//	setCursorPosition(editor_element, i);
 	window.globalIndex = i;
 	console.log(window.globalLeftIndex);
 
@@ -272,7 +251,7 @@ function findTextBeforeRightBrace(index)
 	var right = "";
 	for (var i = index; i < content.length; i++)
 	{
-		if (content[i] != "}")
+		if (content[i] !== "}")
 		{
 			right = right + content[i];
 		}
@@ -355,6 +334,7 @@ function insertOptions()
 	window.parent.SqueezeBox.close();
 	return false;
 }
+
 /*
  * This function takes parameters from link
  */
@@ -364,7 +344,7 @@ function getParam(sParamName)
 	var variable = "";
 	for (var i = 0; i < Params.length; i++)
 	{
-		if (Params[i].split("=")[0] == sParamName)
+		if (Params[i].split("=")[0] === sParamName)
 		{
 			if (Params[i].split("=").length > 1)
 			{

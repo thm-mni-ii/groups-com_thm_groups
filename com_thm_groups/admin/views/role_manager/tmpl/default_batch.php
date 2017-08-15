@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsViewRole_Manager
- * @description THM_GroupsViewRole_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -16,12 +15,10 @@ defined('_JEXEC') or die;
 // Create the copy/move options.
 $options = array(
 	JHtml::_('select.option', 'add', JText::_('COM_THM_GROUPS_ADD')),
-	JHtml::_('select.option', 'del', JText::_('COM_THM_GROUPS_DELETE')),
+	JHtml::_('select.option', 'delete', JText::_('COM_THM_GROUPS_DELETE')),
 );
 
-JHtml::_('formbehavior.chosen', 'select');
 ?>
-
 <div class="modal hide fade" id="collapseModal">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal">&#215;</button>
@@ -30,13 +27,13 @@ JHtml::_('formbehavior.chosen', 'select');
 	<div class="modal-body modal-batch">
 		<div class="row-fluid">
 			<div id="batch-choose-action" class="combo control-group">
-				<label id="batch-choose-action-lbl" class="control-label" for="batch-choose-action">
+				<label id="batch-choose-action-lbl" class="control-label" for="batch-group-id">
 					<?php echo JText::_('COM_THM_GROUPS_BATCH_GROUP') ?>
 				</label>
 			</div>
 			<div id="batch-choose-action" class="combo controls">
 				<div class="control-group">
-					<select name="batch_id[]" id="batch-group-id" multiple>
+					<select name="batch[]" id="batch-group-id" multiple>
 						<option value="" disabled><?php echo JText::_('JSELECT') ?></option>
 						<?php echo JHtml::_('select.options', JHtml::_('user.groups')); ?>
 					</select>

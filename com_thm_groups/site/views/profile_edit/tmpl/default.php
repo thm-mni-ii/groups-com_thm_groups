@@ -10,12 +10,20 @@
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
-jimport('joomla.html.editor');
 
-$session = JFactory::getSession();
+$nameAttributes = array();
+
+if (!empty($attributes[1]) AND $attributes[1]['value'])
+{
+	$nameAttributes[2] = $attribute['value'];
+}
+
+if (!empty($attributes[2]) AND $attributes[2]['value'])
+{
+	$nameAttributes[1] = $attribute['value'];
+}
+
 ?>
-<script type="text/javascript">jQf = jQuery.noConflict();</script>
-
 <form id="adminForm" name="adminForm" class="form-horizontal"
 	  action="index.php?option=com_thm_groups" method="post" enctype="multipart/form-data">
 	<div class="form-horizontal">
@@ -26,12 +34,11 @@ $session = JFactory::getSession();
 			{
 				$name    = $attribute['name'];
 				$value   = $attribute['value'];
-				$options = empty($attribute['options']) ? new stdClass : json_decode($attribute['options']);
+				$options = empty($attribute['options']) ? [] : $attribute['options'];
 				?>
 				<div class='control-group'>
-					<div class='control-label frontend'>
+					<div class='control-label'>
 						<label id='jform_<?php echo $name; ?>-lbl'
-							   class=''
 							   for='jform_<?php echo $name; ?>'
 							   aria-invalid='false'><?php echo $name; ?>
 						</label>
@@ -41,21 +48,11 @@ $session = JFactory::getSession();
 						switch ($attribute['type'])
 						{
 							case 'TEXTFIELD':
-								$editor = JFactory::getEditor();
-								echo $editor->display("jform[$name][value]", $value, '', '', '', '', false);
-								break;
-
-							case 'MULTISELECT':
-								echo $this->getSelect($attribute);
-								break;
-
-							case 'TABLE':
-								$tableData = json_decode($value, true);
-								echo $this->getTable($name, $tableData);
+								echo JEditor::getInstance()->display("jform[$name][value]", $value, '', '', '', '', false);
 								break;
 
 							case 'PICTURE':
-								echo $this->getPicture($attribute);
+								echo $this->getPicture($attribute, $nameAttributes);
 								break;
 
 							default:
@@ -80,8 +77,7 @@ $session = JFactory::getSession();
 	</div>
 	<input type="hidden" name="option" value="com_thm_groups"/>
 	<input type="hidden" name="task" value=""/>
-	<input type="hidden" id='jform_referrer' name="jform[referrer]" value="<?php echo $this->referrer ?>"/>
-	<input type='hidden' id='jform_userID' name='jform[userID]' value='<?php echo $this->userID; ?>'/>
+	<input type='hidden' id='jform_profileID' name='jform[profileID]' value='<?php echo $this->profileID; ?>'/>
 	<input type='hidden' id='jform_groupID' name='jform[groupID]' value='<?php echo $this->groupID; ?>'/>
 	<input type='hidden' id='jform_name' name='jform[name]' value='<?php echo $this->name; ?>'/>
 	<?php if (!empty($this->menuID)): ?>

@@ -31,10 +31,6 @@ $attributeID = $this->attributeID;
 				<div class="toolbar">
 					<input type='file' id='jform_<?php echo $name; ?>' class='file'
 						   name='jform1[Picture][<?php echo $attributeID; ?>]'/>
-					<button type='button' id='<?php echo $name; ?>_saveNormal' class='btn hasTip upload'
-							title='<?php echo JTEXT::_('COM_THM_GROUPS_UNCROPPED_UPLOAD_TIP'); ?>'>
-						<span class="icon-upload"></span><?php echo JText::_('COM_THM_GROUPS_UNCROPPED_UPLOAD'); ?>
-					</button>
 				</div>
 			</div>
 			<div id='<?php echo $name; ?>_Modal_Body' class='modal-body modalPicture'>

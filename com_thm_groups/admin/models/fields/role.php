@@ -1,7 +1,6 @@
 <?php
 defined('_JEXEC') or die;
 JFormHelper::loadFieldClass('list');
-jimport('joomla.form.formfield');
 
 class JFormFieldRole extends JFormFieldList
 {
@@ -21,8 +20,8 @@ class JFormFieldRole extends JFormFieldList
 	 */
 	public function getRolesFromDB()
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
 		$query
 			->select('a.id, a.name')
@@ -30,10 +29,10 @@ class JFormFieldRole extends JFormFieldList
 			->innerJoin('#__thm_groups_usergroups_roles AS b ON a.id = b.rolesID')
 			->group('a.name');
 
-		$db->setQuery($query);
-		$db->execute();
+		$dbo->setQuery($query);
+		$dbo->execute();
 
-		return $db->loadAssocList();
+		return $dbo->loadAssocList();
 	}
 
 	/**

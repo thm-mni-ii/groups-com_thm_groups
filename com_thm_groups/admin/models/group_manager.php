@@ -33,9 +33,7 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
 	 */
 	protected function getListQuery()
 	{
-		// Create a new query object.
-		$db    = $this->getDbo();
-		$query = $db->getQuery(true);
+		$query = $this->_db->getQuery(true);
 
 		// Select the required fields from the table.
 		$query->select(
@@ -44,21 +42,19 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
 				'a.*'
 			)
 		);
-		$query->from($db->quoteName('#__usergroups') . ' AS a');
+		$query->from($this->_db->quoteName('#__usergroups') . ' AS a');
 
 		// Add the level in the tree.
 		$query->select('COUNT(DISTINCT c2.id) AS level')
-			->join('LEFT OUTER', $db->quoteName('#__usergroups') . ' AS c2 ON a.lft > c2.lft AND a.rgt < c2.rgt')
+			->join('LEFT OUTER', $this->_db->quoteName('#__usergroups') . ' AS c2 ON a.lft > c2.lft AND a.rgt < c2.rgt')
 			->leftJoin('#__thm_groups_usergroups_roles AS d ON d.usergroupsID = a.id')
-			->leftJoin('#__thm_groups_users_usergroups_moderator AS e ON e.usergroupsID = a.id')
 			->leftJoin('#__thm_groups_profile_usergroups AS f ON f.usergroupsID = a.id')
 			->group('a.id, a.lft, a.rgt, a.parent_id, a.title');
 
 
 		$this->setSearchFilter($query, array('a.title'));
 		$this->setIDFilter($query, 'd.rolesID', array('filter.roles'));
-		$this->setIDFilter($query, 'e.usersID', array('filter.moderators'));
-		$this->setIDFilter($query, 'f.profileID', array('filter.profile'));
+		$this->setIDFilter($query, 'f.profileID', array('filter.templates'));
 		$this->setOrdering($query);
 
 		return $query;
@@ -71,73 +67,66 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
 	 */
 	public function getItems()
 	{
-		$db     = $this->getDbo();
 		$items  = parent::getItems();
 		$return = array();
+
 		if (empty($items))
 		{
 			return $return;
 		}
 
-		// First pass: get list of the group id's and reset the counts.
-		$groupIds = array();
-		foreach ($items as $item)
-		{
-			$groupIds[]       = (int) $item->id;
-			$item->user_count = 0;
-		}
+		$canEditGroups = JFactory::getUser()->authorise('core.edit', 'com_users');
+		$index         = 0;
 
-		// Get the counts from the database only for the users in the list.
-		$query = $db->getQuery(true);
-
-		// Count the objects in the user group.
-		$query->select('map.group_id, COUNT(DISTINCT map.user_id) AS user_count')
-			->from($db->quoteName('#__user_usergroup_map') . ' AS map')
-			->where('map.group_id IN (' . implode(',', $groupIds) . ')')
-			->group('map.group_id');
-
-		$db->setQuery($query);
-
-		// Load the counts into an array indexed on the user id field.
-		try
-		{
-			$users = $db->loadObjectList('group_id');
-		}
-		catch (RuntimeException $e)
-		{
-			$this->setError($e->getMessage());
-
-			return false;
-		}
-
-		// Second pass: collect the group counts into the master items array.
-		foreach ($items as &$item)
-		{
-			if (isset($users[$item->id]))
-			{
-				$item->user_count = $users[$item->id]->user_count;
-			}
-		}
-
-
-		$index = 0;
 		foreach ($items as &$item)
 		{
 			$url = JRoute::_('index.php?option=com_users&task=group.edit&id=' . $item->id);
 
 			$return[$index][0] = JHtml::_('grid.id', $index, $item->id, false);
 			$return[$index][1] = $item->id;
-			$return[$index][2] = str_repeat('<span class="gi">|&mdash;</span>', $item->level)
-				. ' <span onclick="confirmMsg();">' . JHtml::_('link', $url, $item->title) . '</span>';
-			$return[$index][3] = $this->getModerators($item->id);
-			$return[$index][4] = $this->getRoles($item->id);
-			$return[$index][5] = $this->getProfiles($item->id);
-			$return[$index][6] = $item->user_count ? $item->user_count : '';
+
+			$levelIndicator = str_repeat('<span class="gi">|&mdash;</span>', $item->level);
+			$groupText      = $canEditGroups ? JHtml::_('link', $url, $item->title, array('target' => '_blank')) : $item->title;
+
+			$return[$index][2] = "$levelIndicator $groupText";
+			$return[$index][3] = $this->getRoles($item->id);
+			$return[$index][4] = $this->getProfiles($item->id);
+			$return[$index][5] = $this->getUserCount($item->id);
 
 			$index++;
 		}
 
 		return $return;
+	}
+
+	/**
+	 * Retrieves the sum of users associated with the group of the given id
+	 *
+	 * @param int $groupID the group's id
+	 *
+	 * @return int the count of users if successful, otherwise 0
+	 */
+	private function getUserCount($groupID)
+	{
+		// Get the counts from the database only for the users in the list.
+		$query = $this->_db->getQuery(true);
+
+		// Count the objects in the user group.
+		$query->select('COUNT(DISTINCT map.user_id)')->from('#__user_usergroup_map AS map')->where("map.group_id = '$groupID'");
+		$this->_db->setQuery($query);
+
+		try
+		{
+			$count = $this->_db->loadResult();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+			return 0;
+		}
+
+		return empty($count) ? 0 : $count;
 	}
 
 	/**
@@ -152,11 +141,10 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
 
 		$headers                = array();
 		$headers['checkbox']    = '';
-		$headers['id']          = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'a.id', $direction, $ordering);
+		$headers['id']          = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'a.id', $direction, $ordering);
 		$headers['name']        = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 'a.title', $direction, $ordering);
-		$headers['moderators']  = JText::_('COM_THM_GROUPS_GROUP_MANAGER_MODERATOR');
 		$headers['roles']       = JText::_('COM_THM_GROUPS_GROUP_MANAGER_ROLES');
-		$headers['profile']     = JText::_('COM_THM_GROUPS_GROUP_MANAGER_PROFILE');
+		$headers['templates']   = JText::_('COM_THM_GROUPS_GROUP_MANAGER_PROFILE');
 		$headers['users_count'] = JText::_('COM_THM_GROUPS_GROUP_MANAGER_MEMBERS_IN_GROUP');
 
 		return $headers;
@@ -189,43 +177,46 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
 	/**
 	 * Returns all roles of a group
 	 *
-	 * @param   Int $gid An id of the group
+	 * @param   int $groupID An id of the group
 	 *
-	 * @return  String     A string with all roles comma separated
+	 * @return  string     A string with all roles comma separated
 	 */
-	public function getRoles($gid)
+	private function getRoles($groupID)
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$query = $this->_db->getQuery(true);
 
 		$query
-			->select('DISTINCT(a.id), a.name')
-			->from('#__thm_groups_roles AS a ')
-			->innerJoin('#__thm_groups_usergroups_roles AS b ON a.id = b.rolesID')
-			->where("b.usergroupsID = $gid")
-			->order('a.name ASC');
+			->select('DISTINCT(role.id), role.name')
+			->from('#__thm_groups_roles AS role ')
+			->innerJoin('#__thm_groups_usergroups_roles AS ug ON role.id = ug.rolesID')
+			->where("ug.usergroupsID = '$groupID'")
+			->order('role.name ASC');
 
-		$db->setQuery($query);
-		$roles = $db->loadObjectList();
+		$this->_db->setQuery($query);
+
+		try
+		{
+			$roles = $this->_db->loadObjectList();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+			return '';
+		}
+
+		$deleteIcon = '<span class="icon-trash"></span>';
 
 		$return = array();
 		if (!empty($roles))
 		{
 			foreach ($roles as $role)
 			{
-				$deleteIcon = '<span class="icon-trash"></span>';
-				$deleteBtn  = "<a href='javascript:deleteRole(" . $gid . "," . $role->id . ")'>" . $deleteIcon . "</a>";
+				$deleteBtn = '<a onclick="removeRole(' . $groupID . ',' . $role->id . ')">' . $deleteIcon . '</a>';
 
 				$url = "index.php?option=com_thm_groups&view=role_edit&cid[]=$role->id";
 
-				if (JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
-				{
-					$return[] = "<a href=$url>" . $role->name . "</a> " . $deleteBtn;
-				}
-				else
-				{
-					$return[] = $role->name;
-				}
+				$return[] = "<a href=$url>" . $role->name . "</a> " . $deleteBtn;
 			}
 		}
 
@@ -233,80 +224,33 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
 	}
 
 	/**
-	 * Returns all moderators of a group
-	 *
-	 * @param   Int $gid An id of the group
-	 *
-	 * @return  String     A string with all moderators comma separated
-	 */
-	public function getModerators($gid)
-	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query
-			->select('a.id, a.name')
-			->from('#__users AS a')
-			->innerJoin('#__thm_groups_users_usergroups_moderator AS b ON a.id = b.usersID')
-			->where("b.usergroupsID = $gid");
-
-		$db->setQuery($query);
-		$moderators = $db->loadObjectList();
-
-		$return = array();
-		if (!empty($moderators))
-		{
-			foreach ($moderators as $moderator)
-			{
-				// Delete button
-				$deleteIcon = '<span class="icon-trash"></span>';
-				$deleteBtn  = "<a href='javascript:deleteModerator(" . $gid . "," . $moderator->id . ")'>" . $deleteIcon . "</a>";
-
-				// Link to edit view of user
-				$url = "index.php?option=com_thm_groups&view=profile_edit&cid[]=$moderator->id";
-
-				if (JFactory::getUser()->authorise('core.edit', 'com_thm_groups'))
-				{
-					$return[] = "<a href=$url>" . $moderator->name . "</a> " . $deleteBtn;
-				}
-				else
-				{
-					$return[] = $moderator->name;
-				}
-			}
-		}
-
-		return implode(',<br/>', $return);
-	}
-
-	/**
 	 * Returns a profile of a group
 	 *
-	 * @param   int $gid An id of a group
+	 * @param   int $groupID An id of a group
 	 *
 	 * @return array|bool|string
 	 *
 	 * @throws Exception
 	 */
-	public function getProfiles($gid)
+	private function getProfiles($groupID)
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$query = $this->_db->getQuery(true);
 
 		$query
-			->select('b.id, b.name')
-			->from('#__thm_groups_profile_usergroups AS a')
-			->innerJoin('#__thm_groups_profile AS b ON b.id = a.profileID')
-			->where("a.usergroupsID = $gid");
+			->select('template.id, template.name')
+			->from('#__thm_groups_profile_usergroups AS ug')
+			->innerJoin('#__thm_groups_profile AS template ON template.id = ug.profileID')
+			->where("ug.usergroupsID = $groupID");
 
-		$db->setQuery($query);
+		$this->_db->setQuery($query);
 
 		try
 		{
-			$profile = $db->loadObject();
+			$profile = $this->_db->loadObject();
 		}
-		catch (Exception $e)
+		catch (Exception $exception)
 		{
-			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
 			return false;
 		}
@@ -315,7 +259,7 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
 		if (!empty($profile))
 		{
 			$deleteIcon = '<span class="icon-trash"></span>';
-			$deleteBtn  = "<a href='javascript:deleteProfile(" . $gid . "," . $profile->id . ")'>" . $deleteIcon . "</a>";
+			$deleteBtn  = "<a href='javascript:removeTemplate(" . $groupID . "," . $profile->id . ")'>" . $deleteIcon . "</a>";
 
 			$url = "index.php?option=com_thm_groups&view=profile_edit&id=$profile->id";
 
@@ -341,11 +285,11 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
 	{
 		$fields = array();
 
-		// Hidden fields for deletion of one moderator or role at once
-		$fields[] = '<input type="hidden" name="g_id" value="">';
-		$fields[] = '<input type="hidden" name="u_id" value="">';
-		$fields[] = '<input type="hidden" name="r_id" value="">';
-		$fields[] = '<input type="hidden" name="p_id" value="">';
+		// Hidden fields for batch processing
+		$fields[] = '<input type="hidden" name="groupID" value="">';
+		$fields[] = '<input type="hidden" name="profileID" value="">';
+		$fields[] = '<input type="hidden" name="roleID" value="">';
+		$fields[] = '<input type="hidden" name="templateID" value="">';
 
 		return $fields;
 	}

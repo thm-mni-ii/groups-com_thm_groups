@@ -10,8 +10,7 @@
  * @return null
  **/
 
-jQuery(document).ready(function ()
-{
+jQuery(document).ready(function () {
 	validateAll();
 });
 
@@ -22,53 +21,47 @@ function validateAll()
 
 	for (var i = 0; i < controls.length; i++)
 	{
-		if ((typeof(controls[i].onchange) == 'undefined' ) || (controls[i].onchange == null))
+		if ((typeof(controls[i].onchange) === 'undefined' ) || (controls[i].onchange === null))
 		{
 			continue;
 		}
-		else
-		{
-			controls[i].onchange();
-		}
+
+		controls[i].onchange();
 	}
 }
 
 function disable()
 {
-	var buttons = document.getElementsByClassName('btn-small');
-	var form = document.forms['adminForm'];
-	var controls = form.elements;
-	var disable = false;
+	var buttons = document.getElementsByClassName('btn-small'), form = document.forms['adminForm'],
+		controls = form.elements, disable = false, i;
 
-	for (var i = 0; i < controls.length; i++)
+	for (i = 0; i < controls.length; i++)
 	{
-		if ((typeof(controls[i].onchange) == 'undefined' ) || (controls[i].onchange == null))
+		if ((typeof(controls[i].onchange) === 'undefined' ) || (controls[i].onchange === null))
 		{
 			continue;
 		}
-		else
+
+		var data = controls[i].getAttribute('data');
+		var req = controls[i].getAttribute('data-req');
+		if ((data === 'invalid') && (req === 'true'))
 		{
-			var data = controls[i].getAttribute('data');
-			var req = controls[i].getAttribute('data-req');
-			if ((data == 'invalid') && (req == 'true'))
-			{
-				disable = true;
-				break;
-			}
+			disable = true;
+			break;
 		}
 	}
 
 	// Disable only all save-buttons except cancel-button
 	if (disable)
 	{
-		for (var i = 0; i < buttons.length - 1; i++)
+		for (i = 0; i < buttons.length - 1; i++)
 		{
 			buttons[i].disabled = true;
 		}
 	}
 	else
 	{
-		for (var i = 0; i < buttons.length; i++)
+		for (i = 0; i < buttons.length; i++)
 		{
 			buttons[i].disabled = false;
 		}
@@ -77,27 +70,28 @@ function disable()
 
 function validateInput(regex, inputField)
 {
-	var field = document.getElementById(inputField);
-	var input = field.value;
-	var regexObj = new RegExp(regex);
-	var valid = regexObj.test(input);
+	var field = document.getElementById(inputField),
+		input = field.value,
+		regexObj = new RegExp(regex),
+		valid = regexObj.test(input),
+		cancel = "<span class='icon-publish'></span>";
 
 	//Todo: check all required fields are set to valid when save is active
 	if (valid)
 	{
 		field.setAttribute('data', 'valid');
 		field.style.cssText = "border-color: green !important; float: left !important;";
-		document.getElementById(inputField + "_icon").innerHTML = "<span class='icon-publish'/>";
+		document.getElementById(inputField + "_icon").innerHTML = cancel;
 		jQuery("#" + inputField + "_message").empty();
 	}
 	else
 	{
 		document.getElementById(inputField + "_message").innerHTML = "";
 		field.setAttribute('data', 'invalid');
-		if (field.getAttribute('data-req') != 'false')
+		if (field.getAttribute('data-req') !== 'false')
 		{
 			field.style.cssText = "border-color: red !important; float: left !important;";
-			document.getElementById(inputField + "_icon").innerHTML = "<span class='icon-cancel'/>";
+			document.getElementById(inputField + "_icon").innerHTML = cancel;
 			jQuery("#" + inputField + "_message").append("</br></br><div class='text-error'>Entered value ist invalid!</div>");
 		}
 	}
@@ -107,7 +101,7 @@ function validateInput(regex, inputField)
 /**
  * Replaces escape sequences
  *
- * @return   String  str  Relaced String
+ * @return   string  str  Relaced String
  **/
 function escapeRegExp(str)
 {

@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @name        THMGroupsSingleArticle
- * @description THMGroupsSingleArticle file from com_thm_groups (copy of com_content)
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
@@ -58,9 +57,9 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 
 		$input = JFactory::getApplication()->input;
 
-		$userID  = $input->getInt('userID', 0);
-		$groupID = $input->getInt('groupID', 0);
-		$name    = $input->get('name', '');;
+		$profileID = $input->getInt('profileID', 0);
+		$groupID   = $input->getInt('groupID', 0);
+		$name      = $input->get('name', '');;
 		$menuID = $input->getInt('Itemid', 0);
 
 		$start = $input->get('start', 0);
@@ -69,9 +68,9 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 
 		$dispatcher = JDispatcher::getInstance();
 
-		$dynamicQuery = "&userID=$userID&groupID=$groupID&name=$name&Itemid=$menuID";
+		$dynamicQuery = "&profileID=$profileID&groupID=$groupID&name=$name&Itemid=$menuID";
 		$profileURL   = JRoute::_("index.php?option=com_thm_groups&view=profile&layout=default$dynamicQuery");
-		$nameText     = THM_GroupsHelperProfile::getDisplayName($userID);
+		$nameText     = THM_GroupsHelperProfile::getDisplayName($profileID);
 		$app->getPathway()->addItem($nameText, $profileURL);
 
 		// Get id of an article
@@ -133,9 +132,6 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 			{
 				$url .= $key . "=" . $val . "&";
 			}
-			else
-			{
-			}
 		}
 		$arrayTexts  = array();
 		$pageCount   = '';
@@ -155,26 +151,20 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 				}
 				$pageCount = '<div class="pagenavcounter">Seite ' . $siteNumber . ' von ' . count($parts) . '</div>';
 			}
-			else
-			{
-			}
+
 			$pageBrowser .= '<div class="pagination"><ul>';
 			if ($start > 0)
 			{
 				$previewsPage = $start - 1;
 				$pageBrowser  .= '<li><a href="' . JURI::base() . 'index.php?' . $url . 'start=' . $previewsPage . '"><< Zur&uuml;ck</a></li>';
 			}
-			else
-			{
-			}
+
 			if ($start < count($parts) - 1)
 			{
 				$nextPage    = $start + 1;
 				$pageBrowser .= '<li><a href="' . JURI::base() . 'index.php?' . $url . 'start=' . $nextPage . '">Weiter >></a></li>';
 			}
-			else
-			{
-			}
+
 			$pageBrowser .= '</ul></div>';
 			$toc         = '<div id="article-index"><ul>';
 			$count       = 0;
@@ -183,9 +173,7 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 			{
 				$toc .= " active";
 			}
-			else
-			{
-			}
+
 			$arrayTexts[$count] = $this->item->introtext;
 			$pagetitle          = $this->item->title;
 			$toc                .= '" href="' . JURI::base() . 'index.php?' . $url . 'start='
@@ -206,26 +194,20 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 					{
 						$toc .= " active";
 					}
-					else
-					{
-					}
+
 					$toc .= '" href="' . JURI::base() . 'index.php?' . $url . 'start='
 						. $count . '">' . $title . '</a>';
 					$toc .= '</li>';
 					$count++;
 				}
-				else
-				{
-				}
+
 			}
 			$toc .= '<li><a class="toclink';
 			if (!empty($showall) && $showall == 1)
 			{
 				$toc .= " active";
 			}
-			else
-			{
-			}
+
 			$toc             .= '" href="' . JURI::base() . 'index.php?' . $url . 'showall=1">Alle Seiten</a></li>';
 			$toc             .= '</ul></div>';
 			$this->item->toc = $toc;
@@ -234,13 +216,8 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 				$this->item->introtext = $pageCount . $arrayTexts[$start] . $pageBrowser;
 				$this->item->fulltext  = '';
 			}
-			else
-			{
-			}
 		}
-		else
-		{
-		}
+
 		// Check to see which parameters should take priority
 		if ($active)
 		{
@@ -286,9 +263,6 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 			{
 				$this->setLayout($layout);
 			}
-			else
-			{
-			}
 		}
 
 		$offset = $this->state->get('list.offset');
@@ -297,14 +271,12 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 		if ($item->params->get('access-view') != true && (($item->params->get('show_noauth') != true && $user->get('guest'))))
 		{
 
-			JError::raiseWarning(403, JText::_('JERROR_ALERTNOAUTHOR'));
+			JError::raiseWarning(401, JText::_('JERROR_ALERTNOAUTHOR'));
 
 			return;
 
 		}
-		else
-		{
-		}
+
 		if ($item->params->get('show_intro', '1') == '1')
 		{
 			$item->text = $item->introtext . ' ' . $item->fulltext;

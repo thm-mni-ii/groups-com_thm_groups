@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.general
  * @name        Script
- * @description Script file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -40,7 +39,7 @@ class THM_Groups_Install_Script
 	 */
 	public static function install()
 	{
-		if (self::copyUsers() && self::copyGroupsRolesMapping())
+		if (self::migrateUsers() && self::copyGroupsRolesMapping())
 		{
 			return true;
 		}
@@ -55,19 +54,18 @@ class THM_Groups_Install_Script
 	 *
 	 * @return bool
 	 */
-	private static function copyUsers()
+	private static function migrateUsers()
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
-		$query
-			->select('id, name, username, email')
-			->from('#__users');
+		$query->select('id, name, username, email')->from('#__users');
 
-		$db->setQuery($query);
+		$dbo->setQuery($query);
+
 		try
 		{
-			$users = $db->loadObjectList();
+			$users = $dbo->loadObjectList();
 		}
 		catch (Exception $exc)
 		{
@@ -76,7 +74,7 @@ class THM_Groups_Install_Script
 			return false;
 		}
 
-		if (self::copyUserId($users) && self::copyUserAttributes($users))
+		if (self::createProfiles($users) && self::createBasicAttributes($users))
 		{
 			return true;
 		}
@@ -88,35 +86,33 @@ class THM_Groups_Install_Script
 
 	/**
 	 * Copy user id and save it into THM Groups table with additional attributes like:
-	 * published is 1, it means that the user is activated in the THM Groups component
-	 * injoomla does not matter
-	 * canEdit is 1, because all users can edit their profile by default
-	 * qpPublished is 0, because all users are not allowed to edit their Quickpages by default
+	 * published = 1 (user is active for component)
+	 * canEdit = 1 (user can edit own profile)
+	 * qpPublished = 0 (user cannot manage their own content)
 	 *
 	 * @param   array &$users An array with users
 	 *
-	 * @return bool
-	 *
-	 * @throws Exception
+	 * @return bool true if no error occurred, otherwise false
 	 */
-	private static function copyUserId(&$users)
+	private static function createProfiles(&$users)
 	{
-		$db = JFactory::getDbo();
+		$dbo = JFactory::getDbo();
+
 		foreach ($users as $user)
 		{
-			$query   = $db->getQuery(true);
+			$query   = $dbo->getQuery(true);
 			$columns = array('id', 'published', 'injoomla', 'canEdit', 'qpPublished');
 			$values  = array($user->id, 1, 1, 1, 0);
 			$query
 				->insert('#__thm_groups_users')
-				->columns($db->quoteName($columns))
+				->columns($dbo->quoteName($columns))
 				->values(implode(',', $values));
 
-			$db->setQuery($query);
+			$dbo->setQuery($query);
 
 			try
 			{
-				$db->execute();
+				$dbo->execute();
 			}
 			catch (Exception $exc)
 			{
@@ -139,14 +135,14 @@ class THM_Groups_Install_Script
 	 *
 	 * @throws Exception
 	 */
-	private static function copyUserAttributes(&$users)
+	private static function createBasicAttributes(&$users)
 	{
-		$db         = JFactory::getDbo();
+		$dbo        = JFactory::getDbo();
 		$attributes = self::getInstalledAttributes();
 
 		foreach ($users as $user)
 		{
-			$query = $db->getQuery(true);
+			$query = $dbo->getQuery(true);
 
 			// Prepare first and second name
 			$nameArray = explode(" ", $user->name);
@@ -160,14 +156,14 @@ class THM_Groups_Install_Script
 
 			// Prepare data
 			$columns   = array('usersID', 'attributeID', 'value', 'published');
-			$firstName = array($user->id, 1, $db->quote($firstName), 1);
-			$lastName  = array($user->id, 2, $db->quote($lastName), 1);
-			$username  = array($user->id, 3, $db->quote($user->username), 1);
-			$email     = array($user->id, 4, $db->quote($user->email), 1);
+			$firstName = array($user->id, 1, $dbo->quote($firstName), 1);
+			$lastName  = array($user->id, 2, $dbo->quote($lastName), 1);
+			$username  = array($user->id, 3, $dbo->quote($user->username), 1);
+			$email     = array($user->id, 4, $dbo->quote($user->email), 1);
 
 			$query
 				->insert('#__thm_groups_users_attribute')
-				->columns($db->quoteName($columns))
+				->columns($dbo->quoteName($columns))
 				->values(implode(',', $firstName))
 				->values(implode(',', $lastName))
 				->values(implode(',', $username))
@@ -180,11 +176,11 @@ class THM_Groups_Install_Script
 					->values(implode(',', $values));
 			}
 
-			$db->setQuery($query);
+			$dbo->setQuery($query);
 
 			try
 			{
-				$db->execute();
+				$dbo->execute();
 			}
 			catch (Exception $exc)
 			{
@@ -210,23 +206,23 @@ class THM_Groups_Install_Script
 	 */
 	private static function getInstalledAttributes()
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
 		$query
 			->select('id')
 			->from('#__thm_groups_attribute')
 			->where('id NOT IN (1, 2, 3, 4)');
 
-		$db->setQuery($query);
+		$dbo->setQuery($query);
 
 		try
 		{
-			$result = $db->loadObjectList();
+			$result = $dbo->loadObjectList();
 		}
-		catch (Exception $e)
+		catch (Exception $exception)
 		{
-			JFactory::getApplication()->enqueueMessage('getInstalledAttribute ' . $e->getMessage(), 'error');
+			JFactory::getApplication()->enqueueMessage('getInstalledAttribute ' . $exception->getMessage(), 'error');
 
 			return false;
 		}
@@ -263,18 +259,18 @@ class THM_Groups_Install_Script
 	 */
 	private static function copyGroups()
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
 		$query
 			->select('DISTINCT(group_id)')
 			->from('#__user_usergroup_map');
 
-		$db->setQuery($query);
+		$dbo->setQuery($query);
 
 		try
 		{
-			$groupIds = $db->loadObjectList();
+			$groupIds = $dbo->loadObjectList();
 		}
 		catch (Exception $exc)
 		{
@@ -313,22 +309,22 @@ class THM_Groups_Install_Script
 	 */
 	private static function saveDefaultRoleToGroup(&$groups)
 	{
-		$db = JFactory::getDbo();
+		$dbo = JFactory::getDbo();
 		foreach ($groups as $group)
 		{
-			$query   = $db->getQuery(true);
+			$query   = $dbo->getQuery(true);
 			$columns = array('usergroupsID', 'rolesID');
 			$values  = array($group->group_id, 1);
 			$query
 				->insert('#__thm_groups_usergroups_roles')
-				->columns($db->quoteName($columns))
+				->columns($dbo->quoteName($columns))
 				->values(implode(',', $values));
 
-			$db->setQuery($query);
+			$dbo->setQuery($query);
 
 			try
 			{
-				$db->execute();
+				$dbo->execute();
 			}
 			catch (Exception $exc)
 			{
@@ -350,18 +346,18 @@ class THM_Groups_Install_Script
 	 */
 	private static function assignRoleGroupMappingToUser()
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
 		$query
-			->select('user_id, group_id')
+			->select('user_id as profileID, group_id as groupID')
 			->from('#__user_usergroup_map');
 
-		$db->setQuery($query);
+		$dbo->setQuery($query);
 
 		try
 		{
-			$userGroupMap = $db->loadObjectList();
+			$userGroupMap = $dbo->loadObjectList();
 		}
 		catch (Exception $exc)
 		{
@@ -392,21 +388,21 @@ class THM_Groups_Install_Script
 	 */
 	private static function saveRoleGroupMappingToUser(&$userGroupMap)
 	{
-		$db = JFactory::getDbo();
+		$dbo = JFactory::getDbo();
 
 		foreach ($userGroupMap as $map)
 		{
-			$query = $db->getQuery(true);
+			$query = $dbo->getQuery(true);
 			$query
 				->select('ID')
 				->from('#__thm_groups_usergroups_roles')
 				->where('usergroupsID = ' . $map->group_id)
 				->where('rolesID = 1');
 
-			$db->setQuery($query);
+			$dbo->setQuery($query);
 			try
 			{
-				$result = $db->loadObject();
+				$result = $dbo->loadObject();
 			}
 			catch (Exception $exc)
 			{
@@ -421,19 +417,19 @@ class THM_Groups_Install_Script
 				return false;
 			}
 
-			$query   = $db->getQuery(true);
+			$query   = $dbo->getQuery(true);
 			$columns = array('usersID', 'usergroups_rolesID');
-			$values  = array($map->user_id, $result->ID);
+			$values  = array($map->userID, $result->ID);
 			$query
 				->insert('#__thm_groups_users_usergroups_roles')
-				->columns($db->quoteName($columns))
+				->columns($dbo->quoteName($columns))
 				->values(implode(',', $values));
 
-			$db->setQuery($query);
+			$dbo->setQuery($query);
 
 			try
 			{
-				$db->execute();
+				$dbo->execute();
 			}
 			catch (Exception $exc)
 			{

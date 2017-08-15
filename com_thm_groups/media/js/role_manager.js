@@ -1,8 +1,8 @@
-function deleteGroup(roleId, groupId)
+function deleteGroupAssociation(roleID, groupID)
 {
-	document.getElementsByName('task')[0].value = "role.deleteGroup";
-	document.getElementsByName('g_id')[0].value = groupId;
-	document.getElementsByName('r_id')[0].value = roleId;
+	document.getElementsByName('task')[0].value = "role.deleteGroupAssociation";
+	document.getElementsByName('groupID')[0].value = groupID;
+	document.getElementsByName('roleID')[0].value = roleID;
 	document.adminForm.submit();
 }
 

@@ -7,7 +7,7 @@
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 defined('_JEXEC') or die;
 
@@ -23,7 +23,7 @@ class THM_GroupsModelEdit extends JModelAdmin
 	/**
 	 * Method to get the form
 	 *
-	 * @param   Array   $data     Data         (default: Array)
+	 * @param   array   $data     Data         (default: Array)
 	 * @param   Boolean $loadData Load data  (default: true)
 	 *
 	 * @return  mixed  JForm object on success, False on error.
@@ -32,9 +32,8 @@ class THM_GroupsModelEdit extends JModelAdmin
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-		$option = $this->get('option');
-		$name   = $this->get('name');
-		$form   = $this->loadForm("$option.$name", $name, array('control' => 'jform', 'load_data' => $loadData));
+		$name = $this->get('name');
+		$form = $this->loadForm("com_thm_groups.$name", $name, array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
 		{
@@ -55,18 +54,17 @@ class THM_GroupsModelEdit extends JModelAdmin
 	 */
 	public function getItem($pk = null)
 	{
-		$option = $this->get('option');
-		$path   = JPATH_ROOT . "/media/$option/helpers/componentHelper.php";
-		$helper = str_replace('com_', '', $option) . 'HelperComponent';
-		require_once $path;
+		require_once JPATH_ROOT . "/media/com_thm_groups/helpers/componentHelper.php";
+		THM_GroupsHelperComponent::addActions($this);
 
-		$helper::addActions($this);
 		$item      = parent::getItem($pk);
-		$allowEdit = $helper::allowEdit($this, $item->id);
+		$allowEdit = THM_GroupsHelperComponent::allowEdit($this, $item->id);
+
 		if ($allowEdit)
 		{
 			return $item;
 		}
+
 		throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 404);
 	}
 
@@ -85,14 +83,12 @@ class THM_GroupsModelEdit extends JModelAdmin
 		 * Joomla makes the mistake of handling front end and backend differently for include paths. Here we add the
 		 * possible frontend and media locations for logical consistency.
 		 */
-		$component = $this->get('option');
-		JTable::addIncludePath(JPATH_ROOT . "/media/$component/tables");
-		JTable::addIncludePath(JPATH_ROOT . "/components/$component/tables");
+		JTable::addIncludePath(JPATH_ROOT . "/media/com_thm_groups/tables");
+		JTable::addIncludePath(JPATH_ROOT . "/components/com_thm_groups/tables");
 
-		$type   = str_replace('_edit', '', $this->get('name')) . 's';
-		$prefix = str_replace('com_', '', $component) . 'Table';
+		$type = str_replace('_edit', '', $this->get('name')) . 's';
 
-		return JTable::getInstance($type, $prefix, $options);
+		return JTable::getInstance($type, 'THM_GroupsTable', $options);
 	}
 
 	/**

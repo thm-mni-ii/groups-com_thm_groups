@@ -12,9 +12,9 @@
  */
 
 defined('_JEXEC') or die;
-jimport('joomla.application.component.modeladmin');
-require_once JPATH_ROOT . "/media/com_thm_groups/data/thm_groups_quickpages_data.php";
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/database_compare_helper.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/content.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
 
 /**
  * Class loads form data to edit an entry.
@@ -25,89 +25,91 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/database_compare_helper
  */
 class THM_GroupsModelProfile extends JModelLegacy
 {
-
 	/**
-	 * Key character to identify the ID in the mapping table as user ID
-	 */
-	const TABLE_USER_ID_KIND = 'U';
-
-	/**
-	 * Name of request parameter for a user ID
-	 */
-	const PROFILE_USER_ID_PARAM = 'userID';
-
-	/**
-	 * Deletes one user role from a group
+	 * Associates a group and potentially multiple roles with the selected users
 	 *
-	 * @return bool
-	 *
-	 * @throws Exception
+	 * @return  bool true on success, otherwise false.
 	 */
-	public function deleteRoleInGroupByUser()
+	public function batch()
 	{
-		$input      = JFactory::getApplication()->input;
-		$gid        = $input->getInt('g_id', 0);
-		$uid        = $input->getInt('u_id', 0);
-		$rid        = $input->getInt('r_id', 0);
-		$idToDelete = $this->getUsergroupsRolesID($gid, $rid);
+		$app = JFactory::getApplication();
 
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
-
-		$query
-			->delete('#__thm_groups_users_usergroups_roles')
-			->where("usersID = $uid AND usergroups_rolesID = $idToDelete");
-
-		$dbo->setQuery($query);
-
-		try
+		if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups'))
 		{
-			$dbo->execute();
-		}
-		catch (Exception $exception)
-		{
-			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
 			return false;
 		}
 
-		return true;
+		$selectedUsers = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('cid', array(), 'array'));
+
+		if (empty($selectedUsers))
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_PROFILE_SELECTED'), 'error');
+
+			return false;
+		}
+
+		$requestedAssocs = json_decode(urldecode($app->input->getString('batch-data')), true);
+
+		if (empty($requestedAssocs))
+		{
+			$app->enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
+
+			return false;
+		}
+
+		$usersMapped = $this->setJoomlaAssociations($selectedUsers, $requestedAssocs);
+
+		if (!$usersMapped)
+		{
+			return false;
+		}
+
+		$success = $this->setGroupsAssociations($selectedUsers, $requestedAssocs);
+
+		$this->cleanCache();
+
+		return $success;
 	}
 
 	/**
-	 * Returns usergroups-role relationship ID
+	 * Fixes file path resolution problems stemming from incorrect directory separators.
 	 *
-	 * @param   int $gid Group id
-	 * @param   int $rid Role id
+	 * @param   string $path the configured local path
 	 *
-	 * @return bool
-	 *
-	 * @throws Exception
+	 * @return  string  the corrected path
 	 */
-	public function getUsergroupsRolesID($gid, $rid)
+	private function correctPathDS($path)
 	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
-
-		$query
-			->select('ID')
-			->from('#__thm_groups_usergroups_roles')
-			->where("usergroupsID = $gid AND rolesID = $rid");
-
-		$dbo->setQuery($query);
-
-		try
+		if (DIRECTORY_SEPARATOR == '/')
 		{
-			$result = $dbo->loadObject();
+			return str_replace('\\', '/', $path);
 		}
-		catch (Exception $exception)
+		elseif (DIRECTORY_SEPARATOR == '\\')
 		{
-			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-
-			return false;
+			return str_replace('/', '\\', $path);
 		}
 
-		return $result->ID;
+		return $path;
+	}
+
+	/**
+	 * Create content category for user(s)
+	 *
+	 * @param   array $profileIDs array with ids
+	 *
+	 * @return  void
+	 */
+	private function createCategory($profileIDs)
+	{
+		foreach ($profileIDs as $profileID)
+		{
+			if (!THM_GroupsHelperContent::profileCategoriesExist($profileID))
+			{
+				THM_GroupsHelperContent::createProfileCategory($profileID);
+			}
+		}
 	}
 
 	/**
@@ -117,96 +119,40 @@ class THM_GroupsModelProfile extends JModelLegacy
 	 *
 	 * @throws Exception
 	 */
-	public function deleteAllRolesInGroupByUser()
+	public function deleteGroupAssociation()
 	{
-		$input = JFactory::getApplication()->input;
+		$app = JFactory::getApplication();
 
-		// TODO change later u_id to userID and g_id to groupID
-		$uid    = $input->getInt('u_id', 0);
-		$gid    = $input->getInt('g_id', 0);
-		$groups = JFactory::getUser($uid)->groups;
-
-		// Allow delete user from a group if he is a participant in more than one group
-		if (count($groups) > 1)
+		if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups'))
 		{
-			$deletedTHMGroupsMapping = $this->deleteTHMGroupsUserGroupMapping($uid, $gid);
-			$deletedJoomlaMapping    = $this->deleteUserFromJoomlaGroup($uid, $gid);
-			if ($deletedTHMGroupsMapping AND $deletedJoomlaMapping)
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
+
+			return false;
+		}
+
+		$profileID = $app->input->getInt('profileID', 0);
+		$groupID   = $app->input->getInt('groupID', 0);
+
+		$userAssocs       = $this->getUserAssociations(array($profileID));
+		$assocIDs         = $this->getAssocIDs($groupID);
+		$disposableAssocs = array();
+
+		foreach ($userAssocs as $key => $assoc)
+		{
+			if (in_array($assoc['assocID'], $assocIDs))
 			{
-				return true;
+				array_push($disposableAssocs, $assoc['id']);
 			}
-
-			return false;
 		}
-		JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_DELETE_USER_FROM_GROUP_ERROR'), 'warning');
 
-		return false;
-	}
-
-	/**
-	 * Deletes a user group relationship
-	 *
-	 * @param   int $uid An user id
-	 * @param   int $gid A group id
-	 *
-	 * @return bool  True on success, else false
-	 *
-	 * @throws Exception
-	 */
-	private function deleteUserFromJoomlaGroup($uid, $gid)
-	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
-		$query
-			->delete('#__user_usergroup_map')
-			->where("user_id = $uid AND group_id = $gid");
-		$dbo->setQuery($query);
+		$groupsQuery = $this->_db->getQuery(true);
+		$groupsQuery->delete('#__thm_groups_users_usergroups_roles')
+			->where("id IN ('" . implode("','", $disposableAssocs) . "')");
+		$this->_db->setQuery($groupsQuery);
 
 		try
 		{
-			$dbo->execute();
-		}
-		catch (Exception $exception)
-		{
-			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Deletes an user group role mapping
-	 *
-	 * @param   int $uid An user id
-	 * @param   int $gid A group id
-	 *
-	 * @return bool  True on success, else false
-	 *
-	 * @throws Exception
-	 */
-	private function deleteTHMGroupsUserGroupMapping($uid, $gid)
-	{
-		$app    = JFactory::getApplication();
-		$prefix = $app->get('dbprefix');
-
-		/*
-		* Joomla can't perform delete operation with
-		* inner join
-		* We just write sql statement in query variable
-		*/
-		$query = 'DELETE ugr';
-		$query .= ' FROM ' . $prefix . 'thm_groups_users_usergroups_roles AS ugr';
-		$query .= ' INNER JOIN ' . $prefix . 'thm_groups_usergroups_roles AS gr ON gr.ID = ugr.usergroups_rolesID';
-		$query .= " WHERE ugr.usersID = $uid AND gr.usergroupsID = $gid";
-
-		$dbo = JFactory::getDbo();
-		$dbo->setQuery($query);
-
-		try
-		{
-			$dbo->execute();
+			$success = $this->_db->execute();
 		}
 		catch (Exception $exception)
 		{
@@ -215,233 +161,554 @@ class THM_GroupsModelProfile extends JModelLegacy
 			return false;
 		}
 
-		return true;
-	}
-
-	/**
-	 * Toggles the user
-	 *
-	 * @param   String $action publish/unpublish
-	 *
-	 * @return  boolean  true on success, otherwise false
-	 */
-	public function toggle($action = null)
-	{
-		$dbo   = JFactory::getDbo();
-		$input = JFactory::getApplication()->input;
-
-		// Get array of ids if divers users selected
-		$cid = $input->post->get('cid', array(), 'array');
-
-		// A string with type of column in table
-		$attribute = $input->get('attribute', '', 'string');
-
-		// If array is empty, the toggle button was clicked
-		if (empty($cid))
-		{
-			$id = $input->getInt('id', 0);
-		}
-		else
-		{
-			Joomla\Utilities\ArrayHelper::toInteger($cid);
-			$id = implode(',', $cid);
-		}
-
-		if (empty($id))
+		if (empty($success))
 		{
 			return false;
 		}
 
-		// Will used if buttons (Publish/Unpublish user) in toolbar clicked
-		switch ($action)
+		// Allow deletion of Joomla user group association if the user is associated with more than one user group.
+		if (count(JFactory::getUser($profileID)->groups) > 1)
 		{
-			case 'publish':
-				$value = 1;
-				break;
-			case 'unpublish':
-				$value = 0;
-				break;
-			default:
-				$value = $input->getInt('value', 1) ? 0 : 1;
-				break;
+			$joomlaQuery = $this->_db->getQuery(true);
+			$joomlaQuery->delete('#__user_usergroup_map')->where("user_id = $profileID AND group_id = $groupID");
+			$this->_db->setQuery($joomlaQuery);
+
+			try
+			{
+				$this->_db->execute();
+			}
+			catch (Exception $exception)
+			{
+				JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+				return false;
+			}
+
+			if (empty($success))
+			{
+				return false;
+			}
 		}
 
-		$query = $dbo->getQuery(true);
+		return true;
+	}
 
-		$query
-			->update('#__thm_groups_users')
-			->where("id IN ( $id )");
+	/**
+	 * Deletes the value for a specific profile picture attribute
+	 *
+	 * @param int $profileID   the id of the profile with which the picture is associated.
+	 * @param int $attributeID the id of the attribute under which the value is stored.
+	 *
+	 * @return mixed
+	 */
+	public function deletePicture($profileID = 0, $attributeID = 0)
+	{
+		$app         = JFactory::getApplication();
+		$profileID   = $app->input->getInt('profileID', $profileID);
+		$attributeID = $app->input->getString('attributeID', $attributeID);
 
-		switch ($attribute)
+		if (!THM_GroupsHelperComponent::canEditProfile($profileID))
 		{
-			case 'canEdit':
-				$query->set("canEdit = '$value'");
-				break;
-			case 'qpPublished':
-				$query->set("qpPublished = '$value'");
-				if ($value == 1)
-				{
-					$this->createQuickpageCategoryForUser(explode(',', $id));
-				}
-				break;
-			case 'published':
-			default:
-				$query->set("published = '$value'");
-				break;
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
+
+			return false;
 		}
 
-		$dbo->setQuery((string) $query);
+		$selectQuery = $this->_db->getQuery(true);
+		$selectQuery->select('value')
+			->from('#__thm_groups_users_attribute')
+			->where("usersID = '$profileID'")
+			->where("attributeID = '$attributeID'");
+		$this->_db->setQuery($selectQuery);
 
 		try
 		{
-			return (bool) $dbo->execute();
+			$fileName = $this->_db->loadResult();
+		}
+		catch (Exception $exc)
+		{
+			$app->enqueueMessage($exc->getMessage(), 'error');
+
+			return false;
+		}
+
+		// Button was pushed although there was no saved picture?
+		if (empty($fileName))
+		{
+			return true;
+		}
+
+		$filePath = $this->getPicturePath($attributeID);
+
+		if (file_exists(realpath(JPATH_ROOT . $filePath . $fileName)))
+		{
+			unlink(realpath(JPATH_ROOT . $filePath . $fileName));
+		}
+
+		// Update new picture filename
+		$updateQuery = $this->_db->getQuery(true);
+
+		// Update the database with new picture information
+		$updateQuery->update('#__thm_groups_users_attribute')
+			->set("value = ''")
+			->where("usersID = '$profileID'")
+			->where("attributeID = '$attributeID'");
+		$this->_db->setQuery($updateQuery);
+
+		try
+		{
+			$this->_db->execute();
+		}
+		catch (Exception $exc)
+		{
+			$app->enqueueMessage($exc->getMessage(), 'error');
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Deletes one user role from a group
+	 *
+	 * @return bool
+	 *
+	 * @throws Exception
+	 */
+	public function deleteRoleAssociation()
+	{
+		$app = JFactory::getApplication();
+
+		if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups'))
+		{
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
+
+			return false;
+		}
+
+		$groupID   = $app->input->getInt('groupID', 0);
+		$profileID = $app->input->getInt('profileID', 0);
+		$roleID    = $app->input->getInt('roleID', 0);
+
+		$idToDelete = $this->getAssocID($groupID, $roleID);
+
+		$query = $this->_db->getQuery(true);
+
+		$query
+			->delete('#__thm_groups_users_usergroups_roles')
+			->where("usersID = $profileID AND usergroups_rolesID = $idToDelete");
+
+		$this->_db->setQuery($query);
+
+		try
+		{
+			$success = $this->_db->execute();
+		}
+		catch (Exception $exception)
+		{
+			$app->enqueueMessage($exception->getMessage(), 'error');
+
+			return false;
+		}
+
+		return empty($success) ? false : true;
+	}
+
+	/**
+	 * Retrieves the id of a specific usergroup/role association.
+	 *
+	 * @param   int $groupID the id of the Joomla / THM Groups user group
+	 * @param   int $roleID  the id of the role
+	 *
+	 * @return int the id of the association on success, otherwise 0
+	 */
+	private function getAssocID($groupID, $roleID)
+	{
+		$query = $this->_db->getQuery(true);
+
+		$query
+			->select('ID')
+			->from('#__thm_groups_usergroups_roles')
+			->where("usergroupsID = '$groupID'")
+			->where("rolesID = '$roleID'");
+
+		$this->_db->setQuery($query);
+
+		try
+		{
+			$result = $this->_db->loadResult();
 		}
 		catch (Exception $exception)
 		{
 			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-			return false;
+			return 0;
 		}
+
+		return empty($result) ? 0 : $result;
 	}
 
 	/**
-	 * Create quickpage category for user(s)
+	 * Returns a list of usergroup/role association ids.
 	 *
-	 * @param   array $cid Array with ids
+	 * @param   int $groupID the Joomla / THM Groups user group ids
 	 *
-	 * @return  void
+	 * @return array the ids associated with the group
 	 */
-	public function createQuickpageCategoryForUser($cid)
+	private function getAssocIDs($groupID)
 	{
-		foreach ($cid as $id)
-		{
-			$profileData['Id']        = $id;
-			$profileData['IdKind']    = self::TABLE_USER_ID_KIND;
-			$profileData['ParamName'] = self::PROFILE_USER_ID_PARAM;
+		$query = $this->_db->getQuery(true);
 
-			// Check if user's quickpage category exist and if not, create it
-			if (!THM_GroupsQuickpagesData::existsQuickpageForProfile($profileData))
+		$query
+			->select('ID')
+			->from('#__thm_groups_usergroups_roles')
+			->where("usergroupsID = '$groupID'");
+
+		$this->_db->setQuery($query);
+
+		try
+		{
+			$assocIDs = $this->_db->loadColumn();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+			return array();
+		}
+
+		return empty($assocIDs) ? array() : $assocIDs;
+	}
+
+	/**
+	 * Returns a list of group assoc ids matching the request data
+	 *
+	 * @param   array $requestedAssocs An array with groups and roles
+	 *
+	 * @return  array with ids
+	 */
+	private function getGroupAssociations($requestedAssocs)
+	{
+		$assocs = array();
+
+		foreach ($requestedAssocs as $requestedAssoc)
+		{
+			foreach ($requestedAssoc['roles'] as $role)
 			{
-				THM_GroupsQuickpagesData::createQuickpageForProfile($profileData);
+				$query = $this->_db->getQuery(true);
+				$query->select('ID as id')
+					->from('#__thm_groups_usergroups_roles')
+					->where("usergroupsID = '{$requestedAssoc['id']}'")
+					->where("rolesID = {$role['id']}");
+				$this->_db->setQuery($query);
+
+				try
+				{
+					$assocID = $this->_db->loadResult();
+				}
+				catch (Exception $exception)
+				{
+					JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+					return array();
+				}
+
+				$assocs[$assocID] = $assocID;
 			}
 		}
+
+		return $assocs;
 	}
 
 	/**
-	 * Method to perform batch operations on an item or a set of items.
+	 * Gets the local path that is needed to save the picture to the filesystem.
 	 *
-	 * @return  boolean  Returns true on success, false on failure.
+	 * @param   int $attributeID the attribute id of the picture
 	 *
+	 * @return  mixed
 	 */
-	public function batch()
-	{
-		$app    = JFactory::getApplication();
-		$jinput = $app->input;
-
-		// Array with action command
-		$action = $jinput->post->get('batch_action', array(), 'array');
-
-		// JSON string with groups and roles
-		$data = $jinput->post->get('batch-data', array(), 'array');
-
-		// Decode to normal string
-		$data = urldecode($data[0]);
-
-		// Make from it an array with objects
-		$data = json_decode($data);
-
-		// Array of user ids
-		$cid = $jinput->post->get('cid', array(), 'array');
-
-		// Sanitize user ids.
-		$pks = array_unique($cid);
-		Joomla\Utilities\ArrayHelper::toInteger($pks);
-
-		// Remove any values of zero.
-		if (array_search(0, $pks, true))
-		{
-			unset($pks[array_search(0, $pks, true)]);
-		}
-
-		if (empty($pks))
-		{
-			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'));
-
-			return false;
-		}
-
-		$done = false;
-
-		if (!empty($data))
-		{
-			$cmd = $action[0];
-
-			if (!$this->batchUser($pks, $data, $cmd))
-			{
-				return false;
-			}
-
-			$done = true;
-		}
-
-		if (!$done)
-		{
-			$app->enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
-
-			return false;
-		}
-
-		// Clear the cache
-		$this->cleanCache();
-
-		return true;
-	}
-
-	/**
-	 * Inserts Joomla user-group mapping
-	 *
-	 * @param   array $pks  An array with user ids
-	 *
-	 * @param   array $data An array with groups and roles
-	 *
-	 * @return bool
-	 */
-	public function insertUserGroupMappingInJoomla($pks, $data)
+	private function getPicturePath($attributeID)
 	{
 		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
-
-		$query
-			->insert('#__user_usergroup_map')
-			->columns($dbo->qn(array('user_id', 'group_id')));
-
-		foreach ($pks as $id)
-		{
-			foreach ($data as $group)
-			{
-				$values = array($id, $group->id);
-				$query->values(implode(',', $values));
-			}
-		}
-
+		$query->select('options')->from('#__thm_groups_attribute')->where("id = '$attributeID'");
 		$dbo->setQuery($query);
 
 		try
 		{
-			$dbo->execute();
+			$optionsString = $dbo->loadResult();
+		}
+		catch (Exception $exc)
+		{
+			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+
+			return false;
+		}
+
+		$options = json_decode($optionsString, true);
+
+		if (empty($options) OR empty($options['path']))
+		{
+			return true;
+		}
+
+		$configuredPath = $options['path'];
+		$position       = strpos($options['path'], '/images/');
+
+		if ($position === false)
+		{
+			return true;
+		}
+
+		return substr($configuredPath, $position);
+	}
+
+	/**
+	 * Returns an array with profile associations matching the request data
+	 *
+	 * @param   array $profileIDs An array with user ids
+	 *
+	 * @return array
+	 */
+	private function getUserAssociations($profileIDs)
+	{
+		$query = $this->_db->getQuery(true);
+
+		// First, we need to check if the group-role relationship is already assigned to the user
+		$query->select('ID AS id, usersID AS profileID, usergroups_rolesID AS assocID')
+			->from('#__thm_groups_users_usergroups_roles')
+			->where("usersID IN ('" . implode(',', $profileIDs) . "')")
+			->order('usersID');
+
+		$this->_db->setQuery($query);
+
+		try
+		{
+			$assocs = $this->_db->loadAssocList();
 		}
 		catch (Exception $exception)
 		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-			// Ignore duplicate entry exception
-			if ($exception->getCode() === 1062)
+			return array();
+		}
+
+		return empty($assocs) ? array() : $this->_db->loadAssocList();
+	}
+
+	/**
+	 * Allows the public display of the user's profile. Access checks are performed in toggle.
+	 *
+	 * @return bool
+	 */
+	public function publish()
+	{
+		$input = JFactory::getApplication()->input;
+		$input->set('attribute', 'published');
+		$input->set('value', '1');
+
+		return $this->toggle();
+	}
+
+	/**
+	 * Allows public display of personal content. Access checks are performed in toggle.
+	 *
+	 * @return bool
+	 */
+	public function publishContent()
+	{
+		$input = JFactory::getApplication()->input;
+		$input->set('attribute', 'qpPublished');
+		$input->set('value', '1');
+
+		return $this->toggle();
+	}
+
+	/**
+	 * Replaces blank characters in array keys generated by parsing div ids with underscore characters.
+	 *
+	 * @param   array &$array the array to be processed
+	 *
+	 * @TODO: Find a more elegant solution to this problem before it becomes one, or disallow the use of such characters
+	 *      in the names of profile attributes.
+	 *
+	 * @return  void modifies the given array by reference
+	 */
+	private function replaceBlanks(&$array)
+	{
+		$array = array_combine(
+			array_map(
+				function ($str) {
+					return str_replace("_", " ", $str);
+				},
+				array_keys($array)
+			),
+			array_values($array)
+		);
+	}
+
+	/**
+	 * Saves user profile information
+	 *
+	 * @TODO  Add handling of failures
+	 *
+	 * @return  mixed  int profile ID on success, otherwise false
+	 */
+	public function save()
+	{
+		$app  = JFactory::getApplication();
+		$data = $app->input->get('jform', array(), 'array');
+
+		// Ensuring int will fail access checks on manipulated ids.
+		$profileID = $data['profileID'];
+
+		if (!THM_GroupsHelperComponent::canEditProfile($profileID))
+		{
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
+
+			return false;
+		}
+
+		// Profile attribute names can have blanks, which makes their handling as key names problematic.
+		$this->replaceBlanks($data);
+
+		$dbo = JFactory::getDbo();
+		$dbo->transactionStart();
+
+		$success = $this->saveValues($data);
+
+		if (!$success)
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'error');
+			$dbo->transactionRollback();
+
+			return false;
+		}
+
+		$dbo->transactionCommit();
+
+		return $profileID;
+	}
+
+	/**
+	 * Saves the cropped image that was uploaded via ajax in the profile_edit.view
+	 *
+	 * @return  bool|mixed|string
+	 */
+	public function saveCropped()
+	{
+		$app       = JFactory::getApplication();
+		$input     = $app->input;
+		$profileID = $input->getInt('profileID');
+
+		if (!THM_GroupsHelperComponent::canEditProfile($profileID))
+		{
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
+
+			return false;
+		}
+
+		$file = $app->input->files->get('data');
+
+		if (empty($file))
+		{
+			return false;
+		}
+
+		$filename = $input->get('filename');
+
+		// TODO: Make these configurable
+		$allowedExtensions = array('bmp', 'gif', 'jpg', 'jpeg', 'png', 'BMP', 'GIF', 'JPG', 'JPEG', 'PNG');
+		$invalid           = ($file['size'] > 10000000 OR !in_array(pathinfo($filename, PATHINFO_EXTENSION), $allowedExtensions));
+
+		if ($invalid)
+		{
+			return false;
+		}
+
+		$attributeID = $input->get('attributeID');
+		$newFileName = $profileID . "_" . $attributeID . "." . pathinfo($filename, PATHINFO_EXTENSION);
+		$pathAttr    = $this->getPicturePath($attributeID);
+		$path        = $this->correctPathDS(JPATH_ROOT . $pathAttr . $newFileName);
+
+		$profile = THM_GroupsHelperProfile::getProfile($profileID);
+
+		// Out with the old
+		$deleted = $this->deletePicture($profile, $attributeID);
+		JFactory::getApplication()->enqueueMessage("Deleted: $deleted!", 'message');
+
+		if (!$deleted)
+		{
+			return false;
+		}
+
+		// Upload new cropped image
+		$uploaded = JFile::upload($file['tmp_name'], $path, false);
+
+		// Create thumbs and send back prev image to the form
+		if ($uploaded)
+		{
+			$position      = strpos($path, 'images' . DIRECTORY_SEPARATOR);
+			$convertedPath = substr($path, $position);
+
+			// Adding a random number ensures that the browser no longer uses the cached image.
+			$random   = rand(1, 100);
+			$newImage = "<img  src='" . JURI::root() . $convertedPath . "?force=$random" . "'/>";
+
+			return $newImage;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Updates all profile attribute values and publication statuses.
+	 *
+	 * @param   array $formData the submitted form data
+	 *
+	 * @return  bool true on success, otherwise false
+	 */
+	private function saveValues($formData)
+	{
+		$profileID = $formData['profileID'];
+
+		foreach ($formData as $fieldName => $values)
+		{
+			if (is_string($values))
 			{
-				return true;
+				continue;
 			}
-			else
-			{
-				JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
+			$query = $this->_db->getQuery(true);
+			$query->update('#__thm_groups_users_attribute');
+
+			$value = $this->_db->q($values['value']);
+			$query->set("value = $value");
+
+			$published = empty($values['published']) ? 0 : 1;
+			$query->set("published = '$published'");
+
+			$query->where("usersID = '$profileID'");
+
+			$attributeID = (int) $values['attributeID'];
+			$query->where("attributeID = '$attributeID'");
+
+			$this->_db->setQuery($query);
+
+			try
+			{
+				$success = $this->_db->execute();
+			}
+			catch (Exception $exc)
+			{
+				JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+
+				return false;
+			}
+
+			if (empty($success))
+			{
 				return false;
 			}
 		}
@@ -456,192 +723,224 @@ class THM_GroupsModelProfile extends JModelLegacy
 	 * The function can be extended to perform another
 	 * batch operations.
 	 *
-	 * @param   array  $user_ids The user IDs which assignments are being edited
-	 * @param   array  $data     An array of groups and roles
-	 * @param   string $action   The action to perform
+	 * @param   array $profileIDs      the profile IDs which assignments are being edited
+	 * @param   array $requestedAssocs an array of groups and roles
 	 *
 	 * @return  boolean  True on success, false on failure
 	 *
 	 */
-	public function batchUser($user_ids, $data, $action)
+	private function setGroupsAssociations($profileIDs, $requestedAssocs)
 	{
 		$app = JFactory::getApplication();
-		$dbo = $this->getDbo();
 
-		Joomla\Utilities\ArrayHelper::toInteger($user_ids);
+		$userAssocs  = $this->getUserAssociations($profileIDs);
+		$groupAssocs = $this->getGroupAssociations($requestedAssocs);
 
-		switch ($action)
+		$performInsert = false;
+		$query         = $this->_db->getQuery(true);
+
+		foreach ($profileIDs as $profileID)
 		{
-			case 'del':
-				$doDelete = 'group';
-				break;
-
-			case 'add':
-			default:
-				$doAssign = true;
-				break;
-		}
-
-		if (isset($doDelete))
-		{
-			$query = $dbo->getQuery(true);
-
-			// Remove roles from the groups
-			$query
-				->delete('#__thm_groups_users_usergroups_roles')
-				->where('usersID' . ' IN (' . implode(',', $user_ids) . ')');
-
-			// Only remove roles from selected group
-			if ($doDelete == 'group')
+			foreach ($groupAssocs as $groupAssocID)
 			{
-				$group_role_relationship_ids = $this->getGroupRoleRelationship($data);
-				$query->where('usergroups_rolesID' . ' IN (' . implode(',', $group_role_relationship_ids) . ')');
-			}
+				$assocExists = false;
 
-			$dbo->setQuery($query);
-
-			try
-			{
-				$dbo->execute();
-			}
-			catch (Exception $exception)
-			{
-				$app->enqueueMessage($exception->getMessage(), 'error');
-
-				return false;
-			}
-		}
-
-		// Assign the group-relationship to user
-		if (isset($doAssign))
-		{
-			if (!$this->insertUserGroupMappingInJoomla($user_ids, $data))
-			{
-				return false;
-			}
-
-			$user_group_roles = $this->getUserGroupRoleRelationship($user_ids);
-
-			// Contains user-group-role relationship from db
-			$dataFromDB = array();
-			foreach ($user_group_roles as $user_group_role)
-			{
-				$dataFromDB[$user_group_role->usersID][] = (int) $user_group_role->usergroups_rolesID;
-			}
-
-			$group_role_relationship = false;
-
-			// Contains group-role relationship to insert in DB
-			$insertValues                = array();
-			$group_role_relationship_ids = $this->getGroupRoleRelationship($data);
-			foreach ($user_ids as $uid)
-			{
-				foreach ($group_role_relationship_ids as $group_role_relationship_id)
+				foreach ($userAssocs as $userAssoc)
 				{
-					$insertValues[$uid][] = (int) $group_role_relationship_id;
-				}
-			}
+					$notUser = $profileID != $userAssoc['profileID'];
 
-			// Filter values before insert
-			THM_GroupsHelperDatabase_Compare::filterInsertValues($insertValues, $dataFromDB);
-			$query = $dbo->getQuery(true);
-
-			// Prepare insert statement
-			if (!empty($insertValues))
-			{
-				foreach ($insertValues as $key => $values)
-				{
-					if (!empty($values))
+					if ($notUser)
 					{
-						foreach ($values as $group_role_id)
-						{
-							$query->values($key . ',' . $group_role_id);
-						}
-						$group_role_relationship = true;
+						continue;
 					}
+
+					$notAssoc = $groupAssocID != $userAssoc['assocID'];
+
+					if ($notAssoc)
+					{
+						continue;
+					}
+
+					$assocExists = true;
 				}
 
-				// If we have no roles to process, throw an error to notify the user
-				if (!$group_role_relationship)
+				if (!$assocExists)
 				{
-					$app->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR_NO_ADDITIONS'), 'error');
-
-					return false;
-				}
-
-				// Insert user-group-role relationship in db
-				$query
-					->insert($dbo->quoteName('#__thm_groups_users_usergroups_roles'))
-					->columns(array($dbo->quoteName('usersID'), $dbo->quoteName('usergroups_rolesID')));
-				$dbo->setQuery($query);
-
-				try
-				{
-					$dbo->execute();
-				}
-				catch (Exception $exception)
-				{
-					$app->enqueueMessage($exception->getMessage(), 'error');
-
-					return false;
+					$performInsert = true;
+					$query->values("'$profileID', '$groupAssocID'");
 				}
 			}
 		}
 
-		return true;
-	}
-
-	/**
-	 * Returns ids of group to role relationship
-	 *
-	 * @param   Array $data An array with groups and roles
-	 *
-	 * @return  Array with ids
-	 */
-	public function getGroupRoleRelationship($data)
-	{
-		$db                          = JFactory::getDbo();
-		$group_role_relationship_ids = array();
-		foreach ($data as $group)
+		// All requested associations already exist.
+		if (!$performInsert)
 		{
-			foreach ($group->roles as $role)
-			{
-				$query = $db->getQuery(true);
-				$query
-					->select('ID')
-					->from('#__thm_groups_usergroups_roles')
-					->where("usergroupsID = $group->id")
-					->where("rolesID = $role->id");
-				$db->setQuery($query);
-				array_push($group_role_relationship_ids, $db->loadResult());
-			}
+			return true;
 		}
 
-		return $group_role_relationship_ids;
+		$query->insert('#__thm_groups_users_usergroups_roles')->columns(array('usersID', 'usergroups_rolesID'));
+		$this->_db->setQuery($query);
+
+		try
+		{
+			$success = $this->_db->execute();
+		}
+		catch (Exception $exception)
+		{
+			$app->enqueueMessage($exception->getMessage(), 'error');
+
+			return false;
+		}
+
+		return empty($success) ? false : true;
 	}
 
 	/**
-	 * Returns an array with user -> usergroups_roles association
+	 * Maps users to Joomla user groups.
 	 *
-	 * @param   Array $user_ids An array with user ids
+	 * @param   array $profileIDs an array with profile ids (joomla user ids)
+	 * @param   array $batchData  an array with groups and roles
 	 *
-	 * @return array
+	 * @return bool true on success, otherwise false
 	 */
-	public function getUserGroupRoleRelationship($user_ids)
+	private function setJoomlaAssociations($profileIDs, $batchData)
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$existingQuery = $this->_db->getQuery(true);
+		$existingQuery->select('id')->from('#__user_usergroup_map')
+			->where("user_id IN ('" . implode("','", $profileIDs) . "')");
+		$query = $this->_db->getQuery(true);
+		$query->insert('#__user_usergroup_map')->columns('user_id, group_id');
+		$values = array();
 
-		// First, we need to check if the group-role relationship is already assigned to the user
-		$query
-			->select('ID, usersID, usergroups_rolesID')
-			->from($db->quoteName('#__thm_groups_users_usergroups_roles'))
-			->where($db->quoteName('usersID') . ' IN (' . implode(',', $user_ids) . ')')
-			->order('usersID');
+		foreach ($profileIDs as $profileID)
+		{
+			foreach ($batchData as $groupData)
+			{
+				$values[] = "'$profileID', '{$groupData['id']}'";
+			}
+		}
 
-		$db->setQuery($query);
+		$query->values($values);
+		$this->_db->setQuery($query);
 
-		return $db->loadObjectList();
+		try
+		{
+			$success = $this->_db->execute();
+		}
+		catch (Exception $exception)
+		{
+			// Ignore duplicate entry exception
+			if ($exception->getCode() === 1062)
+			{
+				return true;
+			}
+			else
+			{
+				JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+				return false;
+			}
+		}
+
+		return empty($success) ? false : true;
+	}
+
+	/**
+	 * Toggles a binary entity property value
+	 *
+	 * @return  boolean  true on success, otherwise false
+	 */
+	public function toggle()
+	{
+		$app = JFactory::getApplication();
+
+		if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups'))
+		{
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
+
+			return false;
+		}
+
+		$input         = $app->input;
+		$selectedUsers = THM_GroupsHelperComponent::cleanIntCollection($input->get('cid', array(), 'array'));
+		$toggleID      = $input->getInt('id', 0);
+		$value         = $input->getBool('value', false);
+
+		if (empty($selectedUsers) AND empty($toggleID))
+		{
+			// No selection, should not occur.
+			return false;
+		}
+
+		// Toggle button was used.
+		elseif (empty($selectedUsers))
+		{
+			$selectedUsers = array($toggleID);
+
+			// Toggled values reflect the current value not the desired value
+			$value = !$value;
+		}
+
+		// The binary attribute to toggle and the value to set it to
+		$column = $input->getString('attribute', '');
+
+		// We don't know what to toggle
+		if (empty($column))
+		{
+			return false;
+		}
+
+		if ($column == 'qpPublished')
+		{
+			$this->createCategory($selectedUsers);
+		}
+
+		$query = $this->_db->getQuery(true);
+
+		$selectedString = implode("','", $selectedUsers);
+		$query->update('#__thm_groups_users')->set("$column = '$value'")->where("id IN ( '$selectedString' )");
+		$this->_db->setQuery($query);
+
+		try
+		{
+			$success = $this->_db->execute();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+			return false;
+		}
+
+		return empty($success) ? false : true;
+	}
+
+	/**
+	 * Hides the public display of the user's profile. Access checks are performed in toggle.
+	 *
+	 * @return bool
+	 */
+	public function unpublish()
+	{
+		$input = JFactory::getApplication()->input;
+		$input->set('attribute', 'published');
+		$input->set('value', '0');
+
+		return $this->toggle();
+	}
+
+	/**
+	 * Hides public display of personal content. Access checks are performed in toggle.
+	 *
+	 * @return bool
+	 */
+	public function unpublishContent()
+	{
+		$input = JFactory::getApplication()->input;
+		$input->set('attribute', 'qpPublished');
+		$input->set('value', '0');
+
+		return $this->toggle();
 	}
 }
    

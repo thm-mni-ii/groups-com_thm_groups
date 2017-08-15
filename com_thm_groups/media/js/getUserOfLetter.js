@@ -2,8 +2,7 @@
 
 //get all User of a Groups
 
-jQuery.fn.lib_thm_groups_alphabet = function ()
-{
+jQuery.fn.lib_thm_groups_alphabet = function () {
 	var letter = jQuery(this).text();
 	jQuery(".thm_groups_active").attr('class', ' ');
 	var gid = jQuery("#thm_groups_gid").val();
@@ -36,8 +35,7 @@ jQuery.fn.lib_thm_groups_alphabet = function ()
 			linkElement: linkElement,
 			oldattribut: add
 		},
-		success: function (result)
-		{
+		success: function (result) {
 			jQuery("#new_user_list").html(result);
 		}
 	});

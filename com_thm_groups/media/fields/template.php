@@ -1,0 +1,79 @@
+<?php
+/**
+ * @category    Joomla.Component
+ * @package     com_thm_groups
+ * @subpackage  com_thm_groups.media
+ * @name        JFormFieldTemplate
+ * @author      James Antrim, <james.antrim@mni.thm.de>
+ * @copyright   2017 TH Mittelhessen
+ * @license     GNU GPL v.2
+ * @link        www.thm.de
+ */
+
+defined('_JEXEC') or die;
+JFormHelper::loadFieldClass('list');
+
+/**
+ * Class loads a list of templates
+ *
+ * @category    Joomla.Component
+ * @package     com_thm_groups
+ * @subpackage  lib_thm_core.site
+ */
+class JFormFieldTemplate extends JFormFieldList
+{
+	public $type = 'template';
+
+	/**
+	 * Retrieves the saved profile templates and adds context dependent meta-options.
+	 *
+	 * @return  array  the template options
+	 */
+	protected function getOptions()
+	{
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
+
+		$query->select("DISTINCT p.id AS value, p.name AS text");
+		$query->from('#__thm_groups_profile AS p');
+
+		$associated = (bool) $this->getAttribute('associated', false);
+
+		if ($associated)
+		{
+			$query->innerJoin('#__thm_groups_profile_usergroups AS ug ON ug.profileID = p.id');
+		}
+
+		$query->order("text ASC");
+		$dbo->setQuery($query);
+
+		try
+		{
+			$templates = $dbo->loadAssocList('value');
+		}
+		catch (Exception $exc)
+		{
+			return parent::getOptions();
+		}
+
+		if (empty($templates))
+		{
+			return [];
+		}
+
+		if ($associated)
+		{
+			$noTemplates = ['value' => -1, 'text' => JText::_('JNONE')];
+			array_unshift($templates, $noTemplates);
+			$allTemplates = ['value' => '', 'text' => JText::_('JALL')];
+			array_unshift($templates, $allTemplates);
+		}
+		else
+		{
+			$groupTemplate = ['value' => 0, 'text' => JText::_('COM_THM_GROUPS_GROUP_TEMPLATE')];
+			array_unshift($templates, $groupTemplate);
+		}
+
+		return $templates;
+	}
+}

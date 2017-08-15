@@ -8,22 +8,15 @@
                 hint="JSEARCH_FILTER"
         />
         <field addfieldpath="/administrator/com_thm_groups/models/fields"
-               name="moderators"
-               type="moderator"
-               label="COM_THM_GROUPS_GROUPS_FILTER"
-               onchange="this.form.submit();"
-        >
-        </field>
-        <field addfieldpath="/administrator/com_thm_groups/models/fields"
                name="roles"
                type="role"
                label="COM_THM_GROUPS_GROUPS_FILTER"
                onchange="this.form.submit();"
         >
         </field>
-        <field addfieldpath="/administrator/com_thm_groups/models/fields"
-               name="profile"
-               type="profile"
+        <field name="templates"
+               type="template"
+               associated="true"
                label="COM_THM_GROUPS_GROUPS_FILTER"
                onchange="this.form.submit();"
         >

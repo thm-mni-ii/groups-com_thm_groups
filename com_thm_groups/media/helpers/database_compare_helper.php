@@ -23,8 +23,8 @@ class THM_GroupsHelperDatabase_Compare
 	 * Compare two arrays and delete repeating elements
 	 * This algorithm sucks -> comment form Ilja
 	 *
-	 * @param   Array &$insertValues An array with values to save
-	 * @param   Array $valuesFromDB  An array with values from DB
+	 * @param   array &$insertValues An array with values to save
+	 * @param   array $valuesFromDB  An array with values from DB
 	 *
 	 * @return  void
 	 */

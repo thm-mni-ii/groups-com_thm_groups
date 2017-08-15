@@ -11,8 +11,7 @@
  */
 
 defined('_JEXEC') or die;
-jimport('joomla.application.component.modeladmin');
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/database_compare_helper.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
 
 /**
  * Class loads form data to edit an entry.
@@ -32,201 +31,173 @@ class THM_GroupsModelRole extends JModelLegacy
 	 */
 	public function batch()
 	{
-		$jinput = JFactory::getApplication()->input;
+		$app     = JFactory::getApplication();
+		$isAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
 
-		// array with action command
-		$action = $jinput->post->get('batch_action', array(), 'array');
-
-		// an array of group ids
-		$gid = $jinput->post->get('batch_id', array(), 'array');
-
-		// an array of role ids
-		$cid = $jinput->post->get('cid', array(), 'array');
-
-		// Sanitize role ids.
-		$pks = array_unique($cid);
-		JArrayHelper::toInteger($pks);
-
-		// Remove any values of zero.
-		if (array_search(0, $pks, true))
+		if (!$isAdmin)
 		{
-			unset($pks[array_search(0, $pks, true)]);
-		}
-
-		if (empty($pks))
-		{
-			$this->setError(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'));
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
 			return false;
 		}
 
-		$done = false;
+		$roleIDs = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('cid', array(), 'array'));
 
-		if (!empty($gid))
+		if (empty($roleIDs))
 		{
-			$cmd = $action[0];
-
-			if (!$this->batchRole($gid, $pks, $cmd))
-			{
-				return false;
-			}
-
-			$done = true;
-		}
-
-		if (!$done)
-		{
-			$this->setError(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ROLE_SELECTED'), 'warning');
 
 			return false;
 		}
 
-		// Clear the cache
+		$groupIDs = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('batch', array(), 'array'));
+
+		if (empty($groupIDs))
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_GROUP_SELECTED'), 'warning');
+
+			return false;
+		}
+
+		$validActions  = array('add', 'delete');
+		$actions       = $app->input->get('batch_action', array(), 'array');
+		$invalidAction = (empty($actions) OR empty($actions[0]) OR !in_array($actions[0], $validActions)) ? true : false;
+
+		if ($invalidAction)
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_INVALID_ACTION'), 'error');
+
+			return false;
+		}
+
+		$action = $actions[0];
+
+		if ($action == 'add')
+		{
+			return $this->batchAssociation($groupIDs, $roleIDs);
+		}
+
+		if ($action == 'delete')
+		{
+			return $this->batchDelete($groupIDs, $roleIDs);
+		}
+
+		// This should never occur
 		$this->cleanCache();
 
-		return true;
+		return false;
 	}
 
 	/**
-	 * Perform batch operations
+	 * Associates groups with the selected profile templates
 	 *
-	 * @param   array  $group_ids The group IDs which assignments are being edited
-	 * @param   array  $role_ids  An array of role IDs on which to operate
-	 * @param   string $action    The action to perform
+	 * @param   array $groupIDs the ids of the groups to be associated
+	 * @param   array $roleIDs  the ids of the roles to be associated with
 	 *
-	 * @return  boolean  True on success, false on failure
-	 *
+	 * @return  bool  true on success, otherwise false
 	 */
-	public function batchRole($group_ids, $role_ids, $action)
+	private function batchAssociation($groupIDs, $roleIDs)
 	{
-		// Get the DB object
-		$db = $this->getDbo();
+		$existingQuery = $this->_db->getQuery(true);
 
-		JArrayHelper::toInteger($role_ids);
-		JArrayHelper::toInteger($group_ids);
+		// Search for existing associations matching the requested
+		$existingQuery->select('usergroupsID AS groupID, rolesID AS roleID')
+			->from('#__thm_groups_usergroups_roles')
+			->where('rolesID IN (' . implode(',', $roleIDs) . ')')
+			->order('rolesID');
 
-		switch ($action)
+		$this->_db->setQuery($existingQuery);
+
+		try
 		{
-			// Remove groups from a selected role
-			case 'del':
-				$doDelete = 'group';
-				break;
+			$groupRoles = $this->_db->loadAssocList();
+		}
+		catch (Exception $exc)
+		{
+			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-			// Add groups to a selected role
-			case 'add':
-			default:
-				$doAssign = true;
-				break;
+			return false;
 		}
 
-		// Remove the groups from the role if requested.
-		if (isset($doDelete))
+		// Build an array with unique usergroups and their associated roles
+		$groups = array();
+
+		foreach ($groupRoles as $groupRole)
 		{
-			$query = $db->getQuery(true);
+			$groups[$groupRole['groupID']][$groupRole['roleID']] = $groupRole['roleID'];
+		}
 
-			// Remove groups from the roles
-			$query
-				->delete('#__thm_groups_usergroups_roles')
-				->where('rolesID' . ' IN (' . implode(',', $role_ids) . ')');
+		// Build the values clause for the assignment query.
+		$insertQuery   = $this->_db->getQuery(true);
+		$performInsert = false;
 
-			// Only remove groups from selected role
-			if ($doDelete == 'group')
+		foreach ($groupIDs as $groupID)
+		{
+			foreach ($roleIDs as $roleID)
 			{
-				$query->where('usergroupsID' . ' IN (' . implode(',', $group_ids) . ')');
-			}
-
-			$db->setQuery($query);
-
-			try
-			{
-				$db->execute();
-			}
-			catch (RuntimeException $e)
-			{
-				$this->setError($e->getMessage());
-
-				return false;
+				if (empty($groups[$groupID][$roleID]))
+				{
+					$insertQuery->values("'$groupID','$roleID'");
+					$performInsert = true;
+				}
 			}
 		}
 
-		// Assign the groups to the roles if requested.
-		if (isset($doAssign))
+		// All requested associations already exist
+		if (!$performInsert)
 		{
-			$query = $db->getQuery(true);
-
-			// First, we need to check if the group is already assigned to a role
-			$query
-				->select('usergroupsID, rolesID')
-				->from($db->quoteName('#__thm_groups_usergroups_roles'))
-				->where($db->quoteName('rolesID') . ' IN (' . implode(',', $role_ids) . ')')
-				->order('rolesID');
-
-			$db->setQuery($query);
-			$groups_roles = $db->loadObjectList();
-
-			// Contains groups and roles from db
-			$dataFromDB = array();
-			foreach ($groups_roles as $group_role)
-			{
-				$dataFromDB[$group_role->usergroupsID][] = (int) $group_role->rolesID;
-			}
-
-			// Build the values clause for the assignment query.
-			$query->clear();
-			$groups = false;
-
-			// Contains groups and roles to insert in DB
-			$insertValues = array();
-			foreach ($group_ids as $gid)
-			{
-				foreach ($role_ids as $rid)
-				{
-					$insertValues[$gid][] = $rid;
-				}
-			}
-
-			// filter values before insert
-			THM_GroupsHelperDatabase_Compare::filterInsertValues($insertValues, $dataFromDB);
-
-			// prepare insert values
-			if (!empty($insertValues))
-			{
-				foreach ($insertValues as $key => $values)
-				{
-					if (!empty($values))
-					{
-						foreach ($values as $rid)
-						{
-							$query->values($key . ',' . $rid);
-						}
-						$groups = true;
-					}
-				}
-
-				// If we have no roles to process, throw an error to notify the user
-				if (!$groups)
-				{
-					$this->setError(JText::_('COM_THM_GROUPS_ERROR_NO_ADDITIONS'));
-
-					return false;
-				}
-
-				$query->insert($db->quoteName('#__thm_groups_usergroups_roles'))
-					->columns(array($db->quoteName('usergroupsID'), $db->quoteName('rolesID')));
-				$db->setQuery($query);
-
-				try
-				{
-					$db->execute();
-				}
-				catch (RuntimeException $e)
-				{
-					$this->setError($e->getMessage());
-
-					return false;
-				}
-			}
+			return true;
 		}
+
+		$insertQuery->insert('#__thm_groups_usergroups_roles')
+			->columns('usergroupsID, rolesID');
+		$this->_db->setQuery($insertQuery);
+
+		try
+		{
+			$success = $this->_db->execute();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+			return false;
+		}
+
+		return (empty($success)) ? false : true;
+	}
+
+	/**
+	 * Removes the association of groups with the selected profile templates
+	 *
+	 * @param   array $groupIDs the ids of the groups whose associations are to be removed
+	 * @param   array $roleIDs  the ids of the profiles from which the associations are to be removed
+	 *
+	 * @return  bool  true on success, otherwise false
+	 */
+	private function batchDelete($groupIDs, $roleIDs)
+	{
+		$query = $this->_db->getQuery(true);
+
+		// Remove groups from the profile
+		$query->delete('#__thm_groups_usergroups_roles');
+		$query->where('rolesID' . ' IN (' . implode(',', $roleIDs) . ')');
+		$query->where('usergroupsID' . ' IN (' . implode(',', $groupIDs) . ')');
+
+		$this->_db->setQuery($query);
+
+		try
+		{
+			$this->_db->execute();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+			return false;
+		}
+
+		$this->cleanCache();
 
 		return true;
 	}
@@ -238,22 +209,42 @@ class THM_GroupsModelRole extends JModelLegacy
 	 */
 	public function delete()
 	{
-		$ids = JFactory::getApplication()->input->get('cid', array(), 'array');
+		$app     = JFactory::getApplication();
+		$isAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
 
-		$db = JFactory::getDbo();
+		if (!$isAdmin)
+		{
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
-		$query = $db->getQuery(true);
+			return false;
+		}
 
-		$conditions = array(
-			$db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')',
-		);
+		$roleIDs = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('cid', array(), 'array'));
 
-		$query->delete($db->quoteName('#__thm_groups_roles'));
-		$query->where($conditions);
+		if (empty($roleIDs))
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ROLE_SELECTED'), 'warning');
 
-		$db->setQuery($query);
+			return false;
+		}
 
-		return $result = $db->execute();
+		$query = $this->_db->getQuery(true);
+		$query->delete('#__thm_groups_roles')
+			->where('id IN (' . implode(',', $roleIDs) . ')');
+		$this->_db->setQuery($query);
+
+		try
+		{
+			$success = $this->_db->execute();
+		}
+		catch (Exception $exception)
+		{
+			$app->enqueueMessage($exception->getMessage(), 'warning');
+
+			return false;
+		}
+
+		return empty($success) ? false : true;
 	}
 
 	/**
@@ -262,19 +253,27 @@ class THM_GroupsModelRole extends JModelLegacy
 	 * @return bool
 	 * @throws Exception
 	 */
-	public function deleteGroup()
+	public function deleteGroupAssociation()
 	{
-		$input = JFactory::getApplication()->input;
+		$app     = JFactory::getApplication();
+		$isAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
 
-		$roleID  = $input->getInt('r_id');
-		$groupID = $input->getInt('g_id');
+		if (!$isAdmin)
+		{
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
+
+			return false;
+		}
+
+		$roleID  = $app->input->getInt('roleID');
+		$groupID = $app->input->getInt('groupID');
 
 		$query = $this->_db->getQuery(true);
 		$query
 			->delete('#__thm_groups_usergroups_roles')
 			->where("rolesID = '$roleID'")
 			->where("usergroupsID = '$groupID'");
-		$this->_db->setQuery((string) $query);
+		$this->_db->setQuery($query);
 
 		try
 		{
@@ -297,8 +296,17 @@ class THM_GroupsModelRole extends JModelLegacy
 	 */
 	public function save()
 	{
-		$data = JFactory::getApplication()->input->get('jform', array(), 'array');
+		$app     = JFactory::getApplication();
+		$isAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
 
+		if (!$isAdmin)
+		{
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
+
+			return false;
+		}
+
+		$data  = $app->input->get('jform', array(), 'array');
 		$table = JTable::getInstance('roles', 'thm_groupsTable');
 		$table->save($data);
 
@@ -316,6 +324,13 @@ class THM_GroupsModelRole extends JModelLegacy
 	 */
 	public function saveorder($pks = null, $order = null)
 	{
+		$isAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
+
+		if (!$isAdmin)
+		{
+			return false;
+		}
+
 		JTable::addIncludePath(JPATH_ROOT . '/administrator/components/com_thm_groups/tables/');
 		$table = $this->getTable('Roles', 'THM_GroupsTable');
 
@@ -323,13 +338,7 @@ class THM_GroupsModelRole extends JModelLegacy
 
 		if (empty($pks))
 		{
-			return JError::raiseWarning(500, JText::_('COM_THM_GROUPS_NO_ITEMS_SELECTED'));
-		}
-
-		$canManage = JFactory::getUser()->authorise('core.manage', 'com_thm_groups');
-		if (!$canManage)
-		{
-			return JError::raiseWarning(500, JText::_('JLIB_RULES_NOT_ALLOWED'));
+			return false;
 		}
 
 		// Update ordering values

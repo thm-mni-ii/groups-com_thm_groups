@@ -8,7 +8,7 @@
  * @author      Andrej Sajenko, <Andrej.Sajenko@mni.thm.de>
  * @copyright   2013 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 $doc = JFactory::getDocument();
@@ -34,7 +34,7 @@ class THM_GroupsHelperChangeLog
 	 *  # - fixed
 	 *    - (without prefix) Will displayed normal.
 	 *
-	 * @param   String $file     Path to changelog.
+	 * @param   string $file     Path to changelog.
 	 * @param   bool   $onlyLast Trigger to display only last changelog entry
 	 *
 	 * @return string The colorised HTML String

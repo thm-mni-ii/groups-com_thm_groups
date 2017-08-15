@@ -2,79 +2,8 @@
     font-family: icomoon;
 }
 
-.icon-organizer::before,
-a[href$="view=thm_organizer"]::before,
-a[href$="option=com_thm_organizer"]::before {
-    font-family: icomoon;
-    content: "\e60b";
-    color: #80ba24;
-}
-
-.icon-organizer_colors::before {
-    content: "\e014";
-}
-
-.icon-organizer_degrees::before {
-    content: "\e606";
-}
-
-.icon-organizer_degree_programs::before,
-.icon-organizer_plan_programs::before {
-    content: "\31";
-}
-
-.icon-organizer_departments::before {
-    content: "\e244";
-}
-
-.icon-organizer_fields::before {
-    content: "\74";
-}
-
-.icon-organizer_grids::before {
-    content: "\59";
-    font-size: 1.1rem;
-}
-
-.icon-organizer_methods::before {
-    content: "\e271";
-}
-
 .icon-mni::before {
     content: "\e600";
-}
-
-.icon-organizer_monitors::before {
-    content: "\e01c";
-}
-
-.icon-organizer_plan_pools::before,
-.icon-organizer_subject_pools::before {
-    content: "\44";
-}
-
-.icon-organizer_rooms::before {
-    content: "\e250";
-}
-
-.icon-organizer_room_types::before {
-    content: "\e250";
-}
-
-.icon-organizer_schedules::before {
-    content: "\e931";
-}
-
-.icon-organizer_subjects::before {
-    content: "\e603";
-}
-
-.icon-organizer_subject_pools::before {
-    content: "\44";
-}
-
-.icon-organizer_teachers::before {
-    content: "\e604";
 }
 
 .icon-diff, .icon-import, .icon-import-all, .icon-merge-all {
@@ -83,10 +12,6 @@ a[href$="option=com_thm_organizer"]::before {
 
 .icon-add-Space {
     font-size: 14px;
-}
-
-a[href*="option=com_thm_organizer&view="]::before {
-    padding-right: 8px;
 }
 
 .sidebar-nav {
@@ -225,56 +150,16 @@ tbody tr:first-child td {
     float: none;
 }
 
-@media (min-width: 768px) {
-    #mapping .control-group:nth-of-type(1), #mappings .control-group:nth-of-type(1) {
-        width: 50%;
-        float: left;
-    }
-
-    #mapping .control-group:nth-of-type(1) .controls select, #mappings .control-group:nth-of-type(1) .controls select {
-        width: 95%;
-    }
-
-    #mapping .control-group:nth-of-type(2), #mappings .control-group:nth-of-type(2) {
-        width: 50%;
-        float: right;
-    }
-
-    #mapping .control-group:nth-of-type(2) .controls select, #mappings .control-group:nth-of-type(2) .controls select {
-        width: 95%;
-    }
-
-    #mapping .control-group:nth-of-type(3), #mappings .control-group:nth-of-type(3) {
-        clear: both;
-    }
+/**********************************************************************************************************************/
+/* modals                                                                                                             */
+/**********************************************************************************************************************/
+.modal-body .control-group {
+    padding-left: 1rem;
+    padding-top: .5rem;
 }
 
-#mapping table, #mappings table {
-    width: 98%;
-}
-
-#mapping thead tr:nth-child(1) th, #mappings thead tr:nth-child(1) th {
-    padding: 5px 0 5px 8px;
-}
-
-#mapping thead .thm_organizer_pools_ordering, #mappings thead .thm_organizer_pools_ordering {
-    width: 200px;
-}
-
-#mapping tbody .child-order .btn-small, #mappings tbody .child-order .btn-small {
-    padding: 1px 4px;
-    font-size: 12px;
-    line-height: 8px;
-}
-
-#mapping tbody .child-order .text-area-order, #mappings tbody .child-order .text-area-order {
-    padding: 1px 2px;
-    text-align: center;
-    height: 14px;
-}
-
-#mapping tbody .child-name, #mappings tbody .child-name {
-    padding-right: 30px;
+.modal-body .control-group .control-label > label {
+    font-weight: bold;
 }
 
 @media (max-width: 480px) {
@@ -330,6 +215,9 @@ tbody tr:first-child td {
     }
 }
 
+/**********************************************************************************************************************/
+/* icon picker                                                                                                        */
+/**********************************************************************************************************************/
 .iconPicker {
     white-space: normal !important;
 }

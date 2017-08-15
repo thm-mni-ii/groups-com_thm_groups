@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsViewGroup_Manager
- * @description THM_GroupsViewGroup_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -14,7 +13,6 @@ defined('_JEXEC') or die;
 
 // import Joomla view library
 require_once JPATH_ROOT . '/media/com_thm_groups/views/list.php';
-JHtml::_('jquery.framework');
 require_once JPATH_SITE . '/media/com_thm_groups/helpers/batch.php';
 
 /**
@@ -26,7 +24,6 @@ require_once JPATH_SITE . '/media/com_thm_groups/helpers/batch.php';
  */
 class THM_GroupsViewGroup_Manager extends THM_GroupsViewList
 {
-
 	public $items;
 
 	public $pagination;
@@ -50,21 +47,18 @@ class THM_GroupsViewGroup_Manager extends THM_GroupsViewList
 	{
 		if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
 		{
-			return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+			$exc = new Exception(JText::_('JLIB_RULES_NOT_ALLOWED'), 401);
+			JErrorPage::render($exc);
 		}
 
 		// Set batch template path
 		$this->batch = array(
-			'batch'          => JPATH_COMPONENT_ADMINISTRATOR . '/views/group_manager/tmpl/default_batch.php',
-			'assign_profile' => JPATH_COMPONENT_ADMINISTRATOR . '/views/group_manager/tmpl/default_assign_profile.php'
+			'roles'     => JPATH_COMPONENT_ADMINISTRATOR . '/views/group_manager/tmpl/default_roles.php',
+			'templates' => JPATH_COMPONENT_ADMINISTRATOR . '/views/group_manager/tmpl/default_templates.php'
 		);
 
-		// Get all roles from DB
 		$this->roles    = THM_GroupsHelperBatch::getRoles();
 		$this->profiles = THM_GroupsHelperBatch::getProfiles();
-
-		$document = JFactory::getDocument();
-		$document->addScript(JURI::root(true) . '/media/com_thm_groups/js/group_manager.js');
 
 		parent::display($tpl);
 	}
@@ -76,52 +70,24 @@ class THM_GroupsViewGroup_Manager extends THM_GroupsViewList
 	 */
 	protected function addToolbar()
 	{
-		$user = JFactory::getUser();
 
-		// Get the toolbar object instance
+		JToolBarHelper::title(JText::_('COM_THM_GROUPS_GROUP_MANAGER_TITLE'), 'group_manager');
+
+		$rolesTitle = JText::_('COM_THM_GROUPS_BATCH_ROLES');
+
+		$rolesButton = '<button id="group-roles" data-toggle="modal" data-target="#modal-roles" class="btn btn-small">';
+		$rolesButton .= '<i class="icon-edit" title="' . $rolesTitle . '"></i>' . " $rolesTitle" . '</button>';
+
+		$templatesTitle = JText::_('COM_THM_GROUPS_BATCH_TEMPLATES');
+
+		$templatesButton = '<button id="group-templates" data-toggle="modal" data-target="#modal-templates" class="btn btn-small">';
+		$templatesButton .= '<i class="icon-edit" title="' . $templatesTitle . '"></i>' . " $templatesTitle" . '</button>';
+
 		$bar = JToolBar::getInstance('toolbar');
+		$bar->appendButton('Custom', $rolesButton, 'batch');
+		$bar->appendButton('Custom', $templatesButton, 'batch');
 
-		JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_GROUP_MANAGER'), 'group_manager');
-
-		if ($user->authorise('core.manage', 'com_thm_groups'))
-		{
-			JToolBarHelper::addNew('group.add');
-
-			$image   = 'edit';
-			$title   = JText::_('COM_THM_GROUPS_EDIT_MODERATOR');
-			$link    = 'index.php?option=com_thm_groups&amp;view=user_select&amp;tmpl=component';
-			$height  = '400';
-			$width   = '900';
-			$top     = 0;
-			$left    = 0;
-			$onClose = 'window.location.reload();';
-			$bar     = JToolBar::getInstance('toolbar');
-			$bar->appendButton('Popup', $image, $title, $link, $width, $height, $top, $left, $onClose);
-		}
-
-		if ($user->authorise('core.manage', 'com_thm_groups') && $user->authorise('core.edit', 'com_users') && $user->authorise('core.edit.state', 'com_users'))
-		{
-			JHtml::_('bootstrap.modal', 'myModal');
-			$title = JText::_('COM_THM_GROUPS_GROUP_MANAGER_BATCH');
-
-			// TODO change name for data-target to a meaningful name
-			$dhtml = "<button id='add_role_to_group_btn' data-toggle='modal' data-target='#collapseModal' class='btn btn-small'><i class='icon-edit' title='$title'></i> $title</button>";
-
-			$bar->appendButton('Custom', $dhtml, 'batch');
-		}
-
-		if ($user->authorise('core.manage', 'com_thm_groups') && $user->authorise('core.edit', 'com_users') && $user->authorise('core.edit.state', 'com_users'))
-		{
-			JHtml::_('bootstrap.modal', 'myModal');
-			$title = JText::_('COM_THM_GROUPS_GROUP_MANAGER_ASSIGN_PROFILE');
-
-			// TODO change name for data-target to a meaningful name
-			$dhtml = "<button id='add_profile_to_group_btn' data-toggle='modal' data-target='#myModal' class='btn btn-small'><i class='icon-edit' title='test'></i> $title</button>";
-
-			$bar->appendButton('Custom', $dhtml, 'batch');
-		}
-
-		if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))
+		if (JFactory::getUser()->authorise('core.admin', 'com_thm_groups'))
 		{
 			JToolBarHelper::divider();
 			JToolBarHelper::preferences('com_thm_groups');
@@ -129,13 +95,14 @@ class THM_GroupsViewGroup_Manager extends THM_GroupsViewList
 	}
 
 	/**
-	 * Method to get the script that have to be included on the form
+	 * Adds styles and scripts to the document
 	 *
-	 * @return string    Script file
+	 * @return  void  modifies the document
 	 */
-	protected function getScript()
+	protected function modifyDocument()
 	{
-		// Use Joomla.submitbutton in core.js
-		return JURI::root(true) . '/media/com_thm_groups/js/submitButton.js';
+		parent::modifyDocument();
+
+		JFactory::getDocument()->addScript(JURI::root() . 'media/com_thm_groups/js/group_manager.js');
 	}
 }

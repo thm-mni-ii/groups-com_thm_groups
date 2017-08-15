@@ -7,7 +7,7 @@
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 defined('_JEXEC') or die;
 JFormHelper::loadFieldClass('list');
@@ -48,7 +48,7 @@ class JFormFieldDisjunctList extends JFormFieldList
 		$this->setFrom($query);
 		$this->setDisjuncture($query);
 		$query->order("text ASC");
-		$dbo->setQuery((string) $query);
+		$dbo->setQuery($query);
 
 		try
 		{

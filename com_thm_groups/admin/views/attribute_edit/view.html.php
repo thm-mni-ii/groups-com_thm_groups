@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsViewAttribute_Edit
- * @description THM_GroupsViewAttribute_Edit file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
@@ -32,13 +31,20 @@ class THM_GroupsViewAttribute_Edit extends THM_GroupsViewEdit
 	 */
 	public function display($tpl = null)
 	{
+		if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
+		{
+			$exc = new Exception(JText::_('JLIB_RULES_NOT_ALLOWED'), 401);
+			JErrorPage::render($exc);
+		}
+
 		$input = JFactory::getApplication()->input;
 		$id    = $input->getInt('id', 0);
 
 		// Disable editing of the selected dynamic type
 		if ($id != 0)
 		{
-			$this->get('Form')->setFieldAttribute('dynamic_typeID', 'readonly', 'true');
+			$form = $this->get('Form');
+			$form->setFieldAttribute('dynamic_typeID', 'readonly', 'true');
 		}
 
 		parent::display($tpl);

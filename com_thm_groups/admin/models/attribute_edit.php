@@ -38,10 +38,10 @@ class THM_GroupsModelAttribute_Edit extends THM_GroupsModelEdit
 	/**
 	 * Method to get the form
 	 *
-	 * @param   Array   $data     Data         (default: Array)
+	 * @param   array   $data     Data         (default: Array)
 	 * @param   Boolean $loadData Load data  (default: true)
 	 *
-	 * @return  A Form object
+	 * @return  object the form
 	 *
 	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
 	 */
@@ -64,7 +64,7 @@ class THM_GroupsModelAttribute_Edit extends THM_GroupsModelEdit
 	 *
 	 * @return  JTable|mixed
 	 */
-	public function getTable($type = 'Attribute', $prefix = 'Table', $config = array())
+	public function getTable($type = 'Attribute', $prefix = 'THM_GroupsTable', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}

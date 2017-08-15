@@ -27,11 +27,11 @@ class THM_GroupsUserData extends THM_GroupsData
 	 *
 	 * Update for Joomla 3.3
 	 *
-	 * @param   int $userID the user's id
+	 * @param   int $profileID the user's id
 	 *
 	 * @return    result
 	 */
-	public static function getAllUserAttributesByUserID($userID)
+	public static function getAllProfileAttributes($profileID)
 	{
 		$dbo = JFactory::getDbo();
 
@@ -52,7 +52,7 @@ class THM_GroupsUserData extends THM_GroupsData
 			->leftJoin('#__thm_groups_attribute AS B  ON  A.attributeID = B.id ')
 			->leftJoin('#__thm_groups_dynamic_type AS C ON B.dynamic_typeID = C.id')
 			->leftJoin('#__thm_groups_static_type AS D ON  C.static_typeID = D.id')
-			->where("A.usersID = " . $userID)
+			->where("A.usersID = " . $profileID)
 			->where("B.published = 1")
 			->order("B.ordering");
 
@@ -75,11 +75,11 @@ class THM_GroupsUserData extends THM_GroupsData
 	 * Update for Joomla 3.3
 	 *
 	 * @param   int $attributeID the item's id
-	 * @param   int $userID      the user's id
+	 * @param   int $profileID   the user's id
 	 *
 	 * @return    result
 	 */
-	public static function getUserAttributeByAttributeID($attributeID, $userID)
+	public static function getUserAttributeByAttributeID($attributeID, $profileID)
 	{
 		$dbo = JFactory::getDbo();
 
@@ -100,7 +100,7 @@ class THM_GroupsUserData extends THM_GroupsData
 			->leftJoin('#__thm_groups_attribute AS B  ON  A.attributeID = B.id ')
 			->leftJoin('#__thm_groups_dynamic_type AS C ON B.dynamic_typeID = C.id')
 			->leftJoin('#__thm_groups_static_type AS D ON  C.static_typeID = D.id')
-			->where("A.usersID = " . $userID)
+			->where("A.usersID = " . $profileID)
 			->where("A.attributeID = " . $attributeID);
 
 		$dbo->setQuery($query);
@@ -108,9 +108,9 @@ class THM_GroupsUserData extends THM_GroupsData
 		{
 			return $dbo->loadObjectList();
 		}
-		catch (Exception $e)
+		catch (Exception $exception)
 		{
-			JErrorPage::render($e);
+			JErrorPage::render($exception);
 		}
 	}
 
@@ -151,40 +151,32 @@ class THM_GroupsUserData extends THM_GroupsData
 	 * Construct alle Attribut of a User, when selected Attributs are null,
 	 * return all Attributs
 	 *
-	 * @param   String $uid     UserID
+	 * @param   string $profileID  the profile id
 	 *
-	 * @param   Array  $structs Selected Attributs
+	 * @param   array  $attributes selected attributs
 	 *
-	 * @param   String $gid     GroupID
+	 * @param   string $groupID    GroupID
 	 *
-	 * @return  StdClass Object  with  Information about the Profil and the Role when group id is not null
+	 * @return  array  profile information
 	 */
-	public static function getUserInfo($uid, $structs = null, $gid = null)
+	public static function getUserInfo($profileID, $attributes = null, $groupID = null)
 	{
-		$db      = JFactory::getDbo();
-		$allrole = null;
-
-		if ($gid != null)
-		{
-			$allrole = self::getAllRolesOfUserInGroup($uid, $gid);
-		}
-
-		$userData = self::getAllUserAttributesByUserID($uid);
+		$profileAttributes = self::getAllProfileAttributes($profileID);
 
 		$puffer             = [];
-		$showStructure      = [];
-		$param_structselect = $structs;
+		$selectedAttributes = $attributes;
 
-		if (!isset($param_structselect))
+		if (!isset($selectedAttributes))
 		{
-			$param_structselect = self::getAllAttributesId();
+			$selectedAttributes = self::getAllAttributesId();
 		}
 
-		foreach ($userData as $userItem)
+		foreach ($profileAttributes as $userItem)
 		{
-			foreach ($param_structselect as $item)
+			foreach ($selectedAttributes as $item)
 			{
 				$userStructId = substr($item, 0, strlen($item) - 2);
+
 				if ($userItem->structid == $userStructId)
 				{
 					$itemdata                 = new stdClass;
@@ -212,22 +204,22 @@ class THM_GroupsUserData extends THM_GroupsData
 	/**
 	 * Get user attributes
 	 *
-	 * @param   String $uid       UserID
-	 * @param   int    $profileID Selected Attributs
-	 * @param   String $gid       GroupID
+	 * @param   int $profileID  the profile id
+	 * @param   int $templateID the template id
+	 * @param   int $groupID    the group id
 	 *
-	 * @return  array  Array with information about profile
+	 * @return  array  array with information about profile
 	 */
-	public static function getUserProfileInfo($uid, $profileID, $gid = null)
+	public static function getUserProfileInfo($profileID, $templateID, $groupID = null)
 	{
 		$allRoles = null;
 
-		if ($gid != null)
+		if ($groupID != null)
 		{
-			$allRoles = self::getAllRolesOfUserInGroup($uid, $gid);
+			$allRoles = self::getProfileGroupRoles($profileID, $groupID);
 		}
 
-		$userData = self::getAllUserProfileData($uid, $profileID);
+		$userData = self::getAllUserProfileData($profileID, $templateID);
 
 		$buffer = [];
 
@@ -264,13 +256,13 @@ class THM_GroupsUserData extends THM_GroupsData
 	/**
 	 * Gets all user attributes, optionally filtered for pubished status.
 	 *
-	 * @param   int  $userID        the user ID
 	 * @param   int  $profileID     the profile ID
+	 * @param   int  $templateID    the template ID
 	 * @param   bool $onlyPublished whether or not attributes should be filtered according to their published status
 	 *
 	 * @return  StdClass Object  with  Information about the Profil and the Role when group id is not null
 	 */
-	public static function getAllUserProfileData($userID, $profileID, $onlyPublished = true)
+	public static function getAllUserProfileData($profileID, $templateID, $onlyPublished = true)
 	{
 		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
@@ -294,12 +286,12 @@ class THM_GroupsUserData extends THM_GroupsData
 			$query->where("A.published = '1'");
 		}
 
-		$query->where("A.usersID = '$userID'");
+		$query->where("A.usersID = '$profileID'");
 		$query->where("B.published = '1'");
 		$query->group("B.id");
 		$query->where("E.published = '1'");
-		$query->order("E.order");
-		$query->where("F.id = " . $profileID);
+		$query->order("E.ordering");
+		$query->where("F.id = " . $templateID);
 
 		$dbo->setQuery($query);
 
@@ -316,14 +308,14 @@ class THM_GroupsUserData extends THM_GroupsData
 	/**
 	 * Return all roles of user in group
 	 *
-	 * @param   Integer $userID is user id
+	 * @param   int $profileID is user id
 	 *
-	 * @param   Integer $gid    is a group id
+	 * @param   int $groupID   is a group id
 	 *
-	 * @return    array     $db contains user information
+	 * @return    array     $dbo contains user information
 	 *
 	 */
-	public static function getAllRolesOfUserInGroup($userID, $gid)
+	public static function getProfileGroupRoles($profileID, $groupID)
 	{
 		try
 		{
@@ -336,8 +328,8 @@ class THM_GroupsUserData extends THM_GroupsData
 				->from('#__thm_groups_usergroups_roles as C')
 				->leftJoin('#__thm_groups_users_usergroups_roles as A on C.ID = A.usergroups_rolesID')
 				->leftJoin('#__thm_groups_roles as B on C.rolesID = B.id ')
-				->where('A.usersID = ' . $userID)
-				->where(' C.usergroupsID =' . $gid);
+				->where('A.usersID = ' . $profileID)
+				->where(' C.usergroupsID =' . $groupID);
 
 			$dbo->setQuery($query);
 
@@ -352,11 +344,11 @@ class THM_GroupsUserData extends THM_GroupsData
 	/**
 	 * Return all groups and roles of user
 	 *
-	 * @param   int $userID is user id
+	 * @param   int $profileID is user id
 	 *
-	 * @return    array     $db contains user information
+	 * @return    array     $dbo contains user information
 	 */
-	public static function getAllGroupsWithRolesOfUser($userID)
+	public static function getProfileAssocs($profileID)
 	{
 		try
 		{
@@ -369,7 +361,7 @@ class THM_GroupsUserData extends THM_GroupsData
 				->leftJoin('#__thm_groups_users_usergroups_roles AS userRole ON  C.ID = userRole.usergroups_rolesID')
 				->leftJoin('#__usergroups AS A ON C.usergroupsID = A.id')
 				->leftJoin('#__thm_groups_roles AS B ON C.rolesID = B.id ')
-				->where('userRole.usersID = ' . $userID);
+				->where('userRole.usersID = ' . $profileID);
 
 			$dbo->setQuery($query);
 
@@ -402,9 +394,9 @@ class THM_GroupsUserData extends THM_GroupsData
 
 			return $dbo->loadObjectList();
 		}
-		catch (Exception $e)
+		catch (Exception $exception)
 		{
-			JErrorPage::render($e);
+			JErrorPage::render($exception);
 		}
 	}
 
@@ -443,7 +435,7 @@ class THM_GroupsUserData extends THM_GroupsData
 	 *
 	 * The Structure are for the view schow, Label and wrap
 	 *
-	 * @return all id
+	 * @return array the attribute ids
 	 */
 	private static function getAllAttributesId()
 	{
@@ -463,7 +455,7 @@ class THM_GroupsUserData extends THM_GroupsData
 	/**
 	 * Gets options of attribute and dynamic type
 	 *
-	 * @param   String $attributeID Attribute-ID
+	 * @param   string $attributeID Attribute-ID
 	 *
 	 * @return    Types
 	 */
@@ -494,9 +486,9 @@ class THM_GroupsUserData extends THM_GroupsData
 	/**
 	 * Get extra path from db (for picture)
 	 *
-	 * @param   Int $attributeID User attributeID
+	 * @param   int $attributeID User attributeID
 	 *
-	 * @return    String value
+	 * @return    string value
 	 */
 	public static function getPicPath($attributeID)
 	{
@@ -526,7 +518,7 @@ class THM_GroupsUserData extends THM_GroupsData
 	/**
 	 * Method to get extra data
 	 *
-	 * @param   Int $structid StructID
+	 * @param   int $structid StructID
 	 *
 	 * @access    public
 	 * @return    null / value
@@ -560,10 +552,10 @@ class THM_GroupsUserData extends THM_GroupsData
 	/**
 	 * Get default pic for structure element from db (for picture)
 	 *
-	 * @param   Int $structid StructID
+	 * @param   int $structid StructID
 	 *
 	 * @access public
-	 * @return String value
+	 * @return string value
 	 */
 	public static function getDefaultPic($structid)
 	{
@@ -582,42 +574,13 @@ class THM_GroupsUserData extends THM_GroupsData
 	}
 
 	/**
-	 * Method to get moderator
-	 *
-	 * @param   int $gid Group ID
-	 *
-	 * @return    boolean    True on success
-	 */
-	public static function getModerator($gid)
-	{
-		$user = JFactory::getUser();
-		$id   = $user->id;
-		$dbo  = JFactory::getDbo();
-
-		$query = $dbo->getQuery(true);
-		$query->select('id');
-		$query->from($dbo->qn('#__thm_groups_users_usergroups_moderator'));
-		$query->where('usersID = ' . $dbo->quote($id));
-		$query->where('usergroupsID = ' . $dbo->quote($gid));
-		$dbo->setQuery($query);
-		$modid = $dbo->loadObject();
-
-		if (isset($modid))
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Returns user's name in format "Second name, first name"
 	 *
-	 * @param   Int $userID a user ID
+	 * @param   int $profileID a user ID
 	 *
 	 * @return string like Mustermann, Max
 	 */
-	public static function getUserName($userID)
+	public static function getLNFName($profileID)
 	{
 		$string = "Default string -> Error";
 		$dbo    = JFactory::getDbo();
@@ -628,7 +591,7 @@ class THM_GroupsUserData extends THM_GroupsData
 			->select('b.value as secondName')
 			->from('#__thm_groups_users_attribute AS a')
 			->innerJoin("#__thm_groups_users_attribute AS b ON a.usersID = b.usersID")
-			->where("a.usersID = $userID")
+			->where("a.usersID = $profileID")
 			->where('a.attributeID = 1')
 			->where('b.attributeID = 2');
 
@@ -643,7 +606,7 @@ class THM_GroupsUserData extends THM_GroupsData
 		return $string;
 	}
 
-	public static function getUserValueByAttributeID($userID, $attrID)
+	public static function getAttributeValue($profileID, $attributeID)
 	{
 		$return = 'database entry empty';
 		$dbo    = JFactory::getDbo();
@@ -652,8 +615,8 @@ class THM_GroupsUserData extends THM_GroupsData
 		$query
 			->select('value')
 			->from('#__thm_groups_users_attribute')
-			->where('attributeID =' . (int) $attrID)
-			->where('usersID =' . (int) $userID);
+			->where('attributeID =' . (int) $attributeID)
+			->where('usersID =' . (int) $profileID);
 
 		$dbo->setQuery($query);
 		$result = $dbo->loadObject();

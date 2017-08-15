@@ -12,7 +12,7 @@
  */
 
 defined('_JEXEC') or die;
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/database_compare_helper.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
 
 /**
  * Class loads form data to edit an entry.
@@ -25,84 +25,67 @@ class THM_GroupsModelTemplate extends JModelLegacy
 {
 	/**
 	 * Method to perform batch operations on an item or a set of items.
-	 * TODO make generic function which handle all types of batch operations
 	 *
 	 * @return  boolean  Returns true on success, false on failure.
 	 */
 	public function batch()
 	{
-		$input = JFactory::getApplication()->input;
+		$app     = JFactory::getApplication();
+		$isAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
 
-		// Array with action command
-		$action        = $input->get('batch_action', array(), 'array');
-		$groupIDs      = $input->get('batch_id', array(), 'array');
-		$rawProfileIDs = $input->get('cid', array(), 'array');
-
-		// Sanitize group ids.
-		$profileIDs = array_unique($rawProfileIDs);
-		Joomla\Utilities\ArrayHelper::toInteger($profileIDs);
-
-		// Remove any values of zero.
-		$zeroIndex = array_search(0, $profileIDs, true);
-
-		if ($zeroIndex !== false)
+		if (!$isAdmin)
 		{
-			unset($profileIDs[$zeroIndex]);
-		}
-
-		if (empty($profileIDs))
-		{
-			JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'warning');
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
 			return false;
 		}
 
-		$done = false;
-		if (!empty($groupIDs))
+		$input       = $app->input;
+		$templateIDs = THM_GroupsHelperComponent::cleanIntCollection($input->get('cid', array(), 'array'));
+
+		if (empty($templateIDs))
 		{
-			$cmd = $action[0];
-
-			if (!$this->batchProfile($groupIDs, $profileIDs, $cmd))
-			{
-				return false;
-			}
-
-			$done = true;
-		}
-
-		if (!$done)
-		{
-			JFactory::getApplication()->enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'), 'error');
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_TEMPLATE_SELECTED'), 'warning');
 
 			return false;
 		}
 
-		// Clear the cache
+		$groupIDs = THM_GroupsHelperComponent::cleanIntCollection($input->get('batch', array(), 'array'));
+
+		if (empty($groupIDs))
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_GROUP_SELECTED'), 'warning');
+
+			return false;
+		}
+
+		$validActions  = array('add', 'delete');
+		$actions       = $input->get('batch_action', array(), 'array');
+		$invalidAction = (empty($actions) OR empty($actions[0]) OR !in_array($actions[0], $validActions)) ? true : false;
+
+		if ($invalidAction)
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_INVALID_ACTION'), 'error');
+
+			return false;
+		}
+
+		$action = $actions[0];
+
+		if ($action == 'add')
+		{
+			return $this->batchAssociation($groupIDs, $templateIDs);
+		}
+
+		if ($action == 'delete')
+		{
+			return $this->batchDelete($groupIDs, $templateIDs);
+		}
+
+		// This should never occur
 		$this->cleanCache();
 
-		return true;
-	}
-
-	/**
-	 * Perform batch operations
-	 *
-	 * @param   array  $groupIDs   The role IDs which assignments are being edited
-	 * @param   array  $profileIDs An array of group IDs on which to operate
-	 * @param   string $action     The action to perform
-	 *
-	 * @return  boolean  True on success, false on failure
-	 */
-	public function batchProfile($groupIDs, $profileIDs, $action)
-	{
-		Joomla\Utilities\ArrayHelper::toInteger($groupIDs);
-		Joomla\Utilities\ArrayHelper::toInteger($profileIDs);
-
-		if ($action == 'del')
-		{
-			return $this->batchDelete($groupIDs, $profileIDs);
-		}
-
-		return $this->batchAssociation($groupIDs, $profileIDs);
+		return false;
 	}
 
 	/**
@@ -123,11 +106,11 @@ class THM_GroupsModelTemplate extends JModelLegacy
 		$query->where('profileID IN (' . implode(',', $templateIDs) . ')');
 		$query->order('profileID');
 
-		$this->_db->setQuery((string) $query);
+		$this->_db->setQuery($query);
 
 		try
 		{
-			$templateGroups = $this->_db->loadObjectList();
+			$templateGroups = $this->_db->loadAssocList();
 		}
 		catch (Exception $exc)
 		{
@@ -138,62 +121,40 @@ class THM_GroupsModelTemplate extends JModelLegacy
 
 		// Build an array with unique templates and their associated groups
 		$templates = array();
+
 		foreach ($templateGroups as $templateGroup)
 		{
-			$templates[$templateGroup->profileID][] = (int) $templateGroup->usergroupsID;
+			$templates[$templateGroup['profileID']][$templateGroup['usergroupsID']] = $templateGroup['usergroupsID'];
 		}
 
-		// Contains groups and roles to insert in DB
-		$insertValues = array();
+		$query         = $this->_db->getQuery(true);
+		$performInsert = false;
+
 		foreach ($templateIDs as $templateID)
 		{
 			foreach ($groupIDs as $groupID)
 			{
-				$insertValues[$templateID][] = $groupID;
+				if (empty($templates[$templateID][$groupID]))
+				{
+					$query->values("'$templateID','$groupID'");
+					$performInsert = true;
+				}
 			}
 		}
 
-		// Removes groups already associated in the manner requested
-		THM_GroupsHelperDatabase_Compare::filterInsertValues($insertValues, $templates);
-
-		// All associations to be created already exist
-		if (empty($insertValues))
+		// All requested associations already exist
+		if (!$performInsert)
 		{
 			return true;
 		}
 
-		$query = $this->_db->getQuery(true);
 		$query->insert('#__thm_groups_profile_usergroups');
 		$query->columns(array($this->_db->quoteName('profileID'), $this->_db->quoteName('usergroupsID')));
-
-		$processingNeeded = false;
-		foreach ($insertValues as $templateID => $groups)
-		{
-			if (empty($groups))
-			{
-				continue;
-			}
-
-			foreach ($groups as $groupID)
-			{
-				$query->values($templateID . ',' . $groupID);
-			}
-			$processingNeeded = true;
-		}
-
-		// If there are no roles to process, throw an error to notify the user
-		if (!$processingNeeded)
-		{
-			JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ASSOCIATIONS_ALREADY_EXIST'), 'message');
-
-			return true;
-		}
-
-		$this->_db->setQuery((string) $query);
+		$this->_db->setQuery($query);
 
 		try
 		{
-			$this->_db->execute();
+			$success = $this->_db->execute();
 		}
 		catch (Exception $exc)
 		{
@@ -202,7 +163,9 @@ class THM_GroupsModelTemplate extends JModelLegacy
 			return false;
 		}
 
-		return true;
+		$this->cleanCache();
+
+		return (empty($success)) ? false : true;
 	}
 
 	/**
@@ -222,18 +185,20 @@ class THM_GroupsModelTemplate extends JModelLegacy
 		$query->where('profileID' . ' IN (' . implode(',', $profileIDs) . ')');
 		$query->where('usergroupsID' . ' IN (' . implode(',', $groupIDs) . ')');
 
-		$this->_db->setQuery((string) $query);
+		$this->_db->setQuery($query);
 
 		try
 		{
 			$this->_db->execute();
 		}
-		catch (RuntimeException $e)
+		catch (Exception $exception)
 		{
-			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
 			return false;
 		}
+
+		$this->cleanCache();
 
 		return true;
 	}
@@ -292,6 +257,16 @@ class THM_GroupsModelTemplate extends JModelLegacy
 	 */
 	public function delete()
 	{
+		$app     = JFactory::getApplication();
+		$isAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
+
+		if (!$isAdmin)
+		{
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
+
+			return false;
+		}
+
 		$ids = JFactory::getApplication()->input->get('cid', array(), 'array');
 
 		$query = $this->_db->getQuery(true);
@@ -316,19 +291,29 @@ class THM_GroupsModelTemplate extends JModelLegacy
 	 *
 	 * @throws Exception
 	 */
-	public function deleteGroup()
+	public function deleteGroupAssociation()
 	{
-		$input = JFactory::getApplication()->input;
+		$app     = JFactory::getApplication();
+		$isAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
 
-		$profileID = $input->getInt('p_id');
-		$groupID   = $input->getInt('g_id');
+		if (!$isAdmin)
+		{
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
+
+			return false;
+		}
+
+		$input = $app->input;
+
+		$templateID = $input->getInt('templateID');
+		$groupID    = $input->getInt('groupID');
 
 		$query = $this->_db->getQuery(true);
 		$query
 			->delete('#__thm_groups_profile_usergroups')
-			->where("profileID = '$profileID'")
+			->where("profileID = '$templateID'")
 			->where("usergroupsID = '$groupID'");
-		$this->_db->setQuery((string) $query);
+		$this->_db->setQuery($query);
 
 		try
 		{
@@ -336,7 +321,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
 		}
 		catch (Exception $exc)
 		{
-			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+			$app->enqueueMessage($exc->getMessage(), 'error');
 
 			return false;
 		}
@@ -349,7 +334,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
 	 *
 	 * @return  int the new ordering position
 	 */
-	public function getOrdering()
+	private function getOrdering()
 	{
 		$query = $this->_db->getQuery(true);
 
@@ -462,11 +447,10 @@ class THM_GroupsModelTemplate extends JModelLegacy
 		$jsonParams['showLabel'] = isset($attribute['show_label']) ? (int) $attribute['show_label'] : 0;
 		$jsonParams['showIcon']  = isset($attribute['show_icon']) ? (int) $attribute['show_icon'] : 0;
 		$jsonParams['wrap']      = isset($attribute['wrap']) ? (int) $attribute['wrap'] : 0;
-
-		$attribute['params'] = json_encode($jsonParams);
+		$attribute['params']     = json_encode($jsonParams);
 
 		$templateAttribute = $this->getTable('Template_Attribute', 'THM_GroupsTable');
-
+		$templateAttribute->load(['profileID' => $templateID, 'attributeID' => $attribute['attributeID']]);
 		$success = $templateAttribute->save($attribute);
 
 		if (!$success)
@@ -490,6 +474,13 @@ class THM_GroupsModelTemplate extends JModelLegacy
 	 */
 	public function saveorder($pks = null, $order = null)
 	{
+		$isAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
+
+		if (!$isAdmin)
+		{
+			return false;
+		}
+
 		JTable::addIncludePath(JPATH_ROOT . '/administrator/components/com_thm_groups/tables/');
 		$table = $this->getTable('Template', 'THM_GroupsTable');
 
@@ -497,14 +488,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
 
 		if (empty($pks))
 		{
-			return JError::raiseWarning(400, JText::_('COM_THM_GROUPS_NO_ITEMS_SELECTED'));
-		}
-
-		$groupsAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
-
-		if (!$groupsAdmin)
-		{
-			return JError::raiseWarning(403, JText::_('COM_THM_GROUPS_NOT_ALLOWED'));
+			return false;
 		}
 
 		// Update ordering values

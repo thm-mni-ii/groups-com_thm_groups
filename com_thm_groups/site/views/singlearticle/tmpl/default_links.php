@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @name        THMGroupsSingleArticle
- * @description THMGroupsSingleArticle file from com_thm_groups (copy of com_content)
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2

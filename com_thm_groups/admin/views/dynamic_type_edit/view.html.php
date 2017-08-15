@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsViewDynamic_Type_Edit
- * @description THM_GroupsViewDynamic_Type_Edit file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -31,11 +30,16 @@ class THM_GroupsViewDynamic_Type_Edit extends THM_GroupsViewEdit
 	 */
 	public function display($tpl = null)
 	{
-		$input = JFactory::getApplication()->input;
-		$id    = $input->getInt('id', 0);
+		if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
+		{
+			$exc = new Exception(JText::_('JLIB_RULES_NOT_ALLOWED'), 401);
+			JErrorPage::render($exc);
+		}
+
+		$existingType = !empty(JFactory::getApplication()->input->getInt('id', 0));
 
 		// Disable editing of the selected static type
-		if ($id != 0)
+		if ($existingType)
 		{
 			$this->get('Form')->setFieldAttribute('static_typeID', 'readonly', 'true');
 		}
@@ -52,7 +56,7 @@ class THM_GroupsViewDynamic_Type_Edit extends THM_GroupsViewEdit
 	{
 		parent::modifyDocument();
 		$document = JFactory::getDocument();
-		$document->addScript($this->baseurl . "../../media/com_thm_groups/js/dynamic_type_edit.js");
+		$document->addScript(JUri::root() . "media/com_thm_groups/js/dynamic_type_edit.js");
 	}
 
 	/**

@@ -205,8 +205,8 @@ class THM_GroupsModelArticle extends JModelAdmin
 	 */
 	public function updateDatabaseEntry($id, $attribute, $value)
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
 		$query
 			->update('#__thm_groups_users_content')
@@ -222,11 +222,11 @@ class THM_GroupsModelArticle extends JModelAdmin
 				break;
 		}
 
-		$db->setQuery((string) $query);
+		$dbo->setQuery($query);
 
 		try
 		{
-			return (bool) $db->execute();
+			return (bool) $dbo->execute();
 		}
 		catch (Exception $exc)
 		{
@@ -245,16 +245,16 @@ class THM_GroupsModelArticle extends JModelAdmin
 	 */
 	public function isEntryExistsInDatabase($id)
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
 		$query
 			->select('*')
 			->from('#__thm_groups_users_content')
 			->where('contentID = ' . (int) $id);
-		$db->setQuery($query);
+		$dbo->setQuery($query);
 
-		$result = $db->loadObject();
+		$result = $dbo->loadObject();
 
 		if (empty($result) || $result == null)
 		{
@@ -267,25 +267,25 @@ class THM_GroupsModelArticle extends JModelAdmin
 	/**
 	 * Unfeatures article in DB
 	 *
-	 * @param   Int $a_id article id
+	 * @param   int $a_id article id
 	 *
 	 * @return void
 	 */
 	public static function deleteArticleId($a_id)
 	{
-		$db          = JFactory::getDbo();
-		$deleteQuery = $db->getQuery(true);
+		$dbo         = JFactory::getDbo();
+		$deleteQuery = $dbo->getQuery(true);
 
 
 		$deleteQuery
 			->delete('#__thm_groups_users_content')
 			->where('contentID = ' . (int) $a_id);
 
-		$db->setQuery((string) $deleteQuery);
+		$dbo->setQuery((string) $deleteQuery);
 
 		try
 		{
-			$db->execute();
+			$dbo->execute();
 		}
 		catch (Exception $exception)
 		{

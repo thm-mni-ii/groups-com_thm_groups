@@ -27,7 +27,7 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
  */
 class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 {
-	public $userID;
+	public $profileID;
 
 	public $groupID;
 
@@ -46,23 +46,33 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$input         = JFactory::getApplication()->input;
-		$this->userID  = $input->getInt('userID', 0);
-		$this->groupID = $input->getInt('groupID', 1);
-		$this->name    = $input->get('name', 1);
-		$this->menuID  = $input->getInt('Itemid');
-		$canEdit       = THM_GroupsHelperComponent::canEditProfile($this->userID, $this->groupID);
+		$input           = JFactory::getApplication()->input;
+		$standardID      = $input->getInt('id', 0);
+		$this->profileID = $input->getInt('profileID', $standardID);
+
+		$canEdit = THM_GroupsHelperComponent::canEditProfile($this->profileID);
+
 		if (!$canEdit)
 		{
-			THM_GroupsHelperComponent::noAccess();
+			$exc = new Exception(JText::_('JLIB_RULES_NOT_ALLOWED'), 401);
+			JErrorPage::render($exc);
 		}
 
-		// Get user data for edit view.
-		$this->attributes = $this->get('Attributes');
+		$this->menuID  = $input->getInt('Itemid');
+		$this->groupID = $input->getInt('groupID', 1);
 
+		// Get user data for edit view.
+		$this->attributes = $this->getModel()->getAttributes($this->profileID);
+		$this->name       = empty($this->attributes[2]['value']) ? $input->get('name', '') : $this->attributes[2]['value'];
 		$this->modifyDocument();
 
+		if (method_exists($this, 'addToolBar'))
+		{
+			$this->addToolBar();
+		}
+
 		parent::display($tpl);
+
 	}
 
 	/**
@@ -70,14 +80,14 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 	 *
 	 * @param   string $name        the name of the attribute
 	 * @param   int    $attributeID the id of the attribute type
-	 * @param   int    $userID      the id of the user profile being edited
+	 * @param   int    $profileID   the id of the user profile being edited
 	 *
 	 * @return  string  the HTML output of the crop button
 	 */
-	public function getChangeButton($name, $attributeID, $userID)
+	public function getChangeButton($name, $attributeID, $profileID)
 	{
 		$button = '<button type="button" id="' . $name . '_upload" class="btn image-button" ';
-		$button .= 'onclick="bindImageCropper(\'' . $name . '\', \'' . $attributeID . '\', \'' . $userID . '\');" ';
+		$button .= 'onclick="bindImageCropper(\'' . $name . '\', \'' . $attributeID . '\', \'' . $profileID . '\');" ';
 		$button .= 'data-toggle="modal" data-target="#' . $name . '_Modal">';
 		$button .= '<span class="icon-edit"></span>' . JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_CHANGE');
 		$button .= '</button>';
@@ -90,14 +100,14 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 	 *
 	 * @param   string $name        the name of the attribute
 	 * @param   int    $attributeID the id of the attribute type
-	 * @param   int    $userID      the id of the user profile being edited
+	 * @param   int    $id          the id of the user profile being edited
 	 *
 	 * @return  string  the HTML output of the delete button
 	 */
-	public function getPicDeleteButton($name, $attributeID, $userID)
+	public function getPicDeleteButton($name, $attributeID, $id)
 	{
 		$button = '<button id="' . $name . '_del" class="btn image-button" ';
-		$button .= 'onclick="deletePic(\'' . $name . '\', \'' . $attributeID . '\', \'' . $userID . '\');" ';
+		$button .= 'onclick="deletePic(\'' . $name . '\', \'' . $attributeID . '\', \'' . $id . '\');" ';
 		$button .= 'type="button">';
 		$button .= '<span class="icon-delete"></span>' . JText::_('COM_THM_GROUPS_DELETE');
 		$button .= '</button>';
@@ -106,81 +116,36 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 	}
 
 	/**
-	 * Creates a select input.
-	 *
-	 * @param   object $attribute the attribute being iterated
-	 * @param   bool   $multi     whether multiple options are allowed/desired
-	 *
-	 * @todo  This appears to be endemically broken.
-	 *
-	 * @return  string  the HTML select box output
-	 */
-	public function getSelect($attribute, $multi = true)
-	{
-		$html = '<select ';
-		$html .= 'id="jform_' . $attribute->name . '" ';
-		if ($multi)
-		{
-			$html .= 'name="jform[' . $attribute->name . '][value][]" ';
-			$html .= 'multiple="multiple" ';
-		}
-		else
-		{
-			$html .= 'name="jform[' . $attribute->name . '][value]" ';
-		}
-		$html .= 'class="hasTooltip form-control" ';
-		$html .= 'data-original-title="' . $attribute->description . '" ';
-		$html .= 'data-placement="right" ';
-
-		$html .= '>';
-
-		if (!empty($attribute->options))
-		{
-			$attributeOptions = json_decode($attribute->options);
-			$rawOptions       = $attributeOptions->options;
-			$options          = explode(';', $rawOptions);
-		}
-
-		// TODO: Does this work?/Has this ever worked? Normally options are written <option value="value">text</option>
-		foreach ($options as $option)
-		{
-			$html .= "<option>$option</option>";
-		}
-
-		$html .= '</select>';
-
-		return $html;
-	}
-
-	/**
 	 * Creates an advanced image upload field
 	 *
-	 * @param   object $attribute the attribute object
+	 * @param   array $attribute      the attribute being iterated
+	 * @param   array $nameAttributes the name attributes for the profile being edited
 	 *
 	 * @return  string  the HTML output of the image field
 	 */
-	public function getPicture($attribute)
+	public function getPicture($attribute, $nameAttributes)
 	{
 		$name        = $attribute['name'];
 		$attributeID = $attribute['structid'];
-		$value       = trim($attribute['value']);
-		$options     = (array) json_decode($attribute['options']);
-
-		// If name of file is empty, use default picture
-		if (empty($value))
-		{
-			$value = $options['filename'];
-		}
+		$value       = !empty(trim($attribute['value'])) ? trim($attribute['value']) : '';
+		$options     = $attribute['options'];
 
 		$position = strpos($options['path'], 'images/');
-		$path     = substr($options['path'], $position);
+		$path     = JURI::root() . substr($options['path'], $position);
 
 		$html = '<div id="' . $name . '_IMG" class="image-container">';
-		$html .= '<img src="' . JURI::root() . $path . $value . '" class="edit_img" alt="Kein Bild vorhanden" />';
+
+		if (!empty($value))
+		{
+			$file = $path . $value;
+			$alt  = (count($nameAttributes) == 2) ? implode(', ', $nameAttributes) : end($nameAttributes);
+			$html .= JHtml::image($file, $alt, array('class' => 'edit_img'));
+		}
+
 		$html .= '</div>';
-		$html .= $this->getChangeButton($name, $attributeID, $this->userID);
-		$html .= $this->getPicDeleteButton($name, $attributeID, $this->userID);
-		$html .= '<input id="jform_' . $name . '_hidden" name="jform[' . $name . '][value]" type="hidden" value="' . $value . '" />';
+		$html .= '<input id="jform_' . $name . '_value" name="jform[' . $name . '][value]" type="hidden" value="' . $value . '" />';
+		$html .= $this->getChangeButton($name, $attributeID, $this->profileID);
+		$html .= $this->getPicDeleteButton($name, $attributeID, $this->profileID);
 
 		// Load variables into context for the crop modal template
 		$this->pictureName = $name;
@@ -236,101 +201,6 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 	}
 
 	/**
-	 * Should create a form table never actually have seen it in use
-	 *
-	 * @param   string $name      the name of the attribute
-	 * @param   array  $tableData the date to be output
-	 *
-	 * @return  string  the HTML string to be rendered
-	 */
-	public function getTable($name, $tableData)
-	{
-		$columns = count($tableData);
-		$table   = '<table id="jform_' . $name . '" class="table-attribute">';
-
-		$tableHead = "<thead>";
-		$tableHead .= "<tr>";
-
-		foreach ($tableData[0] as $title => $value)
-		{
-			$tableHead .= "<th>" . $title . "</th>";
-		}
-
-		$tableHead .= "<th>Delete</th>";
-		$tableHead .= "</tr>";
-		$tableHead .= "</thead>";
-
-		$rowNumber = 0;
-		$tableBody = "<tbody>";
-		foreach ($tableData as $row)
-		{
-			$tableBody .= $this->getTableRow($name, $row, $rowNumber);
-			$rowNumber++;
-		}
-		$rowNumber++;
-
-		JFactory::getSession()->set($name . "_rowCount", $rowNumber);
-		$tableBody   .= "</tbody>";
-		$table       .= $tableHead . $tableBody . "</table>";
-		$add         = '<div class="add-container">';
-		$add         .= '<div class="add-label">Add row</div>';
-		$add         .= '<div class="add-data">';
-		$columnCount = 1;
-
-		foreach ($tableData[0] as $title => $value)
-		{
-			$add .= '<input type="text" id="jform_' . $name . '_' . $columnCount . '" ';
-			$add .= 'name="jform[' . $name . '][value][' . $rowNumber . '_' . $title . ']" ';
-			$add .= 'data="" />';
-			$columnCount++;
-		}
-
-		$add .= '<button type="button" class="btn btn-success" onclick="Joomla.submitbutton(\'user.apply\')" >';
-
-		// TODO: Convert this to a text constant.
-		$add .= 'Add to Table';
-		$add .= '</button>';
-
-		$add    .= "</div>";
-		$output = '<div class="table-container">' . $table . $add . '</div>';
-
-		return $output;
-	}
-
-	/**
-	 * Creates an input table row
-	 *
-	 * @param   string $name      the name of the attribute
-	 * @param   array  $columns   the values for the respective columns
-	 * @param   int    $rowNumber the current row number being iterated in getTable
-	 *
-	 * @return  string  the HTML row output
-	 */
-	private function getTableRow($name, $columns, $rowNumber)
-	{
-		$html = "<tr>";
-
-		foreach ($columns as $key => $value)
-		{
-			$html .= '<td>';
-			$html .= '<input type="text" ';
-			$html .= 'id="jform_' . $key . '_' . $value . '" ';
-			$html .= 'name="jform[' . $name . '][value][' . $rowNumber . '_' . $key . '_' . mt_rand() . ']" ';
-			$html .= 'value="' . $value . '"/>';
-			$html .= '</td>';
-		}
-
-		$html .= '<td>';
-		$html .= '<button type="button" class="btn btn-small" onclick="delRow(this);">';
-		$html .= '<span class="icon-delete"></span>';
-		$html .= '</button>';
-		$html .= '</td>';
-		$html .= '</tr>';
-
-		return $html;
-	}
-
-	/**
 	 * Creates a text input
 	 *
 	 * @param   object $attribute the attribute being iterated
@@ -339,9 +209,8 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 	 */
 	public function getText($attribute)
 	{
-		$options  = json_decode($attribute['options']);
-		$relevant = (!empty($options) AND !empty($options->required));
-		$required = $relevant ? $options->required : '';
+		$options  = $attribute['options'];
+		$required = (!empty($options) AND !empty($options['required'])) ? $options['required'] : '';
 		$html     = '<input type="text" ';
 		$html     .= 'id="jform_' . $attribute['name'] . '" ';
 		$html     .= 'name="jform[' . $attribute['name'] . '][value]" ';
@@ -369,19 +238,16 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 		JHtml::_('behavior.formvalidation');
 		JHtml::_('formbehavior.chosen', 'select');
 
-		$document = Jfactory::getDocument();
-		$document->addStyleSheet(JUri::root() . 'media/com_thm_groups/fonts/iconfont.css');
-		$document->addStyleSheet(JUri::root() . 'media/com_thm_groups/css/profile_edit.css');
-		$document->addStyleSheet(JUri::root() . 'media/com_thm_groups/css/respBaseStyles.css');
-		$document->addScript(JUri::root() . 'media/com_thm_groups/js/formbehaviorChosenHelper.js');
-		$document->addScript(JUri::root() . 'media/com_thm_groups/js/cropbox.js');
-		$document->addScript(JUri::root() . 'media/com_thm_groups/js/profile_edit.js');
+		JHtml::stylesheet('media/com_thm_groups/css/profile_edit.css');
+		JHtml::stylesheet('media/com_thm_groups/css/respBaseStyles.css');
+		JHtml::script('media/com_thm_groups/js/formbehaviorChosenHelper.js');
+		JHtml::script('media/com_thm_groups/js/cropbox.js');
 
 		// TODO: Are both of these necessary? Assuming that the second one checks against the dyntype regex...
-		$document->addScript(JUri::root() . 'media/com_thm_groups/js/validators.js');
-		$document->addScript(JUri::root() . 'media/com_thm_groups/js/inputValidation.js');
+		JHtml::script('media/com_thm_groups/js/validators.js');
+		JHtml::script('media/com_thm_groups/js/inputValidation.js');
 
 		// Close modal after editing
-		$document->addScriptDeclaration("window.onbeforeunload = function() { window.parent.location.reload(); };");
+		JFactory::getDocument()->addScriptDeclaration("window.onbeforeunload = function() { window.parent.location.reload(); };");
 	}
 }

@@ -46,19 +46,14 @@ class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
 	{
 		if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
 		{
-			return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+			$exc = new Exception(JText::_('JLIB_RULES_NOT_ALLOWED'), 401);
+			JErrorPage::render($exc);
 		}
 
 		// Set batch template path
 		$this->batch = array('batch' => JPATH_COMPONENT_ADMINISTRATOR . '/views/profile_manager/tmpl/default_batch.php');
 
 		$this->groups = THM_GroupsHelperBatch::getGroupOptions();
-
-		JHtml::_('bootstrap.framework');
-		JHtml::_('jquery.framework');
-		$document = JFactory::getDocument();
-		$document->addScript(JURI::root(true) . '/media/com_thm_groups/js/lib/jquery.chained.remote.js');
-		$document->addScript(JURI::root(true) . '/media/com_thm_groups/js/profile_manager.js');
 
 		parent::display($tpl);
 	}
@@ -78,8 +73,8 @@ class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
 			JToolBarHelper::editList('profile.edit');
 			JToolBarHelper::publishList('profile.publish', 'COM_THM_GROUPS_PUBLISH_PROFILE');
 			JToolBarHelper::unpublishList('profile.unpublish', 'COM_THM_GROUPS_UNPUBLISH_PROFILE');
-			JToolBarHelper::publishList('profile.activateQPForUser', 'COM_THM_GROUPS_ACTIVATE_QPS');
-			JToolBarHelper::unpublishList('profile.deactivateQPForUser', 'COM_THM_GROUPS_DEACTIVATE_QPS');
+			JToolBarHelper::publishList('profile.publishContent', 'COM_THM_GROUPS_ACTIVATE_QPS');
+			JToolBarHelper::unpublishList('profile.unpublishContent', 'COM_THM_GROUPS_DEACTIVATE_QPS');
 			JToolBarHelper::divider();
 
 			$bar = JToolBar::getInstance('toolbar');
@@ -91,17 +86,6 @@ class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
 			$html = "<button data-toggle='modal' data-target='#collapseModal' class='btn btn-small'>";
 			$html .= "<i class='icon-new' title='$title'></i> $title</button>";
 			$bar->appendButton('Custom', $html, 'batch');
-
-			$image   = 'options';
-			$title   = JText::_('COM_THM_GROUPS_QUICKPAGES_SETTINGS');
-			$link    = 'index.php?option=com_thm_groups&amp;view=qp_settings&amp;tmpl=component';
-			$height  = '350';
-			$width   = '250';
-			$top     = 0;
-			$left    = 0;
-			$onClose = 'window.location.reload();';
-			$bar     = JToolBar::getInstance('toolbar');
-			$bar->appendButton('Popup', $image, $title, $link, $width, $height, $top, $left, $onClose);
 		}
 
 		if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups'))
@@ -109,5 +93,19 @@ class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
 			JToolBarHelper::divider();
 			JToolBarHelper::preferences('com_thm_groups');
 		}
+	}
+
+	/**
+	 * Adds styles and scripts to the document
+	 *
+	 * @return  void  modifies the document
+	 */
+	protected function modifyDocument()
+	{
+		parent::modifyDocument();
+
+		$document = JFactory::getDocument();
+		$document->addScript(JURI::root(true) . '/media/com_thm_groups/js/lib/jquery.chained.remote.js');
+		$document->addScript(JURI::root(true) . '/media/com_thm_groups/js/profile_manager.js');
 	}
 }

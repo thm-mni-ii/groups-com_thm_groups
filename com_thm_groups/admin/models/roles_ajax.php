@@ -30,13 +30,12 @@ class THM_GroupsModelRoles_Ajax extends JModelLegacy
 	 */
 	public function getRolesOfGroup()
 	{
-		$db     = JFactory::getDbo();
-		$query  = $db->getQuery(true);
+		$query  = $this->_db->getQuery(true);
 		$jinput = JFactory::getApplication()->input;
 
 		$groupID = $jinput->get->get('batch-groups', '', 'int');
 
-		$nestedQuery = $db->getQuery(true);
+		$nestedQuery = $this->_db->getQuery(true);
 		$nestedQuery
 			->select('id')
 			->from('#__thm_groups_users');
@@ -54,10 +53,10 @@ class THM_GroupsModelRoles_Ajax extends JModelLegacy
 			$query->where("a.usergroupsID = $groupID");
 		}
 
-		$db->setQuery($query);
-		$db->execute();
+		$this->_db->setQuery($query);
+		$this->_db->execute();
 
-		$roles = $db->loadObjectList();
+		$roles = $this->_db->loadObjectList();
 
 		$result = array();
 		foreach ($roles as $role)

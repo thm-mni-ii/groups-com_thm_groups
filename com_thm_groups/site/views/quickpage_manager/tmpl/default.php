@@ -14,7 +14,7 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-$saveOrderingUrl = 'index.php?option=com_thm_groups&task=quickpage.saveOrderAjax&tmpl=component';
+$saveOrderingUrl = 'index.php?option=com_thm_groups&task=content.saveOrderAjax&tmpl=component';
 JHtml::_('sortablelist.sortable', 'quickpage_manager-list', 'adminForm', null, $saveOrderingUrl);
 
 $orderingButton = JHtml::_(

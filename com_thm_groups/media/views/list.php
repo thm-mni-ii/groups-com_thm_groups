@@ -3,12 +3,11 @@
  * @category    Joomla library
  * @package     THM_Groups
  * @name        THM_GroupsViewList
- * @description Common list view
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Ilja Michajlow, <Ilja.Michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 /**
@@ -85,11 +84,7 @@ abstract class THM_GroupsViewList extends JViewLegacy
 	 */
 	protected function modifyDocument()
 	{
-		$option   = JFactory::getApplication()->input->get('option');
-		$document = JFactory::getDocument();
-		$document->addStyleSheet(JUri::root() . "/media/com_thm_groups/fonts/iconfont.css");
-		$document->addStyleSheet(JUri::root() . "/media/com_thm_groups/css/backend.css");
-
+		JHtml::stylesheet('media/com_thm_groups/css/backend.css');
 		JHtml::_('bootstrap.tooltip');
 		JHtml::_('behavior.multiselect');
 		JHtml::_('formbehavior.chosen', 'select');

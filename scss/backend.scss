@@ -166,65 +166,22 @@ tbody tr:first-child td {
   float: none;
 }
 
-// adjusting mapping
-// -> edit Subject Pools(Modulpool) -> Degree Programs and Module Pools (Studiengänge & Modulpools)
-//********************************************************************************************************************//
-#mapping, #mappings {
-  @media (min-width: 768px) {
-    .control-group:nth-of-type(1) {
-      width: 50%;
-      float: left;
-      .controls select {
-        width: 95%;
-      }
-    }
+/**********************************************************************************************************************/
+/* modals                                                                                                             */
+/**********************************************************************************************************************/
 
-    .control-group:nth-of-type(2) {
-      width: 50%;
-      float: right;
-      .controls select {
-        width: 95%;
-      }
-    }
+.modal-body {
 
-    .control-group:nth-of-type(3) {
-      clear: both;
-    }
-  }
+  .control-group {
+    padding-left: 1rem;
+    padding-top: .5rem;
 
-  table {
-    width: 98%;
-  }
-
-  thead {
-    tr:nth-child(1) th {
-      padding: 5px 0 5px 8px;
-    }
-    .thm_organizer_pools_ordering {
-      width: 200px;
-    }
-  }
-
-  tbody {
-    .child-order {
-      .btn-small {
-        padding: 1px 4px;
-        font-size: 12px;
-        line-height: 8px;
-      }
-
-      .text-area-order {
-        padding: 1px 2px;
-        text-align: center;
-        height: 14px;
-      }
-    }
-
-    .child-name {
-      padding-right: 30px;
+    .control-label > label{
+      font-weight: bold;
     }
   }
 }
+
 
 //********************************************************************************************************************//
 // Media Queries for tables in Backend
@@ -254,8 +211,9 @@ tbody tr:first-child td {
   }
 }
 
-// icon picker
-//********************************************************************************************************************//
+/**********************************************************************************************************************/
+/* icon picker                                                                                                        */
+/**********************************************************************************************************************/
 .iconPicker {
   white-space: normal !important; //needed for Firefox
 

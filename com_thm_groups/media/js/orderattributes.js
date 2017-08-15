@@ -5,13 +5,11 @@
  * @copyright Copyright (C) 2015 THM
  */
 
-jQuery(document).ready(function ()
-{
+jQuery(document).ready(function () {
 	jQuery("#paramsattr").sortable({
 
 		// This event is triggered when sorting has stopped
-		stop: function (event, ui)
-		{
+		stop: function (event, ui) {
 
 			// Create array for new ordering
 			var newOrder = [];
@@ -19,8 +17,7 @@ jQuery(document).ready(function ()
 			// Push default value for title
 			newOrder.push(1);
 
-			jQuery("#paramsattr li").each(function ()
-			{
+			jQuery("#paramsattr li").each(function () {
 				// Push values for first and second name
 				newOrder.push(jQuery(this).val());
 			});

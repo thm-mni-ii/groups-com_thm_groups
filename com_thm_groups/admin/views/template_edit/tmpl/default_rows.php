@@ -3,7 +3,6 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @description rows view default template
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -12,38 +11,25 @@
 
 defined('_JEXEC') or die;
 
-
 foreach ($this->attributes as $key => $attribute)
 {
-	$params = null;
-	if (!empty($attribute->params))
+	if (!empty($attribute['params']))
 	{
-		$params = json_decode($attribute->params);
+		$params = json_decode($attribute['params'], true);
 	}
 
-	$defaultPublished = 1;
-	if (!empty($params))
+	$published = isset($attribute['published']) ? $attribute['published'] : 1;
+	$useParams = !empty($params);
+
+	$showIcon = $showLabel = $wrap = 1;
+
+	if ($useParams)
 	{
-		$defaultPublished = empty($attribute->published) ? $attribute->published : 1;
+		$showIcon  = isset($params['showIcon']) ? $params['showIcon'] : 1;
+		$showLabel = isset($params['showLabel']) ? $params['showLabel'] : 1;
+		$wrap      = isset($params['wrap']) ? $params['wrap'] : 1;
 	}
 
-	$defaultShowIcon = 1;
-	if (!empty($params))
-	{
-		$defaultShowIcon = empty($params->showIcon) ? $params->showIcon : 1;
-	}
-
-	$defaultShowTitle = 1;
-	if (!empty($params))
-	{
-		$defaultShowTitle = empty($params->showLabel) ? $params->showLabel : 1;
-	}
-
-	$defaultWrap = 1;
-	if (!empty($params))
-	{
-		$defaultWrap = empty($params->wrap) ? $params->wrap : 1;
-	}
 	?>
 
 	<tr class="ui-state-default">
@@ -54,33 +40,33 @@ foreach ($this->attributes as $key => $attribute)
 		</td>
 		<td>
 			<?php
-			echo $attribute->field;
-			echo "<input type='hidden' name='jform[attributes][$attribute->id][attribute]' value='$attribute->field' />";
-			echo "<input type='hidden' name='jform[attributes][$attribute->id][attributeID]' value='$attribute->id' />";
+			echo $attribute['field'];
+			echo "<input type='hidden' name='jform[attributes][{$attribute['id']}][attribute]' value='{$attribute['field']}' />";
+			echo "<input type='hidden' name='jform[attributes][{$attribute['id']}][attributeID]' value='{$attribute['id']}' />";
 			if (!empty($attribute->ID))
 			{
-				echo "<input type='hidden' name='jform[attributes][$attribute->id][ID]' value='$attribute->ID' />";
+				echo "<input type='hidden' name='jform[attributes][{$attribute['id']}][ID]' value='{$attribute['id']}' />";
 			}
 			?>
 		</td>
 		<td>
 			<?php
-			echo $this->renderRadioBtn('published', $attribute, $defaultPublished);
+			echo $this->renderRadioBtn('published', $attribute, $published);
 			?>
 		</td>
 		<td>
 			<?php
-			echo $this->renderRadioBtn('show_icon', $attribute, $defaultShowIcon);
+			echo $this->renderRadioBtn('show_icon', $attribute, $showIcon);
 			?>
 		</td>
 		<td>
 			<?php
-			echo $this->renderRadioBtn('show_label', $attribute, $defaultShowTitle);
+			echo $this->renderRadioBtn('show_label', $attribute, $showLabel);
 			?>
 		</td>
 		<td>
 			<?php
-			echo $this->renderRadioBtn('wrap', $attribute, $defaultWrap);
+			echo $this->renderRadioBtn('wrap', $attribute, $wrap);
 			?>
 		</td>
 	</tr>

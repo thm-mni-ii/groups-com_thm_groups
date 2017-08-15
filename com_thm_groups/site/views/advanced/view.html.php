@@ -4,25 +4,16 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @name        THMGroupsViewAdvanced
- * @description THMGroupsViewAdvanced file from com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
- * @author      Markus Kaiser,  <markus.kaiser@mni.thm.de>
- * @author      Daniel Bellof,  <daniel.bellof@mni.thm.de>
- * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
- * @author      Peter May,      <peter.may@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
- * @author      Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
- * @author      Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @author      James Antrim, <james.antrim@nm.thm.de>
+ * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 
-jimport('joomla.application.component.view');
 require_once JPATH_ROOT . "/media/com_thm_groups/data/thm_groups_data.php";
-JHtml::_('bootstrap.framework');
-JHtml::_('behavior.modal');
 
 /**
  * THMGroupsViewAdvanced class for component com_thm_groups
@@ -33,6 +24,24 @@ JHtml::_('behavior.modal');
  */
 class THM_GroupsViewAdvanced extends JViewLegacy
 {
+	public $columns;
+
+	private $groupID;
+
+	private $isAdmin;
+
+	private $menuID;
+
+	public $profiles;
+
+	private $showRoles;
+
+	public $sort;
+
+	private $suppressText;
+
+	public $title;
+
 	/**
 	 * Method to get display
 	 *
@@ -42,793 +51,440 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$app   = JFactory::getApplication();
-		$input = JFactory::getApplication()->input;
-		$model = $this->getModel('advanced');
+		$app = JFactory::getApplication();
 
-		// Mainframe Parameter
-		$params        = $app->getParams();
-		$userid        = $input->get('userID', 0);
-		$pagetitle     = $params->get('page_title');
-		$showpagetitle = $params->get('show_page_heading');
+		$input     = $app->input;
+		$profileID = $input->get('profileID', 0);
 
-		if ($showpagetitle)
+		if ($profileID)
 		{
-			$title = $pagetitle;
-		}
-		else
-		{
-			$title = "";
+			$this->addBreadCrumb($profileID);
 		}
 
-		$pathway = $app->getPathway();
+		$this->model = $this->getModel();
+		$params      = $this->model->params;
 
-		if ($userid)
-		{
-			$db    = JFactory::getDbo();
-			$query = $db->getQuery(true);
-			$query->select('value');
-			$query->from($db->qn('#__thm_groups_users_attribute'));
-			$query->where('usersID = ' . $userid);
-			$query->where('attributeID = 1');
+		$this->columns      = $params->get('columns', 2);
+		$this->groupID      = $params->get('groupID');
+		$this->isAdmin      = empty(JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) ? false : true;
+		$this->menuID       = $input->get('Itemid', 0, 'get');
+		$this->profiles     = $this->model->getProfiles();
+		$this->showRoles    = $params->get('showRoles', true);
+		$this->sort         = $params->get('sort', 1);
+		$this->suppressText = $params->get('suppress', true);
+		$this->title        = empty($params->get('show_page_heading')) ? '' : $params->get('page_title', '');
 
-			$db->setQuery($query);
-			$firstname = $db->loadObjectList();
-			$name      = $input->get('name', '') . ', ' . $firstname[0]->value;
-			$pathway->addItem($name, '');
-		}
-
-		$this->title     = $title;
-		$this->app       = $input;
-		$itemId          = $input->get('Itemid', 0, 'get');
-		$viewparams      = $model->getViewParams();
-		$this->params    = $viewparams;
-		$groupnumber     = $model->getGroupNumber();
-		$this->groupID   = $groupnumber;
-		$this->itemid    = $itemId;
-		$canEdit         = $model->canEdit($groupnumber);
-		$this->canEdit   = $canEdit;
-		$tempdata        = $model->getData();
-		$this->data      = $tempdata;
-		$gettable        = $model->getDataTable();
-		$this->dataTable = $gettable;
-
-		$advancedView = $model->getAdvancedView();
-
-		$this->view = $advancedView;
-
-		// Long Info Truncate
-		$truncateLongInfo       = !$params->get('longInfoNotTruncated', false);
-		$this->truncateLongInfo = $truncateLongInfo;
-
-		$document = JFactory::getDocument();
-
-		// Load responsive CSS
-		$document->addStyleSheet($this->baseurl . '/media/com_thm_groups/css/respAdvanced.css');
-
-		// Load Dynamic CSS
-		$mycss = $this->getCssView($params, $advancedView);
-
-		$document->addStyleDeclaration($mycss);
-
-		// Notify Preview Observer
-		$token = $input->get('notifytoken', false);
-
-		if (!empty($token))
-		{
-			$model->notifyPreviewObserver($itemId, $token);
-		}
+		$this->modifyDocument();
 
 		parent::display($tpl);
 	}
 
 	/**
-	 * Method to generate table
+	 * Adds a the selected profile user's name to the path context (breadcrumbs)
 	 *
-	 * @param   Object $data Data
+	 * @param   int $profileID the profile id of the selected user
 	 *
-	 * @return String table
+	 * @return void adds the selected username to the application's path context
 	 */
-	public function make_table($data)
+	private function addBreadCrumb($profileID)
 	{
-		$jsonTable = json_decode($data);
-		$table     = "<table class='table'><tr>";
+		$app = JFactory::getApplication();
+		$dbo = JFactory::getDbo();
 
-		foreach ($jsonTable[0] as $key => $value)
+		$query = $dbo->getQuery(true);
+		$query->select('ua.attributeID, ua.value');
+		$query->from('#__thm_groups_users_attribute AS ua');
+		$query->where('usersID = ' . $profileID);
+		$query->where('attributeID IN (1,2)');
+
+		$dbo->setQuery($query);
+
+		$nameValues = $dbo->loadAssocList();
+		$names      = array(0 => '', 1 => '');
+
+		foreach ($nameValues as $nameValue)
 		{
-			$headItem = str_replace("_", " ", $key);
-			$table    = $table . "<th>" . $headItem . "</th>";
-		}
-
-		$table = $table . "</tr>";
-
-		foreach ($jsonTable as $item)
-		{
-			$table = $table . "<tr>";
-
-			foreach ($item as $value)
+			if ((int) $nameValue['attributeID'] === 1)
 			{
-				$table = $table . "<td>" . $value . "</td>";
+				$names[1] = $nameValue['value'];
 			}
-
-			$table = $table . "</tr>";
+			if ((int) $nameValue['attributeID'] === 2)
+			{
+				$names[0] = $nameValue['value'];
+			}
 		}
 
-		$table = $table . "</table>";
-
-		return $table;
+		$name = implode(", ", $names);
+		$app->getPathway()->addItem($name, '');
 	}
 
-
 	/**
-	 * Add px Suffix to numeric value (for css)
+	 * Modifies the document by adding script and style declarations.
 	 *
-	 * @param   Mixed $value Value
-	 *
-	 * @author    Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
-	 * @author    Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
-	 *
-	 * @return  String    $value    CSS-Value
+	 * @return void modifies the document
 	 */
-	public function addPxSuffixToNumeric($value)
+	private function modifyDocument()
 	{
-		if (is_numeric($value))
+		JHtml::_('bootstrap.framework');
+
+		$document = JFactory::getDocument();
+		$document->addStyleSheet($this->baseurl . '/media/com_thm_groups/css/advanced.css');
+
+		// Truncate Long Info Text
+		if ($this->suppressText)
 		{
-			$value .= 'px';
+			$hide = JText::_('COM_THM_GROUPS_ACTION_HIDE');
+			$read = JText::_('COM_THM_GROUPS_ACTION_DISPLAY');
+			$document->addScriptOptions('com_thm_groups', array('hide' => $hide, 'read' => $read));
+			require_once JPATH_ROOT . "/media/com_thm_groups/js/toggle_text.js.php";
+		}
+	}
+
+	private function getActionContainer($profileID, $lastName)
+	{
+		$container  = '';
+		$canEditOwn = (bool) JComponentHelper::getParams('com_thm_groups')->get('editownprofile', 0);
+		$ownProfile = JFactory::getUser()->id == $profileID;
+		$canEdit    = (($canEditOwn AND $ownProfile) OR $this->isAdmin);
+
+		if ($canEdit)
+		{
+			$container .= '<div class="action-container">';
+
+			$linkTitle = JText::_('COM_THM_GROUPS_EDIT');
+			$data      = ['option'    => 'com_thm_groups',
+			              'view'      => 'profile_edit',
+			              'groupID'   => $this->groupID,
+			              'profileID' => $profileID,
+			              'name'      => $lastName,
+			              'Itemid'    => $this->menuID
+			];
+
+			$link      = 'index.php?' . http_build_query($data);
+			$container .= JHtml::link(JRoute::_($link), '<span class="icon-edit"></span>', $linkTitle);
+			$container .= "</div>";
+			$container .= '<div class="clearFix"></div>';
 		}
 
-		return $value;
+		return $container;
 	}
 
-
 	/**
-	 * Get the Stylesheet for Advance View List
+	 * Creates the container for the attribute
 	 *
-	 * @param   Array $params       Contains the Paramter for the View
-	 * @param   mixed $advancedView Show multiple Containers in one Row
+	 * @param array  $attribute the profile attribute being iterated
+	 * @param string $surname   the surname of the profile being iterated
 	 *
-	 * @author    Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
-	 * @author    Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
-	 *
-	 * @return  String   $result  the HTML code of te view
+	 * @return string the HTML for the value container
 	 */
-	public function getCssView($params, $advancedView = 0)
+	private function getAttributeContainer($attribute, $surname)
 	{
+		$container = '';
 
-		// Container Wrapper Width - DO NOT CHANGE
-		$containerWrapperWidth = (empty($advancedView)) ? '100%' : '50%';
+		$params     = empty($attribute['params']) ? [] : $attribute['params'];
+		$dynOptions = empty($attribute['dynOptions']) ? [] : $attribute['dynOptions'];
+		$options    = empty($attribute['options']) ? [] : $attribute['options'];
 
+		$attribute['params'] = array_merge($params, $dynOptions, $options);
+		$label               = '';
 
-		// LOAD PARAMS START
-
-		// Container Dimensions
-		$containerWidth  = $params->get('containerWidth', '100%');
-		$containerHeight = $params->get('containerHeight', 'auto');
-
-		// Container Padding
-		$containerPadding = $params->get('containerPadding', 10);
-
-		// Container Margin Bottom
-		$containerMarginBottom = $params->get('containerMarginBottom', 10);
-
-		// Container Background
-		$containerBackgroundOdd  = $params->get('containerBackgroundOdd', '#f9f9f9');
-		$containerBackgroundEven = $params->get('containerBackgroundEven', '#f1f1f1');
-
-		// Font Params
-		$fontFamily        = $params->get('fontFamily', 'inherit');
-		$fontSize          = $params->get('fontSize', 'inherit');
-		$fontColorOdd      = $params->get('fontColorOdd', '#000000');
-		$fontColorEven     = $params->get('fontColorEven', '#000000');
-		$longInfoColorOdd  = $params->get('longInfoColorOdd', '#525252');
-		$longInfoColorEven = $params->get('longInfoColorEven', '#525252');
-
-		// Profile Image Dimensions
-		$imgWidth    = $params->get('profileImageWidth', '66');
-		$imgHeight   = $params->get('profileImageHeight', 'auto');
-		$imgBordered = $params->get('profileImageBorderd', false);
-
-		if ($imgBordered)
+		if (($attribute['type'] == 'PICTURE'))
 		{
-			$imgBordered = 'border: 1px solid #ffffff;
-                            -webkit-border-radius: 4px;
-                            border-radius: 4px;
-                            -webkit-box-shadow: 0px 0px 3px 0px #999999;
-                            box-shadow: 0px 0px 3px 0px #999999;';
+			$container .= '<div class="attribute-picture">';
 		}
 		else
 		{
-			$imgBordered = '';
-		}
-
-		$imgPositionLeft = $params->get('profileImageFloatedLeft', false);
-
-		if ($imgPositionLeft)
-		{
-			$imgPosition = 'margin:0px 10px 0px 0px!important;float:left;';
-		}
-		else
-		{
-			$imgPosition = 'margin:0px 0px 0px 10px!important;float:right;';
-		}
-
-		// Addition individual Styles
-		$profileContainerStyles = $params->get('profileContainerStyles', false);
-		$profileImageStyles     = $params->get('profileImageStyles', false);
-		$textLineStyles         = $params->get('textLineStyles', false);
-		$textLineLabelStyles    = $params->get('textLineLabelStyles', false);
-		$linksStyles            = $params->get('linksStyles', false);
-		$showMoreButtonStyles   = $params->get('showMoreButtonStyles', false);
-		$longInfoStyles         = $params->get('longInfoStyles', false);
-
-
-		// LOAD PARAMS END
-
-		$out = 'div#thm_groups_profile_container_list {
-                    font-family: ' . $fontFamily . ';
-                    font-size: ' . $this->addPxSuffixToNumeric($fontSize) . ';
-                }
-
-                div#thm_groups_profile_container_list a {
-                    font-family: inherit;
-                    font-size: inherit;
-                    ' . $linksStyles . '
-                }
-
-                div.thm_groups_profile_container_list_row_odd, div.thm_groups_profile_container_list_row_even {
-                     //width: 100%;
-                    margin: 0px 0px ' . $this->addPxSuffixToNumeric($containerMarginBottom) . ' 0px !important;
-                    clear: both;
-                    overflow: auto;
-                    ' . $profileContainerStyles . '
-                }
-
-                div.thm_groups_profile_container_list_row_odd {
-                    color: ' . $fontColorOdd . ';
-                    background: ' . $containerBackgroundOdd . ';
-                }
-
-                div.thm_groups_profile_container_list_row_even {
-                    color: ' . $fontColorEven . ';
-                    background: ' . $containerBackgroundEven . ';
-                }
-
-                div.clearfix {
-                    clear:both;
-                }
-
-                div.thm_groups_profile_container_list_coloumn_wrapper {
-                    width: ' . $containerWrapperWidth . ';
-					float: left;
-                }
-
-                div.thm_groups_profile_container_list_coloumn {
-                    width: ' . $this->addPxSuffixToNumeric($containerWidth) . ';
-                    height: ' . $this->addPxSuffixToNumeric($containerHeight) . ';
-                    margin: auto;
-                }
-
-                div.thm_groups_profile_container_list_coloumn_content_wrapper {
-                    padding: ' . $this->addPxSuffixToNumeric($containerPadding) . ';
-                }
-
-                img.thm_groups_profile_container_profile_image {
-                    max-width: ' . $this->addPxSuffixToNumeric($imgWidth) . ';
-                    max-height: ' . $this->addPxSuffixToNumeric($imgHeight) . ';
-                    display: block;
-                    ' . $imgBordered . '
-                    ' . $imgPosition . '
-                    ' . $profileImageStyles . '
-                }
-
-                input#thm_groups_profile_container_preview_button {
-                    cursor: pointer;
-                }
-
-                span.thm_groups_profile_container_profile_read_more {
-                    text-decoration: underline;
-                    cursor: pointer;
-                    ' . $showMoreButtonStyles . '
-                }
-
-                div.thm_groups_profile_container_list_row_odd div.thm_groups_profile_container_profile_long_info,
-                div.thm_groups_profile_container_list_row_odd div.thm_groups_profile_container_profile_long_info li {
-                    color: ' . $longInfoColorOdd . ';
-                }
-
-                div.thm_groups_profile_container_list_row_even div.thm_groups_profile_container_profile_long_info,
-                div.thm_groups_profile_container_list_row_even div.thm_groups_profile_container_profile_long_info li {
-                    color: ' . $longInfoColorEven . ';
-                }
-
-                div.thm_groups_profile_container_profile_long_info {
-                    ' . $longInfoStyles . '
-                }
-
-                div.thm_groups_profile_container_line {
-                    ' . $textLineStyles . '
-                }
-
-                span.thm_groups_profile_container_line_label {
-                    ' . $textLineLabelStyles . '
-                }';
-
-		return $out;
-	}
-
-	/**
-	 * to get the Link to show the User Information
-	 *
-	 * @param   String  $paramLinkTarget Show Option for Link
-	 * @param   Integer $itemid          Menu Id
-	 * @param   String  $lastName        Group Member last anem
-	 * @param   Integer $groupID         Group Id
-	 * @param   Integer $userID          Group Member ID
-	 * @param   Array   $attribut        Group Member Attribut
-	 *
-	 * @return the HTML to link the User information
-	 */
-	public function getUserinInformation($paramLinkTarget, $itemid, $lastName, $groupID, $userID, $attribut)
-	{
-		$displayInline = " style='display: inline'";
-		$displayLeft   = " style='float: left'";
-		$result        = "";
-
-		switch ($paramLinkTarget)
-		{
-			case "module":
-				$path   = "index.php?option=com_thm_groups&view=advanced&layout=list&Itemid=";
-				$result .= "<a href="
-					. JRoute::_($path . $itemid . '&userID=' . $userID . '&name=' . trim($lastName) . '&groupID=' . $groupID)
-					. ">";
-				break;
-			case "profile":
-				$path   = 'index.php?option=com_thm_groups&view=profile&layout=default';
-				$result .= "<a href="
-					. JRoute::_($path . '&userID=' . $userID . '&name=' . trim($lastName) . '&groupID=' . $groupID)
-					. ">";
-				break;
-			default:
-				$path   = "index.php?option=com_thm_groups&view=advanced&layout=list&Itemid=";
-				$result .= "<a href="
-					. JRoute::_($path . $itemid . '&userID=' . $userID . '&name=' . trim($lastName) . '&groupID=' . $groupID)
-					. ">";
-		}
-
-		if (trim($attribut->value) != "")
-		{
-			$result .=
-				"<div class='gs_advlist_longinfo'"
-				. ($attribut->structwrap ? $displayLeft : $displayInline) . ">"
-				. trim($attribut->value)
-				. "</div> ";
-		}
-
-		$result .= "</a>";
-
-		return $result;
-	}
-
-	/**
-	 * To get All the User of a Group for Advanced-View
-	 *
-	 * @param   Array   $allUsersData     content All Member of a groups
-	 * @param   Integer $col_view         Number of column
-	 * @param   String  $paramLinkTarget  Show Option for Link
-	 * @param   Boolean $canEdit          Can User Edit
-	 * @param   Integer $groupID          Group Id
-	 * @param   Integer $itemid           Menu Id
-	 * @param   Integer $app_option       Group Member ID
-	 * @param   Array   $app_layout       Layout Option
-	 * @param   Array   $app_view         view Option
-	 * @param   Boolean $truncateLongInfo Hidden the Attribute
-	 *
-	 * @return the HTML Code with all users information
-	 */
-	public function showAllUserOfGroup(
-		$allUsersData,
-		$col_view,
-		$paramLinkTarget,
-		$canEdit,
-		$groupID,
-		$itemid,
-		$app_option,
-		$app_layout,
-		$app_view,
-		$truncateLongInfo)
-	{
-		// Show Profiles
-		$members = $allUsersData;
-		$User    = JFactory::getUser();
-		$result  = "";
-
-		// 1 Column or 2 Columns in one Row.
-		$countOfColoumns = $col_view;
-		$elementCounter  = 0;
-		$rowCounter      = 0;
-		$lastIndex       = count($members) - 1;
-
-		// Get mobile Navigation
-		$result .= $this->getMobileNavbar($allUsersData);
-
-		foreach ($members as $id => $member)
-		{
-			// Open Row Tag - Even / Odd
-			if ($elementCounter % $countOfColoumns == 0)
+			if (($attribute['type'] == 'TEXTFIELD'))
 			{
-				// Count Elements
-				$rowCounter++;
-
-				$cssListRowClass = ($rowCounter % 2) ? '_odd' : '_even';
-				$result          .= '<div class="thm_groups_profile_container_list_row' . $cssListRowClass . '">';
+				$container .= '<div class="attribute-textfield">';
 			}
-
-			// Open Coloumn Wrapper Tag - Only for float-attribute, now is easy to work with width:100%
-			if ($countOfColoumns == 1)
+			elseif (!empty($attribute['params']['wrap']))
 			{
-				$cssListColoumnClass = '_full';
-				$result              .= '<div class="thm_groups_profile_container_list_coloumn_wrapper' . $cssListColoumnClass . '">';
+				$container .= '<div class="attribute-wrap">';
 			}
 			else
 			{
-				$cssListColoumnClass = ($elementCounter % $countOfColoumns == 0) ? '_left' : '_right';
-				$result              .= '<div class="thm_groups_profile_container_list_coloumn_wrapper '
-					. ' col_med_6_advanced col-sm-6 span6 thm_groups_profile_container_list_coloumn_wrapper' . $cssListColoumnClass . '">';
+				$container .= '<div class="attribute-inline">';
 			}
 
-			// Open Coloumn Tag - Only for dimensions
-			$result .= '<div class="thm_groups_profile_container_list_coloumn">';
+			$label .= $this->getLabelContainer($attribute);
+		}
 
-			// Open Content Wrapper Tag - For Properties like padding, border etc.
-			$result .= '<div class="thm_groups_profile_container_list_coloumn_content_wrapper">';
+		$container .= $label;
 
-			// Load Profile Content
-			$lastName = "";
-			$picture  = null;
-			$picpath  = null;
+		// Empty values or undesired
+		if (empty($label))
+		{
+			$labeled = 'none';
+		}
 
-			$componentparams = JComponentHelper::getParams('com_thm_groups');
+		// The icon label consists solely of tags
+		elseif (empty(strip_tags($label)))
+		{
+			$labeled = 'icon';
+		}
+		else
+		{
+			$visibleLength = strlen(strip_tags($label));
+			$labeled       = $visibleLength > 10 ? 'label-long' : 'label';
+		}
 
-			foreach ($member as $memberhead)
+		$container .= $this->getValueContainer($attribute, $surname, $labeled);
+
+		$container .= "</div>";
+
+		return $container;
+	}
+
+	/**
+	 * Creates the container for the attribute label
+	 *
+	 * @param array $attribute the profile attribute being iterated
+	 *
+	 * @return string the HTML for the label container
+	 */
+	private function getLabelContainer($attribute)
+	{
+		$showIcon  = (!empty($attribute['params']['showIcon'] AND !empty($attribute['params']['icon'])));
+		$text      = empty($attribute['name']) ? '' : $attribute['name'];
+		$showLabel = (!empty($attribute['params']['showLabel']) AND !empty($text));
+		$label     = '';
+
+		if ($showIcon OR $showLabel)
+		{
+			$long  = (!$showIcon AND strlen($text) > 10);
+			$label .= $long ? '<div class="attribute-label attribute-label-long">' : '<div class="attribute-label">';
+
+			if ($showIcon)
 			{
-				// Daten fuer den HEAD in Variablen speichern
-				switch ($memberhead->structid)
-				{
-					case "2":
-						$lastName = $memberhead->value;
-						$result   .= "<div id='" . $lastName . "' style='visibility:hidden;'></div>";
-						break;
-					default:
-						if ($memberhead->type == "PICTURE" && $picture == null && $memberhead->publish)
-						{
-							$picture = $memberhead->value;
-
-							if (isset($memberhead->options))
-							{
-								$pictureOption = json_decode($memberhead->options);
-							}
-							else
-							{
-								$pictureOption = json_decode($memberhead->dynOptions);
-							}
-
-							$tempposition = explode('images/', $pictureOption->path, 2);
-							$picpath      = 'images/' . $tempposition[1];
-						}
-						break;
-				}
+				$label .= '<span class="' . $attribute['params']['icon'] . '" title="' . $text . '"></span>';
+			}
+			elseif ($showLabel)
+			{
+				$label .= JText::_($attribute['name']);
 			}
 
-			$result .= "<div id='secondWrapper'>";
+			$label .= '</div>';
+		}
 
-			if ($picture != null)
+		return $label;
+	}
+
+	/**
+	 * Creates the HTML for the name container
+	 *
+	 * @param array $attributes the attributes of the profile
+	 *
+	 * @return string the HTML string containing name information
+	 */
+	private function getNameContainer($attributes)
+	{
+		$text = '';
+
+		if (!empty($attributes[1]['value']))
+		{
+			$text .= '<span class="attribute-name">' . $attributes[1]['value'] . '</span>';
+		}
+
+		$text .= '<span class="attribute-name">' . $attributes[2]['value'] . '</span>';
+
+		return '<div class="attribute-inline">' . JHtml::link($attributes['URL'], $text) . '</div>';
+	}
+
+	/**
+	 * Creates a HTML container with profile information
+	 *
+	 * @param int   $profileID  the profile's id
+	 * @param array $attributes the profile's attributes
+	 * @param bool  $half       whether or not the profile should only take half the row width
+	 * @param int   $groupID    the id of the profile's group
+	 *
+	 * @return string the HTML of the profile container
+	 */
+	public function getProfileContainer($profileID, $attributes, $half, $groupID = null)
+	{
+		$container = '';
+
+		// Open Column Wrapper Tag - Only for float-attribute, now is easy to work with width:100%
+		if ($half)
+		{
+			$container .= '<div class="profile-container half">';
+		}
+		else
+		{
+			$container .= '<div class="profile-container">';
+		}
+
+		$lastName = $attributes[2]['value'];
+
+		$container .= $this->getActionContainer($profileID, $lastName);
+
+		$attributeContainers   = [];
+		$attributeContainers[] = $this->getNameContainer($attributes);
+
+		$titleContainer = $this->getTitleContainer($attributes);
+
+		if (!empty($titleContainer))
+		{
+			$attributeContainers[] = $titleContainer;
+		}
+
+		if ($this->showRoles AND !empty($attributes['roles']) AND !empty($this->sort))
+		{
+			$attributeContainers[] = '<div class="attribute-wrap attribute-roles">' . $attributes['roles'] . '</div>';
+		}
+
+		foreach ($attributes as $attributeID => $attribute)
+		{
+			// These were already taken care of in the name/title containers
+			$processed = in_array($attributeID, [1, 2, 5, 7]);
+
+			// Special indexes and attributes with no saved value are irrelevant
+			$irrelevant = empty($attribute['value']);
+
+			if ($processed OR $irrelevant)
 			{
-				$result .= JHTML::image(
-					JURI::root()
-					. $picpath . $picture, "Portrait", array('class' => 'thm_groups_profile_container_profile_image')
+				continue;
+			}
+
+			$attributeContainer = $this->getAttributeContainer($attribute, $lastName);
+
+			if (($attribute['type'] == 'PICTURE'))
+			{
+				array_unshift($attributeContainers, $attributeContainer);
+			}
+			else
+			{
+				$attributeContainers[] = $attributeContainer;
+			}
+		}
+
+		$container .= implode('', $attributeContainers);
+
+		$container .= '<div class="clearFix"></div>';
+		$container .= "</div>";
+
+		return $container;
+	}
+
+	/**
+	 * Creates the HTML for the title container
+	 *
+	 * @param array $attributes the attributes of the profile
+	 *
+	 * @return string the HTML string containing title information
+	 */
+	private function getTitleContainer($attributes)
+	{
+		$text = '';
+
+		$title = empty($attributes[5]['value']) ? '' : nl2br(htmlspecialchars_decode($attributes[5]['value']));
+		$title .= empty($attributes[7]['value']) ? '' : ', ' . nl2br(htmlspecialchars_decode($attributes[7]['value']));
+
+		if (empty($title))
+		{
+			return $text;
+		}
+
+		$text .= '<span class="attribute-title">' . $title . '</span>';
+
+		return '<div class="attribute-inline">' . JHtml::link($attributes['URL'], $text) . '</div>';
+	}
+
+	/**
+	 * Creates the container for the attribute value
+	 *
+	 * @param array  $attribute the profile attribute being iterated
+	 * @param string $surname   the surname of the profile being iterated
+	 * @param string $labeled   how the attribute will be labeled. determines additional classes for style references.
+	 *
+	 * @return string the HTML for the value container
+	 */
+	private function getValueContainer($attribute, $surname, $labeled)
+	{
+		switch ($attribute['type'])
+		{
+			case "Email":
+
+				$value = '<a href="mailto:' . $attribute['value'] . '">';
+				$value .= JHTML::_('email.cloak', $attribute['value']) . '</a>';
+
+				break;
+
+			case "LINK":
+
+				$value = "<a href='" . htmlspecialchars_decode($attribute['value']) . "'>";
+				$value .= htmlspecialchars_decode($attribute['value']) . "</a>";
+
+				break;
+
+			case "PICTURE":
+
+				$position     = explode('images/', $attribute['params']['path'], 2);
+				$relativePath = 'images/' . $position[1];
+
+				$value = JHTML::image(
+					JURI::root() . $relativePath . $attribute['value'],
+					$surname,
+					array('class' => 'thm_groups_profile_container_profile_image')
 				);
-			}
 
-			$result .= "<div id='gs_advlistTopic'>";
+				break;
 
-			$tempcanEdit = (($User->id == $id && $componentparams->get('editownprofile', 0) == 1) || $canEdit);
+			case "TEXTFIELD":
 
-			// Every user can edit himself
-			if ($tempcanEdit)
-			{
-				$linkTitle = 'bearbeiten';
-				$data      = ['Itemid'  => $itemid,
-				              'option'  => 'com_thm_groups',
-				              'view'    => 'profile_edit',
-				              'userID'  => $id,
-				              'groupID' => $groupID,
-				              'name'    => $lastName
-				];
+				$text = trim(htmlspecialchars_decode($attribute['value']));
 
-				$link   = 'index.php?' . http_build_query($data);
-				$result .= JHtml::link(JRoute::_($link), JHtml::image("media/com_thm_groups/images/edit.png", $linkTitle));
-			}
-
-			$result .= "</div>";
-			$wrap   = true;
-
-			// Rest des Profils darstellen
-			$result .= "<div>";
-
-			foreach ($member as $memberitem)
-			{
-				if ($memberitem->value != "" && $memberitem->publish)
+				// Normalize new lines
+				if (stripos($text, '<li>') === false && stripos($text, '<table') === false)
 				{
-					if ($memberitem->structwrap == true)
-					{
-						if ($memberitem->structname == true && (($memberitem->name == 'Email') || ($memberitem->structid == 4)))
-						{
-							$result .= "<div class='gs_advlist_longinfo thm_groups_profile_container_line respMail-line'>";
-						}
-						else
-						{
-							$result .= "<div class='gs_advlist_longinfo thm_groups_profile_container_line'> ";
-						}
-					}
-					else
-					{
-						$result .= "<div style='display: inline;'> ";
-					}
-
-					// Attributnamen anzeigen
-					if ($memberitem->structname == true)
-					{
-						if (($memberitem->name == 'Email'
-								|| $memberitem->structid == 4)
-							|| ($memberitem->name == 'Website'
-								|| $memberitem->type == 'TEXTFIELD')
-						)
-						{
-							$result .= '<span class="thm_groups_profile_container_line_label respMail-label" style="float: left" >'
-								. JText::_($memberitem->name) . ':&nbsp;' . '</span>';
-						}
-						else
-						{
-							$result .= '<span class="thm_groups_profile_container_line_label" style="float: left" >'
-								. JText::_($memberitem->name) . ':&nbsp;' . '</span>';
-						}
-					}
-
-					// Attribut anzeigen
-					switch ($memberitem->structid)
-					{
-						// Reihenfolge ist von ORDER in Datenbank abhaengig. somit ist hier die Reihenfolge egal
-						case "1":
-							$result .= $this->getUserinInformation($paramLinkTarget, $itemid, $lastName, $groupID, $id, $memberitem);
-							break;
-						case "2":
-							$result .= $this->getUserinInformation($paramLinkTarget, $itemid, $lastName, $groupID, $id, $memberitem);
-							break;
-						case "5":
-							$result .= nl2br(htmlspecialchars_decode($memberitem->value));
-							break;
-						case "4":
-							// EMail
-							$result .= '<span class="respEmail"><a href="mailto:' . $memberitem->value . '" class="btn" role="button">'
-								. '<span class="icon-mail-2"></span></a></span>';
-							$result .= '<span class="respEmail-hidden">' . JHTML::_('email.cloak', $memberitem->value) . '</span>';
-							break;
-						default:
-							switch ($memberitem->type)
-							{
-								case "LINK":
-									$result .= "<span class='respEmail'><a href='"
-										. htmlspecialchars_decode($memberitem->value) . "' class='btn' role='button'>"
-										. "<span class='icon-home'></span>"
-										. "</a></span>"
-										. "<span class='respEmail-hidden'>"
-										. "<a href='" . htmlspecialchars_decode($memberitem->value) . "'>"
-										. htmlspecialchars_decode($memberitem->value) . "</a>"
-										. "</span>";
-									break;
-								case "PICTURE":
-									// TODO
-									break;
-								case "TABLE":
-									$result .= $this->make_table($memberitem->value);
-									break;
-								case "TEXTFIELD":
-									// Long Info
-									$text = JString::trim(htmlspecialchars_decode($memberitem->value));
-
-									if (!empty($text))
-									{
-										if (stripos($text, '<li>') === false && stripos($text, '<table') === false)
-										{
-											$text = nl2br($text);
-										}
-										// Truncate Long Info Text
-										if ($truncateLongInfo)
-										{
-											$result .= '<span class="respEmail btn" onclick="toogle(this);" style="width: 26%;">'
-												. '<span class="thm_groups_profile_container_profile_read_more">'
-												. $memberitem->name . '</span></span>';
-											$result .= '<span class="thm_groups_profile_container_profile_read_more respEmail-hidden">'
-												. JText::_('COM_THM_GROUPS_PROFILE_CONTAINER_LONG_INFO_READ_MORE') . '</span>';
-											$result .=
-												'<div class="thm_groups_profile_container_profile_long_info" style="display:none;"><br/>'
-												. $text
-												. '<br/></div>';
-										}
-										else
-										{
-											$result .= '<div class="thm_groups_profile_container_profile_long_info">' . $text . '</div>';
-										}
-									}
-									break;
-								default:
-									$result .= nl2br(htmlspecialchars_decode($memberitem->value));
-									break;
-							}
-							break;
-					}
-
-					$result .= "</div>";
-
-					if ($memberitem->structwrap == true)
-					{
-						$wrap = true;
-					}
-					else
-					{
-						$wrap   = false;
-						$result .= " ";
-					}
+					$text = nl2br($text);
 				}
-			}
 
-			$result .= "</div>";
-
-			$result .= '<div class="clearfix"></div>';
-			$result .= "</div>";
-
-			// Close Content Wrapper Tag
-			$result .= '</div>';
-
-			// Close Coloumn Tag
-			$result .= '</div>';
-
-			// Close Coloumn Wrapper Tag
-			$result .= '</div>';
-
-			// Close Wrapper Tag
-			if (($elementCounter + 1) % $countOfColoumns == 0)
-			{
-				$result .= '<div class="clearfix"></div>';
-				$result .= '</div>';
-			}
-
-			if (($elementCounter % 2 == 0) && ($elementCounter == $lastIndex))
-			{
-				if ($countOfColoumns == 2)
+				// The closing div for the toggled container is added later
+				if ($this->suppressText AND strlen(strip_tags($text)) > 50)
 				{
-					$result .= '</div>';
+					$value = '<span class="toggled-text-link">' . JText::_('COM_THM_GROUPS_ACTION_DISPLAY') . '</span></div>';
+					$value .= '<div class="toggled-text-container" style="display:none;">' . $text;
 				}
-			}
-
-			// Count Elements
-			$elementCounter++;
-
-		}
-		// Truncate Long Info Text
-		if ($truncateLongInfo)
-		{
-			JFactory::getDocument()->addScript($this->baseurl . "/media/com_thm_groups/js/read_more.js");
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Return a navigation for the mobile Context
-	 *
-	 * @param   mixed $attribs Attributes
-	 *
-	 * @return  String
-	 */
-	public function getMobileNavbar($attribs)
-	{
-		/* Put the first letter of a name and all names for
-		 * this latter in an array.
-		 */
-
-		$list             = array();
-		$list['alphabet'] = array();
-		$list['names']    = array();
-		$list['names']    = array();
-		$namesCounter     = 0;
-
-		foreach ($attribs as $user)
-		{
-			foreach ($user as $object)
-			{
-				if ($object->structid == '2')
+				else
 				{
-					if (!in_array(substr($object->value, 0, 1), $list['alphabet']))
-					{
-						$currentLetter = substr($object->value, 0, 1);
-						array_push($list['alphabet'], $currentLetter);
-						$list['names'][$namesCounter] = array();
-
-						foreach ($attribs as $namesForLetter)
-						{
-							foreach ($namesForLetter as $name)
-							{
-								if (($name->structid == '2') && (substr($name->value, 0, 1) == $currentLetter))
-								{
-									array_push($list['names'][$namesCounter], $name->value);
-								}
-							}
-						}
-
-						$namesCounter++;
-					}
+					$value = $text;
 				}
-			}
+
+				break;
+
+			case "TEXT":
+			default:
+
+				$value = nl2br(htmlspecialchars_decode($attribute['value']));
+
+				break;
 		}
 
-		$navbar = "";
-		$navbar .= "<div id='mob_nav' class='navbar navbar-inverse navbar-fixed-top'>";
-		$navbar .= "<div class='navbar-inner'>";
-		$navbar .= "<div class='container'>";
+		$classes = ['attribute-value'];
 
-		$navbar .= "<a class='btn btn-navbar' data-toggle='collapse' data-target='.nav-collapse'>";
-		$navbar .= "<span class='icon-bar'></span>";
-		$navbar .= "<span class='icon-bar'></span>";
-		$navbar .= "<span class='icon-bar'></span>";
-		$navbar .= "</a>";
+		$visibleLength = strlen(strip_tags($value));
 
-		$navbar .= "<div class='nav-collapse collapse navbar-responsive-collapse'>";
-		$navbar .= "<ul id='adv_nav_menu' class='nav'>";
-
-		// Generate the list items
-		$navbar .= $this->getUserList($list);
-
-		$navbar .= "</ul>";
-		$navbar .= "</div>";
-		$navbar .= "</div>";
-		$navbar .= "</div>";
-		$navbar .= "</div>";
-
-		return $navbar;
-	}
-
-	/**
-	 * Get the nav items HTML as string.
-	 *
-	 * @param   Array $list Array of Users sorted by first letter of name
-	 *
-	 * @return  String
-	 */
-	public function getUserList($list)
-	{
-
-		$navItems = "";
-
-		for ($i = 0; $i < sizeof($list['alphabet']); $i++)
+		// Used to force width on long texts
+		if ($visibleLength > 30)
 		{
-			$navItems .= "<li class='dropdown'>"
-				. "<a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button'"
-				. "aria-haspopup='true' aria-expanded='false'>"
-				. $list['alphabet'][$i] . "<span class='caret'></span></a>";
 
-			$navItems .= "<ul class='dropdown-menu'>";
-
-			foreach ($list['names'][$i] as $name)
+			if ($labeled == 'icon')
 			{
-				$navItems .= "<li style='height: 44px; width: 100%;'><a href='#" . $name . "'>" . $name . "</a></li>";
+				$classes[] = 'attribute-iconed';
+			}
+			elseif ($labeled == 'label')
+			{
+				$classes[] = 'attribute-labeled';
 			}
 
-			$navItems .= "</ul>";
-			$navItems .= "</li>";
-			$navItems .= "<li class='divider'></li>";
 		}
 
-		return $navItems;
+		$html = '<div class="' . implode(' ', $classes) . '">';
+		$html .= $value;
+		$html .= '</div>';
+
+		return $html;
 	}
 }

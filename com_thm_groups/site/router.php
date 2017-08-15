@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @name        THMGroups component site router
- * @description Template file of module mod_thm_groups_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
@@ -13,6 +12,8 @@
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
+
+use RegularLabs\Library\Condition\Component;
 
 /**
  * Creates route for SEF
@@ -23,33 +24,40 @@
  */
 function THM_groupsBuildRoute(&$query)
 {
-
 	// Contains all SEF Elements as list
-	$segments = array();
+	$segments = array();//echo "<pre>" . print_r($query, true) . "</pre>";die;
 
-	if (isset ($query['view']))
+	// All queries have 'option' set to com_thm_groups, otherwise they wouldn't be here.
+
+	// All views reached over the menu have 'Itemid'.
+	$menuItem = (isset($query['Itemid']) AND count($query) < 4);
+
+	if ($menuItem)
 	{
-		$segments[] = $query['view'];
-		unset($query['view']);
+		// Links back to the menu item may inadvertently also have 'view'. (Joomla Pathway error)
+		if (!empty($query['view']))
+		{
+			unset($query['view']);
+		}
+
+		return $segments;
 	}
 
-	if (isset ($query['layout']))
-	{
-		$segments[] = $query['layout'];
-		unset($query['layout']);
-	}
+	$segments[] = $query['view'];
+	unset($query['view']);
 
+	// TODO: Unsure what this does. My assumption: something to do with navigation back out of content.
 	buildOptionsRoute($query, $segments);
 
-	// User options
-	if (!empty($query['userID']))
+	// Group & Profile/Name Segments
+	if (!empty($query['profileID']))
 	{
 		$profileSegment = '';
 		if (!empty($query['groupID']))
 		{
-			$profileSegment .= "{$query['groupID']}:{$query['userID']}";
+			$profileSegment .= "{$query['groupID']}:{$query['profileID']}";
 			unset($query['groupID']);
-			unset($query['userID']);
+			unset($query['profileID']);
 			if (!empty($query['name']))
 			{
 				$profileSegment .= "-" . $query['name'];
@@ -58,14 +66,14 @@ function THM_groupsBuildRoute(&$query)
 		}
 		elseif (!empty($query['name']))
 		{
-			$profileSegment .= $query['userID'] . "-" . $query['name'];
-			unset($query['userID']);
+			$profileSegment .= $query['profileID'] . "-" . $query['name'];
+			unset($query['profileID']);
 			unset($query['name']);
 		}
 		else
 		{
-			$profileSegment .= $query['userID'];
-			unset($query['userID']);
+			$profileSegment .= $query['profileID'];
+			unset($query['profileID']);
 		}
 		$segments[] = $profileSegment;
 	}
@@ -110,8 +118,6 @@ function buildOptionsRoute(&$query, &$segments)
 			//  $temp .= '-' . $query['Itemid_back'];
 			unset($query['Itemid_back']);
 		}
-
-		// $segments[] = $temp;
 	}
 }
 
@@ -124,19 +130,18 @@ function buildOptionsRoute(&$query, &$segments)
  */
 function THM_groupsParseRoute($segments)
 {
-	/* TODO: Fails when popup modal in frontend profile_edit is closed
-	   TODO: because third element of Array is 'index.php', see -> case: default.*/
-
 	// NM PATCH: switch between different views profile/singlearticle
 	$vars = array();
 
-	$doRoute = (!empty($segments) AND end($segments) != 'index' AND !empty($segments[0]));
+	$doRoute = (!empty($segments) AND !empty($segments[0]) AND end($segments) != 'index');
+
 	if (!$doRoute)
 	{
 		return $vars;
 	}
 
 	$vars['view'] = $segments[0];
+
 	switch ($segments[0])
 	{
 		// NM PATCH Administration Quickpages
@@ -147,8 +152,8 @@ function THM_groupsParseRoute($segments)
 
 				if (isset ($arrVar[0]) && isset ($arrVar[1]))
 				{
-					$vars['userID'] = $arrVar[0];
-					$vars['name']   = $arrVar[1];
+					$vars['profileID'] = $arrVar[0];
+					$vars['name']      = $arrVar[1];
 				}
 			}
 			break;
@@ -172,6 +177,7 @@ function THM_groupsParseRoute($segments)
 			}
 			break;
 
+		case 'advanced':
 		case 'profile':
 		case 'profile_edit':
 		case 'list':
@@ -259,23 +265,25 @@ function THM_groupsParseRoute($segments)
 function parseProfileSegment(&$vars, $segment)
 {
 	$profileData = explode('-', $segment);
-	if (!empty($profileData[1]))
-	{
-		$vars['name'] = $profileData[1];
-	}
 
 	// $firstID will always be set irregardless of whether the delimiter was found
-	$profileIDs = explode(':', $profileData[0]);
+	$profileIDs = explode(':', array_shift($profileData));
 
-	// Only the userID
+	// Only the profileID
 	if (empty($profileIDs[1]))
 	{
-		$vars['userID'] = $profileIDs[0];
+		$vars['profileID'] = $profileIDs[0];
 	}
 	else
 	{
-		$vars['groupID'] = $profileIDs[0];
-		$vars['userID']  = $profileIDs[1];
+		$vars['groupID']   = $profileIDs[0];
+		$vars['profileID'] = $profileIDs[1];
+	}
+
+	// Anything left is the surname(s)
+	if (!empty($profileData))
+	{
+		$vars['name'] = implode('-', $profileData);
 	}
 }
 

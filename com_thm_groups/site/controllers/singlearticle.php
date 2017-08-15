@@ -102,7 +102,6 @@ class THM_GroupsControllerSinglearticle extends JControllerForm
 		// Initialise variables.
 		$recordId = (int) isset($data[$key]) ? $data[$key] : 0;
 		$user     = JFactory::getUser();
-		$userId   = $user->get('id');
 		$asset    = 'com_content.article.' . $recordId;
 
 		// Check general edit permission first.
@@ -131,7 +130,7 @@ class THM_GroupsControllerSinglearticle extends JControllerForm
 			}
 
 			// If the owner matches 'me' then do the test.
-			if ($ownerId == $userId)
+			if ($ownerId == $user->id)
 			{
 				return true;
 			}
@@ -261,18 +260,19 @@ class THM_GroupsControllerSinglearticle extends JControllerForm
 		}
 	}
 
+
 	/**
-	 * Function that allows child controller access to model data after the data has been saved.
+	 * Function that allows child controller access to model data
+	 * after the data has been saved.
 	 *
-	 * @param   JModel &$model    The data model object.
-	 * @param   array  $validData The validated data.
+	 * @param   JModelLegacy $model     The data model object.
+	 * @param   array        $validData The validated data.
 	 *
-	 * @return    void
-	 *
+	 * @return  void
 	 *
 	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
 	 */
-	protected function postSaveHook(JModel &$model, $validData)
+	protected function postSaveHook(JModelLegacy $model, $validData = array())
 	{
 		$task = $this->getTask();
 

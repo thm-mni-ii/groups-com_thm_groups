@@ -15,9 +15,9 @@
                 <option value="0">JHIDE</option>
             </field>
             <field
-                    name="selGroup"
+                    name="groupID"
                     type="usergroup"
-                    label="COM_THM_GROUPS_SELECT_GROUP_LABEL"
+                    label="COM_THM_GROUPS_GROUP"
                     description="COM_THM_GROUPS_SELECT_GROUP_DESC"
                     multiple="false"
             />
@@ -33,11 +33,11 @@
             <field
                     name="linkTarget"
                     type="radio"
-                    label="COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_TARGET_LABEL"
-                    default="profile"
-                    description="COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_TARGET_DESCRIPTION">
-                <option value="module">COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_TARGET_LABEL_MODULE</option>
-                <option value="profile">COM_THM_GROUPS_LIST_VIEW_PARAM_LINK_TARGET_LABEL_PROFILE</option>
+                    label="COM_THM_GROUPS_PROFILE_LINK"
+                    description="COM_THM_GROUPS_PROFILE_LINK_DESC"
+                    default="profile">
+                <option value="module">COM_THM_GROUPS_MODULE_DISPLAY</option>
+                <option value="profile">COM_THM_GROUPS_VIEW_DISPLAY</option>
             </field>
             <field
                     name="columnCount"
@@ -48,13 +48,6 @@
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
-            </field>
-            <field
-                    addfieldpath="/media/com_thm_groups/fields/"
-                    name="orderingAttributes"
-                    type="orderattributes"
-                    label="COM_THM_GROUPS_ORDERING_ATTIBUTES_LABEL"
-                    description="COM_THM_GROUPS_ORDERING_ATTIBUTES_DESC">
             </field>
             <field
                     name="showstructure"
@@ -140,13 +133,6 @@
                     label="COM_THM_GROUPS_LINE_SPACING_LABEL"
                     default="1"
                     description="COM_THM_GROUPS_LINE_SPACING_DESC"
-            />
-            <field
-                    name="zSpacing"
-                    type="text"
-                    label="COM_THM_GROUPS_Z_SPACING_LABEL"
-                    default="1"
-                    description="COM_THM_GROUPS_Z_SPACING_DESC"
             />
         </fieldset>
     </fields>

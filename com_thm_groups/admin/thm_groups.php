@@ -4,21 +4,41 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsAdminEntryFile
- * @description THMGroupsAdminEntryFile file from com_thm_groups
- * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
- * @author      Markus Kaiser,  <markus.kaiser@mni.thm.de>
- * @author      Daniel Bellof,  <daniel.bellof@mni.thm.de>
- * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
- * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
- * @author      Peter May,      <peter.may@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @author      James Antrim, <james.antrim@nm.thm.de>
+ * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
-jimport('joomla.application.component.controller');
 
+// Include the JLog class.
+jimport('joomla.log.log');
 
-$controller = JControllerLegacy::getInstance('thm_groups');
-$controller->execute(JRequest::getCmd('task'));
-$controller->redirect();
+$componentName = 'com_thm_groups';
+
+// Get the date.
+$date = JFactory::getDate()->format('Y-m');
+
+JLog::addLogger(
+	array(
+		'text_file' => $componentName . '_admin' . DIRECTORY_SEPARATOR . $componentName . '_' . $date . '.php'
+	),
+	JLog::ALL & ~JLog::DEBUG,
+	array($componentName)
+);
+
+try
+{
+	if (!JFactory::getUser()->authorise('core.manage', 'com_thm_organizer'))
+	{
+		throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 404);
+	}
+	/** @noinspection PhpIncludeInspection */
+	require_once JPATH_SITE . "/media/$componentName/helpers/componentHelper.php";
+	THM_GroupsHelperComponent::callController();
+}
+catch (Exception $exc)
+{
+	JLog::add($exc->__toString(), JLog::ERROR, $componentName);
+	throw $exc;
+}

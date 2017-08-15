@@ -56,10 +56,9 @@ class THM_GroupsModelQp_Categories extends JModelForm
 	public function save()
 	{
 		$input    = JFactory::getApplication()->input;
-		$uid      = JFactory::getUser()->id;
 		$catTitle = $input->get('qp_name', '', 'STRING');
 
-		THM_GroupsQuickpagesData::createQuickpageSubcategoryForProfile($uid, $catTitle);
+		THM_GroupsQuickpagesData::createQuickpageSubcategoryForProfile(JFactory::getUser()->id, $catTitle);
 
 		// TODO check if a category was successfully added
 		return true;

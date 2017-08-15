@@ -13,15 +13,12 @@
 
 jQuery.noConflict();
 
-jQuery(document).ready(function ()
-{
+jQuery(document).ready(function () {
 	jQuery("#paramsattr").sortable({
-		stop: function (event, ui)
-		{
+		stop: function (event, ui) {
 			var listul = [];
-			jQuery('#paramsattr li').each(function ()
-			{
-				if (jQuery(this).val() != 0)
+			jQuery('#paramsattr li').each(function () {
+				if (jQuery(this).val() !== 0)
 				{
 					listul.push(jQuery(this).val());
 				}

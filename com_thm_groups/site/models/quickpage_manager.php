@@ -12,7 +12,7 @@
  */
 defined('_JEXEC') or die;
 
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/quickpage.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/content.php';
 require_once JPATH_COMPONENT . '/models/article.php';
 
 /**
@@ -42,7 +42,7 @@ class THM_GroupsModelQuickpage_Manager extends JModelList
 		}
 
 		// Get user quickpages root category and show on start
-		$this->categoryID = THM_GroupsHelperQuickpage::getQPCategoryID(JFactory::getUser()->id);
+		$this->categoryID = THM_GroupsHelperContent::getQPCategoryID(JFactory::getUser()->id);
 
 		parent::__construct($config);
 	}
@@ -75,7 +75,7 @@ class THM_GroupsModelQuickpage_Manager extends JModelList
 
 		if (empty($items))
 		{
-			return false;
+			return [];
 		}
 
 		return $items;
@@ -88,8 +88,8 @@ class THM_GroupsModelQuickpage_Manager extends JModelList
 	 */
 	protected function getListQuery()
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
 		$contentSelect = 'content.id, content.title, content.alias, content.checked_out, content.checked_out_time, ';
 		$contentSelect .= 'content.catid, content.state, content.access, content.created, content.featured, ';
@@ -140,10 +140,7 @@ class THM_GroupsModelQuickpage_Manager extends JModelList
 	}
 
 	/**
-	 * Method to test whether the session user
-	 * has the permission to create a new article.
-	 *
-	 * @param   int $categoryID The category id to create the article in.
+	 * Method to test whether the session user has the permission to create a new article.
 	 *
 	 * @return    boolean    True if permission granted.
 	 */

@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsViewRole_Manager
- * @description THMGroupsViewRole_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -43,13 +42,13 @@ class THM_GroupsViewRole_Manager extends THM_GroupsViewList
 	{
 		if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
 		{
-			return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+			$exc = new Exception(JText::_('JLIB_RULES_NOT_ALLOWED'), 401);
+			JErrorPage::render($exc);
 		}
 
 		$this->batch = array('batch' => JPATH_COMPONENT_ADMINISTRATOR . '/views/role_manager/tmpl/default_batch.php');
 
-		$document = JFactory::getDocument();
-		$document->addScript(JURI::root(true) . '/media/com_thm_groups/js/role_manager.js');
+		JFactory::getDocument()->addScript(JURI::root(true) . '/media/com_thm_groups/js/role_manager.js');
 
 		parent::display($tpl);
 	}
@@ -71,10 +70,9 @@ class THM_GroupsViewRole_Manager extends THM_GroupsViewList
 		if (JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
 		{
 			JToolBarHelper::addNew('role.add');
-			JToolBarHelper::editList('role.editRole');
+			JToolBarHelper::editList('role.edit');
 			JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM', 'role.delete', 'JTOOLBAR_DELETE');
 
-			JHtml::_('bootstrap.modal', 'collapseModal');
 			$title = JText::_('COM_THM_GROUPS_ROLE_MANAGER_BATCH');
 
 			// Instantiate a new JLayoutFile instance and render the batch button

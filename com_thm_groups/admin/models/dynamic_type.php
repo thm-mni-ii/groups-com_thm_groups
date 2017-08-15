@@ -11,11 +11,10 @@
  * @link        www.thm.de
  */
 
+use MongoDB\BSON\Type;
+
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.model');
-jimport('joomla.filesystem.folder');
-jimport('joomla.filesystem.file');
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/static_type.php';
 
 /**
@@ -28,81 +27,32 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/static_type.php';
 class THM_GroupsModelDynamic_Type extends JModelLegacy
 {
 	/**
-	 * Save element of dynamic types
-	 *
-	 * @return bool true on success, otherwise false
-	 */
-	public function save()
-	{
-		$data         = JFactory::getApplication()->input->get('jform', array(), 'array');
-		$staticTypeID = $data['static_typeID'];
-		$defOptions   = THM_GroupsHelperStatic_Type::getOption($staticTypeID);
-
-		$options = new stdClass();
-		switch ($staticTypeID)
-		{
-			case TEXT:
-				$options->length = empty($data['length']) ? $defOptions->length : (int) $data['length'];
-				break;
-			case TEXTFIELD:
-				$options->length = empty($data['length']) ? $defOptions->length : (int) $data['length'];
-				break;
-			case PICTURE:
-				// Save always default values, because pictures are placed now only in /images/com_thm_groups/profile/
-				$options->path     = $defOptions->path;
-				$options->filename = $defOptions->filename;
-				break;
-			case LINK:
-			case MULTISELECT:
-			case TABLE:
-			case TEMPLATE:
-				$options = $defOptions;
-				break;
-		}
-
-		$data['options']     = json_encode($options);
-		$dbo                 = JFactory::getDbo();
-		$data['description'] = $dbo->escape($data['description']);
-
-		$dbo->transactionStart();
-
-		$dynamicType = $this->getTable();
-
-		$success = $dynamicType->save($data);
-
-
-		if (!$success)
-		{
-			$dbo->transactionRollback();
-
-			return false;
-		}
-		else
-		{
-			$dbo->transactionCommit();
-
-			return $dynamicType->id;
-		}
-	}
-
-	/**
 	 * Deletes selected dynamic types from the db
-	 *
-	 * @param   array $idsToDelete IDs of items which should be deleted
 	 *
 	 * @return  mixed  true on success, otherwise false
 	 */
-	public function delete($idsToDelete)
+	public function delete()
 	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
-		$query->delete('#__thm_groups_dynamic_type');
-		$query->where('id IN (' . join(',', $idsToDelete) . ')');
-		$dbo->setQuery($query);
+		$app = JFactory::getApplication();
+
+		if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups'))
+		{
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
+
+			return false;
+		}
+
+		$doNotDelete = array(TEXT, TEXTFIELD, LINK, PICTURE, MULTISELECT, TABLE, NUMBER, DATE, TEMPLATE);
+		$selected    = $app->input->get('cid', array(), 'array');
+		$dtIDs       = array_diff($selected, $doNotDelete);
+
+		$query = $this->_db->getQuery(true);
+		$query->delete('#__thm_groups_dynamic_type')->where('id IN (' . implode(',', $dtIDs) . ')');
+		$this->_db->setQuery($query);
 
 		try
 		{
-			return $dbo->execute();
+			$success = $this->_db->execute();
 		}
 		catch (Exception $exception)
 		{
@@ -110,5 +60,64 @@ class THM_GroupsModelDynamic_Type extends JModelLegacy
 
 			return false;
 		}
+
+		return empty($success) ? false : true;
+	}
+
+	/**
+	 * Save element of dynamic types
+	 *
+	 * @return bool true on success, otherwise false
+	 */
+	public function save()
+	{
+		$app = JFactory::getApplication();
+
+		if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups'))
+		{
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
+
+			return false;
+		}
+
+		$data         = $app->input->get('jform', array(), 'array');
+		$staticTypeID = $data['static_typeID'];
+		$defOptions   = THM_GroupsHelperStatic_Type::getOption($staticTypeID);
+		$options      = new stdClass();
+
+		switch ($staticTypeID)
+		{
+			case TEXT:
+
+				$options->length = empty($data['length']) ? $defOptions->length : (int) $data['length'];
+				break;
+
+			case TEXTFIELD:
+
+				$options->length = empty($data['length']) ? $defOptions->length : (int) $data['length'];
+				break;
+
+			case PICTURE:
+				$options->path = $defOptions->path;
+				break;
+
+			case LINK:
+			case MULTISELECT:
+			case TABLE:
+			case TEMPLATE:
+
+				$options = $defOptions;
+				break;
+		}
+
+		$data['options']     = json_encode($options);
+		$data['description'] = $this->_db->escape($data['description']);
+
+
+		$dynamicType = $this->getTable('Dynamic_Type', 'THM_GroupsTable');
+
+		$success = $dynamicType->save($data);
+
+		return empty($success) ? false : $dynamicType->id;
 	}
 }

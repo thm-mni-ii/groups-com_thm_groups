@@ -37,13 +37,10 @@ class THM_GroupsViewTemplate_Edit extends THM_GroupsViewEdit
 	 */
 	public function display($tpl = null)
 	{
-		$user      = JFactory::getUser();
-		$canCreate = $user->authorise('core.create', 'com_thm_groups');
-		$canEdit   = $user->authorise('core.edit', 'com_thm_groups');
-		$hasAccess = ($canCreate OR $canEdit);
-		if (!$hasAccess)
+		if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
 		{
-			return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+			$exc = new Exception(JText::_('JLIB_RULES_NOT_ALLOWED'), 401);
+			JErrorPage::render($exc);
 		}
 
 		$allAttributes = THM_GroupsHelperProfile::getAllAttributes();
@@ -57,21 +54,8 @@ class THM_GroupsViewTemplate_Edit extends THM_GroupsViewEdit
 		{
 			$templateAttributes = THM_GroupsHelperTemplate::getTemplateAttributes($id);
 			$this->attributes   = THM_GroupsHelperTemplate::assignParametersToAttributes($allAttributes, $templateAttributes);
-			usort(
-				$this->attributes,
-				function ($a, $b)
-				{
-					if (isset($a->ordering) AND isset($b->ordering))
-					{
-						if ($a->ordering == $b->ordering)
-						{
-							return 0;
-						}
 
-						return ($a->ordering < $b->ordering) ? -1 : 1;
-					}
-				}
-			);
+			usort($this->attributes, array('THM_GroupsViewTemplate_Edit', 'orderSort'));
 		}
 
 		parent::display($tpl);
@@ -115,19 +99,43 @@ class THM_GroupsViewTemplate_Edit extends THM_GroupsViewEdit
 	protected function modifyDocument()
 	{
 		parent::modifyDocument();
-		JHtml::_('jquery.ui');
-		JHtml::_('jquery.ui', ['sortable']);
-		JHtml::script(JUri::root() . 'media/jui/js/sortablelist.js');
-		JHtml::stylesheet(JUri::root() . 'media/jui/css/sortablelist.css');
+		JHtml::_('jquery.ui', ['core', 'sortable']);
 		JHtml::script(JUri::root() . 'media/com_thm_groups/js/template_edit.js');
+
+		JHtml::stylesheet(JUri::root() . 'media/jui/css/sortablelist.css');
 		JHtml::stylesheet(JUri::root() . 'media/com_thm_groups/css/template_edit.css');
+	}
+
+	/**
+	 * Sorts attributes according to their ordering property
+	 *
+	 * @param array $attributeOne the first attribute
+	 * @param array $attributeTwo the second attribute
+	 *
+	 * @return int -1 if the first value should be after the second, 0 if the ordering is equal (initial state),
+	 * or 1 if the first attribute should be displayed first.
+	 */
+	private static function orderSort($attributeOne, $attributeTwo)
+	{
+		if (isset($attributeOne['ordering']) AND isset($attributeTwo['ordering']))
+		{
+			if ($attributeOne['ordering'] == $attributeTwo['ordering'])
+			{
+				return 0;
+			}
+
+			return ($attributeOne['ordering'] < $attributeTwo['ordering']) ? -1 : 1;
+		}
+
+		// Neither have yet been set and they therefore have the same ordering
+		return 0;
 	}
 
 	/**
 	 * Renders radio button using radio layout
 	 *
 	 * @param   string $name         Radio button name
-	 * @param   object $attribute    Attribute object
+	 * @param   array  $attribute    Attribute object
 	 * @param   int    $defaultValue Value of radio button
 	 *
 	 * @return  string
@@ -135,8 +143,8 @@ class THM_GroupsViewTemplate_Edit extends THM_GroupsViewEdit
 	public function renderRadioBtn($name, $attribute, $defaultValue)
 	{
 		$data            = [];
-		$data['id']      = 'jform_attributes_' . str_replace(' ', '', $attribute->id) . "_$name";
-		$data['name']    = "jform[attributes][$attribute->id][$name]";
+		$data['id']      = 'jform_attributes_' . str_replace(' ', '', $attribute['id']) . "_$name";
+		$data['name']    = "jform[attributes][{$attribute['id']}][$name]";
 		$data['class']   = 'btn-group btn-group-yesno';
 		$data['default'] = $defaultValue;
 		$data['options'] = [['value' => 1, 'text' => 'JYES'], ['value' => 0, 'text' => 'JNO']];

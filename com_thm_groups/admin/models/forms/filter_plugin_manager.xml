@@ -13,7 +13,7 @@
                 label="COM_THM_GROUPS_ENABLED"
                 onchange="this.form.submit();"
         >
-            <option value="">COM_THM_GROUPS_ALL</option>
+            <option value="">JALL</option>
             <option value="1">COM_THM_GROUPS_PLUGIN_MANAGER_ENABLED_OPTION</option>
             <option value="0">COM_THM_GROUPS_PLUGIN_MANAGER_DISABLED_OPTION</option>
         </field>
@@ -23,7 +23,7 @@
                 label="COM_THM_GROUPS_ACCESS"
                 onchange="this.form.submit();"
         >
-            <option value="">COM_THM_GROUPS_ALL</option>
+            <option value="">JALL</option>
             <option value="1">COM_THM_GROUPS_PLUGIN_MANAGER_PUBLIC</option>
             <option value="0">COM_THM_GROUPS_PLUGIN_MANAGER_PRIVATE</option>
         </field>

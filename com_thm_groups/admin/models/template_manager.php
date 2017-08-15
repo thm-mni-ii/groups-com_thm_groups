@@ -55,7 +55,7 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
 		$headers             = array();
 		$headers['order']    = JHtml::_('searchtools.sort', '', 'p.ordering', $direction, $ordering, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2');
 		$headers['checkbox'] = '';
-		$headers['id']       = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'id', $direction, $ordering);
+		$headers['id']       = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'id', $direction, $ordering);
 		$headers['name']     = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 'name', $direction, $ordering);
 		$headers['groups']   = JText::_('COM_THM_GROUPS_PROFILE_MANAGER_GROUPS');
 
@@ -73,9 +73,9 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
 	{
 		$fields = array();
 
-		// Hidden fields for deletion of one moderator or role at once
-		$fields[] = '<input type="hidden" name="g_id" value="">';
-		$fields[] = '<input type="hidden" name="p_id" value="">';
+		// Hidden fields for batch processing
+		$fields[] = '<input type="hidden" name="groupID" value="">';
+		$fields[] = '<input type="hidden" name="templateID" value="">';
 
 		return $fields;
 	}
@@ -143,8 +143,7 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
 	 */
 	protected function getListQuery()
 	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
+		$query = $this->_db->getQuery(true);
 
 		$query->select('p.id, p.name, p.ordering')->from('#__thm_groups_profile AS p');
 
@@ -163,18 +162,17 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
 	 */
 	private function getProfileGroups($templateID)
 	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
+		$query = $this->_db->getQuery(true);
 
 		$query->select('ug.id, ug.title');
 		$query->from('#__thm_groups_profile_usergroups AS pug');
 		$query->innerJoin('#__usergroups AS ug ON ug.id = pug.usergroupsID');
 		$query->where("pug.profileID = '$templateID'");
-		$dbo->setQuery($query);
+		$this->_db->setQuery($query);
 
 		try
 		{
-			$groups = $dbo->loadAssocList();
+			$groups = $this->_db->loadAssocList();
 		}
 		catch (Exception $exc)
 		{
@@ -188,7 +186,7 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
 
 		$usersAdmin     = JFactory::getUser()->authorise('core.admin', 'com_users');
 		$return         = array();
-		$buttonTemplate = '<a onclick="deleteGroup(GROUPID,TEMPLATEID)"><span class="icon-trash"></span></a>';
+		$buttonTemplate = '<a onclick="deleteGroupAssociation(GROUPID,TEMPLATEID)"><span class="icon-trash"></span></a>';
 
 		foreach ($groups as $group)
 		{

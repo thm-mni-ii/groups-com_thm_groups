@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @name        THMGroupsViewProfile
- * @description THMGroupsViewProfile file from com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
@@ -17,6 +16,7 @@
 defined('_JEXEC') or die;
 
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/template.php';
 
 /**
  * THMGroupsViewProfile class for component com_thm_groups
@@ -34,130 +34,200 @@ class THM_GroupsViewProfile extends JViewLegacy
 	public $templateName;
 
 	/**
-	 * Creates a container for the profile attribute
+	 * Method to get display
 	 *
-	 * @param   string $name      the name of the profile attribute
-	 * @param   array  $attribute the profile attribute
+	 * @param   Object $tpl template
 	 *
-	 * @return  array  contains the HTML for the begin and end of the attribute container
+	 * @return void
 	 */
-	private function getContainer($name, $attribute)
+	public function display($tpl = null)
 	{
-		$safeName    = JFilterOutput::stringURLSafe($name);
-		$paramsExist = !empty($attribute['params']);
-		$isDiv       = ($paramsExist AND !empty($attribute['params']['wrap']));
+		$this->model = $this->getModel();
 
-		if ($isDiv)
+		$this->groupID    = $this->model->groupID;
+		$this->menuID     = JFactory::getApplication()->input->get('Itemid', 0);
+		$this->profile    = $this->model->profile;
+		$this->profileID  = $this->model->profileID;
+		$this->templateID = $this->model->templateID;
+
+		$this->canEdit = THM_GroupsHelperComponent::canEditProfile($this->profileID);
+
+		$this->templateName = JFilterOutput::stringURLSafe(THM_GroupsHelperTemplate::getName($this->templateID));
+
+		// Adds the user name to the breadcrumb
+		JFactory::getApplication()->getPathway()->addItem(THM_GroupsHelperProfile::getDisplayName($this->profileID), '');
+
+		$this->modifyDocument();
+		parent::display($tpl);
+	}
+
+	/**
+	 * Renders the attributes of a profile
+	 *
+	 * @return void renders to the view
+	 */
+	public function renderAttributes()
+	{
+		$attributes          = '';
+		$attributeContainers = [];
+		$surname             = $this->profile[2]['value'];
+
+		foreach ($this->profile as $attribute)
 		{
-			$containerClass      = "field-container $safeName-container";
-			$labelContainerClass = "field-container-label $safeName-label";
-			$valueClass          = "field-container-value $safeName-value";
+			// These were already taken care of in the name/title containers
+			$processed = in_array($attribute['structid'], [1, 2, 5, 7]);
+
+			// Special indexes and attributes with no saved value are irrelevant
+			$irrelevant = empty($attribute['value']);
+
+			if ($processed OR $irrelevant)
+			{
+				continue;
+			}
+
+			$attributeContainer = $this->getAttributeContainer($attribute, $surname);
+
+			if (($attribute['type'] == 'PICTURE'))
+			{
+				array_unshift($attributeContainers, $attributeContainer);
+			}
+			else
+			{
+				$attributeContainers[] = $attributeContainer;
+			}
+		}
+
+		$attributes .= implode('', $attributeContainers);
+
+		$attributes .= '<div class="clearFix"></div>';
+
+		echo $attributes;
+	}
+
+	/**
+	 * Creates the container for the attribute
+	 *
+	 * @param array  $attribute the profile attribute being iterated
+	 * @param string $surname   the surname of the profile being iterated
+	 *
+	 * @return string the HTML for the value container
+	 */
+	private function getAttributeContainer($attribute, $surname)
+	{
+		$container = '';
+
+		$params              = empty($attribute['params']) ? [] : $attribute['params'];
+		$dynOptions          = empty($attribute['dynOptions']) ? [] : $attribute['dynOptions'];
+		$options             = empty($attribute['options']) ? [] : $attribute['options'];
+		$attribute['params'] = array_merge($params, $dynOptions, $options);
+
+		$label = '';
+
+		if (($attribute['type'] == 'PICTURE'))
+		{
+			$container .= '<div class="attribute-picture">';
 		}
 		else
 		{
-			$containerClass      = "field-row $safeName-container";
-			$labelContainerClass = "field-row-label $safeName-label";
-			$valueClass          = "field-row-value $safeName-value";
+			if (($attribute['type'] == 'TEXTFIELD'))
+			{
+				$container .= '<div class="attribute-textfield">';
+			}
+			elseif (!empty($attribute['params']['wrap']))
+			{
+				$container .= '<div class="attribute-wrap">';
+			}
+			else
+			{
+				$container .= '<div class="attribute-inline">';
+			}
+
+			$label .= $this->getLabelContainer($attribute);
 		}
 
-		$start = '';
-		$start .= '<div class="' . $containerClass . '">';
+		$container .= $label;
 
-		$start = $this->getIconLabelOutput($attribute, $start, $name, $labelContainerClass);
-
-		$start .= '<div class="' . $valueClass . '">';
-
-		$end = '</div></div>';
-
-		return ['start' => $start, 'end' => $end];
-	}
-
-	/**
-	 * Creates a profile date attribute
-	 *
-	 * @param   string $name      the name of the profile attribute
-	 * @param   array  $attribute the profile attribute
-	 *
-	 * @return array
-	 */
-	public function getDATE($name, $attribute)
-	{
-		return $this->getTEXT($name, $attribute);
-	}
-
-	/**
-	 * Creates a profile link attribute
-	 *
-	 * @param   string $name      the name of the profile attribute
-	 * @param   array  $attribute the profile attribute
-	 *
-	 * @return array
-	 */
-	public function getLINK($name, $attribute)
-	{
-		$container = $this->getContainer($name, $attribute);
-		$value     = "<a href='" . htmlspecialchars_decode($attribute['value']) . "'>";
-		$value     .= htmlspecialchars_decode($attribute['value']) . "</a>";
-
-		return $container['start'] . $value . $container['end'];
-	}
-
-	/**
-	 * Creates a profile number attribute
-	 *
-	 * @param   string $name      the name of the profile attribute
-	 * @param   array  $attribute the profile attribute
-	 *
-	 * @return array
-	 */
-	public function getNUMBER($name, $attribute)
-	{
-		return $this->getTEXT($name, $attribute);
-	}
-
-	/**
-	 * Creates the HTML for an attribute of the type 'PICTURE'
-	 *
-	 * @param   string $name      the name of the profile attribute
-	 * @param   array  $attribute the attribute being iterated
-	 *
-	 * @return  string  the HTML for the image to be displayed
-	 */
-	public function getPICTURE($name, $attribute)
-	{
-		$container = $this->getContainer($name, $attribute);
-		$value     = '';
-		$hasImage  = (!empty($attribute['value']));
-		if ($hasImage)
+		// Empty values or undesired
+		if (empty($label))
 		{
-			$imgOptions = $attribute['options'];
-			$path       = JUri::base() . $imgOptions['path'] . '/' . $attribute['value'];
-			$value      .= JHtml::image($path, 'Profilbild');
+			$labeled = 'none';
 		}
 
-		return $container['start'] . $value . $container['end'];
+		// The icon label consists solely of tags => span for icon display
+		elseif (empty(strip_tags($label)))
+		{
+			$labeled = 'icon';
+		}
+		else
+		{
+			$visibleLength = strlen(strip_tags($label));
+			$labeled       = $visibleLength > 10 ? 'label-long' : 'label';
+		}
+
+		$container .= $this->getValueContainer($attribute, $surname, $labeled);
+
+		$container .= "</div>";
+
+		return $container;
 	}
 
 	/**
-	 * Creates a profile link attribute
+	 * Creates the container for the attribute label
 	 *
-	 * @param   string $name      the name of the profile attribute
-	 * @param   array  $attribute the profile attribute
+	 * @param array $attribute the profile attribute being iterated
 	 *
-	 * @return array
+	 * @return string the HTML for the label container
 	 */
-	public function getTEXT($name, $attribute)
+	private function getLabelContainer($attribute)
 	{
-		$container = $this->getContainer($name, $attribute);
+		$text        = empty($attribute['name']) ? '' : $attribute['name'];
+		$isTextField = $attribute['type'] == 'TEXTFIELD';
+
+		$showIconConfig = (!empty($attribute['params']['showIcon'] AND !empty($attribute['params']['icon'])));
+		$showLabel      = (!empty($attribute['params']['showLabel']) AND !empty($text));
+		$showIcon       = $isTextField ? ($showIconConfig AND !$showLabel) : $showIconConfig;
+		$label          = '';
+
+		if ($showIcon OR $showLabel)
+		{
+			$label .= '<div class="attribute-label">';
+
+			if ($showIcon)
+			{
+				$label .= '<span class="' . $attribute['params']['icon'] . '" title="' . $text . '"></span>';
+			}
+			elseif ($showLabel)
+			{
+				$label .= JText::_($attribute['name']);
+			}
+
+			$label .= '</div>';
+		}
+
+		return $label;
+	}
+
+	/**
+	 * Creates the container for the attribute value
+	 *
+	 * @param array  $attribute the profile attribute being iterated
+	 * @param string $surname   the surname of the profile being iterated
+	 * @param string $labeled   how the attribute will be labeled. determines additional classes for style references.
+	 *
+	 * @return string the HTML for the value container
+	 */
+	private function getValueContainer($attribute, $surname, $labeled)
+	{
 		switch (strtolower($attribute['dyntype']))
 		{
-			case 'email':
-				$emails = explode('|', $attribute['value']);
+			case "email":
 
+				$emails = explode('|', $attribute['value']);
 
 				if (count($emails) === 1)
 				{
-					$value = JHtml::_('email.cloak', $attribute['value']);
+					$value = '<a href="mailto:' . $attribute['value'] . '">';
+					$value .= JHTML::_('email.cloak', $attribute['value']) . '</a>';
 				}
 				else
 				{
@@ -165,7 +235,8 @@ class THM_GroupsViewProfile extends JViewLegacy
 
 					foreach ($emails as $email)
 					{
-						$value .= '<li>' . JHtml::_('email.cloak', $email) . '</li>';
+						$value .= '<li><a href="mailto:' . $email . '">';
+						$value .= JHTML::_('email.cloak', $email) . '</a></li>';
 					}
 
 					$value .= '</ul>';
@@ -173,10 +244,10 @@ class THM_GroupsViewProfile extends JViewLegacy
 
 				break;
 
-			case 'telephone':
 			case 'fax':
-				$numbers = explode('|', $attribute['value']);
+			case 'telephone':
 
+				$numbers = explode('|', $attribute['value']);
 
 				if (count($numbers) === 1)
 				{
@@ -196,54 +267,53 @@ class THM_GroupsViewProfile extends JViewLegacy
 
 				break;
 
+			case "link":
+
+				$value = "<a href='" . htmlspecialchars_decode($attribute['value']) . "'>";
+				$value .= htmlspecialchars_decode($attribute['value']) . "</a>";
+
+				break;
+
+			case "picture":
+
+				$position     = explode('images/', $attribute['params']['path'], 2);
+				$relativePath = 'images/' . $position[1];
+
+				$value = JHTML::image(
+					JURI::root() . $relativePath . $attribute['value'],
+					$surname,
+					array('class' => 'profile-picture')
+				);
+
+				break;
+
+			case "textfield":
+
+				$text = trim(htmlspecialchars_decode($attribute['value']));
+
+				// Normalize new lines
+				if (stripos($text, '<li>') === false && stripos($text, '<table') === false)
+				{
+					$text = nl2br($text);
+				}
+
+				$value = $text;
+
+				break;
+
+			case "text":
 			default:
-				$value = $attribute['value'];
+
+				$value = nl2br(htmlspecialchars_decode($attribute['value']));
+
 				break;
 		}
 
-		return $container['start'] . $value . $container['end'];
-	}
+		$html = '<div class="attribute-value">';
+		$html .= $value;
+		$html .= '</div>';
 
-	/**
-	 * Creates a profile link attribute
-	 *
-	 * @param   string $name      the name of the profile attribute
-	 * @param   array  $attribute the profile attribute
-	 *
-	 * @return array
-	 */
-	public function getTEXTFIELD($name, $attribute)
-	{
-		$container = $this->getContainer($name, $attribute);
-		$value     = htmlspecialchars_decode($attribute['value']);
-
-		return $container['start'] . $value . $container['end'];
-	}
-
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object $tpl template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		$this->model     = $this->getModel();
-		$this->profileID = $this->model->profileID;
-		$this->groupID   = $this->model->groupID;
-		$this->canEdit   = THM_GroupsHelperComponent::canEditProfile($this->profileID, $this->groupID);
-		$this->menuID    = JFactory::getApplication()->input->get('Itemid', 0);
-		$this->profile   = $this->get('Item');
-
-		$templateName       = THM_GroupsHelperProfile::getTemplateNameByGroupID($this->groupID);
-		$this->templateName = JFilterOutput::stringURLSafe($templateName);
-
-		// Adds the user name to the breadcrumb
-		JFactory::getApplication()->getPathway()->addItem(THM_GroupsHelperProfile::getDisplayName($this->profileID), '');
-
-		$this->modifyDocument();
-		parent::display($tpl);
+		return $html;
 	}
 
 	/**
@@ -256,6 +326,7 @@ class THM_GroupsViewProfile extends JViewLegacy
 	public function getEditLink($attributes = null)
 	{
 		$editLink = "";
+
 		if ($this->canEdit)
 		{
 			$fullName  = JFactory::getUser($this->profileID)->get('name');
@@ -264,7 +335,7 @@ class THM_GroupsViewProfile extends JViewLegacy
 
 			$lastName = trim($lastName);
 			$path     = "index.php?option=com_thm_groups&view=profile_edit";
-			$path     .= "&groupID=$this->groupID&userID=$this->profileID&name=$lastName&Itemid=$this->menuID";
+			$path     .= "&groupID=$this->groupID&profileID=$this->profileID&name=$lastName&Itemid=$this->menuID";
 			$url      = JRoute::_($path);
 			$text     = '<span class="icon-edit"></span> ' . JText::_('COM_THM_GROUPS_EDIT');
 			$editLink .= JHtml::_('link', $url, $text, $attributes);
@@ -274,34 +345,21 @@ class THM_GroupsViewProfile extends JViewLegacy
 	}
 
 	/**
-	 * Gets a link to the previous static content or webpage
-	 *
-	 * @params   mixed  $attributes  An associative array (or simple string) of attributes to add
+	 * Redirects back to the previous
 	 *
 	 * @return  string  the Link HTML markup
 	 */
-	public function getBackLink($attributes = null)
+	public function getBackLink()
 	{
-		$defaultURL  = 'document.referrer';
-		$defaultText = '<span class="icon-undo"></span> ' . JText::_('COM_THM_GROUPS_PROFILE_BACK');
-		$defaultLink = JHtml::_('link', $defaultURL, $defaultText, $attributes);
-
-		$menu = JFactory::getApplication()->getMenu()->getItem($this->menuID);
-		if (empty($menu))
+		if (JComponentHelper::getParams('com_thm_groups')->get('backButtonForProfile') == 1)
 		{
-			return $defaultLink;
+			$text       = '<span class="icon-arrow-left-22"></span> ' . JText::_("COM_THM_GROUPS_BACK_BUTTON");
+			$attributes = ['class' => 'btn', 'onclick' => 'window.history.back()'];
+
+			return JHtml::link('#', $text, $attributes);
 		}
 
-		$notGroupsComponent = ($menu->type != 'component' OR $menu->component != 'com_thm_groups');
-		if ($notGroupsComponent)
-		{
-			return $defaultLink;
-		}
-
-		$url  = $menu->link . '&Itemid=' . $this->menuID;
-		$text = '<span class="icon-list"></span> ' . JText::_('COM_THM_GROUPS_PROFILE_BACK_TO_LIST');
-
-		return JHtml::_('link', $url, $text, $attributes);
+		return '';
 	}
 
 	/**
@@ -311,51 +369,7 @@ class THM_GroupsViewProfile extends JViewLegacy
 	 */
 	private function modifyDocument()
 	{
-		$document = JFactory::getDocument();
-		$document->addStyleSheet('media/com_thm_groups/css/profile_item.css');
+		JFactory::getDocument()->addStyleSheet('media/com_thm_groups/css/profile_item.css');
 		JHtml::_('bootstrap.framework');
-		JHtml::_('behavior.modal');
-		JHtml::_('behavior.modal', 'a.modal-button');
-	}
-
-	/**
-	 * Creates the name to be displayed
-	 *
-	 * @return  string  the profile name
-	 */
-	public function getDisplayName()
-	{
-		return THM_GroupsHelperProfile::getDisplayNameWithTitle($this->profileID);
-	}
-
-	/**
-	 * Checks icon and value and returns one of them
-	 *
-	 * @param   array  $attribute           Array with options for attribute
-	 * @param   string $output              String which contains icon or label
-	 * @param   string $name                Some necessary shit
-	 * @param   string $labelContainerClass Other necessary shit
-	 *
-	 * @return  string
-	 */
-	private function getIconLabelOutput($attribute, $output, $name, $labelContainerClass)
-	{
-		$paramsExist = !empty($attribute['params']);
-		$showIcon    = (!$paramsExist OR !empty($attribute['params']['showIcon']));
-		$showLabel   = (!$paramsExist OR !empty($attribute['params']['showLabel']));
-		$iconName    = isset($attribute['options']['icon']) ? $attribute['options']['icon'] : '';
-
-		if ($showIcon AND !empty($iconName))
-		{
-			$output .= "<span class='$iconName'></span>";
-		}
-		elseif ($showLabel)
-		{
-			$output .= '<div class="' . $labelContainerClass . '"><span>' . $name . '</span></div>';
-
-			return $output;
-		}
-
-		return $output;
 	}
 }

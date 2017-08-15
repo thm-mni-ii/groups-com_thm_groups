@@ -16,10 +16,32 @@
  * Class providing functions usefull to multiple component files
  *
  * @category  Joomla.Component.Admin
- * @package   thm_organizer
+ * @package   thm_groups
  */
 class THM_GroupsHelperComponent
 {
+	/**
+	 * Set variables for user actions.
+	 *
+	 * @param   object &$object the view context calling the function
+	 *
+	 * @return void
+	 */
+	public static function addActions(&$object)
+	{
+		$user   = JFactory::getUser();
+		$result = new JObject;
+
+		$path    = JPATH_ADMINISTRATOR . '/components/com_thm_groups/access.xml';
+		$actions = JAccess::getActionsFromFile($path, "/access/section[@name='component']/");
+		foreach ($actions as $action)
+		{
+			$result->set($action->name, $user->authorise($action->name, 'com_thm_groups'));
+		}
+
+		$object->actions = $result;
+	}
+
 	/**
 	 * Configure the Linkbar.
 	 *
@@ -43,6 +65,11 @@ class THM_GroupsHelperComponent
 			$viewName == 'thm_groups'
 		);
 		JHtmlSidebar::addEntry(
+			JText::_('COM_THM_GROUPS_CONTENT_MANAGER'),
+			'index.php?option=com_thm_groups&view=content_manager',
+			$viewName == 'content_manager'
+		);
+		JHtmlSidebar::addEntry(
 			JText::_('COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER'),
 			'index.php?option=com_thm_groups&view=dynamic_type_manager',
 			$viewName == 'dynamic_type_manager'
@@ -51,6 +78,11 @@ class THM_GroupsHelperComponent
 			JText::_('COM_THM_GROUPS_GROUP_MANAGER'),
 			'index.php?option=com_thm_groups&view=group_manager',
 			$viewName == 'group_manager'
+		);
+		JHtmlSidebar::addEntry(
+			JText::_('COM_THM_GROUPS_PLUGIN_MANAGER'),
+			'index.php?option=com_plugins&filter[search]=thm%20groups',
+			$viewName == 'plugin_manager'
 		);
 		JHtmlSidebar::addEntry(
 			JText::_('COM_THM_GROUPS_PROFILE_MANAGER'),
@@ -68,16 +100,6 @@ class THM_GroupsHelperComponent
 			$viewName == 'attribute_manager'
 		);
 		JHtmlSidebar::addEntry(
-			JText::_('COM_THM_GROUPS_QUICKPAGE_MANAGER'),
-			'index.php?option=com_thm_groups&view=quickpage_manager',
-			$viewName == 'quickpage_manager'
-		);
-		JHtmlSidebar::addEntry(
-			JText::_('COM_THM_GROUPS_PLUGIN_MANAGER'),
-			'index.php?option=com_thm_groups&view=plugin_manager',
-			$viewName == 'plugin_manager'
-		);
-		JHtmlSidebar::addEntry(
 			JText::_('COM_THM_GROUPS_ROLE_MANAGER'),
 			'index.php?option=com_thm_groups&view=role_manager',
 			$viewName == 'role_manager'
@@ -89,28 +111,6 @@ class THM_GroupsHelperComponent
 		);
 
 		$view->sidebar = JHtmlSidebar::render();
-	}
-
-	/**
-	 * Set variables for user actions.
-	 *
-	 * @param   object &$view the view context calling the function
-	 *
-	 * @return void
-	 */
-	public static function addActions(&$object)
-	{
-		$user   = JFactory::getUser();
-		$result = new JObject;
-
-		$path    = JPATH_ADMINISTRATOR . '/components/com_thm_groups/access.xml';
-		$actions = JAccess::getActionsFromFile($path, "/access/section[@name='component']/");
-		foreach ($actions as $action)
-		{
-			$result->set($action->name, $user->authorise($action->name, 'com_thm_groups'));
-		}
-
-		$object->actions = $result;
 	}
 
 	/**
@@ -148,39 +148,38 @@ class THM_GroupsHelperComponent
 	}
 
 	/**
-	 * Method to check if the current user can edit the profile
+	 * Calls the appropriate controller
 	 *
-	 * @param   int $profileUserID the id of the profile user
-	 * @param   int $groupID       the id of the group
+	 * @param boolean $isAdmin whether the file is being called from the backend
 	 *
-	 * @return  boolean  true if the current user is the moderator for the group, otherwise false
+	 * @return  void
 	 */
-	public static function canEditProfile($profileUserID, $groupID = 0)
+	public static function callController($isAdmin = true)
 	{
-		$userID         = JFactory::getUser()->id;
-		$invalidProfile = empty($profileUserID);
-		$invalidUser    = empty($userID);
-		if ($invalidProfile OR $invalidUser)
+		$basePath = $isAdmin ? JPATH_COMPONENT_ADMINISTRATOR : JPATH_COMPONENT_SITE;
+
+		$handler = explode(".", JFactory::getApplication()->input->getCmd('task', ''));
+
+		if (count($handler) > 1)
 		{
-			return false;
+			$task = $handler[1];
+		}
+		else
+		{
+			$task = $handler[0];
 		}
 
-		$user             = JFactory::getUser();
-		$isSuperAdmin     = $user->authorise('core.admin', 'com_thm_groups');
-		$isComponentAdmin = $user->authorise('core.manage', 'com_thm_groups');
-		$isModerator      = self::getModerator($groupID);
-		$isOwn            = $userID == $profileUserID;
-		$params           = JComponentHelper::getParams('com_thm_groups');
-		$canEditOwn       = ($isOwn && $params->get('editownprofile', 0) == 1);
-		$allow            = ($isSuperAdmin OR $isComponentAdmin OR $isModerator OR $canEditOwn);
-
-		return ($allow) ? true : false;
+		/** @noinspection PhpIncludeInspection */
+		require_once $basePath . '/controller.php';
+		$controllerObj = new THM_GroupsController;
+		$controllerObj->execute($task);
+		$controllerObj->redirect();
 	}
 
 	/**
 	 * Checks if the current user is a super admin in joomla or a admin of a thm_groups component
 	 *
-	 * @return boolean  true if the user is a super user or a component moderator
+	 * @return boolean  true if the user is a site or component administrator
 	 */
 	public static function canEdit()
 	{
@@ -188,41 +187,69 @@ class THM_GroupsHelperComponent
 		$isSuperUser        = $user->authorise('core.admin');
 		$isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
 
-		if ($isSuperUser OR $isComponentManager)
+		return ($isSuperUser OR $isComponentManager) ? true : false;
+	}
+
+	/**
+	 * Method to check if the current user can edit the profile
+	 *
+	 * @param   int $profileID the id of the profile user
+	 *
+	 * @return  boolean  true if the current user is authorized to edit the profile, otherwise false
+	 */
+	public static function canEditProfile($profileID)
+	{
+		$user = JFactory::getUser();
+
+		if (empty($user->id))
+		{
+			return false;
+		}
+
+		$isAdmin = ($user->authorise('core.admin', 'com_thm_groups') OR $user->authorise('core.manage', 'com_thm_groups'));
+
+		if ($isAdmin)
 		{
 			return true;
 		}
 
-		return false;
+		$params  = JComponentHelper::getParams('com_thm_groups');
+		$allowed = (!empty($profileID) AND $params->get('editownprofile', 0) == 1 AND $user->id == $profileID);
+
+		return $allowed;
 	}
 
 	/**
-	 * Method to check if the current user is a moderator of the requested group
+	 * Cleans a given collection. Converts to array as necessary. Removes duplicate values. Enforces int type. Removes
+	 * 0 value indexes.
 	 *
-	 * @param   int $groupID the id of the group
+	 * @param mixed $array the collection to be cleaned (array|object)
 	 *
-	 * @return  boolean  true if the current user is the moderator for the group, otherwise false
+	 * @return array the converted array
 	 */
-	public static function getModerator($groupID)
+	public static function cleanIntCollection($array)
 	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
-		$query->select('id');
-		$query->from('#__thm_groups_users_usergroups_moderator');
-		$query->where("usersID = '" . JFactory::getUser()->id . "'");
-		$query->where("usergroupsID = '" . $groupID . "'");
-		$dbo->setQuery((string) $query);
+		if (!is_array($array))
+		{
+			if (!is_object($array))
+			{
+				return array();
+			}
 
-		try
-		{
-			$modID = $dbo->loadResult();
-		}
-		catch (Exception $exc)
-		{
-			JErrorPage::render($exc);
+			$array = (array) $array;
 		}
 
-		return (empty($modID)) ? false : true;
+		array_unique($array);
+		Joomla\Utilities\ArrayHelper::toInteger($array);
+
+		$zeroIndex = array_search(0, $array, true);
+
+		if ($zeroIndex !== false)
+		{
+			unset($array[$zeroIndex]);
+		}
+
+		return $array;
 	}
 
 	/**
@@ -233,7 +260,7 @@ class THM_GroupsHelperComponent
 	public static function noAccess()
 	{
 		$app  = JFactory::getApplication();
-		$msg  = JText::_('COM_THM_GROUPS_NOT_ALLOWED');
+		$msg  = JText::_('JLIB_RULES_NOT_ALLOWED');
 		$link = JRoute:: _('index.php');
 		$app->Redirect($link, $msg);
 	}

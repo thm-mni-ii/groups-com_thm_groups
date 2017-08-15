@@ -43,25 +43,55 @@ class THM_GroupsHelperTemplate
 			return false;
 		}
 
-		foreach ($allAttributes as $attribute)
+		foreach ($allAttributes as &$attribute)
 		{
 			foreach ($templateAttributes as $templateAttribute)
 			{
-				if ($attribute->id == $templateAttribute->attributeID)
+				if ($attribute['id'] == $templateAttribute['attributeID'])
 				{
-					if (!empty($templateAttribute->ID))
-					{
-						$attribute->ID = $templateAttribute->ID;
-					}
-
-					$attribute->published = $templateAttribute->published;
-					$attribute->ordering     = $templateAttribute->ordering;
-					$attribute->params    = $templateAttribute->params;
+					$attribute['published'] = $templateAttribute['published'];
+					$attribute['ordering']  = $templateAttribute['ordering'];
+					$attribute['params']    = $templateAttribute['params'];
 				}
 			}
 		}
 
 		return $allAttributes;
+	}
+
+	/**
+	 * Retrieves the name of the template with a given ID
+	 *
+	 * @param   int $templateID the id of the template
+	 *
+	 * @return  string the name of the template
+	 */
+	public static function getName($templateID)
+	{
+		if (empty($templateID))
+		{
+			return '';
+		}
+
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
+		$query->select('template.name');
+		$query->from('#__thm_groups_profile AS template');
+		$query->where("id = '$templateID'");
+		$dbo->setQuery($query);
+
+		try
+		{
+			$templateName = $dbo->loadResult();
+		}
+		catch (Exception $exc)
+		{
+			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+
+			return '';
+		}
+
+		return empty($templateName) ? '' : $templateName;
 	}
 
 	/**
@@ -74,6 +104,7 @@ class THM_GroupsHelperTemplate
 	public static function getTemplateAttributes($templateID)
 	{
 		$app = JFactory::getApplication();
+
 		if (empty($templateID))
 		{
 			$app->enqueueMessage(JText::_('COM_THM_GROUPS_TEMPLATE_ERROR_NULL'), 'error');
@@ -83,15 +114,12 @@ class THM_GroupsHelperTemplate
 
 		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
-		$query
-			->select("*")
-			->from('#__thm_groups_profile_attribute')
-			->where("profileID = $templateID");
+		$query->select("*")->from('#__thm_groups_profile_attribute')->where("profileID = $templateID");
 		$dbo->setQuery($query);
 
 		try
 		{
-			return $dbo->loadObjectList();
+			$attributes = $dbo->loadAssocList();
 		}
 		catch (Exception $exception)
 		{
@@ -99,5 +127,7 @@ class THM_GroupsHelperTemplate
 
 			return false;
 		}
+
+		return empty($attributes) ? array() : $attributes;
 	}
 }

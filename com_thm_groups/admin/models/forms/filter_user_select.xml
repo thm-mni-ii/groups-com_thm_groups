@@ -20,7 +20,7 @@
         />
         <field
                 type="hidden"
-                name="group_ids"
+                name="groupIDs"
         />
         <field
                 type="hidden"

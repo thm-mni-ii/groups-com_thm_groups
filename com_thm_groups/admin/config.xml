@@ -1,42 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-    <fieldset
-            name="general"
-            label="COM_THM_GROUPS_BASIC_SETTINGS_TITLE"
-            description="COM_THM_GROUPS_BASIC_SETTINGS_DESCRIPTION">
-
-        <field
-                name="editownprofile"
-                type="checkbox"
-                value="1"
-                default="0"
-                label="COM_THM_GROUPS_MEMBER_CONFIG_MEMBERPERMISSIONS_EDIT_PROFILE"
-                description="COM_THM_GROUPS_MEMBER_CONFIG_MEMBERPERMISSIONS_EDIT_PROFILE_DESC"
-        />
-
-        <field
-                name="backButtonForQuickpages"
-                type="radio"
-                default="0"
-                class="btn-group btn-group-yesno"
-                label="COM_THM_GROUPS_ADVANCED_CONFIG_QP_BACK_LABEL"
-                description="COM_THM_GROUPS_ADVANCED_CONFIG_QP_BACK_DESC">
+    <fieldset name="general"
+              label="COM_THM_GROUPS_BASIC_SETTINGS_TITLE"
+              description="COM_THM_GROUPS_BASIC_SETTINGS_DESCRIPTION">
+        <field name="editownprofile"
+               type="radio"
+               class="btn-group btn-group-yesno"
+               value="1"
+               default="0"
+               label="COM_THM_GROUPS_EDIT_OWN_PROFILE"
+               description="COM_THM_GROUPS_EDIT_OWN_PROFILE_DESC">
+            <option value="1">JON</option>
+            <option value="0">JOFF</option>
+        </field>
+        <field name="backButtonForProfile"
+               type="radio"
+               class="btn-group btn-group-yesno"
+               default="1"
+               label="COM_THM_GROUPS_SHOW_PROFILE_BACK"
+               description="COM_THM_GROUPS_SHOW_PROFILE_BACK_DESC">
             <option value="1">JSHOW</option>
             <option value="0">JHIDE</option>
         </field>
-
-        <field
-                name="backButtonForProfile"
-                type="radio"
-                class="btn-group btn-group-yesno"
-                default="1"
-                label="COM_THM_GROUPS_ADVANCED_CONFIG_PROFILE_BACK_LABEL"
-                description="COM_THM_GROUPS_ADVANCED_CONFIG_PROFILE_BACK_DESC">
+        <field name="enabled"
+               type="radio"
+               default="0"
+               class="btn-group btn-group-yesno"
+               label="COM_THM_GROUPS_ENABLE_CONTENT"
+               description="COM_THM_GROUPS_ENABLE_CONTENT_DESC">
+            <option value="1">JON</option>
+            <option value="0">JOFF</option>
+        </field>
+        <field name="rootCategory"
+               type="category"
+               label="COM_THM_GROUPS_ROOT_CATEGORY"
+               description="COM_THM_GROUPS_ROOT_CATEGORY_DESC"
+               extension="com_content"/>
+        <field name="backButtonForContent"
+               type="radio"
+               default="0"
+               class="btn-group btn-group-yesno"
+               label="COM_THM_GROUPS_SHOW_CONTENT_BACK"
+               description="COM_THM_GROUPS_SHOW_CONTENT_BACK_DESC">
             <option value="1">JSHOW</option>
             <option value="0">JHIDE</option>
+        </field>
+        <field name="showCategories"
+               type="radio"
+               default="0"
+               class="btn-group btn-group-yesno"
+               label="COM_THM_GROUPS_SHOW_ALL_CATEGORIES"
+               description="COM_THM_GROUPS_SHOW_ALL_CATEGORIES_DESC">
+            <option value="1">JON</option>
+            <option value="0">JOFF</option>
         </field>
     </fieldset>
-
     <fieldset name="permissions"
               description="JCONFIG_PERMISSIONS_DESC"
               label="JCONFIG_PERMISSIONS_LABEL">

@@ -5,10 +5,7 @@
  * @subpackage  com_thm_groups.site
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
- * @author      Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
- * @author      Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
  * @name        THMGroupsModelAdvanced
- * @description Advanced model of com_thm_groups
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
@@ -16,9 +13,9 @@
 
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.model');
-require_once JPATH_ROOT . "/media/com_thm_groups/data/thm_groups_data.php";
-require_once JPATH_ROOT . "/media/com_thm_groups/data/thm_groups_user_data.php";
+require_once JPATH_ROOT . "/media/com_thm_groups/helpers/group.php";
+require_once JPATH_ROOT . "/media/com_thm_groups/helpers/profile.php";
+require_once JPATH_ROOT . "/media/com_thm_groups/helpers/role.php";
 jimport('joomla.filesystem.path');
 
 /**
@@ -32,464 +29,262 @@ jimport('joomla.filesystem.path');
  */
 class THM_GroupsModelAdvanced extends JModelLegacy
 {
+	const alphaSort = 1;
 
-	/**
-	 * DAO
-	 *
-	 */
-	protected $db;
+	const no = 0;
+
+	const roleSort = 0;
+
+	const yes = 1;
+
+	private $groupID;
+
+	private $groups;
+
+	private $menuID;
+
+	public $params;
+
+	private $templateID;
 
 	/**
 	 * Constructor
 	 *
+	 * @param   array $config An array of configuration options (name, state, dbo, table_path, ignore_request).
 	 */
-	public function __construct()
+	public function __construct(array $config = array())
 	{
-		parent::__construct();
-		$this->db = JFactory::getDBO();
+		parent::__construct($config);
+		$this->params     = JFactory::getApplication()->getParams();
+		$this->groupID    = $this->params->get('groupID');
+		$this->menuID     = JFactory::getApplication()->input->get('Itemid', 0, 'get');
+		$menuTemplateID   = $this->params->get('templateID', 0);
+		$this->templateID = empty($menuTemplateID) ? THM_GroupsHelperGroup::getTemplateID($this->groupID) : $menuTemplateID;
+		$this->setGroups();
 	}
 
 	/**
-	 * Returns the correct view template
+	 * Returns a flat array of profiles alphabetically sorted by the profile's surname.
 	 *
-	 * @return string
+	 * @param array $groupedProfiles the profiles grouped by group and role
+	 *
+	 * @return array unique profiles in a single group alphabetically sorted.
 	 */
-	public function getView()
+	private function getAlphabeticalProfiles($groupedProfiles)
 	{
-		return $this->getHead() . $this->getList();
-	}
+		$profiles = array();
 
-	/**
-	 * Get View parameters
-	 *
-	 * @return Object Parameter object
-	 */
-	public function getViewParams()
-	{
-		$mainframe = Jfactory::getApplication();
+		$showRoles = $this->params->get('showRoles', self::no);
 
-		return $mainframe->getParams();
-	}
-
-	/**
-	 * Get Group number
-	 *
-	 * @return integer Group number
-	 */
-	public function getGroupNumber()
-	{
-		$params = $this->getViewParams();
-
-		return $params->get('selGroup');
-	}
-
-	/**
-	 * Print object
-	 *
-	 * @param   string $topic  Topic
-	 * @param   string $object Object
-	 *
-	 * @return void
-	 */
-	public function printObject($topic = '', $object = '')
-	{
-		if (!empty ($topic))
+		foreach ($groupedProfiles AS $groupID => $assocs)
 		{
-			$topic = "<div class='com_gs_topic'>$topic</div>";
-		}
-		echo "<div>$topic$object</div>";
-	}
+			$groupName = (empty($showRoles) OR count($this->groups) === 1) ? '' : $groupedProfiles[$groupID]['title'];
 
-	/**
-	 * Get image output
-	 *
-	 * @param   string $path Path
-	 * @param   string $text Text
-	 * @param   string $cssc CSS class
-	 *
-	 * @return string
-	 */
-	public function getImage($path, $text, $cssc)
-	{
-		return JHTML::image(
-			"modules/mod_thm_groups/$path",
-			$text,
-			array(
-				'class' => $cssc
-			)
-		);
-	}
+			foreach ($assocs as $assocID => $data)
+			{
+				if ($assocID == 'title')
+				{
+					continue;
+				}
 
-	/**
-	 * Get unsorted roles of a specific group
-	 *
-	 * @param   integer $gid Group id
-	 *
-	 * @return  array    Array with all roles of group with $gid
-	 */
-	public function getUnsortedRoles($gid)
-	{
+				if (empty($groupName))
+				{
+					$assocName = $data['name'];
+				}
+				elseif (empty($data['name']))
+				{
+					$assocName = $groupName;
+				}
+				else
+				{
+					$assocName = "$groupName: {$data['name']}";
+				}
 
-		return THM_GroupsData::getRoles($gid);
-	}
+				foreach ($data['profiles'] AS $profileID => $attributes)
+				{
+					if (empty($profiles[$profileID]))
+					{
+						$profiles[$profileID] = $attributes;
+					}
 
-	/**
-	 * Method to check if user can edit
-	 *
-	 * @param Integer $groupid Group Id
-	 *
-	 * @return database object
-	 */
-	public function canEdit($groupid)
-	{
-		$groupid = $this->getGroupNumber();
-		$user    = JFactory::getUser();
-		if ($user->authorise('core.admin', 'com_thm_groups'))
-		{
-			return true;
-		}
-		if (THM_GroupsUserData::getModerator($groupid))
-		{
-			return true;
+					if (!empty($showRoles) AND !empty($assocName))
+					{
+						$profiles[$profileID]['roles'] = empty($profiles[$profileID]['roles']) ?
+							$assocName : $profiles[$profileID]['roles'] . ", $assocName";
+					}
+				}
+			}
 		}
 
-		return false;
-	}
+		uasort($profiles, ['THM_GroupsModelAdvanced', 'sortProfiles']);
 
-	/**
-	 * Get all attribute types
-	 *
-	 * @return  Object
-	 */
-	public function getTypes()
-	{
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
-
-		$query->select('C.name AS type')
-			->from('#__thm_groups_attribute AS A')
-			->leftJoin('#__thm_groups_dynamic_type AS B ON A.dynamic_typeID = B.id')
-			->leftJoin('#__thm_groups_static_type AS C ON  B.static_typeID = C.id')
-			->order('A.id');
-
-		$db->setQuery($query);
-
-		return $db->loadObjectList();
+		return $profiles;
 	}
 
 	/**
 	 * Returns array with every group members and related attribute. The group is predefined as view parameter
 	 *
-	 * TODO when all Group have a Profil, put them here
 	 * @return  array  array with group members and related user attributes
 	 */
-	public function getData()
+	public function getProfiles()
 	{
-		// Contains the number of the group, e.g. 10
-		$groupid = $this->getGroupNumber();
-		$params  = $this->getViewParams();
+		$sort = $this->params->get('sort', self::alphaSort);
 
-		$sortedRoles = $params->get('roleid');
-		$data        = array();
-		if ($sortedRoles == "")
+		$groupedProfiles = [];
+
+		foreach ($this->groups AS $group)
 		{
-			$arrSortedRoles = $this->getUnsortedRoles($groupid);
-		}
-		else
-		{
-			$arrSortedRoles = explode(",", $sortedRoles);
+			$groupRoleAssocs                      = THM_GroupsHelperGroup::getRoleAssocIDs($group->id);
+			$groupedProfiles[$group->id]          = array_flip($groupRoleAssocs);
+			$groupedProfiles[$group->id]['title'] = $group->title;
 		}
 
-		$userList  = THM_GroupsData::getMitglieder($groupid, $arrSortedRoles);
-		$profileid = THM_GroupsData::getGroupsProfile($groupid);
+		$URL = "index.php?option=com_thm_groups";
 
-		foreach ($userList as $users)
+		foreach ($groupedProfiles AS $groupID => $assocs)
 		{
-			foreach ($users as $uid)
+			$groupURL = $URL . "&groupID=$groupID";
+
+			foreach (array_keys($assocs) AS $assocID)
 			{
-				$userData   = THM_GroupsUserData::getUserProfileInfo($uid, $profileid);
-				$data[$uid] = $userData;
-			}
-		}
-
-		return $data;
-	}
-
-	/**
-	 * Get attribute structure
-	 *
-	 * @return  ObjectList  Objectlist with defined structure of attributes
-	 */
-	public function getStructure()
-	{
-		$query = $this->db->getQuery(true);
-
-		$query->select('*');
-		$query->from('#__thm_groups_structure AS a');
-		$query->order('a.order');
-
-		$this->db->setQuery($query);
-
-		return $this->db->loadObjectList();
-	}
-
-	/**
-	 * Get Data for table view
-	 *
-	 * @return  array    Two-dimensional array with group members (left and right)
-	 */
-	public function getDataTable()
-	{
-		$memberleft  = array();
-		$memberright = array();
-		$index       = 0;
-		$_data       = $this->getData();
-		if (!empty($_data))
-		{
-			foreach ($_data as $key => $member)
-			{
-				if ($index == 0)
+				if ($assocID == 'title')
 				{
-					$memberleft[$key] = $member;
-					$index++;
+					continue;
 				}
-				else
+
+				$profileIDs = THM_GroupsHelperGroup::getProfileIDsByAssoc($assocID);
+
+				if (empty($profileIDs))
 				{
-					$memberright[$key] = $member;
-					$index--;
+					unset($groupedProfiles[$groupID][$assocID]);
+					continue;
 				}
-			}
-		}
 
-		$_data          = array();
-		$_data['left']  = $memberleft;
-		$_data['right'] = $memberright;
+				$roleName = THM_GroupsHelperRole::getNameByAssoc($assocID, $sort);
 
-		return $_data;
-	}
+				$groupedProfiles[$groupID][$assocID] = ['name' => $roleName, 'profiles' => []];
 
-	/**
-	 * Get the Param for the view
-	 *
-	 * @return  number   The number of the view
-	 */
-	public function getAdvancedView()
-	{
-		$params = $this->getViewParams();
-		$view   = $params->get('advancedview');
-		if (!isset($view))
-		{
-			$view = 0;
-		}
+				// Get the role name
 
-		return $view;
-	}
-
-
-	/**
-	 * Get Auto Increment Value of Database Table
-	 *
-	 * @param   String $dbTable Database Table Name
-	 *
-	 * @author    Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
-	 * @author    Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
-	 *
-	 * @return  int   Value of Autoincrement
-	 */
-	public function getAutoIncrementValue($dbTable)
-	{
-		$sql   = "SHOW TABLE STATUS LIKE '" . $this->db->getPrefix() . $dbTable . "';";
-		$query = $this->db->getQuery(true);
-		$this->db->setQuery($sql);
-		$result = $this->db->loadAssoc();
-
-		if (empty($result) || !isset($result['Auto_increment']))
-		{
-			return false;
-		}
-
-		return $result['Auto_increment'];
-	}
-
-
-	/**
-	 * Save Preview Data
-	 *
-	 * @param   Mixed $data Data
-	 *
-	 * @author    Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
-	 * @author    Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
-	 *
-	 * @return  String  Token
-	 */
-	public function savePreviewData($data = false)
-	{
-		$session = JSession::getInstance('none', array());
-
-		// Create Token (md5 - Token must have 32 chars)
-		$tokenKey = 'db::thm_groups_menu_row';
-		$token    = md5($tokenKey . microtime() . mt_rand(0, 255));
-
-		$session->set($token, $data);
-
-		return $token;
-	}
-
-
-	/**
-	 * Load Preview Data
-	 *
-	 * @param   String $token Token
-	 *
-	 * @author    Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
-	 * @author    Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
-	 *
-	 * @return  Mixed  $data  Data
-	 */
-	public function loadPreviewData($token = false)
-	{
-		$session = JSession::getInstance('none', array());
-
-		return $session->get($token, false);
-	}
-
-
-	/**
-	 * Delete Preview Data
-	 *
-	 * @param   String $token Token
-	 *
-	 * @author    Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
-	 * @author    Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
-	 *
-	 * @return  Mixed  $data  Data
-	 */
-	public function deletePreviewData($token = false)
-	{
-		$session = JSession::getInstance('none', array());
-		$session->clear($token);
-	}
-
-
-	/**
-	 * Preview Observer - Store/Restore Menu Row
-	 *
-	 * @param   int    $id    Item ID (optional)
-	 * @param   string $token md5 Hash (optional)
-	 *
-	 * @author    Bünyamin Akdağ,  <buenyamin.akdag@mni.thm.de>
-	 * @author    Adnan Özsarigöl, <adnan.oezsarigoel@mni.thm.de>
-	 *
-	 * @return  bool OR string (token)
-	 */
-	public function notifyPreviewObserver($id = false, $token = false)
-	{
-		if (!is_numeric($id))
-		{
-			return false;
-		}
-
-		$itemId  = $id;
-		$dbTable = 'menu';
-
-		// Store Mode
-		if ($token === false)
-		{
-			// Get current Auto Increment
-			$autoIncrement = $this->getAutoIncrementValue($dbTable);
-
-			// Item will be updated for preview
-			if (!empty($itemId))
-			{
-				$itemStatus = 'edit';
-
-				$query = $this->db->getQuery(true);
-				$query->select('*');
-				$query->from('#__' . $dbTable);
-				$query->where('id = ' . $this->db->quote($itemId));
-				$this->db->setQuery($query);
-				$row = $this->db->loadAssoc();
-			}
-			// A new item will be created for preview
-			else
-			{
-				$itemStatus = 'new';
-				$row        = false;
-			}
-
-			// Save Data and return Token
-			$data = array('itemStatus' => $itemStatus, 'itemId' => $itemId, 'autoIncrement' => $autoIncrement, 'row' => $row);
-
-			return $this->savePreviewData($data);
-		}
-		// Restore Mode
-		elseif (strlen($token) === 32)
-		{
-			// Load Data by Token
-			$cacheData = $this->loadPreviewData($token);
-
-			if (empty($cacheData) || !isset($cacheData['itemStatus']))
-			{
-				return false;
-			}
-
-			// Restore edited item
-			if ($cacheData['itemStatus'] == 'edit' && $itemId == $cacheData['itemId'])
-			{
-				$query = $this->db->getQuery(true);
-				$query->update($this->db->getPrefix() . $dbTable);
-				foreach ($cacheData['row'] AS $key => $value)
+				foreach ($profileIDs as $profileID)
 				{
-					$query->set($key . ' = ' . $this->db->quote($value));
-				}
-				$query->where('id = ' . $this->db->quote($itemId));
-				$this->db->setQuery($query);
-				$this->db->execute();
-			}
-			// Delete new (preview) item and decrease Auto Increment value if possible
-			elseif ($cacheData['itemStatus'] == 'new' && $itemId >= $cacheData['autoIncrement'])
-			{
-				try
-				{
-					$this->db->transactionStart();
+					$profile = THM_GroupsHelperProfile::getProfile($profileID, $this->templateID, true);
 
-					$autoIncrementOld = $cacheData['autoIncrement'];
-					$autoIncrementNew = $this->getAutoIncrementValue($dbTable);
-
-					if ($autoIncrementOld >= $autoIncrementNew)
+					// No surname
+					if (empty($profile[2]['value']))
 					{
-						throw new Exception('An unexpected error occured!\nAuto Increment Value mismatch!');
+						continue;
 					}
 
-					// Delete new item
-					$query = $this->db->getQuery(true);
-					$query->delete($this->db->getPrefix() . $dbTable);
-					$query->where('id = ' . $this->db->quote($itemId));
-					$this->db->setQuery($query);
-					$this->db->execute();
+					$urlName    = JFilterOutput::stringURLSafe($profile[2]['value']);
+					$profileURL = $groupURL . "&profileID=$profileID&name=$urlName";
 
-					// Decrease Auto Increment Value
-					if ($autoIncrementOld + 1 == $autoIncrementNew)
+					$linkTarget = $this->params['linkTarget'];
+
+					if ($linkTarget == 'module')
 					{
-						$query = $this->db->getQuery(true);
-						$this->db->setQuery("ALTER TABLE " . $this->db->getPrefix() . $dbTable . " AUTO_INCREMENT = $autoIncrementOld");
-						$this->db->execute();
+						$profileURL .= '&view=advanced';
+						$profileURL .= "&Itemid={$this->menuID}";
+					}
+					else
+					{
+						$profileURL .= '&view=profile';
 					}
 
-					$this->db->transactionCommit();
+					$profile['URL'] = JRoute::_($profileURL);
+
+					$groupedProfiles[$groupID][$assocID]['profiles'][$profileID] = $profile;
 				}
-				catch (Exception $e)
-				{
-					$this->db->transactionRollback();
-				}
+
+				uasort($groupedProfiles[$groupID][$assocID]['profiles'], ['THM_GroupsModelAdvanced', 'sortProfiles']);
 			}
-
-			$this->deletePreviewData($token);
-
-			return true;
 		}
 
-		return false;
+		if ($sort == self::roleSort)
+		{
+			return $groupedProfiles;
+		}
+
+		return $this->getAlphabeticalProfiles($groupedProfiles);
+	}
+
+	/**
+	 * Sets the groups whose profiles are to be displayed. These are ordered so that nested groups are before parents and siblings are
+	 * ordered by actual order.
+	 *
+	 * @return void
+	 */
+	private function setGroups()
+	{
+		$ugHelper     = JHelperUsergroups::getInstance();
+		$parentGroup  = $ugHelper->get($this->groupID);
+		$allGroups    = $ugHelper->getAll();
+		$this->groups = [];
+
+		// If no subgroups are desired no further processing is needed
+		if ($this->params->get('subgroups', self::yes) == self::no)
+		{
+			$this->groups[] = $parentGroup;
+
+			return;
+		}
+
+		foreach ($allGroups as $key => $group)
+		{
+			$relevant = ($group->lft >= $parentGroup->lft AND $group->rgt <= $parentGroup->rgt);
+
+			if ($relevant)
+			{
+				$this->groups[$group->id] = $group;
+			}
+		}
+
+		unset($allGroups);
+
+		function orderNested($group1, $group2)
+		{
+			// First group is antecedent
+			if ($group2->lft > $group1->rgt)
+			{
+				return 1;
+			}
+
+			// Second group is antecedent
+			if ($group1->lft > $group2->rgt)
+			{
+				return -1;
+			}
+
+			// First group is nested
+			if ($group1->lft > $group2->lft AND $group1->rgt < $group2->rgt)
+			{
+				return 1;
+			}
+
+			// Second group is nested
+			if ($group2->lft > $group1->lft AND $group2->rgt < $group1->rgt)
+			{
+				return 1;
+			}
+
+			// This should not be able to take place due to the nested table structure
+			return 0;
+		}
+
+		uasort($this->groups, 'orderNested');
+	}
+
+	/**
+	 * Sorts the profiles by the surname attribute value.
+	 *
+	 * @param array $profile1 the profile being compared
+	 * @param array $profile2 the profile being compared with
+	 *
+	 * @return bool whether the first profile's surname is 'bigger' than the second profile's surname
+	 */
+	private static function sortProfiles($profile1, $profile2)
+	{
+		return $profile1[2]['value'] > $profile2[2]['value'];
 	}
 
 }

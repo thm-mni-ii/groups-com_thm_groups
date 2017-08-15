@@ -35,7 +35,8 @@ class THM_GroupsViewTHM_Groups extends JViewLegacy
 	{
 		if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
 		{
-			return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+			$exc = new Exception(JText::_('JLIB_RULES_NOT_ALLOWED'), 401);
+			JErrorPage::render($exc);
 		}
 
 		JHtml::_('bootstrap.tooltip');

@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsControllerUser
- * @description THM_GroupsControllerUser class from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2016 TH Mittelhessen
@@ -16,8 +15,6 @@
 defined('_JEXEC') or die;
 
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
-require_once JPATH_SITE . '/media/com_thm_groups/controllers/profile_edit_controller.php';
-
 
 /**
  * THM_GroupsControllerUser class for component com_thm_groups
@@ -26,19 +23,28 @@ require_once JPATH_SITE . '/media/com_thm_groups/controllers/profile_edit_contro
  * @package   com_thm_groups.admin
  * @link      www.thm.de
  */
-class THM_GroupsControllerProfile extends THM_GroupsControllerProfile_Edit_Controller
+class THM_GroupsControllerProfile extends JControllerLegacy
 {
-	private $_baseURL = 'index.php?option=com_thm_groups';
+	private $baseURL = 'index.php?option=com_thm_groups';
 
-	private $_userID;
+	private $profileID;
 
-	private $_groupID;
+	private $groupID;
 
-	private $_menuID;
+	private $menuID;
 
-	private $_name;
+	private $surname;
 
-	private $_referrer;
+	/**
+	 * THM_GroupsControllerProfile constructor.
+	 *
+	 * @param array $config
+	 */
+	public function __construct(array $config = array())
+	{
+		parent::__construct($config);
+		JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_thm_groups/models');
+	}
 
 	/**
 	 * Saves changes to the profile and returns to the edit view
@@ -48,25 +54,40 @@ class THM_GroupsControllerProfile extends THM_GroupsControllerProfile_Edit_Contr
 	public function apply()
 	{
 		$this->preProcess();
-		$success = $this->getModel('profile_edit')->save();
+
+		$model   = JModelLegacy::getInstance('profile', 'THM_GroupsModel');
+		$success = $model->save();
+
+		$app = JFactory::getApplication();
 
 		if ($success)
 		{
-			JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_SUCCESS'));
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_SUCCESS'));
 		}
 		else
 		{
-			JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_ERROR'), 'error');
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'error');
 		}
 
-		// This method of redirection allows the referrer to be input directly into the context
-		$this->input->set('view', 'profile_edit');
-		$this->input->set('groupID', $this->_groupID);
-		$this->input->set('userID', $this->_userID);
-		$this->input->set('Itemid', $this->_menuID);
-		$this->input->set('name', $this->_name);
-		$this->input->set('referrer', $this->_referrer);
-		parent::display();
+		$URL = "{$this->baseURL}&view=profile_edit&profileID={$this->profileID}&groupID={$this->groupID}";
+		$URL .= "&name={$this->surname}&Itemid={$this->menuID}";
+
+		$app->redirect(JRoute::_($URL));
+	}
+
+	/**
+	 * Calls delete function for picture in the model
+	 *
+	 * @return  void outputs a blank string on success, otherwise affects no change
+	 */
+	public function deletePicture()
+	{
+		$model   = JModelLegacy::getInstance('profile', 'THM_GroupsModel');
+		$success = $model->deletePicture();
+
+		echo empty($success) ? 'error' : '';
+
+		JFactory::getApplication()->close();
 	}
 
 	/**
@@ -78,22 +99,43 @@ class THM_GroupsControllerProfile extends THM_GroupsControllerProfile_Edit_Contr
 	{
 		$this->preProcess();
 
-		$success = $this->getModel('profile_edit')->save();
+		$model   = JModelLegacy::getInstance('profile', 'THM_GroupsModel');
+		$success = $model->save();
 
-		$query = "&groupID=$this->_groupID&userID=$this->_userID&Itemid=$this->_menuID&name=$this->_name";
+		$app = JFactory::getApplication();
+
 		if ($success)
 		{
-			$url = JRoute::_($this->_baseURL . '&view=profile' . $query);
-			$msg = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-			$this->setRedirect($url, $msg);
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_SUCCESS'));
 		}
 		else
 		{
-			$url = JRoute::_($this->_baseURL . '&view=profile_edit' . $query);
-			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
-			//todo: fails:
-			$this->setRedirect($url, $msg);
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'error');
 		}
+
+		$URL = "{$this->baseURL}&view=profile&profileID={$this->profileID}&groupID={$this->groupID}";
+		$URL .= "&name={$this->surname}&Itemid={$this->menuID}";
+
+		$app->redirect(JRoute::_($URL));
+	}
+
+	/**
+	 * Saves the cropped image and outputs the saved image on success.
+	 *
+	 * @return  void outputs the saved image on success, otherwise affects no change
+	 */
+	public function saveCropped()
+	{
+		$model = JModelLegacy::getInstance('profile', 'THM_GroupsModel');
+
+		$success = $model->saveCropped();
+
+		if ($success != false)
+		{
+			echo $success;
+		}
+
+		JFactory::getApplication()->close();
 	}
 
 	/**
@@ -103,44 +145,38 @@ class THM_GroupsControllerProfile extends THM_GroupsControllerProfile_Edit_Contr
 	 */
 	private function preProcess()
 	{
-		$app  = JFactory::getApplication()->input;
-		$data = $app->get('jform', array(), 'array');
+		$data = JFactory::getApplication()->input->get('jform', array(), 'array');
 
-		$this->_userID   = $data['userID'];
-		$this->_groupID  = $data['groupID'];
-		$this->_menuID   = $data['menuID'];
-		$this->_name     = $data['name'];
-		$this->_referrer = $data['referrer'];
-		$canEdit         = THM_GroupsHelperComponent::canEditProfile($this->_userID, $this->_groupID);
+		$this->profileID = $data['profileID'];
+		$this->groupID   = $data['groupID'];
+		$this->menuID    = $data['menuID'];
+		$this->surname   = $data['name'];
 
-		$query = "&view=profile&groupID=$this->_groupID&userID=$this->_userID&Itemid=$this->_menuID&name=$this->_name";
-		if (!$canEdit)
+		if (!THM_GroupsHelperComponent::canEditProfile($this->profileID))
 		{
-			$url = JRoute::_($this->_baseURL . $query);
-			$msg = JText::_('COM_THM_GROUPS_NOT_ALLOWED');
-			$this->setRedirect($url, $msg, 'error');
+			JFactory::getApplication()->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
+			$this->redirect();
 		}
 
 		return;
 	}
 
 	/**
-	 * Calls calls the saveCropped() function. Handles ajax call.
+	 * Sets display parameters and redirects
 	 *
-	 * @TODO  Output should be in a view.
+	 * @param string $view the view name to redirect to.
 	 *
-	 * @return  void  the name of the saved file on success, otherwise empty
+	 * @return void redirects to the next page
 	 */
-	public function saveCropped()
+	public function redirect($view = 'profile')
 	{
-		parent::saveCropped();
-	}
+		$this->input->set('view', $view);
+		$this->input->set('groupID', $this->groupID);
+		$this->input->set('profileID', $this->profileID);
+		$this->input->set('Itemid', $this->menuID);
+		$this->input->set('name', $this->surname);
 
-	public function createQuickpageForUser()
-	{
-		$model = $this->getModel('user');
 
-		// TODO function need cid
-		$model->createQuickpageCategoryForUser('');
+		parent::display();
 	}
 }

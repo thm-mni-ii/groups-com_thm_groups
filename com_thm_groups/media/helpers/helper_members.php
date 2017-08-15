@@ -6,12 +6,11 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsModelMembers
- * @description THMGroupsModelMembers file from com_thm_groups
  * @author      Ilja Michajlow,  <ilja.michajlow@mni.thm.de>
  * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
  * @copyright   2013 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 defined('_JEXEC') or die('Restricted access');
@@ -21,7 +20,7 @@ defined('_JEXEC') or die('Restricted access');
  *
  * @category  Joomla.Library
  * @package   lib_thm_groups
- * @link      www.mni.thm.de
+ * @link      www.thm.de
  * @since     Class available since Release 3.0
  */
 class THMGroupsModelMembers
@@ -34,16 +33,16 @@ class THMGroupsModelMembers
 	public function getStrucktur()
 	{
 		$strucitems = array();
-		$db         = JFactory::getDBO();
-		$query      = $db->getQuery(true);
+		$dbo        = JFactory::getDBO();
+		$query      = $dbo->getQuery(true);
 
 // 		$temp = 'SELECT a.id, a.field FROM `#__thm_groups_structure` as a Order by a.order';
 
 		$query->select("a.id,a.field");
 		$query->from("#__thm_groups_structure as a");
 		$query->order("a.order");
-		$db->setQuery($query);
-		$data = $db->loadObjectList();
+		$dbo->setQuery($query);
+		$data = $dbo->loadObjectList();
 
 		foreach ($data as $structur)
 		{
@@ -57,168 +56,20 @@ class THMGroupsModelMembers
 	}
 
 	/**
-	 * The function, which returns input parameters. And also this function makes checkboxes.
-	 *
-	 * @param   int $count 1-person,2-group,3-list
-	 *
-	 * @return     array    $db     contains user information
-	 */
-	public function getInputParams($count)
-	{
-		switch ($count)
-		{
-			case 1:
-				$columnA = "'cola'";
-				$columnB = "'colb'";
-				$columnC = "'colc'";
-				break;
-			case 2:
-				$columnA = "'cold'";
-				$columnB = "'cole'";
-				$columnC = "'colf'";
-				break;
-		}
-		$strucitems = self::getStrucktur();
-		$result     = '<table width= "50%" align="center"><tr>' .
-			'<th description = "Displays attributes">' . JText::_('COM_THM_GROUPS_ATTRIBUTE') . '</th>' .
-			'<th description = "Displays a label of an attribute ">' . JText::_('COM_THM_GROUPS_SHOW') . '</th>' .
-			'<th description = "Displays a value of a label">' . JText::_('COM_THM_GROUPS_NAME') . '</th>' .
-			'<th description = "Line break"> ' . JText::_('COM_THM_GROUPS_WRAP') . '</th>' .
-			'<tr></tr>' .
-			'<tr>' .
-			'<td></td>' .
-
-			/*
-			' <td><input type="checkbox" name="checkAll1" id="checkAll1" onclick="jqCheckAll2( this.id,'. $columnA .' )"/></td>'.
-			' <td><input type="checkbox" name="checkAll2" id="checkAll2" onclick="jqCheckAll2( this.id,'. $columnB .' )"/></td>'.
-			' <td><input type="checkbox" name="checkAll3" id="checkAll3" onclick="jqCheckAll2( this.id,'. $columnC .' )"/></td>'.
-			*/
-
-			'</tr>';
-		$check      = "checkbox";
-		foreach ($strucitems as $element)
-		{
-			/*
-			 *  id is a number of a structure, see a table thm_groups_structure
-			 */
-			$id   = $element->id;
-			$item = $element->value;
-
-			/*
-			 * Ich halte es für Blödsinn, aber nix anderes habe nicht ausgedacht
-			 * Id of checkboxes für person und group unterscheiden sich, weil checkboxes mit gleichen ID verboten sind.
-			 * Person
-			 * Show Name Wrap
-			 * 100	110	 111
-			 *
-			 * Group
-			 * Show 	Name 	Wrap
-			 * 10000	11000	11100
-			 *
-			 * Bei dem Checkbox Value lesen, werden die Werte von Group durch 10000 geteilt
-			 *
-			 * Das ist ein "Kludge"
-			 *
-			 */
-			switch ($count)
-			{
-				case 1:
-					$id               = $id * 100;
-					$idOfNameCheckbox = $id + 10;
-					$idOfWrapCheckbox = $id + 1;
-					break;
-				case 2:
-					$id               = $id * 100000;
-					$idOfNameCheckbox = $id + 10000;
-					$idOfWrapCheckbox = $id + 1000;
-					break;
-			}
-
-			$output
-				= "<tr>
-
-            <!-- item is a list of attributes -->
-
-            <td>" . $item . "</td>
-
-            <!-- checkboxes for Attributes -->
-
-            <td><input  type=" . $check . " id=" . $id . " name=" . $columnA . " value=" . $id
-				. " onclick= 'onname(" . $count . "," . $id . ")' /></td>" .
-
-				"<td><input type=" . $check . " id=" . $idOfNameCheckbox . " name= " . $columnB
-				. " disabled=true onclick='incrementOnTheShow(" . $count . "," . $id . ")' value=" . $idOfNameCheckbox . " /></td>" .
-
-				"<td><input type=" . $check . " id=" . $idOfWrapCheckbox . " name= " . $columnC
-				. " disabled=true onclick='incrementOnTheWrap(" . $count . "," . $id . ")' value=" . $idOfWrapCheckbox . " /></td>
-
-            </tr>";
-
-			$result .= $output;
-
-		}
-		$result .= '</table><br>';
-
-		return $result;
-	}
-
-
-	/**
 	 * Function, which returns input parameters
 	 *
-	 * @return    array     $db contains user information
-	 */
-	public function getInput()
-	{
-
-		// SQL-Request which returns all staff
-		$selected = $this->value;
-		$db       = JFactory::getDBO();
-		$query    = $db->getQuery(true);
-		$query->select(" a.userid, a.value AS vorname, b.value AS nachname");
-		$query->from("#__thm_groups_text AS a");
-		$query->innerJoin("#__thm_groups_text AS b ON a.userid = b.userid");
-		$query->where("a.publish = 1");
-		$query->where("a.structid = 1");
-		$query->where("b.structid = 2");
-		$query->group("a.userid");
-		$query->order("b.value");
-		$db->setQuery($query);
-		$list = $db->loadObjectList();
-
-		$html = '<select name="' . $this->name . '" id="sel" size="1" id="paramsdefault_user" class="styled">' . "<option value=''>"
-			. JText::_('COM_THM_GROUPS_SELECT_USER') . "</option>";
-		foreach ($list as $user)
-		{
-			$sel = '';
-			if ($user->userid == $selected)
-			{
-				$sel = "selected";
-			}
-
-			$html .= "<option value=" . $user->userid . " $sel>" . $user->nachname . " " . $user->vorname . " </option>";
-		}
-
-		$html .= '</select>';
-
-		return $html;
-	}
-
-	/**
-	 * Function, which returns input parameters
-	 *
-	 * @return    array     $db contains user information
+	 * @return    array     $dbo contains user information
 	 */
 	public function getKeyword()
 	{
 
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
+		$dbo   = JFactory::getDBO();
+		$query = $dbo->getQuery(true);
 		$query->select('params');
 		$query->from('#__extensions');
 		$query->where('element = \'plg_thm_groups_content_members\'');
-		$db->setQuery($query);
-		$data       = $db->loadObjectList();
+		$dbo->setQuery($query);
+		$data       = $dbo->loadObjectList();
 		$parameters = $data[0]->params;
 		$dec        = json_decode($parameters, true);
 		$keyword    = $dec['Keywords'];
@@ -227,11 +78,11 @@ class THMGroupsModelMembers
 	}
 
 	/**
-	 * Returns a list of MNI groups
+	 * Returns a list of groups
 	 *
 	 * @param   int $count 1-person,2-group,3-list
 	 *
-	 * @return html
+	 * @return string the html for the group select box
 	 */
 	public function getListOfGroups($count)
 	{
@@ -249,15 +100,15 @@ class THMGroupsModelMembers
 		// Warning? value is not defined
 
 		$selected = $this->value;
-		$db       = JFactory::getDbo();
-		$query    = $db->getQuery(true);
+		$dbo      = JFactory::getDbo();
+		$query    = $dbo->getQuery(true);
 		$query->select('id,name');
 		$query->from('#__thm_groups_groups');
-		$db->setQuery($query);
-		$list = $db->loadObjectList();
+		$dbo->setQuery($query);
+		$list = $dbo->loadObjectList();
 
 		$html = '<select name="' . $name . '" id="' . $name . '" size="1" id="paramsdefault_user" class="styled">'
-			. "<option value=''>" . JText::_('COM_THM_GROUPS_SELECT_GROUP') . "</option>";
+			. "<option value=''>" . JText::_('COM_THM_GROUPS_GROUP') . "</option>";
 		foreach ($list as $group)
 		{
 			$sel = '';
@@ -277,7 +128,7 @@ class THMGroupsModelMembers
 	/**
 	 * Method to get select options
 	 *
-	 * @return select options
+	 * @return array the group selection options
 	 */
 	public function getGroupSelectOptions()
 	{
@@ -334,7 +185,7 @@ class THMGroupsModelMembers
 	 */
 	public function getGroupsHirarchy()
 	{
-		$db = JFactory::getDBO();
+		$dbo = JFactory::getDBO();
 
 		// Create SQL query string
 
@@ -359,31 +210,31 @@ class THMGroupsModelMembers
 		$queryold .= "ORDER BY lft";
 		*/
 
-		$nestedQuery = $db->getQuery(true);
+		$nestedQuery = $dbo->getQuery(true);
 		$nestedQuery->select('*');
 		$nestedQuery->from("#__thm_groups_groups");
 		$nestedQuery->where("injoomla = 0");
 		$nestedQuery->order("name");
 
-		$nestedQuery1 = $db->getQuery(true);
+		$nestedQuery1 = $dbo->getQuery(true);
 		$nestedQuery1->select('*');
 		$nestedQuery1->from("#__thm_groups_groups");
 
-		$nestedQuery2 = $db->getQuery(true);
+		$nestedQuery2 = $dbo->getQuery(true);
 		$nestedQuery2->select('joo.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla');
 		$nestedQuery2->from("#__usergroups AS joo");
 		$nestedQuery2->leftJoin("($nestedQuery1) AS thm ON joo.id = thm.id");
 		$nestedQuery2->order("lft");
 
-		$query = $db->getQuery(true);
+		$query = $dbo->getQuery(true);
 		$query->select('thm.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla');
 		$query->from("#__usergroups AS joo");
 		$query->rightJoin("($nestedQuery) AS thm ON joo.id = thm.id UNION $nestedQuery2");
 
-		$db->setQuery($query);
-		$db->query();
+		$dbo->setQuery($query);
+		$dbo->query();
 
-		return $db->loadObjectList();
+		return $dbo->loadObjectList();
 	}
 
 	/**
@@ -403,20 +254,20 @@ class THMGroupsModelMembers
 
 		$isSuperAdmin = JFactory::getUser()->authorise('core.admin');
 
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 		$query->select('a.*, COUNT(DISTINCT b.id) AS level');
-		$query->from($db->quoteName('#__usergroups') . ' AS a');
-		$query->join('LEFT', $db->quoteName('#__usergroups') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt');
+		$query->from($dbo->quoteName('#__usergroups') . ' AS a');
+		$query->join('LEFT', $dbo->quoteName('#__usergroups') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt');
 		$query->group('a.id, a.title, a.lft, a.rgt, a.parent_id');
 		$query->order('a.lft ASC');
-		$db->setQuery($query);
-		$groups = $db->loadObjectList();
+		$dbo->setQuery($query);
+		$groups = $dbo->loadObjectList();
 
 		// Check for a database error.
-		if ($db->getErrorNum())
+		if ($dbo->getErrorNum())
 		{
-			JError::raiseNotice(500, $db->getErrorMsg());
+			JError::raiseNotice(500, $dbo->getErrorMsg());
 
 			return null;
 		}

@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @name        THMGroupsController
- * @description THMGroups component site controller
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -28,7 +27,7 @@ class THM_GroupsController extends JControllerLegacy
 	/**
 	 * Constuctor
 	 *
-	 * @param   Array $config Config Params
+	 * @param   array $config Config Params
 	 */
 	public function __construct($config = array())
 	{

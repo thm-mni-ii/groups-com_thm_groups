@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsControllerQp_Categories
- * @description THMGroupsControllerQp_Categories class from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -52,7 +51,7 @@ class THM_GroupsControllerQp_Categories extends JControllerLegacy
 		}
 		else
 		{
-			$msg = JText::_('COM_THM_GROUPS_SAVE_ERROR');
+			$msg = JText::_('COM_THM_GROUPS_SAVE_FAIL');
 			$this->setRedirect('index.php?option=com_thm_groups&view=qp_categories&tmpl=component', $msg);
 		}
 	}

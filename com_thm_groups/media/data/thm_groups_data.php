@@ -26,9 +26,9 @@ class THM_GroupsData
 	/**
 	 * Method to get all attributes of Url
 	 *
-	 * @param   Array $ignored all Attribut must  be ignored
+	 * @param   array $ignored all Attribut must  be ignored
 	 *
-	 * @return String  contain  all attribut
+	 * @return string  contain  all attribut
 	 */
 	public static function getUrl($ignored)
 	{
@@ -93,48 +93,48 @@ class THM_GroupsData
 	/**
 	 * Method to get description from database
 	 *
-	 * @param   Int $gid GroupID
+	 * @param   int $groupID GroupID
 	 *
 	 * @return String
 	 */
-	public static function getDescription($gid)
+	public static function getDescription($groupID)
 	{
 		try
 		{
-			$db = &JFactory::getDBO();
+			$dbo = &JFactory::getDBO();
 
-			$query = $db->getQuery(true);
+			$query = $dbo->getQuery(true);
 
 			$query
 				->select('*')
 				->from('#__usergroups')
-				->where('id = ' . $gid);
+				->where('id = ' . $groupID);
 
-			$db->setQuery($query);
+			$dbo->setQuery($query);
 
-			$list = $db->loadObjectList();
+			$list = $dbo->loadObjectList();
 
 			return $list;
 		}
-		catch (Exception $e)
+		catch (Exception $exception)
 		{
-			JErrorPage::render($e);
+			JErrorPage::render($exception);
 		}
 	}
 
 	/**
 	 * Method to get user count
 	 *
-	 * @param   Int $gid GroupID
+	 * @param   int $groupID GroupID
 	 *
 	 * @return Object
 	 */
-	public static function getUserCount($gid)
+	public static function getUserCount($groupID)
 	{
 		try
 		{
-			$db    = JFactory::getDBO();
-			$query = $db->getQuery(true);
+			$dbo   = JFactory::getDBO();
+			$query = $dbo->getQuery(true);
 
 			$query
 				->select("COUNT(distinct userRoles.usersID) AS anzahl")
@@ -142,31 +142,31 @@ class THM_GroupsData
 				->leftJoin("`#__thm_groups_users_usergroups_roles` AS userRoles ON  groups.id = userRoles.usergroups_rolesID")
 				->leftJoin("`#__thm_groups_users` AS user ON user.id = userRoles.usersID")
 				->where("user.published = 1")
-				->where("groups.usergroupsID = $gid");
+				->where("groups.usergroupsID = $groupID");
 
-			$db->setQuery($query);
+			$dbo->setQuery($query);
 
-			return $db->loadObjectList();
+			return $dbo->loadObjectList();
 		}
-		catch (Exception $e)
+		catch (Exception $exception)
 		{
-			JErrorPage::render($e);
+			JErrorPage::render($exception);
 		}
 	}
 
 	/**
 	 * Method to get user count
 	 *
-	 * @param   Int $gid GroupID
+	 * @param   int $groupID GroupID
 	 *
 	 * @return Object
 	 */
-	public static function getFirstletter($gid)
+	public static function getFirstletter($groupID)
 	{
 		try
 		{
-			$db    = JFactory::getDBO();
-			$query = $db->getQuery(true);
+			$dbo   = JFactory::getDBO();
+			$query = $dbo->getQuery(true);
 
 			$query
 				->select("DISTINCT t.value as lastName")
@@ -179,32 +179,32 @@ class THM_GroupsData
                         AND t.published = 1
                         AND user.published = 1
                         AND t.usersID = userRoles.usersID
-                        AND groups.usergroupsID =" . $gid);
-			$db->setQuery($query);
+                        AND groups.usergroupsID =" . $groupID);
+			$dbo->setQuery($query);
 
-			return $db->loadObjectList();
+			return $dbo->loadObjectList();
 		}
-		catch (Exception $e)
+		catch (Exception $exception)
 		{
-			JErrorPage::render($e);
+			JErrorPage::render($exception);
 		}
 	}
 
 	/**
 	 * Method to get user by char and groupid
 	 *
-	 * @param   Int    $gid  GroupID
-	 * @param   String $char Character
+	 * @param   int    $groupID GroupID
+	 * @param   string $char    Character
 	 *
 	 * @return Object
 	 *
 	 *
 	 */
-	public static function getUserByLetter($gid, $char)
+	public static function getUserByLetter($groupID, $char)
 	{
 		try
 		{
-			$db         = JFactory::getDBO();
+			$dbo        = JFactory::getDBO();
 			$letterCase = "lname.value like '$char%'";
 			if ($char == 'A')
 			{
@@ -221,7 +221,7 @@ class THM_GroupsData
 				$letterCase = "( lname.value like 'U%' or lname.value like 'Ü%')";
 			}
 
-			$query = $db->getQuery(true);
+			$query = $dbo->getQuery(true);
 
 			$query
 				->select("distinct lname.usersID as id")
@@ -247,33 +247,33 @@ class THM_GroupsData
 				->where("user.published = 1")
 				->where($letterCase)
 				->where("lname.usersID = user.id")
-				->where("groups.usergroupsID = " . $gid)
+				->where("groups.usergroupsID = " . $groupID)
 				->order("lastName");
 
-			$db->setQuery($query);
+			$dbo->setQuery($query);
 
-			return $db->loadObjectList();
+			return $dbo->loadObjectList();
 		}
-		catch (Exception $e)
+		catch (Exception $exception)
 		{
-			JErrorPage::render($e);
+			JErrorPage::render($exception);
 		}
 	}
 
 	/**
 	 * Method to get user by char and groupid
 	 *
-	 * @param   Int    $gid         GroupID
-	 * @param   String $shownLetter Shown Letter
+	 * @param   int    $groupID     GroupID
+	 * @param   string $shownLetter Shown Letter
 	 *
 	 * @return Object
 	 *
 	 */
-	public static function getGroupMemberByLetter($gid, $shownLetter)
+	public static function getGroupMemberByLetter($groupID, $shownLetter)
 	{
 		try
 		{
-			$db = JFactory::getDBO();
+			$dbo = JFactory::getDBO();
 
 			$letterCase = "lname.value like '$shownLetter%'";
 			if ($shownLetter == 'A')
@@ -291,7 +291,7 @@ class THM_GroupsData
 				$letterCase = "( lname.value like 'U%' or lname.value like 'Ü%')";
 			}
 
-			$query = $db->getQuery(true);
+			$query = $dbo->getQuery(true);
 
 			$query
 				->select("distinct lname.usersID as id")
@@ -317,40 +317,40 @@ class THM_GroupsData
 				->where("user.published = 1")
 				->where($letterCase)
 				->where("lname.usersID = user.id")
-				->where("groups.usergroupsID = " . $gid)
+				->where("groups.usergroupsID = " . $groupID)
 				->order("lastName");
 
-			$db->setQuery($query);
+			$dbo->setQuery($query);
 
-			return $db->loadObjectList();
+			return $dbo->loadObjectList();
 		}
-		catch (Exception $e)
+		catch (Exception $exception)
 		{
-			JErrorPage::render($e);
+			JErrorPage::render($exception);
 		}
 	}
 
 	/**
 	 * Search all Roles of a Groups
 	 *
-	 * @param   int $gid Groups ID
+	 * @param   int $groupID Groups ID
 	 *
 	 * @return array of all Roles.
 	 */
-	public static function getRoles($gid)
+	public static function getRoles($groupID)
 	{
 		try
 		{
-			$db    = JFactory::getDbo();
-			$query = $db->getQuery(true);
+			$dbo   = JFactory::getDbo();
+			$query = $dbo->getQuery(true);
 
 			$query
 				->select('distinct rolesID as rid')
 				->from('#__thm_groups_usergroups_roles')
-				->where("usergroupsID =" . $gid);
+				->where("usergroupsID =" . $groupID);
 
-			$db->setQuery($query);
-			$data   = $db->loadObjectList();
+			$dbo->setQuery($query);
+			$data   = $dbo->loadObjectList();
 			$result = array();
 			foreach ($data as $item)
 			{
@@ -359,9 +359,9 @@ class THM_GroupsData
 
 			return $result;
 		}
-		catch (Exception $e)
+		catch (Exception $exception)
 		{
-			JErrorPage::render($e);
+			JErrorPage::render($exception);
 		}
 
 	}
@@ -370,25 +370,25 @@ class THM_GroupsData
 	/**
 	 * Search all Member of a Groups
 	 *
-	 * @param   int   $gid         Groups ID
+	 * @param   int   $groupID     Groups ID
 	 * @param   array $sortedRoles Content a sorted List of roles
 	 *
 	 * @return array of all emmeber.
 	 */
-	public static function getMitglieder($gid, $sortedRoles = null)
+	public static function getMitglieder($groupID, $sortedRoles = null)
 	{
 		$result             = array();
-		$allRoles           = (isset($sortedRoles)) ? $sortedRoles : self::getRoles($gid);
+		$allRoles           = (isset($sortedRoles)) ? $sortedRoles : self::getRoles($groupID);
 		$already_save_users = array();
 		foreach ($allRoles as $rolesitem)
 		{
 			if (count($already_save_users) > 1)
 			{
-				$userList = self::getMitgliederByRole($gid, $rolesitem, $already_save_users);
+				$userList = self::getMitgliederByRole($groupID, $rolesitem, $already_save_users);
 			}
 			else
 			{
-				$userList = self::getMitgliederByRole($gid, $rolesitem);
+				$userList = self::getMitgliederByRole($groupID, $rolesitem);
 			}
 
 			$result[$rolesitem] = $userList;
@@ -404,25 +404,25 @@ class THM_GroupsData
 	/**
 	 * Search all Member of a Groups by roles
 	 *
-	 * @param   int   $gid         Groups ID
+	 * @param   int   $groupID     Groups ID
 	 * @param   int   $rolesid     Role ID
 	 * @param   array $excludeList Content a List of user ID to exclude from result
 	 *
 	 * @return array of all member.
 	 */
-	public static function getMitgliederByRole($gid, $rolesid, $excludeList = null)
+	public static function getMitgliederByRole($groupID, $rolesid, $excludeList = null)
 	{
 		try
 		{
-			$db    = JFactory::getDbo();
-			$query = $db->getQuery(true);
+			$dbo   = JFactory::getDbo();
+			$query = $dbo->getQuery(true);
 
 			$query
 				->select("user.id")
 				->from('#__thm_groups_usergroups_roles as groups')
 				->leftJoin('#__thm_groups_users_usergroups_roles as userRoles on groups.ID = userRoles.usergroups_rolesID')
 				->leftJoin('#__thm_groups_users as user on user.id = userRoles.usersID')
-				->where("groups.usergroupsID =" . $gid)
+				->where("groups.usergroupsID =" . $groupID)
 				->where("groups.rolesID =" . $rolesid);
 
 			if (!empty($excludeList))
@@ -432,9 +432,9 @@ class THM_GroupsData
 
 			$query->where("user.published =1");
 
-			$db->setQuery($query);
+			$dbo->setQuery($query);
 
-			$data = $db->loadObjectList();
+			$data = $dbo->loadObjectList();
 
 			$result = array();
 
@@ -445,9 +445,9 @@ class THM_GroupsData
 
 			return $result;
 		}
-		catch (Exception $e)
+		catch (Exception $exception)
 		{
-			JErrorPage::render($e);
+			JErrorPage::render($exception);
 		}
 	}
 
@@ -471,9 +471,9 @@ class THM_GroupsData
 		{
 			$result = $dbo->loadResult();
 		}
-		catch (Exception $e)
+		catch (Exception $exception)
 		{
-			JErrorPage::render($e);
+			JErrorPage::render($exception);
 		}
 
 		return empty($result) ? 1 : $result;

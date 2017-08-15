@@ -11,7 +11,7 @@
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
-require_once JPATH_SITE . '/media/com_thm_groups/helpers/quickpage.php';
+require_once JPATH_SITE . '/media/com_thm_groups/helpers/content.php';
 
 /**
  * THM_GroupsModelQuickpage class for component com_thm_groups
@@ -24,7 +24,7 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 	/**
 	 * Sets published or featured attributes of THM Groups articles to 1
 	 *
-	 * @param   array  $articleID Array with THM Groups article IDs
+	 * @param   array  $articleID array with THM Groups article IDs
 	 * @param   string $attribute Attribute to save, 'published' or 'featured'
 	 *
 	 * @return  mixed  integer on success, false otherwise
@@ -36,7 +36,7 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 		// Should never occur
 		if (empty($articleID))
 		{
-			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'notice');
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_CONTENT_SELECTED'), 'notice');
 
 			return false;
 		}
@@ -57,7 +57,7 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 	/**
 	 * Sets published or featured attribute of groups articles to 0
 	 *
-	 * @param   array  $cid       Array with article IDs
+	 * @param   array  $cid       array with article IDs
 	 * @param   string $attribute Attribute to save, 'published' or 'featured'
 	 *
 	 * @return  mixed  integer on success, false otherwise
@@ -69,7 +69,7 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 		// Should never occur
 		if (empty($cid))
 		{
-			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'notice');
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_CONTENT_SELECTED'), 'notice');
 
 			return false;
 		}
@@ -140,16 +140,16 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 		// Should never occur
 		if (empty($articleIDs))
 		{
-			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'notice');
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_CONTENT_SELECTED'), 'notice');
 
 			return false;
 		}
 
 		$articleID = $articleIDs[0];
 
-		if (!THM_GroupsHelperQuickpage::canEditState($articleID))
+		if (!THM_GroupsHelperContent::canEditState($articleID))
 		{
-			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NOT_ALLOWED'), 'error');
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
 			return false;
 		}
@@ -157,7 +157,7 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 		$task = $app->input->getCmd('task');
 		JTable::addIncludePath(JPATH_ROOT . '/libraries/legacy/table');
 		$table = $this->getTable('Content', 'JTable');
-		$value = constant(strtoupper(str_replace('quickpage.', '', $task)));
+		$value = constant(strtoupper(str_replace('content.', '', $task)));
 
 		// Attempt to change the state of the records.
 		$success = $table->publish($articleID, $value, JFactory::getUser()->id);
@@ -255,7 +255,7 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 	/**
 	 * Toggles THM Groups article attributes like 'published' and 'featured'
 	 *
-	 * @param  array $cid Array with THM Groups article IDs
+	 * @param  array $cid array with THM Groups article IDs
 	 *
 	 * @return  mixed  integer on success, otherwise false
 	 */
@@ -271,7 +271,7 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 
 			if (empty($articleID))
 			{
-				$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'warning');
+				$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_CONTENT_SELECTED'), 'warning');
 
 				return false;
 			}
@@ -329,7 +329,7 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 		$query     = $dbo->getQuery(true);
 		$tableName = '#__thm_groups_users_content';
 
-		$articleExists = THM_GroupsHelperQuickpage::quickpageExists($articleID);
+		$articleExists = THM_GroupsHelperContent::quickpageExists($articleID);
 
 		if ($articleExists)
 		{
@@ -370,7 +370,7 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 			$query->values(implode(',', $values));
 		}
 
-		$dbo->setQuery((string) $query);
+		$dbo->setQuery($query);
 
 		try
 		{

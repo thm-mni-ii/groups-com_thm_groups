@@ -22,26 +22,26 @@ class THM_GroupsHelperBatch
 	/**
 	 * Return all existing roles as select field
 	 *
-	 * @return  array  An array of options for drop-down list
+	 * @return  array  an array of options for drop-down list
 	 */
 	public static function getRoles()
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true)
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true)
 			->select('id AS value, name AS text')
 			->from('#__thm_groups_roles')
 			->order('id');
-		$db->setQuery($query);
+		$dbo->setQuery($query);
 
 		try
 		{
-			$options = $db->loadObjectList();
+			$options = $dbo->loadObjectList();
 		}
 		catch (Exception $exc)
 		{
 			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-			return false;
+			return [];
 		}
 
 		for ($i = 0, $n = count($options); $i < $n; $i++)
@@ -61,8 +61,8 @@ class THM_GroupsHelperBatch
 	 */
 	public static function getGroupOptions()
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
 		// TODO: Explain the logic behind this
 		$select = 'a.id, a.title, COUNT(DISTINCT b.id) AS level';
@@ -74,11 +74,11 @@ class THM_GroupsHelperBatch
 		$query->group('a.id, a.title, a.lft, a.rgt');
 		$query->order('a.lft ASC');
 
-		$db->setQuery($query);
+		$dbo->setQuery($query);
 
 		try
 		{
-			$options = $db->loadObjectList();
+			$options = $dbo->loadObjectList();
 		}
 		catch (Exception $exc)
 		{
@@ -98,28 +98,28 @@ class THM_GroupsHelperBatch
 	/**
 	 * Return all existing profiles as select field
 	 *
-	 * @return array
+	 * @return array options for profile selection
 	 */
 	public static function getProfiles()
 	{
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
 		$query
 			->select('id, name')
 			->from('#__thm_groups_profile');
 
-		$db->setQuery($query);
+		$dbo->setQuery($query);
 
 		try
 		{
-			$options = $db->loadObjectList();
+			$options = $dbo->loadObjectList();
 		}
 		catch (Exception $exc)
 		{
 			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-			return false;
+			return [];
 		}
 
 		foreach ($options as $key => $option)

@@ -27,27 +27,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/views/profile_edit_view.php';
  */
 class THM_GroupsViewProfile_Edit extends THM_GroupsViewProfile_Edit_View
 {
-	public $referrer = '';
-
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object $tpl template (default: null)
-	 *
-	 * @return  void
-	 */
-	public function display($tpl = null)
-	{
-		$input          = JFactory::getApplication()->input;
-		$passedRef      = $input->get('referrer', '', 'raw');
-		$actualRef      = $input->server->get('HTTP_REFERER', '', 'raw');
-		$this->referrer = empty($passedRef) ? $actualRef : $passedRef;
-
-		$this->modifyDocument();
-
-		parent::display($tpl);
-	}
-
 	/**
 	 * Generates the HTML for a toolbar for the front end view
 	 *
@@ -63,13 +42,26 @@ class THM_GroupsViewProfile_Edit extends THM_GroupsViewProfile_Edit_View
 		$html .= '<button type="submit" class="btn btn-primary" ';
 		$html .= 'onclick="document.adminForm.task.value = \'profile.save2profile\';return true;">';
 		$html .= '<span class="icon-user"></span>' . JText::_('COM_THM_GROUPS_SAVE_TO_PROFILE');
-		$html .= '</button>';;
-		if (!empty($this->referrer))
+		$html .= '</button>';
+
+		$breadcrumbs = JFactory::getApplication()->getPathway()->getPathway();
+		$cancel      = '<span class="icon-cancel"></span>' . JText::_('COM_THM_GROUPS_CANCEL');
+
+		if (count($breadcrumbs))
 		{
-			$html .= '<a class="btn btn-primary" href="' . $this->referrer . '">';
-			$html .= '<span class="icon-cancel"></span>' . JText::_('COM_THM_GROUPS_CANCEL');
-			$html .= '</a>';
+			$lastLocation = end($breadcrumbs);
+			$referrer     = $lastLocation->link;
 		}
+
+		if (empty($referrer))
+		{
+			$html .= '<button class="btn btn-primary" onclick="window.history.back()">' . $cancel . '</button>';
+		}
+		else
+		{
+			$html .= '<a class="btn btn-primary" href="' . $referrer . '">' . $cancel . '</a>';
+		}
+
 		$html .= '</div>';
 
 		return $html;

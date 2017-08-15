@@ -1,7 +1,6 @@
 'use strict';
 
-jQuery(document).ready(function ()
-{
+jQuery(document).ready(function () {
 	jQuery('.adminform').append("<div id='ajax-container'></div>");
 	var jformStaticTypeIDSelector = jQuery('#jform_static_typeID');
 	var staticTypeID = jformStaticTypeIDSelector.val();
@@ -10,8 +9,7 @@ jQuery(document).ready(function ()
 
 	getExtraOptions(dynTypeID, staticTypeID);
 
-	jformStaticTypeIDSelector.change(function ()
-	{
+	jformStaticTypeIDSelector.change(function () {
 		getExtraOptions(dynTypeID, this.value);
 	});
 
@@ -24,8 +22,7 @@ jQuery(document).ready(function ()
 				dynTypeID: dynTypeID,
 				staticTypeID: staticTypeID
 			},
-			success: function (response)
-			{
+			success: function (response) {
 				jQuery('#ajax-container').html(response);
 			}
 		});

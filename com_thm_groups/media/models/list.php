@@ -115,13 +115,13 @@ abstract class THM_GroupsModelList extends JModelList
 		$query = $this->getListQuery();
 		$query->clear('select')->clear('limit')->clear('offset')->clear('order');
 		$query->select("COUNT(DISTINCT ($idColumn))");
-		$this->_db->setQuery((string) $query);
+		$this->_db->setQuery($query);
 
 		try
 		{
 			$total = (int) $this->_db->loadResult();
 		}
-		catch (RuntimeException $exc)
+		catch (Exception $exc)
 		{
 			$this->setError($exc->getMessage());
 
@@ -342,18 +342,16 @@ abstract class THM_GroupsModelList extends JModelList
 			}
 
 			/**
-			 * Special value reserved for empty filtering. Since an empty is dependent upon the column default, we must
-			 * check against multiple 'empty' values. Here we check against empty string and null. Should this need to
-			 * be extended we could maybe add a parameter for it later.
+			 * Special value reserved for empty filtering.
 			 */
 			if ($value == '-1')
 			{
 				$query->where("$idColumn = '' OR $idColumn IS NULL");
 			}
-
-			// IDs are unique and therefore mutually exclusive => one is enough!
-
-			$query->where("$idColumn = '$value'");
+			else
+			{
+				$query->where("$idColumn = '$value'");
+			}
 
 			return;
 		}

@@ -11,6 +11,8 @@
  * @link        www.thm.de
  */
 
+use MongoDB\BSON\Type;
+
 defined('_JEXEC') or die;
 require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
 
@@ -34,8 +36,7 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
 	 */
 	protected function getListQuery()
 	{
-		$dbo   = JFactory::getDBO();
-		$query = $dbo->getQuery(true);
+		$query = $this->_db->getQuery(true);
 
 		$query
 			->select('roles.id, roles.name, roles.ordering')
@@ -129,7 +130,7 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
 		$headers             = array();
 		$headers['order']    = JHtml::_('searchtools.sort', '', 'roles.ordering', $direction, $ordering, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2');
 		$headers['checkbox'] = '';
-		$headers['id']       = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'roles.id', $direction, $ordering);
+		$headers['id']       = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'roles.id', $direction, $ordering);
 		$headers['name']     = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 'roles.name', $direction, $ordering);
 		$headers['groups']   = JText::_('COM_THM_GROUPS_GROUPS');
 
@@ -163,24 +164,23 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
 	/**
 	 * Returns all group of a role
 	 *
-	 * @param   Int $rid An id of the role
+	 * @param   int $roleID An id of the role
 	 *
 	 * @return  string     A string with all group comma separated
 	 */
-	public function getGroups($rid)
+	public function getGroups($roleID)
 	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
+		$query = $this->_db->getQuery(true);
 
 		$query
 			->select('DISTINCT(ug.id), ug.title')
 			->from('#__usergroups AS ug')
 			->innerJoin('#__thm_groups_usergroups_roles AS ugr ON ug.id = ugr.usergroupsID')
-			->where("ugr.rolesID = $rid")
+			->where("ugr.rolesID = $roleID")
 			->order('ug.title ASC');
 
-		$dbo->setQuery($query);
-		$groups = $dbo->loadObjectList();
+		$this->_db->setQuery($query);
+		$groups = $this->_db->loadObjectList();
 
 		$return = array();
 		if (!empty($groups))
@@ -189,7 +189,7 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
 			{
 				// Delete button
 				$deleteIcon = '<span class="icon-trash"></span>';
-				$deleteBtn  = "<a href='javascript:deleteGroup(" . $rid . "," . $group->id . ")'>" . $deleteIcon . "</a>";
+				$deleteBtn  = "<a href='javascript:deleteGroupAssociation(" . $roleID . "," . $group->id . ")'>" . $deleteIcon . "</a>";
 
 				// Link to edit view of a group
 				$url = JRoute::_('index.php?option=com_users&task=group.edit&id=' . $group->id);
@@ -211,8 +211,8 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
 		$fields = array();
 
 		// Hidden fields for deletion of one group at once
-		$fields[] = '<input type="hidden" name="g_id" value="">';
-		$fields[] = '<input type="hidden" name="r_id" value="">';
+		$fields[] = '<input type="hidden" name="groupID" value="">';
+		$fields[] = '<input type="hidden" name="roleID" value="">';
 
 		return $fields;
 	}

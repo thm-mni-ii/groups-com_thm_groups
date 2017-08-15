@@ -32,7 +32,7 @@ class THM_GroupsHelperStatic_Type
 	/**
 	 * Returns extra options like length or path for pictures for static types
 	 *
-	 * @param   Int $staticTypeID Static type ID
+	 * @param   int $staticTypeID Static type ID
 	 *
 	 * @return  stdClass
 	 */
@@ -48,8 +48,7 @@ class THM_GroupsHelperStatic_Type
 				$options->length = 120;
 				break;
 			case PICTURE:
-				$options->filename = 'anonym.jpg';
-				$options->path     = '/images/com_thm_groups/profile/';
+				$options->path = '/images/com_thm_groups/profile/';
 				break;
 		}
 

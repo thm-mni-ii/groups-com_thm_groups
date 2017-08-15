@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsViewUser_Select
- * @description view output file for user lists
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -12,7 +11,6 @@
  */
 defined('_JEXEC') or die;
 require_once JPATH_ROOT . '/media/com_thm_groups/views/list.php';
-JHtml::_('jquery.framework');
 
 /**
  * Class which loads data into the view output context
@@ -54,7 +52,5 @@ class THM_GroupsViewUser_Select extends THM_GroupsViewList
 	protected function addToolBar()
 	{
 		JToolbarHelper::title(JText::_('COM_THM_GROUPS_USER_SELECT_VIEW_TITLE'), 'test');
-		JToolbarHelper::addNew('group.editModerator', 'COM_THM_GROUPS_NEW', true);
-		JToolbarHelper::unpublishList('group.editModerator', 'COM_THM_GROUPS_DELETE');
 	}
 }

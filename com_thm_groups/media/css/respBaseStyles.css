@@ -80,11 +80,6 @@ img {
     }
 }
 
-.gslistview {
-    width: 100% !important;
-    float: left !important;
-}
-
 @media screen and (max-width: 550px) {
     .form-horizontal .controls {
         margin-left: 0px !important;

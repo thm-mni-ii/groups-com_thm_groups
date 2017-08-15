@@ -189,20 +189,6 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_settings` (
 )
   ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `#__thm_groups_users_usergroups_moderator` (
-  `id`           INT(11)          NOT NULL AUTO_INCREMENT,
-  `usersID`      INT(11)          NULL,
-  `usergroupsID` INT(11) UNSIGNED NULL,
-  PRIMARY KEY (`id`, `usersID`, `usergroupsID`),
-  FOREIGN KEY (`usersID`) REFERENCES `#__thm_groups_users` (`id`)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  FOREIGN KEY (`usergroupsID`) REFERENCES `#__usergroups` (`id`)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE
-)
-  ENGINE = InnoDB;
-
 INSERT INTO `#__thm_groups_attribute` (`id`, `name`, `dynamic_typeID`, `description`, `options`) VALUES
   (1, 'Vorname', 1, '', '{"length":40, "required":false}'),
   (2, 'Nachname', 1, '', '{"length":40, "required":false}'),
@@ -214,7 +200,7 @@ INSERT INTO `#__thm_groups_dynamic_type` (`id`, `name`, `static_typeID`, `descri
   (1, 'TEXT', 1, '', '{"length":40}'),
   (2, 'TEXTFIELD', 2, '', '{"length":120}'),
   (3, 'LINK', 3, '', '{}'),
-  (4, 'PICTURE', 4, '', '{"filename":"anonym.jpg", "path":"/images/com_thm_groups/profile/"}'),
+  (4, 'PICTURE', 4, '', '{"path":"/images/com_thm_groups/profile/"}'),
   (5, 'MULTISELECT', 5, '', '{}'),
   (6, 'TABLE', 6, '', '{}'),
   (7, 'NUMBER', 7, '', '{}'),

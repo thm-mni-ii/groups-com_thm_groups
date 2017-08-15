@@ -1,0 +1,143 @@
+@import 'variables';
+
+.contentheading {
+  word-wrap: break-word;
+}
+
+.advanced-container {
+
+  .role-heading {
+    background-color: $font-color;
+    color: $foreground-color;
+    font-family: $font-family-header;
+    font-size: 1rem;
+    font-weight: 300;
+    margin-bottom: .8rem;
+    padding: .6rem .6rem .4rem .6rem;
+    text-transform: uppercase;
+  }
+
+  div.clearFix {
+    clear: both;
+  }
+
+  .row-container {
+    clear: both;
+    background-color: $background-color;
+    margin-bottom: 1rem;
+    overflow: auto;
+  }
+
+  .profile-container {
+    float: left;
+    padding: .6rem;
+    width: calc(100% - 1.2rem);
+
+    .attribute-inline, .attribute-wrap, .attribute-textfield, .toggled-text-container {
+      float: left;
+    }
+
+    .action-container, .attribute-picture {
+      float: right;
+    }
+
+    .attribute-textfield {
+      clear: both;
+    }
+
+    .attribute-label, .attribute-value {
+
+      float: left;
+
+      & > div {
+        min-height: 1.5rem;
+      }
+
+    }
+
+    .attribute-inline, .attribute-wrap, .attribute-textfield {
+      margin-bottom: .4rem;
+    }
+
+    .attribute-wrap {
+      clear: left;
+
+      .attribute-iconed {
+        max-width: calc(100% - 1.5rem);
+      }
+
+      .attribute-labeled {
+        max-width: calc(100% - 3rem);
+      }
+    }
+
+    .attribute-textfield {
+      clear: both;
+    }
+
+    .attribute-inline, .attribute-name, .attribute-title {
+      margin-right: .2rem;
+    }
+
+    .attribute-label, .attribute-alone {
+      margin-right: .4rem;
+    }
+
+    .attribute-label-long {
+      width: 100%;
+    }
+
+    .attribute-name, .attribute-title {
+      display: inline-block;
+      float: left;
+      font-family: $font-family-regular;
+      font-size: 1rem;
+    }
+
+    .attribute-title {
+      color: $font-color;
+    }
+
+    .attribute-roles {
+      font-size: .8rem;
+      font-style: italic;
+    }
+
+    img {
+      max-width: 66px;
+      display: block;
+    }
+
+    .toggled-text-container {
+      background-color: $foreground-color;
+      clear: both;
+      margin-top: .4rem;
+      padding: .4rem;
+
+      ul, ol, table {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .profile-container.half {
+    width: calc(50% - 1.2rem);
+
+    .attribute-roles {
+      max-width: 16rem;
+    }
+  }
+
+  .toggled-text-link {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+@media screen and (max-width: 480px) {
+
+  .advanced-container .profile-container.half {
+    clear: left;
+    width: calc(100% - 1.2rem);
+  }
+}

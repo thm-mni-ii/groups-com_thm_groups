@@ -7,7 +7,7 @@
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 defined('_JEXEC') or die;
 jimport('joomla.application.component.model');
@@ -23,17 +23,9 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/static_type.php';
 class THM_GroupsModelStatic_Type_Ajax extends JModelForm
 {
 	/**
-	 * Constructor to set up the class variables and call the parent constructor
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
-	/**
 	 * Returns static type's name of a dynamic type by dynamic type ID
 	 *
-	 * @return String on success, else false
+	 * @return string on success, else false
 	 * @throws Exception
 	 */
 	public function getNameByDynamicID()
@@ -46,19 +38,18 @@ class THM_GroupsModelStatic_Type_Ajax extends JModelForm
 			return '';
 		}
 
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
+		$query = $this->_db->getQuery(true);
 
 		$query
 			->select('static.name')
 			->from('#__thm_groups_static_type AS static')
 			->innerJoin('#__thm_groups_dynamic_type AS dynamic ON dynamic.static_typeID = static.id')
 			->where("dynamic.id = $dynTypeID");
-		$dbo->setQuery($query);
+		$this->_db->setQuery($query);
 
 		try
 		{
-			return $dbo->loadResult();
+			return $this->_db->loadResult();
 		}
 		catch (Exception $exception)
 		{
@@ -71,7 +62,7 @@ class THM_GroupsModelStatic_Type_Ajax extends JModelForm
 	/**
 	 * Returns static type's name by its ID
 	 *
-	 * @return String on success, else false
+	 * @return string on success, else false
 	 * @throws Exception
 	 */
 	public function getNameByID()
@@ -84,18 +75,17 @@ class THM_GroupsModelStatic_Type_Ajax extends JModelForm
 			return '';
 		}
 
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
+		$query = $this->_db->getQuery(true);
 
 		$query
 			->select('name')
 			->from('#__thm_groups_static_type')
 			->where("id = $staticTypeID");
-		$dbo->setQuery($query);
+		$this->_db->setQuery($query);
 
 		try
 		{
-			return $dbo->loadResult();
+			return $this->_db->loadResult();
 		}
 		catch (Exception $exception)
 		{
@@ -108,25 +98,24 @@ class THM_GroupsModelStatic_Type_Ajax extends JModelForm
 	/**
 	 * Returns json options from #__thm_groups_attribute
 	 *
-	 * @param   Int $attrID attribute ID
+	 * @param   int $attributeID attribute ID
 	 *
-	 * @return String in json format on success, else false
+	 * @return string in json format on success, else false
 	 * @throws Exception
 	 */
-	public function getAttributeOptionsByID($attrID)
+	public function getAttributeOptionsByID($attributeID)
 	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
+		$query = $this->_db->getQuery(true);
 
 		$query
 			->select('options')
 			->from('#__thm_groups_attribute')
-			->where("id = $attrID");
-		$dbo->setQuery($query);
+			->where("id = $attributeID");
+		$this->_db->setQuery($query);
 
 		try
 		{
-			return $dbo->loadResult();
+			return $this->_db->loadResult();
 		}
 		catch (Exception $exception)
 		{
@@ -139,25 +128,24 @@ class THM_GroupsModelStatic_Type_Ajax extends JModelForm
 	/**
 	 * Returns json options from #__thm_groups_dynamic_type
 	 *
-	 * @param   Int $dynTypeID dynamic type ID
+	 * @param   int $dynTypeID dynamic type ID
 	 *
-	 * @return String in json format on success, else false
+	 * @return string in json format on success, else false
 	 * @throws Exception
 	 */
 	public function getDynTypeOptionsByID($dynTypeID)
 	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
+		$query = $this->_db->getQuery(true);
 
 		$query
 			->select('options')
 			->from('#__thm_groups_dynamic_type')
 			->where("id = $dynTypeID");
-		$dbo->setQuery($query);
+		$this->_db->setQuery($query);
 
 		try
 		{
-			return $dbo->loadResult();
+			return $this->_db->loadResult();
 		}
 		catch (Exception $exception)
 		{
@@ -208,7 +196,7 @@ class THM_GroupsModelStatic_Type_Ajax extends JModelForm
 		}
 
 		$data        = array();
-		$attrOptions = json_decode($this->getAttributeOptionsByID($input->getInt('attrID', 0)));
+		$attrOptions = json_decode($this->getAttributeOptionsByID($input->getInt('attributeID', 0)));
 
 		// Attribute
 		if (!empty($attrOptions))

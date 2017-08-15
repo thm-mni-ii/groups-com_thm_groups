@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsViewPlugin_Members_Select
- * @description THMGroupsViewPlugins_Members_Select
  * @author      Mehmet-Ali Pamukci,    <mehmet.ali.pamukci@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -60,16 +59,14 @@ require_once 'helper.php';
 		</label>
 		<?php echo createSelectFieldParamsGroups() ?>
 		<br>
-		</br>
 		<label id="batch-choose-action-lbl" class="control-label" for="batch-choose-action">
 			<?php echo JText::_('PLG_EDITORS_THM_GROUPS_EDITORS_XTD_MEMBERS_LABEL_GROUPS'); ?>
 		</label>
 
 		<?php echo createSelectFieldGroups() ?>
 	</div>
-</div>
-<?php echo JHtml::_('bootstrap.endTab'); ?>
-<?php echo JHtml::_('bootstrap.endTabSet'); ?>
+	<?php echo JHtml::_('bootstrap.endTab'); ?>
+	<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 </div>
 <div class="modal-footer">
 	<button class="btn" type="button" onclick="window.parent.jModalClose()" data-dismiss="modal">

@@ -1,124 +1,8 @@
-.icon-organizer::before,
-a[href$="view=thm_organizer"]::before,
-a[href$="option=com_thm_organizer"]::before {
-    font-family: icomoon;
-    content: "\e60b";
-}
-
-.icon-organizer_degrees::before,
-a[href*="view=degree_manager"]::before {
-    font-family: icomoon;
-    content: "\e606";
-}
-
-.icon-organizer_users::before,
-a[href*="view=user_manager"]::before {
-    font-family: icomoon;
-    content: "\e01f";
-}
-
-.icon-organizer_monitors::before,
-a[href*="view=monitor_manager"]::before {
-    font-family: icomoon;
-    content: "\e01c";
-}
-
-.icon-organizer_teachers::before,
-a[href*="view=teacher_manager"]::before {
-    font-family: icomoon;
-    content: "\e604";
-}
-
-.icon-organizer_departments::before,
-a[href*="view=department_manager"]::before {
-    font-family: icomoon;
-    content: "\e244";
-}
-
-.icon-organizer_subjects::before,
-a[href*="view=subject_manager"]::before {
-    font-family: icomoon;
-    content: "\e603";
-}
-
-.icon-organizer_fields::before,
-a[href*="view=field_manager"]::before {
-    font-family: icomoon;
-    content: "\74";
-}
-
-.icon-organizer_colors::before,
-a[href*="view=color_manager"]::before {
-    font-family: icomoon;
-    content: "\e014";
-}
-
-.icon-organizer_subject_pools::before,
-a[href*="view=pool_manager"]::before {
-    font-family: icomoon;
-    content: "\44";
-}
-
-.icon-organizer_rooms::before,
-a[href*="view=room_manager"]::before {
-    font-family: icomoon;
-    content: "\e60a";
-}
-
-.icon-organizer_degree_programs::before,
-a[href*="view=program_manager"]::before {
-    font-family: icomoon;
-    content: "\31";
-}
-
-.icon-organizer_schedules::before,
-.icon-mni::before,
-a[href*="view=schedule_manager"]::before,
-a[href*="view=virtual_schedule_manager"]::before {
-    font-family: icomoon;
-    content: "\e600";
-}
-
-.icon-organizer_categories::before,
-a[href*="view=category_manager"]::before {
-    font-family: icomoon;
-    content: "\e601";
-}
-
-.icon-diff, .icon-import, .icon-import-all, .icon-merge-all {
-    font-weight: bold;
-}
-
-.icon-add-Space {
-    font-size: 14px;
-}
-
-a[href$="view=thm_organizer"]::before, a[href$="option=com_thm_organizer"]::before {
-    color: #80ba24;
-}
-
-a[href*="option=com_thm_organizer&view="]::before {
-    padding-right: 8px;
-}
-
-div.item-page .page-header {
-    float: left;
-}
-
-div.item-page .page-header h2 {
-    display: inline-block;
-}
-
-div.item-page .toolbar {
+.toolbar {
     float: right;
 }
 
-div.item-page .profile {
-    clear: both;
-    position: relative;
-}
-
-div.item-page button, div.item-page a.btn {
+a.btn {
     background-color: white;
     border: 1px solid #77858c;
     margin-left: 10px;
@@ -126,222 +10,78 @@ div.item-page button, div.item-page a.btn {
     padding: 4px 8px;
 }
 
-div.item-page button:hover, div.item-page a.btn:hover {
+a.btn:hover {
     background-color: #394a59;
     color: white;
     border: white 1px solid;
 }
 
-div.item-page button:hover span:before, div.item-page a.btn:hover span:before {
+a.btn:hover span:before {
     color: white;
 }
 
-div.item-page [class^="icon-"], div.item-page [class*=" icon-"] {
-    margin-right: 5px;
+.profile-container {
+    clear: both;
 }
 
-div.item-page .field-container, div.item-page .field-row {
+.profile-container div.clearFix {
+    clear: both;
+}
+
+.profile-container .attribute-picture {
+    float: right;
+    margin-bottom: .8rem;
+}
+
+.profile-container .attribute-picture img {
+    width: 10rem;
+}
+
+.profile-container .attribute-inline, .profile-container .attribute-wrap {
     display: inline-block;
     float: left;
-    margin-top: -1px;
-    padding-top: 1px;
-    padding-bottom: 15px;
+    padding: 0.3rem 0;
 }
 
-div.item-page .field-container {
-    clear: left;
-}
-
-div.item-page .field-container-label, div.item-page .field-container-value, div.item-page .field-row-label, div.item-page .field-row-value {
+.profile-container .attribute-label, .profile-container .attribute-value {
     display: inline-block;
 }
 
-div.item-page .field-container-label, div.item-page .field-row-label {
-    font-size: 150%;
-    margin-right: 20px;
+.profile-container .attribute-label {
+    font-size: 1.05rem;
+    margin-right: 1rem;
     text-align: right;
     vertical-align: top;
-    width: 120px;
 }
 
-div.item-page .field-container-label:before, div.item-page .field-row-label:before {
-    position: relative;
-    top: 2px;
+.profile-container .attribute-wrap {
+    clear: left;
+    width: calc(100% - 11rem);
 }
 
-div[class*="template-standard"] .field-container-label, div[class*="template-standard"] .field-row-label {
-    width: 120px;
+.profile-container .attribute-wrap .attribute-value {
+    width: calc(100% - 2rem);
 }
 
-div[class*="template-standard"] .titel-container, div[class*="template-standard"] .vorname-container, div[class*="template-standard"] .nachname-container, div[class*="template-standard"] .posttitel-container {
-    display: none;
+.profile-container .attribute-textfield {
+    clear: both;
+    margin-top: 1rem;
+    padding: 1rem 0;
 }
 
-div[class*="template-standard"] .bild-container, div[class*="template-standard"] .anschrift-container {
-    background-color: #f2f5f6;
-    padding: 20px;
-}
-
-div[class*="template-standard"] .bild-container {
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 200px;
-}
-
-div[class*="template-standard"] .anschrift-container {
-    margin-bottom: 20px;
-    width: calc(100% - 40px);
-    min-height: 200px;
-}
-
-div[class*="template-standard"] .buero-container, div[class*="template-standard"] .sprechzeiten-container, div[class*="template-standard"] .email-container,
-div[class*="template-standard"] .telefon-container, div[class*="template-standard"] .fax-container, div[class*="template-standard"] .homepage-container {
-    background-color: #dfeec8;
-    padding-bottom: 8px;
-    width: 100%;
-}
-
-div[class*="template-standard"] .anschrift-container + div {
-    padding-top: 15px;
-}
-
-div[class*="template-standard"] .anschrift-container + div:before {
-    content: "Kontaktinformationen";
+.profile-container .attribute-textfield .attribute-label {
     display: block;
     font-family: "THM-Medium", Arial, Helvetica, sans-serif;
-    font-size: 150%;
-    margin-bottom: 15px;
-    padding-left: 20px;
-    width: 100%;
-}
-
-div[class*="template-standard"] .zur-person-container {
-    margin-top: 20px;
-    padding-left: 20px;
-    width: 100%;
-}
-
-div[class*="template-standard"] .weitere-informationen-container {
-    margin-top: 20px;
-    padding-left: 20px;
-    width: 100%;
-}
-
-div[class*="template-standard"] .field-container-label, div[class*="template-standard"] .field-row-label {
-    font-family: "THM-Medium", Arial, Helvetica, sans-serif;
-    font-size: 140%;
-    margin-right: 10px;
-}
-
-div[class*="template-standard"] .anschrift-label {
-    display: block;
-    font-size: 150%;
-    padding: 5px 0;
-    text-align: left;
-    padding-right: calc(30% - 40px);
-}
-
-div[class*="template-standard"] .buero-label, div[class*="template-standard"] .email-label, div[class*="template-standard"] .fax-label, div[class*="template-standard"] .homepage-label, div[class*="template-standard"] .sprechzeiten-label, div[class*="template-standard"] .telefon-label {
-    /* use !important to prevent issues with browser extensions that change fonts */
-    align: left;
-    color: #394a59;
-    font-family: 'icomoon' !important;
-    font-size: 120%;
-    font-style: normal;
-    font-variant: normal;
-    font-weight: normal;
-    line-height: 1;
-    speak: none;
-    text-transform: none;
-    width: 40px;
-    /* Better Font Rendering =========== */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-div[class*="template-standard"] .buero-label span, div[class*="template-standard"] .email-label span, div[class*="template-standard"] .fax-label span, div[class*="template-standard"] .homepage-label span, div[class*="template-standard"] .sprechzeiten-label span, div[class*="template-standard"] .telefon-label span {
-    display: none;
-}
-
-div[class*="template-standard"] .buero-label:before {
-    content: "\21";
-}
-
-div[class*="template-standard"] .email-label:before {
-    content: "\4d";
-}
-
-div[class*="template-standard"] .fax-label:before {
-    content: "\e013";
-}
-
-div[class*="template-standard"] .homepage-label:before {
-    content: "\e903";
-}
-
-div[class*="template-standard"] .sprechzeiten-label:before {
-    content: "\e927";
-}
-
-div[class*="template-standard"] .telefon-label:before {
-    content: "\e260";
-}
-
-div[class*="template-standard"] .zur-person-label {
-    display: block;
-    margin-bottom: 8px;
+    font-size: 1.5rem;
+    margin-bottom: .8rem;
     text-align: left;
     width: 100%;
 }
 
-div[class*="template-standard"] .weitere-informationen-label {
-    display: block;
-    margin-bottom: 8px;
-    text-align: left;
+.profile-container .attribute-textfield .attribute-value {
     width: 100%;
 }
 
-div[class*="template-standard"] .bild-value {
-    float: right;
-}
-
-div[class*="template-standard"] .anschrift-value {
-    display: block;
-    padding-right: calc(30% - 40px);
-}
-
-div.template-mni .titel-container, div.template-mni .vorname-container, div.template-mni .nachname-container, div.template-mni .posttitel-container {
-    display: none;
-}
-
-div.template-mni .field-container, div.template-mni .field-row {
-    max-width: 70%;
-}
-
-div.template-mni .field-container-label, div.template-mni .field-row-label {
-    font-family: "THM-Medium", Arial, Helvetica, sans-serif;
-    font-size: 120%;
-}
-
-div.template-mni .field-container-value, div.template-mni .field-row-value {
-    max-width: calc(100% - 140px);
-}
-
-div.template-mni .bild-container {
-    clear: right;
-    float: right;
-}
-
-div.template-mni .bild-container .bild-value {
-    max-width: 100%;
-}
-
-div.template-mni .bild-container {
-    clear: right;
-    float: right;
-}
-
-div.template-mni .bild-container .bild-value {
-    max-width: 100%;
+.profile-container .attribute-textfield .attribute-value table, .profile-container .attribute-textfield .attribute-value ol, .profile-container .attribute-textfield .attribute-value ul, .profile-container .attribute-textfield .attribute-value fieldset {
+    margin: 0;
 }

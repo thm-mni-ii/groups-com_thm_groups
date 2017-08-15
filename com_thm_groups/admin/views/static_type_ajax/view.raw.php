@@ -7,7 +7,7 @@
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
@@ -18,7 +18,7 @@ jimport('joomla.application.component.view');
  * @category    Joomla.Component.Admin
  * @package     thm_groups
  * @subpackage  com_thm_groups.admin
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 class THM_GroupsViewStatic_Type_Ajax extends JViewLegacy
 {
@@ -27,7 +27,7 @@ class THM_GroupsViewStatic_Type_Ajax extends JViewLegacy
 	 *
 	 * @param   string $tpl the name of the template to be used
 	 *
-	 * @return mixed
+	 * @return void sets context parameters
 	 *
 	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
 	 */

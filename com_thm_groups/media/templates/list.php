@@ -3,12 +3,11 @@
  * @category    Joomla library
  * @package     THM_Groups
  * @name        THM_CoreListTemplate
- * @description Common template for list views
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Ilja Michajlow, <Ilja.Michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 /**
@@ -39,8 +38,8 @@ class THM_GroupsTemplateList
 		<div id="j-main-container" class="span10">
 			<form action="index.php?" id="adminForm" method="post" name="adminForm">
 				<div class="searchArea">
-					<div class="js-stools clearfix">
-						<div class="clearfix">
+					<div class="js-stools clearFix">
+						<div class="clearFix">
 							<div class="js-stools-container-bar">
 								<?php self::renderSearch($filters); ?>
 							</div>

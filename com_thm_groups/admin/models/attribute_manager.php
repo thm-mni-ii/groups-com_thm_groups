@@ -12,11 +12,6 @@
  */
 defined('_JEXEC') or die;
 
-define('VORNAME', 1);
-define('NACHNAME', 2);
-define('EMAIL', 4);
-define('TITEL', 5);
-define('POSTTITEL', 7);
 
 require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
 
@@ -29,6 +24,13 @@ require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
  */
 class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
 {
+	// Standard immutable values
+	const FORENAME = 1;
+	const SURNAME = 2;
+	const EMAIL = 4;
+	const TITLE = 5;
+	const POSTTITLE = 7;
+
 	protected $defaultOrdering = 'attribute.id';
 
 	protected $defaultDirection = 'ASC';
@@ -50,88 +52,6 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
 	}
 
 	/**
-	 * Deletes attribute from database and removes all related entries from users_attribute
-	 *
-	 * @return bool
-	 */
-	public function delete()
-	{
-		$postVariables = JFactory::getApplication()->input->post->getArray(array());
-		$attributeID   = $postVariables['cid'][0];
-
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
-
-		// Remove related pictures from folder:
-		$query->select('*')->from($dbo->qn('#__thm_groups_attribute'))->where('id = ' . (int) $attributeID);
-		$dbo->setQuery($query);
-		$attribute = $dbo->loadObject();
-
-		if ($this->deletePictures($attribute))
-		{
-			// Delete attribute from database:
-			$query = $dbo->getQuery(true);
-
-			$query->delete($dbo->qn('#__thm_groups_attribute'))
-				->where($dbo->qn('id') . ' = ' . $attributeID);
-
-			$dbo->setQuery($query);
-
-			$result = $dbo->execute();
-
-			return $result ? true : false;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	/**
-	 * Deletes pictures from folder
-	 *
-	 * @param   Object $attribute Object of attribute
-	 *
-	 * @return  boolean true on success, otherwise false
-	 */
-	private function deletePictures($attribute)
-	{
-		$dbo = JFactory::getDbo();
-
-		// Get all Pictures from attribute
-		$usersAttributeQuery = $dbo->getQuery(true);
-		$usersAttributeQuery->select($dbo->qn(array('ID', 'value', 'attributeID')))
-			->from($dbo->qn('#__thm_groups_users_attribute'))
-			->where($dbo->qn('attributeID') . ' = ' . $attribute->id . '');
-		$dbo->setQuery($usersAttributeQuery);
-		$pictures = $dbo->loadObjectList();
-
-		// Get path
-		$path = json_decode($attribute->options)->path;
-
-		// Delete files
-		if (!empty($path))
-		{
-			foreach (scandir($path) as $folderPic)
-			{
-				foreach ($pictures as $pic)
-				{
-					if ($folderPic == $pic->value)
-					{
-						unlink($path . $folderPic);
-					}
-				}
-			}
-
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	/**
 	 * Function to get table headers
 	 *
 	 * @return array including headers
@@ -144,7 +64,7 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
 		$headers                = array();
 		$headers['order']       = JHtml::_('searchtools.sort', '', 'attribute.ordering', $direction, $ordering, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2');
 		$headers['checkbox']    = '';
-		$headers['id']          = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'attribute.id', $direction, $ordering);
+		$headers['id']          = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'attribute.id', $direction, $ordering);
 		$headers['attribute']   = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_NAME', 'attribute.name', $direction, $ordering);
 		$headers['published']   = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ATTRIBUTE_PUBLISHED', 'attribute.published', $direction, $ordering);
 		$headers['dynamic']     = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_DYNAMIC_TYPE', 'dynamic.name', $direction, $ordering);
@@ -168,12 +88,12 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
 			return $return;
 		}
 
-		$url          = "index.php?option=com_thm_groups&view=attribute_edit&id=";
-		$sortIcon     = '<span class="sortable-handlerXXX"><i class="icon-menu"></i></span>';
-		$generalLock  = '<span class="icon-lock hasTooltip" title="XXXX"></span>';
-		$doNotDelete  = array(VORNAME, NACHNAME, EMAIL, TITEL, POSTTITEL);
-		$groupsAdmin  = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
-		$index        = 0;
+		$url         = "index.php?option=com_thm_groups&view=attribute_edit&id=";
+		$sortIcon    = '<span class="sortable-handlerXXX"><i class="icon-menu"></i></span>';
+		$generalLock = '<span class="icon-lock hasTooltip" title="XXXX"></span>';
+		$doNotDelete = array(self::FORENAME, self::SURNAME, self::EMAIL, self::TITLE, self::POSTTITLE);
+		$groupsAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
+		$index       = 0;
 
 		$return['attributes'] = array('class' => 'ui-sortable');
 
@@ -187,11 +107,11 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
 
 			if (!$groupsAdmin)
 			{
-				$iconClass = ' inactive';
-				$return[$index]['ordering']['value']      = str_replace('XXX', $iconClass, $sortIcon);
-				$return[$index][0]          = '';
-				$return[$index][1]          = $item->id;
-				$return[$index][2]          = $item->name;
+				$iconClass                           = ' inactive';
+				$return[$index]['ordering']['value'] = str_replace('XXX', $iconClass, $sortIcon);
+				$return[$index][0]                   = '';
+				$return[$index][1]                   = $item->id;
+				$return[$index][2]                   = $item->name;
 
 				$published         = empty($item->published) ? 'unpublish' : 'publish';
 				$return[$index][3] = '<span class="icon-' . $published . '"></span>';
@@ -205,10 +125,10 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
 					$iconClass = ' inactive tip-top hasTooltip';
 				}
 
-				$return[$index]['ordering']['value']      = str_replace('XXX', $iconClass, $sortIcon);
-				$return[$index][0]                        = JHtml::_('grid.id', $index, $item->id);
-				$return[$index][1]                        = $item->id;
-				$lock                                     = '';
+				$return[$index]['ordering']['value'] = str_replace('XXX', $iconClass, $sortIcon);
+				$return[$index][0]                   = JHtml::_('grid.id', $index, $item->id);
+				$return[$index][1]                   = $item->id;
+				$lock                                = '';
 
 				if (in_array($item->id, $doNotDelete))
 				{
@@ -235,8 +155,7 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
 	 */
 	protected function getListQuery()
 	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
+		$query = $this->_db->getQuery(true);
 
 		$select = 'attribute.id, attribute.name, attribute.options, attribute.published, attribute.ordering, attribute.description, ';
 		$select .= 'dynamic.name as dynamic_type_name';

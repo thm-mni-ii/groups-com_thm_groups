@@ -1,7 +1,6 @@
 <?php
 defined('_JEXEC') or die;
 JFormHelper::loadFieldClass('list');
-jimport('joomla.form.formfield');
 
 class JFormFieldUsermanagerrole extends JFormFieldList
 {
@@ -16,24 +15,24 @@ class JFormFieldUsermanagerrole extends JFormFieldList
 	protected static $options = array();
 
 	/**
-	 * returns a list of moderators
+	 * Retrieves a list of roles, optionally for a selected group
 	 *
 	 * @return  Array
 	 */
 	public function getRolesFromDB()
 	{
-		$jinput = JFactory::getApplication()->input;
+		$input = JFactory::getApplication()->input;
 
-		$list = $jinput->post->get('list', array(), 'array');
+		$list = $input->post->get('list', array(), 'array');
 		if (!empty($list['groupID']))
 		{
 			$groupID = $list['groupID'];
 		}
 
-		$db    = JFactory::getDbo();
-		$query = $db->getQuery(true);
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
 
-		$nestedQuery = $db->getQuery(true);
+		$nestedQuery = $dbo->getQuery(true);
 		$nestedQuery
 			->select('id')
 			->from('#__thm_groups_users');
@@ -52,10 +51,10 @@ class JFormFieldUsermanagerrole extends JFormFieldList
 			$query->where("a.usergroupsID = $groupID");
 		}
 
-		$db->setQuery($query);
-		$db->execute();
+		$dbo->setQuery($query);
+		$dbo->execute();
 
-		return $db->loadAssocList();
+		return $dbo->loadAssocList();
 	}
 
 	/**

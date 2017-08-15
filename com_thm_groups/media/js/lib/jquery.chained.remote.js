@@ -13,12 +13,12 @@
  *
  */
 
-;(function ($, window, document, undefined)
-{
+// Used in profile_manager.js
+
+;(function ($, window, document, undefined) {
 	"use strict";
 
-	$.fn.remoteChained = function (options)
-	{
+	$.fn.remoteChained = function (options) {
 
 		var settings = $.extend({}, $.fn.remoteChained.defaults, options);
 
@@ -28,23 +28,19 @@
 			settings.clear = true;
 		}
 
-		return this.each(function ()
-		{
+		return this.each(function () {
 
 			/* Save this to self because this changes when scope changes. */
 			var self = this;
 			var request = false;
 			/* Track xhr requests. */
 
-			$(settings.parents).each(function ()
-			{
-				$(this).bind("change", function ()
-				{
+			$(settings.parents).each(function () {
+				$(this).bind("change", function () {
 
 					/* Build data array from parents values. */
 					var data = {};
-					$(settings.parents).each(function ()
-					{
+					$(settings.parents).each(function () {
 						var id = $(this).attr(settings.attribute);
 						var value = ($(this).is("select") ? $(":selected", this) : $(this)).val();
 						data[id] = value;
@@ -52,8 +48,7 @@
 						/* Optionally also depend on values from these inputs. */
 						if (settings.depends)
 						{
-							$(settings.depends).each(function ()
-							{
+							$(settings.depends).each(function () {
 								/* Do not include own value. */
 								if (self !== this)
 								{
@@ -90,8 +85,7 @@
 						$(self).trigger("change");
 					}
 
-					request = $.getJSON(settings.url, data, function (json)
-					{
+					request = $.getJSON(settings.url, data, function (json) {
 						build.call(self, json);
 						/* Force updating the children. */
 						$(self).trigger("change");
@@ -131,10 +125,8 @@
 					{
 						/* JSON is an array of objects. */
 						/* [{"":"--"},{"series-1":"1 series"},{"series-3":"3 series"}] */
-						option_list = $.map(json, function (value)
-						{
-							return $.map(value, function (value, index)
-							{
+						option_list = $.map(json, function (value) {
+							return $.map(value, function (value, index) {
 								return [[index, value]];
 							});
 						});
@@ -172,8 +164,7 @@
 				}
 
 				/* Loop option again to set selected. IE needed this... */
-				$(self).children().each(function ()
-				{
+				$(self).children().each(function () {
 					if ($(this).val() === selected_key + "")
 					{
 						$(this).attr("selected", "selected");

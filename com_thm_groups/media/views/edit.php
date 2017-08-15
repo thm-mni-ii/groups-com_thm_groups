@@ -3,12 +3,10 @@
  * @category    Joomla library
  * @package     THM_Groups
  * @name        THM_GroupsViewEdit
- * @description Common list view
- * @author      Melih Cakir, <melih.cakir@mni.thm.de>
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @link        www.thm.de
  */
 
 /**
@@ -62,12 +60,9 @@ abstract class THM_GroupsViewEdit extends JViewLegacy
 		JHtml::_('behavior.formvalidation');
 		JHtml::_('formbehavior.chosen', 'select');
 
-		$option   = JFactory::getApplication()->input->get('option');
-		$document = Jfactory::getDocument();
-		$document->addStyleSheet($this->baseurl . "../../media/com_thm_groups/fonts/iconfont.css");
-		$document->addStyleSheet($this->baseurl . "../../media/$option/css/backend.css");
-		$document->addScript($this->baseurl . "../../media/com_thm_groups/js/formbehaviorChosenHelper.js");
-		$document->addScript($this->baseurl . "../../media/com_thm_groups/js/validators.js");
-		$document->addScript($this->baseurl . "../../media/com_thm_groups/js/submitButton.js");
+		JHtml::stylesheet('media/com_thm_groups/css/backend.css');
+		JHtml::script('media/com_thm_groups/js/formbehaviorChosenHelper.js');
+		JHtml::script('media/com_thm_groups/js/validators.js');
+		JHtml::script('media/com_thm_groups/js/submitButton.js');
 	}
 }

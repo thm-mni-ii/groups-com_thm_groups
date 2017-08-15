@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsModelDynamic_Types_Manager
- * @description THMGroupsModelDynamic_Types_Manager file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -34,19 +33,18 @@ class THM_GroupsModelDynamic_Type_Manager extends THM_GroupsModelList
 	public function checkDependencies()
 	{
 		$ids    = JFactory::getApplication()->input->get('cid', array(), 'array');
-		$dbo    = JFactory::getDbo();
 		$badIds = array();
 
 		foreach ($ids as $id)
 		{
-			$query = $dbo->getQuery(true);
+			$query = $this->_db->getQuery(true);
 			$query
 				->select('id')
 				->from('#__thm_groups_attribute')
 				->where("dynamic_typeID = $id");
-			$dbo->setQuery($query);
+			$this->_db->setQuery($query);
 
-			if ($dbo->loadObject() == null)
+			if ($this->_db->loadObject() == null)
 			{
 				array_push($badIds, $id);
 			}
@@ -86,8 +84,7 @@ class THM_GroupsModelDynamic_Type_Manager extends THM_GroupsModelList
 	 */
 	protected function getListQuery()
 	{
-		$db    = JFactory::getDBO();
-		$query = $db->getQuery(true);
+		$query = $this->_db->getQuery(true);
 
 		$query
 			->select('dynamic.id, dynamic.name, static.name as static_type_name, regex, dynamic.description')
@@ -169,7 +166,7 @@ class THM_GroupsModelDynamic_Type_Manager extends THM_GroupsModelList
 
 		$headers                      = array();
 		$headers['checkbox']          = '';
-		$headers['id']                = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'dynamic.id', $direction, $ordering);
+		$headers['id']                = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'dynamic.id', $direction, $ordering);
 		$headers['dynamic']           = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_DYNAMIC_TYPE', 'dynamic.name', $direction, $ordering);
 		$headers['static']            = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_STATIC_TYPE', 'static.name', $direction, $ordering);
 		$headers['regularExpression'] = JText::_('COM_THM_GROUPS_REGULAR_EXPRESSION');

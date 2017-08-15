@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsViewPlugin_Members_Select
- * @description THM_GroupsViewPlugin_Members_Select class for editors xtd plugin
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      Mehmet Ali Pamukci, <mehmet.ali.pamukci@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
@@ -13,7 +12,6 @@
  */
 
 defined('_JEXEC') or die;
-JHtml::_('jquery.framework');
 JHtml::_('bootstrap.framework');
 JHtml::_('formbehavior.chosen', 'select');
 

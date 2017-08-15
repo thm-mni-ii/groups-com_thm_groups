@@ -4,14 +4,9 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @name        THMGroupsViewList
- * @description THMGroupsViewList file from com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
- * @author      Markus Kaiser,  <markus.kaiser@mni.thm.de>
- * @author      Daniel Bellof,  <daniel.bellof@mni.thm.de>
- * @author      Jacek Sokalla,  <jacek.sokalla@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
- * @author      Peter May,      <peter.may@mni.thm.de>
  * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -113,7 +108,7 @@ class THM_GroupsViewList extends JViewLegacy
 			}
 		}
 
-		$url = "$linkTarget&userID=$profile->id&groupID=$this->groupID&name=" . trim($profile->surname);
+		$url = "$linkTarget&profileID=$profile->id&groupID=$this->groupID&name=" . trim($profile->surname);
 
 		return JHtml::link(JRoute::_($url), $displayedText);
 	}
@@ -172,16 +167,16 @@ class THM_GroupsViewList extends JViewLegacy
 	 */
 	private function setPathway()
 	{
-		$app    = JFactory::getApplication();
-		$userID = $app->input->getInt('userID', 0);
+		$app       = JFactory::getApplication();
+		$profileID = $app->input->getInt('profileID', 0);
 
-		if (empty($userID))
+		if (empty($profileID))
 		{
 			return;
 		}
 
 		$pathway = $app->getPathway();
-		$name    = THM_GroupsHelperProfile::getDisplayName($userID);
+		$name    = THM_GroupsHelperProfile::getDisplayName($profileID);
 		$pathway->addItem($name, '');
 	}
 

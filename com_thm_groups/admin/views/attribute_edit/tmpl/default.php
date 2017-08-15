@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsViewAttribue_Edit
- * @description THMGroupsViewAttribute_Edit file from com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
@@ -14,4 +13,3 @@
 defined('_JEXEC') or die ('Restricted access');
 require_once JPATH_ROOT . '/media/com_thm_groups/templates/edit_basic.php';
 THM_GroupsTemplateEdit_Basic::render($this);
-?>

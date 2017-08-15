@@ -5,7 +5,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THMGroupsViewPlugin_Members_Select
- * @description THMGroupsViewPlugins_Members_Select
  * @author      Mehmet-Ali Pamukci,    <mehmet.ali.pamukci@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -22,14 +21,14 @@ $lang->load('plg_editors-xtd_plg_thm_groups_editors_xtd_members', JPATH_PLUGINS 
  */
 function getUsers()
 {
-	$db    = JFactory::getDbo();
-	$query = $db->getQuery(true);
+	$dbo   = JFactory::getDbo();
+	$query = $dbo->getQuery(true);
 	$query
 		->select('id, name')
 		->from('#__users');
-	$db->setQuery($query);
+	$dbo->setQuery($query);
 
-	return $db->loadObjectList();
+	return $dbo->loadObjectList();
 }
 
 /**
@@ -39,14 +38,14 @@ function getUsers()
  */
 function getGroups()
 {
-	$db    = JFactory::getDbo();
-	$query = $db->getQuery(true);
+	$dbo   = JFactory::getDbo();
+	$query = $dbo->getQuery(true);
 	$query
 		->select('id, title')
 		->from('#__usergroups');
-	$db->setQuery($query);
+	$dbo->setQuery($query);
 
-	return $db->loadObjectList();
+	return $dbo->loadObjectList();
 }
 
 
@@ -57,14 +56,14 @@ function getGroups()
  */
 function getProfiles()
 {
-	$db    = JFactory::getDbo();
-	$query = $db->getQuery(true);
+	$dbo   = JFactory::getDbo();
+	$query = $dbo->getQuery(true);
 	$query
 		->select('id, name')
 		->from('#__thm_groups_profile');
-	$db->setQuery($query);
+	$dbo->setQuery($query);
 
-	return $db->loadObjectList();
+	return $dbo->loadObjectList();
 }
 
 
@@ -136,16 +135,16 @@ function createSelectFieldProfiles()
 function createSelectFieldParamsUsers()
 {
 
-	$db    = JFactory::getDbo();
-	$query = $db->getQuery(true);
+	$dbo   = JFactory::getDbo();
+	$query = $dbo->getQuery(true);
 	$query
 		->select(array('title,params'))
 		->from('#__modules')
 		->where('published=1 AND module LIKE \'%mod_thm_groups_members%\'');
 
-	$db->setQuery($query);
+	$dbo->setQuery($query);
 
-	$result = $db->loadObjectList();
+	$result = $dbo->loadObjectList();
 
 	$titles = $result;
 
@@ -179,16 +178,16 @@ function createSelectFieldParamsUsers()
 function createSelectFieldParamsGroups()
 {
 
-	$db    = JFactory::getDbo();
-	$query = $db->getQuery(true);
+	$dbo   = JFactory::getDbo();
+	$query = $dbo->getQuery(true);
 	$query
 		->select(array('title,params'))
 		->from('#__modules')
 		->where('module LIKE \'%mod_thm_groups_members%\'');
 
-	$db->setQuery($query);
+	$dbo->setQuery($query);
 
-	$result = $db->loadObjectList();
+	$result = $dbo->loadObjectList();
 
 	$titles = $result;
 

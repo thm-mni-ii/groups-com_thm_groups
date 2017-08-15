@@ -11,7 +11,7 @@
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
-require_once JPATH_SITE . '/media/com_thm_groups/helpers/quickpage.php';
+require_once JPATH_SITE . '/media/com_thm_groups/helpers/content.php';
 
 /**
  * THM_GroupsModelQuickpage class for component com_thm_groups
@@ -62,9 +62,9 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 
 		$app = JFactory::getApplication();
 
-		if (!THM_GroupsHelperQuickpage::canEditState($articleID))
+		if (!THM_GroupsHelperContent::canEditState($articleID))
 		{
-			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NOT_ALLOWED'), 'error');
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
 			return false;
 		}
@@ -112,7 +112,7 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 			$table->load((int) $articleID);
 
 			// Access checks.
-			if (!THM_GroupsHelperQuickpage::canEditState($articleID))
+			if (!THM_GroupsHelperContent::canEditState($articleID))
 			{
 				// Prune items that you can't change.
 				unset($pks[$i]);
@@ -177,7 +177,7 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 
 		if (empty($articleID))
 		{
-			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ITEM_SELECTED'), 'warning');
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_CONTENT_SELECTED'), 'warning');
 
 			return false;
 		}
@@ -216,7 +216,7 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 		$query     = $dbo->getQuery(true);
 		$tableName = '#__thm_groups_users_content';
 
-		$articleExists = THM_GroupsHelperQuickpage::quickpageExists($articleID);
+		$articleExists = THM_GroupsHelperContent::quickpageExists($articleID);
 
 		if ($articleExists)
 		{
@@ -256,7 +256,7 @@ class THM_GroupsModelQuickpage extends JModelLegacy
 			$query->values(implode(',', $values));
 		}
 
-		$dbo->setQuery((string) $query);
+		$dbo->setQuery($query);
 
 		try
 		{
