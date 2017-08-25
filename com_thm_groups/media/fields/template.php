@@ -68,11 +68,6 @@ class JFormFieldTemplate extends JFormFieldList
 			$allTemplates = ['value' => '', 'text' => JText::_('JALL')];
 			array_unshift($templates, $allTemplates);
 		}
-		else
-		{
-			$groupTemplate = ['value' => 0, 'text' => JText::_('COM_THM_GROUPS_GROUP_TEMPLATE')];
-			array_unshift($templates, $groupTemplate);
-		}
 
 		return $templates;
 	}

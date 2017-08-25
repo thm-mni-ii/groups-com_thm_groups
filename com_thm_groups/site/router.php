@@ -25,7 +25,7 @@ use RegularLabs\Library\Condition\Component;
 function THM_groupsBuildRoute(&$query)
 {
 	// Contains all SEF Elements as list
-	$segments = array();//echo "<pre>" . print_r($query, true) . "</pre>";die;
+	$segments = array();
 
 	// All queries have 'option' set to com_thm_groups, otherwise they wouldn't be here.
 
@@ -52,28 +52,26 @@ function THM_groupsBuildRoute(&$query)
 	// Group & Profile/Name Segments
 	if (!empty($query['profileID']))
 	{
-		$profileSegment = '';
-		if (!empty($query['groupID']))
+		$profileSegment = $query['profileID'];
+		unset($query['profileID']);
+
+		if (!empty($query['groupID']) OR !empty($query['name']))
 		{
-			$profileSegment .= "{$query['groupID']}:{$query['profileID']}";
-			unset($query['groupID']);
-			unset($query['profileID']);
+			$profileSegment .= ":";
+
 			if (!empty($query['name']))
 			{
-				$profileSegment .= "-" . $query['name'];
+				$profileSegment .= $query['name'];
 				unset($query['name']);
+
+				$profileSegment .= empty($query['groupID']) ? '' : '-';
 			}
-		}
-		elseif (!empty($query['name']))
-		{
-			$profileSegment .= $query['profileID'] . "-" . $query['name'];
-			unset($query['profileID']);
-			unset($query['name']);
-		}
-		else
-		{
-			$profileSegment .= $query['profileID'];
-			unset($query['profileID']);
+
+			if (!empty($query['groupID']))
+			{
+				$profileSegment .= $query['groupID'];
+				unset($query['groupID']);
+			}
 		}
 		$segments[] = $profileSegment;
 	}
@@ -255,7 +253,8 @@ function THM_groupsParseRoute($segments)
 }
 
 /**
- * Parses the segment with profile information
+ * Parses the segment with profile information.
+ * Format profileID\:profile-surname?-?groupID?
  *
  * @param   array  $vars    the input variables
  * @param   string $segment the segment with profile information
@@ -264,26 +263,24 @@ function THM_groupsParseRoute($segments)
  */
 function parseProfileSegment(&$vars, $segment)
 {
-	$profileData = explode('-', $segment);
+	list($profileID, $profileData) = explode(':', $segment);
 
-	// $firstID will always be set irregardless of whether the delimiter was found
-	$profileIDs = explode(':', array_shift($profileData));
+	$vars['profileID'] = $profileID;
 
-	// Only the profileID
-	if (empty($profileIDs[1]))
-	{
-		$vars['profileID'] = $profileIDs[0];
-	}
-	else
-	{
-		$vars['groupID']   = $profileIDs[0];
-		$vars['profileID'] = $profileIDs[1];
-	}
-
-	// Anything left is the surname(s)
 	if (!empty($profileData))
 	{
-		$vars['name'] = implode('-', $profileData);
+		$profileData = explode('-', $profileData);
+
+		if (is_numeric(end($profileData)))
+		{
+			$vars['groupID'] = array_pop($profileData);
+		}
+
+		// Anything left is the profile's surname
+		if (!empty($profileData))
+		{
+			$vars['name'] = implode('-', $profileData);
+		}
 	}
 }
 

@@ -12,7 +12,6 @@
  */
 defined('_JEXEC') or die;
 require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
-require_once JPATH_ROOT . '/media/com_thm_groups/data/thm_groups_user_data.php';
 
 /**
  * THM_GroupsModelProfile_Manager class for component com_thm_groups

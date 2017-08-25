@@ -16,7 +16,6 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
-require_once JPATH_ROOT . "/media/com_thm_groups/data/thm_groups_user_data.php";
 require_once JPATH_COMPONENT . '/../com_content/helpers/route.php';
 require_once JPATH_COMPONENT . '/../com_content/helpers/query.php';
 require_once JPATH_COMPONENT . '/../com_content/models/article.php';

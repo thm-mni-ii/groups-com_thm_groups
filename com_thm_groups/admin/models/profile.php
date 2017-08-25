@@ -683,7 +683,7 @@ class THM_GroupsModelProfile extends JModelLegacy
 			$query = $this->_db->getQuery(true);
 			$query->update('#__thm_groups_users_attribute');
 
-			$value = $this->_db->q($values['value']);
+			$value = $this->_db->q(trim($values['value']));
 			$query->set("value = $value");
 
 			$published = empty($values['published']) ? 0 : 1;

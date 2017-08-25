@@ -13,7 +13,6 @@
 
 defined('_JEXEC') or die;
 require_once JPATH_ROOT . '/media/com_thm_groups/models/edit.php';
-require_once JPATH_ROOT . "/media/com_thm_groups/data/thm_groups_user_data.php";
 /** @noinspection MissingSinceTagDocInspection */
 
 

@@ -138,7 +138,6 @@ class THMGroupsModelMembers
 		// $jgroups = $this->getJoomlaGroups(); Alte Methode, kann gelöscht werden...
 		$jgroups = $this->getUsergroups(true);
 
-		$injoomla      = false;
 		$wasinjoomla   = false;
 		$selectOptions = array();
 
@@ -188,27 +187,6 @@ class THMGroupsModelMembers
 		$dbo = JFactory::getDBO();
 
 		// Create SQL query string
-
-		/*
-			$queryold = "SELECT thm.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla ";
-		$queryold .= "FROM #__usergroups AS joo ";
-		$queryold .= "RIGHT JOIN (";
-				$queryold .= "  SELECT * ";
-				$queryold .= "  FROM #__thm_groups_groups ";
-				$queryold .= "  WHERE injoomla = 0 ";
-				$queryold .= "  ORDER BY name";
-				$queryold .= ") AS thm ";
-		$queryold .= "ON joo.id = thm.id ";
-		$queryold .= "UNION ";
-		$queryold .= "SELECT joo.id, joo.parent_id, joo.lft, joo.rgt, joo.title, thm.name, thm.info, thm.picture, thm.mode, thm.injoomla ";
-		$queryold .= "FROM #__usergroups AS joo ";
-		$queryold .= "LEFT JOIN (";
-				$queryold .= "  SELECT * ";
-				$queryold .= "  FROM #__thm_groups_groups ";
-				$queryold .= ") AS thm ";
-		$queryold .= "ON joo.id = thm.id ";
-		$queryold .= "ORDER BY lft";
-		*/
 
 		$nestedQuery = $dbo->getQuery(true);
 		$nestedQuery->select('*');

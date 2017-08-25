@@ -38,6 +38,14 @@
     float: right;
 }
 
+.advanced-container .profile-container .attribute-picture {
+    width: 20%;
+}
+
+.advanced-container .profile-container .attribute-picture img {
+    display: block;
+}
+
 .advanced-container .profile-container .attribute-textfield {
     clear: both;
 }
@@ -56,10 +64,11 @@
 
 .advanced-container .profile-container .attribute-wrap {
     clear: left;
+    width: 79%;
 }
 
 .advanced-container .profile-container .attribute-wrap .attribute-iconed {
-    max-width: calc(100% - 1.5rem);
+    width: calc(100% - 1.5rem);
 }
 
 .advanced-container .profile-container .attribute-wrap .attribute-labeled {
@@ -96,11 +105,6 @@
 .advanced-container .profile-container .attribute-roles {
     font-size: .8rem;
     font-style: italic;
-}
-
-.advanced-container .profile-container img {
-    max-width: 66px;
-    display: block;
 }
 
 .advanced-container .profile-container .toggled-text-container {

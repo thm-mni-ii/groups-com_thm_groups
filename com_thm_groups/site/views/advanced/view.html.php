@@ -13,7 +13,7 @@
  * @link        www.thm.de
  */
 
-require_once JPATH_ROOT . "/media/com_thm_groups/data/thm_groups_data.php";
+require_once JPATH_ROOT . "/media/com_thm_groups/helpers/profile.php";
 
 /**
  * THMGroupsViewAdvanced class for component com_thm_groups
@@ -140,6 +140,16 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 		}
 	}
 
+	/**
+	 * Creates a container for the edit link button
+	 *
+	 * @param $profileID
+	 * @param $lastName
+	 *
+	 * @return string
+	 *
+	 * @since version
+	 */
 	private function getActionContainer($profileID, $lastName)
 	{
 		$container  = '';
@@ -167,128 +177,6 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 		}
 
 		return $container;
-	}
-
-	/**
-	 * Creates the container for the attribute
-	 *
-	 * @param array  $attribute the profile attribute being iterated
-	 * @param string $surname   the surname of the profile being iterated
-	 *
-	 * @return string the HTML for the value container
-	 */
-	private function getAttributeContainer($attribute, $surname)
-	{
-		$container = '';
-
-		$params     = empty($attribute['params']) ? [] : $attribute['params'];
-		$dynOptions = empty($attribute['dynOptions']) ? [] : $attribute['dynOptions'];
-		$options    = empty($attribute['options']) ? [] : $attribute['options'];
-
-		$attribute['params'] = array_merge($params, $dynOptions, $options);
-		$label               = '';
-
-		if (($attribute['type'] == 'PICTURE'))
-		{
-			$container .= '<div class="attribute-picture">';
-		}
-		else
-		{
-			if (($attribute['type'] == 'TEXTFIELD'))
-			{
-				$container .= '<div class="attribute-textfield">';
-			}
-			elseif (!empty($attribute['params']['wrap']))
-			{
-				$container .= '<div class="attribute-wrap">';
-			}
-			else
-			{
-				$container .= '<div class="attribute-inline">';
-			}
-
-			$label .= $this->getLabelContainer($attribute);
-		}
-
-		$container .= $label;
-
-		// Empty values or undesired
-		if (empty($label))
-		{
-			$labeled = 'none';
-		}
-
-		// The icon label consists solely of tags
-		elseif (empty(strip_tags($label)))
-		{
-			$labeled = 'icon';
-		}
-		else
-		{
-			$visibleLength = strlen(strip_tags($label));
-			$labeled       = $visibleLength > 10 ? 'label-long' : 'label';
-		}
-
-		$container .= $this->getValueContainer($attribute, $surname, $labeled);
-
-		$container .= "</div>";
-
-		return $container;
-	}
-
-	/**
-	 * Creates the container for the attribute label
-	 *
-	 * @param array $attribute the profile attribute being iterated
-	 *
-	 * @return string the HTML for the label container
-	 */
-	private function getLabelContainer($attribute)
-	{
-		$showIcon  = (!empty($attribute['params']['showIcon'] AND !empty($attribute['params']['icon'])));
-		$text      = empty($attribute['name']) ? '' : $attribute['name'];
-		$showLabel = (!empty($attribute['params']['showLabel']) AND !empty($text));
-		$label     = '';
-
-		if ($showIcon OR $showLabel)
-		{
-			$long  = (!$showIcon AND strlen($text) > 10);
-			$label .= $long ? '<div class="attribute-label attribute-label-long">' : '<div class="attribute-label">';
-
-			if ($showIcon)
-			{
-				$label .= '<span class="' . $attribute['params']['icon'] . '" title="' . $text . '"></span>';
-			}
-			elseif ($showLabel)
-			{
-				$label .= JText::_($attribute['name']);
-			}
-
-			$label .= '</div>';
-		}
-
-		return $label;
-	}
-
-	/**
-	 * Creates the HTML for the name container
-	 *
-	 * @param array $attributes the attributes of the profile
-	 *
-	 * @return string the HTML string containing name information
-	 */
-	private function getNameContainer($attributes)
-	{
-		$text = '';
-
-		if (!empty($attributes[1]['value']))
-		{
-			$text .= '<span class="attribute-name">' . $attributes[1]['value'] . '</span>';
-		}
-
-		$text .= '<span class="attribute-name">' . $attributes[2]['value'] . '</span>';
-
-		return '<div class="attribute-inline">' . JHtml::link($attributes['URL'], $text) . '</div>';
 	}
 
 	/**
@@ -320,9 +208,9 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 		$container .= $this->getActionContainer($profileID, $lastName);
 
 		$attributeContainers   = [];
-		$attributeContainers[] = $this->getNameContainer($attributes);
+		$attributeContainers[] = THM_GroupsHelperProfile::getNameContainer($attributes);
 
-		$titleContainer = $this->getTitleContainer($attributes);
+		$titleContainer = THM_GroupsHelperProfile::getTitleContainer($attributes);
 
 		if (!empty($titleContainer))
 		{
@@ -347,7 +235,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 				continue;
 			}
 
-			$attributeContainer = $this->getAttributeContainer($attribute, $lastName);
+			$attributeContainer = THM_GroupsHelperProfile::getAttributeContainer($attribute, $lastName, $this->suppressText);
 
 			if (($attribute['type'] == 'PICTURE'))
 			{
@@ -365,126 +253,5 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 		$container .= "</div>";
 
 		return $container;
-	}
-
-	/**
-	 * Creates the HTML for the title container
-	 *
-	 * @param array $attributes the attributes of the profile
-	 *
-	 * @return string the HTML string containing title information
-	 */
-	private function getTitleContainer($attributes)
-	{
-		$text = '';
-
-		$title = empty($attributes[5]['value']) ? '' : nl2br(htmlspecialchars_decode($attributes[5]['value']));
-		$title .= empty($attributes[7]['value']) ? '' : ', ' . nl2br(htmlspecialchars_decode($attributes[7]['value']));
-
-		if (empty($title))
-		{
-			return $text;
-		}
-
-		$text .= '<span class="attribute-title">' . $title . '</span>';
-
-		return '<div class="attribute-inline">' . JHtml::link($attributes['URL'], $text) . '</div>';
-	}
-
-	/**
-	 * Creates the container for the attribute value
-	 *
-	 * @param array  $attribute the profile attribute being iterated
-	 * @param string $surname   the surname of the profile being iterated
-	 * @param string $labeled   how the attribute will be labeled. determines additional classes for style references.
-	 *
-	 * @return string the HTML for the value container
-	 */
-	private function getValueContainer($attribute, $surname, $labeled)
-	{
-		switch ($attribute['type'])
-		{
-			case "Email":
-
-				$value = '<a href="mailto:' . $attribute['value'] . '">';
-				$value .= JHTML::_('email.cloak', $attribute['value']) . '</a>';
-
-				break;
-
-			case "LINK":
-
-				$value = "<a href='" . htmlspecialchars_decode($attribute['value']) . "'>";
-				$value .= htmlspecialchars_decode($attribute['value']) . "</a>";
-
-				break;
-
-			case "PICTURE":
-
-				$position     = explode('images/', $attribute['params']['path'], 2);
-				$relativePath = 'images/' . $position[1];
-
-				$value = JHTML::image(
-					JURI::root() . $relativePath . $attribute['value'],
-					$surname,
-					array('class' => 'thm_groups_profile_container_profile_image')
-				);
-
-				break;
-
-			case "TEXTFIELD":
-
-				$text = trim(htmlspecialchars_decode($attribute['value']));
-
-				// Normalize new lines
-				if (stripos($text, '<li>') === false && stripos($text, '<table') === false)
-				{
-					$text = nl2br($text);
-				}
-
-				// The closing div for the toggled container is added later
-				if ($this->suppressText AND strlen(strip_tags($text)) > 50)
-				{
-					$value = '<span class="toggled-text-link">' . JText::_('COM_THM_GROUPS_ACTION_DISPLAY') . '</span></div>';
-					$value .= '<div class="toggled-text-container" style="display:none;">' . $text;
-				}
-				else
-				{
-					$value = $text;
-				}
-
-				break;
-
-			case "TEXT":
-			default:
-
-				$value = nl2br(htmlspecialchars_decode($attribute['value']));
-
-				break;
-		}
-
-		$classes = ['attribute-value'];
-
-		$visibleLength = strlen(strip_tags($value));
-
-		// Used to force width on long texts
-		if ($visibleLength > 30)
-		{
-
-			if ($labeled == 'icon')
-			{
-				$classes[] = 'attribute-iconed';
-			}
-			elseif ($labeled == 'label')
-			{
-				$classes[] = 'attribute-labeled';
-			}
-
-		}
-
-		$html = '<div class="' . implode(' ', $classes) . '">';
-		$html .= $value;
-		$html .= '</div>';
-
-		return $html;
 	}
 }

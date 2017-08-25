@@ -41,6 +41,15 @@
       float: right;
     }
 
+    .attribute-picture {
+
+      width: 20%;
+
+      img {
+        display: block;
+      }
+    }
+
     .attribute-textfield {
       clear: both;
     }
@@ -60,10 +69,12 @@
     }
 
     .attribute-wrap {
+
       clear: left;
+      width: 79%;
 
       .attribute-iconed {
-        max-width: calc(100% - 1.5rem);
+        width: calc(100% - 1.5rem);
       }
 
       .attribute-labeled {
@@ -101,11 +112,6 @@
     .attribute-roles {
       font-size: .8rem;
       font-style: italic;
-    }
-
-    img {
-      max-width: 66px;
-      display: block;
     }
 
     .toggled-text-container {

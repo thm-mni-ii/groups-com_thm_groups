@@ -55,6 +55,74 @@ class THM_GroupsHelperProfile
 	}
 
 	/**
+	 * Creates the container for the attribute
+	 *
+	 * @param array  $attribute    the profile attribute being iterated
+	 * @param string $surname      the surname of the profile being iterated
+	 * @param bool   $suppressText whether or not lengthy text should be initially hidden.
+	 *
+	 * @return string the HTML for the value container
+	 */
+	public static function getAttributeContainer($attribute, $surname, $suppressText)
+	{
+		$container = '';
+
+		$params     = empty($attribute['params']) ? [] : $attribute['params'];
+		$dynOptions = empty($attribute['dynOptions']) ? [] : $attribute['dynOptions'];
+		$options    = empty($attribute['options']) ? [] : $attribute['options'];
+
+		$attribute['params'] = array_merge($params, $dynOptions, $options);
+		$label               = '';
+
+		if (($attribute['type'] == 'PICTURE'))
+		{
+			$container .= '<div class="attribute-picture">';
+		}
+		else
+		{
+			if (($attribute['type'] == 'TEXTFIELD'))
+			{
+				$container .= '<div class="attribute-textfield">';
+			}
+			elseif (!empty($attribute['params']['wrap']))
+			{
+				$container .= '<div class="attribute-wrap">';
+			}
+			else
+			{
+				$container .= '<div class="attribute-inline">';
+			}
+
+			$label .= self::getLabelContainer($attribute);
+		}
+
+		$container .= $label;
+
+		// Empty values or undesired
+		if (empty($label))
+		{
+			$labeled = 'none';
+		}
+
+		// The icon label consists solely of tags
+		elseif (empty(strip_tags($label)))
+		{
+			$labeled = 'icon';
+		}
+		else
+		{
+			$visibleLength = strlen(strip_tags($label));
+			$labeled       = $visibleLength > 10 ? 'label-long' : 'label';
+		}
+
+		$container .= self::getValueContainer($attribute, $surname, $labeled, $suppressText);
+
+		$container .= "</div>";
+
+		return $container;
+	}
+
+	/**
 	 * Retrieves a saved profile attribute value
 	 *
 	 * @param   int $profileID   the id of the profile
@@ -152,15 +220,102 @@ class THM_GroupsHelperProfile
 	}
 
 	/**
+	 * Creates the container for the attribute label
+	 *
+	 * @param array $attribute the profile attribute being iterated
+	 *
+	 * @return string the HTML for the label container
+	 */
+	private static function getLabelContainer($attribute)
+	{
+		$showIcon  = (!empty($attribute['params']['showIcon'] AND !empty($attribute['params']['icon'])));
+		$text      = empty($attribute['name']) ? '' : $attribute['name'];
+		$showLabel = (!empty($attribute['params']['showLabel']) AND !empty($text));
+		$label     = '';
+
+		if ($showIcon OR $showLabel)
+		{
+			$long  = (!$showIcon AND strlen($text) > 10);
+			$label .= $long ? '<div class="attribute-label attribute-label-long">' : '<div class="attribute-label">';
+
+			if ($showIcon)
+			{
+				$label .= '<span class="' . $attribute['params']['icon'] . '" title="' . $text . '"></span>';
+			}
+			elseif ($showLabel)
+			{
+				$label .= JText::_($attribute['name']);
+			}
+
+			$label .= '</div>';
+		}
+
+		return $label;
+	}
+
+	/**
+	 * Creates the HTML for the name container
+	 *
+	 * @param array $attributes the attributes of the profile
+	 *
+	 * @return string the HTML string containing name information
+	 */
+	public static function getNameContainer($attributes)
+	{
+		$text = '';
+
+		if (!empty($attributes[1]['value']))
+		{
+			$text .= '<span class="attribute-name">' . $attributes[1]['value'] . '</span>';
+		}
+
+		$text .= '<span class="attribute-name">' . $attributes[2]['value'] . '</span>';
+
+		return '<div class="attribute-inline">' . JHtml::link($attributes['URL'], $text) . '</div>';
+	}
+
+	/**
+	 * Creates the HTML for the name container
+	 *
+	 * @param array $attributes the attributes of the profile
+	 *
+	 * @return string the HTML string containing name information
+	 */
+	public static function getNameTitleContainer($attributes)
+	{
+		$text = '';
+
+		if (!empty($attributes[5]['value']))
+		{
+			$text .= '<span class="attribute-title">' . nl2br(htmlspecialchars_decode($attributes[5]['value'])) . '</span>';
+		}
+
+		if (!empty($attributes[1]['value']))
+		{
+			$text .= '<span class="attribute-name">' . $attributes[1]['value'] . '</span>';
+		}
+
+		$text .= '<span class="attribute-name">' . $attributes[2]['value'] . '</span>';
+
+		if (!empty($attributes[7]['value']))
+		{
+			$text .= '<span class="attribute-title">' . nl2br(htmlspecialchars_decode($attributes[7]['value'])) . '</span>';
+		}
+
+		return '<div class="attribute-wrap attribute-header">' . JHtml::link($attributes['URL'], $text) . '</div>';
+	}
+
+	/**
 	 * Gets all user attributes, optionally filtering according to a profile template and the attribute pubished status.
 	 *
-	 * @param   int  $profileID     the user ID
-	 * @param   int  $templateID    the profile ID
+	 * @param   int  $profileID     the profile ID
+	 * @param   int  $templateID    the template ID
 	 * @param   bool $onlyPublished whether or not attributes should be filtered according to their published status
+	 * @param   bool $onlyFilled    whether or not attributes need to have a non-empty value
 	 *
 	 * @return  array  array of arrays with profile information
 	 */
-	public static function getProfile($profileID, $templateID = null, $onlyPublished = false)
+	public static function getProfile($profileID, $templateID = null, $onlyPublished = false, $onlyFilled = false)
 	{
 		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
@@ -177,7 +332,9 @@ class THM_GroupsHelperProfile
 		$query->innerJoin('#__thm_groups_static_type AS s ON s.id = d.static_typeID');
 		$query->innerJoin('#__thm_groups_profile_attribute AS pa ON pa.attributeID = a.id');
 		$query->innerJoin('#__thm_groups_profile AS p ON  p.id = pa.profileID');
-		$query->leftJoin("#__thm_groups_users_attribute AS ua ON ua.attributeID = a.id AND ua.usersID ='$profileID'");
+		$query->leftJoin("#__thm_groups_users_attribute AS ua ON ua.attributeID = a.id");
+
+		$query->where("ua.usersID = '$profileID'");
 
 		if (!empty($templateID))
 		{
@@ -187,6 +344,11 @@ class THM_GroupsHelperProfile
 		if ($onlyPublished == true)
 		{
 			$query->where("ua.published = 1");
+		}
+
+		if ($onlyFilled)
+		{
+			$query->where("(ua.value IS NOT NULL  and ua.value != '')");
 		}
 
 		$query->where("pa.published = '1'");
@@ -272,6 +434,125 @@ class THM_GroupsHelperProfile
 
 			return 1;
 		}
+	}
+
+	/**
+	 * Creates the HTML for the title container
+	 *
+	 * @param array $attributes the attributes of the profile
+	 *
+	 * @return string the HTML string containing title information
+	 */
+	public static function getTitleContainer($attributes)
+	{
+		$text = '';
+
+		$title = empty($attributes[5]['value']) ? '' : nl2br(htmlspecialchars_decode($attributes[5]['value']));
+		$title .= empty($attributes[7]['value']) ? '' : ', ' . nl2br(htmlspecialchars_decode($attributes[7]['value']));
+
+		if (empty($title))
+		{
+			return $text;
+		}
+
+		$text .= '<span class="attribute-title">' . $title . '</span>';
+
+		return '<div class="attribute-inline">' . JHtml::link($attributes['URL'], $text) . '</div>';
+	}
+
+	/**
+	 * Creates the container for the attribute value
+	 *
+	 * @param array  $attribute    the profile attribute being iterated
+	 * @param string $surname      the surname of the profile being iterated
+	 * @param string $labeled      how the attribute will be labeled. determines additional classes for style references.
+	 * @param bool   $suppressText whether or not lengthy text should be initially hidden.
+	 *
+	 * @return string the HTML for the value container
+	 */
+	private static function getValueContainer($attribute, $surname, $labeled, $suppressText = true)
+	{
+		switch ($attribute['dyntype'])
+		{
+			case "Email":
+
+				$value = '<a href="mailto:' . $attribute['value'] . '">';
+				$value .= JHTML::_('email.cloak', $attribute['value']) . '</a>';
+
+				break;
+
+			case "LINK":
+
+				$value = "<a href='" . htmlspecialchars_decode($attribute['value']) . "'>";
+				$value .= htmlspecialchars_decode($attribute['value']) . "</a>";
+
+				break;
+
+			case "PICTURE":
+
+				$position     = explode('images/', $attribute['params']['path'], 2);
+				$relativePath = 'images/' . $position[1];
+
+				$value = JHTML::image(
+					JURI::root() . $relativePath . $attribute['value'],
+					$surname,
+					array('class' => 'thm_groups_profile_container_profile_image')
+				);
+
+				break;
+
+			case "TEXTFIELD":
+
+				$text = trim(htmlspecialchars_decode($attribute['value']));
+
+				// Normalize new lines
+				if (stripos($text, '<li>') === false && stripos($text, '<table') === false)
+				{
+					$text = nl2br($text);
+				}
+
+				// The closing div for the toggled container is added later
+				if ($suppressText AND strlen(strip_tags($text)) > 50)
+				{
+					$value = '<span class="toggled-text-link">' . JText::_('COM_THM_GROUPS_ACTION_DISPLAY') . '</span></div>';
+					$value .= '<div class="toggled-text-container" style="display:none;">' . $text;
+				}
+				else
+				{
+					$value = $text;
+				}
+
+				break;
+
+			case "TEXT":
+			default:
+
+				$value = nl2br(htmlspecialchars_decode($attribute['value']));
+
+				break;
+		}
+
+		$classes = ['attribute-value'];
+
+		if ($labeled == 'icon')
+		{
+			$classes[] = 'attribute-iconed';
+		}
+		elseif ($labeled == 'label')
+		{
+			$classes[] = 'attribute-labeled';
+		}
+		else
+		{
+			$classes[] = 'attribute-no-label';
+		}
+
+
+		$html = '<div class="' . implode(' ', $classes) . '">';
+		$html .= $value;
+		$html .= '</div>';
+
+		return $html;
 	}
 
 	/**
