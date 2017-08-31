@@ -61,12 +61,24 @@ class JFormFieldTemplate extends JFormFieldList
 			return [];
 		}
 
+		$plugin = (bool) $this->getAttribute('plugin', false);
+
 		if ($associated)
 		{
-			$noTemplates = ['value' => -1, 'text' => JText::_('JNONE')];
-			array_unshift($templates, $noTemplates);
-			$allTemplates = ['value' => '', 'text' => JText::_('JALL')];
-			array_unshift($templates, $allTemplates);
+			if ($plugin)
+			{
+				$noTemplates = ['value' => '', 'text' => JText::_('COM_THM_GROUPS_MODULE_DEFAULT')];
+				array_unshift($templates, $noTemplates);
+			}
+			else
+			{
+
+				$noTemplates = ['value' => -1, 'text' => JText::_('JNONE')];
+				array_unshift($templates, $noTemplates);
+
+				$allTemplates = ['value' => '', 'text' => JText::_('JALL')];
+				array_unshift($templates, $allTemplates);
+			}
 		}
 
 		return $templates;

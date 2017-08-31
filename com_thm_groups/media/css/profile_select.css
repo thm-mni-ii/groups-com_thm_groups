@@ -1,0 +1,39 @@
+.profile-select-container {
+    width: 720px;
+}
+
+.profile-select-container .filter-row {
+    float: left;
+    width: 50%;
+}
+
+.profile-select-container .filter-row label {
+    margin-bottom: 0;
+}
+
+.profile-select-container .filter-row .row-label label {
+    min-width: 3.5rem;
+}
+
+.profile-select-container .adminlist {
+    margin-top: 5px;
+    width: 100%;
+}
+
+.profile-select-container .adminlist tr:nth-child(even) {
+    background-color: #f2f5f6;
+}
+
+.profile-select-container .adminlist th {
+    background-color: #dfe5e6;
+    color: #394a59;
+    padding: 8px;
+}
+
+.profile-select-container .adminlist td {
+    padding: 8px;
+}
+
+.profile-select-container .check-span, .profile-select-container .group-name {
+    margin-left: 8px;
+}

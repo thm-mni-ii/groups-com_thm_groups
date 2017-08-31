@@ -20,6 +20,7 @@
             </field>
             <field name="templateID"
                    type="template"
+                   none="0"
                    label="COM_THM_GROUPS_TEMPLATE"
                    description="COM_THM_GROUPS_TEMPLATE_SELECT_DESC"/>
             <field name="sort"

@@ -40,7 +40,6 @@ class THM_GroupsViewTHM_Groups extends JViewLegacy
 		}
 
 		JHtml::_('bootstrap.tooltip');
-		JFactory::getDocument()->addStyleSheet(JUri::root() . "media/com_thm_groups/fonts/iconfont.css");
 
 		THM_GroupsHelperComponent::addSubmenu($this);
 

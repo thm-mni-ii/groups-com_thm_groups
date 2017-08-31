@@ -216,7 +216,7 @@ class THM_GroupsHelperProfile
 			}
 		}
 
-		return $text;
+		return trim($text);
 	}
 
 	/**
@@ -405,6 +405,25 @@ class THM_GroupsHelperProfile
 
 			return 1;
 		}
+	}
+
+	/**
+	 * Retrieves the profile's surname
+	 *
+	 * @param   int  $profileID the profile id
+	 *
+	 * @return  string  the profile name
+	 */
+	public static function getSurname($profileID)
+	{
+		$profile = self::getProfile($profileID);
+
+		if (!empty($profile[2]) AND !empty($profile[2]['value']))
+		{
+			return trim($profile[2]['value']);
+		}
+
+		return '';
 	}
 
 	/**

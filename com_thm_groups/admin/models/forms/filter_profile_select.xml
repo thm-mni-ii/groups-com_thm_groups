@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="filter" addfieldpath="/media/com_thm_groups/fields">
+        <field name="search"
+               type="text"
+               label="COM_THM_ORGANIZER_FILTER_SEARCH_DESC"
+               hint="JSEARCH_FILTER"/>
+        <field name="groups"
+               type="group"
+               plugin="1"
+               onchange="repopulateProfiles();return false;"
+               label="COM_THM_GROUPS_GROUP"
+               description=""/>
+        <field name="templates"
+               type="template"
+               plugin="1"
+               associated="true"
+               label="COM_THM_GROUPS_TEMPLATE"
+               description=""/>
+    </fields>
+</form>

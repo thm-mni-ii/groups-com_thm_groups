@@ -1,0 +1,43 @@
+@import 'variables';
+
+.profile-select-container {
+
+  width: 720px;
+
+  .filter-row {
+    float: left;
+    width: 50%;
+
+    label {
+      margin-bottom: 0;
+    }
+
+    .row-label label {
+      min-width: 3.5rem;
+    }
+  }
+
+  .adminlist
+  {
+    margin-top: 5px;
+    width: 100%;
+
+    tr:nth-child(even) {
+      background-color: $background-color;
+    }
+  }
+
+  .adminlist th{
+    background-color: $background-navigation-color;
+    color: #394a59;
+    padding: 8px;
+  }
+
+  .adminlist td{
+    padding: 8px;
+  }
+
+  .check-span, .group-name{
+    margin-left: 8px;
+  }
+}

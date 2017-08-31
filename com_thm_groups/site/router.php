@@ -13,8 +13,6 @@
  * @link        www.thm.de
  */
 
-use RegularLabs\Library\Condition\Component;
-
 /**
  * Creates route for SEF
  *
@@ -22,7 +20,7 @@ use RegularLabs\Library\Condition\Component;
  *
  * @return  array  all SEF Elements as list
  */
-function THM_groupsBuildRoute(&$query)
+function THM_GroupsBuildRoute(&$query)
 {
 	// Contains all SEF Elements as list
 	$segments = array();
@@ -126,7 +124,7 @@ function buildOptionsRoute(&$query, &$segments)
  *
  * @return  array  Accessable elements from SEF
  */
-function THM_groupsParseRoute($segments)
+function THM_GroupsParseRoute($segments)
 {
 	// NM PATCH: switch between different views profile/singlearticle
 	$vars = array();

@@ -108,10 +108,13 @@
             <language tag="de-DE">language/de-DE/de-DE.com_thm_groups.ini</language>
             <language tag="de-DE">language/de-DE/de-DE.com_thm_groups.sys.ini</language>
         </languages>
+
     </administration>
+
     <updateservers>
         <server type="extension" priority="1" name="THM Organizer Component Update Site">
             http://jenkins-ci.mni.thm.de/view/THM%20Control/job/Releases/lastSuccessfulBuild/artifact/updates/com_thm_groups.xml
         </server>
     </updateservers>
+
 </extension>
