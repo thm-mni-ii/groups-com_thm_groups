@@ -13,6 +13,9 @@
  * @link        www.thm.de
  */
 
+defined("_JEXEC") or die;
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
+
 // Unfortunately these have nothing to do with the attribute IDS
 define('PRETITLE', 0);
 define('FORENAME', 1);
@@ -82,31 +85,7 @@ class THM_GroupsViewList extends JViewLegacy
 				$linkTarget .= '&view=list';
 		}
 
-		$displayedText = '';
-
-		// Write name
-		foreach ($attributeOrder as $index => $attribute)
-		{
-			switch ($attribute)
-			{
-				case PRETITLE:
-					$displayedText .= $profile->title . ' ';
-					break;
-				case FORENAME:
-					$displayedText .= $profile->forename . ' ';
-					break;
-				case 2:
-					$forenameIndex  = array_search(FORENAME, $attributeOrder);
-					$displayedText  .= $profile->surname;
-					$naturalOrder   = $index > $forenameIndex;
-					$forenameExists = !empty($profile->forename);
-					$displayedText  .= ($naturalOrder OR !$forenameExists) ? ' ' : ', ';
-					break;
-				case 3:
-					$displayedText .= $profile->posttitle . ' ';
-					break;
-			}
-		}
+		$displayedText = THM_GroupsHelperProfile::getDisplayName($profile->id, true);
 
 		$url = "$linkTarget&profileID=$profile->id&groupID=$this->groupID&name=" . trim($profile->surname);
 
