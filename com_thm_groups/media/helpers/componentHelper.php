@@ -80,11 +80,6 @@ class THM_GroupsHelperComponent
 			$viewName == 'group_manager'
 		);
 		JHtmlSidebar::addEntry(
-			JText::_('COM_THM_GROUPS_PLUGIN_MANAGER'),
-			'index.php?option=com_plugins&filter[search]=thm%20groups',
-			$viewName == 'plugin_manager'
-		);
-		JHtmlSidebar::addEntry(
 			JText::_('COM_THM_GROUPS_PROFILE_MANAGER'),
 			'index.php?option=com_thm_groups&view=profile_manager',
 			$viewName == 'profile_manager'
