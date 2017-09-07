@@ -7,14 +7,17 @@
 .advanced-container {
 
   .role-heading {
-    background-color: $font-color;
+    background-color: $background-foot;
     color: $foreground-color;
     font-family: $font-family-header;
     font-size: 1rem;
     font-weight: 300;
     margin-bottom: .8rem;
     padding: .6rem .6rem .4rem .6rem;
-    text-transform: uppercase;
+
+    .group-title {
+      text-transform: uppercase;
+    }
   }
 
   div.clearFix {

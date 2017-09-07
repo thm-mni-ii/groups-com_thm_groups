@@ -3,13 +3,16 @@
 }
 
 .advanced-container .role-heading {
-    background-color: #394a59;
+    background-color: #4a5c66;
     color: white;
     font-family: "THM-Medium", Arial, Helvetica, sans-serif;
     font-size: 1rem;
     font-weight: 300;
     margin-bottom: .8rem;
     padding: .6rem .6rem .4rem .6rem;
+}
+
+.advanced-container .role-heading .group-title {
     text-transform: uppercase;
 }
 
