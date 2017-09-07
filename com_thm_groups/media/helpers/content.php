@@ -205,27 +205,8 @@ class THM_GroupsHelperContent
 	 */
 	public static function getRootCategory()
 	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
-
-		$query->select('params')->from('#__thm_groups_settings')->where($dbo->qn('type') . " = 'content'");
-
-		$dbo->setQuery($query);
-
-		try
-		{
-			$result = $dbo->loadObject();
-		}
-		catch (Exception $exception)
-		{
-			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-
-			return false;
-		}
-
-		$params = json_decode($result->params);
-
-		return $params->rootCategory;
+		$params = JComponentHelper::getParams('com_thm_groups');
+		return $params->get('rootCategory');
 	}
 
 	/**
