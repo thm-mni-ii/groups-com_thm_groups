@@ -54,24 +54,17 @@ class THM_GroupsViewList extends JViewLegacy
 	 */
 	public function getProfileLink($profile)
 	{
-		$attributeOrder = empty($this->params['orderingAttributes']) ?
-			array() : explode(",", $this->params['orderingAttributes']);
-		Joomla\Utilities\ArrayHelper::toInteger($attributeOrder);
-		$attributeOrder = array_flip($attributeOrder);
-		ksort($attributeOrder);
-
-		$attributes = $this->params['showstructure'];
-		Joomla\Utilities\ArrayHelper::toInteger($attributes);
-
-		foreach ($attributeOrder AS $key => $value)
+		if (isset($this->params['showTitles']))
 		{
-			if (!in_array($value, $attributes))
-			{
-				unset($attributeOrder[$key]);
-			}
+			$showTitles = (bool) $this->params['showTitles'];
+		}
+		else
+		{
+			$showTitles = true;
 		}
 
-		$menuID     = JFactory::getApplication()->input->get('Itemid', 0);
+		$input      = JFactory::getApplication()->input;
+		$menuID     = $input->get('Itemid', 0);
 		$linkTarget = "index.php?option=com_thm_groups&Itemid=$menuID";
 
 		// When a user is clicked should parameters be passed to the profile module or should the profile view open
@@ -83,9 +76,16 @@ class THM_GroupsViewList extends JViewLegacy
 			case "module":
 			default:
 				$linkTarget .= '&view=list';
+
+				$letter = $input->get('letter');
+
+				if (!empty($letter))
+				{
+					$linkTarget .= "&letter=$letter";
+				}
 		}
 
-		$displayedText = THM_GroupsHelperProfile::getDisplayName($profile->id, true);
+		$displayedText = THM_GroupsHelperProfile::getDisplayName($profile->id, $showTitles, true);
 
 		$url = "$linkTarget&profileID=$profile->id&groupID=$this->groupID&name=" . trim($profile->surname);
 
@@ -155,8 +155,7 @@ class THM_GroupsViewList extends JViewLegacy
 		}
 
 		$pathway = $app->getPathway();
-		$name    = THM_GroupsHelperProfile::getDisplayName($profileID);
-		$pathway->addItem($name, '');
+		$pathway->addItem(THM_GroupsHelperProfile::getDisplayName($profileID), '');
 	}
 
 	/**

@@ -12,35 +12,41 @@ defined('_JEXEC') or die;
 $params = $this->params;
 
 $input       = JFactory::getApplication()->input;
-$shownLetter = $input->get('letter', 'all');
-$shownLetter = strtoupper($shownLetter);
+$shownLetter = $input->get('letter');
 $menuID      = $input->get('Itemid');
 $baseURL     = "index.php?option=com_thm_groups&Itemid=$menuID";
-$allURL      = "$baseURL&letter=all";
-$attributes  = array('class' => 'letter-enabled');
 
 echo '<div class="alphabet-container"><ul class="alphabet-list">';
-echo '<li>';
-echo JHtml::_('link', $allURL, JText::_('JALL'), $attributes);
-echo '</li>';
 
 $alphabet = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
                   'U', 'V', 'W', 'X', 'Y', 'Z');
+
 foreach ($alphabet as $letter)
 {
-	echo '<li>';
 	if (array_key_exists($letter, $this->profiles))
 	{
+		if (empty($shownLetter))
+		{
+			$shownLetter = $letter;
+		}
+
+		echo (strtoupper($shownLetter) == $letter) ? '<li class="letter-active">' : '<li>';
+
+		$attributes  = ['class' => ['letter-enabled']];
+
 		$url = "$baseURL&letter=$letter";
 		echo JHtml::_('link', $url, $letter, $attributes);
 	}
 	else
 	{
-		echo '<span class="letter-disabled">' . $letter . '</span>';
+		echo '<li><span class="letter-disabled">' . $letter . '</span>';
 	}
+
 	echo '</li>';
 }
 echo '</ul></div>';
+
+$shownLetter = strtoupper($shownLetter);
 
 $this->letterProfiles = array();
 if (array_key_exists($shownLetter, $this->profiles))

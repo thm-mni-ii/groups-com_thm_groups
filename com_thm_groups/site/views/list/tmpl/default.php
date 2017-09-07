@@ -20,7 +20,7 @@
 	<?php endif; ?>
 	<div itemprop="articleBody" class="list-container">
 		<?php
-		if ($this->params->get('showAll') == 1)
+		if ($this->params->get('byLetter') == 0)
 		{
 			echo $this->loadTemplate('list');
 

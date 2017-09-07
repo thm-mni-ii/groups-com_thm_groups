@@ -33,18 +33,26 @@ $currentProfilesCount = 0;
 $currentRowCount      = 1;
 $totalLettersOutput   = 0;
 $totalRowsOutput      = 0;
-
+$all = $this->params->get('byLetter') == 0;
 
 echo '<div class="profiles-container">';
+
+if (!$all)
+{
+	echo '<div class="single-letter ym-gl"><div class="profiles"><ul>';
+}
+
 foreach ($profilesArray as $letter => $profiles)
 {
 	foreach ($profiles as $profile)
 	{
-		if ($currentRowCount == 1)
+		if ($all AND $currentRowCount == 1)
 		{
 			echo '<div class="ym-g33 ym-gl">';
 		}
-		$showLetter = ($currentProfilesCount == 0 OR ($currentRowCount == 1 AND $currentProfilesCount));
+
+		$showLetter = ($all AND ($currentProfilesCount == 0 OR ($currentRowCount == 1 AND $currentProfilesCount)));
+
 		if ($showLetter)
 		{
 			echo '<div class="letter">' . $letter . '</div>';
@@ -58,7 +66,7 @@ foreach ($profilesArray as $letter => $profiles)
 		$currentProfilesCount++;
 		$letterDone     = $currentProfilesCount == count($profiles);
 		$maxRowsReached = $maxColumnSize == $currentRowCount;
-		if ($letterDone OR $maxRowsReached)
+		if ($all AND ($letterDone OR $maxRowsReached))
 		{
 			echo '</ul></div>';
 		}
@@ -81,11 +89,16 @@ foreach ($profilesArray as $letter => $profiles)
 		$nextBreaksWell   = (!empty($nextSize) AND $nextSize >= $tolerance * 2);
 		$startNextLetter  = (($nextFitsInColumn OR $nextBreaksWell) AND $rowsAvailable >= $tolerance);
 		$done             = $totalLettersOutput == count($this->profiles);
-		if (($letterDone AND !$startNextLetter) OR $maxRowsReached OR $done)
+		if ($all AND (($letterDone AND !$startNextLetter) OR $maxRowsReached OR $done))
 		{
 			echo '</div>';
 			$currentRowCount = 1;
 		}
 	}
 }
+if (!$all)
+{
+	echo '</ul></div></div>';
+}
+
 echo '</div>';

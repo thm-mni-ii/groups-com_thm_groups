@@ -7,12 +7,16 @@
 
   li {
     list-style-type: none;
+
+    .title-value {
+      color: $font-color;
+      font-size: .75rem;
+    }
   }
 
   .list-container {
 
     .alphabet-container, .alphabet-list {
-      display: inline-block;
       text-align: center;
     }
 
@@ -25,11 +29,13 @@
 
       border: $border;
       margin-bottom: 0;
+      width: 100%;
 
       li {
         display: inline-block;
         margin-left: 0;
         padding: 8px 6px;
+        width: 2%;
       }
 
       .letter-enabled, .letter-disabled {
@@ -43,6 +49,10 @@
 
       .letter-enabled {
         font-weight: bold;
+      }
+
+      .letter-active {
+        background-color: $background-navigation-color;
       }
     }
 
@@ -63,5 +73,15 @@
       display: inline-block;
       width: calc(100% - 22px);
     }
+
+    .single-letter {
+
+      width: 100%;
+
+      .profiles-container .profiles {
+        width: 100%;
+      }
+    }
+
   }
 }

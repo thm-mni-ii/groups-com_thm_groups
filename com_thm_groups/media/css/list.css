@@ -22,8 +22,12 @@
     list-style-type: none;
 }
 
+.thm_groups-list li .title-value {
+    color: #394a59;
+    font-size: .75rem;
+}
+
 .thm_groups-list .list-container .alphabet-container, .thm_groups-list .list-container .alphabet-list {
-    display: inline-block;
     text-align: center;
 }
 
@@ -35,12 +39,14 @@
 .thm_groups-list .list-container .alphabet-list {
     border: 1px solid #77858c;
     margin-bottom: 0;
+    width: 100%;
 }
 
 .thm_groups-list .list-container .alphabet-list li {
     display: inline-block;
     margin-left: 0;
     padding: 8px 6px;
+    width: 2%;
 }
 
 .thm_groups-list .list-container .alphabet-list .letter-enabled, .thm_groups-list .list-container .alphabet-list .letter-disabled {
@@ -54,6 +60,10 @@
 
 .thm_groups-list .list-container .alphabet-list .letter-enabled {
     font-weight: bold;
+}
+
+.thm_groups-list .list-container .alphabet-list .letter-active {
+    background-color: #dfe5e6;
 }
 
 .thm_groups-list .list-container .profiles-container .letter {
@@ -72,4 +82,12 @@
 .thm_groups-list .list-container .profiles-container .profiles {
     display: inline-block;
     width: calc(100% - 22px);
+}
+
+.thm_groups-list .list-container .single-letter {
+    width: 100%;
+}
+
+.thm_groups-list .list-container .single-letter .profiles-container .profiles {
+    width: 100%;
 }

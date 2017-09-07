@@ -9,7 +9,7 @@ jQuery.fn.lib_thm_groups_alphabet = function () {
 	var column = jQuery("#thm_groups_columnNumber").val();
 	var paramLinkTarget = jQuery("#thm_groups_paramLinkTarget").val();
 	var orderAttr = jQuery("#thm_groups_orderAttr").val();
-	var showStructure = jQuery("#thm_groups_showStructure").val();
+	var showTitles = jQuery("#thm_groups_showTitles").val();
 	var linkElement = jQuery("#thm_groups_linkElement").val();
 	var itemid = jQuery("#thm_groups_itemid").val();
 	jQuery(this).attr('class', 'thm_groups_active');
@@ -31,7 +31,7 @@ jQuery.fn.lib_thm_groups_alphabet = function () {
 			Itemid: itemid,
 			paramLinkTarget: paramLinkTarget,
 			orderAttr: orderAttr,
-			showStructure: showStructure,
+			showTitles: showTitles,
 			linkElement: linkElement,
 			oldattribut: add
 		},

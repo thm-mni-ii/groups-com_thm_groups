@@ -199,10 +199,11 @@ class THM_GroupsHelperProfile
 	 *
 	 * @param   int  $profileID the user id
 	 * @param   bool $withTitle whether the titles should be displayed
+	 * @param   bool $withSpan  whether the attributes should be contained in individual spans for style assignments
 	 *
 	 * @return  string  the profile name
 	 */
-	public static function getDisplayName($profileID, $withTitle = false)
+	public static function getDisplayName($profileID, $withTitle = false, $withSpan = false)
 	{
 		$profile = self::getProfile($profileID);
 		$indexes = $withTitle ? [5, 1, 2, 7] : [1, 2];
@@ -212,7 +213,17 @@ class THM_GroupsHelperProfile
 		{
 			if (!empty($profile[$index]) AND !empty($profile[$index]['value']))
 			{
-				$text .= "{$profile[$index]['value']} ";
+				if ($withSpan)
+				{
+					$span = ($index === 1 OR $index === 2) ? '<span class="name-value">' : '<span class="title-value">';
+					$span .= $profile[$index]['value'];
+					$span .= ' </span>';
+					$text .= $span;
+				}
+				else
+				{
+					$text .= "{$profile[$index]['value']} ";
+				}
 			}
 		}
 
@@ -410,7 +421,7 @@ class THM_GroupsHelperProfile
 	/**
 	 * Retrieves the profile's surname
 	 *
-	 * @param   int  $profileID the profile id
+	 * @param   int $profileID the profile id
 	 *
 	 * @return  string  the profile name
 	 */
