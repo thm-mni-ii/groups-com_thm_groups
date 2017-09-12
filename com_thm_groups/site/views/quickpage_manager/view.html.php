@@ -253,8 +253,8 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 
 
 		$viewText    = '<span class="icon-eye-open"></span>';
-		$qpURL       = 'index.php?option=com_thm_groups&view=singlearticle';
-		$qpURL       .= "&id=$item->id&nameqp=$item->alias&profileID=$profileID&name=$surname";
+		$qpURL       = 'index.php?option=com_thm_groups&view=content';
+		$qpURL       .= "&id=$item->id&alias=$item->alias&profileID=$profileID&name=$surname";
 		$qpRoute     = JRoute::_($qpURL, false);
 		$editAttribs = array('title' => JText::_('COM_THM_GROUPS_VIEW'), 'class' => 'jgrid');
 		$editLink    = JHTML::_('link', $qpRoute, $viewText, $editAttribs);

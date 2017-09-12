@@ -1,11 +1,11 @@
 <?php
 /**
- * @category    Joomla library
- * @package     THM_Core
- * @subpackage  lib_thm_core.site
+ * @category    Joomla component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.site
  * @name        THM_GroupsTemplateEdit_Basic
+ * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
  * @author      James Antrim, <james.antrim@mni.thm.de>
- * @author      Ilja Michajlow, <Ilja.Michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
@@ -14,14 +14,14 @@
 /**
  * Class provides standardized output of list items
  *
- * @category    Joomla.Library
- * @package     thm_list
- * @subpackage  lib_thm_list.site
+ * @category    Joomla.Component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.site
  */
 class THM_GroupsTemplateEdit_Basic
 {
 	/**
-	 * Method to create a list output
+	 * Method to create a form output based solely on the xml configuration.
 	 *
 	 * @param   object &$view the view context calling the function
 	 *
@@ -29,11 +29,8 @@ class THM_GroupsTemplateEdit_Basic
 	 */
 	public static function render(&$view)
 	{
-		$option   = JFactory::getApplication()->input->get('option');
-		$resource = str_replace('_edit', '', $view->get('name'));
 		?>
-
-		<form action="index.php?option=<?php echo $option; ?>"
+		<form action="index.php?option=com_thm_groups"
 			  enctype="multipart/form-data"
 			  method="post"
 			  name="adminForm"

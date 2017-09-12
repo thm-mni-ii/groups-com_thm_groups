@@ -12,7 +12,7 @@
  */
 defined('_JEXEC') or die;
 
-jimport('thm_core.list.model');
+require_once JPATH_SITE . '/media/com_thm_groups/models/list.php';
 require_once JPATH_SITE . '/media/com_thm_groups/helpers/content.php';
 
 /**
@@ -22,7 +22,7 @@ require_once JPATH_SITE . '/media/com_thm_groups/helpers/content.php';
  * @package   com_thm_groups.admin
  * @link      www.thm.de
  */
-class THM_GroupsModelContent_Manager extends THM_CoreModelList
+class THM_GroupsModelContent_Manager extends THM_GroupsModelList
 {
 
 	protected $defaultOrdering = 'users.name';

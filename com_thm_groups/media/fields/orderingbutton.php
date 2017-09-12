@@ -1,8 +1,8 @@
 <?php
 /**
- * @category    Joomla library
- * @package     THM_Core
- * @subpackage  lib_thm_core.site
+ * @category    Joomla component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.site
  * @name        JFormFieldFields
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
@@ -14,9 +14,9 @@ defined('_JEXEC') or die;
 /**
  * Class loads an ordering button
  *
- * @category    Joomla.Library
- * @package     thm_core
- * @subpackage  lib_thm_core.site
+ * @category    Joomla.Component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.site
  */
 class JFormFieldOrderingButton extends JFormField
 {

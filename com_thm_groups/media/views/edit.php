@@ -1,6 +1,6 @@
 <?php
 /**
- * @category    Joomla library
+ * @category    Joomla component
  * @package     THM_Groups
  * @name        THM_GroupsViewEdit
  * @author      James Antrim, <james.antrim@mni.thm.de>
@@ -12,9 +12,9 @@
 /**
  * Class provides standardized output of an item
  *
- * @category    Joomla.Library
- * @package     thm_list
- * @subpackage  lib_thm_list.site
+ * @category    Joomla.Component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.site
  */
 abstract class THM_GroupsViewEdit extends JViewLegacy
 {

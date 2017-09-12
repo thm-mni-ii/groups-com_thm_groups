@@ -4,7 +4,6 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsModelTemplate_Edit
- * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2

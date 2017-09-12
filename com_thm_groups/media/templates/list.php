@@ -1,8 +1,8 @@
 <?php
 /**
- * @category    Joomla library
+ * @category    Joomla component
  * @package     THM_Groups
- * @name        THM_CoreListTemplate
+ * @name        THM_GroupsTemplateList
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Ilja Michajlow, <Ilja.Michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
@@ -13,9 +13,9 @@
 /**
  * Class provides standardized output of list items
  *
- * @category    Joomla.Library
- * @package     thm_list
- * @subpackage  lib_thm_list.site
+ * @category    Joomla.Component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.site
  */
 class THM_GroupsTemplateList
 {

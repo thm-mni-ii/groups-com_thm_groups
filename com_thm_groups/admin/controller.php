@@ -305,39 +305,6 @@ class THM_GroupsController extends JControllerLegacy
 		$app->input->set('view', "{$this->resource}_manager");
 		parent::display();
 
-		$canEdit = THM_GroupsHelperComponent::canEdit();
-		if (!$canEdit)
-		{
-			return;
-		}
-
-		$model   = $this->getModel('content');
-		$cid     = JFactory::getApplication()->input->get('cid', array(), 'array');
-		$success = 0;
-
-		try
-		{
-			$success = $model->activate($cid, 'featured');
-		}
-		catch (Exception $exception)
-		{
-			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-		}
-
-		if ($success === 1)
-		{
-			$this->setMessage(JText::_($this->text_prefix . '_ARTICLE_FEATURED'));
-		}
-		elseif ($success > 1)
-		{
-			$this->setMessage(JText::plural($this->text_prefix . '_N_ARTICLES_FEATURED', count($cid)));
-		}
-		else
-		{
-			$this->setMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'error');
-		}
-
-		$this->setRedirect("index.php?option=com_thm_groups&view=content_manager");
 	}
 
 	/**

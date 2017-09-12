@@ -44,7 +44,6 @@ class THM_GroupsHelperContent
 			return true;
 		}
 
-		// TODO: Would it be possible for a person of the same group to edit the state of 'my' article?
 		return JFactory::getUser()->authorise('core.edit.state', "com_content.article.$contentID");
 	}
 

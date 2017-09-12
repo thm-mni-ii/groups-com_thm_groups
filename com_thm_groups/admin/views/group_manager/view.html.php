@@ -11,7 +11,6 @@
  */
 defined('_JEXEC') or die;
 
-// import Joomla view library
 require_once JPATH_ROOT . '/media/com_thm_groups/views/list.php';
 require_once JPATH_SITE . '/media/com_thm_groups/helpers/batch.php';
 

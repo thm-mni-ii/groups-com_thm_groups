@@ -1,8 +1,8 @@
 <?php
 /**
- * @category    Joomla library
- * @package     THM_Core
- * @subpackage  lib_thm_core.site
+ * @category    Joomla component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.site
  * @name        THM_GroupsHelperLanguage
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Wolf Rost, <wolf.rost@mni.thm.de>
@@ -15,7 +15,7 @@
  * Class providing functions usefull to multiple component files
  *
  * @category  Joomla.Library
- * @package   thm_core
+ * @package   THM_Groups
  */
 class THM_GroupsHelperLanguage
 {

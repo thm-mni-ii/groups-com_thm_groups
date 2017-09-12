@@ -24,28 +24,18 @@ jimport('joomla.application.component.controller');
  */
 class THM_GroupsController extends JControllerLegacy
 {
+	private $resource = '';
+
 	/**
-	 * Constuctor
+	 * Class constructor
 	 *
-	 * @param   array $config Config Params
+	 * @param array $config An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
-	}
-
-	/**
-	 * Inherited method, which calls the method display() of parent JController.
-	 *
-	 * @param   boolean $cachable  cachable
-	 * @param   boolean $urlparams url param
-	 *
-	 * @return  void
-	 */
-	public function display($cachable = false, $urlparams = false)
-	{
-		$cachable = true;
-		JHtml::_('behavior.caption');
-		parent::display($cachable, $urlparams);
+		$task           = JFactory::getApplication()->input->get('task', '');
+		$taskParts      = explode('.', $task);
+		$this->resource = $taskParts[0];
 	}
 }

@@ -1,11 +1,11 @@
 <?php
 /**
- * @category    Joomla library
- * @package     THM_Core
- * @subpackage  lib_thm_core.site
+ * @category    Joomla component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.site
  * @name        JFormFieldFields
  * @author      James Antrim, <james.antrim@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -15,9 +15,9 @@ jimport('joomla.form.formfield');
 /**
  * Class loads a grid check all box
  *
- * @category    Joomla.Library
- * @package     thm_core
- * @subpackage  lib_thm_core.site
+ * @category    Joomla.Component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.site
  */
 class JFormFieldCheckAll extends JFormField
 {

@@ -1,11 +1,10 @@
-@import '../../lib_thm_core/scss/variables';
-@import '../../lib_thm_core/scss/icons';
+@import 'variables';
 
 #adminForm {
 
   .frontend-toolbar {
     border: $border;
-    background-color: $background;
+    background-color: $background-color;
     margin-bottom: 10px;
     padding: 10px;
     text-align: right;
@@ -13,7 +12,7 @@
 
   button, a.btn {
 
-    background-color: $foreground;
+    background-color: $foreground-color;
     border: $border;
     margin-left: 10px;
     padding: 4px 8px;
@@ -24,11 +23,11 @@
 
     &:hover {
       background-color: $font-color;
-      color: $foreground;
-      border: $foreground 1px solid;
+      color: $foreground-color;
+      border: $foreground-color 1px solid;
 
       span:before {
-        color: $foreground;
+        color: $foreground-color;
       }
     }
   }
@@ -114,7 +113,7 @@
 
       .modal-header, .modal-footer {
 
-        background-color: $background;
+        background-color: $background-color;
         padding: 5px;
         text-align: left;
 
@@ -134,7 +133,7 @@
           }
 
           button.close {
-            background-color: $background;
+            background-color: $background-color;
             border: none;
             color: $font-color;
             display: block;
@@ -155,8 +154,8 @@
 
       .modal-body {
 
-        border-left: $background 5px solid;
-        border-right: $background 5px solid;
+        border-left: $background-color 5px solid;
+        border-right: $background-color 5px solid;
         height: 230px;
         padding: 0;
 

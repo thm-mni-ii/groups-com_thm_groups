@@ -26,7 +26,6 @@
 
     <media folder="media" destination="com_thm_groups">
         <folder>css</folder>
-        <folder>data</folder>
         <folder>fields</folder>
         <folder>helpers</folder>
         <folder>icons</folder>

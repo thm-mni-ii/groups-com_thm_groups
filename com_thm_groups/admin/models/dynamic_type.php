@@ -4,8 +4,8 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        dynamic type model
+ * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de

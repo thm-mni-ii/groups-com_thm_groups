@@ -11,8 +11,9 @@
  */
 
 defined('_JEXEC') or die;
-jimport('thm_core.list.view');
+
 require_once JPATH_ROOT . "/media/com_thm_groups/helpers/content.php";
+require_once JPATH_ROOT . "/media/com_thm_groups/views/list.php";
 
 /**
  * THM_GroupsViewContent_Manager class for component com_thm_groups
@@ -21,7 +22,7 @@ require_once JPATH_ROOT . "/media/com_thm_groups/helpers/content.php";
  * @package   com_thm_groups.admin
  * @link      www.thm.de
  */
-class THM_GroupsViewContent_Manager extends THM_CoreViewList
+class THM_GroupsViewContent_Manager extends THM_GroupsViewList
 {
 
 	public $items;

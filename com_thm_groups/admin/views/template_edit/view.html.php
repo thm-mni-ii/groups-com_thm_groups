@@ -11,7 +11,7 @@
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
-jimport('thm_core.edit.view');
+
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/template.php';
 require_once JPATH_ROOT . '/media/com_thm_groups/views/edit.php';

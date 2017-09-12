@@ -265,6 +265,23 @@ class THM_GroupsHelperProfile
 	}
 
 	/**
+	 * Creates a simple surname, forename string for the given profile
+	 *
+	 * @param   int  $profileID the user id
+	 *
+	 * @return  string  the profile name
+	 */
+	public static function getLNFName($profileID)
+	{
+		$profile = self::getProfile($profileID);
+
+		$text    = $profile[2]['value'];
+		$text .= (empty($profile[1]) OR empty($profile[1]['value']))? '' : ", {$profile[1]['value']}";
+
+		return $text;
+	}
+
+	/**
 	 * Creates the HTML for the name container
 	 *
 	 * @param array $attributes the attributes of the profile

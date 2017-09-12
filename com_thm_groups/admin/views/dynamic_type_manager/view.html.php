@@ -13,8 +13,6 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-// import Joomla view library
-jimport('joomla.application.component.view');
 require_once JPATH_ROOT . '/media/com_thm_groups/views/list.php';
 
 /**

@@ -18,7 +18,7 @@ JFormHelper::loadFieldClass('list');
  *
  * @category    Joomla.Component
  * @package     com_thm_groups
- * @subpackage  lib_thm_core.site
+ * @subpackage  com_thm_groups.site
  */
 class JFormFieldTemplate extends JFormFieldList
 {

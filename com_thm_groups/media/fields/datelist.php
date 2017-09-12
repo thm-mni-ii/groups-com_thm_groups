@@ -1,8 +1,8 @@
 <?php
 /**
- * @category    Joomla library
- * @package     THM_Core
- * @subpackage  lib_thm_core.site
+ * @category    Joomla component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.site
  * @name        JFormFieldFields
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
@@ -15,9 +15,9 @@ JFormHelper::loadFieldClass('list');
 /**
  * Class loads a list of fields for selection
  *
- * @category    Joomla.Library
- * @package     thm_core
- * @subpackage  lib_thm_core.site
+ * @category    Joomla.Component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.site
  */
 class JFormFieldDateList extends JFormFieldList
 {

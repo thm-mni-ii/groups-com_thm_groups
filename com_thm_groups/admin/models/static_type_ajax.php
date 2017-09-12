@@ -4,6 +4,7 @@
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @name        THM_GroupsModelStatic_Type_Extra_Options_Ajax
+ * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2

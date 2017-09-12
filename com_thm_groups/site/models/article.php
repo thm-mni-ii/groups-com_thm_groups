@@ -76,7 +76,6 @@ class THM_GroupsModelArticle extends JModelAdmin
 
 	/**
 	 * Method to test whether a article's state can be changed.
-	 * Important: Must exist to use library functions to change the state of an item.
 	 *
 	 * @param   object $record A article record object.
 	 *
@@ -105,7 +104,6 @@ class THM_GroupsModelArticle extends JModelAdmin
 
 	/**
 	 * Method to test whether a article can be deleted.
-	 * Important: Must exist to use library functions to delete an item.
 	 *
 	 * @param   object $record A article record object.
 	 *

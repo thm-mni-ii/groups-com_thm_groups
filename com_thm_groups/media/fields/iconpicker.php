@@ -1,8 +1,8 @@
 <?php
 /**
- * @category    Joomla library
- * @package     THM_Core
- * @subpackage  lib_thm_core.site
+ * @category    Joomla component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.site
  * @name        JFormFieldFields
  * @author      Lavinia Popa-Rössel, <lavinia.popa-roessel@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
@@ -16,9 +16,9 @@ defined('_JEXEC') or die;
 /**
  * Class loads a list of fields for selection
  *
- * @category    Joomla.Library
- * @package     thm_core
- * @subpackage  lib_thm_core.site
+ * @category    Joomla.Component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.site
  */
 class JFormFieldIconPicker extends JFormField
 {
@@ -45,14 +45,12 @@ class JFormFieldIconPicker extends JFormField
 	 */
 	public function getInput()
 	{
-		JFactory::getDocument()->addScript(JUri::root() . "libraries/thm_core/js/iconpicker.js");
-		$lang = JFactory::getLanguage();
-		$lang->load('lib_thm_core', JPATH_SITE);
+		JHtml::script(JUri::root() . 'media/com_thm_groups/js/iconpicker.js');
 
 		// Generate the content of the button.
 		// If an icon has been saved, it will be put at the button, otherwise "Select an Icon" will appear
 		$labelContent = empty($this->value) ?
-			JText::_('LIB_THM_CORE_SELECT') :
+			JText::_('COM_THM_GROUPS_ICON_FILTER') :
 			'<span class="' . $this->value . '"></span><span class="iconName">' . str_replace("icon-", "", $this->value) . '</span>';
 
 		$path = JPATH_ROOT . '/media/jui/css/icomoon.css';
