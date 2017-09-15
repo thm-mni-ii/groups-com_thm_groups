@@ -172,7 +172,8 @@ class THM_GroupsHelperComponent
 	}
 
 	/**
-	 * Checks if the current user is a super admin in joomla or a admin of a thm_groups component
+	 * Checks if the current user is a super admin in joomla or a admin of a thm_groups component. Content access rights
+	 * are handled by com content.
 	 *
 	 * @return boolean  true if the user is a site or component administrator
 	 */
