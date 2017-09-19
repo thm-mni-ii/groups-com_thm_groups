@@ -28,7 +28,7 @@ jimport('joomla.application.component.helper');
  * @category  Joomla.Component.Site
  * @package   thm_groups
  */
-class THM_GroupsViewSinglearticle extends JViewLegacy
+class THM_GroupsViewContent extends JViewLegacy
 {
 
 	protected $item;
@@ -38,8 +38,6 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 	protected $print;
 
 	protected $state;
-
-	protected $user;
 
 	/**
 	 * Method to get display
@@ -51,44 +49,30 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 	public function display($tpl = null)
 	{
 		// Initialise variables.
-		$app  = JFactory::getApplication();
-		$user = JFactory::getUser();
-
-		$input = JFactory::getApplication()->input;
+		$app   = JFactory::getApplication();
+		$input = $app->input;
+		$user  = JFactory::getUser();
 
 		$profileID = $input->getInt('profileID', 0);
 		$groupID   = $input->getInt('groupID', 0);
-		$name      = $input->get('name', '');;
-		$menuID = $input->getInt('Itemid', 0);
-
-		$start = $input->get('start', 0);
-
-		$showall = $input->get('showall', 0);
-
-		$dispatcher = JDispatcher::getInstance();
+		$name      = $input->get('name', '');
+		$menuID    = $input->getInt('Itemid', 0);
 
 		$dynamicQuery = "&profileID=$profileID&groupID=$groupID&name=$name&Itemid=$menuID";
-		$profileURL   = JRoute::_("index.php?option=com_thm_groups&view=profile&layout=default$dynamicQuery");
+		$profileURL   = JRoute::_("index.php?option=com_thm_groups&view=profile$dynamicQuery");
 		$nameText     = THM_GroupsHelperProfile::getDisplayName($profileID);
 		$app->getPathway()->addItem($nameText, $profileURL);
 
-		// Get id of an article
-		$id = $input->get('id', '', 'STRING');
-
-		// Load article title by id
-		$article = JTable::getInstance('content');
-		$article->load($id);
-		$article_title = $article->get('title');
+		$this->item = $this->get('Item');
 
 		// Add article title in breadcrumb
-		$app->getPathway()->addItem($article_title);
+		$app->getPathway()->addItem($this->item->title);
 
 		$this->item = $this->get('Item');
 
 		//$this->print	= JRequest::getBool('print');
 		$this->print = $input->get('print', false, 'BOOL');
 		$this->state = $this->get('State');
-		$this->user  = $user;
 
 		$comContentParams = JComponentHelper::getParams('com_content');
 
@@ -107,115 +91,9 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 		// Create a shortcut for $item.
 		$item = &$this->item;
 
-		// Add router helpers.
-		$item->slug        = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
-		$item->catslug     = $item->category_alias ? ($item->catid . ':' . $item->category_alias) : $item->catid;
-		$item->parent_slug = $item->category_alias ? ($item->parent_id . ':' . $item->parent_alias) : $item->parent_id;
-
-		// TODO: Change based on shownoauth
-		$item->readmore_link = JRoute::_(ContentHelperRoute::getArticleRoute($item->slug, $item->catslug));
-
-		// Merge article params. If this is single-article view, menu params override article params
-		// Otherwise, article params override menu item params
-
-		$this->params         = $this->state->get('params');
-		$active               = $app->getMenu()->getActive();
-		$temp                 = clone ($this->params);
-		$pos                  = strpos($this->item->fulltext, '<hr');
-		$this->item->fulltext = substr($this->item->fulltext, $pos);
-		$parts                = explode('<hr ', $this->item->fulltext);
-		$url                  = "";
-		foreach ($_REQUEST as $key => $val)
-		{
-			if ($key != 'start' && $key != 'showall')
-			{
-				$url .= $key . "=" . $val . "&";
-			}
-		}
-		$arrayTexts  = array();
-		$pageCount   = '';
-		$pageBrowser = '';
-		if (count($parts) > 1)
-		{
-			if ($showall != 1)
-			{
-				if (!empty($start))
-				{
-					$siteNumber = $start + 1;
-				}
-				else
-				{
-					$start      = 0;
-					$siteNumber = 1;
-				}
-				$pageCount = '<div class="pagenavcounter">Seite ' . $siteNumber . ' von ' . count($parts) . '</div>';
-			}
-
-			$pageBrowser .= '<div class="pagination"><ul>';
-			if ($start > 0)
-			{
-				$previewsPage = $start - 1;
-				$pageBrowser  .= '<li><a href="' . JURI::base() . 'index.php?' . $url . 'start=' . $previewsPage . '"><< Zur&uuml;ck</a></li>';
-			}
-
-			if ($start < count($parts) - 1)
-			{
-				$nextPage    = $start + 1;
-				$pageBrowser .= '<li><a href="' . JURI::base() . 'index.php?' . $url . 'start=' . $nextPage . '">Weiter >></a></li>';
-			}
-
-			$pageBrowser .= '</ul></div>';
-			$toc         = '<div id="article-index"><ul>';
-			$count       = 0;
-			$toc         .= '<li><a class="toclink';
-			if ((empty($start) && empty($showall)) || (!empty($start) && $start == 0))
-			{
-				$toc .= " active";
-			}
-
-			$arrayTexts[$count] = $this->item->introtext;
-			$pagetitle          = $this->item->title;
-			$toc                .= '" href="' . JURI::base() . 'index.php?' . $url . 'start='
-				. $count . '">' . $pagetitle . '</a></li>';
-			$count++;
-			foreach ($parts as $part)
-			{
-				if (strlen($part) > 0)
-				{
-					preg_match('/^title=".*"/U', $part, $hits);
-					$hrPos              = strpos($part, '/>');
-					$arrayTexts[$count] = substr($part, $hrPos + 2);
-					$title              = str_replace('"', "", $hits[0]);
-					$title              = str_replace('title=', "", $title);
-					$toc                .= '<li>';
-					$toc                .= '<a class="toclink';
-					if (!empty($start) && $start == $count)
-					{
-						$toc .= " active";
-					}
-
-					$toc .= '" href="' . JURI::base() . 'index.php?' . $url . 'start='
-						. $count . '">' . $title . '</a>';
-					$toc .= '</li>';
-					$count++;
-				}
-
-			}
-			$toc .= '<li><a class="toclink';
-			if (!empty($showall) && $showall == 1)
-			{
-				$toc .= " active";
-			}
-
-			$toc             .= '" href="' . JURI::base() . 'index.php?' . $url . 'showall=1">Alle Seiten</a></li>';
-			$toc             .= '</ul></div>';
-			$this->item->toc = $toc;
-			if ($showall != 1)
-			{
-				$this->item->introtext = $pageCount . $arrayTexts[$start] . $pageBrowser;
-				$this->item->fulltext  = '';
-			}
-		}
+		$this->params = $this->state->get('params');
+		$active       = $app->getMenu()->getActive();
+		$temp         = clone ($this->params);
 
 		// Check to see which parameters should take priority
 		if ($active)
@@ -264,8 +142,6 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 			}
 		}
 
-		$offset = $this->state->get('list.offset');
-
 		// Check the view access to the article (the model has already computed the values).
 		if ($item->params->get('access-view') != true && (($item->params->get('show_noauth') != true && $user->get('guest'))))
 		{
@@ -289,25 +165,13 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 			$item->text = $item->introtext;
 		}
 
-		// Process the content plugins.
-		JPluginHelper::importPlugin('content');
-		$results = $dispatcher->trigger('onContentPrepare', array('com_content.article', &$item, &$this->params, $offset));
-
-		$item->event                    = new stdClass;
-		$results                        = $dispatcher->trigger('onContentAfterTitle', array('com_content.article', &$item, &$this->params, $offset));
-		$item->event->afterDisplayTitle = trim(implode("\n", $results));
-
-		$results                           = $dispatcher->trigger('onContentBeforeDisplay', array('com_content.article', &$item, &$this->params, $offset));
-		$item->event->beforeDisplayContent = trim(implode("\n", $results));
-
-		$results                          = $dispatcher->trigger('onContentAfterDisplay', array('com_content.article', &$item, &$this->params, $offset));
-		$item->event->afterDisplayContent = trim(implode("\n", $results));
+		$pageNo = $this->state->get('list.offset');
+		$this->triggerPlugins($pageNo);
 
 		// Increment the hit counter of the article.
-		if (!$this->params->get('intro_only') && $offset == 0)
+		if (!$this->params->get('intro_only') && $pageNo == 0)
 		{
-			$model = $this->getModel();
-			$model->hit();
+			$this->getModel()->hit();
 		}
 
 		// Escape strings for HTML output
@@ -442,5 +306,47 @@ class THM_GroupsViewSinglearticle extends JViewLegacy
 		{
 			$this->document->setMetaData('robots', 'noindex, nofollow');
 		}
+	}
+
+	/**
+	 * Initiates triggers for content plugins and handles the results.
+	 *
+	 * @param int $pageNo the number of the page being displayed
+	 *
+	 * @since version
+	 */
+	private function triggerPlugins($pageNo)
+	{
+		$dispatcher = JEventDispatcher::getInstance();
+
+		// Process the content plugins.
+		JPluginHelper::importPlugin('content');
+		$results = $dispatcher->trigger(
+			'onContentPrepare',
+			array('com_content.article', &$this->item, &$this->params, $pageNo)
+		);
+
+		$this->item->event = new stdClass;
+
+		$results = $dispatcher->trigger(
+			'onContentAfterTitle',
+			array('com_content.article', &$this->item, &$this->params, $pageNo)
+		);
+
+		$this->item->event->afterDisplayTitle = trim(implode("\n", $results));
+
+		$results = $dispatcher->trigger(
+			'onContentBeforeDisplay',
+			array('com_content.article', &$this->item, &$this->params, $pageNo)
+		);
+
+		$this->item->event->beforeDisplayContent = trim(implode("\n", $results));
+
+		$results = $dispatcher->trigger(
+			'onContentAfterDisplay',
+			array('com_content.article', &$this->item, &$this->params, $pageNo)
+		);
+
+		$this->item->event->afterDisplayContent = trim(implode("\n", $results));
 	}
 }

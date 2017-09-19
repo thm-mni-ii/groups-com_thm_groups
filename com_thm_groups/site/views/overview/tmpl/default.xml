@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+    <layout title="COM_THM_GROUPS_OVERVIEW">
+        <message>COM_THM_GROUPS_OVERVIEW_DESC</message>
+    </layout>
+    <fields name="params">
+        <fieldset name="basic">
+            <field name="groupID"
+                   type="usergroup"
+                   label="COM_THM_GROUPS_GROUP"
+                   description="COM_THM_GROUPS_SELECT_GROUP_DESC"
+                   multiple="false"/>
+            <field name="columnCount"
+                   type="integer"
+                   label="COM_THM_GROUPS_COLUMNS"
+                   description="COM_THM_GROUPS_COLUMNS_DESC"
+                   first="1"
+                   last="3"
+                   step="1"
+                    default="3"/>
+        </fieldset>
+    </fields>
+</metadata>

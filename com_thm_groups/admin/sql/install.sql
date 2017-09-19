@@ -35,7 +35,6 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_users_content` (
   `usersID`   INT(11)          NOT NULL,
   `contentID` INT(11) UNSIGNED NOT NULL,
   `featured`  TINYINT(1)       NULL,
-  `published` TINYINT(1)       NULL,
   PRIMARY KEY (`ID`),
   FOREIGN KEY (`usersID`) REFERENCES `#__thm_groups_users` (`id`)
     ON UPDATE CASCADE

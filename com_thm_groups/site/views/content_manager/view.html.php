@@ -3,10 +3,9 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsViewQuickpage_Manager
- * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @name        THM_GroupsViewContent_Manager
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -22,13 +21,13 @@ define('TRASHED', -2);
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
 
 /**
- * THMGroupsViewUserManager class for component com_thm_groups
+ * Class displays content in the profile's content category
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_groups.admin
  * @link      www.thm.de
  */
-class THM_GroupsViewQuickpage_Manager extends JViewLegacy
+class THM_GroupsViewContent_Manager extends JViewLegacy
 {
 
 	public $items;
@@ -54,9 +53,8 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 	{
 		$this->modifyDocument();
 
-		$this->state      = $this->get('State');
-		$this->items      = $this->get('Items');
-		$this->pagination = $this->get('Pagination');
+		$this->state = $this->get('State');
+		$this->items = $this->get('Items');
 
 		$this->model      = $this->getModel();
 		$this->categoryID = $this->model->categoryID;
@@ -64,12 +62,13 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 
 		$this->pageTitle = '';
 		$params          = JFactory::getApplication()->getParams();
-		$showPageTitle   = $params->get('show_page_heading', 0);
+
+		$showPageTitle = $params->get('show_page_heading', 0);
 
 		if ($showPageTitle)
 		{
 			$this->pageTitle .= empty($menuTitle) ?
-				JText::_('COM_THM_GROUPS_QUICKPAGE_MANAGER') : $params->get('page_title', '');
+				JText::_('COM_THM_GROUPS_MY_CONTENT') : $params->get('page_title', '');
 		}
 
 		parent::display($tpl);
@@ -87,7 +86,7 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 		if ($canCreate)
 		{
 			$menuID    = JFactory::getApplication()->input->getInt('Itemid', 0);
-			$returnURL = base64_encode("index.php?option=com_thm_groups&view=quickpage_manager&Itemid=$menuID");
+			$returnURL = base64_encode("index.php?option=com_thm_groups&view=content_manager&Itemid=$menuID");
 			$addURL    = JRoute::_('index.php?option=com_content&view=form&layout=edit&catid='
 				. $this->categoryID . '&return=' . $returnURL
 			);
@@ -104,8 +103,7 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 		}
 		else
 		{
-			return '<span class="qp_icon_big qp_create_icon_disabled"><span class="qp_invisible_text">' .
-				JText::_('COM_THM_GROUPS_NEW_ARTICLE') . '</span></span>';
+			return '';
 		}
 	}
 
@@ -136,26 +134,26 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 	 * Creates the output data for the table row
 	 *
 	 * @param   int    $key  the row id
-	 * @param   object $item the quickpage object
+	 * @param   object $item the content item
 	 *
 	 * @return  string  the HTML for the row to be rendered
 	 */
 	public function getRow($key, $item)
 	{
-		$sort = '<td class="order nowrap center" style="width: 40px;">';
-		$sort .= '<span class="sortable-handler" style="cursor: move;"><i class="icon-menu"></i></span>';
-		$sort .= '<input type="text" style="display:none" name="order[]" size="5" value="5" class="width-20 text-area-order">';
-		$sort .= '</td>';
+		$sortIcon = '<span class="sortable-handler" style="cursor: move;"><i class="icon-menu"></i></span>';
+		$sortInput = '<input type="text" style="display:none" name="order[]" size="5" ';
+		$sortInput .= 'value="' . (string) $item->ordering . '" class="width-20 text-area-order">';
+		$sort = '<td class="order nowrap center" style="width: 40px;">' . $sortIcon . $sortInput . '</td>';
 
 		$title = '<td>' . $this->getTitle($item) . '</td>';
 
 		$published = '<td>';
-		$published .= $this->getStateSelect($key, $item->state);
+		$published .= THM_GroupsHelperContent::getStatusDropdown($key, $item);
 		$published .= JHtml::_('grid.id', $key, $item->id);
 		$published .= '</td>';
 
 		$listed = '<td class="btn-column">';
-		$listed .= $this->getToggle($item->id, $item->qp_featured, 'featured');
+		$listed .= $this->getToggle($item->id, $item->groups_featured, 'featured');
 		$listed .= '</td>';
 
 		return $sort . $title . $published . $listed;
@@ -171,9 +169,9 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 	 */
 	public function getStateSelect($key, $state)
 	{
-
 		$spanClass = '';
 		$spanTip   = '';
+
 		switch ($state)
 		{
 			case PUBLISHED:
@@ -185,11 +183,11 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 				$spanTip   = JText::_('COM_THM_GROUPS_UNPUBLISHED');
 				break;
 			case ARCHIVED:
-				$spanClass = 'icon-archive';
+				$spanClass = 'icon-archive red';
 				$spanTip   = JText::_('COM_THM_GROUPS_ARCHIVED');
 				break;
 			case TRASHED:
-				$spanClass = 'icon-trash';
+				$spanClass = 'icon-trash red';
 				$spanTip   = JText::_('COM_THM_GROUPS_TRASHED');
 				break;
 		}
@@ -244,7 +242,7 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 		$surname   = THM_GroupsHelperProfile::getAttributeValue(JFactory::getUser()->id, 2);
 		$menuID    = JFactory::getApplication()->input->getInt('Itemid', 0);
 
-		$returnURL    = base64_encode("index.php?option=com_thm_groups&view=quickpage_manager&Itemid=$menuID");
+		$returnURL    = base64_encode(JUri::current());
 		$editURL      = 'index.php?option=com_content&task=article.edit';
 		$editURL      .= "&Itemid=$menuID'&a_id=$item->id&return=$returnURL";
 		$editRoute    = JRoute::_($editURL);
@@ -253,11 +251,11 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 
 
 		$viewText    = '<span class="icon-eye-open"></span>';
-		$qpURL       = 'index.php?option=com_thm_groups&view=content';
-		$qpURL       .= "&id=$item->id&alias=$item->alias&profileID=$profileID&name=$surname";
-		$qpRoute     = JRoute::_($qpURL, false);
+		$contentURL       = 'index.php?option=com_thm_groups&view=content';
+		$contentURL       .= "&id=$item->id&alias=$item->alias&profileID=$profileID&name=$surname";
+		$contentRoute     = JRoute::_($contentURL, false);
 		$editAttribs = array('title' => JText::_('COM_THM_GROUPS_VIEW'), 'class' => 'jgrid');
-		$editLink    = JHTML::_('link', $qpRoute, $viewText, $editAttribs);
+		$editLink    = JHTML::_('link', $contentRoute, $viewText, $editAttribs);
 
 		$category = "<div class='small'>" . JText::_('JCATEGORY') . ": " . $item->category_title . "</div>";
 
@@ -280,14 +278,12 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 			$colorClass  = 'green';
 			$iconClass   = 'publish';
 			$tip         = 'COM_THM_GROUPS_PUBLISHED';
-			$toggleValue = '0';
 		}
 		else
 		{
 			$colorClass  = 'red';
 			$iconClass   = 'unpublish';
 			$tip         = 'COM_THM_GROUPS_UNPUBLISHED';
-			$toggleValue = '1';
 		}
 
 		$attributes                = array();
@@ -297,9 +293,12 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 		$icon = '<span class="icon-' . $iconClass . ' ' . $colorClass . '"></span>';
 
 		$menuID = JFactory::getApplication()->input->getInt('Itemid', 0);
-		$url    = "index.php?option=com_thm_groups&task=content.toggle&id=$id&value=$toggleValue&Itemid=$menuID";
-		$url    .= empty($attribute) ? '' : "&attribute=$attribute";
-		$link   = JHtml::_('link', $url, $icon, $attributes);
+
+		$url  = "index.php?option=com_thm_groups&task=content.toggle";
+		$url  .= "&id=$id&value=$value&Itemid=$menuID";
+		$url  .= empty($attribute) ? '' : "&attribute=$attribute";
+
+		$link = JHtml::_('link', JRoute::_($url), $icon, $attributes);
 
 		return $link;
 	}
@@ -312,7 +311,7 @@ class THM_GroupsViewQuickpage_Manager extends JViewLegacy
 	protected function modifyDocument()
 	{
 		$document = Jfactory::getDocument();
-		$document->addStyleSheet($this->baseurl . "/media/com_thm_groups/css/quickpage_manager.css");
+		$document->addStyleSheet($this->baseurl . "/media/com_thm_groups/css/content_manager.css");
 
 		JHtml::_('bootstrap.framework');
 		JHtml::_('bootstrap.tooltip');

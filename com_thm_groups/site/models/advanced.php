@@ -57,7 +57,7 @@ class THM_GroupsModelAdvanced extends JModelLegacy
 		parent::__construct($config);
 		$this->params     = JFactory::getApplication()->getParams();
 		$this->groupID    = $this->params->get('groupID');
-		$this->menuID     = JFactory::getApplication()->input->get('Itemid', 0, 'get');
+		$this->menuID     = JFactory::getApplication()->input->getInt('Itemid', 0);
 		$menuTemplateID   = $this->params->get('templateID', 0);
 		$this->templateID = empty($menuTemplateID) ? THM_GroupsHelperGroup::getTemplateID($this->groupID) : $menuTemplateID;
 		$this->setGroups();
@@ -139,7 +139,7 @@ class THM_GroupsModelAdvanced extends JModelLegacy
 			$groupedProfiles[$group->id]['title'] = $group->title;
 		}
 
-		$URL = "index.php?option=com_thm_groups";
+		$URL = "index.php?option=com_thm_groups&view=profile&Itemid={$this->menuID}";
 
 		foreach ($groupedProfiles AS $groupID => $assocs)
 		{
@@ -178,18 +178,6 @@ class THM_GroupsModelAdvanced extends JModelLegacy
 
 					$urlName    = JFilterOutput::stringURLSafe($profile[2]['value']);
 					$profileURL = $groupURL . "&profileID=$profileID&name=$urlName";
-
-					$linkTarget = $this->params['linkTarget'];
-
-					if ($linkTarget == 'module')
-					{
-						$profileURL .= '&view=advanced';
-						$profileURL .= "&Itemid={$this->menuID}";
-					}
-					else
-					{
-						$profileURL .= '&view=profile';
-					}
 
 					$profile['URL'] = JRoute::_($profileURL);
 

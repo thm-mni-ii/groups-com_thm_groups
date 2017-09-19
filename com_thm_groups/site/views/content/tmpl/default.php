@@ -279,7 +279,7 @@ if (!empty($this->item->pagination) AND $this->item->pagination AND $this->item-
 
 echo $this->item->event->afterDisplayContent;
 
-if (JComponentHelper::getParams('com_thm_groups')->get('backButtonForQuickpages') == 1)
+if (JComponentHelper::getParams('com_thm_groups')->get('backButtonForContent') == 1)
 {
 	echo '<input type="button" class="btn btn-thm" value="' . JText::_("COM_THM_GROUPS_BACK_BUTTON") . '" onclick="window.history.back()">';
 }

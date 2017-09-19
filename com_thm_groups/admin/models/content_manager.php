@@ -54,13 +54,13 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
 		$query->select('ag.title AS access_level');
 		$query->select('cats.title AS category_title');
 		$query->select('users.name AS author_name');
-		$query->select('qps.featured as featured');
+		$query->select('pContent.featured as featured');
 		$query->from('#__content AS content');
 		$query->leftJoin('#__languages AS language ON language.lang_code = content.language');
 		$query->leftJoin('#__viewlevels AS ag ON ag.id = content.access');
 		$query->leftJoin('#__categories AS cats ON cats.id = content.catid');
 		$query->leftJoin('#__users AS users ON users.id = content.created_by');
-		$query->leftJoin('#__thm_groups_users_content AS qps ON qps.contentID = content.id');
+		$query->leftJoin('#__thm_groups_users_content AS pContent ON pContent.contentID = content.id');
 
 		$search = $this->getState('filter.search');
 		if (!empty($search))
@@ -79,21 +79,11 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
 		$featured = $this->getState('filter.featured');
 		if (isset($featured) AND $featured === 0)
 		{
-			$query->where("(qps.featured = '0' OR qps.featured IS NULL)");
+			$query->where("(pContent.featured = '0' OR pContent.featured IS NULL)");
 		}
 		elseif ($featured === 1)
 		{
-			$query->where("qps.featured = '1'");
-		}
-
-		$published = $this->getState('filter.published');
-		if (isset($published) AND $published === 0)
-		{
-			$query->where("(qps.published = '0' OR qps.published IS NULL)");
-		}
-		elseif ($published === 1)
-		{
-			$query->where("qps.published = '1'");
+			$query->where("pContent.featured = '1'");
 		}
 
 		$state = $this->getState('filter.status');
@@ -142,6 +132,7 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
 		$user            = JFactory::getUser();
 
 		$index = 0;
+
 		foreach ($items as $item)
 		{
 			$canEdit   = $user->authorise('core.edit', 'com_content.article.' . $item->id);
@@ -181,7 +172,7 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
 
 			$return[$index][2] = $item->author_name;
 			$return[$index][3] = $this->getToggle($item->id, $item->featured, 'content', '', 'featured');
-			$return[$index][4] = $this->getStatusDropdown($index, $item);
+			$return[$index][4] = THM_GroupsHelperContent::getStatusDropdown($index, $item);
 			$return[$index][5] = $item->id;
 
 			$index++;
@@ -220,35 +211,5 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
 	public function getHiddenFields()
 	{
 		return array();
-	}
-
-	/**
-	 * Returns dropdown for changing content status
-	 *
-	 * @param   int    $index the current row index
-	 * @param   object $item  the content item being iterated
-	 *
-	 * @return  string the HTML for the status selection dialog
-	 */
-	private function getStatusDropdown($index, $item)
-	{
-		$status    = '';
-		$canChange = THM_GroupsHelperContent::canEditState($item->id);
-
-		$task = 'content.publish';
-
-		$status .= '<div class="btn-group">';
-		$status .= JHtml::_('jgrid.published', $item->state, $index, "$task.", $canChange, 'cb', $item->publish_up, $item->publish_down);
-
-		$archive = $item->state == 2 ? 'unarchive' : 'archive';
-		$status  .= JHtml::_('actionsdropdown.' . $archive, 'cb' . $index, $task);
-
-		$trash  = $item->state == -2 ? 'untrash' : 'trash';
-		$status .= JHtml::_('actionsdropdown.' . $trash, 'cb' . $index, $task);
-
-		$status .= JHtml::_('actionsdropdown.render', JFactory::getDbo()->escape($item->title));
-		$status .= "</div>";
-
-		return $status;
 	}
 }

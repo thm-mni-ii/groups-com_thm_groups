@@ -216,6 +216,45 @@ class THM_GroupsHelperComponent
 	}
 
 	/**
+	 * Clean the cache
+	 *
+	 * @return  void
+	 */
+	public static function cleanCache()
+	{
+		$conf = JFactory::getConfig();
+
+		$options = array(
+			'defaultgroup' => 'com_thm_groups',
+			'cachebase' => JFactory::getApplication()->isClient('administrator') ?
+				JPATH_ADMINISTRATOR . '/cache' : $conf->get('cache_path', JPATH_SITE . '/cache'),
+			'result' => true,
+		);
+
+		try
+		{
+			$cache = JCache::getInstance('callback', $options);
+			$cache->clean();
+		}
+		catch (JCacheException $exception)
+		{
+			$options['result'] = false;
+		}
+		// Set the clean cache event
+		if (isset($conf['event_clean_cache']))
+		{
+			$event = $conf['event_clean_cache'];
+		}
+		else
+		{
+			$event = 'onContentCleanCache';
+		}
+
+		// Trigger the onContentCleanCache event.
+		JEventDispatcher::getInstance()->trigger($event, $options);
+	}
+
+	/**
 	 * Cleans a given collection. Converts to array as necessary. Removes duplicate values. Enforces int type. Removes
 	 * 0 value indexes.
 	 *

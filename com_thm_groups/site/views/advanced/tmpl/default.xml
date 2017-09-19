@@ -40,14 +40,6 @@
                 <option value="1">JYES</option>
                 <option value="0">JNO</option>
             </field>
-            <field name="linkTarget"
-                   type="radio"
-                   label="COM_THM_GROUPS_PROFILE_LINK"
-                   default="profile"
-                   description="COM_THM_GROUPS_PROFILE_LINK_DESC">
-                <option value="module">COM_THM_GROUPS_MODULE_DISPLAY</option>
-                <option value="profile">COM_THM_GROUPS_VIEW_DISPLAY</option>
-            </field>
             <field type="integer"
                    name="columns"
                    label="COM_THM_GROUPS_COLUMNS"

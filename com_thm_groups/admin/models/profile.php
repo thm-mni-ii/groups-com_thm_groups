@@ -927,19 +927,5 @@ class THM_GroupsModelProfile extends JModelLegacy
 
 		return $this->toggle();
 	}
-
-	/**
-	 * Hides public display of personal content. Access checks are performed in toggle.
-	 *
-	 * @return bool
-	 */
-	public function unpublishContent()
-	{
-		$input = JFactory::getApplication()->input;
-		$input->set('attribute', 'qpPublished');
-		$input->set('value', '0');
-
-		return $this->toggle();
-	}
 }
    

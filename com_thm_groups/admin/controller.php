@@ -345,43 +345,6 @@ class THM_GroupsController extends JControllerLegacy
 	}
 
 	/**
-	 * Activates personal content for the selected users
-	 *
-	 * @return void
-	 */
-	public function publishContent()
-	{
-		$app               = JFactory::getApplication();
-		$model             = $this->getModel($this->resource);
-		$functionAvailable = (method_exists($model, 'publishContent'));
-
-		if ($functionAvailable)
-		{
-			$success = $model->publishContent();
-
-			if ($success)
-			{
-				$msg  = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-				$type = 'message';
-			}
-			else
-			{
-				$msg  = JText::_('COM_THM_GROUPS_SAVE_FAIL');
-				$type = 'error';
-			}
-		}
-		else
-		{
-			$msg  = JText::_('COM_THM_GROUPS_ACTION_UNAVAILABLE');
-			$type = 'error';
-		}
-
-		$app->enqueueMessage($msg, $type);
-		$app->input->set('view', "{$this->resource}_manager");
-		parent::display();
-	}
-
-	/**
 	 * Removes the role's association with the given group
 	 *
 	 * @return void
@@ -670,43 +633,6 @@ class THM_GroupsController extends JControllerLegacy
 		if ($functionAvailable)
 		{
 			$success = $model->unpublish();
-
-			if ($success)
-			{
-				$msg  = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-				$type = 'message';
-			}
-			else
-			{
-				$msg  = JText::_('COM_THM_GROUPS_SAVE_FAIL');
-				$type = 'error';
-			}
-		}
-		else
-		{
-			$msg  = JText::_('COM_THM_GROUPS_ACTION_UNAVAILABLE');
-			$type = 'error';
-		}
-
-		$app->enqueueMessage($msg, $type);
-		$app->input->set('view', "{$this->resource}_manager");
-		parent::display();
-	}
-
-	/**
-	 * Hides display of personal content
-	 *
-	 * @return void
-	 */
-	public function unpublishContent()
-	{
-		$app               = JFactory::getApplication();
-		$model             = $this->getModel($this->resource);
-		$functionAvailable = (method_exists($model, 'unpublishContent'));
-
-		if ($functionAvailable)
-		{
-			$success = $model->unpublishContent();
 
 			if ($success)
 			{

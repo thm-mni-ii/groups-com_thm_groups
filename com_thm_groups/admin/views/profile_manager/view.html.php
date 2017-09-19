@@ -73,8 +73,8 @@ class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
 			JToolBarHelper::editList('profile.edit');
 			JToolBarHelper::publishList('profile.publish', 'COM_THM_GROUPS_PUBLISH_PROFILE');
 			JToolBarHelper::unpublishList('profile.unpublish', 'COM_THM_GROUPS_UNPUBLISH_PROFILE');
-			JToolBarHelper::publishList('profile.publishContent', 'COM_THM_GROUPS_ACTIVATE_QPS');
-			JToolBarHelper::unpublishList('profile.unpublishContent', 'COM_THM_GROUPS_DEACTIVATE_QPS');
+			JToolBarHelper::publishList('profile.publishContent', 'COM_THM_GROUPS_ACTIVATE_CONTENT_MANAGMENT');
+			JToolBarHelper::unpublishList('profile.unpublishContent', 'COM_THM_GROUPS_DEACTIVATE_CONTENT_MANAGEMENT');
 			JToolBarHelper::divider();
 
 			$bar = JToolBar::getInstance('toolbar');

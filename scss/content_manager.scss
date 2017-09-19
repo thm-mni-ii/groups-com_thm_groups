@@ -1,6 +1,10 @@
-@import '../../lib_thm_core/scss/variables';
+@import 'variables';
 
 div.manager-page {
+
+  [class^="icon-"], [class*=" icon-"] {
+    font-family: icomoon;
+  }
 
   .page-header {
 
@@ -19,18 +23,18 @@ div.manager-page {
   button, a.btn {
 
     background-color: $background-grey;
-    border: 2px solid $foreground;
-    color: $foreground;
+    box-shadow: none;
+    border: 2px solid $foreground-color;
+    color: $foreground-color;
     margin-left: 10px;
     margin-bottom: 20px;
-    padding: 4px 8px;
 
     span:before {
-      color: $foreground;
+      color: $foreground-color;
     }
 
     &:hover {
-      background-color: $foreground;
+      background-color: $foreground-color;
       color: $background-grey;
       border: $border;
 
@@ -41,26 +45,68 @@ div.manager-page {
   }
 
   .btn-group {
+
     display: inline-block;
-    background-color: $foreground;
-    border: $border;
-    border-radius: 0;
+
+    button, a.btn {
+      background-color: $foreground-color;
+      border: $border;
+      border-radius: 0;
+      color: $font-color;
+      margin-bottom: 0;
+
+      span:before {
+        color: $font-color;
+        margin-left: 0;
+      }
+
+      span.caret {
+        border-top-color: $font-color;
+      }
+
+      &:hover, &:focus {
+        background-color: $background-foot;
+        color: $foreground-color;
+
+        span:before {
+          color: $foreground-color;
+        }
+
+        span.caret {
+          border-top-color: $foreground-color;
+        }
+      }
+    }
 
     .dropdown-toggle {
+
       text-align: left;
-      width: 140px;
+
+      .element-invisible {
+        position: absolute;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        height: 1px;
+        width: 1px;
+        overflow: hidden;
+      }
 
       span:before {
         color: $font-color;
       }
     }
 
-    &.open .dropdown-toggle, a, a:hover {
-      background-color: $foreground;
-      border: none;
+    &.open .dropdown-toggle {
+      background-color: $foreground-color;
+      border: $border;
       box-shadow: none;
       color: $font-color;
       margin-bottom: 0;
+
+      span.caret {
+        border-top-color: $font-color;
+      }
     }
 
     ul {
@@ -77,7 +123,7 @@ div.manager-page {
         padding: 6px 10px;
 
         &:hover {
-          background: $background-navigation;
+          background: $background-navigation-color;
         }
       }
     }
@@ -93,7 +139,7 @@ div.manager-page {
   }
 
   th span:before {
-    color: $foreground;
+    color: $foreground-color;
   }
 
   td span.status-container {

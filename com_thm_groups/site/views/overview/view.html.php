@@ -3,7 +3,7 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
- * @name        THMGroupsViewList
+ * @name        THM_GroupsViewOverview
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
@@ -23,13 +23,13 @@ define('SURNAME', 2);
 define('POSTTITLE', 3);
 
 /**
- * THMGroupsViewList class for component com_thm_groups
+ * Class provides an overview of group profiles.
  *
  * @category  Joomla.Component.Site
  * @package   thm_groups
  * @link      www.thm.de
  */
-class THM_GroupsViewList extends JViewLegacy
+class THM_GroupsViewOverview extends JViewLegacy
 {
 	public $model = null;
 
@@ -54,40 +54,9 @@ class THM_GroupsViewList extends JViewLegacy
 	 */
 	public function getProfileLink($profile)
 	{
-		if (isset($this->params['showTitles']))
-		{
-			$showTitles = (bool) $this->params['showTitles'];
-		}
-		else
-		{
-			$showTitles = true;
-		}
+		$url = $this->profileLink . "&profileID=$profile->id&groupID=$this->groupID&name=" . trim($profile->surname);
 
-		$input      = JFactory::getApplication()->input;
-		$menuID     = $input->get('Itemid', 0);
-		$linkTarget = "index.php?option=com_thm_groups&Itemid=$menuID";
-
-		// When a user is clicked should parameters be passed to the profile module or should the profile view open
-		switch ($this->params['linkTarget'])
-		{
-			case "profile":
-				$linkTarget .= '&view=profile';
-				break;
-			case "module":
-			default:
-				$linkTarget .= '&view=list';
-
-				$letter = $input->get('letter');
-
-				if (!empty($letter))
-				{
-					$linkTarget .= "&letter=$letter";
-				}
-		}
-
-		$displayedText = THM_GroupsHelperProfile::getDisplayName($profile->id, $showTitles, true);
-
-		$url = "$linkTarget&profileID=$profile->id&groupID=$this->groupID&name=" . trim($profile->surname);
+		$displayedText = THM_GroupsHelperProfile::getLNFName($profile->id);
 
 		return JHtml::link(JRoute::_($url), $displayedText);
 	}
@@ -110,18 +79,7 @@ class THM_GroupsViewList extends JViewLegacy
 		$this->groupID = $this->model->getGroupNumber();
 
 		$menuID            = $app->input->get('Itemid', 0);
-		$this->profileLink = "index.php?option=com_thm_groups&Itemid=$menuID";
-
-		// When a user is clicked should parameters be passed to the profile module or should the profile view open
-		switch ($this->params['linkTarget'])
-		{
-			case "profile":
-				$this->profileLink .= '&view=profile';
-				break;
-			case "module":
-			default:
-				$this->profileLink .= '&view=list';
-		}
+		$this->profileLink = "index.php?option=com_thm_groups&view=profile&Itemid=$menuID";
 
 		// Sizing attributes
 		$this->totalUsers    = THM_GroupsHelperGroup::getUserCount($this->groupID);
@@ -130,7 +88,7 @@ class THM_GroupsViewList extends JViewLegacy
 
 		// Title handling
 		$heading     = $this->params->get('page_heading', '');
-		$title       = $this->params->get('page_title', JText::_('COM_THM_GROUPS_LIST_TITLE'));
+		$title       = $this->params->get('page_title', JText::_('COM_THM_GROUPS_OVERVIEW_TITLE'));
 		$this->title = empty($heading) ? $title : $heading;
 
 		$this->profiles = $this->model->getProfilesByLetter($this->groupID);
@@ -166,7 +124,7 @@ class THM_GroupsViewList extends JViewLegacy
 	private function modifyDocument()
 	{
 		$document = JFactory::getDocument();
-		$document->addStyleSheet('media/com_thm_groups/css/list.css');
+		$document->addStyleSheet('media/com_thm_groups/css/overview.css');
 		JHtml::_('bootstrap.framework');
 	}
 

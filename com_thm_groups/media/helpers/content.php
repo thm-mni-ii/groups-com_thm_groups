@@ -26,7 +26,7 @@ class THM_GroupsHelperContent
 	/**
 	 * Method which checks user edit state permissions for content.
 	 *
-	 * @param   int $contentID the id of the quickpage
+	 * @param   int $contentID the id of the content
 	 *
 	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
 	 *
@@ -45,6 +45,28 @@ class THM_GroupsHelperContent
 		}
 
 		return JFactory::getUser()->authorise('core.edit.state', "com_content.article.$contentID");
+	}
+
+	/**
+	 * Checks whether the user has permission to edit the content associated with the ids provided.
+	 *
+	 * @param array $contentIDs the content ids submitted by the form
+	 *
+	 * @return bool true if the user can edit the state all referenced content, otherwise false
+	 */
+	private static function canReorder($contentIDs)
+	{
+		foreach ($contentIDs as $contentID)
+		{
+			$canReorder = THM_GroupsHelperContent::canEditState($contentID);
+
+			if (empty($canReorder))
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -80,9 +102,9 @@ class THM_GroupsHelperContent
 	/**
 	 * Checks if an article were previously featured or published for modules
 	 *
-	 * @param   int $contentID the id of the quickpage
+	 * @param   int $contentID the id of the content
 	 *
-	 * @return  bool  true if the quickpage already exists, otherwise false
+	 * @return  bool  true if the content already exists, otherwise false
 	 */
 	public static function contentExists($contentID)
 	{
@@ -160,7 +182,7 @@ class THM_GroupsHelperContent
 	}
 
 	/**
-	 * Creates a category for the quickpage of a user or group.
+	 * Creates a content category for the profile
 	 *
 	 * @param   int $profileID the id of the user for whom the category is to be created
 	 *
@@ -181,7 +203,6 @@ class THM_GroupsHelperContent
 		$rawAlias = trim($surname) . "-" . trim(implode("-", $namePieces)) . "-" . $profileID;
 		$alias    = JFilterOutput::stringURLSafe($rawAlias);
 
-		// Get ID of root category for quickpages
 		$parentID = self::getRootCategory();
 
 		if ($parentID > 0)
@@ -198,24 +219,13 @@ class THM_GroupsHelperContent
 	}
 
 	/**
-	 * Returns the quickpage root category
-	 *
-	 * @return mixed
-	 */
-	public static function getRootCategory()
-	{
-		$params = JComponentHelper::getParams('com_thm_groups');
-		return $params->get('rootCategory');
-	}
-
-	/**
-	 * Gets the user's quickpage category id according to their user id
+	 * Gets the profile's category id
 	 *
 	 * @param   int $profileID the user id
 	 *
 	 * @return  mixed  int on successful query, null if the query failed, 0 on exception or if user is empty
 	 */
-	public static function getQPCategoryID($profileID)
+	public static function getCategoryID($profileID)
 	{
 		if (empty($profileID))
 		{
@@ -245,7 +255,49 @@ class THM_GroupsHelperContent
 	}
 
 	/**
-	 * Inserts a new data row into the quickpage mapping table.
+	 * Returns the root category for profile content
+	 *
+	 * @return mixed
+	 */
+	public static function getRootCategory()
+	{
+		$params = JComponentHelper::getParams('com_thm_groups');
+
+		return $params->get('rootCategory');
+	}
+
+	/**
+	 * Returns dropdown for changing content status
+	 *
+	 * @param   int    $index the current row index
+	 * @param   object $item  the content item being iterated
+	 *
+	 * @return  string the HTML for the status selection dialog
+	 */
+	public static function getStatusDropdown($index, $item)
+	{
+		$status    = '';
+		$canChange = THM_GroupsHelperContent::canEditState($item->id);
+
+		$task = 'content.publish';
+
+		$status .= '<div class="btn-group">';
+		$status .= JHtml::_('jgrid.published', $item->state, $index, "$task.", $canChange, 'cb', $item->publish_up, $item->publish_down);
+
+		$archive = $item->state == 2 ? 'unarchive' : 'archive';
+		$status  .= JHtml::_('actionsdropdown.' . $archive, 'cb' . $index, $task);
+
+		$trash  = $item->state == -2 ? 'untrash' : 'trash';
+		$status .= JHtml::_('actionsdropdown.' . $trash, 'cb' . $index, $task);
+
+		$status .= JHtml::_('actionsdropdown.render', JFactory::getDbo()->escape($item->title));
+		$status .= "</div>";
+
+		return $status;
+	}
+
+	/**
+	 * Inserts a new data row into the content mapping table.
 	 *
 	 * @param   int $profileID  the profile ID
 	 * @param   int $categoryID the category ID to be associated with the profile
@@ -289,5 +341,233 @@ class THM_GroupsHelperContent
 		}
 
 		return ($result > 0);
+	}
+
+	/**
+	 * Method to change the core published state of THM Groups articles.
+	 *
+	 * @return  boolean  true on success, otherwise false
+	 */
+	public static function publish()
+	{
+		$app   = JFactory::getApplication();
+		$input = $app->input;
+
+		$contentIDs = THM_GroupsHelperComponent::cleanIntCollection($input->get('cid', array(), 'array'));
+
+		if (empty($contentIDs) OR empty($contentIDs[0]))
+		{
+			return false;
+		}
+
+		$contentID = $contentIDs[0];
+
+		if (!THM_GroupsHelperContent::canEditState($contentID))
+		{
+			$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
+
+			return false;
+		}
+
+		$taskParts     = explode('.', $app->input->getString('task'));
+		$status        = count($taskParts) == 3 ? $taskParts[2] : 'unpublish';
+		$validStatuses = array('publish' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
+
+		// Unarchive and untrash equate to unpublish.
+		$statusValue = Joomla\Utilities\ArrayHelper::getValue($validStatuses, $status, 0, 'int');
+
+		JTable::addIncludePath(JPATH_ROOT . '/libraries/legacy/table');
+		$table = JTable::getInstance('Content', 'JTable');
+
+		// Attempt to change the state of the records.
+		$success = $table->publish($contentID, $statusValue, JFactory::getUser()->id);
+
+		if (!$success)
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_STATE_FAIL'), 'error');
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Saves the manually set order of records.
+	 *
+	 * @param   array $contentIDs an array of primary content ids
+	 * @param   array $order      the order for the content items
+	 *
+	 * @return  mixed
+	 *
+	 */
+	public static function saveorder($contentIDs = null, $order = null)
+	{
+		if (empty($contentIDs))
+		{
+			return false;
+		}
+
+		$canReorder = self::canReorder($contentIDs);
+
+		JTable::addIncludePath(JPATH_ROOT . '/libraries/legacy/table');
+		$table      = JTable::getInstance('Content', 'JTable');
+		$conditions = array();
+
+		// Update ordering values
+		foreach ($contentIDs as $index => $contentID)
+		{
+			$table->load((int) $contentID);
+
+			if ($table->ordering != $order[$index])
+			{
+				$table->ordering = $order[$index];
+
+				if (!$table->store())
+				{
+					return false;
+				}
+
+				// Remember to reorder within position and client_id
+				$condition   = array();
+				$condition[] = 'catid = ' . (int) $table->catid;
+
+				$found = false;
+
+				foreach ($conditions as $cond)
+				{
+					if ($cond[1] == $condition)
+					{
+						$found = true;
+						break;
+					}
+				}
+
+				if (!$found)
+				{
+					$key          = $table->getKeyName();
+					$conditions[] = array($table->$key, $condition);
+				}
+			}
+		}
+
+		// Execute reorder for each category.
+		foreach ($conditions as $cond)
+		{
+			$table->load($cond[0]);
+			$table->reorder($cond[1]);
+		}
+
+		// Clear the component's cache
+		THM_GroupsHelperComponent::cleanCache();
+
+		return true;
+	}
+
+	/**
+	 * Toggles the binary attribute 'featured'
+	 *
+	 * @return  mixed  integer on success, otherwise false
+	 */
+	public static function toggle()
+	{
+		$app   = JFactory::getApplication();
+		$input = $app->input;
+
+		$selectedContent = THM_GroupsHelperComponent::cleanIntCollection($input->get('cid', array(), 'array'));
+		$toggleID        = $input->getInt('id', 0);
+		$value           = $input->getBool('value', false);
+
+		// Should never occur without request manipulation
+		if (empty($selectedContent) AND empty($toggleID))
+		{
+			return false;
+		}
+		// The inline toggle was used.
+		elseif (empty($selectedContent))
+		{
+			$selectedContent = array($toggleID);
+
+			// Toggled values reflect the current value not the desired value
+			$value = !$value;
+		}
+
+		$attribute        = $input->getString('attribute', '');
+		$invalidAttribute = (empty($attribute) OR $attribute != 'featured');
+
+		// Should only occur by url manipulation, general error
+		if ($invalidAttribute)
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
+
+			return false;
+		}
+
+		foreach ($selectedContent as $contentID)
+		{
+			$canEditState = JFactory::getUser()->authorise('core.edit.state', "com_content.article.$contentID");
+
+			if (!$canEditState)
+			{
+				$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
+
+				return false;
+			}
+
+			$success = self::updateState($contentID, $value);
+
+			if (!$success)
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Checks if a THM Groups article exists and executes a corresponding query
+	 *
+	 * @param   int $contentID ID of the THM Groups article
+	 * @param   int $value     Value to save, 0 or 1
+	 *
+	 * @return  mixed
+	 */
+	private static function updateState($contentID, $value)
+	{
+		$dbo       = JFactory::getDbo();
+		$query     = $dbo->getQuery(true);
+		$tableName = '#__thm_groups_users_content';
+
+		$contentExists = THM_GroupsHelperContent::contentExists($contentID);
+
+		if ($contentExists)
+		{
+			$query->update($tableName)->set("featured = '$value'")->where("contentID = '$contentID'");
+		}
+
+		// TODO: There is no synchronization plugin or event. This block is necessary to synchronize group attributes with content
+		else
+		{
+			$profileID = JFactory::getUser()->id;
+			$query->insert('#__thm_groups_users_content')
+				->columns(array('usersID', 'contentID', 'featured'))
+				->values("'$profileID','$contentID','$value'");
+		}
+
+		$dbo->setQuery($query);
+
+		try
+		{
+			$success = $dbo->execute();
+		}
+		catch (Exception $exc)
+		{
+			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+
+			return false;
+		}
+
+		return empty($success) ? false : true;
 	}
 }

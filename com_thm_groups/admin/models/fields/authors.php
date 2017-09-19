@@ -42,11 +42,11 @@ class JFormFieldAuthors extends JFormFieldList
 	public function getQPAuthors()
 	{
 		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
+		$catQuery = $dbo->getQuery(true);
 
 		$rootCategory = THM_GroupsHelperContent::getRootCategory();
-		$query
-			->select('users.id, users.name')
+		$catQuery
+			->select('users.id, users.name, cat.id AS catid')
 			->from('#__users AS users')
 			->leftJoin('#__categories AS cat on cat.created_user_id = users.id')
 			->where("cat.parent_id = $rootCategory")
@@ -54,11 +54,11 @@ class JFormFieldAuthors extends JFormFieldList
 			->order('users.name')
 			->group('users.id');
 
-		$dbo->setQuery($query);
+		$dbo->setQuery($catQuery);
 
 		try
 		{
-			return $dbo->loadAssocList();
+			$allProfiles = $dbo->loadAssocList();
 		}
 		catch (Exception $exception)
 		{
@@ -66,6 +66,31 @@ class JFormFieldAuthors extends JFormFieldList
 
 			return false;
 		}
+
+		foreach ($allProfiles as $index => $profile)
+		{
+			$contentQuery = $dbo->getQuery(true);
+			$contentQuery->select("count('*')")->from('#__content')->where("catid = '{$profile['catid']}'");
+			$dbo->setQuery($contentQuery);
+
+			try
+			{
+				$contentCount = $dbo->loadResult();
+			}
+			catch (Exception $exception)
+			{
+				JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+				return false;
+			}
+
+			if (empty($contentCount))
+			{
+				unset($allProfiles[$index]);
+			}
+		}
+
+		return $allProfiles;
 	}
 
 	/**

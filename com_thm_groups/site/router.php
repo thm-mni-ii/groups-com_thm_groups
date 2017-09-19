@@ -3,7 +3,7 @@
  * @category    Joomla component
  * @package     THM_Groups
  * @subpackage  com_thm_groups.site
- * @name        THMGroups component site router
+ * @name        THM_GroupsRouter
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
@@ -24,27 +24,15 @@ function THM_GroupsBuildRoute(&$query)
 {
 	// Contains all SEF Elements as list
 	$segments = array();
+	$view     = '';
 
-	// All queries have 'option' set to com_thm_groups, otherwise they wouldn't be here.
-
-	// All views reached over the menu have 'Itemid'.
-	$menuItem = (isset($query['Itemid']) AND count($query) < 4);
-
-	if ($menuItem)
+	if (!empty($query['view']))
 	{
-		// Links back to the menu item may inadvertently also have 'view'. (Joomla Pathway error)
-		if (!empty($query['view']))
-		{
-			unset($query['view']);
-		}
-
-		return $segments;
+		$view       = $query['view'];
+		$segments[] = $query['view'];
+		unset($query['view']);
 	}
 
-	$segments[] = $query['view'];
-	unset($query['view']);
-
-	// TODO: Unsure what this does. My assumption: something to do with navigation back out of content.
 	buildOptionsRoute($query, $segments);
 
 	// Group & Profile/Name Segments
@@ -76,12 +64,18 @@ function THM_GroupsBuildRoute(&$query)
 
 	if (isset ($query['id']))
 	{
-		if (isset ($query['nameqp']))
+		if (isset ($query['alias']))
 		{
-			$segments[] = $query['id'] . "-" . $query['nameqp'];
+			$segments[] = $query['id'] . "-" . $query['alias'];
 			unset($query['id']);
-			unset($query['nameqp']);
+			unset($query['alias']);
 		}
+	}
+
+	// The view name should never be at the end of the groups own routing.
+	if (end($segments) == $view)
+	{
+		array_pop($segments);
 	}
 
 	return $segments;
@@ -126,36 +120,13 @@ function buildOptionsRoute(&$query, &$segments)
  */
 function THM_GroupsParseRoute($segments)
 {
-	// NM PATCH: switch between different views profile/singlearticle
-	$vars = array();
-
-	$doRoute = (!empty($segments) AND !empty($segments[0]) AND end($segments) != 'index');
-
-	if (!$doRoute)
-	{
-		return $vars;
-	}
-
+	$vars         = array();
 	$vars['view'] = $segments[0];
 
 	switch ($segments[0])
 	{
-		// NM PATCH Administration Quickpages
-		case 'articles':
-			if (isset ($segments[1]))
-			{
-				$arrVar = explode(':', $segments[1]);
+		case 'content':
 
-				if (isset ($arrVar[0]) && isset ($arrVar[1]))
-				{
-					$vars['profileID'] = $arrVar[0];
-					$vars['name']      = $arrVar[1];
-				}
-			}
-			break;
-
-
-		case 'singlearticle':
 			if (count($segments) == 3)
 			{
 				if (!empty($segments[1]))
@@ -164,19 +135,19 @@ function THM_GroupsParseRoute($segments)
 				}
 				if (!empty($segments[1]))
 				{
-					parseQPSegment($vars, $segments[2]);
+					parseContentSegment($vars, $segments[2]);
 				}
 			}
 			elseif (count($segments) == 2)
 			{
-				parseQPSegment($vars, $segments[1]);
+				parseContentSegment($vars, $segments[1]);
 			}
 			break;
 
 		case 'advanced':
 		case 'profile':
 		case 'profile_edit':
-		case 'list':
+		case 'overview':
 			parseProfileSegment($vars, end($segments));
 			break;
 
@@ -261,6 +232,11 @@ function THM_GroupsParseRoute($segments)
  */
 function parseProfileSegment(&$vars, $segment)
 {
+	if (strpos($segment, ':') === false)
+	{
+		return;
+	}
+
 	list($profileID, $profileData) = explode(':', $segment);
 
 	$vars['profileID'] = $profileID;
@@ -290,7 +266,7 @@ function parseProfileSegment(&$vars, $segment)
  *
  * @return  void  sets indexes in &$vars
  */
-function parseQPSegment(&$vars, $segment)
+function parseContentSegment(&$vars, $segment)
 {
 	$qpParameters = explode(':', $segment);
 
@@ -301,7 +277,7 @@ function parseQPSegment(&$vars, $segment)
 	}
 	if (count($qpParameters) == 2)
 	{
-		$vars['nameqp'] = $qpParameters[1];
+		$vars['alias'] = $qpParameters[1];
 	}
 
 	return;

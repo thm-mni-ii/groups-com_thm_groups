@@ -1,0 +1,59 @@
+[class^="icon-"], [class*=" icon-"] {
+    font-family: icomoon;
+}
+
+.icon-mni::before {
+    content: "\e600";
+}
+
+.icon-diff, .icon-import, .icon-import-all, .icon-merge-all {
+    font-weight: bold;
+}
+
+.icon-add-Space {
+    font-size: 14px;
+}
+
+.thm_groups-overview {
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
+
+.thm_groups-overview li {
+    list-style-type: none;
+}
+
+.thm_groups-overview li .title-value {
+    color: #394a59;
+    font-size: .75rem;
+}
+
+.thm_groups-overview .overview-container .alphabet-container {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.thm_groups-overview .overview-container .profiles-container .letter {
+    background-color: #4a5c66;
+    color: white;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 16px;
+    margin: 0;
+    padding: 3px;
+    text-align: center;
+    vertical-align: top;
+    width: 16px;
+}
+
+.thm_groups-overview .overview-container .profiles-container .profiles {
+    display: inline-block;
+    width: calc(100% - 22px);
+}
+
+.thm_groups-overview .overview-container .single-letter {
+    width: 100%;
+}
+
+.thm_groups-overview .overview-container .single-letter .profiles-container .profiles {
+    width: 100%;
+}

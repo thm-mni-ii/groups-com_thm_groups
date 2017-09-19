@@ -1,3 +1,7 @@
+div.manager-page [class^="icon-"], div.manager-page [class*=" icon-"] {
+    font-family: icomoon;
+}
+
 div.manager-page .page-header {
     float: left;
 }
@@ -13,11 +17,11 @@ div.manager-page .toolbar {
 
 div.manager-page button, div.manager-page a.btn {
     background-color: #4a5c66;
+    box-shadow: none;
     border: 2px solid white;
     color: white;
     margin-left: 10px;
     margin-bottom: 20px;
-    padding: 4px 8px;
 }
 
 div.manager-page button span:before, div.manager-page a.btn span:before {
@@ -36,26 +40,66 @@ div.manager-page button:hover span:before, div.manager-page a.btn:hover span:bef
 
 div.manager-page .btn-group {
     display: inline-block;
+}
+
+div.manager-page .btn-group button, div.manager-page .btn-group a.btn {
     background-color: white;
     border: 1px solid #77858c;
     border-radius: 0;
+    color: #394a59;
+    margin-bottom: 0;
+}
+
+div.manager-page .btn-group button span:before, div.manager-page .btn-group a.btn span:before {
+    color: #394a59;
+    margin-left: 0;
+}
+
+div.manager-page .btn-group button span.caret, div.manager-page .btn-group a.btn span.caret {
+    border-top-color: #394a59;
+}
+
+div.manager-page .btn-group button:hover, div.manager-page .btn-group button:focus, div.manager-page .btn-group a.btn:hover, div.manager-page .btn-group a.btn:focus {
+    background-color: #4a5c66;
+    color: white;
+}
+
+div.manager-page .btn-group button:hover span:before, div.manager-page .btn-group button:focus span:before, div.manager-page .btn-group a.btn:hover span:before, div.manager-page .btn-group a.btn:focus span:before {
+    color: white;
+}
+
+div.manager-page .btn-group button:hover span.caret, div.manager-page .btn-group button:focus span.caret, div.manager-page .btn-group a.btn:hover span.caret, div.manager-page .btn-group a.btn:focus span.caret {
+    border-top-color: white;
 }
 
 div.manager-page .btn-group .dropdown-toggle {
     text-align: left;
-    width: 140px;
+}
+
+div.manager-page .btn-group .dropdown-toggle .element-invisible {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
 }
 
 div.manager-page .btn-group .dropdown-toggle span:before {
     color: #394a59;
 }
 
-div.manager-page .btn-group.open .dropdown-toggle, div.manager-page .btn-group a, div.manager-page .btn-group a:hover {
+div.manager-page .btn-group.open .dropdown-toggle {
     background-color: white;
-    border: none;
+    border: 1px solid #77858c;
     box-shadow: none;
     color: #394a59;
     margin-bottom: 0;
+}
+
+div.manager-page .btn-group.open .dropdown-toggle span.caret {
+    border-top-color: #394a59;
 }
 
 div.manager-page .btn-group ul {

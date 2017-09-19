@@ -1,7 +1,7 @@
 @import 'variables';
 @import 'icons';
 
-.thm_groups-list {
+.thm_groups-overview {
 
   font-family: $font-family;
 
@@ -14,46 +14,11 @@
     }
   }
 
-  .list-container {
-
-    .alphabet-container, .alphabet-list {
-      text-align: center;
-    }
+  .overview-container {
 
     .alphabet-container {
       margin-bottom: 15px;
       width: 100%;
-    }
-
-    .alphabet-list {
-
-      border: $border;
-      margin-bottom: 0;
-      width: 100%;
-
-      li {
-        display: inline-block;
-        margin-left: 0;
-        padding: 8px 6px;
-        width: 2%;
-      }
-
-      .letter-enabled, .letter-disabled {
-        display: inline;
-        font-size: 14px;
-      }
-
-      .letter-disabled {
-        color: $grey-25;
-      }
-
-      .letter-enabled {
-        font-weight: bold;
-      }
-
-      .letter-active {
-        background-color: $background-navigation-color;
-      }
     }
 
     .profiles-container .letter {

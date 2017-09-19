@@ -15,19 +15,7 @@
 defined('_JEXEC') or die;
 
 $saveOrderingUrl = 'index.php?option=com_thm_groups&task=content.saveOrderAjax&tmpl=component';
-JHtml::_('sortablelist.sortable', 'quickpage_manager-list', 'adminForm', null, $saveOrderingUrl);
-
-$orderingButton = JHtml::_(
-	'searchtools.sort',
-	'',
-	'content.ordering',
-	'ASC',
-	'content.ordering',
-	null,
-	'asc',
-	'JGRID_HEADING_ORDERING',
-	'icon-menu-2'
-);
+JHtml::_('sortablelist.sortable', 'content_manager-list', 'adminForm', null, $saveOrderingUrl);
 
 ?>
 <div id="j-main-container" class="manager-page">
@@ -42,11 +30,10 @@ $orderingButton = JHtml::_(
 			<?php echo $this->getProfileButton(); ?>
 		</div>
 		<div class="thm_table_area">
-			<table class="table table-striped" id="quickpage_manager-list">
+			<table class="table table-striped" id="content_manager-list">
 				<thead>
 				<tr>
-					<th>
-						<?php echo $orderingButton; ?>
+					<th></th>
 					<th>
 						<?php echo JText::_('COM_THM_GROUPS_TITLE'); ?>
 					</th>
@@ -70,7 +57,7 @@ $orderingButton = JHtml::_(
 		<input type="hidden" name="task" value=""/>
 		<input type="hidden" name="boxchecked" value="0"/>
 		<input type="hidden" name="option" value="com_thm_groups"/>
-		<input type="hidden" name="view" value="quickpage_manager"/>
+		<input type="hidden" name="view" value="content_manager"/>
 		<input type="hidden" name="Itemid" value="<?php echo $this->menuID; ?>"/>
 		<?php echo JHtml::_('form.token'); ?>
 	</form>
