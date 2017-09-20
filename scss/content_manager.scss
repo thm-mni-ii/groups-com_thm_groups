@@ -1,4 +1,4 @@
-@import 'variables';
+@import 'mixins';
 
 div.manager-page {
 
@@ -21,27 +21,9 @@ div.manager-page {
   }
 
   button, a.btn {
-
-    background-color: $background-grey;
     box-shadow: none;
-    border: 2px solid $foreground-color;
-    color: $foreground-color;
     margin-left: 10px;
     margin-bottom: 20px;
-
-    span:before {
-      color: $foreground-color;
-    }
-
-    &:hover {
-      background-color: $foreground-color;
-      color: $background-grey;
-      border: $border;
-
-      span:before {
-        color: $background-grey;
-      }
-    }
   }
 
   .btn-group {
@@ -49,7 +31,8 @@ div.manager-page {
     display: inline-block;
 
     button, a.btn {
-      background-color: $foreground-color;
+
+      background-color: transparent;
       border: $border;
       border-radius: 0;
       color: $font-color;
@@ -81,6 +64,7 @@ div.manager-page {
     .dropdown-toggle {
 
       text-align: left;
+      padding-bottom: .25rem;
 
       .element-invisible {
         position: absolute;
@@ -127,10 +111,6 @@ div.manager-page {
         }
       }
     }
-  }
-
-  [class^="icon-"], [class*=" icon-"] {
-    margin-right: 5px;
   }
 
   .btn-column {

@@ -40,6 +40,11 @@
       float: left;
     }
 
+    .attribute-inline {
+      height: 1.2rem;
+      vertical-align: bottom;
+    }
+
     .action-container, .attribute-picture {
       float: right;
     }
@@ -51,10 +56,6 @@
       img {
         display: block;
       }
-    }
-
-    .attribute-textfield {
-      clear: both;
     }
 
     .attribute-label, .attribute-value {
@@ -71,9 +72,12 @@
       margin-bottom: .4rem;
     }
 
+    .attribute-wrap, .attribute-textfield {
+      clear: left;
+    }
+
     .attribute-wrap {
 
-      clear: left;
       width: 79%;
 
       .attribute-iconed {
@@ -83,10 +87,6 @@
       .attribute-labeled {
         max-width: calc(100% - 3rem);
       }
-    }
-
-    .attribute-textfield {
-      clear: both;
     }
 
     .attribute-inline, .attribute-name, .attribute-title {
@@ -105,11 +105,16 @@
       display: inline-block;
       float: left;
       font-family: $font-family-regular;
-      font-size: 1rem;
+    }
+
+    .attribute-name {
+      font-size: 1.15rem;
     }
 
     .attribute-title {
       color: $font-color;
+      font-size: .95rem;
+      padding-top: .2rem;
     }
 
     .attribute-roles {
@@ -118,7 +123,6 @@
     }
 
     .toggled-text-container {
-      background-color: $foreground-color;
       clear: both;
       margin-top: .4rem;
       padding: .4rem;

@@ -1,3 +1,22 @@
+[class^="icon-"], [class*=" icon-"] {
+    margin-right: .5rem;
+}
+
+button, a.btn {
+    border: 2px solid #4a5c66;
+    font-family: "THM-Regular";
+    padding: .4rem .6rem .2rem .6rem;
+}
+
+button:hover, a.btn:hover {
+    background-color: #394a59;
+    color: white;
+}
+
+button:hover span:before, a.btn:hover span:before {
+    color: white;
+}
+
 div.manager-page [class^="icon-"], div.manager-page [class*=" icon-"] {
     font-family: icomoon;
 }
@@ -16,26 +35,9 @@ div.manager-page .toolbar {
 }
 
 div.manager-page button, div.manager-page a.btn {
-    background-color: #4a5c66;
     box-shadow: none;
-    border: 2px solid white;
-    color: white;
     margin-left: 10px;
     margin-bottom: 20px;
-}
-
-div.manager-page button span:before, div.manager-page a.btn span:before {
-    color: white;
-}
-
-div.manager-page button:hover, div.manager-page a.btn:hover {
-    background-color: white;
-    color: #4a5c66;
-    border: 1px solid #77858c;
-}
-
-div.manager-page button:hover span:before, div.manager-page a.btn:hover span:before {
-    color: #4a5c66;
 }
 
 div.manager-page .btn-group {
@@ -43,7 +45,7 @@ div.manager-page .btn-group {
 }
 
 div.manager-page .btn-group button, div.manager-page .btn-group a.btn {
-    background-color: white;
+    background-color: transparent;
     border: 1px solid #77858c;
     border-radius: 0;
     color: #394a59;
@@ -74,6 +76,7 @@ div.manager-page .btn-group button:hover span.caret, div.manager-page .btn-group
 
 div.manager-page .btn-group .dropdown-toggle {
     text-align: left;
+    padding-bottom: .25rem;
 }
 
 div.manager-page .btn-group .dropdown-toggle .element-invisible {
@@ -117,10 +120,6 @@ div.manager-page .btn-group li a {
 
 div.manager-page .btn-group li a:hover {
     background: #dfe5e6;
-}
-
-div.manager-page [class^="icon-"], div.manager-page [class*=" icon-"] {
-    margin-right: 5px;
 }
 
 div.manager-page .btn-column {

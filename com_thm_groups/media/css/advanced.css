@@ -37,6 +37,11 @@
     float: left;
 }
 
+.advanced-container .profile-container .attribute-inline {
+    height: 1.2rem;
+    vertical-align: bottom;
+}
+
 .advanced-container .profile-container .action-container, .advanced-container .profile-container .attribute-picture {
     float: right;
 }
@@ -47,10 +52,6 @@
 
 .advanced-container .profile-container .attribute-picture img {
     display: block;
-}
-
-.advanced-container .profile-container .attribute-textfield {
-    clear: both;
 }
 
 .advanced-container .profile-container .attribute-label, .advanced-container .profile-container .attribute-value {
@@ -65,8 +66,11 @@
     margin-bottom: .4rem;
 }
 
-.advanced-container .profile-container .attribute-wrap {
+.advanced-container .profile-container .attribute-wrap, .advanced-container .profile-container .attribute-textfield {
     clear: left;
+}
+
+.advanced-container .profile-container .attribute-wrap {
     width: 79%;
 }
 
@@ -76,10 +80,6 @@
 
 .advanced-container .profile-container .attribute-wrap .attribute-labeled {
     max-width: calc(100% - 3rem);
-}
-
-.advanced-container .profile-container .attribute-textfield {
-    clear: both;
 }
 
 .advanced-container .profile-container .attribute-inline, .advanced-container .profile-container .attribute-name, .advanced-container .profile-container .attribute-title {
@@ -98,11 +98,16 @@
     display: inline-block;
     float: left;
     font-family: "THM-Regular";
-    font-size: 1rem;
+}
+
+.advanced-container .profile-container .attribute-name {
+    font-size: 1.15rem;
 }
 
 .advanced-container .profile-container .attribute-title {
     color: #394a59;
+    font-size: .95rem;
+    padding-top: .2rem;
 }
 
 .advanced-container .profile-container .attribute-roles {
@@ -111,7 +116,6 @@
 }
 
 .advanced-container .profile-container .toggled-text-container {
-    background-color: white;
     clear: both;
     margin-top: .4rem;
     padding: .4rem;

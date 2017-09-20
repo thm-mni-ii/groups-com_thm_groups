@@ -1,24 +1,23 @@
-//********************************************************************************************************************//
-// border definitions
-//********************************************************************************************************************//
-@mixin border-radius($radius) {
-  -webkit-border-radius: $radius;
-  -moz-border-radius: $radius;
-  -ms-border-radius: $radius;
-  -o-border-radius: $radius;
-  border-radius: $radius;
+@import 'variables';
+
+[class^="icon-"], [class*=" icon-"] {
+  margin-right: .5rem;
 }
 
-//********************************************************************************************************************//
-// shadow definitions
-//********************************************************************************************************************//
-//:null means optional parameter; for example "none" can be rendered as parameter
-@mixin box-shadow($x:null, $y:null, $spread:null, $color:null) {
-  -webkit-box-shadow: $x $y $spread $color;
-  -moz-box-shadow: $x $y $spread $color;
-  -ms-box-shadow: $x $y $spread $color;
-  -o-box-shadow: $x $y $spread $color;
-  box-shadow: $x $y $spread $color;
+button, a.btn {
+
+  border: $border-thick;
+  font-family: $font-family-regular;
+  padding: .4rem .6rem .2rem .6rem;
+
+  &:hover {
+    background-color: $font-color;
+    color: $foreground-color;
+
+    span:before {
+      color: $foreground-color;
+    }
+  }
 }
 
 //********************************************************************************************************************//

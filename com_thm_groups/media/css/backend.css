@@ -1,4 +1,23 @@
 [class^="icon-"], [class*=" icon-"] {
+    margin-right: .5rem;
+}
+
+button, a.btn {
+    border: 2px solid #4a5c66;
+    font-family: "THM-Regular";
+    padding: .4rem .6rem .2rem .6rem;
+}
+
+button:hover, a.btn:hover {
+    background-color: #394a59;
+    color: white;
+}
+
+button:hover span:before, a.btn:hover span:before {
+    color: white;
+}
+
+[class^="icon-"], [class*=" icon-"] {
     font-family: icomoon;
 }
 
@@ -86,11 +105,6 @@
     margin-top: 7px;
     border-collapse: separate;
     border-top: 1px solid #bbb;
-    -webkit-border-radius: 3px 3px 0 0;
-    -moz-border-radius: 3px 3px 0 0;
-    -ms-border-radius: 3px 3px 0 0;
-    -o-border-radius: 3px 3px 0 0;
-    border-radius: 3px 3px 0 0;
 }
 
 .table-striped th:not(:first-child) {
@@ -125,14 +139,6 @@ tr:nth-last-child(1):not(:first-child) th {
     border-top: none;
     border-bottom: 1px solid #bbb;
     padding-top: 0.1rem;
-}
-
-tr:nth-last-child(1) th:first-child {
-    border-bottom-left-radius: 3px;
-}
-
-tr:nth-last-child(1) th:last-child {
-    border-bottom-right-radius: 3px;
 }
 
 tbody tr:first-child td {

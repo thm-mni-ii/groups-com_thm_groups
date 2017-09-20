@@ -16,6 +16,7 @@
 defined('_JEXEC') or die;
 
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
+require_once JPATH_ROOT . "/media/com_thm_groups/helpers/profile.php";
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/template.php';
 
 /**
@@ -78,14 +79,14 @@ class THM_GroupsViewProfile extends JViewLegacy
 			$processed = in_array($attribute['structid'], [1, 2, 5, 7]);
 
 			// Special indexes and attributes with no saved value are irrelevant
-			$irrelevant = empty($attribute['value']);
+			$irrelevant = (empty($attribute['value']) OR empty(trim($attribute['value'])));
 
 			if ($processed OR $irrelevant)
 			{
 				continue;
 			}
 
-			$attributeContainer = $this->getAttributeContainer($attribute, $surname);
+			$attributeContainer = THM_GroupsHelperProfile::getAttributeContainer($attribute, $surname);
 
 			if (($attribute['type'] == 'PICTURE'))
 			{
@@ -102,73 +103,6 @@ class THM_GroupsViewProfile extends JViewLegacy
 		$attributes .= '<div class="clearFix"></div>';
 
 		echo $attributes;
-	}
-
-	/**
-	 * Creates the container for the attribute
-	 *
-	 * @param array  $attribute the profile attribute being iterated
-	 * @param string $surname   the surname of the profile being iterated
-	 *
-	 * @return string the HTML for the value container
-	 */
-	private function getAttributeContainer($attribute, $surname)
-	{
-		$container = '';
-
-		$params              = empty($attribute['params']) ? [] : $attribute['params'];
-		$dynOptions          = empty($attribute['dynOptions']) ? [] : $attribute['dynOptions'];
-		$options             = empty($attribute['options']) ? [] : $attribute['options'];
-		$attribute['params'] = array_merge($params, $dynOptions, $options);
-
-		$label = '';
-
-		if (($attribute['type'] == 'PICTURE'))
-		{
-			$container .= '<div class="attribute-picture">';
-		}
-		else
-		{
-			if (($attribute['type'] == 'TEXTFIELD'))
-			{
-				$container .= '<div class="attribute-textfield">';
-			}
-			elseif (!empty($attribute['params']['wrap']))
-			{
-				$container .= '<div class="attribute-wrap">';
-			}
-			else
-			{
-				$container .= '<div class="attribute-inline">';
-			}
-
-			$label .= $this->getLabelContainer($attribute);
-		}
-
-		$container .= $label;
-
-		// Empty values or undesired
-		if (empty($label))
-		{
-			$labeled = 'none';
-		}
-
-		// The icon label consists solely of tags => span for icon display
-		elseif (empty(strip_tags($label)))
-		{
-			$labeled = 'icon';
-		}
-		else
-		{
-			$visibleLength = strlen(strip_tags($label));
-			$labeled       = $visibleLength > 10 ? 'label-long' : 'label';
-		}
-
-		$container .= $this->getValueContainer($attribute, $surname, $labeled);
-
-		$container .= "</div>";
-
-		return $container;
 	}
 
 	/**

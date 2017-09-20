@@ -22,33 +22,7 @@ $urls    = json_decode($this->item->urls);
 $canEdit = $this->item->params->get('access-edit');
 $user    = JFactory::getUser();
 
-echo '<div class="item-page' . $this->pageclass_sfx . '">';
-
-if ($this->params->get('show_page_heading'))
-{
-	echo '<h1>' . $this->escape($this->params->get('page_heading')) . '</h1>';
-}
-
-if (!empty($this->item->pagination) AND $this->item->pagination && !$this->item->paginationposition && $this->item->paginationrelative)
-{
-	echo $this->item->pagination;
-}
-
-if ($params->get('show_title'))
-{
-	echo '<h2>';
-
-	if ($params->get('link_titles') && !empty($this->item->readmore_link))
-	{
-		echo '<a href="' . $this->item->readmore_link . '">' . $this->escape($this->item->title) . '</a>';
-	}
-	else
-	{
-		echo $this->escape($this->item->title);
-	}
-
-	echo '</h2>';
-}
+echo '<div class="item-page' . $this->pageclass_sfx . ' groups-content">';
 
 if ($canEdit || $params->get('show_print_icon') || $params->get('show_email_icon'))
 {
@@ -78,6 +52,32 @@ if ($canEdit || $params->get('show_print_icon') || $params->get('show_email_icon
 	}
 
 	echo '</ul>';
+}
+
+if ($this->params->get('show_page_heading'))
+{
+	echo '<h1>' . $this->escape($this->params->get('page_heading')) . '</h1>';
+}
+
+if (!empty($this->item->pagination) AND $this->item->pagination && !$this->item->paginationposition && $this->item->paginationrelative)
+{
+	echo $this->item->pagination;
+}
+
+if ($params->get('show_title'))
+{
+	echo '<h2>';
+
+	if ($params->get('link_titles') && !empty($this->item->readmore_link))
+	{
+		echo '<a href="' . $this->item->readmore_link . '">' . $this->escape($this->item->title) . '</a>';
+	}
+	else
+	{
+		echo $this->escape($this->item->title);
+	}
+
+	echo '</h2>';
 }
 
 if (!$params->get('show_intro'))

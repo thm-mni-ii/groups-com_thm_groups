@@ -1,23 +1,29 @@
+[class^="icon-"], [class*=" icon-"] {
+    margin-right: .5rem;
+}
+
+button, a.btn {
+    border: 2px solid #4a5c66;
+    font-family: "THM-Regular";
+    padding: .4rem .6rem .2rem .6rem;
+}
+
+button:hover, a.btn:hover {
+    background-color: #394a59;
+    color: white;
+}
+
+button:hover span:before, a.btn:hover span:before {
+    color: white;
+}
+
 .toolbar {
     float: right;
 }
 
 a.btn {
-    background-color: white;
-    border: 1px solid #77858c;
     margin-left: 10px;
     margin-bottom: 20px;
-    padding: 4px 8px;
-}
-
-a.btn:hover {
-    background-color: #394a59;
-    color: white;
-    border: white 1px solid;
-}
-
-a.btn:hover span:before {
-    color: white;
 }
 
 .profile-container {
@@ -64,7 +70,7 @@ a.btn:hover span:before {
 }
 
 .profile-container .attribute-textfield {
-    clear: both;
+    clear: left;
     margin-top: 1rem;
     padding: 1rem 0;
 }
@@ -76,12 +82,4 @@ a.btn:hover span:before {
     margin-bottom: .8rem;
     text-align: left;
     width: 100%;
-}
-
-.profile-container .attribute-textfield .attribute-value {
-    width: 100%;
-}
-
-.profile-container .attribute-textfield .attribute-value table, .profile-container .attribute-textfield .attribute-value ol, .profile-container .attribute-textfield .attribute-value ul, .profile-container .attribute-textfield .attribute-value fieldset {
-    margin: 0;
 }

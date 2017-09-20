@@ -63,7 +63,7 @@ class THM_GroupsHelperProfile
 	 *
 	 * @return string the HTML for the value container
 	 */
-	public static function getAttributeContainer($attribute, $surname, $suppressText)
+	public static function getAttributeContainer($attribute, $surname, $suppressText = false)
 	{
 		$container = '';
 
@@ -348,30 +348,40 @@ class THM_GroupsHelperProfile
 		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
 
-		$select = 'DISTINCT a.id AS structid, a.name as name, a.options as options, a.description AS description, ';
-		$select .= 'd.options as dynOptions, d.description as dynDescription, d.regex as regex, d.name as dyntype, ';
-		$select .= 's.name as type, ';
-		$select .= 'pa.params as params, pa.ordering, ';
-		$select .= 'ua.usersID as id, ua.value, ua.published as publish ';
-
-		$query->select($select);
+		$query->select('DISTINCT a.id AS structid, a.name as name, a.options as options, a.description AS description');
+		$query->select('d.options as dynOptions, d.description as dynDescription, d.regex as regex, d.name as dyntype');
+		$query->select('s.name as type');
+		$query->select('ua.usersID as id, ua.value, ua.published as publish');
 		$query->from('#__thm_groups_attribute AS a');
 		$query->innerJoin('#__thm_groups_dynamic_type AS d ON d.id = a.dynamic_typeID');
 		$query->innerJoin('#__thm_groups_static_type AS s ON s.id = d.static_typeID');
-		$query->innerJoin('#__thm_groups_profile_attribute AS pa ON pa.attributeID = a.id');
-		$query->innerJoin('#__thm_groups_profile AS p ON  p.id = pa.profileID');
 		$query->leftJoin("#__thm_groups_users_attribute AS ua ON ua.attributeID = a.id");
 
 		$query->where("ua.usersID = '$profileID'");
 
 		if (!empty($templateID))
 		{
+			$query->select('pa.params as params, pa.ordering');
 			$query->where("p.id = '$templateID'");
+			$query->innerJoin('#__thm_groups_profile_attribute AS pa ON pa.attributeID = a.id');
+			$query->innerJoin('#__thm_groups_profile AS p ON  p.id = pa.profileID');
+			$query->order("pa.ordering");
+
+			if ($onlyPublished == true)
+			{
+				$query->where("pa.published = '1'");
+			}
+		}
+		// Default ordering from the attributes themselves
+		else
+		{
+			$query->order("a.ordering");
 		}
 
 		if ($onlyPublished == true)
 		{
-			$query->where("ua.published = 1");
+			$query->where("ua.published = '1'");
+			$query->where("a.published = '1'");
 		}
 
 		if ($onlyFilled)
@@ -379,10 +389,7 @@ class THM_GroupsHelperProfile
 			$query->where("(ua.value IS NOT NULL  and ua.value != '')");
 		}
 
-		$query->where("pa.published = '1'");
-		$query->where("a.published = '1'");
 		$query->group("a.id");
-		$query->order("pa.ordering");
 
 		$dbo->setQuery($query);
 
@@ -539,12 +546,20 @@ class THM_GroupsHelperProfile
 
 				$position     = explode('images/', $attribute['params']['path'], 2);
 				$relativePath = 'images/' . $position[1];
+				$file = JPATH_ROOT . "/$relativePath{$attribute['value']}";
 
-				$value = JHTML::image(
-					JURI::root() . $relativePath . $attribute['value'],
-					$surname,
-					array('class' => 'thm_groups_profile_container_profile_image')
-				);
+				if (file_exists ($file))
+				{
+					$value = JHTML::image(
+						JURI::root() . $relativePath . $attribute['value'],
+						$surname,
+						array('class' => 'thm_groups_profile_container_profile_image')
+					);
+				}
+				else
+				{
+					$value = '';
+				}
 
 				break;
 

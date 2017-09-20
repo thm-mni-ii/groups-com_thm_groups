@@ -306,6 +306,8 @@ class THM_GroupsViewContent extends JViewLegacy
 		{
 			$this->document->setMetaData('robots', 'noindex, nofollow');
 		}
+
+		$this->document->addStyleSheet($this->baseurl . "/media/com_thm_groups/css/content.css");
 	}
 
 	/**

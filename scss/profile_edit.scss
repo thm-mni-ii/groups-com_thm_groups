@@ -1,10 +1,10 @@
-@import 'variables';
+@import 'mixins';
 
 #adminForm {
 
   .frontend-toolbar {
-    border: $border;
-    background-color: $background-color;
+    border-bottom: $border-thick;
+    border-top: $border-thick;
     margin-bottom: 10px;
     padding: 10px;
     text-align: right;
@@ -12,28 +12,11 @@
 
   button, a.btn {
 
-    background-color: $foreground-color;
-    border: $border;
     margin-left: 10px;
-    padding: 4px 8px;
 
     &.upload {
       float: right;
     }
-
-    &:hover {
-      background-color: $font-color;
-      color: $foreground-color;
-      border: $foreground-color 1px solid;
-
-      span:before {
-        color: $foreground-color;
-      }
-    }
-  }
-
-  [class^="icon-"], [class*=" icon-"] {
-    margin-right: 5px;
   }
 
   .clear, .control-group {
@@ -47,8 +30,8 @@
       padding: 0;
       width: 180px;
 
-      &.frontend {
-        width: 100px;
+      label {
+        width: auto;
       }
     }
 
@@ -66,14 +49,14 @@
         }
       }
 
-      .image-container {
+      .image-container, .image-button-container, .image-button {
         float: left;
       }
 
       .image-button {
-
-        border-radius: 0;
-        float: left;
+        clear:left;
+        margin-bottom: .5rem;
+        width: 8rem;
       }
     }
 

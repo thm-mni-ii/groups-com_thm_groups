@@ -72,7 +72,6 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 		}
 
 		parent::display($tpl);
-
 	}
 
 	/**
@@ -128,24 +127,32 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 		$name        = $attribute['name'];
 		$attributeID = $attribute['structid'];
 		$value       = !empty(trim($attribute['value'])) ? trim($attribute['value']) : '';
-		$options     = $attribute['options'];
-
-		$position = strpos($options['path'], 'images/');
-		$path     = JURI::root() . substr($options['path'], $position);
 
 		$html = '<div id="' . $name . '_IMG" class="image-container">';
 
 		if (!empty($value))
 		{
-			$file = $path . $value;
-			$alt  = (count($nameAttributes) == 2) ? implode(', ', $nameAttributes) : end($nameAttributes);
-			$html .= JHtml::image($file, $alt, array('class' => 'edit_img'));
+			$options     = $attribute['options'];
+
+			$position     = explode('images/', $options['path'], 2);
+			$relativePath = 'images/' . $position[1];
+			$filePath = JPATH_ROOT . "/$relativePath{$attribute['value']}";
+
+			if (file_exists ($filePath))
+			{
+				$file     = JURI::root() . $relativePath . $value;
+				$alt  = (count($nameAttributes) == 2) ? implode(', ', $nameAttributes) : end($nameAttributes);
+				$html .= JHtml::image($file, $alt, array('class' => 'edit_img'));
+			}
 		}
 
 		$html .= '</div>';
 		$html .= '<input id="jform_' . $name . '_value" name="jform[' . $name . '][value]" type="hidden" value="' . $value . '" />';
+
+		$html .= '<div class="image-button-container">';
 		$html .= $this->getChangeButton($name, $attributeID, $this->profileID);
 		$html .= $this->getPicDeleteButton($name, $attributeID, $this->profileID);
+		$html .= '</div>';
 
 		// Load variables into context for the crop modal template
 		$this->pictureName = $name;

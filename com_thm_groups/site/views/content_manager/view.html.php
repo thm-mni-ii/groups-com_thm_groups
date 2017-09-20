@@ -40,6 +40,8 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 
 	public $groups;
 
+	public $pageTitle;
+
 	public $url;
 
 	/**
@@ -56,19 +58,35 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 		$this->state = $this->get('State');
 		$this->items = $this->get('Items');
 
-		$this->model      = $this->getModel();
-		$this->categoryID = $this->model->categoryID;
-		$this->menuID     = JFactory::getApplication()->input->getInt('Itemid', 0);
+		$this->model        = $this->getModel();
+		$this->categoryID   = $this->model->categoryID;
+		$this->menuID       = JFactory::getApplication()->input->getInt('Itemid', 0);
 
-		$this->pageTitle = '';
-		$params          = JFactory::getApplication()->getParams();
+		$profileID    = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
+		$profileName = THM_GroupsHelperProfile::getDisplayName($profileID);
+		$contextTitle = $profileID == JFactory::getUser()->id ?
+			JText::_('COM_THM_GROUPS_MY_CONTENT') : JText::sprintf('COM_THM_GROUPS_MANAGE_CONTENT', $profileName);
 
-		$showPageTitle = $params->get('show_page_heading', 0);
-
-		if ($showPageTitle)
+		if (!empty($this->menuID))
 		{
-			$this->pageTitle .= empty($menuTitle) ?
-				JText::_('COM_THM_GROUPS_MY_CONTENT') : $params->get('page_title', '');
+			$thisMenu  = JFactory::getApplication()->getMenu()->getItem($this->menuID);
+			$menuQuery = $thisMenu->get('query');
+			$isMenu    = (empty($menuQuery['view']) OR $menuQuery['view'] != 'content_manager') ? false : true;
+		}
+		else
+		{
+			$isMenu = false;
+		}
+
+		if ($isMenu)
+		{
+			$params = JFactory::getApplication()->getParams();
+			$showPageTitle   = $params->get('show_page_heading', false);
+			$this->pageTitle = $showPageTitle? $params->get('page_title', '') : '';
+		}
+		else
+		{
+			$this->pageTitle = $contextTitle;
 		}
 
 		parent::display($tpl);
@@ -140,10 +158,10 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 	 */
 	public function getRow($key, $item)
 	{
-		$sortIcon = '<span class="sortable-handler" style="cursor: move;"><i class="icon-menu"></i></span>';
+		$sortIcon  = '<span class="sortable-handler" style="cursor: move;"><i class="icon-menu"></i></span>';
 		$sortInput = '<input type="text" style="display:none" name="order[]" size="5" ';
 		$sortInput .= 'value="' . (string) $item->ordering . '" class="width-20 text-area-order">';
-		$sort = '<td class="order nowrap center" style="width: 40px;">' . $sortIcon . $sortInput . '</td>';
+		$sort      = '<td class="order nowrap center" style="width: 40px;">' . $sortIcon . $sortInput . '</td>';
 
 		$title = '<td>' . $this->getTitle($item) . '</td>';
 
@@ -250,12 +268,12 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 		$titleLink    = JHTML::_('link', $editRoute, $item->title, $titleAttribs);
 
 
-		$viewText    = '<span class="icon-eye-open"></span>';
-		$contentURL       = 'index.php?option=com_thm_groups&view=content';
-		$contentURL       .= "&id=$item->id&alias=$item->alias&profileID=$profileID&name=$surname";
-		$contentRoute     = JRoute::_($contentURL, false);
-		$editAttribs = array('title' => JText::_('COM_THM_GROUPS_VIEW'), 'class' => 'jgrid');
-		$editLink    = JHTML::_('link', $contentRoute, $viewText, $editAttribs);
+		$viewText     = '<span class="icon-eye-open"></span>';
+		$contentURL   = 'index.php?option=com_thm_groups&view=content';
+		$contentURL   .= "&id=$item->id&alias=$item->alias&profileID=$profileID&name=$surname";
+		$contentRoute = JRoute::_($contentURL, false);
+		$editAttribs  = array('title' => JText::_('COM_THM_GROUPS_VIEW'), 'class' => 'jgrid', 'target' => '_blank');
+		$editLink     = JHTML::_('link', $contentRoute, $viewText, $editAttribs);
 
 		$category = "<div class='small'>" . JText::_('JCATEGORY') . ": " . $item->category_title . "</div>";
 
@@ -275,15 +293,15 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 	{
 		if ($value)
 		{
-			$colorClass  = 'green';
-			$iconClass   = 'publish';
-			$tip         = 'COM_THM_GROUPS_PUBLISHED';
+			$colorClass = 'green';
+			$iconClass  = 'publish';
+			$tip        = 'COM_THM_GROUPS_PUBLISHED';
 		}
 		else
 		{
-			$colorClass  = 'red';
-			$iconClass   = 'unpublish';
-			$tip         = 'COM_THM_GROUPS_UNPUBLISHED';
+			$colorClass = 'red';
+			$iconClass  = 'unpublish';
+			$tip        = 'COM_THM_GROUPS_UNPUBLISHED';
 		}
 
 		$attributes                = array();
@@ -294,9 +312,9 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 
 		$menuID = JFactory::getApplication()->input->getInt('Itemid', 0);
 
-		$url  = "index.php?option=com_thm_groups&task=content.toggle";
-		$url  .= "&id=$id&value=$value&Itemid=$menuID";
-		$url  .= empty($attribute) ? '' : "&attribute=$attribute";
+		$url = "index.php?option=com_thm_groups&task=content.toggle";
+		$url .= "&id=$id&value=$value&Itemid=$menuID";
+		$url .= empty($attribute) ? '' : "&attribute=$attribute";
 
 		$link = JHtml::_('link', JRoute::_($url), $icon, $attributes);
 

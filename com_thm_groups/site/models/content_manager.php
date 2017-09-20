@@ -36,7 +36,9 @@ class THM_GroupsModelContent_Manager extends JModelList
 			$config['filter_fields'] = array();
 		}
 
-		$this->categoryID = THM_GroupsHelperContent::getCategoryID(JFactory::getUser()->id);
+		$profileID = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
+
+		$this->categoryID = THM_GroupsHelperContent::getCategoryID($profileID);
 
 		parent::__construct($config);
 	}

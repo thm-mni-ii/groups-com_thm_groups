@@ -197,6 +197,44 @@ class THM_GroupsModelAdvanced extends JModelLegacy
 	}
 
 	/**
+	 * Sorts nested groups. Used dynamically by array sort functions => ignore usage warnings.
+	 *
+	 * @param object $group1 the first group being compared
+	 * @param object $group2 the second group being compared
+	 *
+	 * @return int
+	 */
+	private static function orderNested($group1, $group2)
+	{
+		// First group is antecedent
+		if ($group2->lft > $group1->rgt)
+		{
+			return 1;
+		}
+
+		// Second group is antecedent
+		if ($group1->lft > $group2->rgt)
+		{
+			return -1;
+		}
+
+		// First group is nested
+		if ($group1->lft > $group2->lft AND $group1->rgt < $group2->rgt)
+		{
+			return 1;
+		}
+
+		// Second group is nested
+		if ($group2->lft > $group1->lft AND $group2->rgt < $group1->rgt)
+		{
+			return 1;
+		}
+
+		// This should not be able to take place due to the nested table structure
+		return 0;
+	}
+
+	/**
 	 * Sets the groups whose profiles are to be displayed. These are ordered so that nested groups are before parents and siblings are
 	 * ordered by actual order.
 	 *
@@ -229,37 +267,7 @@ class THM_GroupsModelAdvanced extends JModelLegacy
 
 		unset($allGroups);
 
-		function orderNested($group1, $group2)
-		{
-			// First group is antecedent
-			if ($group2->lft > $group1->rgt)
-			{
-				return 1;
-			}
-
-			// Second group is antecedent
-			if ($group1->lft > $group2->rgt)
-			{
-				return -1;
-			}
-
-			// First group is nested
-			if ($group1->lft > $group2->lft AND $group1->rgt < $group2->rgt)
-			{
-				return 1;
-			}
-
-			// Second group is nested
-			if ($group2->lft > $group1->lft AND $group2->rgt < $group1->rgt)
-			{
-				return 1;
-			}
-
-			// This should not be able to take place due to the nested table structure
-			return 0;
-		}
-
-		uasort($this->groups, 'orderNested');
+		uasort($this->groups, ['THM_GroupsModelAdvanced', 'orderNested']);
 	}
 
 	/**

@@ -228,7 +228,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 			$processed = in_array($attributeID, [1, 2, 5, 7]);
 
 			// Special indexes and attributes with no saved value are irrelevant
-			$irrelevant = empty($attribute['value']);
+			$irrelevant = (empty($attribute['value']) OR empty(trim($attribute['value'])));
 
 			if ($processed OR $irrelevant)
 			{

@@ -1,137 +1,36 @@
-.icon-organizer::before,
-a[href$="view=thm_organizer"]::before,
-a[href$="option=com_thm_organizer"]::before {
-    font-family: icomoon;
-    content: "\e60b";
+[class^="icon-"], [class*=" icon-"] {
+    margin-right: .5rem;
 }
 
-.icon-organizer_degrees::before,
-a[href*="view=degree_manager"]::before {
-    font-family: icomoon;
-    content: "\e606";
+button, a.btn {
+    border: 2px solid #4a5c66;
+    font-family: "THM-Regular";
+    padding: .4rem .6rem .2rem .6rem;
 }
 
-.icon-organizer_users::before,
-a[href*="view=user_manager"]::before {
-    font-family: icomoon;
-    content: "\e01f";
+button:hover, a.btn:hover {
+    background-color: #394a59;
+    color: white;
 }
 
-.icon-organizer_monitors::before,
-a[href*="view=monitor_manager"]::before {
-    font-family: icomoon;
-    content: "\e01c";
-}
-
-.icon-organizer_teachers::before,
-a[href*="view=teacher_manager"]::before {
-    font-family: icomoon;
-    content: "\e604";
-}
-
-.icon-organizer_departments::before,
-a[href*="view=department_manager"]::before {
-    font-family: icomoon;
-    content: "\e244";
-}
-
-.icon-organizer_subjects::before,
-a[href*="view=subject_manager"]::before {
-    font-family: icomoon;
-    content: "\e603";
-}
-
-.icon-organizer_fields::before,
-a[href*="view=field_manager"]::before {
-    font-family: icomoon;
-    content: "\74";
-}
-
-.icon-organizer_colors::before,
-a[href*="view=color_manager"]::before {
-    font-family: icomoon;
-    content: "\e014";
-}
-
-.icon-organizer_subject_pools::before,
-a[href*="view=pool_manager"]::before {
-    font-family: icomoon;
-    content: "\44";
-}
-
-.icon-organizer_rooms::before,
-a[href*="view=room_manager"]::before {
-    font-family: icomoon;
-    content: "\e60a";
-}
-
-.icon-organizer_degree_programs::before,
-a[href*="view=program_manager"]::before {
-    font-family: icomoon;
-    content: "\31";
-}
-
-.icon-organizer_schedules::before,
-.icon-mni::before,
-a[href*="view=schedule_manager"]::before,
-a[href*="view=virtual_schedule_manager"]::before {
-    font-family: icomoon;
-    content: "\e600";
-}
-
-.icon-organizer_categories::before,
-a[href*="view=category_manager"]::before {
-    font-family: icomoon;
-    content: "\e601";
-}
-
-.icon-diff, .icon-import, .icon-import-all, .icon-merge-all {
-    font-weight: bold;
-}
-
-.icon-add-Space {
-    font-size: 14px;
-}
-
-a[href$="view=thm_organizer"]::before, a[href$="option=com_thm_organizer"]::before {
-    color: #80ba24;
-}
-
-a[href*="option=com_thm_organizer&view="]::before {
-    padding-right: 8px;
+button:hover span:before, a.btn:hover span:before {
+    color: white;
 }
 
 #adminForm .frontend-toolbar {
-    border: 1px solid #77858c;
-    background-color: #f2f5f6;
+    border-bottom: 2px solid #4a5c66;
+    border-top: 2px solid #4a5c66;
     margin-bottom: 10px;
     padding: 10px;
     text-align: right;
 }
 
 #adminForm button, #adminForm a.btn {
-    background-color: white;
-    border: 1px solid #77858c;
     margin-left: 10px;
-    padding: 4px 8px;
 }
 
 #adminForm button.upload, #adminForm a.btn.upload {
     float: right;
-}
-
-#adminForm button:hover, #adminForm a.btn:hover {
-    background-color: #394a59;
-    color: white;
-    border: white 1px solid;
-}
-
-#adminForm button:hover span:before, #adminForm a.btn:hover span:before {
-    color: white;
-}
-
-#adminForm [class^="icon-"], #adminForm [class*=" icon-"] {
-    margin-right: 5px;
 }
 
 #adminForm .clear, #adminForm .control-group {
@@ -144,8 +43,8 @@ a[href*="option=com_thm_organizer&view="]::before {
     width: 180px;
 }
 
-#adminForm .control-group .control-label.frontend {
-    width: 100px;
+#adminForm .control-group .control-label label {
+    width: auto;
 }
 
 #adminForm .control-group .controls {
@@ -162,13 +61,14 @@ a[href*="option=com_thm_organizer&view="]::before {
     margin-right: 0;
 }
 
-#adminForm .control-group .controls .image-container {
+#adminForm .control-group .controls .image-container, #adminForm .control-group .controls .image-button-container, #adminForm .control-group .controls .image-button {
     float: left;
 }
 
 #adminForm .control-group .controls .image-button {
-    border-radius: 0;
-    float: left;
+    clear: left;
+    margin-bottom: .5rem;
+    width: 8rem;
 }
 
 #adminForm .control-group .publish-container {

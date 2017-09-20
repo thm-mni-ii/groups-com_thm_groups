@@ -235,10 +235,10 @@ class THM_GroupsHelperContent
 		$dbo   = JFactory::getDBO();
 		$query = $dbo->getQuery(true);
 
-		$query->select('qpCats.categoriesID');
-		$query->from('#__thm_groups_users_categories AS qpCats');
-		$query->innerJoin('#__categories AS contentCats ON contentCats.id = qpCats.categoriesID');
-		$query->where("qpCats.usersID = '$profileID'");
+		$query->select('groupsCats.categoriesID');
+		$query->from('#__thm_groups_users_categories AS groupsCats');
+		$query->innerJoin('#__categories AS contentCats ON contentCats.id = groupsCats.categoriesID');
+		$query->where("groupsCats.usersID = '$profileID'");
 		$query->where("contentCats.extension = 'com_content'");
 		$dbo->setQuery($query);
 

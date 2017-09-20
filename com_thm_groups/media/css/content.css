@@ -1,0 +1,47 @@
+[class^="icon-"], [class*=" icon-"] {
+    margin-right: .5rem;
+}
+
+button, a.btn {
+    border: 2px solid #4a5c66;
+    font-family: "THM-Regular";
+    padding: .4rem .6rem .2rem .6rem;
+}
+
+button:hover, a.btn:hover {
+    background-color: #394a59;
+    color: white;
+}
+
+button:hover span:before, a.btn:hover span:before {
+    color: white;
+}
+
+.groups-content ul.actions {
+    display: inline-block;
+    float: right;
+    overflow: visible;
+    width: auto;
+}
+
+.groups-content ul.actions li {
+    height: auto;
+    overflow: visible;
+}
+
+.groups-content ul.actions li a {
+    border: 2px solid #4a5c66;
+    color: #394a59;
+    font-family: "THM-Regular";
+    font-size: .95rem;
+    padding: .6rem .6rem .4rem .6rem;
+}
+
+.groups-content ul.actions li a:hover {
+    background-color: #394a59;
+    color: white;
+}
+
+.groups-content ul.actions li a:hover span:before {
+    color: white;
+}

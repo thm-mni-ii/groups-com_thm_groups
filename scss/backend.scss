@@ -1,6 +1,5 @@
 
 //Here divided main sections: navigation, content, toolbar -> new/edit
-@import 'variables';
 @import 'mixins';
 @import 'icons';
 
@@ -92,7 +91,6 @@
   margin-top: 7px;
   border-collapse: separate;
   border-top: 1px solid #bbb;
-  @include border-radius(3px 3px 0 0);
 
   // needed here to overwrite template
   th:not(:first-child) {
@@ -131,15 +129,6 @@ tr:nth-last-child(1):not(:first-child) th {
   border-top: none;
   border-bottom: 1px solid #bbb;
   padding-top: 0.1rem;
-}
-
-tr:nth-last-child(1) th {
-  &:first-child {
-    border-bottom-left-radius: 3px;
-  }
-  &:last-child {
-    border-bottom-right-radius: 3px;
-  }
 }
 
 // adjusting table body **********************************************************************************************//

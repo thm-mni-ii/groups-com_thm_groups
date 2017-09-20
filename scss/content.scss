@@ -1,0 +1,35 @@
+@import 'mixins';
+
+.groups-content {
+
+  ul.actions {
+    display: inline-block;
+    float: right;
+    overflow: visible;
+    width: auto;
+
+    li {
+
+      height: auto;
+      overflow: visible;
+
+      a {
+
+        border: $border-thick;
+        color: $font-color;
+        font-family: $font-family-regular;
+        font-size: .95rem;
+        padding: .6rem .6rem .4rem .6rem;
+
+        &:hover {
+          background-color: $font-color;
+          color: $foreground-color;
+
+          span:before {
+            color: $foreground-color;
+          }
+        }
+      }
+    }
+  }
+}

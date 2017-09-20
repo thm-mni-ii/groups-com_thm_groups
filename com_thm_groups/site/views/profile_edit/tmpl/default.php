@@ -22,7 +22,6 @@ if (!empty($attributes[2]) AND $attributes[2]['value'])
 {
 	$nameAttributes[1] = $attribute['value'];
 }
-
 ?>
 <form id="adminForm" name="adminForm" class="form-horizontal"
 	  action="index.php?option=com_thm_groups" method="post" enctype="multipart/form-data">

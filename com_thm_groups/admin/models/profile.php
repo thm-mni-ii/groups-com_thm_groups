@@ -672,9 +672,9 @@ class THM_GroupsModelProfile extends JModelLegacy
 	{
 		$profileID = $formData['profileID'];
 
-		foreach ($formData as $fieldName => $values)
+		foreach ($formData as $fieldName => $attribute)
 		{
-			if (is_string($values))
+			if (is_string($attribute))
 			{
 				continue;
 			}
@@ -682,15 +682,16 @@ class THM_GroupsModelProfile extends JModelLegacy
 			$query = $this->_db->getQuery(true);
 			$query->update('#__thm_groups_users_attribute');
 
-			$value = $this->_db->q(trim($values['value']));
+			$rawValue = empty(strip_tags(trim($attribute['value']))) ? '' : trim($attribute['value']);
+			$value = $this->_db->q($rawValue);
 			$query->set("value = $value");
 
-			$published = empty($values['published']) ? 0 : 1;
+			$published = empty($attribute['published']) ? 0 : 1;
 			$query->set("published = '$published'");
 
 			$query->where("usersID = '$profileID'");
 
-			$attributeID = (int) $values['attributeID'];
+			$attributeID = (int) $attribute['attributeID'];
 			$query->where("attributeID = '$attributeID'");
 
 			$this->_db->setQuery($query);
