@@ -40,7 +40,7 @@ a.btn {
 }
 
 .profile-container .attribute-picture img {
-    width: 10rem;
+    max-width: 6rem;
 }
 
 .profile-container .attribute-inline, .profile-container .attribute-wrap {
@@ -50,7 +50,8 @@ a.btn {
 }
 
 .profile-container .attribute-label, .profile-container .attribute-value {
-    display: inline-block;
+    display: block;
+    float: left;
 }
 
 .profile-container .attribute-label {
@@ -62,11 +63,6 @@ a.btn {
 
 .profile-container .attribute-wrap {
     clear: left;
-    width: calc(100% - 11rem);
-}
-
-.profile-container .attribute-wrap .attribute-value {
-    width: calc(100% - 2rem);
 }
 
 .profile-container .attribute-textfield {
@@ -76,10 +72,7 @@ a.btn {
 }
 
 .profile-container .attribute-textfield .attribute-label {
-    display: block;
     font-family: "THM-Medium", Arial, Helvetica, sans-serif;
-    font-size: 1.5rem;
     margin-bottom: .8rem;
     text-align: left;
-    width: 100%;
 }
