@@ -234,34 +234,23 @@ function parseProfileSegment(&$vars, $segment)
 		return;
 	}
 
-	list($firstItem, $theRest) = explode(':', $segment);
+	list($profileID, $profileData) = explode(':', $segment);
 
-	if (empty($theRest))
+	$vars['profileID'] = $profileID;
+
+	if (!empty($profileData))
 	{
-		$vars['profileID'] = $firstItem;
-	}
-	else
-	{
-		$theRest = explode('-', $theRest);
+		$profileData = explode('-', $profileData);
 
-		// Old format
-		if (is_numeric($theRest[0]))
+		if (is_numeric(end($profileData)))
 		{
-			$vars['groupID'] = $firstItem;
-			$vars['profileID'] = array_shift($theRest);
-		}
-
-		// New format
-		if (is_numeric(end($theRest)))
-		{
-			$vars['profileID'] = $firstItem;
-			$vars['groupID'] = array_pop($theRest);
+			$vars['groupID'] = array_pop($profileData);
 		}
 
 		// Anything left is the profile's surname
-		if (!empty($theRest))
+		if (!empty($profileData))
 		{
-			$vars['name'] = implode('-', $theRest);
+			$vars['name'] = implode('-', $profileData);
 		}
 	}
 }

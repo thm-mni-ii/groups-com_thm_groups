@@ -132,7 +132,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 	 */
 	public function getProfileButton()
 	{
-		$profileID   = JFactory::getUser()->id;
+		$profileID    = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
 		$groupID     = THM_GroupsHelperProfile::getDefaultGroup($profileID);
 		$surname     = THM_GroupsHelperProfile::getAttributeValue($profileID, 2);
 		$buttonURL   = "index.php?view=profile&layout=default&profileID=$profileID&name=$surname";
