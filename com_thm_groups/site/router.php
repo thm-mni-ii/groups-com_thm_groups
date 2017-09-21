@@ -33,7 +33,7 @@ function THM_GroupsBuildRoute(&$query)
 		unset($query['view']);
 	}
 
-	buildOptionsRoute($query, $segments);
+	buildOptionsRoute($query);
 
 	// Group & Profile/Name Segments
 	if (!empty($query['profileID']))
@@ -85,27 +85,23 @@ function THM_GroupsBuildRoute(&$query)
  * builds back options
  *
  * @param   array &$query    query
- * @param   array &$segments segments
  *
  * @return  void
  */
-function buildOptionsRoute(&$query, &$segments)
+function buildOptionsRoute(&$query)
 {
 	if (isset($query['option_back']) && isset($query['view_back']))
 	{
-		// $temp = $query['option_back'] . '-' . $query['view_back'];
 		unset($query['option_back']);
 		unset($query['view_back']);
 
 		if (isset ($query['layout_back']))
 		{
-			// $temp .= '-' . $query['layout_back'];
 			unset($query['layout_back']);
 		}
 
 		if (isset ($query['Itemid_back']))
 		{
-			//  $temp .= '-' . $query['Itemid_back'];
 			unset($query['Itemid_back']);
 		}
 	}
@@ -238,23 +234,34 @@ function parseProfileSegment(&$vars, $segment)
 		return;
 	}
 
-	list($profileID, $profileData) = explode(':', $segment);
+	list($firstItem, $theRest) = explode(':', $segment);
 
-	$vars['profileID'] = $profileID;
-
-	if (!empty($profileData))
+	if (empty($theRest))
 	{
-		$profileData = explode('-', $profileData);
+		$vars['profileID'] = $firstItem;
+	}
+	else
+	{
+		$theRest = explode('-', $theRest);
 
-		if (is_numeric(end($profileData)))
+		// Old format
+		if (is_numeric($theRest[0]))
 		{
-			$vars['groupID'] = array_pop($profileData);
+			$vars['groupID'] = $firstItem;
+			$vars['profileID'] = array_shift($theRest);
+		}
+
+		// New format
+		if (is_numeric(end($theRest)))
+		{
+			$vars['profileID'] = $firstItem;
+			$vars['groupID'] = array_pop($theRest);
 		}
 
 		// Anything left is the profile's surname
-		if (!empty($profileData))
+		if (!empty($theRest))
 		{
-			$vars['name'] = implode('-', $profileData);
+			$vars['name'] = implode('-', $theRest);
 		}
 	}
 }
