@@ -84,7 +84,7 @@ function THM_GroupsBuildRoute(&$query)
 /**
  * builds back options
  *
- * @param   array &$query    query
+ * @param   array &$query query
  *
  * @return  void
  */

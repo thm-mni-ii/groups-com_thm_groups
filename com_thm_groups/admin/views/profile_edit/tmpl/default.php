@@ -25,7 +25,7 @@ if (!empty($attributes[2]) AND $attributes[2]['value'])
 }
 
 ?>
-<form id="adminForm" name="adminForm" class="form-horizontal"
+<form id="adminForm" name="adminForm" class="form-horizontal form-validate"
 	  action="index.php?option=com_thm_groups" method="post" enctype="multipart/form-data">
 	<div class="form-horizontal">
 		<div id="user" class="tab-pane active">

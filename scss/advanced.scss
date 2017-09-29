@@ -51,7 +51,7 @@
 
     .attribute-picture {
 
-      width: 20%;
+      width: 4.5rem;
 
       img {
         display: block;
@@ -74,19 +74,6 @@
 
     .attribute-wrap, .attribute-textfield {
       clear: left;
-    }
-
-    .attribute-wrap {
-
-      width: 79%;
-
-      .attribute-iconed {
-        width: calc(100% - 1.5rem);
-      }
-
-      .attribute-labeled {
-        max-width: calc(100% - 3rem);
-      }
     }
 
     .attribute-inline, .attribute-name, .attribute-title {

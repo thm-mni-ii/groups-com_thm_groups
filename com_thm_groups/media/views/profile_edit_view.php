@@ -132,15 +132,15 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 
 		if (!empty($value))
 		{
-			$options     = $attribute['options'];
+			$options = $attribute['options'];
 
 			$position     = explode('images/', $options['path'], 2);
 			$relativePath = 'images/' . $position[1];
-			$filePath = JPATH_ROOT . "/$relativePath{$attribute['value']}";
+			$filePath     = JPATH_ROOT . "/$relativePath{$attribute['value']}";
 
-			if (file_exists ($filePath))
+			if (file_exists($filePath))
 			{
-				$file     = JURI::root() . $relativePath . $value;
+				$file = JURI::root() . $relativePath . $value;
 				$alt  = (count($nameAttributes) == 2) ? implode(', ', $nameAttributes) : end($nameAttributes);
 				$html .= JHtml::image($file, $alt, array('class' => 'edit_img'));
 			}
@@ -246,7 +246,6 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 		JHtml::_('formbehavior.chosen', 'select');
 
 		JHtml::stylesheet('media/com_thm_groups/css/profile_edit.css');
-		JHtml::stylesheet('media/com_thm_groups/css/respBaseStyles.css');
 		JHtml::script('media/com_thm_groups/js/formbehaviorChosenHelper.js');
 		JHtml::script('media/com_thm_groups/js/cropbox.js');
 

@@ -5,6 +5,14 @@
     </layout>
     <fields name="params">
         <fieldset name="basic">
+            <field name="showTitles"
+                   type="list"
+                   default="1"
+                   label="JGLOBAL_SHOW_TITLE_LABEL"
+                   description="JGLOBAL_SHOW_TITLE_DESC">
+                <option value="1">JSHOW</option>
+                <option value="0">JHIDE</option>
+            </field>
             <field name="groupID"
                    type="usergroup"
                    label="COM_THM_GROUPS_GROUP"
@@ -17,7 +25,7 @@
                    first="1"
                    last="3"
                    step="1"
-                    default="3"/>
+                   default="3"/>
         </fieldset>
     </fields>
 </metadata>

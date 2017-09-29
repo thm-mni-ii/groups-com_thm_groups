@@ -47,7 +47,7 @@
 }
 
 .advanced-container .profile-container .attribute-picture {
-    width: 20%;
+    width: 4.5rem;
 }
 
 .advanced-container .profile-container .attribute-picture img {
@@ -68,18 +68,6 @@
 
 .advanced-container .profile-container .attribute-wrap, .advanced-container .profile-container .attribute-textfield {
     clear: left;
-}
-
-.advanced-container .profile-container .attribute-wrap {
-    width: 79%;
-}
-
-.advanced-container .profile-container .attribute-wrap .attribute-iconed {
-    width: calc(100% - 1.5rem);
-}
-
-.advanced-container .profile-container .attribute-wrap .attribute-labeled {
-    max-width: calc(100% - 3rem);
 }
 
 .advanced-container .profile-container .attribute-inline, .advanced-container .profile-container .attribute-name, .advanced-container .profile-container .attribute-title {

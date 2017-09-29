@@ -13,6 +13,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/content.php';
 
 /**

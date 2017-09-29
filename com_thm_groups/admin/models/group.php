@@ -155,7 +155,6 @@ class THM_GroupsModelGroup extends JModelLegacy
 	 * TODO make generic function which handle all types of batch operations
 	 *
 	 * @return  boolean  Returns true on success, false on failure.
-	 *
 	 */
 	public function batch()
 	{
@@ -233,7 +232,7 @@ class THM_GroupsModelGroup extends JModelLegacy
 						break;
 				}
 
-				if (!$success)
+				if (empty($success))
 				{
 					return false;
 				}

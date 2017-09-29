@@ -75,10 +75,11 @@ class THM_GroupsModelAdvanced extends JModelLegacy
 		$profiles = array();
 
 		$showRoles = $this->params->get('showRoles', self::no);
+		$showGroup = ($showRoles AND (count($groupedProfiles) - 1) > 1);
 
 		foreach ($groupedProfiles AS $groupID => $assocs)
 		{
-			$groupName = (empty($showRoles) OR count($this->groups) === 1) ? '' : $groupedProfiles[$groupID]['title'];
+			$groupName = $showGroup ? $groupedProfiles[$groupID]['title'] : '';
 
 			foreach ($assocs as $assocID => $data)
 			{

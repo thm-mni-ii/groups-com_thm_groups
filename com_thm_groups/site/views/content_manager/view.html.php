@@ -58,12 +58,12 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 		$this->state = $this->get('State');
 		$this->items = $this->get('Items');
 
-		$this->model        = $this->getModel();
-		$this->categoryID   = $this->model->categoryID;
-		$this->menuID       = JFactory::getApplication()->input->getInt('Itemid', 0);
+		$this->model      = $this->getModel();
+		$this->categoryID = $this->model->categoryID;
+		$this->menuID     = JFactory::getApplication()->input->getInt('Itemid', 0);
 
 		$profileID    = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
-		$profileName = THM_GroupsHelperProfile::getDisplayName($profileID);
+		$profileName  = THM_GroupsHelperProfile::getDisplayName($profileID);
 		$contextTitle = $profileID == JFactory::getUser()->id ?
 			JText::_('COM_THM_GROUPS_MY_CONTENT') : JText::sprintf('COM_THM_GROUPS_MANAGE_CONTENT', $profileName);
 
@@ -80,9 +80,9 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 
 		if ($isMenu)
 		{
-			$params = JFactory::getApplication()->getParams();
+			$params          = JFactory::getApplication()->getParams();
 			$showPageTitle   = $params->get('show_page_heading', false);
-			$this->pageTitle = $showPageTitle? $params->get('page_title', '') : '';
+			$this->pageTitle = $showPageTitle ? $params->get('page_title', '') : '';
 		}
 		else
 		{
@@ -132,7 +132,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 	 */
 	public function getProfileButton()
 	{
-		$profileID    = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
+		$profileID   = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
 		$groupID     = THM_GroupsHelperProfile::getDefaultGroup($profileID);
 		$surname     = THM_GroupsHelperProfile::getAttributeValue($profileID, 2);
 		$buttonURL   = "index.php?view=profile&layout=default&profileID=$profileID&name=$surname";

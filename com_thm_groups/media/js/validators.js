@@ -2,7 +2,7 @@
  * Contains form validation expressions
  */
 
-window.addEvent('domready', function () {
+jQuery(document).ready(function () {
 	"use strict";
 	document.formvalidator.setHandler('ip',
 		function (value) {

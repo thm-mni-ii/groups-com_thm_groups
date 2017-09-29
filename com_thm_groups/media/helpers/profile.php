@@ -265,20 +265,40 @@ class THM_GroupsHelperProfile
 	}
 
 	/**
-	 * Creates a simple surname, forename string for the given profile
+	 * Creates the name to be displayed
 	 *
 	 * @param   int  $profileID the user id
+	 * @param   bool $withTitle whether the titles should be displayed
+	 * @param   bool $withSpan  whether the attributes should be contained in individual spans for style assignments
 	 *
 	 * @return  string  the profile name
 	 */
-	public static function getLNFName($profileID)
+	public static function getLNFName($profileID, $withTitle = false, $withSpan = false)
 	{
 		$profile = self::getProfile($profileID);
+		$indexes = $withTitle ? [2, 1, 5, 7] : [2, 1];
+		$text    = '';
 
-		$text    = $profile[2]['value'];
-		$text .= (empty($profile[1]) OR empty($profile[1]['value']))? '' : ", {$profile[1]['value']}";
+		foreach ($indexes as $index)
+		{
+			if (!empty($profile[$index]) AND !empty($profile[$index]['value']))
+			{
+				if ($withSpan)
+				{
+					$span = ($index === 1 OR $index === 2) ? '<span class="name-value">' : '<span class="title-value">';
+					$span .= ($index === 2 AND !empty($profile[1])) ?
+						"{$profile[$index]['value']}," : $profile[$index]['value'];
+					$span .= ' </span>';
+					$text .= $span;
+				}
+				else
+				{
+					$text .= "{$profile[$index]['value']} ";
+				}
+			}
+		}
 
-		return $text;
+		return trim($text);
 	}
 
 	/**
@@ -537,8 +557,8 @@ class THM_GroupsHelperProfile
 
 			case "LINK":
 
-				$value = "<a href='" . htmlspecialchars_decode($attribute['value']) . "'>";
-				$value .= htmlspecialchars_decode($attribute['value']) . "</a>";
+				$URL   = strpos($attribute['value'], 'http') === false ? "http://{$attribute['value']}" : $attribute['value'];
+				$value = JHtml::link($URL, $attribute['value']);
 
 				break;
 
@@ -546,9 +566,9 @@ class THM_GroupsHelperProfile
 
 				$position     = explode('images/', $attribute['params']['path'], 2);
 				$relativePath = 'images/' . $position[1];
-				$file = JPATH_ROOT . "/$relativePath{$attribute['value']}";
+				$file         = JPATH_ROOT . "/$relativePath{$attribute['value']}";
 
-				if (file_exists ($file))
+				if (file_exists($file))
 				{
 					$value = JHTML::image(
 						JURI::root() . $relativePath . $attribute['value'],

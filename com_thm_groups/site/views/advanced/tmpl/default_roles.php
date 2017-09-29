@@ -13,9 +13,15 @@
 $rows     = '';
 $rowIndex = 0;
 
+// One index is taken by the name
+$groupCount = count($this->profiles) - 1;
+
 foreach ($this->profiles as $groupID => $assocs)
 {
-	$groupSpan = '<span class="group-title">' . $this->profiles[$groupID]['title'] . '</span>';
+	$groupSpan = $groupCount > 1 ? '<span class="group-title">' . $this->profiles[$groupID]['title'] . '</span>' : '';
+
+	// One index is taken up by the name
+	$assocCount = count($assocs) - 1;
 
 	foreach ($assocs as $assocID => $data)
 	{
@@ -24,7 +30,8 @@ foreach ($this->profiles as $groupID => $assocs)
 			continue;
 		}
 
-		$roleSpan = empty($data['name'])? '' : '<span class="role-title">' . $data['name'] . '</span>';
+		$roleSpan = (empty($data['name']) OR $assocCount == 1) ?
+			'' : '<span class="role-title">' . $data['name'] . '</span>';
 
 		if (empty($groupSpan))
 		{
@@ -40,7 +47,7 @@ foreach ($this->profiles as $groupID => $assocs)
 		}
 
 		// Only print headings if there are differing groups/roles. Role count reduced because of the group name index.
-		if (count($this->profiles) > 1 OR (count($assocs) - 1) > 1)
+		if ($groupCount > 1 OR $assocCount > 1)
 		{
 			echo '<div class="role-heading">' . $assocName . '</div>';
 		}

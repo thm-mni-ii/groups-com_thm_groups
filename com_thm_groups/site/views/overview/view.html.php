@@ -56,7 +56,8 @@ class THM_GroupsViewOverview extends JViewLegacy
 	{
 		$url = $this->profileLink . "&profileID=$profile->id&groupID=$this->groupID&name=" . trim($profile->surname);
 
-		$displayedText = THM_GroupsHelperProfile::getLNFName($profile->id);
+		$showTitles    = $this->params->get('showTitles', 1);
+		$displayedText = THM_GroupsHelperProfile::getLNFName($profile->id, $showTitles, true);
 
 		return JHtml::link(JRoute::_($url), $displayedText);
 	}

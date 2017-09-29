@@ -105,12 +105,12 @@ class THM_GroupsController extends JControllerLegacy
 
 			if ($success)
 			{
-				$msg  = JText::_('JLIB_APPLICATION_SUCCESS_BATCH');
+				$msg  = JText::_('COM_THM_GROUPS_BATCH_SUCCESS');
 				$type = 'message';
 			}
 			else
 			{
-				$msg  = JText::_('JLIB_APPLICATION_ERROR_BATCH_FAILED');
+				$msg  = JText::_('COM_THM_GROUPS_BATCH_FAIL');
 				$type = 'error';
 			}
 		}

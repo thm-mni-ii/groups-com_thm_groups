@@ -40,6 +40,7 @@ class JFormFieldGroup extends JFormFieldList
 		catch (Exception $exception)
 		{
 			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
 			return [];
 		}
 

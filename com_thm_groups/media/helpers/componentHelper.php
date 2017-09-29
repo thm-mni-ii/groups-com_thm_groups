@@ -226,9 +226,9 @@ class THM_GroupsHelperComponent
 
 		$options = array(
 			'defaultgroup' => 'com_thm_groups',
-			'cachebase' => JFactory::getApplication()->isClient('administrator') ?
+			'cachebase'    => JFactory::getApplication()->isClient('administrator') ?
 				JPATH_ADMINISTRATOR . '/cache' : $conf->get('cache_path', JPATH_SITE . '/cache'),
-			'result' => true,
+			'result'       => true,
 		);
 
 		try
@@ -271,18 +271,10 @@ class THM_GroupsHelperComponent
 				return array();
 			}
 
-			$array = (array) $array;
+			$array = Joomla\Utilities\ArrayHelper::fromObject($array);
 		}
 
-		array_unique($array);
-		Joomla\Utilities\ArrayHelper::toInteger($array);
-
-		$zeroIndex = array_search(0, $array, true);
-
-		if ($zeroIndex !== false)
-		{
-			unset($array[$zeroIndex]);
-		}
+		$array = Joomla\Utilities\ArrayHelper::toInteger(array_filter(array_unique($array)));
 
 		return $array;
 	}

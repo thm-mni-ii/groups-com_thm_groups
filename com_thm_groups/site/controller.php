@@ -211,7 +211,7 @@ class THM_GroupsController extends JControllerLegacy
 	public function saveCropped()
 	{
 		JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_thm_groups/models');
-		$model = JModelLegacy::getInstance('profile', 'THM_GroupsModel');
+		$model   = JModelLegacy::getInstance('profile', 'THM_GroupsModel');
 		$success = $model->saveCropped();
 
 		if ($success != false)

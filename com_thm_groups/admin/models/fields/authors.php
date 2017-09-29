@@ -41,7 +41,7 @@ class JFormFieldAuthors extends JFormFieldList
 	 */
 	public function getQPAuthors()
 	{
-		$dbo   = JFactory::getDbo();
+		$dbo      = JFactory::getDbo();
 		$catQuery = $dbo->getQuery(true);
 
 		$rootCategory = THM_GroupsHelperContent::getRootCategory();
