@@ -113,6 +113,12 @@ div.manager-page {
     }
   }
 
+  .title-column .btn{
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+
   .btn-column {
     text-align: center;
     width: 40px;
@@ -139,7 +145,7 @@ div.manager-page {
     }
   }
 
-  td a:nth-child(2) {
+  td a.jgrid {
     margin-left: 8px;
   }
 

@@ -45,6 +45,12 @@ class THM_GroupsModelAttribute extends JModelLegacy
 		$associatedProfileIDs = $this->getAssocProfileIDs($attributeID);
 		$unAssocProfileIDs    = array_diff($allProfileIDs, $associatedProfileIDs);
 
+		// All profiles already have the attribute
+		if (empty($unAssocProfileIDs))
+		{
+			return true;
+		}
+
 		/*
 		 * Create database entry for created attribute with empty value for all users
 		 * It will be used in profile_edit view

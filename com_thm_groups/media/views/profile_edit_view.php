@@ -175,16 +175,14 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 	 */
 	public function getPublishBox($inputName, $published)
 	{
-		$html = '<input type="checkbox" ';
-		$html .= 'id="jform_' . $inputName . '_published" ';
-		$html .= 'name="jform[' . $inputName . '][published]" ';
-		if ($published)
-		{
-			$html .= 'checked="checked" ';
-		}
-		$html .= '/>';
+		$type    = 'type="checkbox"';
+		$id      = 'id="jform_' . $inputName . '_published" ';
+		$name    = 'name="jform[' . $inputName . '][published]" ';
+		$class   = 'class="hasTip" ';
+		$title   = 'title="' . JText::_('COM_THM_GROUPS_PUBLISHED') . '" ';
+		$checked = empty($published) ? '' : 'checked="checked"';
 
-		return $html;
+		return "<input $type $id $name $class $title $checked />";
 	}
 
 	/**

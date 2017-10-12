@@ -17,7 +17,7 @@ use Joomla\Registry\Registry;
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/content.php';
 
 /**
- * Content Component Article Model
+ * Content Model
  *
  * @package        Joomla.Site
  * @subpackage     com_content
@@ -30,6 +30,25 @@ class THM_GroupsModelContent extends JModelItem
 	 * @var        string
 	 */
 	protected $_context = 'com_content.article';
+
+	/**
+	 * Method to check a row in if the necessary properties/fields exist. Checking a row in will allow other users the
+	 * ability to edit the row.
+	 *
+	 * @return  bool  true on success, otherwise false
+	 */
+	public function checkIn()
+	{
+		$selectedArray = JFactory::getApplication()->input->get('cid', [], 'array');
+
+		if (empty($selectedArray) OR empty($selectedArray[0]))
+		{
+			return true;
+		}
+
+		$table = JTable::getInstance('Content', 'JTable');
+		return $table->checkIn($selectedArray[0]);
+	}
 
 	/**
 	 * Retrieves the content for the given ID.

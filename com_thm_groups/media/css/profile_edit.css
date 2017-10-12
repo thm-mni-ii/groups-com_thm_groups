@@ -52,15 +52,6 @@ button:hover span:before, a.btn:hover span:before {
     margin-left: 10px;
 }
 
-#adminForm .control-group .controls .validation-container {
-    margin-left: 5px;
-    float: left;
-}
-
-#adminForm .control-group .controls .validation-container .icon-publish {
-    margin-right: 0;
-}
-
 #adminForm .control-group .controls .image-container, #adminForm .control-group .controls .image-button-container, #adminForm .control-group .controls .image-button {
     float: left;
 }
@@ -73,7 +64,7 @@ button:hover span:before, a.btn:hover span:before {
 
 #adminForm .control-group .publish-container {
     display: inline-block;
-    margin-left: 30px;
+    margin-left: .4rem;
     vertical-align: top;
 }
 

@@ -36,6 +36,7 @@ class THM_GroupsModelProfile extends JModelItem
 	public function __construct()
 	{
 		$input           = JFactory::getApplication()->input;
+
 		$this->profileID = $input->getint('profileID', 0);
 
 		$published = empty($this->profileID) ? false : THM_GroupsHelperProfile::isPublished($this->profileID);

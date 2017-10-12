@@ -56,15 +56,18 @@ class THM_GroupsController extends JControllerLegacy
 	 */
 	public function apply()
 	{
-		$app               = JFactory::getApplication();
-		$model             = $this->getModel($this->resource);
+		$app        = JFactory::getApplication();
+		$data       = $app->input->get('jform', [], 'array');
+		$resourceID = empty($data['id']) ? $app->input->get('id', 0) : $data['id'];
+		$model      = $this->getModel($this->resource);
+
 		$functionAvailable = (method_exists($model, 'save'));
 
 		if ($functionAvailable)
 		{
-			$resourceID = $model->save();
+			$savedID = $model->save();
 
-			if (!empty($resourceID))
+			if (!empty($savedID))
 			{
 				$msg  = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
 				$type = 'message';
@@ -77,10 +80,11 @@ class THM_GroupsController extends JControllerLegacy
 		}
 		else
 		{
-			$resourceID = $app->input->get('id', 0);
-			$msg        = JText::_('COM_THM_GROUPS_ACTION_UNAVAILABLE');
-			$type       = 'error';
+			$msg  = JText::_('COM_THM_GROUPS_ACTION_UNAVAILABLE');
+			$type = 'error';
 		}
+
+		$resourceID = empty($savedID) ? $resourceID : $savedID;
 
 		$app->enqueueMessage($msg, $type);
 		$app->input->set('view', "{$this->resource}_edit");

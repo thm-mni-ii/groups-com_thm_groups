@@ -285,15 +285,27 @@ class THM_GroupsViewProfile extends JViewLegacy
 	 */
 	public function getBackLink()
 	{
-		if (JComponentHelper::getParams('com_thm_groups')->get('backButtonForProfile') == 1)
+		if (empty(JComponentHelper::getParams('com_thm_groups')->get('backButtonForProfile')))
 		{
-			$text       = '<span class="icon-arrow-left-22"></span> ' . JText::_("COM_THM_GROUPS_BACK_BUTTON");
-			$attributes = ['class' => 'btn', 'onclick' => 'window.history.back()'];
-
-			return JHtml::link('#', $text, $attributes);
+			return '';
 		}
 
-		return '';
+		$text = '<span class="icon-arrow-left-22"></span> ' . JText::_("COM_THM_GROUPS_BACK_BUTTON");
+		$attributes = ['class' => 'btn'];
+
+		$menuID = JFactory::getApplication()->input->get('Itemid');
+
+		if (empty($menuID))
+		{
+			$attributes = ['onclick' => 'window.history.back()'];
+			$url = '#';
+		}
+		else
+		{
+			$url = JRoute::_("index.php?option=com_thm_groups&Itemid=$menuID");
+		}
+
+		return JHtml::link($url, $text, $attributes);
 	}
 
 	/**

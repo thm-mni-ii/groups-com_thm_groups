@@ -22,11 +22,14 @@ if (!empty($attributes[2]) AND $attributes[2]['value'])
 {
 	$nameAttributes[1] = $attribute['value'];
 }
+
+$editor = JFactory::getConfig()->get('editor');
+$toolbar = $this->getToolbar();
 ?>
 <form id="adminForm" name="adminForm" class="form-horizontal form-validate"
 	  action="index.php?option=com_thm_groups" method="post" enctype="multipart/form-data">
 	<div class="form-horizontal">
-		<?php echo $this->getToolbar(); ?>
+		<?php echo $toolbar; ?>
 		<div class="field-container">
 			<?php
 			foreach ($this->attributes as $attribute)
@@ -47,7 +50,7 @@ if (!empty($attributes[2]) AND $attributes[2]['value'])
 						switch ($attribute['type'])
 						{
 							case 'TEXTFIELD':
-								echo JEditor::getInstance()->display("jform[$name][value]", $value, '', '', '', '', false);
+								echo JEditor::getInstance($editor)->display("jform[$name][value]", $value, '', '', '', '', false);
 								break;
 
 							case 'PICTURE':
@@ -59,13 +62,10 @@ if (!empty($attributes[2]) AND $attributes[2]['value'])
 								break;
 						}
 						?>
-						<div id='jform_<?php echo $name; ?>_icon' class="validation-container"></div>
 						<div>
 							<?php echo $this->getStructInput($name, 'attributeID', $attribute['structid']); ?>
 							<?php echo $this->getStructInput($name, 'type', $attribute['type']); ?>
 						</div>
-						<div id='jform_<?php echo $name; ?>_message'></div>
-						<div id='info'></div>
 					</div>
 					<div class="publish-container">
 						<?php echo $this->getPublishBox($name, $attribute['publish']); ?>
@@ -74,14 +74,15 @@ if (!empty($attributes[2]) AND $attributes[2]['value'])
 			<?php } ?>
 		</div>
 	</div>
-	<input type="hidden" name="option" value="com_thm_groups"/>
-	<input type="hidden" name="task" value=""/>
-	<input type='hidden' id='jform_profileID' name='jform[profileID]' value='<?php echo $this->profileID; ?>'/>
 	<input type='hidden' id='jform_groupID' name='jform[groupID]' value='<?php echo $this->groupID; ?>'/>
-	<input type='hidden' id='jform_name' name='jform[name]' value='<?php echo $this->name; ?>'/>
 	<?php if (!empty($this->menuID)): ?>
 		<input type='hidden' id='jform_menuID' name='jform[menuID]' value='<?php echo $this->menuID; ?>'/>
 	<?php endif; ?>
+	<input type='hidden' id='jform_name' name='jform[name]' value='<?php echo $this->name; ?>'/>
+	<input type='hidden' id='jform_profileID' name='jform[profileID]' value='<?php echo $this->profileID; ?>'/>
+	<input type='hidden' id='jform_referrer'name='jform[referrer]' value='<?php echo $this->referrer; ?>'/>
+	<input type="hidden" name="option" value="com_thm_groups"/>
+	<input type="hidden" name="task" value=""/>
 	<?php echo JHtml::_('form.token'); ?>
-	<?php echo $this->getToolbar(); ?>
+	<?php echo $toolbar; ?>
 </form>

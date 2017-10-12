@@ -122,6 +122,12 @@ div.manager-page .btn-group li a:hover {
     background: #dfe5e6;
 }
 
+div.manager-page .title-column .btn {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
 div.manager-page .btn-column {
     text-align: center;
     width: 40px;
@@ -144,7 +150,7 @@ div.manager-page td span.red:before {
     color: #942a25;
 }
 
-div.manager-page td a:nth-child(2) {
+div.manager-page td a.jgrid {
     margin-left: 8px;
 }
 

@@ -32,6 +32,8 @@ class THM_GroupsController extends JControllerLegacy
 
 	private $menuID;
 
+	private $referrer;
+
 	private $surname;
 
 	private $resource = '';
@@ -73,10 +75,47 @@ class THM_GroupsController extends JControllerLegacy
 			$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'error');
 		}
 
-		$URL = "{$this->baseURL}&view=profile_edit&profileID={$this->profileID}&groupID={$this->groupID}";
-		$URL .= "&name={$this->surname}&Itemid={$this->menuID}";
+		$input = $app->input;
+		$input->set('profileID', $this->profileID);
+		$input->set('groupID', $this->groupID);
+		$input->set('name', $this->surname);
+		$input->set('Itemid', $this->menuID);
+		$input->set('referrer', $this->referrer);
 
-		$app->redirect(JRoute::_($URL));
+		parent::display();
+	}
+
+	/**
+	 * Checks in content
+	 *
+	 * @return void
+	 */
+	public function checkin()
+	{
+		$app               = JFactory::getApplication();
+		$model             = $this->getModel($this->resource);
+		$functionAvailable = (method_exists($model, 'checkin'));
+
+		if ($functionAvailable)
+		{
+			$success = $this->getModel($this->resource)->checkin();
+
+			if ($success)
+			{
+				$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_SUCCESS'));
+			}
+			else
+			{
+				$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'error');
+			}
+		}
+		else
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_ACTION_UNAVAILABLE'), 'error');
+		}
+
+		$referrer = $app->input->server->getString('HTTP_REFERER');
+		$app->redirect($referrer);
 	}
 
 	/**
@@ -112,24 +151,20 @@ class THM_GroupsController extends JControllerLegacy
 
 			if ($success)
 			{
-				$msg  = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-				$type = 'message';
+				$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_SUCCESS'));
 			}
 			else
 			{
-				$msg  = JText::_('COM_THM_GROUPS_SAVE_FAIL');
-				$type = 'error';
+				$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'error');
 			}
 		}
 		else
 		{
-			$msg  = JText::_('COM_THM_GROUPS_ACTION_UNAVAILABLE');
-			$type = 'error';
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_ACTION_UNAVAILABLE'), 'error');
 		}
 
-		$app->enqueueMessage($msg, $type);
-		$app->input->set('view', "{$this->resource}_manager");
-		parent::display();
+		$referrer = $app->input->server->getString('HTTP_REFERER');
+		$app->redirect($referrer);
 	}
 
 	/**
@@ -139,11 +174,13 @@ class THM_GroupsController extends JControllerLegacy
 	 */
 	private function preProcess()
 	{
-		$data = JFactory::getApplication()->input->get('jform', array(), 'array');
+		$input = JFactory::getApplication()->input;
+		$data  = $input->get('jform', array(), 'array');
 
-		$this->profileID = $data['profileID'];
 		$this->groupID   = $data['groupID'];
 		$this->menuID    = $data['menuID'];
+		$this->profileID = $data['profileID'];
+		$this->referrer  = $data['referrer'];
 		$this->surname   = $data['name'];
 
 		if (!THM_GroupsHelperComponent::canEditProfile($this->profileID))
@@ -174,6 +211,35 @@ class THM_GroupsController extends JControllerLegacy
 	}
 
 	/**
+	 * Saves changes to the profile and displays to the profile on success
+	 *
+	 * @return  void
+	 */
+	public function save2List()
+	{
+		$this->preProcess();
+
+		JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_thm_groups/models');
+		$model   = JModelLegacy::getInstance('profile', 'THM_GroupsModel');
+		$success = $model->save();
+
+		$app = JFactory::getApplication();
+		$URL = "{$this->baseURL}&Itemid={$this->menuID}";
+
+		if ($success)
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_SUCCESS'));
+		}
+		else
+		{
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'error');
+			$URL .= "&groupID={$this->groupID}&name={$this->surname}&profileID={$this->profileID}&view=profile_edit";
+		}
+
+		$app->redirect(JRoute::_($URL));
+	}
+
+	/**
 	 * Saves changes to the profile and redirects to the profile on success
 	 *
 	 * @return  void
@@ -187,18 +253,19 @@ class THM_GroupsController extends JControllerLegacy
 		$success = $model->save();
 
 		$app = JFactory::getApplication();
+		$URL = "{$this->baseURL}&Itemid={$this->menuID}";
+		$URL .= "&groupID={$this->groupID}&name={$this->surname}&profileID={$this->profileID}";
 
 		if ($success)
 		{
 			$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_SUCCESS'));
+			$URL .= '&view=profile';
 		}
 		else
 		{
 			$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'error');
+			$URL .= '&view=profile_edit';
 		}
-
-		$URL = "{$this->baseURL}&view=profile&profileID={$this->profileID}&groupID={$this->groupID}";
-		$URL .= "&name={$this->surname}&Itemid={$this->menuID}";
 
 		$app->redirect(JRoute::_($URL));
 	}
@@ -256,6 +323,7 @@ class THM_GroupsController extends JControllerLegacy
 	 */
 	public function toggle()
 	{
+		$app               = JFactory::getApplication();
 		$model             = $this->getModel($this->resource);
 		$functionAvailable = (method_exists($model, 'toggle'));
 
@@ -265,25 +333,20 @@ class THM_GroupsController extends JControllerLegacy
 
 			if ($success)
 			{
-				$msg  = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-				$type = 'message';
+				$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_SUCCESS'));
 			}
 			else
 			{
-				$msg  = JText::_('COM_THM_GROUPS_SAVE_FAIL');
-				$type = 'error';
+				$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'error');
 			}
 		}
 		else
 		{
-			$msg  = JText::_('COM_THM_GROUPS_ACTION_UNAVAILABLE');
-			$type = 'error';
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_ACTION_UNAVAILABLE'), 'error');
 		}
 
-		$app = JFactory::getApplication();
-		$app->enqueueMessage($msg, $type);
-		$app->input->set('view', "{$this->resource}_manager");
-		parent::display();
+		$referrer = $app->input->server->getString('HTTP_REFERER');
+		$app->redirect($referrer);
 	}
 
 	/**
@@ -303,23 +366,19 @@ class THM_GroupsController extends JControllerLegacy
 
 			if ($success)
 			{
-				$msg  = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-				$type = 'message';
+				$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_SUCCESS'));
 			}
 			else
 			{
-				$msg  = JText::_('COM_THM_GROUPS_SAVE_FAIL');
-				$type = 'error';
+				$app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'error');
 			}
 		}
 		else
 		{
-			$msg  = JText::_('COM_THM_GROUPS_ACTION_UNAVAILABLE');
-			$type = 'error';
+			$app->enqueueMessage(JText::_('COM_THM_GROUPS_ACTION_UNAVAILABLE'), 'error');
 		}
 
-		$app->enqueueMessage($msg, $type);
-		$app->input->set('view', "{$this->resource}_manager");
-		parent::display();
+		$referrer = $app->input->server->getString('HTTP_REFERER');
+		$app->redirect($referrer);
 	}
 }

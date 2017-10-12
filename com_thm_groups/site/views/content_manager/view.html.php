@@ -29,6 +29,11 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
  */
 class THM_GroupsViewContent_Manager extends JViewLegacy
 {
+	private $canCreate;
+
+	public $canEditAll;
+
+	public $canEditOne;
 
 	public $items;
 
@@ -62,9 +67,9 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 		$this->categoryID = $this->model->categoryID;
 		$this->menuID     = JFactory::getApplication()->input->getInt('Itemid', 0);
 
-		$profileID    = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
-		$profileName  = THM_GroupsHelperProfile::getDisplayName($profileID);
-		$contextTitle = $profileID == JFactory::getUser()->id ?
+		$this->profileID    = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
+		$profileName  = THM_GroupsHelperProfile::getDisplayName($this->profileID);
+		$contextTitle = $this->profileID == JFactory::getUser()->id ?
 			JText::_('COM_THM_GROUPS_MY_CONTENT') : JText::sprintf('COM_THM_GROUPS_MANAGE_CONTENT', $profileName);
 
 		if (!empty($this->menuID))
@@ -89,6 +94,11 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 			$this->pageTitle = $contextTitle;
 		}
 
+		$user             = JFactory::getUser();
+		$this->canCreate  = $user->authorise('core.create', 'com_content.category.' . $this->categoryID);
+		$this->canEditAll = $this->model->canEditAll;
+		$this->canEditOne = $this->model->canEditOne;
+
 		parent::display($tpl);
 	}
 
@@ -99,9 +109,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 	 */
 	public function getNewButton()
 	{
-		$canCreate = $this->model->hasUserRightToCreateArticle();
-
-		if ($canCreate)
+		if ($this->canCreate)
 		{
 			$menuID    = JFactory::getApplication()->input->getInt('Itemid', 0);
 			$returnURL = base64_encode("index.php?option=com_thm_groups&view=content_manager&Itemid=$menuID");
@@ -135,7 +143,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 		$profileID   = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
 		$groupID     = THM_GroupsHelperProfile::getDefaultGroup($profileID);
 		$surname     = THM_GroupsHelperProfile::getAttributeValue($profileID, 2);
-		$buttonURL   = "index.php?view=profile&layout=default&profileID=$profileID&name=$surname";
+		$buttonURL   = "index.php?view=profile&profileID=$profileID&name=$surname";
 		$buttonURL   .= empty($groupID) ? '' : "&groupID=$groupID";
 		$buttonRoute = JRoute::_($buttonURL);
 
@@ -158,21 +166,48 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 	 */
 	public function getRow($key, $item)
 	{
-		$sortIcon  = '<span class="sortable-handler" style="cursor: move;"><i class="icon-menu"></i></span>';
-		$sortInput = '<input type="text" style="display:none" name="order[]" size="5" ';
-		$sortInput .= 'value="' . (string) $item->ordering . '" class="width-20 text-area-order">';
-		$sort      = '<td class="order nowrap center" style="width: 40px;">' . $sortIcon . $sortInput . '</td>';
+		if ($this->canEditAll)
+		{
+			$sortIcon  = '<span class="sortable-handler" style="cursor: move;"><i class="icon-menu"></i></span>';
+			$sortInput = '<input type="text" style="display:none" name="order[]" size="5" ';
+			$sortInput .= 'value="' . (string) $item->ordering . '" class="width-20 text-area-order">';
+			$sort      = '<td class="order nowrap center" style="width: 40px;">' . $sortIcon . $sortInput . '</td>';
+		}
+		else
+		{
+			$sort = '';
+		}
 
-		$title = '<td>' . $this->getTitle($item) . '</td>';
+		if ($item->canEdit)
+		{
 
-		$published = '<td>';
-		$published .= THM_GroupsHelperContent::getStatusDropdown($key, $item);
-		$published .= JHtml::_('grid.id', $key, $item->id);
-		$published .= '</td>';
+			$published = '<td>';
+			$published .= THM_GroupsHelperContent::getStatusDropdown($key, $item);
+			$published .= JHtml::_('grid.id', $key, $item->id);
+			$published .= '</td>';
 
-		$listed = '<td class="btn-column">';
-		$listed .= $this->getToggle($item->id, $item->groups_featured, 'featured');
-		$listed .= '</td>';
+			$listed = '<td class="btn-column">';
+			$listed .= $this->getToggle($item->id, $item->groups_featured, 'featured');
+			$listed .= '</td>';
+		}
+		elseif ($this->canEditOne)
+		{
+			$published = '<td>';
+			$published .= JHtml::_('jgrid.published', $item->state, $key, "", false, 'cb', $item->publish_up, $item->publish_down);
+			$published .= JHtml::_('grid.id', $key, $item->id);
+			$published .= '</td>';
+
+			$listed = '<td class="btn-column">';
+			$listed .= $this->getToggle($item->id, $item->groups_featured, 'featured');
+			$listed .= '</td>';
+		}
+		else
+		{
+			$published = '';
+			$listed    = '';
+		}
+
+		$title = '<td class="title-column">' . $this->getTitle($key, $item) . '</td>';
 
 		return $sort . $title . $published . $listed;
 	}
@@ -250,34 +285,49 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 	/**
 	 * Returns a title of an article
 	 *
-	 * @param   object &$item An object item
+	 * @param int    $key     the key of the item being iterated
+	 * @param object &$item   An object item
 	 *
-	 * @return  string
+	 * @return  string the HTML for the title
 	 */
-	public function getTitle(&$item)
+	public function getTitle($key, &$item)
 	{
-		$profileID = JFactory::getUser()->id;
-		$surname   = THM_GroupsHelperProfile::getAttributeValue(JFactory::getUser()->id, 2);
-		$menuID    = JFactory::getApplication()->input->getInt('Itemid', 0);
+		$profileID   = JFactory::getUser()->id;
+		$surname     = THM_GroupsHelperProfile::getAttributeValue(JFactory::getUser()->id, 2);
+		$menuID      = JFactory::getApplication()->input->getInt('Itemid', 0);
+		$viewURL     = 'index.php?option=com_thm_groups&view=content';
+		$viewURL     .= "&id=$item->id&alias=$item->alias&profileID=$profileID&name=$surname";
+		$viewRoute   = JRoute::_($viewURL, false);
+		$viewAttribs = array('title' => JText::_('COM_THM_GROUPS_VIEW'), 'class' => 'jgrid', 'target' => '_blank');
 
-		$returnURL    = base64_encode(JUri::current());
-		$editURL      = 'index.php?option=com_content&task=article.edit';
-		$editURL      .= "&Itemid=$menuID'&a_id=$item->id&return=$returnURL";
-		$editRoute    = JRoute::_($editURL);
-		$titleAttribs = array('title' => JText::_('COM_THM_GROUPS_EDIT'));
-		$titleLink    = JHTML::_('link', $editRoute, $item->title, $titleAttribs);
+		if ($item->canEdit)
+		{
+			$lock = '';
 
+			if (!empty($item->checked_out))
+			{
+				$lock .= JHtml::_('jgrid.checkedout', $key, $item->author_name, $item->checked_out_time, 'content.', true);
+			}
 
-		$viewText     = '<span class="icon-eye-open"></span>';
-		$contentURL   = 'index.php?option=com_thm_groups&view=content';
-		$contentURL   .= "&id=$item->id&alias=$item->alias&profileID=$profileID&name=$surname";
-		$contentRoute = JRoute::_($contentURL, false);
-		$editAttribs  = array('title' => JText::_('COM_THM_GROUPS_VIEW'), 'class' => 'jgrid', 'target' => '_blank');
-		$editLink     = JHTML::_('link', $contentRoute, $viewText, $editAttribs);
+			$returnURL = base64_encode(JUri::current());
+			$editURL   = 'index.php?option=com_content&task=article.edit';
+			$editURL   .= "&Itemid=$menuID'&a_id=$item->id&return=$returnURL";
+			$editRoute = JRoute::_($editURL);
 
-		$category = "<div class='small'>" . JText::_('JCATEGORY') . ": " . $item->category_title . "</div>";
+			$editAttribs = array('title' => JText::_('COM_THM_GROUPS_EDIT'));
+			$editLink    = $lock . JHTML::_('link', $editRoute, $item->title, $editAttribs);
 
-		return $titleLink . $editLink . $category;
+			$viewText = '<span class="icon-eye-open"></span>';
+
+		}
+		else
+		{
+			$editLink = '';
+			$viewText = $item->title;
+		}
+
+		$viewLink = JHTML::_('link', $viewRoute, $viewText, $viewAttribs);
+		return $editLink . $viewLink;
 	}
 
 	/**

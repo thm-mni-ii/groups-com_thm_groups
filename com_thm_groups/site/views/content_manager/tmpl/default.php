@@ -16,6 +16,7 @@ defined('_JEXEC') or die;
 
 $saveOrderingUrl = 'index.php?option=com_thm_groups&task=content.saveOrderAjax&tmpl=component';
 JHtml::_('sortablelist.sortable', 'content_manager-list', 'adminForm', null, $saveOrderingUrl);
+$rowClass = $this->canEditAll ? 'order dndlist-sortable' : '';
 
 ?>
 <div id="j-main-container" class="manager-page">
@@ -33,21 +34,26 @@ JHtml::_('sortablelist.sortable', 'content_manager-list', 'adminForm', null, $sa
 			<table class="table table-striped" id="content_manager-list">
 				<thead>
 				<tr>
-					<th></th>
+					<?php if ($this->canEditAll) : ?>
+						<th></th>
+					<?php endif; ?>
 					<th>
 						<?php echo JText::_('COM_THM_GROUPS_TITLE'); ?>
 					</th>
-					<th class="hasTip" title="<?php echo JText::_('COM_THM_GROUPS_STATUS_TIP') ?>">
-						<?php echo JText::_('COM_THM_GROUPS_STATUS'); ?>
-					</th>
-					<th class="hasTip btn-column" title="<?php echo JText::_('COM_THM_GROUPS_MENU_TIP') ?>">
-						<?php echo JText::_('COM_THM_GROUPS_MENU'); ?>
-					</th>
+					<?php if ($this->canEditOne) : ?>
+						<th class="hasTip" title="<?php echo JText::_('COM_THM_GROUPS_STATUS_TIP') ?>">
+							<?php echo JText::_('COM_THM_GROUPS_STATUS'); ?>
+						</th>
+						<th class="hasTip btn-column" title="<?php echo JText::_('COM_THM_GROUPS_MENU_TIP') ?>">
+							<?php echo JText::_('COM_THM_GROUPS_MENU'); ?>
+						</th>
+					<?php endif; ?>
 				</tr>
 				</thead>
 				<tbody class="ui-sortable">
 				<?php foreach ($this->items as $key => $item): ?>
-					<tr class="order nowrap center dndlist-sortable" id="<?php echo $item->id; ?>">
+					<tr class="nowrap center <?php echo $rowClass; ?>"
+						id="<?php echo $item->id; ?>">
 						<?php echo $this->getRow($key, $item); ?>
 					</tr>
 				<?php endforeach; ?>
@@ -59,6 +65,7 @@ JHtml::_('sortablelist.sortable', 'content_manager-list', 'adminForm', null, $sa
 		<input type="hidden" name="option" value="com_thm_groups"/>
 		<input type="hidden" name="view" value="content_manager"/>
 		<input type="hidden" name="Itemid" value="<?php echo $this->menuID; ?>"/>
+		<input type="hidden" name="profileID" value="<?php echo $this->profileID; ?>"/>
 		<?php echo JHtml::_('form.token'); ?>
 	</form>
 </div>

@@ -39,16 +39,6 @@
       display: inline-block;
       margin-left: 10px;
 
-      .validation-container {
-
-        margin-left: 5px;
-        float: left;
-
-        .icon-publish {
-          margin-right: 0;
-        }
-      }
-
       .image-container, .image-button-container, .image-button {
         float: left;
       }
@@ -62,7 +52,7 @@
 
     .publish-container {
       display: inline-block;
-      margin-left: 30px;
+      margin-left: .4rem;
       vertical-align: top;
 
       input {

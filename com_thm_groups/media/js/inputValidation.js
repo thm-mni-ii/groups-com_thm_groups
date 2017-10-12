@@ -70,29 +70,33 @@ function disable()
 
 function validateInput(regex, inputField)
 {
-	var field = document.getElementById(inputField),
-		input = field.value,
-		regexObj = new RegExp(regex),
-		valid = regexObj.test(input),
-		cancel = "<span class='icon-publish'></span>";
 
-	//Todo: check all required fields are set to valid when save is active
+	var field, value, regexObj, valid;
+
+	if (regex == '')
+	{
+		return;
+	}
+
+	field  = document.getElementById(inputField);
+	value = field.value;
+	regexObj = new RegExp(regex);
+	valid = regexObj.test(input);
+
 	if (valid)
 	{
 		field.setAttribute('data', 'valid');
-		field.style.cssText = "border-color: green !important; float: left !important;";
-		document.getElementById(inputField + "_icon").innerHTML = cancel;
-		jQuery("#" + inputField + "_message").empty();
+		field.style.cssText = "border-color: green;";
+		field.title = '';
 	}
 	else
 	{
-		document.getElementById(inputField + "_message").innerHTML = "";
 		field.setAttribute('data', 'invalid');
+
 		if (field.getAttribute('data-req') !== 'false')
 		{
-			field.style.cssText = "border-color: red !important; float: left !important;";
-			document.getElementById(inputField + "_icon").innerHTML = cancel;
-			jQuery("#" + inputField + "_message").append("</br></br><div class='text-error'>Entered value ist invalid!</div>");
+			field.style.cssText = "border-color: red;";
+			field.title = 'Invalid';
 		}
 	}
 	disable();
