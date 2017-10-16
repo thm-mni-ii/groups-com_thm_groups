@@ -12,6 +12,7 @@ a.btn {
 .profile-container {
 
   clear: both;
+  padding-bottom: 1rem;
 
   div.clearFix {
     clear: both;
@@ -26,10 +27,13 @@ a.btn {
     }
   }
 
-  .attribute-inline, .attribute-wrap {
-    display: inline-block;
+  .attribute-inline, .attribute-textfield, .attribute-wrap {
     float: left;
     padding: 0.3rem 0;
+  }
+
+  .attribute-inline, .attribute-wrap {
+    display: inline-block;
   }
 
   .attribute-label, .attribute-value {
@@ -44,20 +48,11 @@ a.btn {
     vertical-align: top;
   }
 
-  .attribute-wrap {
+  .attribute-textfield, .attribute-wrap {
     clear: left;
   }
 
-  .attribute-textfield {
-
-    clear: left;
-    margin-top: 1rem;
-    padding: 1rem 0;
-
-    .attribute-label {
-      font-family: $font-family-header;
-      margin-bottom: .8rem;
-      text-align: left;
-    }
+  .attribute-textfield h3{
+    margin: 1.5rem 0 1rem 0;
   }
 }

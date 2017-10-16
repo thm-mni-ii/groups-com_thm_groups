@@ -280,6 +280,28 @@ class THM_GroupsHelperComponent
 	}
 
 	/**
+	 * Removes empty tags or tags with &nbsp; recursively
+	 *
+	 * @param string $original the original text
+	 *
+	 * @return string the text without empty tags
+	 */
+	public static function cleanText($original)
+	{
+		$pattern = "/<[^\/>]*>([\s|\&nbsp;]?)*<\/[^>]*>/";
+		$cleaned = preg_replace($pattern, '', $original);
+
+		// If the text remains unchanged there is no more to be done => bubble up
+		if ($original == $cleaned)
+		{
+			return $original;
+		}
+
+		// There could still be further empty tags which encased the original empties.
+		return self::cleanText($cleaned);
+	}
+
+	/**
 	 * Redirects to the homepage and displays a message about missing access rights
 	 *
 	 * @return  void

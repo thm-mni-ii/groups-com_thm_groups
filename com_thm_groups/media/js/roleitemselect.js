@@ -11,8 +11,6 @@
  * See COPYRIGHT.php for copyright notices and details.
  */
 
-jQuery.noConflict();
-
 jQuery(document).ready(function () {
 	jQuery("#paramsattr").sortable({
 		stop: function (event, ui) {

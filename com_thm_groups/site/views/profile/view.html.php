@@ -28,6 +28,8 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/template.php';
  */
 class THM_GroupsViewProfile extends JViewLegacy
 {
+	private $profile;
+
 	public $profileID;
 
 	protected $links;
@@ -69,9 +71,13 @@ class THM_GroupsViewProfile extends JViewLegacy
 	 */
 	public function renderAttributes()
 	{
-		$attributes          = '';
-		$attributeContainers = [];
-		$surname             = $this->profile[2]['value'];
+		$attributes = [];
+
+		// Spoofs a textfield to borrow the styling of a textfield label
+		$contactHeader = '<h3>' . JText::_('COM_THM_GROUPS_CONTACT_HEADER') . '</h3>';
+		$attributes[] = $contactHeader;
+
+		$surname    = $this->profile[2]['value'];
 
 		foreach ($this->profile as $attribute)
 		{
@@ -90,19 +96,15 @@ class THM_GroupsViewProfile extends JViewLegacy
 
 			if (($attribute['type'] == 'PICTURE'))
 			{
-				array_unshift($attributeContainers, $attributeContainer);
+				array_unshift($attributes, $attributeContainer);
 			}
 			else
 			{
-				$attributeContainers[] = $attributeContainer;
+				$attributes[] = $attributeContainer;
 			}
 		}
 
-		$attributes .= implode('', $attributeContainers);
-
-		$attributes .= '<div class="clearFix"></div>';
-
-		echo $attributes;
+		echo implode('', $attributes);
 	}
 
 	/**
@@ -290,7 +292,7 @@ class THM_GroupsViewProfile extends JViewLegacy
 			return '';
 		}
 
-		$text = '<span class="icon-arrow-left-22"></span> ' . JText::_("COM_THM_GROUPS_BACK_BUTTON");
+		$text       = '<span class="icon-arrow-left-22"></span> ' . JText::_("COM_THM_GROUPS_BACK_BUTTON");
 		$attributes = ['class' => 'btn'];
 
 		$menuID = JFactory::getApplication()->input->get('Itemid');
@@ -298,7 +300,7 @@ class THM_GroupsViewProfile extends JViewLegacy
 		if (empty($menuID))
 		{
 			$attributes = ['onclick' => 'window.history.back()'];
-			$url = '#';
+			$url        = '#';
 		}
 		else
 		{

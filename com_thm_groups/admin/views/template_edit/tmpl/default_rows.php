@@ -21,13 +21,12 @@ foreach ($this->attributes as $key => $attribute)
 	$published = isset($attribute['published']) ? $attribute['published'] : 1;
 	$useParams = !empty($params);
 
-	$showIcon = $showLabel = $wrap = 1;
+	$showIcon = $showLabel = 1;
 
 	if ($useParams)
 	{
 		$showIcon  = isset($params['showIcon']) ? $params['showIcon'] : 1;
 		$showLabel = isset($params['showLabel']) ? $params['showLabel'] : 1;
-		$wrap      = isset($params['wrap']) ? $params['wrap'] : 1;
 	}
 
 	?>
@@ -62,11 +61,6 @@ foreach ($this->attributes as $key => $attribute)
 		<td>
 			<?php
 			echo $this->renderRadioBtn('show_label', $attribute, $showLabel);
-			?>
-		</td>
-		<td>
-			<?php
-			echo $this->renderRadioBtn('wrap', $attribute, $wrap);
 			?>
 		</td>
 	</tr>

@@ -679,11 +679,13 @@ class THM_GroupsModelProfile extends JModelLegacy
 				continue;
 			}
 
+			$rawValue     = empty(strip_tags(trim($attribute['value']))) ? '' : trim($attribute['value']);
+			$cleanedValue = THM_GroupsHelperComponent::cleanText($rawValue);
+
 			$query = $this->_db->getQuery(true);
 			$query->update('#__thm_groups_users_attribute');
 
-			$rawValue = empty(strip_tags(trim($attribute['value']))) ? '' : trim($attribute['value']);
-			$value    = $this->_db->q($rawValue);
+			$value = $this->_db->q($cleanedValue);
 			$query->set("value = $value");
 
 			$published = empty($attribute['published']) ? 0 : 1;

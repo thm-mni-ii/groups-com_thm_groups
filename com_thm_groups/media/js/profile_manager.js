@@ -1,7 +1,6 @@
-var jq = jQuery.noConflict();
-jq(document).ready(function () {
+jQuery(document).ready(function () {
 
-	jq("#toolbar-batch").click(function () {
+	jQuery("#toolbar-batch").click(function () {
 		if (document.adminForm.boxchecked.value === 0)
 		{
 			alert('Please first make a selection from the list');
@@ -10,7 +9,7 @@ jq(document).ready(function () {
 	});
 
 	// Chained select field
-	jq("#batch-roles-id").remoteChained({
+	jQuery("#batch-roles-id").remoteChained({
 		parents: "#batch-groups-id",
 		url: "index.php?option=com_thm_groups&view=roles_ajax&format=raw"
 	});
@@ -21,25 +20,25 @@ jq(document).ready(function () {
 	 By click on Add button, selected group and roles will scanned
 	 and passed to div with the id "group-roles-id"
 	 */
-	jq('#batch-add-btn').on('click', function () {
+	jQuery('#batch-add-btn').on('click', function () {
 
-		jq('#error-label').empty();
+		jQuery('#error-label').empty();
 
 		// get selected group id
-		var groupID = jq("#batch-groups-id option:selected").val();
+		var groupID = jQuery("#batch-groups-id option:selected").val();
 		// get selected group name
-		var groupName = jq("#batch-groups-id option:selected").text();
+		var groupName = jQuery("#batch-groups-id option:selected").text();
 		// get selected role ids, comma separated
-		var roleIDs = jq("#batch-roles-id").chosen().val();
+		var roleIDs = jQuery("#batch-roles-id").chosen().val();
 
 		// get selected role names
 		// Chosen plugin can't give the text of option normal :(
 		// Because if that we need to get it in another way
-		var roleNames = jq("#roles-div-id .result-selected");
+		var roleNames = jQuery("#roles-div-id .result-selected");
 
 		if (roleIDs === null || groupID === "" || roleNames === null)
 		{
-			jq('#error-label').append("ERROR -> Yod didn't choose any group or role!");
+			jQuery('#error-label').append("ERROR -> Yod didn't choose any group or role!");
 			return false;
 		}
 
@@ -47,8 +46,8 @@ jq(document).ready(function () {
 		var roles = [];
 
 		// assign role name to role id
-		jq.each(roleIDs, function (key, value) {
-			if (jq.inArray(key, roleNames))
+		jQuery.each(roleIDs, function (key, value) {
+			if (jQuery.inArray(key, roleNames))
 			{
 				// this line is here because of bug, without this check bug appears randomly
 				if (typeof roleNames[key] !== 'undefined')
@@ -59,7 +58,7 @@ jq(document).ready(function () {
 		});
 
 		gr.addGroup({id: groupID, name: groupName});
-		jq.each(roles, function (key, value) {
+		jQuery.each(roles, function (key, value) {
 			gr.addRoleToGroup(groupID, value);
 		});
 
@@ -71,7 +70,7 @@ jq(document).ready(function () {
 function updateHiddenField()
 {
 	var data = gr.getData();
-	jq('#batch-data').val(encodeURIComponent(JSON.stringify(data)));
+	jQuery('#batch-data').val(encodeURIComponent(JSON.stringify(data)));
 }
 
 /**
@@ -83,21 +82,20 @@ function updateView()
 {
 	var data = gr.getData();
 	// put groups with roles to div
-	jq('#group-roles-id').empty();
+	jQuery('#group-roles-id').empty();
 
 	console.log(data);
 
-	jq.each(data, function (key, group) {
-		jq('#group-roles-id').append("<br /><b><span class='icon-trash' onclick='gr.removeGroup(" + group.id + ");updateView();'></span> " + group.name + "</b>");
-		jq('#group-roles-id').append(" : ");
+	jQuery.each(data, function (key, group) {
+		jQuery('#group-roles-id').append("<br /><b><span class='icon-trash' onclick='gr.removeGroup(" + group.id + ");updateView();'></span> " + group.name + "</b>");
+		jQuery('#group-roles-id').append(" : ");
 
 		var roles = [];
-		jq.each(group.roles, function (key, role) {
+		jQuery.each(group.roles, function (key, role) {
 			roles.push(role.name + " <span class='icon-trash' onclick='gr.removeRoleFromGroup(" + group.id + "," + role.id + ");updateView();'></span>");
 		});
 
-		jq('#group-roles-id').append(roles.join(', '));
-		//jq(roles.join(', ')).appendTo('#group-roles-id').fadeIn('slow');
+		jQuery('#group-roles-id').append(roles.join(', '));
 
 		updateHiddenField();
 	});
@@ -134,7 +132,6 @@ if (!Array.prototype.find)
  */
 function BatchData()
 {
-
 	// {id: 1, name: "asd", roles: [ {id: 1, roleName: "asd"} ]}
 	var data = [], me = this;
 

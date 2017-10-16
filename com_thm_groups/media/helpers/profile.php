@@ -11,6 +11,8 @@
  */
 
 require_once "group.php";
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
+
 
 /**
  * Class providing helper functions for batch select options
@@ -84,13 +86,9 @@ class THM_GroupsHelperProfile
 			{
 				$container .= '<div class="attribute-textfield">';
 			}
-			elseif (!empty($attribute['params']['wrap']))
-			{
-				$container .= '<div class="attribute-wrap">';
-			}
 			else
 			{
-				$container .= '<div class="attribute-inline">';
+				$container .= '<div class="attribute-wrap">';
 			}
 
 			$label .= self::getLabelContainer($attribute);
@@ -116,7 +114,7 @@ class THM_GroupsHelperProfile
 		}
 
 		$container .= self::getValueContainer($attribute, $surname, $labeled, $suppressText);
-
+		$container .= '<div class="clearFix"></div>';
 		$container .= "</div>";
 
 		return $container;
@@ -244,21 +242,15 @@ class THM_GroupsHelperProfile
 		$showLabel = (!empty($attribute['params']['showLabel']) AND !empty($text));
 		$label     = '';
 
-		if ($showIcon OR $showLabel)
+		if ($showIcon)
 		{
-			$long  = (!$showIcon AND strlen($text) > 10);
-			$label .= $long ? '<div class="attribute-label attribute-label-long">' : '<div class="attribute-label">';
-
-			if ($showIcon)
-			{
-				$label .= '<span class="' . $attribute['params']['icon'] . '" title="' . $text . '"></span>';
-			}
-			elseif ($showLabel)
-			{
-				$label .= JText::_($attribute['name']);
-			}
-
+			$label .= '<div class="attribute-label">';
+			$label .= '<span class="' . $attribute['params']['icon'] . '" title="' . $text . '"></span>';
 			$label .= '</div>';
+		}
+		elseif ($showLabel)
+		{
+			$label .= '<h3>' . JText::_($attribute['name']) . '</h3>';
 		}
 
 		return $label;
@@ -369,7 +361,7 @@ class THM_GroupsHelperProfile
 		$query = $dbo->getQuery(true);
 
 		$query->select('DISTINCT a.id AS structid, a.name as name, a.options as options, a.description AS description');
-		$query->select('d.options as dynOptions, d.description as dynDescription, d.regex as regex, d.name as dyntype');
+		$query->select('d.options as dynOptions, d.regex as regex, d.name as dyntype');
 		$query->select('s.name as type');
 		$query->select('ua.usersID as id, ua.value, ua.published as publish');
 		$query->from('#__thm_groups_attribute AS a');
@@ -585,7 +577,8 @@ class THM_GroupsHelperProfile
 
 			case "TEXTFIELD":
 
-				$text = trim(htmlspecialchars_decode($attribute['value']));
+				$text = THM_GroupsHelperComponent::cleanText($attribute['value']);
+				$text = trim(htmlspecialchars_decode($text));
 
 				// Normalize new lines
 				if (stripos($text, '<li>') === false && stripos($text, '<table') === false)
@@ -623,6 +616,10 @@ class THM_GroupsHelperProfile
 		elseif ($labeled == 'label')
 		{
 			$classes[] = 'attribute-labeled';
+		}
+		elseif ($labeled == 'label-long')
+		{
+			$classes[] = 'attribute-break';
 		}
 		else
 		{

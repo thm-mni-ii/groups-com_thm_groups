@@ -193,7 +193,6 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 	{
 		$container = '';
 
-		// Open Column Wrapper Tag - Only for float-attribute, now is easy to work with width:100%
 		if ($half)
 		{
 			$container .= '<div class="profile-container half">';

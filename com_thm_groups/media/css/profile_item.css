@@ -28,6 +28,7 @@ a.btn {
 
 .profile-container {
     clear: both;
+    padding-bottom: 1rem;
 }
 
 .profile-container div.clearFix {
@@ -43,10 +44,13 @@ a.btn {
     max-width: 10rem;
 }
 
-.profile-container .attribute-inline, .profile-container .attribute-wrap {
-    display: inline-block;
+.profile-container .attribute-inline, .profile-container .attribute-textfield, .profile-container .attribute-wrap {
     float: left;
     padding: 0.3rem 0;
+}
+
+.profile-container .attribute-inline, .profile-container .attribute-wrap {
+    display: inline-block;
 }
 
 .profile-container .attribute-label, .profile-container .attribute-value {
@@ -61,18 +65,10 @@ a.btn {
     vertical-align: top;
 }
 
-.profile-container .attribute-wrap {
+.profile-container .attribute-textfield, .profile-container .attribute-wrap {
     clear: left;
 }
 
-.profile-container .attribute-textfield {
-    clear: left;
-    margin-top: 1rem;
-    padding: 1rem 0;
-}
-
-.profile-container .attribute-textfield .attribute-label {
-    font-family: "THM-Medium", Arial, Helvetica, sans-serif;
-    margin-bottom: .8rem;
-    text-align: left;
+.profile-container .attribute-textfield h3 {
+    margin: 1.5rem 0 1rem 0;
 }

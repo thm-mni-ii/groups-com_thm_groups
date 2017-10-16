@@ -445,7 +445,6 @@ class THM_GroupsModelTemplate extends JModelLegacy
 		$jsonParams              = [];
 		$jsonParams['showLabel'] = isset($attribute['show_label']) ? (int) $attribute['show_label'] : 0;
 		$jsonParams['showIcon']  = isset($attribute['show_icon']) ? (int) $attribute['show_icon'] : 0;
-		$jsonParams['wrap']      = isset($attribute['wrap']) ? (int) $attribute['wrap'] : 0;
 		$attribute['params']     = json_encode($jsonParams);
 
 		$templateAttribute = $this->getTable('Template_Attribute', 'THM_GroupsTable');

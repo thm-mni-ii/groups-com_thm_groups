@@ -40,9 +40,6 @@ defined('_JEXEC') or die;
 			<th><span class="hasTooltip"
 					  title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_SHOW_LABEL', 'COM_THM_GROUPS_TEMPLATE_EDIT_SHOW_LABEL_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_SHOW_LABEL'); ?></span>
 			</th>
-			<th><span class="hasTooltip"
-					  title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_WRAP', 'COM_THM_GROUPS_TEMPLATE_EDIT_WRAP_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_WRAP'); ?></span>
-			</th>
 		</tr>
 		</thead>
 		<tbody>

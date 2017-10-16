@@ -210,11 +210,11 @@ INSERT INTO `#__thm_groups_profile` (`id`, `name`, `ordering`) VALUES (1, 'Stand
 
 INSERT INTO `#__thm_groups_profile_attribute` (`ID`, `profileID`, `attributeID`, `published`, `ordering`, `params`)
 VALUES
-  (1, 1, 1, 1, 2, '{ "showLabel":1, "showIcon":1, "wrap":1}'),
-  (2, 1, 2, 1, 3, '{ "showLabel":1, "showIcon":1, "wrap":1}'),
-  (3, 1, 4, 1, 5, '{ "showLabel":1, "showIcon":1, "wrap":1}'),
-  (4, 1, 5, 1, 1, '{ "showLabel":1, "showIcon":1, "wrap":1}'),
-  (5, 1, 7, 1, 4, '{ "showLabel":1, "showIcon":1, "wrap":1}');
+  (1, 1, 1, 1, 2, '{ "showLabel":1, "showIcon":1}'),
+  (2, 1, 2, 1, 3, '{ "showLabel":1, "showIcon":1}'),
+  (3, 1, 4, 1, 5, '{ "showLabel":1, "showIcon":1}'),
+  (4, 1, 5, 1, 1, '{ "showLabel":1, "showIcon":1}'),
+  (5, 1, 7, 1, 4, '{ "showLabel":1, "showIcon":1}');
 
 INSERT INTO `#__thm_groups_roles` (`id`, `name`, `ordering`) VALUES
   (1, 'Mitglied', 3),

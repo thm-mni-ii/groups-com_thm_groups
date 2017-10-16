@@ -105,7 +105,7 @@ class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
 		parent::modifyDocument();
 
 		$document = JFactory::getDocument();
-		$document->addScript(JURI::root(true) . '/media/com_thm_groups/js/lib/jquery.chained.remote.js');
+		$document->addScript(JURI::root(true) . '/media/com_thm_groups/js/jquery.chained.remote.js');
 		$document->addScript(JURI::root(true) . '/media/com_thm_groups/js/profile_manager.js');
 	}
 }
