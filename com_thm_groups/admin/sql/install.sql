@@ -1,5 +1,4 @@
 # noinspection SqlNoDataSourceInspectionForFile
-SET foreign_key_checks = 0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
@@ -47,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_users_content` (
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_static_type` (
   `id`          INT(11)      NOT NULL AUTO_INCREMENT,
-  `name`        VARCHAR(255) NOT NULL,
+  `name`        VARCHAR(100) NOT NULL,
   `description` TEXT         NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC)
@@ -56,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_static_type` (
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_dynamic_type` (
   `id`            INT(11)      NOT NULL AUTO_INCREMENT,
-  `name`          VARCHAR(255) NOT NULL,
+  `name`          VARCHAR(100) NOT NULL,
   `regex`         TEXT         NULL,
   `static_typeID` INT(11)      NOT NULL,
   `description`   TEXT         NULL,
@@ -72,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_dynamic_type` (
 CREATE TABLE IF NOT EXISTS `#__thm_groups_attribute` (
   `id`             INT(11)      NOT NULL AUTO_INCREMENT,
   `dynamic_typeID` INT(11)      NOT NULL,
-  `name`           VARCHAR(255) NOT NULL,
+  `name`           VARCHAR(100) NOT NULL,
   `options`        TEXT         NULL,
   `description`    TEXT         NULL,
   `published`      TINYINT(1)            DEFAULT 0,
@@ -188,12 +187,16 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_settings` (
 )
   ENGINE = InnoDB;
 
-INSERT INTO `#__thm_groups_attribute` (`id`, `name`, `dynamic_typeID`, `description`, `options`) VALUES
-  (1, 'Vorname', 1, '', '{"length":40, "required":false}'),
-  (2, 'Nachname', 1, '', '{"length":40, "required":false}'),
-  (4, 'Email', 1, '', '{"length":40, "required":false}'),
-  (5, 'Titel', 1, '', '{"length":15, "required":false}'),
-  (7, 'Posttitel', 1, '', '{"length":15, "required":false}');
+INSERT INTO `#__thm_groups_static_type` (`id`, `name`, `description`) VALUES
+  (1, 'TEXT', ''),
+  (2, 'TEXTFIELD', ''),
+  (3, 'LINK', ''),
+  (4, 'PICTURE', ''),
+  (5, 'MULTISELECT', ''),
+  (6, 'TABLE', ''),
+  (7, 'NUMBER', ''),
+  (8, 'DATE', ''),
+  (9, 'TEMPLATE', '');
 
 INSERT INTO `#__thm_groups_dynamic_type` (`id`, `name`, `static_typeID`, `description`, `options`) VALUES
   (1, 'TEXT', 1, '', '{"length":40}'),
@@ -205,6 +208,13 @@ INSERT INTO `#__thm_groups_dynamic_type` (`id`, `name`, `static_typeID`, `descri
   (7, 'NUMBER', 7, '', '{}'),
   (8, 'DATE', 8, '', '{}'),
   (9, 'TEMPLATE', 9, '', '{}');
+
+INSERT INTO `#__thm_groups_attribute` (`id`, `name`, `dynamic_typeID`, `description`, `options`) VALUES
+  (1, 'Vorname', 1, '', '{"length":40, "required":false}'),
+  (2, 'Nachname', 1, '', '{"length":40, "required":false}'),
+  (4, 'Email', 1, '', '{"length":40, "required":false}'),
+  (5, 'Titel', 1, '', '{"length":15, "required":false}'),
+  (7, 'Posttitel', 1, '', '{"length":15, "required":false}');
 
 INSERT INTO `#__thm_groups_profile` (`id`, `name`, `ordering`) VALUES (1, 'Standard', 1);
 
@@ -220,16 +230,3 @@ INSERT INTO `#__thm_groups_roles` (`id`, `name`, `ordering`) VALUES
   (1, 'Mitglied', 3),
   (2, 'Manager', 2),
   (3, 'Administrator', 1);
-
-INSERT INTO `#__thm_groups_static_type` (`id`, `name`, `description`) VALUES
-  (1, 'TEXT', ''),
-  (2, 'TEXTFIELD', ''),
-  (3, 'LINK', ''),
-  (4, 'PICTURE', ''),
-  (5, 'MULTISELECT', ''),
-  (6, 'TABLE', ''),
-  (7, 'NUMBER', ''),
-  (8, 'DATE', ''),
-  (9, 'TEMPLATE', '');
-
-SET foreign_key_checks = 1;

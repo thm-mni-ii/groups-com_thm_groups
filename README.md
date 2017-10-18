@@ -1,46 +1,72 @@
-#Component THM Groups
+#THM Groups
 
-<a href="http://icampus.thm.de"> <img src="com_thm_groups/media/images/iCampusLogo_V2.png"
-alt="Homepage of iCampus"height="180" /></a>
+Extends and integrates Joomla! user, user group, content and contact management.
 
-Whereas the user management of Joomla! only supports expected entry attributes like name, username and email address, THM Groups provides the possibility to manage additional attributes. With THM Groups, users have the opportunity to manage their attributes for themselves on a Joomla!-based website. The same applies to user groups....
+Joomla users and contacts are combined into profiles which integrate the
+functions of both to create profiles. Profiles are extensible via custom
+attributes which can be anything from a telephone to a list of publications.
 
-In all software there are mistakes that need to be fixed. The source
-code of iCampus projects is centrally located on the internet, making it
-accessible to everyone. Besides that there is a possibility to report
-bugs. Reported bugs will be solved and eventually need testing. This
-page explains how you can contribute to the iCampus projects by testing
-proposed solutions or sending change requests. You do not need to have
-any coding knowledge, you do need a Joomla installation to test on.
+The formatting of profiles is accomplished by templates which determine the
+ordering and labeling of the individual attributes. Labels can be textual or
+icons from the IcoMoon set can be chosen. The exception to this customization
+arte the attributes for names, titles and pictures which receive special
+handling in formatting and as a rule are never labeled.
 
-<a href="http://icampus.thm.de/jira/issues/"><img src="com_thm_groups/media/images/issues_button.png"
-alt="Issues"height="80" align="center"/></a>
-</br>
+Profiles can be allowed to create personalized content and will then be
+associated with a category which shares their name.
 
-#Overview
-An overview of the iCampus development infrastructure is available at
-<http://dev.mni.thm.de/>.
-The illustration provides several links that direct to the depicted
-systems. The figure simplifies the orientation for developers.
+Groups can be assigned roles. While semantically similar to user groups. They
+denote real world groupings which may or may not have additional
+responsibilities. Because these groupings have no consequences as concerns
+Joomla access and viewing rights they are uncoupled from them and do not
+unnecessarily bloat this resource.
 
-#Process
-In order to contribute to the iCampus software projects the first step
-is to discover the latest projects on GitHub. A description of the
-projects and iCampus working group can be found at:
-<http://icampus.thm.de/>
+##Component
 
--   1\. Discover projects at: <https://github.com/icampus>
--   2\. Clone desired project to your local workspace. Follow Instructions
-    at: <https://help.github.com/articles/cloning-a-repository>
--   3\. Spectate or create related issues at:
-    <http://icampus.thm.de/jira/issues> (spectate)
-    <http://icampus.thm.de/jira/secure/CreateIssue.jspa> (create)
--   4\. In order to submit a pull request to the project, follow the
-    instructions at:
-    <https://help.github.com/articles/creating-a-pull-request>
-    -   Please ensure to enrich the issue number (e.g ORGANIZER-150) to
-        the commit message. Issue numbers can be found within the
-        related Jira (issue-tracker) ticket.
+The component provides an administrative area for resource management and a
+public area for the display of managed resources. Additionally the the
+component provides general purpose functionality also used by the other package
+extenstions.
 
-Questions may be directed to the following email address:
-icampus@lists.thm.de
+###Public views
+
+* Advanced - a formatted display of profiles associated with a group
+* Content Manager - a list of the content in a profile's personal category
+* Content - a single personal content item
+* Overview - a list of links to the profiles associated with a group
+* Profile - a single profile with all published attributes
+* Profile Editor - a form for editing profile attribute values and publication
+(restricted)
+
+##Menu Module
+
+Creates a menu related to the profile or profile related content being
+displayed. This will always display menu-published content, and can be
+configured to display a link to the profile itself. Administrators and the
+profile user will also be shown links to views which manage personal resources:
+the profile editor, the content manager and the joomla content editor
+(with the category restricted).
+
+##Profiles Module
+
+Displays profiles as parametrized in content. The profiles display is designed
+to resemble the output of the 'Advanced' view. (See **Profiles Button Plugin**.)
+
+##Content Plugin
+
+Resolves parameter hooks inserted into content. (See **Profiles Button Plugin**.)
+
+##Profiles Button Plugin
+
+Inserts profiles data into content in two forms: static links which directly
+link profiles, and parameter hooks which are later resolved by the **content
+plugin** and displayed by the **profiles module**.
+
+##System Plugin
+
+Resolves usernames from the **THM Organizer Subject Pools Plugin** to links to
+profiles.
+
+##User Plugin
+
+Synchronizes Joomla users with profiles.

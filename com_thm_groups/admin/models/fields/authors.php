@@ -18,7 +18,7 @@ require_once JPATH_ROOT . "/media/com_thm_groups/helpers/content.php";
  * Class JFormFieldAuthors which returns authors of specific content.
  *
  * @category    Joomla.Component.Admin
- * @package     thm_groups
+ * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  */
 class JFormFieldAuthors extends JFormFieldList

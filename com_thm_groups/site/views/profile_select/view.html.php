@@ -2,7 +2,7 @@
 /**
  * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
+ * @subpackage  com_thm_groups.site
  * @name        THM_GroupsViewProfile_Select
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @copyright   2017 TH Mittelhessen
@@ -14,9 +14,10 @@ defined('_JEXEC') or die;
 /**
  * Class which loads data into the view output context
  *
- * @category    Joomla.Component.Admin
+ * @category    Joomla.Component.Site
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
+ * @subpackage  com_thm_groups.site
+ * @link        www.thm.de
  */
 class THM_GroupsViewProfile_Select extends JViewLegacy
 {
@@ -45,5 +46,6 @@ class THM_GroupsViewProfile_Select extends JViewLegacy
 
 		parent::display();
 	}
+
 }
 

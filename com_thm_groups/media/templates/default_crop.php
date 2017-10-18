@@ -1,7 +1,7 @@
 <?php
 /**
  * @category    Joomla component
- * @package     THM_Organizer
+ * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  * @name        template for modal display of crop box
  * @author      James Antrim, <james.antrim@nm.thm.de>

@@ -16,7 +16,7 @@ require_once JPATH_ROOT . '/media/com_thm_groups/views/edit.php';
  * Class loads persistent color information into display context
  *
  * @category    Joomla.Component.Admin
- * @package     thm_groups
+ * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  */
 class THM_GroupsViewRole_Edit extends THM_GroupsViewEdit

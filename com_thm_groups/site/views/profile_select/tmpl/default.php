@@ -13,8 +13,6 @@ defined("_JEXEC") or die;
 
 $filters = $this->filterForm->getGroup('filter');
 ?>
-
-<body>
 <script type="text/javascript">
 	var rootURI = '<?php echo JUri::root(); ?>',
 		editor = '<?php echo JFactory::getApplication()->input->getString('editor')?>';
@@ -110,4 +108,3 @@ $filters = $this->filterForm->getGroup('filter');
 		jQuery().popover({container: 'body'})
 	});
 </script>
-</body>

@@ -16,7 +16,7 @@ jimport('joomla.application.component.view');
  * Class loading persistent data into the view context
  *
  * @category    Joomla.Component.Site
- * @package     thm_groups
+ * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  * @link        www.thm.de
  */

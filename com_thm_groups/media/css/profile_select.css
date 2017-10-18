@@ -1,5 +1,33 @@
 .profile-select-container {
-    width: 720px;
+    width: 100%;
+}
+
+.profile-select-container header {
+    box-shadow: none;
+}
+
+.profile-select-container header h2.page-title {
+    color: white;
+    font-size: 1.5rem;
+}
+
+.profile-select-container header h2.page-title span::before {
+    color: white;
+}
+
+.profile-select-container .btn-toolbar {
+    font-size: inherit;
+}
+
+.profile-select-container .btn-toolbar .btn-wrapper {
+    display: inline-block;
+    margin-bottom: .5rem;
+    margin-left: .4rem;
+    vertical-align: middle;
+}
+
+.profile-select-container .btn-toolbar .btn-wrapper label {
+    width: auto;
 }
 
 .profile-select-container .filter-row {
@@ -16,6 +44,7 @@
 }
 
 .profile-select-container .adminlist {
+    margin-bottom: 0;
     margin-top: 5px;
     width: 100%;
 }
@@ -26,14 +55,68 @@
 
 .profile-select-container .adminlist th {
     background-color: #dfe5e6;
+    border-bottom: none;
     color: #394a59;
+    font-size: .8rem;
+    font-weight: normal;
     padding: 8px;
+    text-align: center;
 }
 
 .profile-select-container .adminlist td {
     padding: 8px;
 }
 
-.profile-select-container .check-span, .profile-select-container .group-name {
-    margin-left: 8px;
+.profile-select-container .check-span {
+    margin-right: .5rem;
+}
+
+body.tmpl-component #main {
+    padding: 10px 0;
+}
+
+body.tmpl-component #main .profile-select-container {
+    width: 100%;
+}
+
+body.tmpl-component #main .profile-select-container header {
+    background-color: #4a5c66;
+    color: white;
+    height: auto;
+    padding: .6rem .8rem .1rem .8rem;
+    width: calc(100% - 1.6rem);
+}
+
+body.tmpl-component #main .profile-select-container header span {
+    margin-right: .8rem;
+}
+
+body.tmpl-component #main .profile-select-container .subhead {
+    background-color: #f2f5f6;
+}
+
+body.tmpl-component #main .profile-select-container .subhead .btn-toolbar {
+    float: left;
+    margin: 1rem 0 .1rem 0;
+}
+
+body.tmpl-component #main .profile-select-container .btn-wrapper label, body.tmpl-component #main .profile-select-container .btn-wrapper select {
+    max-width: 15rem;
+    width: auto;
+}
+
+body.tmpl-component #main .profile-select-container .btn-wrapper select {
+    padding-right: 2rem;
+}
+
+body.tmpl-component #main .profile-select-container .btn-wrapper .btn {
+    background-color: white;
+}
+
+body.tmpl-component #main .profile-select-container .btn-wrapper .btn:hover {
+    background-color: #4a5c66;
+}
+
+body.tmpl-component #main .profile-select-container .btn-wrapper .btn:hover span::before {
+    color: white;
 }

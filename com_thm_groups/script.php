@@ -17,7 +17,7 @@ defined('_JEXEC') or die;
  * ThmGroupsInstaller
  *
  * @category    Joomla.Component.General
- * @package     thm_groups
+ * @package     THM_Groups
  * @subpackage  com_thm_groups
  */
 class Com_THM_GroupsInstallerScript

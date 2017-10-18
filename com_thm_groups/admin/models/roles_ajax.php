@@ -16,7 +16,7 @@ jimport('joomla.application.component.model');
  * Class provides methods for building a model of the roles in JSON format
  *
  * @category    Joomla.Component.Site
- * @package     thm_groups
+ * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  */
 class THM_GroupsModelRoles_Ajax extends JModelLegacy

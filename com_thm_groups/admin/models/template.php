@@ -17,7 +17,7 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
  * Class loads form data to edit an entry.
  *
  * @category    Joomla.Component.Admin
- * @package     thm_groups
+ * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  */
 class THM_GroupsModelTemplate extends JModelLegacy

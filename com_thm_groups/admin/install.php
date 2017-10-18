@@ -23,7 +23,7 @@ if (!defined('DS'))
  * THM_Groups_Install_Script
  *
  * @category    Joomla.Component.General
- * @package     thm_groups
+ * @package     THM_Groups
  * @subpackage  com_thm_groups
  */
 class THM_Groups_Install_Script

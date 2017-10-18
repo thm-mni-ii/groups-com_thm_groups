@@ -18,7 +18,7 @@ jimport('joomla.application.component.table');
  * Class representing the profiles table.
  *
  * @category    Joomla.Component.Admin
- * @package     thm_groups
+ * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  */
 class THM_GroupsTableTemplate extends JTable

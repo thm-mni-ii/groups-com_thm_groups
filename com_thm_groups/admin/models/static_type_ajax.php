@@ -18,8 +18,8 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/static_type.php';
  * Class provides method for extra options of static types
  *
  * @category    Joomla.Component.Site
- * @package     thm_organizer
- * @subpackage  com_thm_organizer.site
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.site
  */
 class THM_GroupsModelStatic_Type_Ajax extends JModelForm
 {

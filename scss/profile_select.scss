@@ -2,9 +2,41 @@
 
 .profile-select-container {
 
-  width: 720px;
+  width: 100%;
+
+  header {
+
+    box-shadow: none;
+
+    h2.page-title {
+
+      color: $foreground-color;
+      font-size: 1.5rem;
+
+      span::before {
+        color: $foreground-color;
+      }
+    }
+  }
+
+  .btn-toolbar {
+    font-size: inherit;
+
+    .btn-wrapper {
+
+      display: inline-block;
+      margin-bottom: .5rem;
+      margin-left: .4rem;
+      vertical-align: middle;
+
+      label {
+        width: auto;
+      }
+    }
+  }
 
   .filter-row {
+
     float: left;
     width: 50%;
 
@@ -17,8 +49,8 @@
     }
   }
 
-  .adminlist
-  {
+  .adminlist {
+    margin-bottom: 0;
     margin-top: 5px;
     width: 100%;
 
@@ -27,17 +59,80 @@
     }
   }
 
-  .adminlist th{
+  .adminlist th {
     background-color: $background-navigation-color;
-    color: #394a59;
+    border-bottom: none;
+    color: $font-color;
+    font-size: .8rem;
+    font-weight: normal;
+    padding: 8px;
+    text-align: center;
+  }
+
+  .adminlist td {
     padding: 8px;
   }
 
-  .adminlist td{
-    padding: 8px;
+  .check-span {
+    margin-right: .5rem;
+  }
+}
+
+body.tmpl-component #main {
+
+  padding: 10px 0;
+
+  .profile-select-container {
+
+    width: 100%;
+
+    header {
+
+      background-color: $background-foot;
+      color: $foreground-color;
+      height: auto;
+      padding: .6rem .8rem .1rem .8rem;
+      width: calc(100% - 1.6rem);
+
+      span {
+        margin-right: .8rem;
+      }
+    }
+
+    .subhead {
+      background-color: $background-color;
+
+      .btn-toolbar {
+
+        float: left;
+        margin: 1rem 0 .1rem 0;
+      }
+    }
+
+    .btn-wrapper {
+
+      label, select {
+        max-width: 15rem;
+        width: auto;
+      }
+
+      select {
+        padding-right: 2rem;
+      }
+
+      .btn {
+        background-color: $foreground-color;
+
+        &:hover {
+
+          background-color: $background-foot;
+
+          span::before {
+            color: $foreground-color;
+          }
+        }
+      }
+    }
   }
 
-  .check-span, .group-name{
-    margin-left: 8px;
-  }
 }

@@ -20,7 +20,7 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
  * Class provides methods to retrieve data for pool ajax calls
  *
  * @category    Joomla.Component.Site
- * @package     thm_groups
+ * @package     THM_Groups
  * @subpackage  com_thm_groups.site
  */
 class THM_GroupsModelProfile_Ajax extends JModelLegacy

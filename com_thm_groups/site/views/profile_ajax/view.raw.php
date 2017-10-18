@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * Class loading persistent data into the view context
  *
  * @category    Joomla.Component.Admin
- * @package     thm_groups
+ * @package     THM_Groups
  * @subpackage  com_thm_groups.admin
  */
 class THM_GroupsViewProfile_Ajax extends JViewLegacy

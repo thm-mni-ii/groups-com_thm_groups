@@ -52,7 +52,7 @@ function insertProfileLinks()
 
 	jQuery.each(jQuery('#selected-profiles td.profile-data'), function (key, value) {
 		var name = value.children[1].textContent, link = value.children[3].textContent;
-		links.push('<a href="' + link + '">' + name + '</a>');
+		links.push('<a title="' + name + '"href="' + link + '">' + name + '</a>');
 	});
 
 	jQuery('#selected-profiles').children().remove();
@@ -150,7 +150,7 @@ function repopulateProfiles()
 
 	jQuery.ajax({
 		type: 'GET',
-		url: ownURI + componentParameters + selectionParameters,
+		url: rootURI + componentParameters + selectionParameters,
 		success: function (data) {
 			addProfiles(data);
 		},
@@ -161,6 +161,17 @@ function repopulateProfiles()
 			}
 		}
 	});
+}
+
+/**
+ * Resets all filters and lists
+ */
+function resetProfiles()
+{
+	jQuery('#selected-profiles').children().remove();
+	jQuery('#selectable-profiles').children().remove();
+	jQuery('#filter_groups').val('');
+	jQuery('#filter_templates').val('');
 }
 
 
