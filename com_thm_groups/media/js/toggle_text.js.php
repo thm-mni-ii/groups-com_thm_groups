@@ -1,6 +1,5 @@
 <script type='text/javascript'>
-	'use strict
-	';
+	'use strict';
 
 	jQuery(document).ready(function ()
 	{

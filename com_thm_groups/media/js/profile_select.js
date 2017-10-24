@@ -23,7 +23,7 @@ function addProfiles(profileEntries)
 
 		row = '<tr id="' + rowID + '">';
 
-		row += '<td class="order nowrap center hidden-phone" style="width: 1rem;">';
+		row += '<td class="order nowrap center" style="width: 1rem;">';
 		row += '<span class="sortable-handler" style="cursor: move;"><span class="icon-menu"></span></span>';
 		row += '</td>';
 
