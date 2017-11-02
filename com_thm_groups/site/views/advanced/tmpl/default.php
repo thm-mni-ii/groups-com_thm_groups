@@ -17,13 +17,10 @@
 echo '<h2 class="contentheading">' . $this->title . '</h2>';
 echo '<div id="advanced-container" class="advanced-container row-fluid">';
 
-if ($this->sort)
-{
-	echo $this->loadTemplate('alpha');
-}
-else
-{
-	echo $this->loadTemplate('roles');
+if ($this->sort) {
+    echo $this->loadTemplate('alpha');
+} else {
+    echo $this->loadTemplate('roles');
 }
 
 echo '</div>';

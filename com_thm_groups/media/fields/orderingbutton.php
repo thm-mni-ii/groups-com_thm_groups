@@ -20,15 +20,16 @@ defined('_JEXEC') or die;
  */
 class JFormFieldOrderingButton extends JFormField
 {
-	protected $type = 'OrderingButton';
+    protected $type = 'OrderingButton';
 
-	/**
-	 * Makes an ordering button
-	 *
-	 * @return  string  a HTML checkbox
-	 */
-	public function getInput()
-	{
-		return JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'a.ordering', 'asc', '', null, 'asc', 'JGRID_HEADING_ORDERING');
-	}
+    /**
+     * Makes an ordering button
+     *
+     * @return  string  a HTML checkbox
+     */
+    public function getInput()
+    {
+        return JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'a.ordering', 'asc', '', null, 'asc',
+            'JGRID_HEADING_ORDERING');
+    }
 }

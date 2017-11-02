@@ -2,43 +2,43 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
-CREATE TABLE IF NOT EXISTS `#__thm_groups_users` (
+CREATE TABLE IF NOT EXISTS `#__thm_groups_profiles` (
   `id`          INT(11)    NOT NULL AUTO_INCREMENT,
   `published`   TINYINT(1) NULL,
   `injoomla`    TINYINT(1) NULL,
   `canEdit`     TINYINT(1) NULL,
   `qpPublished` TINYINT(1) NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`id`) REFERENCES `#__users` (`id`)
+  CONSTRAINT `profiles_usersid_fk` FOREIGN KEY (`id`) REFERENCES `#__users` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE
 )
   ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `#__thm_groups_users_categories` (
+CREATE TABLE IF NOT EXISTS `#__thm_groups_categories` (
   `ID`           INT(11) NOT NULL AUTO_INCREMENT,
   `usersID`      INT(11) NOT NULL,
   `categoriesID` INT(11) NOT NULL,
   PRIMARY KEY (`ID`),
-  FOREIGN KEY (`usersID`) REFERENCES `#__thm_groups_users` (`id`)
+  CONSTRAINT `categories_profilesid_fk` FOREIGN KEY (`usersID`) REFERENCES `#__thm_groups_profiles` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  FOREIGN KEY (`categoriesID`) REFERENCES `#__categories` (`id`)
+  CONSTRAINT `categories_categoriesid_fk` FOREIGN KEY (`categoriesID`) REFERENCES `#__categories` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE
 )
   ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `#__thm_groups_users_content` (
+CREATE TABLE IF NOT EXISTS `#__thm_groups_content` (
   `ID`        INT(11)          NOT NULL AUTO_INCREMENT,
   `usersID`   INT(11)          NOT NULL,
   `contentID` INT(11) UNSIGNED NOT NULL,
   `featured`  TINYINT(1)       NULL,
   PRIMARY KEY (`ID`),
-  FOREIGN KEY (`usersID`) REFERENCES `#__thm_groups_users` (`id`)
+  CONSTRAINT `content_profilesid_fk` FOREIGN KEY (`usersID`) REFERENCES `#__thm_groups_profiles` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  FOREIGN KEY (`contentID`) REFERENCES `#__content` (`id`)
+  CONSTRAINT `content_contentid_fk` FOREIGN KEY (`contentID`) REFERENCES `#__content` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE
 )
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_dynamic_type` (
   `description`   TEXT         NULL,
   `options`       TEXT         NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`static_typeID`) REFERENCES `#__thm_groups_static_type` (`id`)
+  Constraint `dynamic_type_statictypeid_fk` FOREIGN KEY (`static_typeID`) REFERENCES `#__thm_groups_static_type` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   UNIQUE INDEX `name_UNIQUE` (`name` ASC)
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_attribute` (
   `published`      TINYINT(1)            DEFAULT 0,
   `ordering`       TINYINT(1)            DEFAULT 0,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`dynamic_typeID`) REFERENCES `#__thm_groups_dynamic_type` (`id`)
+  CONSTRAINT `attribute_dynamictypeid_fk` FOREIGN KEY (`dynamic_typeID`) REFERENCES `#__thm_groups_dynamic_type` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   UNIQUE INDEX `name_UNIQUE` (`name` ASC)
@@ -85,17 +85,17 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_attribute` (
   ENGINE = InnoDB
   AUTO_INCREMENT = 100;
 
-CREATE TABLE IF NOT EXISTS `#__thm_groups_users_attribute` (
+CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attributes` (
   `ID`          INT(11)    NOT NULL AUTO_INCREMENT,
   `usersID`     INT(11)    NOT NULL,
   `attributeID` INT(11)    NOT NULL,
   `value`       TEXT       NULL,
   `published`   TINYINT(1) NULL,
   PRIMARY KEY (`ID`),
-  FOREIGN KEY (`usersID`) REFERENCES `#__users` (`id`)
+  CONSTRAINT `profile_attributes_profilesid_fk` FOREIGN KEY (`usersID`) REFERENCES `#__thm_groups_profiles` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  FOREIGN KEY (`attributeID`) REFERENCES `#__thm_groups_attribute` (`id`)
+  CONSTRAINT `profile_attributes_attributeid_fk` FOREIGN KEY (`attributeID`) REFERENCES `#__thm_groups_attribute` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE
 )
@@ -110,15 +110,15 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_roles` (
   ENGINE = InnoDB
   AUTO_INCREMENT = 5;
 
-CREATE TABLE IF NOT EXISTS `#__thm_groups_usergroups_roles` (
+CREATE TABLE IF NOT EXISTS `#__thm_groups_role_associations` (
   `ID`           INT(11)          NOT NULL AUTO_INCREMENT,
   `usergroupsID` INT(11) UNSIGNED NOT NULL,
   `rolesID`      INT(11)          NOT NULL,
   PRIMARY KEY (`ID`),
-  FOREIGN KEY (`usergroupsID`) REFERENCES `#__usergroups` (`id`)
+  CONSTRAINT `role_associations_usergroupsid_fk` FOREIGN KEY (`usergroupsID`) REFERENCES `#__usergroups` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  FOREIGN KEY (`rolesID`) REFERENCES `#__thm_groups_roles` (`id`)
+  CONSTRAINT `role_associations_groupsrolesid_fk` FOREIGN KEY (`rolesID`) REFERENCES `#__thm_groups_roles` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 )
@@ -126,21 +126,21 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_usergroups_roles` (
   DEFAULT CHARSET = utf8
   AUTO_INCREMENT = 1;
 
-CREATE TABLE IF NOT EXISTS `#__thm_groups_users_usergroups_roles` (
+CREATE TABLE IF NOT EXISTS `#__thm_groups_associations` (
   `ID`                 INT(11) NOT NULL AUTO_INCREMENT,
   `usersID`            INT(11) NOT NULL,
   `usergroups_rolesID` INT(11) NOT NULL,
   PRIMARY KEY (`ID`),
-  FOREIGN KEY (`usergroups_rolesID`) REFERENCES `#__thm_groups_usergroups_roles` (`ID`)
+  CONSTRAINT `associations_roleassociationsid_fk` FOREIGN KEY (`usergroups_rolesID`) REFERENCES `#__thm_groups_role_associations` (`ID`)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  FOREIGN KEY (`usersID`) REFERENCES `#__users` (`id`)
+  CONSTRAINT `associations_profilesid_fk` FOREIGN KEY (`usersID`) REFERENCES `#__thm_groups_profiles` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE
 )
   ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `#__thm_groups_profile` (
+CREATE TABLE IF NOT EXISTS `#__thm_groups_templates` (
   `id`       INT(11)      NOT NULL AUTO_INCREMENT,
   `name`     VARCHAR(255) NULL,
   `ordering` INT(11)      NOT NULL,
@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_profile` (
 )
   ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attribute` (
+CREATE TABLE IF NOT EXISTS `#__thm_groups_template_attributes` (
   `ID`          INT(11) NOT NULL AUTO_INCREMENT,
   `profileID`   INT(11) NOT NULL,
   `attributeID` INT(11) NOT NULL,
@@ -156,24 +156,24 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attribute` (
   `ordering`    INT(11) NOT NULL,
   `params`      TEXT    NULL,
   PRIMARY KEY (`ID`),
-  FOREIGN KEY (`profileID`) REFERENCES `#__thm_groups_profile` (`id`)
+  CONSTRAINT `template_attributes_templatesid_fk` FOREIGN KEY (`profileID`) REFERENCES `#__thm_groups_templates` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  FOREIGN KEY (`attributeID`) REFERENCES `#__thm_groups_attribute` (`id`)
+  CONSTRAINT `template_attributes_attributeid_fk` FOREIGN KEY (`attributeID`) REFERENCES `#__thm_groups_attribute` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE
 )
   ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_usergroups` (
+CREATE TABLE IF NOT EXISTS `#__thm_groups_template_associations` (
   `ID`           INT(11)          NOT NULL AUTO_INCREMENT,
   `profileID`    INT(11)          NOT NULL,
   `usergroupsID` INT(11) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`profileID`) REFERENCES `#__thm_groups_profile` (`id`)
+  CONSTRAINT `template_associations_templatesid_fk` FOREIGN KEY (`profileID`) REFERENCES `#__thm_groups_templates` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  FOREIGN KEY (`usergroupsID`) REFERENCES `#__usergroups` (`id`)
+  CONSTRAINT `template_associations_usergroupsid_fk` FOREIGN KEY (`usergroupsID`) REFERENCES `#__usergroups` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE
 )
@@ -209,6 +209,8 @@ INSERT INTO `#__thm_groups_dynamic_type` (`id`, `name`, `static_typeID`, `descri
   (8, 'DATE', 8, '', '{}'),
   (9, 'TEMPLATE', 9, '', '{}');
 
+INSERT INTO `#__thm_groups_templates` (`id`, `name`, `ordering`) VALUES (1, 'Standard', 1);
+
 INSERT INTO `#__thm_groups_attribute` (`id`, `name`, `dynamic_typeID`, `description`, `options`) VALUES
   (1, 'Vorname', 1, '', '{"length":40, "required":false}'),
   (2, 'Nachname', 1, '', '{"length":40, "required":false}'),
@@ -216,9 +218,7 @@ INSERT INTO `#__thm_groups_attribute` (`id`, `name`, `dynamic_typeID`, `descript
   (5, 'Titel', 1, '', '{"length":15, "required":false}'),
   (7, 'Posttitel', 1, '', '{"length":15, "required":false}');
 
-INSERT INTO `#__thm_groups_profile` (`id`, `name`, `ordering`) VALUES (1, 'Standard', 1);
-
-INSERT INTO `#__thm_groups_profile_attribute` (`ID`, `profileID`, `attributeID`, `published`, `ordering`, `params`)
+INSERT INTO `#__thm_groups_template_attributes` (`ID`, `profileID`, `attributeID`, `published`, `ordering`, `params`)
 VALUES
   (1, 1, 1, 1, 2, '{ "showLabel":1, "showIcon":1}'),
   (2, 1, 2, 1, 3, '{ "showLabel":1, "showIcon":1}'),

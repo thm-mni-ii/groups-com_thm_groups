@@ -16,82 +16,69 @@ $rowIndex = 0;
 // One index is taken by the name
 $groupCount = count($this->profiles) - 1;
 
-foreach ($this->profiles as $groupID => $assocs)
-{
-	$groupSpan = $groupCount > 1 ? '<span class="group-title">' . $this->profiles[$groupID]['title'] . '</span>' : '';
+foreach ($this->profiles as $groupID => $assocs) {
+    $groupSpan = $groupCount > 1 ? '<span class="group-title">' . $this->profiles[$groupID]['title'] . '</span>' : '';
 
-	// One index is taken up by the name
-	$assocCount = count($assocs) - 1;
+    // One index is taken up by the name
+    $assocCount = count($assocs) - 1;
 
-	foreach ($assocs as $assocID => $data)
-	{
-		if ($assocID == 'title')
-		{
-			continue;
-		}
+    foreach ($assocs as $assocID => $data) {
+        if ($assocID == 'title') {
+            continue;
+        }
 
-		$roleSpan = (empty($data['name']) OR $assocCount == 1) ?
-			'' : '<span class="role-title">' . $data['name'] . '</span>';
+        $roleSpan = (empty($data['name']) or $assocCount == 1) ?
+            '' : '<span class="role-title">' . $data['name'] . '</span>';
 
-		if (empty($groupSpan))
-		{
-			$assocName = $roleSpan;
-		}
-		elseif (empty($roleSpan))
-		{
-			$assocName = $groupSpan;
-		}
-		else
-		{
-			$assocName = "$groupSpan: $roleSpan";
-		}
+        if (empty($groupSpan)) {
+            $assocName = $roleSpan;
+        } elseif (empty($roleSpan)) {
+            $assocName = $groupSpan;
+        } else {
+            $assocName = "$groupSpan: $roleSpan";
+        }
 
-		// Only print headings if there are differing groups/roles. Role count reduced because of the group name index.
-		if ($groupCount > 1 OR $assocCount > 1)
-		{
-			echo '<div class="role-heading">' . $assocName . '</div>';
-		}
+        // Only print headings if there are differing groups/roles. Role count reduced because of the group name index.
+        if ($groupCount > 1 or $assocCount > 1) {
+            echo '<div class="role-heading">' . $assocName . '</div>';
+        }
 
-		$profileCount = 0;
-		$lastProfile  = count($data['profiles']) - 1;
-		$half         = ($this->columns == 2 AND count($data['profiles']) > 1);
+        $profileCount = 0;
+        $lastProfile  = count($data['profiles']) - 1;
+        $half         = ($this->columns == 2 and count($data['profiles']) > 1);
 
-		foreach ($data['profiles'] AS $profileID => $attributes)
-		{
-			// Skip profiles with no surname
-			if (empty($attributes[2]))
-			{
-				// Reduce the end profile count to compensate for lack of output
-				$lastProfile = $lastProfile - 1;
-				continue;
-			}
+        foreach ($data['profiles'] as $profileID => $attributes) {
+            // Skip profiles with no surname
+            if (empty($attributes[2])) {
+                // Reduce the end profile count to compensate for lack of output
+                $lastProfile = $lastProfile - 1;
+                continue;
+            }
 
-			$startRow = ($profileCount % $this->columns == 0);
+            $startRow = ($profileCount % $this->columns == 0);
 
-			if ($startRow)
-			{
-				$rowIndex++;
-				$row = '<div class="row-container">';
-			}
+            if ($startRow) {
+                $rowIndex++;
+                $row = '<div class="row-container">';
+            }
 
-			$row .= $this->getProfileContainer($profileID, $attributes, $half, $groupID);
+            $row .= $this->getProfileContainer($profileID, $attributes, $half, $groupID);
 
-			$endRow = ($profileCount % $this->columns == $this->columns - 1 OR $profileCount == $lastProfile);
+            $endRow = ($profileCount % $this->columns == $this->columns - 1 or $profileCount == $lastProfile);
 
-			if ($endRow)
-			{
-				// Ensure the row container wraps around the profiles
-				$row .= '<div class="clearFix"></div>';
+            if ($endRow) {
+                // Ensure the row container wraps around the profiles
+                $row .= '<div class="clearFix"></div>';
 
-				// Close the row
-				$row .= '</div>';
+                // Close the row
+                $row .= '</div>';
 
-				echo $row;
-			}
+                echo $row;
+            }
 
-			$profileCount++;
-		}
+            $profileCount++;
+        }
 
-		$rowIndex = 0;
-	}
+        $rowIndex = 0;
+    }
 }

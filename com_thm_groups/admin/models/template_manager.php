@@ -21,185 +21,182 @@ require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
  */
 class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
 {
-	protected $defaultOrdering = 'id';
+    protected $defaultOrdering = 'id';
 
-	protected $defaultDirection = 'ASC';
+    protected $defaultDirection = 'ASC';
 
-	/**
-	 * Constructor.
-	 *
-	 * @param   array $config An optional associative array of configuration settings.
-	 */
-	public function __construct($config = array())
-	{
-		$config['filter_fields'] = array(
-			'id',
-			'name',
-			'order'
-		);
+    /**
+     * Constructor.
+     *
+     * @param   array $config An optional associative array of configuration settings.
+     */
+    public function __construct($config = array())
+    {
+        $config['filter_fields'] = array(
+            'id',
+            'name',
+            'order'
+        );
 
-		parent::__construct($config);
-	}
+        parent::__construct($config);
+    }
 
-	/**
-	 * Function to get table headers
-	 *
-	 * @return array including headers
-	 */
-	public function getHeaders()
-	{
-		$ordering  = $this->state->get('list.ordering');
-		$direction = $this->state->get('list.direction');
+    /**
+     * Function to get table headers
+     *
+     * @return array including headers
+     */
+    public function getHeaders()
+    {
+        $ordering  = $this->state->get('list.ordering');
+        $direction = $this->state->get('list.direction');
 
-		$headers             = array();
-		$headers['order']    = JHtml::_('searchtools.sort', '', 'p.ordering', $direction, $ordering, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2');
-		$headers['checkbox'] = '';
-		$headers['id']       = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'id', $direction, $ordering);
-		$headers['name']     = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 'name', $direction, $ordering);
-		$headers['groups']   = JText::_('COM_THM_GROUPS_PROFILE_MANAGER_GROUPS');
+        $headers             = array();
+        $headers['order']    = JHtml::_('searchtools.sort', '', 'p.ordering', $direction, $ordering, null, 'asc',
+            'JGRID_HEADING_ORDERING', 'icon-menu-2');
+        $headers['checkbox'] = '';
+        $headers['id']       = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'id', $direction, $ordering);
+        $headers['name']     = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 'name', $direction,
+            $ordering);
+        $headers['groups']   = JText::_('COM_THM_GROUPS_PROFILE_MANAGER_GROUPS');
 
-		return $headers;
-	}
+        return $headers;
+    }
 
-	/**
-	 * Returns custom hidden fields for page
-	 *
-	 * @todo  Restructure this into the form. If the library has been modified for this these changes need to be removed.
-	 *
-	 * @return array
-	 */
-	public function getHiddenFields()
-	{
-		$fields = array();
+    /**
+     * Returns custom hidden fields for page
+     *
+     * @todo  Restructure this into the form. If the library has been modified for this these changes need to be removed.
+     *
+     * @return array
+     */
+    public function getHiddenFields()
+    {
+        $fields = array();
 
-		// Hidden fields for batch processing
-		$fields[] = '<input type="hidden" name="groupID" value="">';
-		$fields[] = '<input type="hidden" name="templateID" value="">';
+        // Hidden fields for batch processing
+        $fields[] = '<input type="hidden" name="groupID" value="">';
+        $fields[] = '<input type="hidden" name="templateID" value="">';
 
-		return $fields;
-	}
+        return $fields;
+    }
 
-	/**
-	 * Function to feed the data in the table body correctly to the list view
-	 *
-	 * @return array consisting of items in the body
-	 */
-	public function getItems()
-	{
-		$items  = parent::getItems();
-		$return = array();
+    /**
+     * Function to feed the data in the table body correctly to the list view
+     *
+     * @return array consisting of items in the body
+     */
+    public function getItems()
+    {
+        $items  = parent::getItems();
+        $return = array();
 
-		if (empty($items))
-		{
-			return $return;
-		}
+        if (empty($items)) {
+            return $return;
+        }
 
-		$url         = "index.php?option=com_thm_groups&view=template_edit&id=";
-		$sortIcon    = '<span class="sortable-handlerXXX"><i class="icon-menu"></i></span>';
-		$groupsAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
-		$index       = 0;
+        $url         = "index.php?option=com_thm_groups&view=template_edit&id=";
+        $sortIcon    = '<span class="sortable-handlerXXX"><i class="icon-menu"></i></span>';
+        $groupsAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
+        $index       = 0;
 
-		$return['attributes'] = array('class' => 'ui-sortable');
+        $return['attributes'] = array('class' => 'ui-sortable');
 
-		foreach ($items as $key => $item)
-		{
-			$orderingActive = $this->state->get('list.ordering') == 'p.ordering';
+        foreach ($items as $key => $item) {
+            $orderingActive = $this->state->get('list.ordering') == 'p.ordering';
 
-			$return[$index]                           = array();
-			$return[$index]['attributes']             = array('class' => 'order center hidden-phone', 'id' => $item->id);
-			$return[$index]['ordering']['attributes'] = array('class' => 'order center hidden-phone', 'style' => "width: 40px;");
+            $return[$index]                           = array();
+            $return[$index]['attributes']             = array(
+                'class' => 'order center hidden-phone',
+                'id'    => $item->id
+            );
+            $return[$index]['ordering']['attributes'] = array(
+                'class' => 'order center hidden-phone',
+                'style' => "width: 40px;"
+            );
 
-			if (!$groupsAdmin)
-			{
-				$iconClass                           = ' inactive';
-				$return[$index]['ordering']['value'] = str_replace('XXX', $iconClass, $sortIcon);
-				$return[$index]['checkbox']          = '';
-				$return[$index]['id']                = $item->id;
-				$return[$index]['name']              = $item->name;
-			}
-			else
-			{
-				$iconClass                           = $orderingActive ? '' : ' inactive tip-top hasTooltip';
-				$return[$index]['ordering']['value'] = str_replace('XXX', $iconClass, $sortIcon);
-				$return[$index]['checkbox']          = JHtml::_('grid.id', $index, $item->id);
-				$return[$index]['id']                = $item->id;
+            if (!$groupsAdmin) {
+                $iconClass                           = ' inactive';
+                $return[$index]['ordering']['value'] = str_replace('XXX', $iconClass, $sortIcon);
+                $return[$index]['checkbox']          = '';
+                $return[$index]['id']                = $item->id;
+                $return[$index]['name']              = $item->name;
+            } else {
+                $iconClass                           = $orderingActive ? '' : ' inactive tip-top hasTooltip';
+                $return[$index]['ordering']['value'] = str_replace('XXX', $iconClass, $sortIcon);
+                $return[$index]['checkbox']          = JHtml::_('grid.id', $index, $item->id);
+                $return[$index]['id']                = $item->id;
 
-				$url                    = "index.php?option=com_thm_groups&view=template_edit&id=$item->id";
-				$return[$index]['name'] = !empty($item->name) ? JHtml::_('link', $url, $item->name) : '';
-			}
+                $url                    = "index.php?option=com_thm_groups&view=template_edit&id=$item->id";
+                $return[$index]['name'] = !empty($item->name) ? JHtml::_('link', $url, $item->name) : '';
+            }
 
-			$return[$index]['profiles'] = $this->getProfileGroups($item->id);
-			$index++;
-		}
+            $return[$index]['profiles'] = $this->getProfileGroups($item->id);
+            $index++;
+        }
 
-		return $return;
-	}
+        return $return;
+    }
 
-	/**
-	 * Method to build an SQL query to load the list data.
-	 *
-	 * @return  JDatabaseQuery the query object
-	 */
-	protected function getListQuery()
-	{
-		$query = $this->_db->getQuery(true);
+    /**
+     * Method to build an SQL query to load the list data.
+     *
+     * @return  JDatabaseQuery the query object
+     */
+    protected function getListQuery()
+    {
+        $query = $this->_db->getQuery(true);
 
-		$query->select('p.id, p.name, p.ordering')->from('#__thm_groups_profile AS p');
+        $query->select('p.id, p.name, p.ordering')->from('#__thm_groups_templates AS p');
 
-		$this->setSearchFilter($query, array('p.name'));
-		$this->setOrdering($query);
+        $this->setSearchFilter($query, array('p.name'));
+        $this->setOrdering($query);
 
-		return $query;
-	}
+        return $query;
+    }
 
-	/**
-	 * Creates a list of all groups associated with the given profile template.
-	 *
-	 * @param   int $templateID An id of a profile template
-	 *
-	 * @return  string an HTML string containing the associated groups
-	 */
-	private function getProfileGroups($templateID)
-	{
-		$query = $this->_db->getQuery(true);
+    /**
+     * Creates a list of all groups associated with the given profile template.
+     *
+     * @param   int $templateID An id of a profile template
+     *
+     * @return  string an HTML string containing the associated groups
+     */
+    private function getProfileGroups($templateID)
+    {
+        $query = $this->_db->getQuery(true);
 
-		$query->select('ug.id, ug.title');
-		$query->from('#__thm_groups_profile_usergroups AS pug');
-		$query->innerJoin('#__usergroups AS ug ON ug.id = pug.usergroupsID');
-		$query->where("pug.profileID = '$templateID'");
-		$this->_db->setQuery($query);
+        $query->select('ug.id, ug.title');
+        $query->from('#__thm_groups_template_associations AS pug');
+        $query->innerJoin('#__usergroups AS ug ON ug.id = pug.usergroupsID');
+        $query->where("pug.profileID = '$templateID'");
+        $this->_db->setQuery($query);
 
-		try
-		{
-			$groups = $this->_db->loadAssocList();
-		}
-		catch (Exception $exc)
-		{
-			return '';
-		}
+        try {
+            $groups = $this->_db->loadAssocList();
+        } catch (Exception $exc) {
+            return '';
+        }
 
-		if (empty($groups))
-		{
-			return '';
-		}
+        if (empty($groups)) {
+            return '';
+        }
 
-		$usersAdmin     = JFactory::getUser()->authorise('core.admin', 'com_users');
-		$return         = array();
-		$buttonTemplate = '<a onclick="deleteGroupAssociation(GROUPID,TEMPLATEID)"><span class="icon-trash"></span></a>';
+        $usersAdmin     = JFactory::getUser()->authorise('core.admin', 'com_users');
+        $return         = array();
+        $buttonTemplate = '<a onclick="deleteGroupAssociation(GROUPID,TEMPLATEID)"><span class="icon-trash"></span></a>';
 
-		foreach ($groups as $group)
-		{
-			$deleteButton = '';
+        foreach ($groups as $group) {
+            $deleteButton = '';
 
-			if ($usersAdmin)
-			{
-				$deleteButton = str_replace('GROUPID', $group['id'], $buttonTemplate);
-				$deleteButton = ' ' . str_replace('TEMPLATEID', $templateID, $deleteButton);
-			}
+            if ($usersAdmin) {
+                $deleteButton = str_replace('GROUPID', $group['id'], $buttonTemplate);
+                $deleteButton = ' ' . str_replace('TEMPLATEID', $templateID, $deleteButton);
+            }
 
-			$return[] = $group['title'] . $deleteButton;
-		}
+            $return[] = $group['title'] . $deleteButton;
+        }
 
-		return implode('<br /> ', $return);
-	}
+        return implode('<br /> ', $return);
+    }
 }

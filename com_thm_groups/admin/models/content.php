@@ -21,65 +21,65 @@ require_once JPATH_SITE . '/media/com_thm_groups/helpers/componentHelper.php';
  */
 class THM_GroupsModelContent extends JModelLegacy
 {
-	/**
-	 * Activates personal menu display for specific content articles.
-	 *
-	 * @return  bool  true on success, otherwise false
-	 */
-	public function feature()
-	{
-		$input = JFactory::getApplication()->input;
-		$input->set('attribute', 'featured');
-		$input->set('value', '1');
+    /**
+     * Activates personal menu display for specific content articles.
+     *
+     * @return  bool  true on success, otherwise false
+     */
+    public function feature()
+    {
+        $input = JFactory::getApplication()->input;
+        $input->set('attribute', 'featured');
+        $input->set('value', '1');
 
-		return $this->toggle();
-	}
+        return $this->toggle();
+    }
 
-	/**
-	 * Deactivates personal menu display for specific content articles.
-	 *
-	 * @return  bool true on success, otherwise false
-	 */
-	public function unfeature()
-	{
-		$input = JFactory::getApplication()->input;
-		$input->set('attribute', 'featured');
-		$input->set('value', '0');
+    /**
+     * Deactivates personal menu display for specific content articles.
+     *
+     * @return  bool true on success, otherwise false
+     */
+    public function unfeature()
+    {
+        $input = JFactory::getApplication()->input;
+        $input->set('attribute', 'featured');
+        $input->set('value', '0');
 
-		return $this->toggle();
-	}
+        return $this->toggle();
+    }
 
-	/**
-	 * Method to change the core published state of THM Groups articles.
-	 *
-	 * @return  boolean  true on success, otherwise false
-	 */
-	public function publish()
-	{
-		return THM_GroupsHelperContent::publish();
-	}
+    /**
+     * Method to change the core published state of THM Groups articles.
+     *
+     * @return  boolean  true on success, otherwise false
+     */
+    public function publish()
+    {
+        return THM_GroupsHelperContent::publish();
+    }
 
-	/**
-	 * Saves the manually set order of records.
-	 *
-	 * @param   array   $pks   An array of primary key ids.
-	 * @param   integer $order +1 or -1
-	 *
-	 * @return  mixed
-	 *
-	 */
-	public function saveorder($pks = null, $order = null)
-	{
-		return THM_GroupsHelperContent::saveorder($pks, $order);
-	}
+    /**
+     * Saves the manually set order of records.
+     *
+     * @param   array   $pks   An array of primary key ids.
+     * @param   integer $order +1 or -1
+     *
+     * @return  mixed
+     *
+     */
+    public function saveorder($pks = null, $order = null)
+    {
+        return THM_GroupsHelperContent::saveorder($pks, $order);
+    }
 
-	/**
-	 * Toggles the binary attribute featured
-	 *
-	 * @return  mixed  integer on success, otherwise false
-	 */
-	public function toggle()
-	{
-		return THM_GroupsHelperContent::toggle();
-	}
+    /**
+     * Toggles the binary attribute featured
+     *
+     * @return  mixed  integer on success, otherwise false
+     */
+    public function toggle()
+    {
+        return THM_GroupsHelperContent::toggle();
+    }
 }

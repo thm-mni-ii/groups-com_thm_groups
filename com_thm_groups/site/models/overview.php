@@ -22,79 +22,73 @@ jimport('joomla.filesystem.path');
  */
 class THM_GroupsModelOverview extends JModelLegacy
 {
-	/**
-	 * Method to get group number
-	 *
-	 * @return int group id
-	 */
-	public function getGroupNumber()
-	{
-		return JFactory::getApplication()->getParams()->get('groupID');
-	}
+    /**
+     * Method to get group number
+     *
+     * @return int group id
+     */
+    public function getGroupNumber()
+    {
+        return JFactory::getApplication()->getParams()->get('groupID');
+    }
 
-	public function getProfilesByLetter($groupID)
-	{
-		$dbo   = JFactory::getDBO();
-		$query = $dbo->getQuery(true);
+    public function getProfilesByLetter($groupID)
+    {
+        $dbo   = JFactory::getDBO();
+        $query = $dbo->getQuery(true);
 
-		$query->select("DISTINCT user.id AS id, sname.value as surname");
-		$query->select("fname.value as forename");
-		$query->select("allAttr.published as published");
-		$query->select("user.injoomla as injoomla");
-		$query->select("pretitle.value as title");
-		$query->select("posttitle.value as posttitle");
-		$query->from("#__thm_groups_usergroups_roles as groups");
-		$query->leftJoin("#__thm_groups_users_usergroups_roles AS userRoles ON groups.ID = userRoles.usergroups_rolesID");
-		$query->leftJoin("#__thm_groups_users AS user ON user.id = userRoles.usersID");
-		$query->leftJoin("#__thm_groups_users_attribute AS allAttr ON allAttr.usersID = user.id");
-		$query->leftJoin("#__thm_groups_users_attribute AS sname ON sname.usersID = user.id AND sname.attributeID = 2");
-		$query->leftJoin("#__thm_groups_users_attribute AS fname ON fname.usersID = user.id AND fname.attributeID = 1");
-		$query->leftJoin("#__thm_groups_users_attribute AS pretitle ON pretitle.usersID = user.id AND pretitle.attributeID = '5'");
-		$query->leftJoin("#__thm_groups_users_attribute AS posttitle ON posttitle.usersID = user.id AND posttitle.attributeID = '7'");
-		$query->where("allAttr.published = 1");
-		$query->where("user.published = 1");
+        $query->select("DISTINCT profile.id AS id, sname.value as surname");
+        $query->select("fname.value as forename");
+        $query->select("allAttr.published as published");
+        $query->select("profile.injoomla as injoomla");
+        $query->select("pretitle.value as title");
+        $query->select("posttitle.value as posttitle");
+        $query->from("#__thm_groups_role_associations as roleAssoc");
+        $query->leftJoin("#__thm_groups_associations AS userRoles ON roleAssoc.ID = userRoles.usergroups_rolesID");
+        $query->leftJoin("#__thm_groups_profiles AS profile ON profile.id = userRoles.usersID");
+        $query->leftJoin("#__thm_groups_profile_attributes AS allAttr ON allAttr.usersID = profile.id");
+        $query->leftJoin("#__thm_groups_profile_attributes AS sname ON sname.usersID = profile.id AND sname.attributeID = 2");
+        $query->leftJoin("#__thm_groups_profile_attributes AS fname ON fname.usersID = profile.id AND fname.attributeID = 1");
+        $query->leftJoin("#__thm_groups_profile_attributes AS pretitle ON pretitle.usersID = profile.id AND pretitle.attributeID = '5'");
+        $query->leftJoin("#__thm_groups_profile_attributes AS posttitle ON posttitle.usersID = profile.id AND posttitle.attributeID = '7'");
+        $query->where("allAttr.published = 1");
+        $query->where("profile.published = 1");
 
-		$query->where("groups.usergroupsID = " . $groupID);
-		$query->order("surname");
-		$dbo->setQuery($query);
+        $query->where("roleAssoc.usergroupsID = " . $groupID);
+        $query->order("surname");
+        $dbo->setQuery($query);
 
-		try
-		{
-			$items = $dbo->loadObjectList();
-		}
-		catch (Exception $exc)
-		{
-			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+        try {
+            $items = $dbo->loadObjectList();
+        } catch (Exception $exc) {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-			return array();
-		}
+            return array();
+        }
 
-		$profiles = array();
-		foreach ($items as $profile)
-		{
-			// Normal substring messes up special characters
-			$letter = strtoupper(mb_substr($profile->surname, 0, 1));
-			switch ($letter)
-			{
-				case 'Ä':
-					$letter = 'A';
-					break;
-				case 'Ö':
-					$letter = 'O';
-					break;
-				case 'Ü':
-					$letter = 'U';
-					break;
-				default:
-					break;
-			}
-			if (!array_key_exists($letter, $profiles))
-			{
-				$profiles[$letter] = array();
-			}
-			$profiles[$letter][] = $profile;
-		}
+        $profiles = array();
+        foreach ($items as $profile) {
+            // Normal substring messes up special characters
+            $letter = strtoupper(mb_substr($profile->surname, 0, 1));
+            switch ($letter) {
+                case 'Ä':
+                    $letter = 'A';
+                    break;
+                case 'Ö':
+                    $letter = 'O';
+                    break;
+                case 'Ü':
+                    $letter = 'U';
+                    break;
+                default:
+                    break;
+            }
+            if (!array_key_exists($letter, $profiles)) {
+                $profiles[$letter] = array();
+            }
+            $profiles[$letter][] = $profile;
+        }
 
-		return $profiles;
-	}
+        return $profiles;
+    }
 }

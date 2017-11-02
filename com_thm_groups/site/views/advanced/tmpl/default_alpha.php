@@ -15,38 +15,34 @@ $lastProfile  = count($this->profiles) - 1;
 $row          = '';
 $rowIndex     = 0;
 
-foreach ($this->profiles as $profileID => $profileAttributes)
-{
-	// Skip profiles with no surname
-	if (empty($profileAttributes[2]))
-	{
-		// Reduce the end profile count to compensate for lack of output
-		$lastProfile = $lastProfile - 1;
-		continue;
-	}
+foreach ($this->profiles as $profileID => $profileAttributes) {
+    // Skip profiles with no surname
+    if (empty($profileAttributes[2])) {
+        // Reduce the end profile count to compensate for lack of output
+        $lastProfile = $lastProfile - 1;
+        continue;
+    }
 
-	$startRow = ($profileCount % $this->columns == 0);
+    $startRow = ($profileCount % $this->columns == 0);
 
-	if ($startRow)
-	{
-		$rowIndex++;
-		$row = '<div class="row-container">';
-	}
+    if ($startRow) {
+        $rowIndex++;
+        $row = '<div class="row-container">';
+    }
 
-	$row .= $this->getProfileContainer($profileID, $profileAttributes, $this->columns == 2);
+    $row .= $this->getProfileContainer($profileID, $profileAttributes, $this->columns == 2);
 
-	$endRow = ($profileCount % $this->columns == $this->columns - 1 OR $profileCount == $lastProfile);
+    $endRow = ($profileCount % $this->columns == $this->columns - 1 or $profileCount == $lastProfile);
 
-	if ($endRow)
-	{
-		// Ensure the row container wraps around the profiles
-		$row .= '<div class="clearFix"></div>';
+    if ($endRow) {
+        // Ensure the row container wraps around the profiles
+        $row .= '<div class="clearFix"></div>';
 
-		// Close the row
-		$row .= '</div>';
+        // Close the row
+        $row .= '</div>';
 
-		echo $row;
-	}
+        echo $row;
+    }
 
-	$profileCount++;
+    $profileCount++;
 }

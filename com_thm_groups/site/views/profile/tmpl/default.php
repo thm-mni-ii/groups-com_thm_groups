@@ -13,15 +13,15 @@ defined('_JEXEC') or die;
 $skipIndexes = [1, 2, 5, 7];
 ?>
 <div class="toolbar">
-	<?php echo $this->getEditLink('class="btn btn-toolbar-thm"'); ?>
-	<?php echo $this->getBackLink(); ?>
+    <?php echo $this->getEditLink('class="btn btn-toolbar-thm"'); ?>
+    <?php echo $this->getBackLink(); ?>
 </div>
 <div id="profile-container" class="profile-container row-fluid template-<?php echo $this->templateName; ?>">
-	<div class="page-header">
-		<h2><?php echo THM_GroupsHelperProfile::getDisplayName($this->profileID, true); ?></h2>
-	</div>
-	<?php $this->renderAttributes() ?>
-	<div class="clearFix"></div>
+    <div class="page-header">
+        <h2><?php echo THM_GroupsHelperProfile::getDisplayName($this->profileID, true); ?></h2>
+    </div>
+    <?php $this->renderAttributes() ?>
+    <div class="clearFix"></div>
 </div>
 
 

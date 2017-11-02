@@ -27,36 +27,35 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
  */
 class THM_GroupsModelProfile_Edit_Model extends THM_GroupsModelEdit
 {
-	/**
-	 * Returns all user attributes for the user edit form
-	 *
-	 * @param   int $profileID the user id
-	 *
-	 * @return  array  array of arrays containing profile information
-	 */
-	public function getAttributes($profileID)
-	{
-		$profileID = empty($profileID) ? JFactory::getApplication()->input->getInt('profileID') : $profileID;
+    /**
+     * Returns all user attributes for the user edit form
+     *
+     * @param   int $profileID the user id
+     *
+     * @return  array  array of arrays containing profile information
+     */
+    public function getAttributes($profileID)
+    {
+        $profileID = empty($profileID) ? JFactory::getApplication()->input->getInt('profileID') : $profileID;
 
-		if (empty($profileID))
-		{
-			return array();
-		}
+        if (empty($profileID)) {
+            return array();
+        }
 
-		return THM_GroupsHelperProfile::getProfile($profileID);
-	}
+        return THM_GroupsHelperProfile::getProfile($profileID);
+    }
 
-	/**
-	 * Method to load the form data
-	 *
-	 * @return  mixed  Object on success, false on failure.
-	 */
-	protected function loadFormData()
-	{
-		$input       = JFactory::getApplication()->input;
-		$selectedIDs = $input->get('cid', array(), 'array');
-		$id          = (empty($selectedIDs)) ? $input->getInt('id', 0) : $selectedIDs[0];
+    /**
+     * Method to load the form data
+     *
+     * @return  mixed  Object on success, false on failure.
+     */
+    protected function loadFormData()
+    {
+        $input       = JFactory::getApplication()->input;
+        $selectedIDs = $input->get('cid', array(), 'array');
+        $id          = (empty($selectedIDs)) ? $input->getInt('id', 0) : $selectedIDs[0];
 
-		return $this->getItem($id);
-	}
+        return $this->getItem($id);
+    }
 }

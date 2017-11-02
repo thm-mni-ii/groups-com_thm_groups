@@ -21,31 +21,29 @@ defined('_JEXEC') or die;
  */
 class THM_GroupsViewProfile_Select extends JViewLegacy
 {
-	public $filterForm = null;
+    public $filterForm = null;
 
-	/**
-	 * Method to create a list output
-	 *
-	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		JHtml::_('bootstrap.tooltip');
-		JHtml::_('jquery.ui', ['core', 'sortable']);
-		$ownURI = JUri::root();
-		$document = JFactory::getDocument();
-		$document->addStyleSheet($ownURI .'media/jui/css/icomoon.css');
-		$document->addStyleSheet($ownURI . 'media/jui/css/sortablelist.css');
-		$document->addStyleSheet($ownURI . 'media/com_thm_groups/css/profile_select.css');
-		$document->addScript($ownURI . 'media/com_thm_groups/js/profile_select.js');
+    /**
+     * Method to create a list output
+     *
+     * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
+        JHtml::_('bootstrap.tooltip');
+        JHtml::_('jquery.ui', ['core', 'sortable']);
+        $ownURI   = JUri::root();
+        $document = JFactory::getDocument();
+        $document->addStyleSheet($ownURI . 'media/jui/css/icomoon.css');
+        $document->addStyleSheet($ownURI . 'media/jui/css/sortablelist.css');
+        $document->addStyleSheet($ownURI . 'media/com_thm_groups/css/profile_select.css');
+        $document->addScript($ownURI . 'media/com_thm_groups/js/profile_select.js');
 
-		// Don't know which of these filters does what if anything active had no effect on the active highlighting
-		$this->filterForm = $this->get('FilterForm');
+        // Don't know which of these filters does what if anything active had no effect on the active highlighting
+        $this->filterForm = $this->get('FilterForm');
 
-		parent::display();
-	}
-
+        parent::display();
+    }
 }
-

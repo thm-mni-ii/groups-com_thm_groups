@@ -26,85 +26,79 @@ require_once JPATH_ROOT . '/media/com_thm_groups/models/edit.php';
  */
 class THM_GroupsModelDynamic_Type_Edit extends THM_GroupsModelEdit
 {
-	protected $form = false;
+    protected $form = false;
 
-	/**
-	 * Method to get the form
-	 *
-	 * @param   array   $data     Data         (default: Array)
-	 * @param   Boolean $loadData Load data  (default: true)
-	 *
-	 * @return  object the form
-	 *
-	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-	 */
-	public function getForm($data = array(), $loadData = true)
-	{
-		if (empty($this->form))
-		{
-			$this->form = $this->loadForm('com_thm_groups.dynamic_type_edit', 'dynamic_type_edit', array('control' => 'jform', 'load_data' => $loadData));
-		}
+    /**
+     * Method to get the form
+     *
+     * @param   array   $data     Data         (default: Array)
+     * @param   Boolean $loadData Load data  (default: true)
+     *
+     * @return  object the form
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function getForm($data = array(), $loadData = true)
+    {
+        if (empty($this->form)) {
+            $this->form = $this->loadForm('com_thm_groups.dynamic_type_edit', 'dynamic_type_edit',
+                array('control' => 'jform', 'load_data' => $loadData));
+        }
 
-		return $this->form;
-	}
+        return $this->form;
+    }
 
-	/**
-	 * returns table object
-	 *
-	 * @param   string $type   type
-	 * @param   string $prefix prefix
-	 * @param   array  $config config
-	 *
-	 * @return  JTable|mixed
-	 */
-	public function getTable($type = 'Dynamic_Type', $prefix = 'THM_GroupsTable', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
-	}
+    /**
+     * returns table object
+     *
+     * @param   string $type   type
+     * @param   string $prefix prefix
+     * @param   array  $config config
+     *
+     * @return  JTable|mixed
+     */
+    public function getTable($type = 'Dynamic_Type', $prefix = 'THM_GroupsTable', $config = array())
+    {
+        return JTable::getInstance($type, $prefix, $config);
+    }
 
-	/**
-	 * Method to load the form data
-	 *
-	 * @return  Object
-	 */
-	protected function loadFormData()
-	{
-		$input     = JFactory::getApplication()->input;
-		$task      = $input->getCmd('task', "dynamic_type.add");
-		$dynTypeID = $input->getInt('id', 0);
+    /**
+     * Method to load the form data
+     *
+     * @return  Object
+     */
+    protected function loadFormData()
+    {
+        $input     = JFactory::getApplication()->input;
+        $task      = $input->getCmd('task', "dynamic_type.add");
+        $dynTypeID = $input->getInt('id', 0);
 
-		// Edit can only be explicitly called from the list view or implicitly with an id over a URL
-		$edit = (($task == "dynamic_type.edit") OR $dynTypeID > 0);
+        // Edit can only be explicitly called from the list view or implicitly with an id over a URL
+        $edit = (($task == "dynamic_type.edit") or $dynTypeID > 0);
 
-		if ($edit)
-		{
-			if (empty($dynTypeID))
-			{
-				$selected = $input->get('cid', array(), 'array');
+        if ($edit) {
+            if (empty($dynTypeID)) {
+                $selected = $input->get('cid', array(), 'array');
 
-				if (empty($selected))
-				{
-					return $this->getItem(0);
-				}
+                if (empty($selected)) {
+                    return $this->getItem(0);
+                }
 
-				$dynTypeID = $selected[0];
-			}
+                $dynTypeID = $selected[0];
+            }
 
-			$item    = $this->getItem($dynTypeID);
-			$options = empty($item->options) ? '' : json_decode($item->options);
+            $item    = $this->getItem($dynTypeID);
+            $options = empty($item->options) ? '' : json_decode($item->options);
 
-			if (!empty($options))
-			{
-				if (isset($options->required))
-				{
-					$item->validate = $options->required === false ? 0 : 1;
-				}
-			}
+            if (!empty($options)) {
+                if (isset($options->required)) {
+                    $item->validate = $options->required === false ? 0 : 1;
+                }
+            }
 
-			return $item;
-		}
+            return $item;
+        }
 
-		return $this->getItem(0);
-	}
-
+        return $this->getItem(0);
+    }
 }

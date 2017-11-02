@@ -29,362 +29,335 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
  */
 class THM_GroupsViewContent_Manager extends JViewLegacy
 {
-	private $canCreate;
+    private $canCreate;
 
-	public $canEditAll;
+    public $canEditAll;
 
-	public $canEditOne;
+    public $canEditOne;
 
-	public $items;
+    public $items;
 
-	public $pagination;
+    public $pagination;
 
-	public $state;
+    public $state;
 
-	public $batch;
+    public $batch;
 
-	public $groups;
+    public $groups;
 
-	public $pageTitle;
+    public $pageTitle;
 
-	public $url;
+    public $url;
 
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object $tpl template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		$this->modifyDocument();
+    /**
+     * Method to get display
+     *
+     * @param   Object $tpl template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
+        $this->modifyDocument();
 
-		$this->state = $this->get('State');
-		$this->items = $this->get('Items');
+        $this->state = $this->get('State');
+        $this->items = $this->get('Items');
 
-		$this->model      = $this->getModel();
-		$this->categoryID = $this->model->categoryID;
-		$this->menuID     = JFactory::getApplication()->input->getInt('Itemid', 0);
+        $this->model      = $this->getModel();
+        $this->categoryID = $this->model->categoryID;
+        $this->menuID     = JFactory::getApplication()->input->getInt('Itemid', 0);
 
-		$this->profileID    = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
-		$profileName  = THM_GroupsHelperProfile::getDisplayName($this->profileID);
-		$contextTitle = $this->profileID == JFactory::getUser()->id ?
-			JText::_('COM_THM_GROUPS_MY_CONTENT') : JText::sprintf('COM_THM_GROUPS_MANAGE_CONTENT', $profileName);
+        $this->profileID = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
+        $profileName     = THM_GroupsHelperProfile::getDisplayName($this->profileID);
+        $contextTitle    = $this->profileID == JFactory::getUser()->id ?
+            JText::_('COM_THM_GROUPS_MY_CONTENT') : JText::sprintf('COM_THM_GROUPS_MANAGE_CONTENT', $profileName);
 
-		if (!empty($this->menuID))
-		{
-			$thisMenu  = JFactory::getApplication()->getMenu()->getItem($this->menuID);
-			$menuQuery = $thisMenu->get('query');
-			$isMenu    = (empty($menuQuery['view']) OR $menuQuery['view'] != 'content_manager') ? false : true;
-		}
-		else
-		{
-			$isMenu = false;
-		}
+        if (!empty($this->menuID)) {
+            $thisMenu  = JFactory::getApplication()->getMenu()->getItem($this->menuID);
+            $menuQuery = $thisMenu->get('query');
+            $isMenu    = (empty($menuQuery['view']) or $menuQuery['view'] != 'content_manager') ? false : true;
+        } else {
+            $isMenu = false;
+        }
 
-		if ($isMenu)
-		{
-			$params          = JFactory::getApplication()->getParams();
-			$showPageTitle   = $params->get('show_page_heading', false);
-			$this->pageTitle = $showPageTitle ? $params->get('page_title', '') : '';
-		}
-		else
-		{
-			$this->pageTitle = $contextTitle;
-		}
+        if ($isMenu) {
+            $params          = JFactory::getApplication()->getParams();
+            $showPageTitle   = $params->get('show_page_heading', false);
+            $this->pageTitle = $showPageTitle ? $params->get('page_title', '') : '';
+        } else {
+            $this->pageTitle = $contextTitle;
+        }
 
-		$user             = JFactory::getUser();
-		$this->canCreate  = $user->authorise('core.create', 'com_content.category.' . $this->categoryID);
-		$this->canEditAll = $this->model->canEditAll;
-		$this->canEditOne = $this->model->canEditOne;
+        $user             = JFactory::getUser();
+        $this->canCreate  = $user->authorise('core.create', 'com_content.category.' . $this->categoryID);
+        $this->canEditAll = $this->model->canEditAll;
+        $this->canEditOne = $this->model->canEditOne;
 
-		parent::display($tpl);
-	}
+        parent::display($tpl);
+    }
 
-	/**
-	 * Returns a button for creating of a new article
-	 *
-	 * @return mixed|string
-	 */
-	public function getNewButton()
-	{
-		if ($this->canCreate)
-		{
-			$menuID    = JFactory::getApplication()->input->getInt('Itemid', 0);
-			$returnURL = base64_encode("index.php?option=com_thm_groups&view=content_manager&Itemid=$menuID");
-			$addURL    = JRoute::_('index.php?option=com_content&view=form&layout=edit&catid='
-				. $this->categoryID . '&return=' . $returnURL
-			);
+    /**
+     * Returns a button for creating of a new article
+     *
+     * @return mixed|string
+     */
+    public function getNewButton()
+    {
+        if ($this->canCreate) {
+            $menuID    = JFactory::getApplication()->input->getInt('Itemid', 0);
+            $returnURL = base64_encode("index.php?option=com_thm_groups&view=content_manager&Itemid=$menuID");
+            $addURL    = JRoute::_('index.php?option=com_content&view=form&layout=edit&catid='
+                . $this->categoryID . '&return=' . $returnURL
+            );
 
-			$attribs = array(
-				'title' => JText::_('COM_THM_GROUPS_NEW_ARTICLE'),
-				'class' => 'btn'
-			);
+            $attribs = array(
+                'title' => JText::_('COM_THM_GROUPS_NEW_ARTICLE'),
+                'class' => 'btn'
+            );
 
-			$text = '<span class="icon-new"></span> ' . JText::_('COM_THM_GROUPS_NEW_ARTICLE');
+            $text = '<span class="icon-new"></span> ' . JText::_('COM_THM_GROUPS_NEW_ARTICLE');
 
-			return JHTML::_('link', $addURL, $text, $attribs);
+            return JHTML::_('link', $addURL, $text, $attribs);
+        } else {
+            return '';
+        }
+    }
 
-		}
-		else
-		{
-			return '';
-		}
-	}
+    /**
+     * Creates the HTML for a link to the user profile
+     *
+     * @return  string  the HTML string for the profile button
+     */
+    public function getProfileButton()
+    {
+        $profileID = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
+        $groupID   = THM_GroupsHelperProfile::getDefaultGroup($profileID);
+        $surname   = THM_GroupsHelperProfile::getAttributeValue($profileID, 2);
+        $buttonURL = "index.php?view=profile&profileID=$profileID&name=$surname";
+        $buttonURL .= empty($groupID) ? '' : "&groupID=$groupID";
+        $buttonRoute = JRoute::_($buttonURL);
 
-	/**
-	 * Creates the HTML for a link to the user profile
-	 *
-	 * @return  string  the HTML string for the profile button
-	 */
-	public function getProfileButton()
-	{
-		$profileID   = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
-		$groupID     = THM_GroupsHelperProfile::getDefaultGroup($profileID);
-		$surname     = THM_GroupsHelperProfile::getAttributeValue($profileID, 2);
-		$buttonURL   = "index.php?view=profile&profileID=$profileID&name=$surname";
-		$buttonURL   .= empty($groupID) ? '' : "&groupID=$groupID";
-		$buttonRoute = JRoute::_($buttonURL);
+        $buttonText = '<span class="icon-user"></span>' . JText::_('COM_THM_GROUPS_MY_PROFILE');
 
-		$buttonText = '<span class="icon-user"></span>' . JText::_('COM_THM_GROUPS_MY_PROFILE');
+        $attribs = array(
+            'class' => 'btn'
+        );
 
-		$attribs = array(
-			'class' => 'btn'
-		);
+        return JHTML::_('link', $buttonRoute, $buttonText, $attribs);
+    }
 
-		return JHTML::_('link', $buttonRoute, $buttonText, $attribs);
-	}
+    /**
+     * Creates the output data for the table row
+     *
+     * @param   int    $key  the row id
+     * @param   object $item the content item
+     *
+     * @return  string  the HTML for the row to be rendered
+     */
+    public function getRow($key, $item)
+    {
+        if ($this->canEditAll) {
+            $sortIcon  = '<span class="sortable-handler" style="cursor: move;"><i class="icon-menu"></i></span>';
+            $sortInput = '<input type="text" style="display:none" name="order[]" size="5" ';
+            $sortInput .= 'value="' . (string)$item->ordering . '" class="width-20 text-area-order">';
+            $sort = '<td class="order nowrap center" style="width: 40px;">' . $sortIcon . $sortInput . '</td>';
+        } else {
+            $sort = '';
+        }
 
-	/**
-	 * Creates the output data for the table row
-	 *
-	 * @param   int    $key  the row id
-	 * @param   object $item the content item
-	 *
-	 * @return  string  the HTML for the row to be rendered
-	 */
-	public function getRow($key, $item)
-	{
-		if ($this->canEditAll)
-		{
-			$sortIcon  = '<span class="sortable-handler" style="cursor: move;"><i class="icon-menu"></i></span>';
-			$sortInput = '<input type="text" style="display:none" name="order[]" size="5" ';
-			$sortInput .= 'value="' . (string) $item->ordering . '" class="width-20 text-area-order">';
-			$sort      = '<td class="order nowrap center" style="width: 40px;">' . $sortIcon . $sortInput . '</td>';
-		}
-		else
-		{
-			$sort = '';
-		}
+        if ($item->canEdit) {
 
-		if ($item->canEdit)
-		{
+            $published = '<td>';
+            $published .= THM_GroupsHelperContent::getStatusDropdown($key, $item);
+            $published .= JHtml::_('grid.id', $key, $item->id);
+            $published .= '</td>';
 
-			$published = '<td>';
-			$published .= THM_GroupsHelperContent::getStatusDropdown($key, $item);
-			$published .= JHtml::_('grid.id', $key, $item->id);
-			$published .= '</td>';
+            $listed = '<td class="btn-column">';
+            $listed .= $this->getToggle($item->id, $item->groups_featured, 'featured');
+            $listed .= '</td>';
+        } elseif ($this->canEditOne) {
+            $published = '<td>';
+            $published .= JHtml::_('jgrid.published', $item->state, $key, "", false, 'cb', $item->publish_up,
+                $item->publish_down);
+            $published .= JHtml::_('grid.id', $key, $item->id);
+            $published .= '</td>';
 
-			$listed = '<td class="btn-column">';
-			$listed .= $this->getToggle($item->id, $item->groups_featured, 'featured');
-			$listed .= '</td>';
-		}
-		elseif ($this->canEditOne)
-		{
-			$published = '<td>';
-			$published .= JHtml::_('jgrid.published', $item->state, $key, "", false, 'cb', $item->publish_up, $item->publish_down);
-			$published .= JHtml::_('grid.id', $key, $item->id);
-			$published .= '</td>';
+            $listed = '<td class="btn-column">';
+            $listed .= $this->getToggle($item->id, $item->groups_featured, 'featured');
+            $listed .= '</td>';
+        } else {
+            $published = '';
+            $listed    = '';
+        }
 
-			$listed = '<td class="btn-column">';
-			$listed .= $this->getToggle($item->id, $item->groups_featured, 'featured');
-			$listed .= '</td>';
-		}
-		else
-		{
-			$published = '';
-			$listed    = '';
-		}
+        $title = '<td class="title-column">' . $this->getTitle($key, $item) . '</td>';
 
-		$title = '<td class="title-column">' . $this->getTitle($key, $item) . '</td>';
+        return $sort . $title . $published . $listed;
+    }
 
-		return $sort . $title . $published . $listed;
-	}
+    /**
+     * Creates the HMTL for the status select box
+     *
+     * @param   int $key   the row id
+     * @param   int $state the content state
+     *
+     * @return string
+     */
+    public function getStateSelect($key, $state)
+    {
+        $spanClass = '';
+        $spanTip   = '';
 
-	/**
-	 * Creates the HMTL for the status select box
-	 *
-	 * @param   int $key   the row id
-	 * @param   int $state the content state
-	 *
-	 * @return string
-	 */
-	public function getStateSelect($key, $state)
-	{
-		$spanClass = '';
-		$spanTip   = '';
+        switch ($state) {
+            case PUBLISHED:
+                $spanClass = 'icon-publish green';
+                $spanTip   = JText::_('COM_THM_GROUPS_PUBLISHED');
+                break;
+            case UNPUBLISHED:
+                $spanClass = 'icon-unpublish red';
+                $spanTip   = JText::_('COM_THM_GROUPS_UNPUBLISHED');
+                break;
+            case ARCHIVED:
+                $spanClass = 'icon-archive red';
+                $spanTip   = JText::_('COM_THM_GROUPS_ARCHIVED');
+                break;
+            case TRASHED:
+                $spanClass = 'icon-trash red';
+                $spanTip   = JText::_('COM_THM_GROUPS_TRASHED');
+                break;
+        }
 
-		switch ($state)
-		{
-			case PUBLISHED:
-				$spanClass = 'icon-publish green';
-				$spanTip   = JText::_('COM_THM_GROUPS_PUBLISHED');
-				break;
-			case UNPUBLISHED:
-				$spanClass = 'icon-unpublish red';
-				$spanTip   = JText::_('COM_THM_GROUPS_UNPUBLISHED');
-				break;
-			case ARCHIVED:
-				$spanClass = 'icon-archive red';
-				$spanTip   = JText::_('COM_THM_GROUPS_ARCHIVED');
-				break;
-			case TRASHED:
-				$spanClass = 'icon-trash red';
-				$spanTip   = JText::_('COM_THM_GROUPS_TRASHED');
-				break;
-		}
+        $select = '<span class="status-container ' . $spanClass . ' hasTip" title="' . $spanTip . '"></span>';
+        $select .= '<div class="btn-group">';
+        $select .= '<a class="btn dropdown-toggle stateid" data-toggle="dropdown" href="#">';
+        $select .= JText::_('COM_THM_GROUPS_CHANGE_STATUS');
+        $select .= '<span class="icon-arrow-down-3 pull-right"></span></a>';
+        $select .= '<ul id="category" class="dropdown-menu">';
 
-		$select = '<span class="status-container ' . $spanClass . ' hasTip" title="' . $spanTip . '"></span>';
-		$select .= '<div class="btn-group">';
-		$select .= '<a class="btn dropdown-toggle stateid" data-toggle="dropdown" href="#">';
-		$select .= JText::_('COM_THM_GROUPS_CHANGE_STATUS');
-		$select .= '<span class="icon-arrow-down-3 pull-right"></span></a>';
-		$select .= '<ul id="category" class="dropdown-menu">';
+        if ($state != PUBLISHED) {
+            $select .= '<li><a href="javascript://" onclick="listItemTask(\'cb' . $key . '\', \'content.publish\')">';
+            $select .= '<i class="icon-publish"></i> ' . JText::_('COM_THM_GROUPS_PUBLISH');
+            $select .= '</a></li>';
+        }
+        if ($state != UNPUBLISHED) {
+            $select .= '<li><a href="javascript://" onclick="listItemTask(\'cb' . $key . '\', \'content.unpublish\')">';
+            $select .= '<i class="icon-unpublish"></i> ' . JText::_('COM_THM_GROUPS_UNPUBLISH');
+            $select .= '</a></li>';
+        }
+        if ($state != ARCHIVED) {
+            $select .= '<li><a href="javascript://" onclick="listItemTask(\'cb' . $key . '\', \'content.archive\')">';
+            $select .= '<i class="icon-archive"></i> ' . JText::_('COM_THM_GROUPS_ARCHIVE');
+            $select .= '</a></li>';
+        }
+        if ($state != TRASHED) {
+            $select .= '<li><a href="javascript://" onclick="listItemTask(\'cb' . $key . '\', \'content.trash\')">';
+            $select .= '<i class="icon-trash"></i> ' . JText::_('COM_THM_GROUPS_TRASH');
+            $select .= '</a></li>';
+        }
+        $select .= '</ul>';
+        $select .= '</div>';
 
-		if ($state != PUBLISHED)
-		{
-			$select .= '<li><a href="javascript://" onclick="listItemTask(\'cb' . $key . '\', \'content.publish\')">';
-			$select .= '<i class="icon-publish"></i> ' . JText::_('COM_THM_GROUPS_PUBLISH');
-			$select .= '</a></li>';
-		}
-		if ($state != UNPUBLISHED)
-		{
-			$select .= '<li><a href="javascript://" onclick="listItemTask(\'cb' . $key . '\', \'content.unpublish\')">';
-			$select .= '<i class="icon-unpublish"></i> ' . JText::_('COM_THM_GROUPS_UNPUBLISH');
-			$select .= '</a></li>';
-		}
-		if ($state != ARCHIVED)
-		{
-			$select .= '<li><a href="javascript://" onclick="listItemTask(\'cb' . $key . '\', \'content.archive\')">';
-			$select .= '<i class="icon-archive"></i> ' . JText::_('COM_THM_GROUPS_ARCHIVE');
-			$select .= '</a></li>';
-		}
-		if ($state != TRASHED)
-		{
-			$select .= '<li><a href="javascript://" onclick="listItemTask(\'cb' . $key . '\', \'content.trash\')">';
-			$select .= '<i class="icon-trash"></i> ' . JText::_('COM_THM_GROUPS_TRASH');
-			$select .= '</a></li>';
-		}
-		$select .= '</ul>';
-		$select .= '</div>';
+        return $select;
+    }
 
-		return $select;
-	}
+    /**
+     * Returns a title of an article
+     *
+     * @param int    $key   the key of the item being iterated
+     * @param object &$item An object item
+     *
+     * @return  string the HTML for the title
+     */
+    public function getTitle($key, &$item)
+    {
+        $profileID = JFactory::getUser()->id;
+        $surname   = THM_GroupsHelperProfile::getAttributeValue(JFactory::getUser()->id, 2);
+        $menuID    = JFactory::getApplication()->input->getInt('Itemid', 0);
+        $viewURL   = 'index.php?option=com_thm_groups&view=content';
+        $viewURL .= "&id=$item->id&alias=$item->alias&profileID=$profileID&name=$surname";
+        $viewRoute   = JRoute::_($viewURL, false);
+        $viewAttribs = array('title' => JText::_('COM_THM_GROUPS_VIEW'), 'class' => 'jgrid', 'target' => '_blank');
 
-	/**
-	 * Returns a title of an article
-	 *
-	 * @param int    $key     the key of the item being iterated
-	 * @param object &$item   An object item
-	 *
-	 * @return  string the HTML for the title
-	 */
-	public function getTitle($key, &$item)
-	{
-		$profileID   = JFactory::getUser()->id;
-		$surname     = THM_GroupsHelperProfile::getAttributeValue(JFactory::getUser()->id, 2);
-		$menuID      = JFactory::getApplication()->input->getInt('Itemid', 0);
-		$viewURL     = 'index.php?option=com_thm_groups&view=content';
-		$viewURL     .= "&id=$item->id&alias=$item->alias&profileID=$profileID&name=$surname";
-		$viewRoute   = JRoute::_($viewURL, false);
-		$viewAttribs = array('title' => JText::_('COM_THM_GROUPS_VIEW'), 'class' => 'jgrid', 'target' => '_blank');
+        if ($item->canEdit) {
+            $lock = '';
 
-		if ($item->canEdit)
-		{
-			$lock = '';
+            if (!empty($item->checked_out)) {
+                $lock .= JHtml::_('jgrid.checkedout', $key, $item->author_name, $item->checked_out_time, 'content.',
+                    true);
+            }
 
-			if (!empty($item->checked_out))
-			{
-				$lock .= JHtml::_('jgrid.checkedout', $key, $item->author_name, $item->checked_out_time, 'content.', true);
-			}
+            $returnURL = base64_encode(JUri::current());
+            $editURL   = 'index.php?option=com_content&task=article.edit';
+            $editURL .= "&Itemid=$menuID'&a_id=$item->id&return=$returnURL";
+            $editRoute = JRoute::_($editURL);
 
-			$returnURL = base64_encode(JUri::current());
-			$editURL   = 'index.php?option=com_content&task=article.edit';
-			$editURL   .= "&Itemid=$menuID'&a_id=$item->id&return=$returnURL";
-			$editRoute = JRoute::_($editURL);
+            $editAttribs = array('title' => JText::_('COM_THM_GROUPS_EDIT'));
+            $editLink    = $lock . JHTML::_('link', $editRoute, $item->title, $editAttribs);
 
-			$editAttribs = array('title' => JText::_('COM_THM_GROUPS_EDIT'));
-			$editLink    = $lock . JHTML::_('link', $editRoute, $item->title, $editAttribs);
+            $viewText = '<span class="icon-eye-open"></span>';
 
-			$viewText = '<span class="icon-eye-open"></span>';
+        } else {
+            $editLink = '';
+            $viewText = $item->title;
+        }
 
-		}
-		else
-		{
-			$editLink = '';
-			$viewText = $item->title;
-		}
+        $viewLink = JHTML::_('link', $viewRoute, $viewText, $viewAttribs);
 
-		$viewLink = JHTML::_('link', $viewRoute, $viewText, $viewAttribs);
-		return $editLink . $viewLink;
-	}
+        return $editLink . $viewLink;
+    }
 
-	/**
-	 * Generates a toggle for the attribute in question
-	 *
-	 * @param   int    $id        the id of the database entry
-	 * @param   bool   $value     the value currently set for the attribute (saves asking it later)
-	 * @param   string $attribute the resource attribute to be changed (useful if multiple entries can be toggled)
-	 *
-	 * @return  string  a HTML string
-	 */
-	public function getToggle($id, $value, $attribute)
-	{
-		if ($value)
-		{
-			$colorClass = 'green';
-			$iconClass  = 'publish';
-			$tip        = 'COM_THM_GROUPS_PUBLISHED';
-		}
-		else
-		{
-			$colorClass = 'red';
-			$iconClass  = 'unpublish';
-			$tip        = 'COM_THM_GROUPS_UNPUBLISHED';
-		}
+    /**
+     * Generates a toggle for the attribute in question
+     *
+     * @param   int    $id        the id of the database entry
+     * @param   bool   $value     the value currently set for the attribute (saves asking it later)
+     * @param   string $attribute the resource attribute to be changed (useful if multiple entries can be toggled)
+     *
+     * @return  string  a HTML string
+     */
+    public function getToggle($id, $value, $attribute)
+    {
+        if ($value) {
+            $colorClass = 'green';
+            $iconClass  = 'publish';
+            $tip        = 'COM_THM_GROUPS_PUBLISHED';
+        } else {
+            $colorClass = 'red';
+            $iconClass  = 'unpublish';
+            $tip        = 'COM_THM_GROUPS_UNPUBLISHED';
+        }
 
-		$attributes                = array();
-		$attributes['title']       = JText::_($tip);
-		$attributes['data-toggle'] = "tooltip";
+        $attributes                = array();
+        $attributes['title']       = JText::_($tip);
+        $attributes['data-toggle'] = "tooltip";
 
-		$icon = '<span class="icon-' . $iconClass . ' ' . $colorClass . '"></span>';
+        $icon = '<span class="icon-' . $iconClass . ' ' . $colorClass . '"></span>';
 
-		$menuID = JFactory::getApplication()->input->getInt('Itemid', 0);
+        $menuID = JFactory::getApplication()->input->getInt('Itemid', 0);
 
-		$url = "index.php?option=com_thm_groups&task=content.toggle";
-		$url .= "&id=$id&value=$value&Itemid=$menuID";
-		$url .= empty($attribute) ? '' : "&attribute=$attribute";
+        $url = "index.php?option=com_thm_groups&task=content.toggle";
+        $url .= "&id=$id&value=$value&Itemid=$menuID";
+        $url .= empty($attribute) ? '' : "&attribute=$attribute";
 
-		$link = JHtml::_('link', JRoute::_($url), $icon, $attributes);
+        $link = JHtml::_('link', JRoute::_($url), $icon, $attributes);
 
-		return $link;
-	}
+        return $link;
+    }
 
-	/**
-	 * Adds styles and scripts to the document
-	 *
-	 * @return  void  modifies the document
-	 */
-	protected function modifyDocument()
-	{
-		$document = Jfactory::getDocument();
-		$document->addStyleSheet($this->baseurl . "/media/com_thm_groups/css/content_manager.css");
+    /**
+     * Adds styles and scripts to the document
+     *
+     * @return  void  modifies the document
+     */
+    protected function modifyDocument()
+    {
+        $document = Jfactory::getDocument();
+        $document->addStyleSheet($this->baseurl . "/media/com_thm_groups/css/content_manager.css");
 
-		JHtml::_('bootstrap.framework');
-		JHtml::_('bootstrap.tooltip');
+        JHtml::_('bootstrap.framework');
+        JHtml::_('bootstrap.tooltip');
 
-		// Used for pseudo-select boxes with icons
-		JHtml::_('behavior.modal');
-	}
+        // Used for pseudo-select boxes with icons
+        JHtml::_('behavior.modal');
+    }
 }

@@ -18,376 +18,342 @@
  */
 class THM_GroupsHelperGroup
 {
-	/**
-	 * Method to get the distinct first letters of the user surnames
-	 *
-	 * @param   int $groupID the group id
-	 *
-	 * @return  array  the first letters of the surnames
-	 */
-	public static function getFirstLetters($groupID)
-	{
-		$dbo   = JFactory::getDBO();
-		$query = $dbo->getQuery(true);
+    /**
+     * Method to get the distinct first letters of the user surnames
+     *
+     * @param   int $groupID the group id
+     *
+     * @return  array  the first letters of the surnames
+     */
+    public static function getFirstLetters($groupID)
+    {
+        $dbo   = JFactory::getDBO();
+        $query = $dbo->getQuery(true);
 
-		$query->select("DISTINCT t.value");
-		$query->from("`#__thm_groups_users_attribute` AS t");
-		$query->leftJoin("`#__thm_groups_users_usergroups_roles` AS userRoles ON userRoles.usersID = t.usersID");
-		$query->leftJoin("`#__thm_groups_usergroups_roles` AS groups ON userRoles.usergroups_rolesID = groups.id");
-		$query->leftJoin("`#__thm_groups_users` AS user ON user.id = userRoles.usersID");
-		$query->where("t.attributeID = '2'");
-		$query->where("t.published = '1'");
-		$query->where("user.published = '1'");
-		$query->where("groups.usergroupsID = '$groupID'");
-		$dbo->setQuery($query);
+        $query->select("DISTINCT pa.value");
+        $query->from("`#__thm_groups_profile_attributes` AS pa");
+        $query->leftJoin("`#__thm_groups_associations` AS assoc ON assoc.usersID = pa.usersID");
+        $query->leftJoin("`#__thm_groups_role_associations` AS groups ON assoc.usergroups_rolesID = groups.id");
+        $query->leftJoin("`#__thm_groups_profiles` AS profile ON profile.id = assoc.usersID");
+        $query->where("pa.attributeID = '2'");
+        $query->where("pa.published = '1'");
+        $query->where("profile.published = '1'");
+        $query->where("groups.usergroupsID = '$groupID'");
+        $dbo->setQuery($query);
 
-		try
-		{
-			$surnames = $dbo->loadColumn();
-		}
-		catch (Exception $exc)
-		{
-			JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
+        try {
+            $surnames = $dbo->loadColumn();
+        } catch (Exception $exc) {
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
 
-			return array();
-		}
+            return array();
+        }
 
-		$letters = array();
-		foreach ($surnames as $surname)
-		{
-			$letter = strtoupper(substr($surname, 0, 1));
-			if (!in_array($letter, $letters))
-			{
-				$letters[] = $letter;
-			}
-		}
-		sort($letters);
+        $letters = array();
+        foreach ($surnames as $surname) {
+            $letter = strtoupper(substr($surname, 0, 1));
+            if (!in_array($letter, $letters)) {
+                $letters[] = $letter;
+            }
+        }
+        sort($letters);
 
-		return $letters;
-	}
+        return $letters;
+    }
 
-	/**
-	 * Retrieves profileIDs for the given group grouped by the optionally pre-selected group roles.
-	 *
-	 * @param   int $groupID the id of the group
-	 *
-	 * @return  array the profile ids for the given group, grouped by role id
-	 */
-	public static function getProfileIDs($groupID)
-	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
-		$query->select("DISTINCT user.id AS profileID")
-			->from('#__thm_groups_usergroups_roles as groups')
-			->leftJoin('#__thm_groups_users_usergroups_roles as userRoles on groups.ID = userRoles.usergroups_rolesID')
-			->leftJoin('#__thm_groups_users as user on user.id = userRoles.usersID')
-			->where("groups.usergroupsID = '$groupID'")
-			->where("user.published = '1'");
+    /**
+     * Retrieves profileIDs for the given group grouped by the optionally pre-selected group roles.
+     *
+     * @param   int $groupID the id of the group
+     *
+     * @return  array the profile ids for the given group, grouped by role id
+     */
+    public static function getProfileIDs($groupID)
+    {
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query->select("DISTINCT profile.id AS profileID")
+            ->from('#__thm_groups_role_associations as roleAssoc')
+            ->leftJoin('#__thm_groups_associations as assoc on roleAssoc.ID = assoc.usergroups_rolesID')
+            ->leftJoin('#__thm_groups_profiles as profile on profile.id = assoc.usersID')
+            ->where("roleAssoc.usergroupsID = '$groupID'")
+            ->where("profile.published = '1'");
 
-		$dbo->setQuery($query);
+        $dbo->setQuery($query);
 
-		try
-		{
-			$profileIDs = $dbo->loadColumn();
-		}
-		catch (Exception $exception)
-		{
-			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+        try {
+            $profileIDs = $dbo->loadColumn();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-			return [];
-		}
+            return [];
+        }
 
-		return empty($profileIDs) ? [] : $profileIDs;
-	}
+        return empty($profileIDs) ? [] : $profileIDs;
+    }
 
-	/**
-	 * Retrieves profileIDs for the given group -> role association.
-	 *
-	 * @param   int $assocID the id of the group -> role association
-	 *
-	 * @return  array the profile ids for the given association
-	 */
-	public static function getProfileIDsByAssoc($assocID)
-	{
-		$dbo = JFactory::getDbo();
+    /**
+     * Retrieves profileIDs for the given group -> role association.
+     *
+     * @param   int $assocID the id of the group -> role association
+     *
+     * @return  array the profile ids for the given association
+     */
+    public static function getProfileIDsByAssoc($assocID)
+    {
+        $dbo = JFactory::getDbo();
 
-		$query = $dbo->getQuery(true);
-		$query
-			->select("user.id AS profileID")
-			->from('#__thm_groups_usergroups_roles as groups')
-			->leftJoin('#__thm_groups_users_usergroups_roles as userRoles on groups.ID = userRoles.usergroups_rolesID')
-			->leftJoin('#__thm_groups_users as user on user.id = userRoles.usersID');
+        $query = $dbo->getQuery(true);
+        $query
+            ->select("profile.id AS profileID")
+            ->from('#__thm_groups_role_associations as roleAssoc')
+            ->leftJoin('#__thm_groups_associations as assoc on roleAssoc.ID = assoc.usergroups_rolesID')
+            ->leftJoin('#__thm_groups_profiles as profile on profile.id = assoc.usersID');
 
-		$query->where("groups.ID = '$assocID'");
-		$query->where("user.published = '1'");
+        $query->where("roleAssoc.ID = '$assocID'");
+        $query->where("profile.published = '1'");
 
-		$dbo->setQuery($query);
+        $dbo->setQuery($query);
 
-		try
-		{
-			$profileIDs = $dbo->loadColumn();
-		}
-		catch (Exception $exception)
-		{
-			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+        try {
+            $profileIDs = $dbo->loadColumn();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-			return array();
-		}
+            return array();
+        }
 
-		return empty($profileIDs) ? [] : $profileIDs;
-	}
+        return empty($profileIDs) ? [] : $profileIDs;
+    }
 
-	/**
-	 * Retrieves profileIDs for the given group grouped by the optionally pre-selected group roles.
-	 *
-	 * @param   int $groupID the id of the group
-	 *
-	 * @return  array the profile ids for the given group, grouped by role id
-	 */
-	public static function getProfileIDsByRole($groupID)
-	{
-		$return      = array();
-		$roleIDs     = (empty($sortedRoles)) ? self::getRoleIDs($groupID) : $sortedRoles;
-		$excludeList = array();
-		$dbo         = JFactory::getDbo();
+    /**
+     * Retrieves profileIDs for the given group grouped by the optionally pre-selected group roles.
+     *
+     * @param   int $groupID the id of the group
+     *
+     * @return  array the profile ids for the given group, grouped by role id
+     */
+    public static function getProfileIDsByRole($groupID)
+    {
+        $return      = array();
+        $roleIDs     = (empty($sortedRoles)) ? self::getRoleIDs($groupID) : $sortedRoles;
+        $excludeList = array();
+        $dbo         = JFactory::getDbo();
 
-		$query = $dbo->getQuery(true);
-		$query
-			->select("user.id AS profileID, roles.ordering as roleOrder")
-			->from('#__thm_groups_usergroups_roles as groups')
-			->innerJoin('#__thm_groups_roles AS roles ON groups.rolesID = roles.id')
-			->leftJoin('#__thm_groups_users_usergroups_roles as userRoles on groups.ID = userRoles.usergroups_rolesID')
-			->leftJoin('#__thm_groups_users as user on user.id = userRoles.usersID');
+        $query = $dbo->getQuery(true);
+        $query
+            ->select("profile.id AS profileID, roles.ordering as roleOrder")
+            ->from('#__thm_groups_role_associations as roleAssoc')
+            ->innerJoin('#__thm_groups_roles AS roles ON roleAssoc.rolesID = roles.id')
+            ->leftJoin('#__thm_groups_associations as assoc on roleAssoc.ID = assoc.usergroups_rolesID')
+            ->leftJoin('#__thm_groups_profiles as profile on profile.id = assoc.usersID');
 
-		foreach ($roleIDs as $roleID)
-		{
-			$query->clear('where');
-			$query->where("groups.usergroupsID = '$groupID'");
-			$query->where("groups.rolesID = '$roleID'");
-			$query->where("user.published = '1'");
+        foreach ($roleIDs as $roleID) {
+            $query->clear('where');
+            $query->where("roleAssoc.usergroupsID = '$groupID'");
+            $query->where("roleAssoc.rolesID = '$roleID'");
+            $query->where("profile.published = '1'");
 
-			if (!empty($excludeList))
-			{
-				$query->where("user.id NOT IN (" . implode(",", $excludeList) . ")");
-			}
+            if (!empty($excludeList)) {
+                $query->where("profile.id NOT IN (" . implode(",", $excludeList) . ")");
+            }
 
-			$dbo->setQuery($query);
+            $dbo->setQuery($query);
 
-			try
-			{
-				$profileIDs   = $dbo->loadColumn(0);
-				$orderResults = $dbo->loadColumn(1);
-			}
-			catch (Exception $exception)
-			{
-				JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            try {
+                $profileIDs   = $dbo->loadColumn(0);
+                $orderResults = $dbo->loadColumn(1);
+            } catch (Exception $exception) {
+                JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-				return array();
-			}
+                return array();
+            }
 
-			if (empty($profileIDs))
-			{
-				continue;
-			}
+            if (empty($profileIDs)) {
+                continue;
+            }
 
-			$return[$orderResults[0]] = $profileIDs;
-			$excludeList              = array_unique(array_merge($excludeList, $profileIDs));
-		}
+            $return[$orderResults[0]] = $profileIDs;
+            $excludeList              = array_unique(array_merge($excludeList, $profileIDs));
+        }
 
-		return $return;
-	}
+        return $return;
+    }
 
-	/**
-	 * Get the ids of the group -> role associations for a particular group ordered by the role ordering.
-	 *
-	 * @param   int $groupID the group id
-	 *
-	 * @return array the group -> role associations
-	 */
-	public static function getRoleAssocIDs($groupID)
-	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
-		$query->select('DISTINCT assoc.ID')
-			->from('#__thm_groups_usergroups_roles AS assoc')
-			->innerJoin('#__thm_groups_roles AS roles ON assoc.rolesID = roles.id')
-			->where("usergroupsID = '$groupID'")
-			->order('roles.ordering');
-		$dbo->setQuery($query);
+    /**
+     * Get the ids of the group -> role associations for a particular group ordered by the role ordering.
+     *
+     * @param   int $groupID the group id
+     *
+     * @return array the group -> role associations
+     */
+    public static function getRoleAssocIDs($groupID)
+    {
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query->select('DISTINCT assoc.ID')
+            ->from('#__thm_groups_role_associations AS assoc')
+            ->innerJoin('#__thm_groups_roles AS roles ON assoc.rolesID = roles.id')
+            ->where("usergroupsID = '$groupID'")
+            ->order('roles.ordering');
+        $dbo->setQuery($query);
 
-		try
-		{
-			$assocIDs = $dbo->loadColumn();
-		}
-		catch (Exception $exception)
-		{
-			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+        try {
+            $assocIDs = $dbo->loadColumn();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-			return array();
-		}
+            return array();
+        }
 
-		return empty($assocIDs) ? array() : $assocIDs;
-	}
+        return empty($assocIDs) ? array() : $assocIDs;
+    }
 
-	/**
-	 * Get the roles associated with a group
-	 *
-	 * @param   int $groupID the group id
-	 *
-	 * @return array the associated roles
-	 */
-	public static function getRoleIDs($groupID)
-	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
-		$query->select('DISTINCT rolesID')->from('#__thm_groups_usergroups_roles')->where("usergroupsID = '$groupID'");
-		$dbo->setQuery($query);
+    /**
+     * Get the roles associated with a group
+     *
+     * @param   int $groupID the group id
+     *
+     * @return array the associated roles
+     */
+    public static function getRoleIDs($groupID)
+    {
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query->select('DISTINCT rolesID')->from('#__thm_groups_role_associations')->where("usergroupsID = '$groupID'");
+        $dbo->setQuery($query);
 
-		try
-		{
-			$roleIDs = $dbo->loadColumn();
-		}
-		catch (Exception $exception)
-		{
-			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+        try {
+            $roleIDs = $dbo->loadColumn();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-			return array();
-		}
+            return array();
+        }
 
-		return empty($roleIDs) ? array() : $roleIDs;
-	}
+        return empty($roleIDs) ? array() : $roleIDs;
+    }
 
-	/**
-	 * Retrieves the ID of the default tempate for a given group
-	 *
-	 * @param   int $groupID the user group id
-	 *
-	 * @return  int  id of the default group profile, or 1 (the default profile id)
-	 */
-	public static function getTemplateID($groupID)
-	{
-		if (empty($groupID))
-		{
-			return 1;
-		}
+    /**
+     * Retrieves the ID of the default tempate for a given group
+     *
+     * @param   int $groupID the user group id
+     *
+     * @return  int  id of the default group profile, or 1 (the default profile id)
+     */
+    public static function getTemplateID($groupID)
+    {
+        if (empty($groupID)) {
+            return 1;
+        }
 
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
-		$query->select('profileID');
-		$query->from('#__thm_groups_profile_usergroups');
-		$query->where("usergroupsID = '$groupID'");
-		$dbo->setQuery($query);
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query->select('profileID');
+        $query->from('#__thm_groups_template_associations');
+        $query->where("usergroupsID = '$groupID'");
+        $dbo->setQuery($query);
 
-		try
-		{
-			$profileID = $dbo->loadResult();
-		}
-		catch (Exception $exc)
-		{
-			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+        try {
+            $profileID = $dbo->loadResult();
+        } catch (Exception $exc) {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-			return 1;
-		}
+            return 1;
+        }
 
-		return empty($profileID) ? 1 : $profileID;
-	}
+        return empty($profileID) ? 1 : $profileID;
+    }
 
-	/**
-	 * Method to get user by char and groupid
-	 *
-	 * @param   int    $groupID the group id
-	 * @param   string $letter  the first letter of the surname
-	 *
-	 * @return array
-	 */
-	public static function getUsersByLetter($groupID, $letter)
-	{
-		$dbo   = JFactory::getDBO();
-		$query = $dbo->getQuery(true);
+    /**
+     * Method to get user by char and groupid
+     *
+     * @param   int    $groupID the group id
+     * @param   string $letter  the first letter of the surname
+     *
+     * @return array
+     */
+    public static function getUsersByLetter($groupID, $letter)
+    {
+        $dbo   = JFactory::getDBO();
+        $query = $dbo->getQuery(true);
 
-		$query->select("DISTINCT user.id AS id, sname.value as surname");
-		$query->select("fname.value as forename");
-		$query->select("email.value as email");
-		$query->select("allAttr.published as published");
-		$query->select("user.injoomla as injoomla");
-		$query->select("pretitle.value as title");
-		$query->select("posttitle.value as posttitle");
-		$query->from("#__thm_groups_usergroups_roles as groups");
-		$query->leftJoin("#__thm_groups_users_usergroups_roles AS userRoles ON groups.ID = userRoles.usergroups_rolesID");
-		$query->leftJoin("#__thm_groups_users AS user ON user.id = userRoles.usersID");
-		$query->leftJoin("#__thm_groups_users_attribute AS allAttr ON allAttr.usersID = user.id");
-		$query->leftJoin("#__thm_groups_users_attribute AS sname ON sname.usersID = user.id AND sname.attributeID = 2");
-		$query->leftJoin("#__thm_groups_users_attribute AS fname ON fname.usersID = user.id AND fname.attributeID = 1");
-		$query->leftJoin("#__thm_groups_users_attribute AS email ON email.usersID = user.id AND email.attributeID = 4");
-		$query->leftJoin("#__thm_groups_users_attribute AS pretitle ON pretitle.usersID = user.id AND pretitle.attributeID = '5'");
-		$query->leftJoin("#__thm_groups_users_attribute AS posttitle ON posttitle.usersID = user.id AND posttitle.attributeID = '7'");
-		$query->where("allAttr.published = 1");
-		$query->where("user.published = 1");
+        $query->select("DISTINCT profile.id AS id, sname.value as surname");
+        $query->select("fname.value as forename");
+        $query->select("email.value as email");
+        $query->select("allAttr.published as published");
+        $query->select("profile.injoomla as injoomla");
+        $query->select("pretitle.value as title");
+        $query->select("posttitle.value as posttitle");
+        $query->from("#__thm_groups_role_associations as roleAssoc");
+        $query->leftJoin("#__thm_groups_associations AS assoc ON roleAssoc.ID = assoc.usergroups_rolesID");
+        $query->leftJoin("#__thm_groups_profiles AS profile ON profile.id = assoc.usersID");
+        $query->leftJoin("#__thm_groups_profile_attributes AS allAttr ON allAttr.usersID = profile.id");
+        $query->leftJoin("#__thm_groups_profile_attributes AS sname ON sname.usersID = profile.id AND sname.attributeID = 2");
+        $query->leftJoin("#__thm_groups_profile_attributes AS fname ON fname.usersID = profile.id AND fname.attributeID = 1");
+        $query->leftJoin("#__thm_groups_profile_attributes AS email ON email.usersID = profile.id AND email.attributeID = 4");
+        $query->leftJoin("#__thm_groups_profile_attributes AS pretitle ON pretitle.usersID = profile.id AND pretitle.attributeID = '5'");
+        $query->leftJoin("#__thm_groups_profile_attributes AS posttitle ON posttitle.usersID = profile.id AND posttitle.attributeID = '7'");
+        $query->where("allAttr.published = 1");
+        $query->where("profile.published = 1");
 
-		switch ($letter)
-		{
-			case'A':
-				$letterClause = "sname.value like 'A%' OR sname.value like 'Ä%'";
-				break;
-			case'O':
-				$letterClause = "sname.value like 'O%' OR sname.value like 'Ö%'";
-				break;
-			case'U':
-				$letterClause = "sname.value like 'U%' OR sname.value like 'Ü%'";
-				break;
-			default:
-				$letterClause = "sname.value like '$letter%'";
-				break;
-		}
+        switch ($letter) {
+            case 'A':
+                $letterClause = "sname.value like 'A%' OR sname.value like 'Ä%'";
+                break;
+            case 'O':
+                $letterClause = "sname.value like 'O%' OR sname.value like 'Ö%'";
+                break;
+            case 'U':
+                $letterClause = "sname.value like 'U%' OR sname.value like 'Ü%'";
+                break;
+            default:
+                $letterClause = "sname.value like '$letter%'";
+                break;
+        }
 
-		$query->where($letterClause);
-		$query->where("groups.usergroupsID = " . $groupID);
-		$query->order("surname");
-		$dbo->setQuery($query);
+        $query->where($letterClause);
+        $query->where("roleAssoc.usergroupsID = " . $groupID);
+        $query->order("surname");
+        $dbo->setQuery($query);
 
-		try
-		{
-			$list = $dbo->loadObjectList();
-		}
-		catch (Exception $exc)
-		{
-			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+        try {
+            $list = $dbo->loadObjectList();
+        } catch (Exception $exc) {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-			return array();
-		}
+            return array();
+        }
 
-		return empty($list) ? [] : $list;
-	}
+        return empty($list) ? [] : $list;
+    }
 
-	/**
-	 * Gets the number of profiles associated with a given group
-	 *
-	 * @param   int $groupID GroupID
-	 *
-	 * @return  int  the number of profiles associated with the group
-	 */
-	public static function getUserCount($groupID)
-	{
-		$dbo   = JFactory::getDBO();
-		$query = $dbo->getQuery(true);
+    /**
+     * Gets the number of profiles associated with a given group
+     *
+     * @param   int $groupID GroupID
+     *
+     * @return  int  the number of profiles associated with the group
+     */
+    public static function getUserCount($groupID)
+    {
+        $dbo   = JFactory::getDBO();
+        $query = $dbo->getQuery(true);
 
-		$query->select("COUNT(distinct userGRs.usersID) AS total");
-		$query->from("`#__thm_groups_usergroups_roles` AS groupRoles");
-		$query->innerJoin("`#__thm_groups_users_usergroups_roles` AS userGRs ON groupRoles.id = userGRs.usergroups_rolesID");
-		$query->innerJoin("`#__thm_groups_users` AS user ON user.id = userGRs.usersID");
-		$query->where("user.published = 1");
-		$query->where("groupRoles.usergroupsID = $groupID");
-		$dbo->setQuery($query);
+        $query->select("COUNT(distinct assoc.usersID) AS total");
+        $query->from("`#__thm_groups_role_associations` AS roleAssoc");
+        $query->innerJoin("`#__thm_groups_associations` AS assoc ON roleAssoc.id = assoc.usergroups_rolesID");
+        $query->innerJoin("`#__thm_groups_profiles` AS profile ON profile.id = assoc.usersID");
+        $query->where("profile.published = 1");
+        $query->where("roleAssoc.usergroupsID = $groupID");
+        $dbo->setQuery($query);
 
-		try
-		{
-			return $dbo->loadResult();
-		}
-		catch (Exception $exc)
-		{
-			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+        try {
+            return $dbo->loadResult();
+        } catch (Exception $exc) {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-			return 0;
-		}
-	}
+            return 0;
+        }
+    }
 }

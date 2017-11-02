@@ -14,5 +14,3 @@
 defined('_JEXEC') or die;
 require_once JPATH_ROOT . '/media/com_thm_groups/templates/list.php';
 THM_GroupsTemplateList::render($this);
-
-

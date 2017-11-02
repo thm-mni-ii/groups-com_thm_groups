@@ -25,54 +25,51 @@ require_once JPATH_ROOT . "/media/com_thm_groups/views/list.php";
 class THM_GroupsViewContent_Manager extends THM_GroupsViewList
 {
 
-	public $items;
+    public $items;
 
-	public $pagination;
+    public $pagination;
 
-	public $state;
+    public $state;
 
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object $tpl template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups'))
-		{
-			$exc = new Exception(JText::_('JLIB_RULES_NOT_ALLOWED'), 401);
-			JErrorPage::render($exc);
-		}
+    /**
+     * Method to get display
+     *
+     * @param   Object $tpl template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
+        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups')) {
+            $exc = new Exception(JText::_('JLIB_RULES_NOT_ALLOWED'), 401);
+            JErrorPage::render($exc);
+        }
 
-		parent::display($tpl);
-	}
+        parent::display($tpl);
+    }
 
-	/**
-	 * Add Joomla ToolBar with add edit delete options.
-	 *
-	 * @return void
-	 */
-	protected function addToolbar()
-	{
-		JToolBarHelper::title(
-			JText::_('COM_THM_GROUPS_CONTENT_MANAGER_VIEW_TITLE'), 'content_manager'
-		);
+    /**
+     * Add Joomla ToolBar with add edit delete options.
+     *
+     * @return void
+     */
+    protected function addToolbar()
+    {
+        JToolBarHelper::title(
+            JText::_('COM_THM_GROUPS_CONTENT_MANAGER_VIEW_TITLE'), 'content_manager'
+        );
 
-		$user         = JFactory::getUser();
-		$rootCategory = THM_GroupsHelperContent::getRootCategory();
+        $user         = JFactory::getUser();
+        $rootCategory = THM_GroupsHelperContent::getRootCategory();
 
-		if ($user->authorise('core.manage', 'com_thm_groups') AND !empty($rootCategory))
-		{
-			JToolBarHelper::publishList('content.feature', 'COM_THM_GROUPS_FEATURE');
-			JToolBarHelper::unpublishList('content.unfeature', 'COM_THM_GROUPS_UNFEATURE');
-		}
+        if ($user->authorise('core.manage', 'com_thm_groups') and !empty($rootCategory)) {
+            JToolBarHelper::publishList('content.feature', 'COM_THM_GROUPS_FEATURE');
+            JToolBarHelper::unpublishList('content.unfeature', 'COM_THM_GROUPS_UNFEATURE');
+        }
 
-		if ($user->authorise('core.admin', 'com_thm_groups'))
-		{
-			JToolBarHelper::divider();
-			JToolBarHelper::preferences('com_thm_groups');
-		}
-	}
+        if ($user->authorise('core.admin', 'com_thm_groups')) {
+            JToolBarHelper::divider();
+            JToolBarHelper::preferences('com_thm_groups');
+        }
+    }
 }

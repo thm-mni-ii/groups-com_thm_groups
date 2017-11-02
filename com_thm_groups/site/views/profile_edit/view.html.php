@@ -27,62 +27,59 @@ require_once JPATH_ROOT . '/media/com_thm_groups/views/profile_edit_view.php';
  */
 class THM_GroupsViewProfile_Edit extends THM_GroupsViewProfile_Edit_View
 {
-	/**
-	 * Stores the original previous page for the event of a cancel after an apply
-	 *
-	 * @var $referrer
-	 */
-	public $referrer;
+    /**
+     * Stores the original previous page for the event of a cancel after an apply
+     *
+     * @var $referrer
+     */
+    public $referrer;
 
-	/**
-	 * Generates the HTML for a toolbar for the front end view
-	 *
-	 * @return  string  the HTML for the toolbar
-	 */
-	public function getToolbar()
-	{
-		$html = '<div class="frontend-toolbar">';
-		$html .= '<button type="submit" class="btn btn-primary" ';
-		$html .= 'onclick="document.adminForm.task.value=\'profile.apply\';return true;">';
-		$html .= '<span class="icon-save"></span>' . JText::_('COM_THM_GROUPS_APPLY');
-		$html .= '</button>';
-		$html .= '<button type="submit" class="btn btn-primary" ';
-		$html .= 'onclick="document.adminForm.task.value = \'profile.save2profile\';return true;">';
-		$html .= '<span class="icon-user"></span>' . JText::_('COM_THM_GROUPS_SAVE_TO_PROFILE');
-		$html .= '</button>';
-		$html .= '<button type="submit" class="btn btn-primary" ';
+    /**
+     * Generates the HTML for a toolbar for the front end view
+     *
+     * @return  string  the HTML for the toolbar
+     */
+    public function getToolbar()
+    {
+        $html = '<div class="frontend-toolbar">';
+        $html .= '<button type="submit" class="btn btn-primary" ';
+        $html .= 'onclick="document.adminForm.task.value=\'profile.apply\';return true;">';
+        $html .= '<span class="icon-save"></span>' . JText::_('COM_THM_GROUPS_APPLY');
+        $html .= '</button>';
+        $html .= '<button type="submit" class="btn btn-primary" ';
+        $html .= 'onclick="document.adminForm.task.value = \'profile.save2profile\';return true;">';
+        $html .= '<span class="icon-user"></span>' . JText::_('COM_THM_GROUPS_SAVE_TO_PROFILE');
+        $html .= '</button>';
+        $html .= '<button type="submit" class="btn btn-primary" ';
 
-		$breadcrumbs = JFactory::getApplication()->getPathway()->getPathway();
+        $breadcrumbs = JFactory::getApplication()->getPathway()->getPathway();
 
-		if (count($breadcrumbs))
-		{
-			$lastLocation = end($breadcrumbs);
-			$menuURL      = $lastLocation->link;
-		}
+        if (count($breadcrumbs)) {
+            $lastLocation = end($breadcrumbs);
+            $menuURL      = $lastLocation->link;
+        }
 
-		if (!empty($menuURL))
-		{
-			$html .= '<button type="submit" class="btn btn-primary" ';
-			$html .= 'onclick="document.adminForm.task.value=\'profile.save2list\';return true;">';
-			$html .= '<span class="icon-list"></span>' . JText::_('COM_THM_GROUPS_SAVE_TO_LIST') . '</button>';
-		}
+        if (!empty($menuURL)) {
+            $html .= '<button type="submit" class="btn btn-primary" ';
+            $html .= 'onclick="document.adminForm.task.value=\'profile.save2list\';return true;">';
+            $html .= '<span class="icon-list"></span>' . JText::_('COM_THM_GROUPS_SAVE_TO_LIST') . '</button>';
+        }
 
-		$app      = JFactory::getApplication();
-		$referrer = $app->input->server->getString('HTTP_REFERER');
-		$referrerURI = JUri::getInstance($referrer);
-		$parameters = $app::getRouter()->parse($referrerURI);
+        $app         = JFactory::getApplication();
+        $referrer    = $app->input->server->getString('HTTP_REFERER');
+        $referrerURI = JUri::getInstance($referrer);
+        $parameters  = $app::getRouter()->parse($referrerURI);
 
-		if (!empty($parameters['view']) AND $parameters['view'] == 'profile_edit')
-		{
-			$referrer = $app->input->getString('referrer', $referrer);
-		}
+        if (!empty($parameters['view']) and $parameters['view'] == 'profile_edit') {
+            $referrer = $app->input->getString('referrer', $referrer);
+        }
 
-		$this->referrer = $referrer;
+        $this->referrer = $referrer;
 
-		$cancel = '<span class="icon-cancel"></span>' . JText::_('COM_THM_GROUPS_CANCEL');
-		$html   .= '<a class="btn btn-primary" href="' . $referrer . '">' . $cancel . '</a>';
-		$html   .= '</div>';
+        $cancel = '<span class="icon-cancel"></span>' . JText::_('COM_THM_GROUPS_CANCEL');
+        $html .= '<a class="btn btn-primary" href="' . $referrer . '">' . $cancel . '</a>';
+        $html .= '</div>';
 
-		return $html;
-	}
+        return $html;
+    }
 }

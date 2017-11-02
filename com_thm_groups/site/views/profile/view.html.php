@@ -28,296 +28,273 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/template.php';
  */
 class THM_GroupsViewProfile extends JViewLegacy
 {
-	private $profile;
+    private $profile;
 
-	public $profileID;
+    public $profileID;
 
-	protected $links;
+    protected $links;
 
-	public $templateName;
+    public $templateName;
 
-	/**
-	 * Method to get display
-	 *
-	 * @param   Object $tpl template
-	 *
-	 * @return void
-	 */
-	public function display($tpl = null)
-	{
-		$this->model = $this->getModel();
+    /**
+     * Method to get display
+     *
+     * @param   Object $tpl template
+     *
+     * @return void
+     */
+    public function display($tpl = null)
+    {
+        $this->model = $this->getModel();
 
-		$this->groupID    = $this->model->groupID;
-		$this->menuID     = JFactory::getApplication()->input->get('Itemid', 0);
-		$this->profile    = $this->model->profile;
-		$this->profileID  = $this->model->profileID;
-		$this->templateID = $this->model->templateID;
+        $this->groupID    = $this->model->groupID;
+        $this->menuID     = JFactory::getApplication()->input->get('Itemid', 0);
+        $this->profile    = $this->model->profile;
+        $this->profileID  = $this->model->profileID;
+        $this->templateID = $this->model->templateID;
 
-		$this->canEdit = THM_GroupsHelperComponent::canEditProfile($this->profileID);
+        $this->canEdit = THM_GroupsHelperComponent::canEditProfile($this->profileID);
 
-		$this->templateName = JFilterOutput::stringURLSafe(THM_GroupsHelperTemplate::getName($this->templateID));
+        $this->templateName = JFilterOutput::stringURLSafe(THM_GroupsHelperTemplate::getName($this->templateID));
 
-		// Adds the user name to the breadcrumb
-		JFactory::getApplication()->getPathway()->addItem(THM_GroupsHelperProfile::getDisplayName($this->profileID), '');
+        // Adds the user name to the breadcrumb
+        JFactory::getApplication()->getPathway()->addItem(THM_GroupsHelperProfile::getDisplayName($this->profileID),
+            '');
 
-		$this->modifyDocument();
-		parent::display($tpl);
-	}
+        $this->modifyDocument();
+        parent::display($tpl);
+    }
 
-	/**
-	 * Renders the attributes of a profile
-	 *
-	 * @return void renders to the view
-	 */
-	public function renderAttributes()
-	{
-		$attributes = [];
+    /**
+     * Renders the attributes of a profile
+     *
+     * @return void renders to the view
+     */
+    public function renderAttributes()
+    {
+        $attributes = [];
 
-		// Spoofs a textfield to borrow the styling of a textfield label
-		$contactHeader = '<h3>' . JText::_('COM_THM_GROUPS_CONTACT_HEADER') . '</h3>';
-		$attributes[] = $contactHeader;
+        // Spoofs a textfield to borrow the styling of a textfield label
+        $contactHeader = '<h3>' . JText::_('COM_THM_GROUPS_CONTACT_HEADER') . '</h3>';
+        $attributes[]  = $contactHeader;
 
-		$surname    = $this->profile[2]['value'];
+        $surname = $this->profile[2]['value'];
 
-		foreach ($this->profile as $attribute)
-		{
-			// These were already taken care of in the name/title containers
-			$processed = in_array($attribute['structid'], [1, 2, 5, 7]);
+        foreach ($this->profile as $attribute) {
+            // These were already taken care of in the name/title containers
+            $processed = in_array($attribute['structid'], [1, 2, 5, 7]);
 
-			// Special indexes and attributes with no saved value are irrelevant
-			$irrelevant = (empty($attribute['value']) OR empty(trim($attribute['value'])));
+            // Special indexes and attributes with no saved value are irrelevant
+            $irrelevant = (empty($attribute['value']) or empty(trim($attribute['value'])));
 
-			if ($processed OR $irrelevant)
-			{
-				continue;
-			}
+            if ($processed or $irrelevant) {
+                continue;
+            }
 
-			$attributeContainer = THM_GroupsHelperProfile::getAttributeContainer($attribute, $surname);
+            $attributeContainer = THM_GroupsHelperProfile::getAttributeContainer($attribute, $surname);
 
-			if (($attribute['type'] == 'PICTURE'))
-			{
-				array_unshift($attributes, $attributeContainer);
-			}
-			else
-			{
-				$attributes[] = $attributeContainer;
-			}
-		}
+            if (($attribute['type'] == 'PICTURE')) {
+                array_unshift($attributes, $attributeContainer);
+            } else {
+                $attributes[] = $attributeContainer;
+            }
+        }
 
-		echo implode('', $attributes);
-	}
+        echo implode('', $attributes);
+    }
 
-	/**
-	 * Creates the container for the attribute label
-	 *
-	 * @param array $attribute the profile attribute being iterated
-	 *
-	 * @return string the HTML for the label container
-	 */
-	private function getLabelContainer($attribute)
-	{
-		$text        = empty($attribute['name']) ? '' : $attribute['name'];
-		$isTextField = $attribute['type'] == 'TEXTFIELD';
+    /**
+     * Creates the container for the attribute label
+     *
+     * @param array $attribute the profile attribute being iterated
+     *
+     * @return string the HTML for the label container
+     */
+    private function getLabelContainer($attribute)
+    {
+        $text        = empty($attribute['name']) ? '' : $attribute['name'];
+        $isTextField = $attribute['type'] == 'TEXTFIELD';
 
-		$showIconConfig = (!empty($attribute['params']['showIcon'] AND !empty($attribute['params']['icon'])));
-		$showLabel      = (!empty($attribute['params']['showLabel']) AND !empty($text));
-		$showIcon       = $isTextField ? ($showIconConfig AND !$showLabel) : $showIconConfig;
-		$label          = '';
+        $showIconConfig = (!empty($attribute['params']['showIcon'] and !empty($attribute['params']['icon'])));
+        $showLabel      = (!empty($attribute['params']['showLabel']) and !empty($text));
+        $showIcon       = $isTextField ? ($showIconConfig and !$showLabel) : $showIconConfig;
+        $label          = '';
 
-		if ($showIcon OR $showLabel)
-		{
-			$label .= '<div class="attribute-label">';
+        if ($showIcon or $showLabel) {
+            $label .= '<div class="attribute-label">';
 
-			if ($showIcon)
-			{
-				$label .= '<span class="' . $attribute['params']['icon'] . '" title="' . $text . '"></span>';
-			}
-			elseif ($showLabel)
-			{
-				$label .= JText::_($attribute['name']);
-			}
+            if ($showIcon) {
+                $label .= '<span class="' . $attribute['params']['icon'] . '" title="' . $text . '"></span>';
+            } elseif ($showLabel) {
+                $label .= JText::_($attribute['name']);
+            }
 
-			$label .= '</div>';
-		}
+            $label .= '</div>';
+        }
 
-		return $label;
-	}
+        return $label;
+    }
 
-	/**
-	 * Creates the container for the attribute value
-	 *
-	 * @param array  $attribute the profile attribute being iterated
-	 * @param string $surname   the surname of the profile being iterated
-	 * @param string $labeled   how the attribute will be labeled. determines additional classes for style references.
-	 *
-	 * @return string the HTML for the value container
-	 */
-	private function getValueContainer($attribute, $surname, $labeled)
-	{
-		switch (strtolower($attribute['dyntype']))
-		{
-			case "email":
+    /**
+     * Creates the container for the attribute value
+     *
+     * @param array  $attribute the profile attribute being iterated
+     * @param string $surname   the surname of the profile being iterated
+     * @param string $labeled   how the attribute will be labeled. determines additional classes for style references.
+     *
+     * @return string the HTML for the value container
+     */
+    private function getValueContainer($attribute, $surname, $labeled)
+    {
+        switch (strtolower($attribute['dyntype'])) {
+            case "email":
 
-				$emails = explode('|', $attribute['value']);
+                $emails = explode('|', $attribute['value']);
 
-				if (count($emails) === 1)
-				{
-					$value = '<a href="mailto:' . $attribute['value'] . '">';
-					$value .= JHTML::_('email.cloak', $attribute['value']) . '</a>';
-				}
-				else
-				{
-					$value = '<ul>';
+                if (count($emails) === 1) {
+                    $value = '<a href="mailto:' . $attribute['value'] . '">';
+                    $value .= JHTML::_('email.cloak', $attribute['value']) . '</a>';
+                } else {
+                    $value = '<ul>';
 
-					foreach ($emails as $email)
-					{
-						$value .= '<li><a href="mailto:' . $email . '">';
-						$value .= JHTML::_('email.cloak', $email) . '</a></li>';
-					}
+                    foreach ($emails as $email) {
+                        $value .= '<li><a href="mailto:' . $email . '">';
+                        $value .= JHTML::_('email.cloak', $email) . '</a></li>';
+                    }
 
-					$value .= '</ul>';
-				}
+                    $value .= '</ul>';
+                }
 
-				break;
+                break;
 
-			case 'fax':
-			case 'telephone':
+            case 'fax':
+            case 'telephone':
 
-				$numbers = explode('|', $attribute['value']);
+                $numbers = explode('|', $attribute['value']);
 
-				if (count($numbers) === 1)
-				{
-					$value = $attribute['value'];
-				}
-				else
-				{
-					$value = '<ul>';
+                if (count($numbers) === 1) {
+                    $value = $attribute['value'];
+                } else {
+                    $value = '<ul>';
 
-					foreach ($numbers as $number)
-					{
-						$value .= "<li>$number</li>";
-					}
+                    foreach ($numbers as $number) {
+                        $value .= "<li>$number</li>";
+                    }
 
-					$value = '</ul>';
-				}
+                    $value = '</ul>';
+                }
 
-				break;
+                break;
 
-			case "link":
+            case "link":
 
-				$value = "<a href='" . htmlspecialchars_decode($attribute['value']) . "'>";
-				$value .= htmlspecialchars_decode($attribute['value']) . "</a>";
+                $value = "<a href='" . htmlspecialchars_decode($attribute['value']) . "'>";
+                $value .= htmlspecialchars_decode($attribute['value']) . "</a>";
 
-				break;
+                break;
 
-			case "picture":
+            case "picture":
 
-				$position     = explode('images/', $attribute['params']['path'], 2);
-				$relativePath = 'images/' . $position[1];
+                $position     = explode('images/', $attribute['params']['path'], 2);
+                $relativePath = 'images/' . $position[1];
 
-				$value = JHTML::image(
-					JURI::root() . $relativePath . $attribute['value'],
-					$surname,
-					array('class' => 'profile-picture')
-				);
+                $value = JHTML::image(
+                    JURI::root() . $relativePath . $attribute['value'],
+                    $surname,
+                    array('class' => 'profile-picture')
+                );
 
-				break;
+                break;
 
-			case "textfield":
+            case "textfield":
 
-				$text = trim(htmlspecialchars_decode($attribute['value']));
+                $text = trim(htmlspecialchars_decode($attribute['value']));
 
-				// Normalize new lines
-				if (stripos($text, '<li>') === false && stripos($text, '<table') === false)
-				{
-					$text = nl2br($text);
-				}
+                // Normalize new lines
+                if (stripos($text, '<li>') === false && stripos($text, '<table') === false) {
+                    $text = nl2br($text);
+                }
 
-				$value = $text;
+                $value = $text;
 
-				break;
+                break;
 
-			case "text":
-			default:
+            case "text":
+            default:
 
-				$value = nl2br(htmlspecialchars_decode($attribute['value']));
+                $value = nl2br(htmlspecialchars_decode($attribute['value']));
 
-				break;
-		}
+                break;
+        }
 
-		$html = '<div class="attribute-value">';
-		$html .= $value;
-		$html .= '</div>';
+        $html = '<div class="attribute-value">';
+        $html .= $value;
+        $html .= '</div>';
 
-		return $html;
-	}
+        return $html;
+    }
 
-	/**
-	 * Gets a link to the profile edit view
-	 *
-	 * @params   mixed $attributes An associative array (or simple string) of attributes to add
-	 *
-	 * @return  string  the Link HTML markup
-	 */
-	public function getEditLink($attributes = null)
-	{
-		$editLink = "";
+    /**
+     * Gets a link to the profile edit view
+     *
+     * @params   mixed $attributes An associative array (or simple string) of attributes to add
+     *
+     * @return  string  the Link HTML markup
+     */
+    public function getEditLink($attributes = null)
+    {
+        $editLink = "";
 
-		if ($this->canEdit)
-		{
-			$fullName  = JFactory::getUser($this->profileID)->get('name');
-			$nameArray = explode(" ", $fullName);
-			$lastName  = array_key_exists(1, $nameArray) ? $nameArray[1] : "";
+        if ($this->canEdit) {
+            $fullName  = JFactory::getUser($this->profileID)->get('name');
+            $nameArray = explode(" ", $fullName);
+            $lastName  = array_key_exists(1, $nameArray) ? $nameArray[1] : "";
 
-			$lastName = trim($lastName);
-			$path     = "index.php?option=com_thm_groups&view=profile_edit";
-			$path     .= "&groupID=$this->groupID&profileID=$this->profileID&name=$lastName&Itemid=$this->menuID";
-			$url      = JRoute::_($path);
-			$text     = '<span class="icon-edit"></span> ' . JText::_('COM_THM_GROUPS_EDIT');
-			$editLink .= JHtml::_('link', $url, $text, $attributes);
-		}
+            $lastName = trim($lastName);
+            $path     = "index.php?option=com_thm_groups&view=profile_edit";
+            $path .= "&groupID=$this->groupID&profileID=$this->profileID&name=$lastName&Itemid=$this->menuID";
+            $url  = JRoute::_($path);
+            $text = '<span class="icon-edit"></span> ' . JText::_('COM_THM_GROUPS_EDIT');
+            $editLink .= JHtml::_('link', $url, $text, $attributes);
+        }
 
-		return $editLink;
-	}
+        return $editLink;
+    }
 
-	/**
-	 * Redirects back to the previous
-	 *
-	 * @return  string  the Link HTML markup
-	 */
-	public function getBackLink()
-	{
-		if (empty(JComponentHelper::getParams('com_thm_groups')->get('backButtonForProfile')))
-		{
-			return '';
-		}
+    /**
+     * Redirects back to the previous
+     *
+     * @return  string  the Link HTML markup
+     */
+    public function getBackLink()
+    {
+        if (empty(JComponentHelper::getParams('com_thm_groups')->get('backButtonForProfile'))) {
+            return '';
+        }
 
-		$text       = '<span class="icon-arrow-left-22"></span> ' . JText::_("COM_THM_GROUPS_BACK_BUTTON");
-		$attributes = ['class' => 'btn'];
+        $text       = '<span class="icon-arrow-left-22"></span> ' . JText::_("COM_THM_GROUPS_BACK_BUTTON");
+        $attributes = ['class' => 'btn'];
 
-		$menuID = JFactory::getApplication()->input->get('Itemid');
+        $menuID = JFactory::getApplication()->input->get('Itemid');
 
-		if (empty($menuID))
-		{
-			$attributes = ['onclick' => 'window.history.back()'];
-			$url        = '#';
-		}
-		else
-		{
-			$url = JRoute::_("index.php?option=com_thm_groups&Itemid=$menuID");
-		}
+        if (empty($menuID)) {
+            $attributes = ['onclick' => 'window.history.back()'];
+            $url        = '#';
+        } else {
+            $url = JRoute::_("index.php?option=com_thm_groups&Itemid=$menuID");
+        }
 
-		return JHtml::link($url, $text, $attributes);
-	}
+        return JHtml::link($url, $text, $attributes);
+    }
 
-	/**
-	 * Adds css and javascript files to the document
-	 *
-	 * @return  void  modifies the document
-	 */
-	private function modifyDocument()
-	{
-		JFactory::getDocument()->addStyleSheet('media/com_thm_groups/css/profile_item.css');
-		JHtml::_('bootstrap.framework');
-	}
+    /**
+     * Adds css and javascript files to the document
+     *
+     * @return  void  modifies the document
+     */
+    private function modifyDocument()
+    {
+        JFactory::getDocument()->addStyleSheet('media/com_thm_groups/css/profile_item.css');
+        JHtml::_('bootstrap.framework');
+    }
 }

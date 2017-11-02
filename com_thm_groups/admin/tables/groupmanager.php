@@ -23,13 +23,13 @@ jimport('joomla.application.component.table');
  */
 class TableGroupmanager extends JTable
 {
-	/**
-	 * TableGroupmanager
-	 *
-	 * @param   Object &$dbo Database
-	 */
-	public function __construct(&$dbo)
-	{
-		parent::__construct('#__thm_groups_groups', 'id', $dbo);
-	}
+    /**
+     * TableGroupmanager
+     *
+     * @param   Object &$dbo Database
+     */
+    public function __construct(&$dbo)
+    {
+        parent::__construct('#__thm_groups_groups', 'id', $dbo);
+    }
 }

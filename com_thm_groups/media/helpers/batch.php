@@ -19,114 +19,103 @@
  */
 class THM_GroupsHelperBatch
 {
-	/**
-	 * Return all existing roles as select field
-	 *
-	 * @return  array  an array of options for drop-down list
-	 */
-	public static function getRoles()
-	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true)
-			->select('id AS value, name AS text')
-			->from('#__thm_groups_roles')
-			->order('id');
-		$dbo->setQuery($query);
+    /**
+     * Return all existing roles as select field
+     *
+     * @return  array  an array of options for drop-down list
+     */
+    public static function getRoles()
+    {
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true)
+            ->select('id AS value, name AS text')
+            ->from('#__thm_groups_roles')
+            ->order('id');
+        $dbo->setQuery($query);
 
-		try
-		{
-			$options = $dbo->loadObjectList();
-		}
-		catch (Exception $exc)
-		{
-			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+        try {
+            $options = $dbo->loadObjectList();
+        } catch (Exception $exc) {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-			return [];
-		}
+            return [];
+        }
 
-		for ($i = 0, $n = count($options); $i < $n; $i++)
-		{
-			$roles[] = JHtml::_('select.option', $options[$i]->value, $options[$i]->text);
-		}
+        for ($i = 0, $n = count($options); $i < $n; $i++) {
+            $roles[] = JHtml::_('select.option', $options[$i]->value, $options[$i]->text);
+        }
 
-		return $roles;
-	}
+        return $roles;
+    }
 
-	/**
-	 * Returns groups as select field
-	 * It shows only groups with users in it, because this select field
-	 * will be used only for filtering in backend-user-manager
-	 *
-	 * @return array
-	 */
-	public static function getGroupOptions()
-	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
+    /**
+     * Returns groups as select field
+     * It shows only groups with users in it, because this select field
+     * will be used only for filtering in backend-user-manager
+     *
+     * @return array
+     */
+    public static function getGroupOptions()
+    {
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
 
-		// TODO: Explain the logic behind this
-		$select = 'a.id, a.title, COUNT(DISTINCT b.id) AS level';
-		$query->select($select);
-		$query->from('#__usergroups as a');
-		$query->leftJoin('#__usergroups AS b ON a.lft > b.lft AND a.rgt < b.rgt');
-		$query->leftJoin('#__thm_groups_usergroups_roles AS c ON a.id = c.usergroupsID');
-		$query->where('a.id NOT IN  (1,2)');
-		$query->group('a.id, a.title, a.lft, a.rgt');
-		$query->order('a.lft ASC');
+        // TODO: Explain the logic behind this
+        $select = 'a.id, a.title, COUNT(DISTINCT b.id) AS level';
+        $query->select($select);
+        $query->from('#__usergroups as a');
+        $query->leftJoin('#__usergroups AS b ON a.lft > b.lft AND a.rgt < b.rgt');
+        $query->leftJoin('#__thm_groups_role_associations AS c ON a.id = c.usergroupsID');
+        $query->where('a.id NOT IN  (1,2)');
+        $query->group('a.id, a.title, a.lft, a.rgt');
+        $query->order('a.lft ASC');
 
-		$dbo->setQuery($query);
+        $dbo->setQuery($query);
 
-		try
-		{
-			$options = $dbo->loadObjectList();
-		}
-		catch (Exception $exc)
-		{
-			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+        try {
+            $options = $dbo->loadObjectList();
+        } catch (Exception $exc) {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-			return array();
-		}
+            return array();
+        }
 
-		for ($i = 0, $n = count($options); $i < $n; $i++)
-		{
-			$groups[] = JHtml::_('select.option', $options[$i]->id, str_repeat('- ', $options[$i]->level) . $options[$i]->title);
-		}
+        for ($i = 0, $n = count($options); $i < $n; $i++) {
+            $groups[] = JHtml::_('select.option', $options[$i]->id,
+                str_repeat('- ', $options[$i]->level) . $options[$i]->title);
+        }
 
-		return $groups;
-	}
+        return $groups;
+    }
 
-	/**
-	 * Return all existing profiles as select field
-	 *
-	 * @return array options for profile selection
-	 */
-	public static function getProfiles()
-	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
+    /**
+     * Return all existing profiles as select field
+     *
+     * @return array options for profile selection
+     */
+    public static function getProfiles()
+    {
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
 
-		$query
-			->select('id, name')
-			->from('#__thm_groups_profile');
+        $query
+            ->select('id, name')
+            ->from('#__thm_groups_templates');
 
-		$dbo->setQuery($query);
+        $dbo->setQuery($query);
 
-		try
-		{
-			$options = $dbo->loadObjectList();
-		}
-		catch (Exception $exc)
-		{
-			JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+        try {
+            $options = $dbo->loadObjectList();
+        } catch (Exception $exc) {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-			return [];
-		}
+            return [];
+        }
 
-		foreach ($options as $key => $option)
-		{
-			$profiles[] = JHtml::_('select.option', $option->id, $option->name);
-		}
+        foreach ($options as $key => $option) {
+            $profiles[] = JHtml::_('select.option', $option->id, $option->name);
+        }
 
-		return $profiles;
-	}
+        return $profiles;
+    }
 }

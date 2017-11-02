@@ -21,51 +21,49 @@ jimport('joomla.application.component.model');
  */
 class THM_GroupsModelRoles_Ajax extends JModelLegacy
 {
-	/**
-	 * Returns all roles of specified group
-	 *
-	 * @return json string
-	 *
-	 * @throws Exception
-	 */
-	public function getRolesOfGroup()
-	{
-		$query  = $this->_db->getQuery(true);
-		$jinput = JFactory::getApplication()->input;
+    /**
+     * Returns all roles of specified group
+     *
+     * @return json string
+     *
+     * @throws Exception
+     */
+    public function getRolesOfGroup()
+    {
+        $query  = $this->_db->getQuery(true);
+        $jinput = JFactory::getApplication()->input;
 
-		$groupID = $jinput->get->get('batch-groups', '', 'int');
+        $groupID = $jinput->get->get('batch-groups', '', 'int');
 
-		$nestedQuery = $this->_db->getQuery(true);
-		$nestedQuery
-			->select('id')
-			->from('#__thm_groups_users');
+        $nestedQuery = $this->_db->getQuery(true);
+        $nestedQuery
+            ->select('id')
+            ->from('#__thm_groups_profiles');
 
 
-		$query
-			->select('r.id, r.name')
-			->from('#__thm_groups_roles AS r')
-			->innerJoin('#__thm_groups_usergroups_roles AS a ON r.id = a.rolesID')
-			->group('r.id')
-			->order('r.name ASC');
+        $query
+            ->select('r.id, r.name')
+            ->from('#__thm_groups_roles AS r')
+            ->innerJoin('#__thm_groups_role_associations AS a ON r.id = a.rolesID')
+            ->group('r.id')
+            ->order('r.name ASC');
 
-		if (!empty($groupID))
-		{
-			$query->where("a.usergroupsID = $groupID");
-		}
+        if (!empty($groupID)) {
+            $query->where("a.usergroupsID = $groupID");
+        }
 
-		$this->_db->setQuery($query);
-		$this->_db->execute();
+        $this->_db->setQuery($query);
+        $this->_db->execute();
 
-		$roles = $this->_db->loadObjectList();
+        $roles = $this->_db->loadObjectList();
 
-		$result = array();
-		foreach ($roles as $role)
-		{
-			$result[(int) $role->id] = $role->name;
-		}
+        $result = array();
+        foreach ($roles as $role) {
+            $result[(int)$role->id] = $role->name;
+        }
 
-		$result = json_encode($result);
+        $result = json_encode($result);
 
-		return $result;
-	}
+        return $result;
+    }
 }

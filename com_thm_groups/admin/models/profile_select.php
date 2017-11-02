@@ -21,5 +21,5 @@ defined('_JEXEC') or die;
  */
 class THM_GroupsModelProfile_Select extends JModelList
 {
-	// Everything is in the parent.
+    // Everything is in the parent.
 }

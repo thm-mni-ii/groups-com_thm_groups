@@ -24,357 +24,335 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/content.php';
  */
 class THM_GroupsModelContent extends JModelItem
 {
-	/**
-	 * Model context string.
-	 *
-	 * @var        string
-	 */
-	protected $_context = 'com_content.article';
+    /**
+     * Model context string.
+     *
+     * @var        string
+     */
+    protected $_context = 'com_content.article';
 
-	/**
-	 * Method to check a row in if the necessary properties/fields exist. Checking a row in will allow other users the
-	 * ability to edit the row.
-	 *
-	 * @return  bool  true on success, otherwise false
-	 */
-	public function checkIn()
-	{
-		$selectedArray = JFactory::getApplication()->input->get('cid', [], 'array');
+    /**
+     * Method to check a row in if the necessary properties/fields exist. Checking a row in will allow other users the
+     * ability to edit the row.
+     *
+     * @return  bool  true on success, otherwise false
+     */
+    public function checkIn()
+    {
+        $selectedArray = JFactory::getApplication()->input->get('cid', [], 'array');
 
-		if (empty($selectedArray) OR empty($selectedArray[0]))
-		{
-			return true;
-		}
+        if (empty($selectedArray) or empty($selectedArray[0])) {
+            return true;
+        }
 
-		$table = JTable::getInstance('Content', 'JTable');
-		return $table->checkIn($selectedArray[0]);
-	}
+        $table = JTable::getInstance('Content', 'JTable');
 
-	/**
-	 * Retrieves the content for the given ID.
-	 *
-	 * @param $contentID
-	 *
-	 *
-	 * @since version
-	 */
-	private function getContent($contentID)
-	{
-		$user  = JFactory::getUser();
-		$dbo   = $this->getDbo();
-		$query = $dbo->getQuery(true);
+        return $table->checkIn($selectedArray[0]);
+    }
 
-		$query->select(
-			$this->getState(
-				'item.select', 'a.id, a.asset_id, a.title, a.alias, a.introtext, a.fulltext, ' .
-				'a.state, a.catid, a.created, a.created_by, a.created_by_alias, ' .
-				// Use created if modified is 0
-				'CASE WHEN a.modified = ' . $dbo->quote($dbo->getNullDate()) . ' THEN a.created ELSE a.modified END as modified, ' .
-				'a.modified_by, a.checked_out, a.checked_out_time, a.publish_up, a.publish_down, ' .
-				'a.images, a.urls, a.attribs, a.version, a.ordering, ' .
-				'a.metakey, a.metadesc, a.access, a.hits, a.metadata, a.featured, a.language, a.xreference'
-			)
-		);
-		$query->from('#__content AS a')->where('a.id = ' . (int) $contentID);
+    /**
+     * Retrieves the content for the given ID.
+     *
+     * @param $contentID
+     *
+     *
+     * @since version
+     */
+    private function getContent($contentID)
+    {
+        $user  = JFactory::getUser();
+        $dbo   = $this->getDbo();
+        $query = $dbo->getQuery(true);
 
-		// Join on category table.
-		$query->select('c.title AS category_title, c.alias AS category_alias, c.access AS category_access');
-		$query->innerJoin('#__categories AS c on c.id = a.catid')->where('c.published > 0');
+        $query->select(
+            $this->getState(
+                'item.select', 'a.id, a.asset_id, a.title, a.alias, a.introtext, a.fulltext, ' .
+                'a.state, a.catid, a.created, a.created_by, a.created_by_alias, ' .
+                // Use created if modified is 0
+                'CASE WHEN a.modified = ' . $dbo->quote($dbo->getNullDate()) . ' THEN a.created ELSE a.modified END as modified, ' .
+                'a.modified_by, a.checked_out, a.checked_out_time, a.publish_up, a.publish_down, ' .
+                'a.images, a.urls, a.attribs, a.version, a.ordering, ' .
+                'a.metakey, a.metadesc, a.access, a.hits, a.metadata, a.featured, a.language, a.xreference'
+            )
+        );
+        $query->from('#__content AS a')->where('a.id = ' . (int)$contentID);
 
-		// Join on user table.
-		$query->select('u.name AS author')->join('LEFT', '#__users AS u on u.id = a.created_by');
+        // Join on category table.
+        $query->select('c.title AS category_title, c.alias AS category_alias, c.access AS category_access');
+        $query->innerJoin('#__categories AS c on c.id = a.catid')->where('c.published > 0');
 
-		// Filter by language
-		if ($this->getState('filter.language'))
-		{
-			$query->where('a.language in (' . $dbo->quote(JFactory::getLanguage()->getTag()) . ',' . $dbo->quote('*') . ')');
-		}
+        // Join on user table.
+        $query->select('u.name AS author')->join('LEFT', '#__users AS u on u.id = a.created_by');
 
-		// Join over the categories to get parent category titles
-		$query->select('parent.title as parent_title, parent.id as parent_id, parent.path as parent_route, parent.alias as parent_alias');
-		$query->join('LEFT', '#__categories as parent ON parent.id = c.parent_id');
+        // Filter by language
+        if ($this->getState('filter.language')) {
+            $query->where('a.language in (' . $dbo->quote(JFactory::getLanguage()->getTag()) . ',' . $dbo->quote('*') . ')');
+        }
 
-		//TODO: does anyone need this?
-		// Join on voting table
-		$query->select('ROUND(v.rating_sum / v.rating_count, 0) AS rating, v.rating_count as rating_count');
-		$query->join('LEFT', '#__content_rating AS v ON a.id = v.content_id');
+        // Join over the categories to get parent category titles
+        $query->select('parent.title as parent_title, parent.id as parent_id, parent.path as parent_route, parent.alias as parent_alias');
+        $query->join('LEFT', '#__categories as parent ON parent.id = c.parent_id');
 
-		$canEdit      = $user->authorise('core.edit', 'com_content');
-		$canEditState = $user->authorise('core.edit.state', 'com_content');
-		$cannotEdit   = (!$canEditState AND !$canEdit);
+        //TODO: does anyone need this?
+        // Join on voting table
+        $query->select('ROUND(v.rating_sum / v.rating_count, 0) AS rating, v.rating_count as rating_count');
+        $query->join('LEFT', '#__content_rating AS v ON a.id = v.content_id');
 
-		// If they cannot edit they need only be interested in published items.
-		if ($cannotEdit)
-		{
-			// Filter by start and end dates.
-			$nullDate = $dbo->quote($dbo->getNullDate());
-			$date     = JFactory::getDate();
-			$nowDate  = $dbo->quote($date->toSql());
+        $canEdit      = $user->authorise('core.edit', 'com_content');
+        $canEditState = $user->authorise('core.edit.state', 'com_content');
+        $cannotEdit   = (!$canEditState and !$canEdit);
 
-			$query->where('(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')');
-			$query->where('(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')');
-		}
+        // If they cannot edit they need only be interested in published items.
+        if ($cannotEdit) {
+            // Filter by start and end dates.
+            $nullDate = $dbo->quote($dbo->getNullDate());
+            $date     = JFactory::getDate();
+            $nowDate  = $dbo->quote($date->toSql());
 
-		// Filter by published state.
-		$published = $this->getState('filter.published');
-		$archived  = $this->getState('filter.archived');
+            $query->where('(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')');
+            $query->where('(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')');
+        }
 
-		if (is_numeric($published) OR is_numeric($archived))
-		{
-			$query->where('(a.state = ' . (int) $published . ' OR a.state =' . (int) $archived . ')');
-		}
+        // Filter by published state.
+        $published = $this->getState('filter.published');
+        $archived  = $this->getState('filter.archived');
 
-		$dbo->setQuery($query);
+        if (is_numeric($published) or is_numeric($archived)) {
+            $query->where('(a.state = ' . (int)$published . ' OR a.state =' . (int)$archived . ')');
+        }
 
-		try
-		{
-			$content = $dbo->loadObject();
-		}
-		catch (Exception $exception)
-		{
-			if ($exception->getCode() == 404)
-			{
-				// Need to go thru the error handler to allow Redirect to work.
-				JError::raiseError($exception->getCode(), $exception->getMessage());
-			}
-			else
-			{
-				$this->setError($exception);
+        $dbo->setQuery($query);
 
-				return false;
-			}
-		}
+        try {
+            $content = $dbo->loadObject();
+        } catch (Exception $exception) {
+            if ($exception->getCode() == 404) {
+                // Need to go thru the error handler to allow Redirect to work.
+                JError::raiseError($exception->getCode(), $exception->getMessage());
+            } else {
+                $this->setError($exception);
 
-		return empty($content) ? false : $content;
-	}
+                return false;
+            }
+        }
 
-	/**
-	 * Method to get content data.
-	 *
-	 * @return  object|boolean|JException  Menu item data object on success, boolean false or JException instance on error
-	 */
-	public function getItem()
-	{
-		$contentID = JFactory::getApplication()->input->get('id');
-		$contentID = (!empty($contentID)) ? $contentID : (int) $this->getState('article.id');
+        return empty($content) ? false : $content;
+    }
 
-		if (empty($this->_item))
-		{
-			$this->_item = [];
-		}
+    /**
+     * Method to get content data.
+     *
+     * @return  object|boolean|JException  Menu item data object on success, boolean false or JException instance on error
+     */
+    public function getItem()
+    {
+        $contentID = JFactory::getApplication()->input->get('id');
+        $contentID = (!empty($contentID)) ? $contentID : (int)$this->getState('article.id');
 
-		if (!isset($this->_item[$contentID]))
-		{
-			$content = $this->getContent($contentID);
+        if (empty($this->_item)) {
+            $this->_item = [];
+        }
 
-			if (empty($content))
-			{
-				return JError::raiseError(404, JText::_('COM_CONTENT_ERROR_ARTICLE_NOT_FOUND'));
-			}
+        if (!isset($this->_item[$contentID])) {
+            $content = $this->getContent($contentID);
 
-			// Filter by published state.
-			$published = $this->getState('filter.published');
-			$archived  = $this->getState('filter.archived');
+            if (empty($content)) {
+                return JError::raiseError(404, JText::_('COM_CONTENT_ERROR_ARTICLE_NOT_FOUND'));
+            }
 
-			$wrongPublishState = (is_numeric($published) AND $content->state != $published);
-			$wrongArchiveState = (is_numeric($archived) AND $content->state != $archived);
+            // Filter by published state.
+            $published = $this->getState('filter.published');
+            $archived  = $this->getState('filter.archived');
 
-			// Check for published state if filter set.
-			if ($wrongPublishState AND $wrongArchiveState)
-			{
-				return JError::raiseError(404, JText::_('COM_CONTENT_ERROR_ARTICLE_NOT_FOUND'));
-			}
+            $wrongPublishState = (is_numeric($published) and $content->state != $published);
+            $wrongArchiveState = (is_numeric($archived) and $content->state != $archived);
 
-			// Convert parameter fields to objects.
-			$registry = new Registry($content->attribs);
+            // Check for published state if filter set.
+            if ($wrongPublishState and $wrongArchiveState) {
+                return JError::raiseError(404, JText::_('COM_CONTENT_ERROR_ARTICLE_NOT_FOUND'));
+            }
 
-			$content->params = clone $this->getState('params');
-			$content->params->merge($registry);
+            // Convert parameter fields to objects.
+            $registry = new Registry($content->attribs);
 
-			$content->metadata = new Registry($content->metadata);
+            $content->params = clone $this->getState('params');
+            $content->params->merge($registry);
 
-			$this->setEditAccess($content);
-			$this->setViewAccess($content);
+            $content->metadata = new Registry($content->metadata);
 
-			// Add router helpers.
-			$content->slug        = empty($content->alias) ? $content->id : "$content->id:$content->alias";
-			$content->catslug     = empty($content->category_alias) ? $content->catid : "$content->catid:$content->category_alias";
-			$content->parent_slug = empty($content->parent_alias) ? $content->parent_id : "$content->parent_id:$content->parent_alias";
+            $this->setEditAccess($content);
+            $this->setViewAccess($content);
 
-			// No link for ROOT category
-			if ($content->parent_alias === 'root')
-			{
-				$content->parent_slug = null;
-			}
+            // Add router helpers.
+            $content->slug        = empty($content->alias) ? $content->id : "$content->id:$content->alias";
+            $content->catslug     = empty($content->category_alias) ? $content->catid : "$content->catid:$content->category_alias";
+            $content->parent_slug = empty($content->parent_alias) ? $content->parent_id : "$content->parent_id:$content->parent_alias";
 
-			$content->readmore_link = JRoute::_(ContentHelperRoute::getArticleRoute($content->slug, $content->catslug));
+            // No link for ROOT category
+            if ($content->parent_alias === 'root') {
+                $content->parent_slug = null;
+            }
 
-			if ($content->params->get('show_associations'))
-			{
-				$content->associations = ContentHelperAssociation::displayAssociations($content->id);
-			}
+            $content->readmore_link = JRoute::_(ContentHelperRoute::getArticleRoute($content->slug, $content->catslug));
 
-			$this->_item[$contentID] = $content;
-		}
+            if ($content->params->get('show_associations')) {
+                $content->associations = ContentHelperAssociation::displayAssociations($content->id);
+            }
 
-		return $this->_item[$contentID];
-	}
+            $this->_item[$contentID] = $content;
+        }
 
-	/**
-	 * Increment the hit counter for the article.
-	 *
-	 * @param   integer $contentID Optional primary key of the article to increment.
-	 *
-	 * @return  boolean  True if successful; false otherwise and internal error set.
-	 */
-	public function hit($contentID = 0)
-	{
-		$contentID = (!empty($contentID)) ? $contentID : (int) $this->getState('article.id');
+        return $this->_item[$contentID];
+    }
 
-		$table = JTable::getInstance('Content', 'JTable');
-		$table->load($contentID);
-		$table->hit($contentID);
+    /**
+     * Increment the hit counter for the article.
+     *
+     * @param   integer $contentID Optional primary key of the article to increment.
+     *
+     * @return  boolean  True if successful; false otherwise and internal error set.
+     */
+    public function hit($contentID = 0)
+    {
+        $contentID = (!empty($contentID)) ? $contentID : (int)$this->getState('article.id');
 
-		return true;
-	}
+        $table = JTable::getInstance('Content', 'JTable');
+        $table->load($contentID);
+        $table->hit($contentID);
 
-	/**
-	 * Method to populate the model state.
-	 *
-	 * @return void
-	 */
-	protected function populateState()
-	{
-		$app = JFactory::getApplication();
+        return true;
+    }
 
-		// Load state from the request.
-		$contentID = $app->input->getInt('id');
-		$this->setState('article.id', $contentID);
+    /**
+     * Method to populate the model state.
+     *
+     * @return void
+     */
+    protected function populateState()
+    {
+        $app = JFactory::getApplication();
 
-		$offset = $app->input->getUInt('limitstart');
-		$this->setState('list.offset', $offset);
+        // Load state from the request.
+        $contentID = $app->input->getInt('id');
+        $this->setState('article.id', $contentID);
 
-		// Load the parameters.
-		$params = $app->getParams();
-		$this->setState('params', $params);
+        $offset = $app->input->getUInt('limitstart');
+        $this->setState('list.offset', $offset);
 
-		// TODO: Tune these values based on other permissions.
-		$user = JFactory::getUser();
+        // Load the parameters.
+        $params = $app->getParams();
+        $this->setState('params', $params);
 
-		if ((!$user->authorise('core.edit.state', 'com_content')) && (!$user->authorise('core.edit', 'com_content')))
-		{
-			$this->setState('filter.published', 1);
-			$this->setState('filter.archived', 2);
-		}
+        // TODO: Tune these values based on other permissions.
+        $user = JFactory::getUser();
 
-		$this->setState('filter.language', JLanguageMultilang::isEnabled());
-	}
+        if ((!$user->authorise('core.edit.state', 'com_content')) && (!$user->authorise('core.edit', 'com_content'))) {
+            $this->setState('filter.published', 1);
+            $this->setState('filter.archived', 2);
+        }
 
-	/**
-	 * Method to change the core published state of THM Groups articles.
-	 *
-	 * @return  boolean  true on success, otherwise false
-	 */
-	public function publish()
-	{
-		return THM_GroupsHelperContent::publish();
-	}
+        $this->setState('filter.language', JLanguageMultilang::isEnabled());
+    }
 
-	/**
-	 * Saves the manually set order of records.
-	 *
-	 * @param   array $contentIDs an array of primary content ids
-	 * @param   array $order      the order for the content items
-	 *
-	 * @return  mixed
-	 *
-	 */
-	public function saveorder($contentIDs = null, $order = null)
-	{
-		return THM_GroupsHelperContent::saveorder($contentIDs, $order);
-	}
+    /**
+     * Method to change the core published state of THM Groups articles.
+     *
+     * @return  boolean  true on success, otherwise false
+     */
+    public function publish()
+    {
+        return THM_GroupsHelperContent::publish();
+    }
 
-	/**
-	 * Sets the user's edit access rights to the content.
-	 *
-	 * @param object $content the content being created.
-	 *
-	 * @return void modifies the content object.
-	 */
-	private function setEditAccess(&$content)
-	{
-		$user = JFactory::getUser();
+    /**
+     * Saves the manually set order of records.
+     *
+     * @param   array $contentIDs an array of primary content ids
+     * @param   array $order      the order for the content items
+     *
+     * @return  mixed
+     *
+     */
+    public function saveorder($contentIDs = null, $order = null)
+    {
+        return THM_GroupsHelperContent::saveorder($contentIDs, $order);
+    }
 
-		if ($user->get('guest'))
-		{
-			return;
-		}
+    /**
+     * Sets the user's edit access rights to the content.
+     *
+     * @param object $content the content being created.
+     *
+     * @return void modifies the content object.
+     */
+    private function setEditAccess(&$content)
+    {
+        $user = JFactory::getUser();
 
-		$asset = 'com_content.article.' . $content->id;
+        if ($user->get('guest')) {
+            return;
+        }
 
-		// Check general edit permission first.
-		if ($user->authorise('core.edit', $asset))
-		{
-			$content->params->set('access-edit', true);
+        $asset = 'com_content.article.' . $content->id;
 
-			return;
-		}
+        // Check general edit permission first.
+        if ($user->authorise('core.edit', $asset)) {
+            $content->params->set('access-edit', true);
 
-		if ($user->id != $content->created_by)
-		{
-			return;
-		}
+            return;
+        }
 
-		// Now check if edit.own is available.
-		if ($user->authorise('core.edit.own', $asset))
-		{
-			$content->params->set('access-edit', true);
+        if ($user->id != $content->created_by) {
+            return;
+        }
 
-			return;
-		}
-	}
+        // Now check if edit.own is available.
+        if ($user->authorise('core.edit.own', $asset)) {
+            $content->params->set('access-edit', true);
 
-	/**
-	 * Sets the user's view access rights to the content.
-	 *
-	 * @param object $content the content being created.
-	 *
-	 * @return void modifies the content object.
-	 */
-	private function setViewAccess(&$content)
-	{
-		// Compute view access permissions.
-		if ($access = $this->getState('filter.access'))
-		{
-			// If the access filter has been set, we already know this user can view.
-			$content->params->set('access-view', true);
+            return;
+        }
+    }
 
-			return;
-		}
+    /**
+     * Sets the user's view access rights to the content.
+     *
+     * @param object $content the content being created.
+     *
+     * @return void modifies the content object.
+     */
+    private function setViewAccess(&$content)
+    {
+        // Compute view access permissions.
+        if ($access = $this->getState('filter.access')) {
+            // If the access filter has been set, we already know this user can view.
+            $content->params->set('access-view', true);
 
-		// If no access filter is set, the layout takes some responsibility for display of limited information.
-		$user          = JFactory::getUser();
-		$groups        = $user->getAuthorisedViewLevels();
-		$contentAccess = in_array($content->access, $groups);
+            return;
+        }
 
-		if ($content->catid == 0 OR $content->category_access === null)
-		{
-			$content->params->set('access-view', $contentAccess);
+        // If no access filter is set, the layout takes some responsibility for display of limited information.
+        $user          = JFactory::getUser();
+        $groups        = $user->getAuthorisedViewLevels();
+        $contentAccess = in_array($content->access, $groups);
 
-			return;
-		}
+        if ($content->catid == 0 or $content->category_access === null) {
+            $content->params->set('access-view', $contentAccess);
 
-		$categoryAccess = in_array($content->category_access, $groups);
-		$content->params->set('access-view', $contentAccess AND $categoryAccess);
-	}
+            return;
+        }
 
-	/**
-	 * Toggles THM Groups article attributes like 'published' and 'featured'
-	 *
-	 * @return  mixed  integer on success, otherwise false
-	 */
-	public function toggle()
-	{
-		return THM_GroupsHelperContent::toggle();
-	}
+        $categoryAccess = in_array($content->category_access, $groups);
+        $content->params->set('access-view', $contentAccess and $categoryAccess);
+    }
+
+    /**
+     * Toggles THM Groups article attributes like 'published' and 'featured'
+     *
+     * @return  mixed  integer on success, otherwise false
+     */
+    public function toggle()
+    {
+        return THM_GroupsHelperContent::toggle();
+    }
 }

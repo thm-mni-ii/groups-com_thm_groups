@@ -12,6 +12,8 @@
 defined('_JEXEC') or die;
 require_once JPATH_ROOT . '/media/com_thm_groups/templates/list.php';
 ?>
-	<script type="text/javascript">var noItemsSelected = '<?php echo JText::_('COM_THM_GROUPS_NO_GROUP_SELECTED'); ?>'</script>
+    <script
+        type="text/javascript">var noItemsSelected = '<?php echo JText::_('COM_THM_GROUPS_NO_GROUP_SELECTED'); ?>'
+    </script>
 <?php
 THM_GroupsTemplateList::render($this);

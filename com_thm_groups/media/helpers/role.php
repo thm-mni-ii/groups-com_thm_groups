@@ -18,39 +18,36 @@
  */
 class THM_GroupsHelperRole
 {
-	/**
-	 * Retrieves the name of the role by means of its association with a group.
-	 *
-	 * @param   int  $assocID the id of the group -> role association
-	 * @param   bool $block   whether redundant roles ('Mitglied') should be blocked
-	 *
-	 * @return  string the name of the role referenced in the association
-	 */
-	public static function getNameByAssoc($assocID, $block)
-	{
-		$dbo = JFactory::getDbo();
+    /**
+     * Retrieves the name of the role by means of its association with a group.
+     *
+     * @param   int  $assocID the id of the group -> role association
+     * @param   bool $block   whether redundant roles ('Mitglied') should be blocked
+     *
+     * @return  string the name of the role referenced in the association
+     */
+    public static function getNameByAssoc($assocID, $block)
+    {
+        $dbo = JFactory::getDbo();
 
-		$query = $dbo->getQuery(true);
-		$query
-			->select("roles.name, roles.id")
-			->from('#__thm_groups_usergroups_roles AS groups')
-			->innerJoin('#__thm_groups_roles AS roles ON groups.rolesID = roles.id')
-			->where("groups.ID = '$assocID'");
+        $query = $dbo->getQuery(true);
+        $query
+            ->select("roles.name, roles.id")
+            ->from('#__thm_groups_role_associations AS groups')
+            ->innerJoin('#__thm_groups_roles AS roles ON groups.rolesID = roles.id')
+            ->where("groups.ID = '$assocID'");
 
-		$dbo->setQuery($query);
+        $dbo->setQuery($query);
 
-		try
-		{
-			$role = $dbo->loadAssoc();
-		}
-		catch (Exception $exception)
-		{
-			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+        try {
+            $role = $dbo->loadAssoc();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-			return '';
-		}
+            return '';
+        }
 
-		// Role ID 1 is 'Mitglied', which is implied.
-		return (empty($role['name']) OR ($block AND $role['id'] == 1)) ? '' : $role['name'];
-	}
+        // Role ID 1 is 'Mitglied', which is implied.
+        return (empty($role['name']) or ($block and $role['id'] == 1)) ? '' : $role['name'];
+    }
 }

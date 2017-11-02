@@ -22,65 +22,55 @@ JFormHelper::loadFieldClass('list');
  */
 class JFormFieldTemplate extends JFormFieldList
 {
-	public $type = 'template';
+    public $type = 'template';
 
-	/**
-	 * Retrieves the saved profile templates and adds context dependent meta-options.
-	 *
-	 * @return  array  the template options
-	 */
-	protected function getOptions()
-	{
-		$dbo   = JFactory::getDbo();
-		$query = $dbo->getQuery(true);
+    /**
+     * Retrieves the saved profile templates and adds context dependent meta-options.
+     *
+     * @return  array  the template options
+     */
+    protected function getOptions()
+    {
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
 
-		$query->select("DISTINCT p.id AS value, p.name AS text");
-		$query->from('#__thm_groups_profile AS p');
+        $query->select("DISTINCT p.id AS value, p.name AS text");
+        $query->from('#__thm_groups_templates AS p');
 
-		$associated = (bool) $this->getAttribute('associated', false);
+        $associated = (bool)$this->getAttribute('associated', false);
 
-		if ($associated)
-		{
-			$query->innerJoin('#__thm_groups_profile_usergroups AS ug ON ug.profileID = p.id');
-		}
+        if ($associated) {
+            $query->innerJoin('#__thm_groups_template_associations AS tempAssoc ON tempAssoc.profileID = p.id');
+        }
 
-		$query->order("text ASC");
-		$dbo->setQuery($query);
+        $query->order("text ASC");
+        $dbo->setQuery($query);
 
-		try
-		{
-			$templates = $dbo->loadAssocList('value');
-		}
-		catch (Exception $exc)
-		{
-			return parent::getOptions();
-		}
+        try {
+            $templates = $dbo->loadAssocList('value');
+        } catch (Exception $exc) {
+            return parent::getOptions();
+        }
 
-		if (empty($templates))
-		{
-			return [];
-		}
+        if (empty($templates)) {
+            return [];
+        }
 
-		$plugin = (bool) $this->getAttribute('plugin', false);
+        $plugin = (bool)$this->getAttribute('plugin', false);
 
-		if ($associated)
-		{
-			if ($plugin)
-			{
-				$noTemplates = ['value' => '', 'text' => JText::_('COM_THM_GROUPS_MODULE_DEFAULT')];
-				array_unshift($templates, $noTemplates);
-			}
-			else
-			{
+        if ($associated) {
+            if ($plugin) {
+                $noTemplates = ['value' => '', 'text' => JText::_('COM_THM_GROUPS_MODULE_DEFAULT')];
+                array_unshift($templates, $noTemplates);
+            } else {
+                $noTemplates = ['value' => -1, 'text' => JText::_('JNONE')];
+                array_unshift($templates, $noTemplates);
 
-				$noTemplates = ['value' => -1, 'text' => JText::_('JNONE')];
-				array_unshift($templates, $noTemplates);
+                $allTemplates = ['value' => '', 'text' => JText::_('JALL')];
+                array_unshift($templates, $allTemplates);
+            }
+        }
 
-				$allTemplates = ['value' => '', 'text' => JText::_('JALL')];
-				array_unshift($templates, $allTemplates);
-			}
-		}
-
-		return $templates;
-	}
+        return $templates;
+    }
 }

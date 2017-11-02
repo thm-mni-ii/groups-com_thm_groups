@@ -14,70 +14,68 @@ defined('_JEXEC') or die;
 
 $nameAttributes = array();
 
-if (!empty($attributes[1]) AND $attributes[1]['value'])
-{
-	$nameAttributes[2] = $attribute['value'];
+if (!empty($attributes[1]) && $attributes[1]['value']) {
+    $nameAttributes[2] = $attribute['value'];
 }
 
-if (!empty($attributes[2]) AND $attributes[2]['value'])
-{
-	$nameAttributes[1] = $attribute['value'];
+if (!empty($attributes[2]) && $attributes[2]['value']) {
+    $nameAttributes[1] = $attribute['value'];
 }
 
 $editor = JFactory::getConfig()->get('editor');
 
 ?>
 <form id="adminForm" name="adminForm" class="form-horizontal form-validate"
-	  action="index.php?option=com_thm_groups" method="post" enctype="multipart/form-data">
-	<div class="form-horizontal">
-		<div id="user" class="tab-pane active">
-			<?php
-			foreach ($this->attributes as $attribute):
-				$name = $attribute['name'];
-				$value = $attribute['value'];
-				$options = empty($attribute['options']) ? [] : $attribute['options'];
-				?>
-				<div class='control-group'>
-					<div class='control-label'>
-						<label id='jform_<?php echo $name; ?>-lbl'
-							   for='jform_<?php echo $name; ?>'
-							   aria-invalid='false'><?php echo $name; ?>
-						</label>
-					</div>
-					<div id='jform_<?php echo $name; ?>_box' class='controls'>
-						<?php
-						switch ($attribute['type'])
-						{
-							case 'TEXTFIELD':
-								echo JEditor::getInstance($editor)->display("jform[$name][value]", $value, '', '', '', '', false);
-								break;
+      action="index.php?option=com_thm_groups" method="post" enctype="multipart/form-data">
+    <div class="form-horizontal">
+        <div id="user" class="tab-pane active">
+            <?php
+            foreach ($this->attributes as $attribute) :
+                $name = $attribute['name'];
+                $value = $attribute['value'];
+                $options = empty($attribute['options']) ? [] : $attribute['options'];
+                ?>
+                <div class='control-group'>
+                    <div class='control-label'>
+                        <label id='jform_<?php echo $name; ?>-lbl'
+                               for='jform_<?php echo $name; ?>'
+                               aria-invalid='false'><?php echo $name; ?>
+                        </label>
+                    </div>
+                    <div id='jform_<?php echo $name; ?>_box' class='controls'>
+                        <?php
+                        switch ($attribute['type']) {
+                            case 'TEXTFIELD':
+                                echo JEditor::getInstance($editor)->display("jform[$name][value]", $value, '', '', '',
+                                    '', false);
+                                break;
 
-							case 'PICTURE':
-								echo $this->getPicture($attribute, $nameAttributes);
-								break;
+                            case 'PICTURE':
+                                echo $this->getPicture($attribute, $nameAttributes);
+                                break;
 
-							default:
-								echo $this->getText($attribute);
-								break;
-						}
-						?>
-						<div>
-							<?php echo $this->getStructInput($name, 'attributeID', $attribute['structid']); ?>
-							<?php echo $this->getStructInput($name, 'type', $attribute['type']); ?>
-						</div>
-					</div>
-					<div class="publish-container">
-						<?php echo $this->getPublishBox($name, $attribute['publish']); ?>
-					</div>
-				</div>
-			<?php endforeach; ?>
-		</div>
-	</div>
-	<input type="hidden" name="option" value="com_thm_groups"/>
-	<input type="hidden" name="task" value="user.apply"/>
-	<input type='hidden' id='jform_profileID' name='jform[profileID]' value='<?php echo $this->profileID; ?>'/>
-	<?php if (!empty($this->menuID)): ?>
-		<input type='hidden' id='jform_menuID' name='jform[menuID]' value='<?php echo $this->menuID; ?>'/>
-	<?php endif; ?>
-	<?php echo JHtml::_('form.token'); ?>
+                            default:
+                                echo $this->getText($attribute);
+                                break;
+                        }
+                        ?>
+                        <div>
+                            <?php echo $this->getStructInput($name, 'attributeID', $attribute['structid']); ?>
+                            <?php echo $this->getStructInput($name, 'type', $attribute['type']); ?>
+                        </div>
+                    </div>
+                    <div class="publish-container">
+                        <?php echo $this->getPublishBox($name, $attribute['publish']); ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <input type="hidden" name="option" value="com_thm_groups"/>
+    <input type="hidden" name="task" value="user.apply"/>
+    <input type='hidden' id='jform_profileID' name='jform[profileID]' value='<?php echo $this->profileID; ?>'/>
+    <?php if (!empty($this->menuID)) : ?>
+        <input type='hidden' id='jform_menuID' name='jform[menuID]' value='<?php echo $this->menuID; ?>'/>
+    <?php endif; ?>
+    <?php echo JHtml::_('form.token'); ?>
 </form>

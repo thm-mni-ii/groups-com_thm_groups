@@ -15,10 +15,9 @@ defined('_JEXEC') or die;
 
 $listOrder = $this->escape($this->state->get('list.ordering'));
 
-if ($listOrder == 'content.ordering')
-{
-	$saveOrderingUrl = 'index.php?option=com_thm_groups&task=content.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'content_manager-list', 'adminForm', null, $saveOrderingUrl);
+if ($listOrder == 'content.ordering') {
+    $saveOrderingUrl = 'index.php?option=com_thm_groups&task=content.saveOrderAjax&tmpl=component';
+    JHtml::_('sortablelist.sortable', 'content_manager-list', 'adminForm', null, $saveOrderingUrl);
 }
 
 require_once JPATH_ROOT . '/media/com_thm_groups/templates/list.php';

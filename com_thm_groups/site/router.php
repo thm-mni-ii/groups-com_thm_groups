@@ -22,63 +22,55 @@
  */
 function THM_GroupsBuildRoute(&$query)
 {
-	// Contains all SEF Elements as list
-	$segments = array();
-	$view     = '';
+    // Contains all SEF Elements as list
+    $segments = array();
+    $view     = '';
 
-	if (!empty($query['view']))
-	{
-		$view       = $query['view'];
-		$segments[] = $query['view'];
-		unset($query['view']);
-	}
+    if (!empty($query['view'])) {
+        $view       = $query['view'];
+        $segments[] = $query['view'];
+        unset($query['view']);
+    }
 
-	buildOptionsRoute($query);
+    buildOptionsRoute($query);
 
-	// Group & Profile/Name Segments
-	if (!empty($query['profileID']))
-	{
-		$profileSegment = $query['profileID'];
-		unset($query['profileID']);
+    // Group & Profile/Name Segments
+    if (!empty($query['profileID'])) {
+        $profileSegment = $query['profileID'];
+        unset($query['profileID']);
 
-		if (!empty($query['groupID']) OR !empty($query['name']))
-		{
-			$profileSegment .= ":";
+        if (!empty($query['groupID']) or !empty($query['name'])) {
+            $profileSegment .= ":";
 
-			if (!empty($query['name']))
-			{
-				$profileSegment .= $query['name'];
-				unset($query['name']);
+            if (!empty($query['name'])) {
+                $profileSegment .= $query['name'];
+                unset($query['name']);
 
-				$profileSegment .= empty($query['groupID']) ? '' : '-';
-			}
+                $profileSegment .= empty($query['groupID']) ? '' : '-';
+            }
 
-			if (!empty($query['groupID']))
-			{
-				$profileSegment .= $query['groupID'];
-				unset($query['groupID']);
-			}
-		}
-		$segments[] = $profileSegment;
-	}
+            if (!empty($query['groupID'])) {
+                $profileSegment .= $query['groupID'];
+                unset($query['groupID']);
+            }
+        }
+        $segments[] = $profileSegment;
+    }
 
-	if (isset ($query['id']))
-	{
-		if (isset ($query['alias']))
-		{
-			$segments[] = $query['id'] . "-" . $query['alias'];
-			unset($query['id']);
-			unset($query['alias']);
-		}
-	}
+    if (isset($query['id'])) {
+        if (isset($query['alias'])) {
+            $segments[] = $query['id'] . "-" . $query['alias'];
+            unset($query['id']);
+            unset($query['alias']);
+        }
+    }
 
-	// The view name should never be at the end of the groups own routing.
-	if (end($segments) == $view)
-	{
-		array_pop($segments);
-	}
+    // The view name should never be at the end of the groups own routing.
+    if (end($segments) == $view) {
+        array_pop($segments);
+    }
 
-	return $segments;
+    return $segments;
 }
 
 /**
@@ -90,21 +82,18 @@ function THM_GroupsBuildRoute(&$query)
  */
 function buildOptionsRoute(&$query)
 {
-	if (isset($query['option_back']) && isset($query['view_back']))
-	{
-		unset($query['option_back']);
-		unset($query['view_back']);
+    if (isset($query['option_back']) && isset($query['view_back'])) {
+        unset($query['option_back']);
+        unset($query['view_back']);
 
-		if (isset ($query['layout_back']))
-		{
-			unset($query['layout_back']);
-		}
+        if (isset($query['layout_back'])) {
+            unset($query['layout_back']);
+        }
 
-		if (isset ($query['Itemid_back']))
-		{
-			unset($query['Itemid_back']);
-		}
-	}
+        if (isset($query['Itemid_back'])) {
+            unset($query['Itemid_back']);
+        }
+    }
 }
 
 /**
@@ -116,106 +105,89 @@ function buildOptionsRoute(&$query)
  */
 function THM_GroupsParseRoute($segments)
 {
-	$vars         = array();
-	$vars['view'] = $segments[0];
+    $vars         = array();
+    $vars['view'] = $segments[0];
 
-	switch ($segments[0])
-	{
-		case 'content':
+    switch ($segments[0]) {
+        case 'content':
 
-			if (count($segments) == 3)
-			{
-				if (!empty($segments[1]))
-				{
-					parseProfileSegment($vars, $segments[1]);
-				}
-				if (!empty($segments[1]))
-				{
-					parseContentSegment($vars, $segments[2]);
-				}
-			}
-			elseif (count($segments) == 2)
-			{
-				parseContentSegment($vars, $segments[1]);
-			}
-			break;
+            if (count($segments) == 3) {
+                if (!empty($segments[1])) {
+                    parseProfileSegment($vars, $segments[1]);
+                }
+                if (!empty($segments[1])) {
+                    parseContentSegment($vars, $segments[2]);
+                }
+            } elseif (count($segments) == 2) {
+                parseContentSegment($vars, $segments[1]);
+            }
+            break;
 
-		case 'advanced':
-		case 'profile':
-		case 'profile_edit':
-		case 'overview':
-		case 'content_manager':
-			parseProfileSegment($vars, end($segments));
-			break;
+        case 'advanced':
+        case 'profile':
+        case 'profile_edit':
+        case 'overview':
+        case 'content_manager':
+            parseProfileSegment($vars, end($segments));
+            break;
 
-		// THM Groups default case (original code)
-		default:
-			$numberOfSegments = count($segments);
+        // THM Groups default case (original code)
+        default:
+            $numberOfSegments = count($segments);
 
-			$vars['view'] = $segments[0];
+            $vars['view'] = $segments[0];
 
-			if (isset ($segments[3]))
-			{
-				$vars['layout'] = $segments[1];
-			}
+            if (isset($segments[3])) {
+                $vars['layout'] = $segments[1];
+            }
 
-			if ($numberOfSegments == 3)
-			{
-				// User information
-				if (isset ($segments[2]))
-				{
-					// TODO: This temporary prevents a crash.
-					if ($segments[2] == 'index.php')
-					{
-						// Leeds to previous page.
-						$vars = array();
+            if ($numberOfSegments == 3) {
+                // User information
+                if (isset($segments[2])) {
+                    // TODO: This temporary prevents a crash.
+                    if ($segments[2] == 'index.php') {
+                        // Leeds to previous page.
+                        $vars = array();
 
-						return $vars;
-					}
+                        return $vars;
+                    }
 
-					parseProfileSegment($vars, $segments[2]);
-				}
-			}
+                    parseProfileSegment($vars, $segments[2]);
+                }
+            }
 
-			if ($numberOfSegments == 4)
-			{
-				// Back options
-				if (isset ($segments[2]))
-				{
-					$backOptionsTemp = explode(':', $segments[2]);
-				}
+            if ($numberOfSegments == 4) {
+                // Back options
+                if (isset($segments[2])) {
+                    $backOptionsTemp = explode(':', $segments[2]);
+                }
 
-				if ((isset ($backOptionsTemp[0]) && ($backOptionsTemp[0] == 'com_thm_groups')))
-				{
-					$backOptions = explode('-', $backOptionsTemp[1]);
+                if ((isset($backOptionsTemp[0]) && ($backOptionsTemp[0] == 'com_thm_groups'))) {
+                    $backOptions = explode('-', $backOptionsTemp[1]);
 
-					if (isset ($backOptions[0]))
-					{
-						$vars['option_back'] = $backOptionsTemp[0];
-						$vars['view_back']   = $backOptions[0];
+                    if (isset($backOptions[0])) {
+                        $vars['option_back'] = $backOptionsTemp[0];
+                        $vars['view_back']   = $backOptions[0];
 
-						if (isset ($backOptions[1]))
-						{
-							$vars['layout_back'] = $backOptions[1];
-						}
+                        if (isset($backOptions[1])) {
+                            $vars['layout_back'] = $backOptions[1];
+                        }
 
-						if (isset ($backOptions[2]))
-						{
-							$vars['Itemid_back'] = $backOptions[2];
-						}
-					}
-				}
+                        if (isset($backOptions[2])) {
+                            $vars['Itemid_back'] = $backOptions[2];
+                        }
+                    }
+                }
 
-				// User information
-				if (!empty ($segments[3]))
-				{
-					parseProfileSegment($vars, $segments[3]);
-				}
-			}
-			break;
-	}
+                // User information
+                if (!empty($segments[3])) {
+                    parseProfileSegment($vars, $segments[3]);
+                }
+            }
+            break;
+    }
 
-	return $vars;
+    return $vars;
 }
 
 /**
@@ -229,30 +201,26 @@ function THM_GroupsParseRoute($segments)
  */
 function parseProfileSegment(&$vars, $segment)
 {
-	if (strpos($segment, ':') === false)
-	{
-		return;
-	}
+    if (strpos($segment, ':') === false) {
+        return;
+    }
 
-	list($profileID, $profileData) = explode(':', $segment);
+    list($profileID, $profileData) = explode(':', $segment);
 
-	$vars['profileID'] = $profileID;
+    $vars['profileID'] = $profileID;
 
-	if (!empty($profileData))
-	{
-		$profileData = explode('-', $profileData);
+    if (!empty($profileData)) {
+        $profileData = explode('-', $profileData);
 
-		if (is_numeric(end($profileData)))
-		{
-			$vars['groupID'] = array_pop($profileData);
-		}
+        if (is_numeric(end($profileData))) {
+            $vars['groupID'] = array_pop($profileData);
+        }
 
-		// Anything left is the profile's surname
-		if (!empty($profileData))
-		{
-			$vars['name'] = implode('-', $profileData);
-		}
-	}
+        // Anything left is the profile's surname
+        if (!empty($profileData)) {
+            $vars['name'] = implode('-', $profileData);
+        }
+    }
 }
 
 /**
@@ -265,17 +233,15 @@ function parseProfileSegment(&$vars, $segment)
  */
 function parseContentSegment(&$vars, $segment)
 {
-	$qpParameters = explode(':', $segment);
+    $qpParameters = explode(':', $segment);
 
-	$validID = (!empty($qpParameters[0]) AND intval($qpParameters[0]) !== 0);
-	if ($validID)
-	{
-		$vars['id'] = $qpParameters[0];
-	}
-	if (count($qpParameters) == 2)
-	{
-		$vars['alias'] = $qpParameters[1];
-	}
+    $validID = (!empty($qpParameters[0]) and intval($qpParameters[0]) !== 0);
+    if ($validID) {
+        $vars['id'] = $qpParameters[0];
+    }
+    if (count($qpParameters) == 2) {
+        $vars['alias'] = $qpParameters[1];
+    }
 
-	return;
+    return;
 }

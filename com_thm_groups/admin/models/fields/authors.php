@@ -24,100 +24,90 @@ require_once JPATH_ROOT . "/media/com_thm_groups/helpers/content.php";
 class JFormFieldAuthors extends JFormFieldList
 {
 
-	protected $type = 'authors';
+    protected $type = 'authors';
 
-	/**
-	 * Cached array of the category items.
-	 *
-	 * @var    array
-	 */
-	protected static $options = array();
+    /**
+     * Cached array of the category items.
+     *
+     * @var    array
+     */
+    protected static $options = array();
 
-	/**
-	 * Returns a list of all authors associated with THM Groups, even they don't have
-	 * articles in their categories
-	 *
-	 * @return  mixed  array on success, otherwise false
-	 */
-	public function getQPAuthors()
-	{
-		$dbo      = JFactory::getDbo();
-		$catQuery = $dbo->getQuery(true);
+    /**
+     * Returns a list of all authors associated with THM Groups, even they don't have
+     * articles in their categories
+     *
+     * @return  mixed  array on success, otherwise false
+     */
+    public function getQPAuthors()
+    {
+        $dbo      = JFactory::getDbo();
+        $catQuery = $dbo->getQuery(true);
 
-		$rootCategory = THM_GroupsHelperContent::getRootCategory();
-		$catQuery
-			->select('users.id, users.name, cat.id AS catid')
-			->from('#__users AS users')
-			->leftJoin('#__categories AS cat on cat.created_user_id = users.id')
-			->where("cat.parent_id = $rootCategory")
-			->where("cat.published = 1")
-			->order('users.name')
-			->group('users.id');
+        $rootCategory = THM_GroupsHelperContent::getRootCategory();
+        $catQuery
+            ->select('users.id, users.name, cat.id AS catid')
+            ->from('#__users AS users')
+            ->leftJoin('#__categories AS cat on cat.created_user_id = users.id')
+            ->where("cat.parent_id = $rootCategory")
+            ->where("cat.published = 1")
+            ->order('users.name')
+            ->group('users.id');
 
-		$dbo->setQuery($catQuery);
+        $dbo->setQuery($catQuery);
 
-		try
-		{
-			$allProfiles = $dbo->loadAssocList();
-		}
-		catch (Exception $exception)
-		{
-			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+        try {
+            $allProfiles = $dbo->loadAssocList();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-			return false;
-		}
+            return false;
+        }
 
-		foreach ($allProfiles as $index => $profile)
-		{
-			$contentQuery = $dbo->getQuery(true);
-			$contentQuery->select("count('*')")->from('#__content')->where("catid = '{$profile['catid']}'");
-			$dbo->setQuery($contentQuery);
+        foreach ($allProfiles as $index => $profile) {
+            $contentQuery = $dbo->getQuery(true);
+            $contentQuery->select("count('*')")->from('#__content')->where("catid = '{$profile['catid']}'");
+            $dbo->setQuery($contentQuery);
 
-			try
-			{
-				$contentCount = $dbo->loadResult();
-			}
-			catch (Exception $exception)
-			{
-				JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            try {
+                $contentCount = $dbo->loadResult();
+            } catch (Exception $exception) {
+                JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-				return false;
-			}
+                return false;
+            }
 
-			if (empty($contentCount))
-			{
-				unset($allProfiles[$index]);
-			}
-		}
+            if (empty($contentCount)) {
+                unset($allProfiles[$index]);
+            }
+        }
 
-		return $allProfiles;
-	}
+        return $allProfiles;
+    }
 
-	/**
-	 * Method to get the options to populate to populate list
-	 *
-	 * @return  array  The field option objects.
-	 *
-	 */
-	protected function getOptions()
-	{
-		$options = array();
+    /**
+     * Method to get the options to populate to populate list
+     *
+     * @return  array  The field option objects.
+     *
+     */
+    protected function getOptions()
+    {
+        $options = array();
 
-		$rootCategory = THM_GroupsHelperContent::getRootCategory();
+        $rootCategory = THM_GroupsHelperContent::getRootCategory();
 
-		if (empty($rootCategory))
-		{
-			return parent::getOptions();
-		}
+        if (empty($rootCategory)) {
+            return parent::getOptions();
+        }
 
-		$qpAuthors = $this->getQPAuthors();
+        $qpAuthors = $this->getQPAuthors();
 
-		// Convert array to options
-		foreach ($qpAuthors as $key => $value)
-		{
-			$options[] = JHTML::_('select.option', $value['id'], $value['name']);
-		}
+        // Convert array to options
+        foreach ($qpAuthors as $key => $value) {
+            $options[] = JHTML::_('select.option', $value['id'], $value['name']);
+        }
 
-		return array_merge(parent::getOptions(), $options);
-	}
+        return array_merge(parent::getOptions(), $options);
+    }
 }

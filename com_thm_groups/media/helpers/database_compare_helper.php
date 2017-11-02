@@ -18,32 +18,27 @@
  */
 class THM_GroupsHelperDatabase_Compare
 {
-	/**
-	 * Filters insert values before save
-	 * Compare two arrays and delete repeating elements
-	 * This algorithm sucks -> comment form Ilja
-	 *
-	 * @param   array &$insertValues An array with values to save
-	 * @param   array $valuesFromDB  An array with values from DB
-	 *
-	 * @return  void
-	 */
-	public static function filterInsertValues(&$insertValues, $valuesFromDB)
-	{
-		foreach ($valuesFromDB as $key => $value)
-		{
-			if (array_key_exists($key, $insertValues))
-			{
-				foreach ($value as $data)
-				{
-					$idx = array_search($data, $insertValues[$key]);
-					if (!is_bool($idx))
-					{
-						unset($insertValues[$key][$idx]);
-					}
-				}
-			}
-		}
-	}
-
+    /**
+     * Filters insert values before save
+     * Compare two arrays and delete repeating elements
+     * This algorithm sucks -> comment form Ilja
+     *
+     * @param   array &$insertValues An array with values to save
+     * @param   array $valuesFromDB  An array with values from DB
+     *
+     * @return  void
+     */
+    public static function filterInsertValues(&$insertValues, $valuesFromDB)
+    {
+        foreach ($valuesFromDB as $key => $value) {
+            if (array_key_exists($key, $insertValues)) {
+                foreach ($value as $data) {
+                    $idx = array_search($data, $insertValues[$key]);
+                    if (!is_bool($idx)) {
+                        unset($insertValues[$key][$idx]);
+                    }
+                }
+            }
+        }
+    }
 }
