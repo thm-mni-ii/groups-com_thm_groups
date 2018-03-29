@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension type="component" version="3.*" method="upgrade">
     <name>COM_THM_GROUPS</name>
-    <creationDate>January 2018</creationDate>
+    <creationDate>March 2018</creationDate>
     <author>THM iCampus</author>
     <authorUrl>http://www.thm.de</authorUrl>
     <copyright>TH Mittelhessen 2018</copyright>
     <license>GNU/GPL Version 2</license>
-    <version>3.8.12</version>
+    <version>3.8.13</version>
     <scriptfile>script.php</scriptfile>
     <install>
         <sql>
