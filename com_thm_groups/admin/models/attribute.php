@@ -82,16 +82,19 @@ class THM_GroupsModelAttribute extends JModelLegacy
      */
     public function delete()
     {
-        $app = JFactory::getApplication();
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
         }
 
-        $doNotDelete = array(self::FORENAME, self::SURNAME, self::EMAIL, self::TITLE, self::POSTTITLE);
-        $selected    = $app->input->get('cid', array(), 'array');
+        $doNotDelete = [self::FORENAME, self::SURNAME, self::EMAIL, self::TITLE, self::POSTTITLE];
+        $selected    = $app->input->get('cid', [], 'array');
         Joomla\Utilities\ArrayHelper::toInteger($selected);
         $attributeIDs = array_diff($selected, $doNotDelete);
 
@@ -236,16 +239,18 @@ class THM_GroupsModelAttribute extends JModelLegacy
      */
     public function save()
     {
-        $app = JFactory::getApplication();
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
         }
 
-
-        $data         = $app->input->get('jform', array(), 'array');
+        $data         = $app->input->get('jform', [], 'array');
         $staticTypeID = $this->getStaticTypeIDByDynTypeID($data['dynamic_typeID']);
         $options      = THM_GroupsHelperStatic_Type::getOption($staticTypeID);
 
@@ -325,9 +330,12 @@ class THM_GroupsModelAttribute extends JModelLegacy
      */
     public function toggle()
     {
-        $app = JFactory::getApplication();
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
@@ -336,10 +344,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
         $input = JFactory::getApplication()->input;
 
         // Get array of ids if divers users selected
-        $cid = $input->post->get('cid', array(), 'array');
-
-        // A string with type of column in table
-        $attribute = $input->get('attribute', '', 'string');
+        $cid = $input->post->get('cid', [], 'array');
 
         // If array is empty, the toggle button was clicked
         if (empty($cid)) {
@@ -353,31 +358,13 @@ class THM_GroupsModelAttribute extends JModelLegacy
             return false;
         }
 
-        // Will used if buttons (Publish/Unpublish user) in toolbar clicked
-        switch ($action) {
-            case 'publish':
-                $value = 1;
-                break;
-            case 'unpublish':
-                $value = 0;
-                break;
-            default:
-                $value = $input->getInt('value', 1) ? 0 : 1;
-                break;
-        }
+        $value = $input->getInt('value', 1) ? 0 : 1;
 
         $query = $this->_db->getQuery(true);
 
-        $query
-            ->update('#__thm_groups_attribute')
+        $query->update('#__thm_groups_attribute')
+            ->set("published = '$value'")
             ->where("id IN ( $id )");
-
-        switch ($attribute) {
-            case 'published':
-            default:
-                $query->set("published = '$value'");
-                break;
-        }
 
         $this->_db->setQuery($query);
 
@@ -400,9 +387,12 @@ class THM_GroupsModelAttribute extends JModelLegacy
      */
     public function saveorder($pks = null, $order = null)
     {
-        $app = JFactory::getApplication();
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;

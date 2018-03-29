@@ -33,10 +33,10 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
      *
      * @param   array $config config array
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array();
+            $config['filter_fields'] = [];
         }
 
         parent::__construct($config);
@@ -72,29 +72,28 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
         } catch (Exception $exception) {
             JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-            return array();
+            return [];
         }
 
-        return empty($associations) ? array() : $associations;
+        return empty($associations) ? [] : $associations;
     }
 
     /**
      * Generates HTML with links for disassociation of groups/roles with the user being iterated
      *
-     * @param   int $profileID the id of the user being iterated
+     * @param   int  $profileID the id of the user being iterated
+     * @param   bool $canEdit   whether or not the user is authorized to edit associations
      *
      * @return  string the HTML output
      */
-    private function getAssocLinks($profileID)
+    private function getAssocLinks($profileID, $canEdit)
     {
         $associations = $this->getAssociations($profileID);
-        $user         = JFactory::getUser();
         $result       = "";
-        $canEdit      = $user->authorise('core.admin', 'com_thm_groups');
         $deleteIcon   = '<span class="icon-delete"></span>';
         $roleHREF     = 'javascript:deleteRoleAssociation(PROFILEID,GROUPID,ROLEID);';
         $roleTitle    = JText::_('COM_THM_GROUPS_GROUP') . ": GROUPNAME - ";
-        $roleTitle .= JText::_('COM_THM_GROUPS_ROLE') . ": ROLENAME::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE');
+        $roleTitle    .= JText::_('COM_THM_GROUPS_ROLE') . ": ROLENAME::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE');
         $rawRoleLink  = "<a href='$roleHREF' title='$roleTitle' class='hasTooltip'>{$deleteIcon}</a>ROLENAME";
         $groupHREF    = 'javascript:deleteGroupAssociation(PROFILEID,GROUPID);';
         $groupTitle   = JText::_('COM_THM_GROUPS_GROUP') . ": GROUPNAME::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES');
@@ -108,7 +107,7 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
             }
 
             $roles      = explode(', ', $association['roleName']);
-            $groupRoles = array();
+            $groupRoles = [];
             $groupName  = $association['groupName'];
             $uRoleLink  = str_replace('PROFILEID', $profileID, $rawRoleLink);
             $uGroupLink = str_replace('PROFILEID', $profileID, $rawGroupLink);
@@ -156,7 +155,7 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
         $ordering  = $this->state->get('list.ordering');
         $direction = $this->state->get('list.direction');
 
-        $headers                = array();
+        $headers                = [];
         $headers['checkbox']    = '';
         $headers['surname']     = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_SURNAME'), 'surname',
             $direction, $ordering);
@@ -184,7 +183,7 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
      */
     public function getHiddenFields()
     {
-        $fields = array();
+        $fields = [];
 
         // Hidden fields for batch processing
         $fields[] = '<input type="hidden" name="groupID" value="">';
@@ -201,20 +200,24 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
      */
     public function getItems()
     {
-        $items = parent::getItems();
-
+        $return = [];
+        $items  = parent::getItems();
         if (empty($items)) {
-            return array();
+            return $return;
         }
+
+        $user               = JFactory::getUser();
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+        $canEdit            = ($isAdmin or $isComponentManager);
 
         $index = 0;
         foreach ($items as $key => $item) {
-            // Changed from cid to id
             $url            = "index.php?option=com_thm_groups&view=profile_edit&id=$item->profileID";
-            $return[$index] = array();
+            $return[$index] = [];
 
             $return[$index][0] = JHtml::_('grid.id', $index, $item->profileID);
-            if (JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
+            if ($canEdit) {
                 $return[$index][1] = !empty($item->surname) ? JHtml::_('link', $url, $item->surname) : '';
                 $return[$index][2] = !empty($item->forename) ? JHtml::_('link', $url, $item->forename) : '';
                 $return[$index][3] = !empty($item->email) ? JHtml::_('link', $url, $item->email) : '';
@@ -226,7 +229,7 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
             $return[$index][4] = $this->getToggle($item->profileID, $item->published, 'profile', '', 'published');
             $return[$index][5] = $this->getToggle($item->profileID, $item->canEdit, 'profile', '', 'canEdit');
             $return[$index][6] = $this->getToggle($item->profileID, $item->qpPublished, 'profile', '', 'qpPublished');
-            $return[$index][7] = $this->getAssocLinks($item->profileID);
+            $return[$index][7] = $this->getAssocLinks($item->profileID, $canEdit);
             $return[$index][8] = $item->profileID;
 
             $index++;
@@ -259,14 +262,14 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
         // Email
         $query->innerJoin('#__thm_groups_profile_attributes AS em ON em.usersID = profile.id AND em.attributeID = 4');
 
-        $this->setSearchFilter($query, array('profile.id', 'fn.value', 'sn.value', 'em.value'));
+        $this->setSearchFilter($query, ['profile.id', 'fn.value', 'sn.value', 'em.value']);
 
-        $this->setIDFilter($query, 'profile.published', array('filter.published'));
-        $this->setIDFilter($query, 'profile.canEdit', array('filter.canEdit'));
-        $this->setIDFilter($query, 'profile.qpPublished', array('filter.qpPublished'));
+        $this->setIDFilter($query, 'profile.published', ['filter.published']);
+        $this->setIDFilter($query, 'profile.canEdit', ['filter.canEdit']);
+        $this->setIDFilter($query, 'profile.qpPublished', ['filter.qpPublished']);
 
         $app          = JFactory::getApplication();
-        $list         = $app->input->get('list', array(), 'array');
+        $list         = $app->input->get('list', [], 'array');
         $filterGroups = empty($list['groupID']) ? false : true;
         $filterRoles  = empty($list['roleID']) ? false : true;
 
@@ -276,10 +279,10 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
             $query->leftJoin('#__thm_groups_role_associations AS gr ON gr.ID = ugr.usergroups_rolesID');
 
             if ($filterGroups) {
-                $this->setIDFilter($query, 'gr.usergroupsID', array('list.groupID'));
+                $this->setIDFilter($query, 'gr.usergroupsID', ['list.groupID']);
             }
             if ($filterRoles) {
-                $this->setIDFilter($query, 'gr.rolesID', array('list.roleID'));
+                $this->setIDFilter($query, 'gr.rolesID', ['list.roleID']);
             }
         }
 

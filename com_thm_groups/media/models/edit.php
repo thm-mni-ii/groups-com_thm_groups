@@ -30,10 +30,10 @@ class THM_GroupsModelEdit extends JModelAdmin
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = [], $loadData = true)
     {
         $name = $this->get('name');
-        $form = $this->loadForm("com_thm_groups.$name", $name, array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm("com_thm_groups.$name", $name, ['control' => 'jform', 'load_data' => $loadData]);
 
         if (empty($form)) {
             return false;
@@ -53,17 +53,20 @@ class THM_GroupsModelEdit extends JModelAdmin
      */
     public function getItem($pk = null)
     {
-        require_once JPATH_ROOT . "/media/com_thm_groups/helpers/componentHelper.php";
-        THM_GroupsHelperComponent::addActions($this);
+        $user = JFactory::getUser();
 
-        $item      = parent::getItem($pk);
-        $allowEdit = THM_GroupsHelperComponent::allowEdit($this, $item->id);
-
-        if ($allowEdit) {
-            return $item;
+        if (empty($user->id)) {
+            return false;
         }
 
-        throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 404);
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
+            throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 404);
+        }
+
+        return parent::getItem($pk);
     }
 
     /**
@@ -75,7 +78,7 @@ class THM_GroupsModelEdit extends JModelAdmin
      *
      * @return  JTable  A JTable object
      */
-    public function getTable($name = '', $prefix = 'Table', $options = array())
+    public function getTable($name = '', $prefix = 'Table', $options = [])
     {
         /**
          * Joomla makes the mistake of handling front end and backend differently for include paths. Here we add the

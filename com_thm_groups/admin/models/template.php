@@ -29,17 +29,20 @@ class THM_GroupsModelTemplate extends JModelLegacy
      */
     public function batch()
     {
-        $app     = JFactory::getApplication();
-        $isAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!$isAdmin) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
         }
 
         $input       = $app->input;
-        $templateIDs = THM_GroupsHelperComponent::cleanIntCollection($input->get('cid', array(), 'array'));
+        $templateIDs = THM_GroupsHelperComponent::cleanIntCollection($input->get('cid', [], 'array'));
 
         if (empty($templateIDs)) {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_TEMPLATE_SELECTED'), 'warning');
@@ -47,7 +50,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
             return false;
         }
 
-        $groupIDs = THM_GroupsHelperComponent::cleanIntCollection($input->get('batch', array(), 'array'));
+        $groupIDs = THM_GroupsHelperComponent::cleanIntCollection($input->get('batch', [], 'array'));
 
         if (empty($groupIDs)) {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_GROUP_SELECTED'), 'warning');
@@ -55,8 +58,8 @@ class THM_GroupsModelTemplate extends JModelLegacy
             return false;
         }
 
-        $validActions  = array('add', 'delete');
-        $actions       = $input->get('batch_action', array(), 'array');
+        $validActions  = ['add', 'delete'];
+        $actions       = $input->get('batch_action', [], 'array');
         $invalidAction = (empty($actions) or empty($actions[0]) or !in_array($actions[0],
                 $validActions)) ? true : false;
 
@@ -111,7 +114,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
         }
 
         // Build an array with unique templates and their associated groups
-        $templates = array();
+        $templates = [];
 
         foreach ($templateGroups as $templateGroup) {
             $templates[$templateGroup['profileID']][$templateGroup['usergroupsID']] = $templateGroup['usergroupsID'];
@@ -135,7 +138,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
         }
 
         $query->insert('#__thm_groups_template_associations');
-        $query->columns(array($this->_db->quoteName('profileID'), $this->_db->quoteName('usergroupsID')));
+        $query->columns([$this->_db->quoteName('profileID'), $this->_db->quoteName('usergroupsID')]);
         $this->_db->setQuery($query);
 
         try {
@@ -191,7 +194,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
     private function saveTemplate()
     {
         $app      = JFactory::getApplication();
-        $formData = $app->input->get('jform', array(), 'array');
+        $formData = $app->input->get('jform', [], 'array');
 
         $template = $this->getTable('Template', 'THM_GroupsTable');
 
@@ -210,7 +213,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
             }
         }
 
-        $data             = array();
+        $data             = [];
         $data['name']     = $formData['name'];
         $data['ordering'] = $this->getOrdering();
 
@@ -232,26 +235,25 @@ class THM_GroupsModelTemplate extends JModelLegacy
      */
     public function delete()
     {
-        $app     = JFactory::getApplication();
-        $isAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!$isAdmin) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
         }
 
-        $ids = JFactory::getApplication()->input->get('cid', array(), 'array');
-
+        $ids   = JFactory::getApplication()->input->get('cid', [], 'array');
         $query = $this->_db->getQuery(true);
 
-        $conditions = array(
-            $this->_db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')',
-        );
+        $conditions = [$this->_db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')'];
 
         $query->delete($this->_db->quoteName('#__thm_groups_templates'));
         $query->where($conditions);
-
         $this->_db->setQuery($query);
 
         return $result = $this->_db->execute();
@@ -267,10 +269,13 @@ class THM_GroupsModelTemplate extends JModelLegacy
      */
     public function deleteGroupAssociation()
     {
-        $app     = JFactory::getApplication();
-        $isAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!$isAdmin) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
@@ -330,16 +335,19 @@ class THM_GroupsModelTemplate extends JModelLegacy
      */
     public function save()
     {
-        $app     = JFactory::getApplication();
-        $isAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!$isAdmin) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
         }
 
-        $template = $app->input->get('jform', array(), 'array');
+        $template = $app->input->get('jform', [], 'array');
 
         if (empty($template['name'])) {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_TEMPLATE_ERROR_NAME_EMPTY'), 'error');
@@ -434,16 +442,19 @@ class THM_GroupsModelTemplate extends JModelLegacy
      */
     public function saveorder($pks = null, $order = null)
     {
-        $isAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
+        $user = JFactory::getUser();
 
-        if (!$isAdmin) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
             return false;
         }
 
         JTable::addIncludePath(JPATH_ROOT . '/administrator/components/com_thm_groups/tables/');
         $table = $this->getTable('Template', 'THM_GroupsTable');
 
-        $conditions = array();
+        $conditions = [];
 
         if (empty($pks)) {
             return false;

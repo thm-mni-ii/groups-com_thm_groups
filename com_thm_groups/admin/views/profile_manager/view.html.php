@@ -50,7 +50,7 @@ class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
         }
 
         // Set batch template path
-        $this->batch = array('batch' => JPATH_COMPONENT_ADMINISTRATOR . '/views/profile_manager/tmpl/default_batch.php');
+        $this->batch = ['batch' => JPATH_COMPONENT_ADMINISTRATOR . '/views/profile_manager/tmpl/default_batch.php'];
 
         $this->groups = THM_GroupsHelperBatch::getGroupOptions();
 
@@ -64,29 +64,27 @@ class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
      */
     protected function addToolbar()
     {
-        $user = JFactory::getUser();
         JToolBarHelper::title(JText::_('COM_THM_GROUPS_PROFILE_MANAGER_TITLE'), 'profile_manager');
 
-        if ($user->authorise('core.edit', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups')) {
-            JToolBarHelper::editList('profile.edit');
-            JToolBarHelper::publishList('profile.publish', 'COM_THM_GROUPS_PUBLISH_PROFILE');
-            JToolBarHelper::unpublishList('profile.unpublish', 'COM_THM_GROUPS_UNPUBLISH_PROFILE');
-            JToolBarHelper::publishList('profile.publishContent', 'COM_THM_GROUPS_ACTIVATE_CONTENT_MANAGMENT');
-            JToolBarHelper::unpublishList('profile.unpublishContent', 'COM_THM_GROUPS_DEACTIVATE_CONTENT_MANAGEMENT');
-            JToolBarHelper::divider();
+        JToolBarHelper::editList('profile.edit');
+        JToolBarHelper::publishList('profile.publish', 'COM_THM_GROUPS_PUBLISH_PROFILE');
+        JToolBarHelper::unpublishList('profile.unpublish', 'COM_THM_GROUPS_UNPUBLISH_PROFILE');
+        JToolBarHelper::publishList('profile.publishContent', 'COM_THM_GROUPS_ACTIVATE_CONTENT_MANAGMENT');
+        JToolBarHelper::unpublishList('profile.unpublishContent', 'COM_THM_GROUPS_DEACTIVATE_CONTENT_MANAGEMENT');
+        JToolBarHelper::divider();
 
-            $bar = JToolBar::getInstance('toolbar');
-            JHtml::_('bootstrap.modal', 'myModal');
-            $title = JText::_('COM_THM_GROUPS_ADD_ROLES');
+        $bar = JToolBar::getInstance('toolbar');
+        JHtml::_('bootstrap.modal', 'myModal');
+        $title = JText::_('COM_THM_GROUPS_ADD_ROLES');
 
-            // Instantiate a new JLayoutFile instance and render the batch button
+        // Instantiate a new JLayoutFile instance and render the batch button
 
-            $html = "<button data-toggle='modal' data-target='#collapseModal' class='btn btn-small'>";
-            $html .= "<i class='icon-new' title='$title'></i> $title</button>";
-            $bar->appendButton('Custom', $html, 'batch');
-        }
+        $html = "<button data-toggle='modal' data-target='#collapseModal' class='btn btn-small'>";
+        $html .= "<i class='icon-new' title='$title'></i> $title</button>";
+        $bar->appendButton('Custom', $html, 'batch');
 
-        if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups')) {
+        $user = JFactory::getUser();
+        if ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups')) {
             JToolBarHelper::divider();
             JToolBarHelper::preferences('com_thm_groups');
         }

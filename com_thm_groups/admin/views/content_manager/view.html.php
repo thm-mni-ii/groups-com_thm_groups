@@ -59,15 +59,15 @@ class THM_GroupsViewContent_Manager extends THM_GroupsViewList
             JText::_('COM_THM_GROUPS_CONTENT_MANAGER_VIEW_TITLE'), 'content_manager'
         );
 
-        $user         = JFactory::getUser();
         $rootCategory = THM_GroupsHelperContent::getRootCategory();
 
-        if ($user->authorise('core.manage', 'com_thm_groups') and !empty($rootCategory)) {
+        if (!empty($rootCategory)) {
             JToolBarHelper::publishList('content.feature', 'COM_THM_GROUPS_FEATURE');
             JToolBarHelper::unpublishList('content.unfeature', 'COM_THM_GROUPS_UNFEATURE');
         }
 
-        if ($user->authorise('core.admin', 'com_thm_groups')) {
+        $user = JFactory::getUser();
+        if ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups')) {
             JToolBarHelper::divider();
             JToolBarHelper::preferences('com_thm_groups');
         }

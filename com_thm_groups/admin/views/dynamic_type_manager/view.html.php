@@ -55,26 +55,17 @@ class THM_GroupsViewDynamic_Type_Manager extends THM_GroupsViewList
      */
     protected function addToolbar()
     {
-        $user = JFactory::getUser();
-
         JToolBarHelper::title(
             JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER'), 'dynamic_type_manager'
         );
 
-        if ($user->authorise('core.create', 'com_thm_groups')) {
-            JToolBarHelper::addNew('dynamic_type.add', 'COM_THM_GROUPS_NEW', false);
-        }
+        JToolBarHelper::addNew('dynamic_type.add', 'COM_THM_GROUPS_NEW', false);
+        JToolBarHelper::editList('dynamic_type.edit', 'COM_THM_GROUPS_EDIT');
+        JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM_DEPENDENCIES', 'dynamic_type.delete',
+            'JTOOLBAR_DELETE');
 
-        if ($user->authorise('core.edit', 'com_thm_groups')) {
-            JToolBarHelper::editList('dynamic_type.edit', 'COM_THM_GROUPS_EDIT');
-        }
-
-        if ($user->authorise('core.delete', 'com_thm_groups')) {
-            JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM_DEPENDENCIES', 'dynamic_type.delete',
-                'JTOOLBAR_DELETE');
-        }
-
-        if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups')) {
+        $user = JFactory::getUser();
+        if ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups')) {
             JToolBarHelper::divider();
             JToolBarHelper::preferences('com_thm_groups');
         }

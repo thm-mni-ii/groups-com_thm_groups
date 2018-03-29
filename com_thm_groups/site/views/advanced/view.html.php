@@ -65,13 +65,17 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
         $this->columns      = $params->get('columns', 2);
         $this->groupID      = $params->get('groupID');
-        $this->isAdmin      = empty(JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) ? false : true;
         $this->menuID       = $input->get('Itemid', 0, 'get');
         $this->profiles     = $this->model->getProfiles();
         $this->showRoles    = $params->get('showRoles', true);
         $this->sort         = $params->get('sort', 1);
         $this->suppressText = $params->get('suppress', true);
         $this->title        = empty($params->get('show_page_heading')) ? '' : $params->get('page_title', '');
+
+        $user = JFactory::getUser();
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+        $this->isAdmin      = ($isAdmin or $isComponentManager);
 
         $this->modifyDocument();
 
@@ -99,7 +103,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $dbo->setQuery($query);
 
         $nameValues = $dbo->loadAssocList();
-        $names      = array(0 => '', 1 => '');
+        $names      = [0 => '', 1 => ''];
 
         foreach ($nameValues as $nameValue) {
             if ((int)$nameValue['attributeID'] === 1) {
@@ -130,7 +134,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         if ($this->suppressText) {
             $hide = JText::_('COM_THM_GROUPS_ACTION_HIDE');
             $read = JText::_('COM_THM_GROUPS_ACTION_DISPLAY');
-            $document->addScriptOptions('com_thm_groups', array('hide' => $hide, 'read' => $read));
+            $document->addScriptOptions('com_thm_groups', ['hide' => $hide, 'read' => $read]);
             require_once JPATH_ROOT . "/media/com_thm_groups/js/toggle_text.js.php";
         }
     }
@@ -165,7 +169,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                 'Itemid'    => $this->menuID
             ];
 
-            $link = 'index.php?' . http_build_query($data);
+            $link      = 'index.php?' . http_build_query($data);
             $container .= JHtml::link(JRoute::_($link), '<span class="icon-edit"></span>', $linkTitle);
             $container .= "</div>";
             $container .= '<div class="clearFix"></div>';

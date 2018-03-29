@@ -33,16 +33,20 @@ class THM_GroupsModelDynamic_Type extends JModelLegacy
      */
     public function delete()
     {
-        $app = JFactory::getApplication();
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
         }
 
-        $doNotDelete = array(TEXT, TEXTFIELD, LINK, PICTURE, MULTISELECT, TABLE, NUMBER, DATE, TEMPLATE);
-        $selected    = $app->input->get('cid', array(), 'array');
+        $doNotDelete = [TEXT, TEXTFIELD, LINK, PICTURE, MULTISELECT, TABLE, NUMBER, DATE, TEMPLATE];
+        $selected    = $app->input->get('cid', [], 'array');
         $dtIDs       = array_diff($selected, $doNotDelete);
 
         $query = $this->_db->getQuery(true);
@@ -67,15 +71,19 @@ class THM_GroupsModelDynamic_Type extends JModelLegacy
      */
     public function save()
     {
-        $app = JFactory::getApplication();
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
         }
 
-        $data         = $app->input->get('jform', array(), 'array');
+        $data         = $app->input->get('jform', [], 'array');
         $staticTypeID = $data['static_typeID'];
         $defOptions   = THM_GroupsHelperStatic_Type::getOption($staticTypeID);
         $options      = new stdClass();

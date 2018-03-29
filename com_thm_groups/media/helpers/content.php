@@ -34,13 +34,12 @@ class THM_GroupsHelperContent
      */
     public static function canEditState($contentID)
     {
-        // Check admin rights before descending into the mud
         $user = JFactory::getUser();
 
-        // We only concern ourselves with THM Groups access rights.
-        $isAdmin = $user->authorise('core.admin', 'com_thm_groups');
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
 
-        if ($isAdmin) {
+        if ($isAdmin or $isComponentManager) {
             return true;
         }
 
@@ -147,7 +146,7 @@ class THM_GroupsHelperContent
             return false;
         }
 
-        $properties                    = array();
+        $properties                    = [];
         $properties['title']           = $title;
         $properties['alias']           = $alias;
         $properties['path']            = "$path/$alias";
@@ -159,7 +158,7 @@ class THM_GroupsHelperContent
         $properties['created_user_id'] = $profileID;
         $properties['language']        = '*';
 
-        $table = JTable::getInstance('Category', 'JTable', array());
+        $table = JTable::getInstance('Category', 'JTable', []);
 
         // Append category to parent as last child
         $table->setLocation($parentID, 'last-child');
@@ -182,7 +181,7 @@ class THM_GroupsHelperContent
         $user = JFactory::getUser($profileID);
 
         // Remove overhead from name, although honestly they should not be making personal content from non-personal accounts
-        $overhead   = array("(", ")", "Admin", "Webmaster");
+        $overhead   = ["(", ")", "Admin", "Webmaster"];
         $namePieces = explode(" ", str_replace($overhead, '', $user->name));
         $surname    = array_pop($namePieces);
 
@@ -270,9 +269,9 @@ class THM_GroupsHelperContent
             $item->publish_down);
 
         $archive = $item->state == 2 ? 'unarchive' : 'archive';
-        $status .= JHtml::_('actionsdropdown.' . $archive, 'cb' . $index, $task);
+        $status  .= JHtml::_('actionsdropdown.' . $archive, 'cb' . $index, $task);
 
-        $trash = $item->state == -2 ? 'untrash' : 'trash';
+        $trash  = $item->state == -2 ? 'untrash' : 'trash';
         $status .= JHtml::_('actionsdropdown.' . $trash, 'cb' . $index, $task);
 
         $status .= JHtml::_('actionsdropdown.render', JFactory::getDbo()->escape($item->title));
@@ -335,7 +334,7 @@ class THM_GroupsHelperContent
         $app   = JFactory::getApplication();
         $input = $app->input;
 
-        $contentIDs = THM_GroupsHelperComponent::cleanIntCollection($input->get('cid', array(), 'array'));
+        $contentIDs = THM_GroupsHelperComponent::cleanIntCollection($input->get('cid', [], 'array'));
 
         if (empty($contentIDs) or empty($contentIDs[0])) {
             return false;
@@ -351,7 +350,7 @@ class THM_GroupsHelperContent
 
         $taskParts     = explode('.', $app->input->getString('task'));
         $status        = count($taskParts) == 3 ? $taskParts[2] : 'unpublish';
-        $validStatuses = array('publish' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
+        $validStatuses = ['publish' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3];
 
         // Unarchive and untrash equate to unpublish.
         $statusValue = Joomla\Utilities\ArrayHelper::getValue($validStatuses, $status, 0, 'int');
@@ -390,7 +389,7 @@ class THM_GroupsHelperContent
 
         JTable::addIncludePath(JPATH_ROOT . '/libraries/legacy/table');
         $table      = JTable::getInstance('Content', 'JTable');
-        $conditions = array();
+        $conditions = [];
 
         // Update ordering values
         foreach ($contentIDs as $index => $contentID) {
@@ -404,7 +403,7 @@ class THM_GroupsHelperContent
                 }
 
                 // Remember to reorder within position and client_id
-                $condition   = array();
+                $condition   = [];
                 $condition[] = 'catid = ' . (int)$table->catid;
 
                 $found = false;
@@ -418,7 +417,7 @@ class THM_GroupsHelperContent
 
                 if (!$found) {
                     $key          = $table->getKeyName();
-                    $conditions[] = array($table->$key, $condition);
+                    $conditions[] = [$table->$key, $condition];
                 }
             }
         }
@@ -445,7 +444,7 @@ class THM_GroupsHelperContent
         $app   = JFactory::getApplication();
         $input = $app->input;
 
-        $selectedContent = THM_GroupsHelperComponent::cleanIntCollection($input->get('cid', array(), 'array'));
+        $selectedContent = THM_GroupsHelperComponent::cleanIntCollection($input->get('cid', [], 'array'));
         $toggleID        = $input->getInt('id', 0);
         $value           = $input->getBool('value', false);
 
@@ -454,7 +453,7 @@ class THM_GroupsHelperContent
             return false;
         } // The inline toggle was used.
         elseif (empty($selectedContent)) {
-            $selectedContent = array($toggleID);
+            $selectedContent = [$toggleID];
 
             // Toggled values reflect the current value not the desired value
             $value = !$value;
@@ -511,7 +510,7 @@ class THM_GroupsHelperContent
         else {
             $profileID = JFactory::getUser()->id;
             $query->insert('#__thm_groups_content')
-                ->columns(array('usersID', 'contentID', 'featured'))
+                ->columns(['usersID', 'contentID', 'featured'])
                 ->values("'$profileID','$contentID','$value'");
         }
 

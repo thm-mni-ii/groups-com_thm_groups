@@ -56,7 +56,7 @@ class THM_GroupsModelGroup extends JModelLegacy
 
         $insertQuery = $this->_db->getQuery(true);
 
-        $insertQuery->insert('#__thm_groups_role_associations')->columns(array('usergroupsID', 'rolesID'));
+        $insertQuery->insert('#__thm_groups_role_associations')->columns(['usergroupsID', 'rolesID']);
         $insertQuery->values("$groupID, $roleID");
         $this->_db->setQuery($insertQuery);
 
@@ -99,7 +99,7 @@ class THM_GroupsModelGroup extends JModelLegacy
         if (empty($existingTemplateID)) {
             $insertQuery = $this->_db->getQuery(true);
 
-            $insertQuery->insert('#__thm_groups_template_associations')->columns(array('usergroupsID', 'profileID'));
+            $insertQuery->insert('#__thm_groups_template_associations')->columns(['usergroupsID', 'profileID']);
             $insertQuery->values("$groupID, $templateID");
 
             $this->_db->setQuery($insertQuery);
@@ -139,15 +139,19 @@ class THM_GroupsModelGroup extends JModelLegacy
      */
     public function batch()
     {
-        $app = JFactory::getApplication();
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
         }
 
-        $validActions = array('addRole', 'addTemplate', 'removeRole', 'removeTemplate');
+        $validActions = ['addRole', 'addTemplate', 'removeRole', 'removeTemplate'];
         $action       = $app->input->getCmd('batch_action', '');
 
         if (empty($action) or !in_array($action, $validActions)) {
@@ -157,7 +161,7 @@ class THM_GroupsModelGroup extends JModelLegacy
         $isRoleAction = strpos($action, 'Role') !== false;
 
         // Role or Template IDs depending upon the batch used
-        $batchSelected = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('batch', array(), 'array'));
+        $batchSelected = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('batch', [], 'array'));
 
         if (empty($batchSelected)) {
             if ($isRoleAction) {
@@ -169,7 +173,7 @@ class THM_GroupsModelGroup extends JModelLegacy
             return false;
         }
 
-        $groupIDs = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('cid', array(), 'array'));
+        $groupIDs = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('cid', [], 'array'));
 
         // Should not be able to occur because of the checks before the batch is opened
         if (empty($groupIDs)) {
@@ -224,9 +228,13 @@ class THM_GroupsModelGroup extends JModelLegacy
      */
     public function removeRole($roleID = 0, $groupID = 0)
     {
-        $app = JFactory::getApplication();
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
@@ -266,9 +274,13 @@ class THM_GroupsModelGroup extends JModelLegacy
      */
     public function removeTemplate($templateID = 0, $groupID = 0)
     {
-        $app = JFactory::getApplication();
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;

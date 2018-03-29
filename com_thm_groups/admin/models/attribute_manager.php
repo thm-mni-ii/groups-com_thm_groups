@@ -39,13 +39,13 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
      *
      * @param   array $config An optional associative array of configuration settings.
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
-        $config['filter_fields'] = array(
+        $config['filter_fields'] = [
             'attribute.id',
             'attribute.name',
             'dynamic.name'
-        );
+        ];
 
         parent::__construct($config);
     }
@@ -59,8 +59,8 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
     {
         $ordering  = $this->state->get('list.ordering');
         $direction = $this->state->get('list.direction');
+        $headers   = [];
 
-        $headers                = array();
         $headers['order']       = JHtml::_('searchtools.sort', '', 'attribute.ordering', $direction, $ordering, null,
             'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2');
         $headers['checkbox']    = '';
@@ -85,7 +85,7 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
     public function getItems()
     {
         $items  = parent::getItems();
-        $return = array();
+        $return = [];
 
         if (empty($items)) {
             return $return;
@@ -94,32 +94,27 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
         $url         = "index.php?option=com_thm_groups&view=attribute_edit&id=";
         $sortIcon    = '<span class="sortable-handlerXXX"><i class="icon-menu"></i></span>';
         $generalLock = '<span class="icon-lock hasTooltip" title="XXXX"></span>';
-        $doNotDelete = array(self::FORENAME, self::SURNAME, self::EMAIL, self::TITLE, self::POSTTITLE);
-        $groupsAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
-        $index       = 0;
+        $doNotDelete = [self::FORENAME, self::SURNAME, self::EMAIL, self::TITLE, self::POSTTITLE];
 
-        $return['attributes'] = array('class' => 'ui-sortable');
+        $user               = JFactory::getUser();
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+        $canEdit            = ($isAdmin or $isComponentManager);
 
+        $return['attributes'] = ['class' => 'ui-sortable'];
+
+        $index = 0;
         foreach ($items as $item) {
             $iconClass                    = '';
-            $return[$index]               = array();
-            $return[$index]['attributes'] = array('class' => 'order nowrap center', 'id' => $item->id);
+            $return[$index]               = [];
+            $return[$index]['attributes'] = ['class' => 'order nowrap center', 'id' => $item->id];
 
-            $return[$index]['ordering']['attributes'] = array(
+            $return[$index]['ordering']['attributes'] = [
                 'class' => "order nowrap center",
                 'style' => "width: 40px;"
-            );
+            ];
 
-            if (!$groupsAdmin) {
-                $iconClass                           = ' inactive';
-                $return[$index]['ordering']['value'] = str_replace('XXX', $iconClass, $sortIcon);
-                $return[$index][0]                   = '';
-                $return[$index][1]                   = $item->id;
-                $return[$index][2]                   = $item->name;
-
-                $published         = empty($item->published) ? 'unpublish' : 'publish';
-                $return[$index][3] = '<span class="icon-' . $published . '"></span>';
-            } else {
+            if ($canEdit) {
                 $orderingActive = $this->state->get('list.ordering') == 'attribute.ordering';
 
                 if (!$orderingActive) {
@@ -133,11 +128,21 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
 
                 if (in_array($item->id, $doNotDelete)) {
                     $lockTip = JHtml::tooltipText($item->name, "COM_THM_GROUPS_CANT_DELETE_PREDEFINED_ELEMENT");
-                    $lock .= in_array($item->id, $doNotDelete) ? str_replace('XXXX', $lockTip, $generalLock) : '';
+                    $lock    .= in_array($item->id, $doNotDelete) ? str_replace('XXXX', $lockTip, $generalLock) : '';
                 }
 
                 $return[$index][2] = $lock . JHtml::_('link', $url . $item->id, $item->name);
                 $return[$index][3] = $this->getToggle($item->id, $item->published, 'attribute', '', 'published');
+
+            } else {
+                $iconClass                           = ' inactive';
+                $return[$index]['ordering']['value'] = str_replace('XXX', $iconClass, $sortIcon);
+                $return[$index][0]                   = '';
+                $return[$index][1]                   = $item->id;
+                $return[$index][2]                   = $item->name;
+
+                $published         = empty($item->published) ? 'unpublish' : 'publish';
+                $return[$index][3] = '<span class="icon-' . $published . '"></span>';
             }
 
             $return[$index][4] = $item->dynamic_type_name;
@@ -163,7 +168,7 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
         $query->select($select)->from('#__thm_groups_attribute AS attribute')
             ->innerJoin('#__thm_groups_dynamic_type AS dynamic ON attribute.dynamic_typeID = dynamic.id');
 
-        $this->setIDFilter($query, 'attribute.published', array('filter.published'));
+        $this->setIDFilter($query, 'attribute.published', ['filter.published']);
 
         $search = $this->getState('filter.search');
 

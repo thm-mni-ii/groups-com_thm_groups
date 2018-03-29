@@ -67,18 +67,20 @@ class THM_GroupsViewTemplate_Manager extends THM_GroupsViewList
     {
         JToolBarHelper::title(JText::_('COM_THM_GROUPS_TEMPLATE_MANAGER_TITLE'), 'template_manager');
 
-        if (JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
-            JToolBarHelper::addNew('template.add', 'COM_THM_GROUPS_NEW', false);
-            JToolBarHelper::editList('template.edit', 'COM_THM_GROUPS_EDIT');
-            JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM_DEPENDENCIES', 'template.delete',
-                'JTOOLBAR_DELETE');
+        JToolBarHelper::addNew('template.add', 'COM_THM_GROUPS_NEW', false);
+        JToolBarHelper::editList('template.edit', 'COM_THM_GROUPS_EDIT');
+        JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM_DEPENDENCIES', 'template.delete',
+            'JTOOLBAR_DELETE');
 
-            $bar   = JToolbar::getInstance('toolbar');
-            $title = JText::_('COM_THM_GROUPS_BATCH_GROUPS');
-            $html  = "<button id='add_group_to_profile_btn' data-toggle='modal' data-target='#collapseModal' class='btn btn-small'>";
-            $html .= "<i class='icon-users' title='$title'></i> $title</button>";
+        $bar   = JToolbar::getInstance('toolbar');
+        $title = JText::_('COM_THM_GROUPS_BATCH_GROUPS');
+        $html  = "<button id='add_group_to_profile_btn' data-toggle='modal' data-target='#collapseModal' class='btn btn-small'>";
+        $html  .= "<i class='icon-users' title='$title'></i> $title</button>";
 
-            $bar->appendButton('Custom', $html, 'batch');
+        $bar->appendButton('Custom', $html, 'batch');
+
+        $user = JFactory::getUser();
+        if ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups')) {
             JToolBarHelper::divider();
             JToolBarHelper::preferences('com_thm_groups');
         }

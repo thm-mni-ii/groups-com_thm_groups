@@ -29,25 +29,9 @@ abstract class THM_GroupsModelList extends JModelList
 
     protected $defaultStart = '0';
 
-    protected $defaultFilters = array();
+    protected $defaultFilters = [];
 
     public $actions = null;
-
-    /**
-     * Constructor.
-     *
-     * @param   array $config An optional associative array of configuration settings.
-     */
-    public function __construct($config = array())
-    {
-        parent::__construct($config);
-
-        $path = JPATH_ROOT . "/media/com_thm_groups/helpers/componentHelper.php";
-        /** @noinspection PhpIncludeInspection */
-        require_once $path;
-
-        THM_GroupsHelperComponent::addActions($this);
-    }
 
     /**
      * Method to get the data that should be injected in the form.
@@ -61,11 +45,11 @@ abstract class THM_GroupsModelList extends JModelList
 
         // Pre-create the list options
         if (!property_exists($data, 'list')) {
-            $data->list = array();
+            $data->list = [];
         }
 
         if (!property_exists($data, 'filter')) {
-            $data->filter = array();
+            $data->filter = [];
         }
 
         // Joomla doesn't fill these correctly but requires some of them
@@ -141,7 +125,7 @@ abstract class THM_GroupsModelList extends JModelList
         $app = JFactory::getApplication();
 
         // Receive & set filters
-        $filters = $app->getUserStateFromRequest($this->context . '.filter', 'filter', array(), 'array');
+        $filters = $app->getUserStateFromRequest($this->context . '.filter', 'filter', [], 'array');
         if (!empty($filters)) {
             foreach ($filters as $name => $value) {
                 $this->setState('filter.' . $name, $value);
@@ -152,7 +136,7 @@ abstract class THM_GroupsModelList extends JModelList
             }
         }
 
-        $list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array');
+        $list = $app->getUserStateFromRequest($this->context . '.list', 'list', [], 'array');
         $this->setListState($list);
 
         $validLimit = (isset($list['limit']) && is_numeric($list['limit']));
@@ -177,7 +161,7 @@ abstract class THM_GroupsModelList extends JModelList
         $ordering         = $validReqOrdering ? $list['ordering'] : $this->defaultOrdering;
 
         $validReqDirection = (!empty($list['direction']) and in_array(strtoupper($list['direction']),
-                array('ASC', 'DESC', '')));
+                ['ASC', 'DESC', '']));
         $direction         = $validReqDirection ? $list['direction'] : $this->defaultDirection;
 
         $session = JFactory::getSession();
@@ -190,7 +174,7 @@ abstract class THM_GroupsModelList extends JModelList
         $this->setState('list.ordering', $ordering);
         $this->setState('list.direction', $direction);
 
-        $alreadyProcessed = array('ordering, direction, fullordering');
+        $alreadyProcessed = ['ordering, direction, fullordering'];
         foreach ($list as $item => $value) {
             if (!in_array($item, $alreadyProcessed)) {
                 $this->setState("list.$item", $value);
@@ -217,7 +201,7 @@ abstract class THM_GroupsModelList extends JModelList
         $orderingParts = explode(' ', $list['fullordering']);
         if (count($orderingParts) == 2) {
             $plausibleOrdering = $orderingParts[0] != 'null';
-            $validDirection    = in_array(strtoupper($orderingParts[1]), array('ASC', 'DESC', ''));
+            $validDirection    = in_array(strtoupper($orderingParts[1]), ['ASC', 'DESC', '']);
             if ($plausibleOrdering and $validDirection) {
                 $ordering  = $orderingParts[0];
                 $direction = $orderingParts[1];
@@ -241,13 +225,13 @@ abstract class THM_GroupsModelList extends JModelList
         $iconClass = empty($value) ? 'unpublish' : 'publish';
         $icon      = '<i class="icon-' . $iconClass . '"></i>';
 
-        $attributes          = array();
+        $attributes          = [];
         $attributes['title'] = $tip;
         $attributes['class'] = 'btn btn-micro hasTooltip';
         $attributes['class'] .= empty($value) ? ' inactive' : '';
 
-        $url = "index.php?option=com_thm_groups&task=" . $controller . ".toggle&id=" . $id . "&value=" . $value;
-        $url .= empty($attribute) ? '' : "&attribute=$attribute";
+        $url  = "index.php?option=com_thm_groups&task=" . $controller . ".toggle&id=" . $id . "&value=" . $value;
+        $url  .= empty($attribute) ? '' : "&attribute=$attribute";
         $link = JHtml::_('link', $url, $icon, $attributes);
 
         return '<div class="button-grp">' . $link . '</div>';
@@ -292,7 +276,7 @@ abstract class THM_GroupsModelList extends JModelList
             return;
         }
         $search  = '%' . $this->_db->escape($userInput, true) . '%';
-        $wherray = array();
+        $wherray = [];
         foreach ($columnNames as $name) {
             $wherray[] = "$name LIKE '$search'";
         }

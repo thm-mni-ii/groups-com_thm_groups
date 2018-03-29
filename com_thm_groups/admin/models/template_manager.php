@@ -30,13 +30,9 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
      *
      * @param   array $config An optional associative array of configuration settings.
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
-        $config['filter_fields'] = array(
-            'id',
-            'name',
-            'order'
-        );
+        $config['filter_fields'] = ['id', 'name', 'order'];
 
         parent::__construct($config);
     }
@@ -51,7 +47,7 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
         $ordering  = $this->state->get('list.ordering');
         $direction = $this->state->get('list.direction');
 
-        $headers             = array();
+        $headers             = [];
         $headers['order']    = JHtml::_('searchtools.sort', '', 'p.ordering', $direction, $ordering, null, 'asc',
             'JGRID_HEADING_ORDERING', 'icon-menu-2');
         $headers['checkbox'] = '';
@@ -72,7 +68,7 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
      */
     public function getHiddenFields()
     {
-        $fields = array();
+        $fields = [];
 
         // Hidden fields for batch processing
         $fields[] = '<input type="hidden" name="groupID" value="">';
@@ -89,33 +85,37 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
     public function getItems()
     {
         $items  = parent::getItems();
-        $return = array();
+        $return = [];
 
         if (empty($items)) {
             return $return;
         }
 
-        $url         = "index.php?option=com_thm_groups&view=template_edit&id=";
-        $sortIcon    = '<span class="sortable-handlerXXX"><i class="icon-menu"></i></span>';
-        $groupsAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
-        $index       = 0;
+        $url      = "index.php?option=com_thm_groups&view=template_edit&id=";
+        $sortIcon = '<span class="sortable-handlerXXX"><i class="icon-menu"></i></span>';
 
-        $return['attributes'] = array('class' => 'ui-sortable');
+        $user               = JFactory::getUser();
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+        $canEdit            = ($isAdmin or $isComponentManager);
+
+        $index                = 0;
+        $return['attributes'] = ['class' => 'ui-sortable'];
 
         foreach ($items as $key => $item) {
             $orderingActive = $this->state->get('list.ordering') == 'p.ordering';
 
-            $return[$index]                           = array();
-            $return[$index]['attributes']             = array(
+            $return[$index]                           = [];
+            $return[$index]['attributes']             = [
                 'class' => 'order center hidden-phone',
                 'id'    => $item->id
-            );
-            $return[$index]['ordering']['attributes'] = array(
+            ];
+            $return[$index]['ordering']['attributes'] = [
                 'class' => 'order center hidden-phone',
                 'style' => "width: 40px;"
-            );
+            ];
 
-            if (!$groupsAdmin) {
+            if (!$canEdit) {
                 $iconClass                           = ' inactive';
                 $return[$index]['ordering']['value'] = str_replace('XXX', $iconClass, $sortIcon);
                 $return[$index]['checkbox']          = '';
@@ -127,8 +127,7 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
                 $return[$index]['checkbox']          = JHtml::_('grid.id', $index, $item->id);
                 $return[$index]['id']                = $item->id;
 
-                $url                    = "index.php?option=com_thm_groups&view=template_edit&id=$item->id";
-                $return[$index]['name'] = !empty($item->name) ? JHtml::_('link', $url, $item->name) : '';
+                $return[$index]['name'] = !empty($item->name) ? JHtml::_('link', $url . $item->id, $item->name) : '';
             }
 
             $return[$index]['profiles'] = $this->getProfileGroups($item->id);
@@ -149,7 +148,7 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
 
         $query->select('p.id, p.name, p.ordering')->from('#__thm_groups_templates AS p');
 
-        $this->setSearchFilter($query, array('p.name'));
+        $this->setSearchFilter($query, ['p.name']);
         $this->setOrdering($query);
 
         return $query;
@@ -183,7 +182,7 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
         }
 
         $usersAdmin     = JFactory::getUser()->authorise('core.admin', 'com_users');
-        $return         = array();
+        $return         = [];
         $buttonTemplate = '<a onclick="deleteGroupAssociation(GROUPID,TEMPLATEID)"><span class="icon-trash"></span></a>';
 
         foreach ($groups as $group) {

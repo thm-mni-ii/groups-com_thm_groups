@@ -32,16 +32,19 @@ class THM_GroupsModelRole extends JModelLegacy
      */
     public function batch()
     {
-        $app     = JFactory::getApplication();
-        $isAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!$isAdmin) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
         }
 
-        $roleIDs = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('cid', array(), 'array'));
+        $roleIDs = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('cid', [], 'array'));
 
         if (empty($roleIDs)) {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ROLE_SELECTED'), 'warning');
@@ -49,7 +52,7 @@ class THM_GroupsModelRole extends JModelLegacy
             return false;
         }
 
-        $groupIDs = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('batch', array(), 'array'));
+        $groupIDs = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('batch', [], 'array'));
 
         if (empty($groupIDs)) {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_GROUP_SELECTED'), 'warning');
@@ -57,8 +60,8 @@ class THM_GroupsModelRole extends JModelLegacy
             return false;
         }
 
-        $validActions  = array('add', 'delete');
-        $actions       = $app->input->get('batch_action', array(), 'array');
+        $validActions  = ['add', 'delete'];
+        $actions       = $app->input->get('batch_action', [], 'array');
         $invalidAction = (empty($actions) or empty($actions[0]) or !in_array($actions[0],
                 $validActions)) ? true : false;
 
@@ -113,7 +116,7 @@ class THM_GroupsModelRole extends JModelLegacy
         }
 
         // Build an array with unique usergroups and their associated roles
-        $groups = array();
+        $groups = [];
 
         foreach ($groupRoles as $groupRole) {
             $groups[$groupRole['groupID']][$groupRole['roleID']] = $groupRole['roleID'];
@@ -191,16 +194,19 @@ class THM_GroupsModelRole extends JModelLegacy
      */
     public function delete()
     {
-        $app     = JFactory::getApplication();
-        $isAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!$isAdmin) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
         }
 
-        $roleIDs = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('cid', array(), 'array'));
+        $roleIDs = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('cid', [], 'array'));
 
         if (empty($roleIDs)) {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ROLE_SELECTED'), 'warning');
@@ -232,10 +238,13 @@ class THM_GroupsModelRole extends JModelLegacy
      */
     public function deleteGroupAssociation()
     {
-        $app     = JFactory::getApplication();
-        $isAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!$isAdmin) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
@@ -269,16 +278,19 @@ class THM_GroupsModelRole extends JModelLegacy
      */
     public function save()
     {
-        $app     = JFactory::getApplication();
-        $isAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!$isAdmin) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
         }
 
-        $data  = $app->input->get('jform', array(), 'array');
+        $data  = $app->input->get('jform', [], 'array');
         $table = JTable::getInstance('roles', 'thm_groupsTable');
         $table->save($data);
 
@@ -296,16 +308,19 @@ class THM_GroupsModelRole extends JModelLegacy
      */
     public function saveorder($pks = null, $order = null)
     {
-        $isAdmin = JFactory::getUser()->authorise('core.admin', 'com_thm_groups');
+        $user = JFactory::getUser();
 
-        if (!$isAdmin) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
             return false;
         }
 
         JTable::addIncludePath(JPATH_ROOT . '/administrator/components/com_thm_groups/tables/');
         $table = $this->getTable('Roles', 'THM_GroupsTable');
 
-        $conditions = array();
+        $conditions = [];
 
         if (empty($pks)) {
             return false;

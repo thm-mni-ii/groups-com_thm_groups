@@ -31,15 +31,19 @@ class THM_GroupsModelProfile extends JModelLegacy
      */
     public function batch()
     {
-        $app = JFactory::getApplication();
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
         }
 
-        $selectedUsers = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('cid', array(), 'array'));
+        $selectedUsers = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('cid', [], 'array'));
 
         if (empty($selectedUsers)) {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_PROFILE_SELECTED'), 'error');
@@ -111,9 +115,13 @@ class THM_GroupsModelProfile extends JModelLegacy
      */
     public function deleteGroupAssociation()
     {
-        $app = JFactory::getApplication();
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
@@ -122,9 +130,9 @@ class THM_GroupsModelProfile extends JModelLegacy
         $profileID = $app->input->getInt('profileID', 0);
         $groupID   = $app->input->getInt('groupID', 0);
 
-        $userAssocs       = $this->getUserAssociations(array($profileID));
+        $userAssocs       = $this->getUserAssociations([$profileID]);
         $assocIDs         = $this->getAssocIDs($groupID);
-        $disposableAssocs = array();
+        $disposableAssocs = [];
 
         foreach ($userAssocs as $key => $assoc) {
             if (in_array($assoc['assocID'], $assocIDs)) {
@@ -247,9 +255,13 @@ class THM_GroupsModelProfile extends JModelLegacy
      */
     public function deleteRoleAssociation()
     {
-        $app = JFactory::getApplication();
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
@@ -334,10 +346,10 @@ class THM_GroupsModelProfile extends JModelLegacy
         } catch (Exception $exception) {
             JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-            return array();
+            return [];
         }
 
-        return empty($assocIDs) ? array() : $assocIDs;
+        return empty($assocIDs) ? [] : $assocIDs;
     }
 
     /**
@@ -349,7 +361,7 @@ class THM_GroupsModelProfile extends JModelLegacy
      */
     private function getGroupAssociations($requestedAssocs)
     {
-        $assocs = array();
+        $assocs = [];
 
         foreach ($requestedAssocs as $requestedAssoc) {
             foreach ($requestedAssoc['roles'] as $role) {
@@ -365,7 +377,7 @@ class THM_GroupsModelProfile extends JModelLegacy
                 } catch (Exception $exception) {
                     JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-                    return array();
+                    return [];
                 }
 
                 $assocs[$assocID] = $assocID;
@@ -437,10 +449,10 @@ class THM_GroupsModelProfile extends JModelLegacy
         } catch (Exception $exception) {
             JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-            return array();
+            return [];
         }
 
-        return empty($assocs) ? array() : $this->_db->loadAssocList();
+        return empty($assocs) ? [] : $this->_db->loadAssocList();
     }
 
     /**
@@ -504,7 +516,7 @@ class THM_GroupsModelProfile extends JModelLegacy
     public function save()
     {
         $app  = JFactory::getApplication();
-        $data = $app->input->get('jform', array(), 'array');
+        $data = $app->input->get('jform', [], 'array');
 
         // Ensuring int will fail access checks on manipulated ids.
         $profileID = $data['profileID'];
@@ -561,7 +573,7 @@ class THM_GroupsModelProfile extends JModelLegacy
         $filename = $input->get('filename');
 
         // TODO: Make these configurable
-        $allowedExtensions = array('bmp', 'gif', 'jpg', 'jpeg', 'png', 'BMP', 'GIF', 'JPG', 'JPEG', 'PNG');
+        $allowedExtensions = ['bmp', 'gif', 'jpg', 'jpeg', 'png', 'BMP', 'GIF', 'JPG', 'JPEG', 'PNG'];
         $invalid           = ($file['size'] > 10000000 or !in_array(pathinfo($filename, PATHINFO_EXTENSION),
                 $allowedExtensions));
 
@@ -708,7 +720,7 @@ class THM_GroupsModelProfile extends JModelLegacy
             return true;
         }
 
-        $query->insert('#__thm_groups_associations')->columns(array('usersID', 'usergroups_rolesID'));
+        $query->insert('#__thm_groups_associations')->columns(['usersID', 'usergroups_rolesID']);
         $this->_db->setQuery($query);
 
         try {
@@ -737,7 +749,7 @@ class THM_GroupsModelProfile extends JModelLegacy
             ->where("user_id IN ('" . implode("','", $profileIDs) . "')");
         $query = $this->_db->getQuery(true);
         $query->insert('#__user_usergroup_map')->columns('user_id, group_id');
-        $values = array();
+        $values = [];
 
         foreach ($profileIDs as $profileID) {
             foreach ($batchData as $groupData) {
@@ -771,16 +783,20 @@ class THM_GroupsModelProfile extends JModelLegacy
      */
     public function toggle()
     {
-        $app = JFactory::getApplication();
+        $app  = JFactory::getApplication();
+        $user = JFactory::getUser();
 
-        if (!JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if (!($isAdmin or $isComponentManager)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
         }
 
         $input         = $app->input;
-        $selectedUsers = THM_GroupsHelperComponent::cleanIntCollection($input->get('cid', array(), 'array'));
+        $selectedUsers = THM_GroupsHelperComponent::cleanIntCollection($input->get('cid', [], 'array'));
         $toggleID      = $input->getInt('id', 0);
         $value         = $input->getBool('value', false);
 
@@ -789,7 +805,7 @@ class THM_GroupsModelProfile extends JModelLegacy
             return false;
         } // Toggle button was used.
         elseif (empty($selectedUsers)) {
-            $selectedUsers = array($toggleID);
+            $selectedUsers = [$toggleID];
 
             // Toggled values reflect the current value not the desired value
             $value = !$value;

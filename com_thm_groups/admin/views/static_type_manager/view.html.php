@@ -55,13 +55,12 @@ class THM_GroupsViewStatic_Type_Manager extends THM_GroupsViewList
      */
     protected function addToolbar()
     {
-        $user = JFactory::getUser();
-
         JToolBarHelper::title(
             JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_STATIC_TYPE_MANAGER'), 'static_types_manager'
         );
 
-        if ($user->authorise('core.admin', 'com_thm_groups') && $user->authorise('core.manage', 'com_thm_groups')) {
+        $user = JFactory::getUser();
+        if ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups')) {
             JToolBarHelper::divider();
             JToolBarHelper::preferences('com_thm_groups');
         }

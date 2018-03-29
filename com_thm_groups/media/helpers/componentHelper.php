@@ -21,27 +21,6 @@
 class THM_GroupsHelperComponent
 {
     /**
-     * Set variables for user actions.
-     *
-     * @param   object &$object the view context calling the function
-     *
-     * @return void
-     */
-    public static function addActions(&$object)
-    {
-        $user   = JFactory::getUser();
-        $result = new JObject;
-
-        $path    = JPATH_ADMINISTRATOR . '/components/com_thm_groups/access.xml';
-        $actions = JAccess::getActionsFromFile($path, "/access/section[@name='component']/");
-        foreach ($actions as $action) {
-            $result->set($action->name, $user->authorise($action->name, 'com_thm_groups'));
-        }
-
-        $object->actions = $result;
-    }
-
-    /**
      * Configure the Linkbar.
      *
      * @param   object &$view the view context calling the function
@@ -125,7 +104,7 @@ class THM_GroupsHelperComponent
         $name = $model->get('name');
 
         // Views accessible with component create/edit access
-        $resourceEditViews = array('attribute_edit', 'dynamic_type_edit', 'profile_edit', 'role_edit', 'template_edit');
+        $resourceEditViews = ['attribute_edit', 'dynamic_type_edit', 'profile_edit', 'role_edit', 'template_edit'];
         if (in_array($name, $resourceEditViews)) {
             if ((int)$itemID > 0) {
                 return $model->actions->{'core.edit'};
@@ -164,21 +143,6 @@ class THM_GroupsHelperComponent
     }
 
     /**
-     * Checks if the current user is a super admin in joomla or a admin of a thm_groups component. Content access rights
-     * are handled by com content.
-     *
-     * @return boolean  true if the user is a site or component administrator
-     */
-    public static function canEdit()
-    {
-        $user               = JFactory::getUser();
-        $isSuperUser        = $user->authorise('core.admin');
-        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-
-        return ($isSuperUser OR $isComponentManager) ? true : false;
-    }
-
-    /**
      * Method to check if the current user can edit the profile
      *
      * @param   int $profileID the id of the profile user
@@ -193,10 +157,10 @@ class THM_GroupsHelperComponent
             return false;
         }
 
-        $isAdmin = ($user->authorise('core.admin', 'com_thm_groups') or $user->authorise('core.manage',
-                'com_thm_groups'));
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
 
-        if ($isAdmin) {
+        if ($isAdmin or $isComponentManager) {
             return true;
         }
 
@@ -215,12 +179,12 @@ class THM_GroupsHelperComponent
     {
         $conf = JFactory::getConfig();
 
-        $options = array(
+        $options = [
             'defaultgroup' => 'com_thm_groups',
             'cachebase'    => JFactory::getApplication()->isClient('administrator') ?
                 JPATH_ADMINISTRATOR . '/cache' : $conf->get('cache_path', JPATH_SITE . '/cache'),
             'result'       => true,
-        );
+        ];
 
         try {
             $cache = JCache::getInstance('callback', $options);
@@ -251,7 +215,7 @@ class THM_GroupsHelperComponent
     {
         if (!is_array($array)) {
             if (!is_object($array)) {
-                return array();
+                return [];
             }
 
             $array = Joomla\Utilities\ArrayHelper::fromObject($array);
