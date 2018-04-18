@@ -61,14 +61,14 @@ class THM_GroupsHelperBatch
         $query = $dbo->getQuery(true);
 
         // TODO: Explain the logic behind this
-        $select = 'a.id, a.title, COUNT(DISTINCT b.id) AS level';
+        $select = 'ug.id, ug.title, COUNT(DISTINCT ugTemp.id) AS level';
         $query->select($select);
-        $query->from('#__usergroups as a');
-        $query->leftJoin('#__usergroups AS b ON a.lft > b.lft AND a.rgt < b.rgt');
-        $query->leftJoin('#__thm_groups_role_associations AS c ON a.id = c.usergroupsID');
-        $query->where('a.id NOT IN  (1,2)');
-        $query->group('a.id, a.title, a.lft, a.rgt');
-        $query->order('a.lft ASC');
+        $query->from('#__usergroups as ug');
+        $query->leftJoin('#__usergroups AS ugTemp ON ug.lft > ugTemp.lft AND ug.rgt < ugTemp.rgt');
+        $query->leftJoin('#__thm_groups_role_associations AS roleAssoc ON ug.id = roleAssoc.usergroupsID');
+        $query->where('ug.id NOT IN  (1,2)');
+        $query->group('ug.id, ug.title, ug.lft, ug.rgt');
+        $query->order('ug.lft ASC');
 
         $dbo->setQuery($query);
 

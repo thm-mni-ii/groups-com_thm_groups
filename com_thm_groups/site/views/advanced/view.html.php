@@ -97,7 +97,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $query = $dbo->getQuery(true);
         $query->select('pa.attributeID, pa.value');
         $query->from('#__thm_groups_profile_attributes AS pa');
-        $query->where('usersID = ' . $profileID);
+        $query->where('profileID = ' . $profileID);
         $query->where('attributeID IN (1,2)');
 
         $dbo->setQuery($query);

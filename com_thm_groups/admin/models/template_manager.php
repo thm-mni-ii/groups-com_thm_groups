@@ -146,9 +146,9 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
     {
         $query = $this->_db->getQuery(true);
 
-        $query->select('p.id, p.name, p.ordering')->from('#__thm_groups_templates AS p');
+        $query->select('id, name, ordering')->from('#__thm_groups_templates');
 
-        $this->setSearchFilter($query, ['p.name']);
+        $this->setSearchFilter($query, ['name']);
         $this->setOrdering($query);
 
         return $query;
@@ -165,10 +165,10 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
     {
         $query = $this->_db->getQuery(true);
 
-        $query->select('ug.id, ug.title');
-        $query->from('#__thm_groups_template_associations AS pug');
-        $query->innerJoin('#__usergroups AS ug ON ug.id = pug.usergroupsID');
-        $query->where("pug.profileID = '$templateID'");
+        $query->select('usergr.id, usergr.title');
+        $query->from('#__thm_groups_template_associations AS tempAssoc');
+        $query->innerJoin('#__usergroups AS usergr ON usergr.id = tempAssoc.usergroupsID');
+        $query->where("tempAssoc.templateID = '$templateID'");
         $this->_db->setQuery($query);
 
         try {

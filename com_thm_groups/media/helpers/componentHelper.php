@@ -76,11 +76,6 @@ class THM_GroupsHelperComponent
             'index.php?option=com_thm_groups&view=role_manager',
             $viewName == 'role_manager'
         );
-        JHtmlSidebar::addEntry(
-            JText::_('COM_THM_GROUPS_STATIC_TYPE_MANAGER'),
-            'index.php?option=com_thm_groups&view=static_type_manager',
-            $viewName == 'static_type_manager'
-        );
 
         $view->sidebar = JHtmlSidebar::render();
     }

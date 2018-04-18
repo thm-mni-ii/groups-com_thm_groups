@@ -59,6 +59,207 @@ class Com_THM_GroupsInstallerScript
     }
 
     /**
+     * Import all Groups that exist in Joomla to THM_Groups and
+     * set the member role as default.
+     */
+    private function importGroups()
+    {
+        $dbo     = JFactory::getDbo();
+        $query   = $dbo->getQuery(true);
+        $groups = [];
+
+        $query->select("id")
+            ->from("#__usergroups");
+        $dbo->setQuery($query);
+
+        try {
+            $groups = $dbo->loadAssocList();
+        } catch (RuntimeException $exception) {
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
+        }
+
+        // Set member role to all groups
+        if (!empty($groups)) {
+            foreach ($groups as $group) {
+                $dbo->transactionStart();
+
+                $query->clear();
+                $query->insert("#__thm_groups_role_associations")
+                    ->columns("usergroupsID, rolesID")
+                    ->values($group["id"] . ", 1");
+
+                $dbo->setQuery($query);
+
+                try {
+                    $dbo->execute();
+                    $dbo->transactionCommit();
+                } catch (RuntimeException $exception) {
+                    JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
+                    $dbo->transactionRollback();
+                }
+            }
+        }
+    }
+
+    /**
+     * Assoicate all groups to a user profile with the default member
+     * role.
+     *
+     * @param $user
+     */
+    private function associateProfileGroups($user)
+    {
+        $dbo     = JFactory::getDbo();
+        $query   = $dbo->getQuery(true);
+
+        // Get group and association id for the user.
+        $query->select("usr.group_id, roleAssoc.ID")
+            ->from("#__user_usergroup_map AS usr, #__thm_groups_role_associations AS roleAssoc")
+            ->where("usr.user_id = " . $user["id"] . " AND roleAssoc.usergroupsID = usr.group_id");
+
+        $dbo->setQuery($query);
+        $assignedGroups = [];
+
+        try {
+            $assignedGroups = $dbo->loadAssocList();
+        } catch (RuntimeException $exception) {
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
+        }
+
+        // Set profile associated groups and roles to be member.
+        if (!empty($assignedGroups)) {
+            foreach ($assignedGroups as $userGroup) {
+                if (($userGroup["group_id"] != 1) && ($userGroup["group_id"] != 2)) {
+                    $dbo->transactionStart();
+
+                    $query->clear();
+                    $query->insert("#__thm_groups_associations")
+                        ->columns("profileID, role_assocID")
+                        ->values($user["id"] . ", " . $userGroup["ID"]);
+
+                    $dbo->SetQuery($query);
+
+                    try {
+                        $dbo->execute();
+                        $dbo->transactionCommit();
+                    } catch (RuntimeException $exception) {
+                        JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
+                        $dbo->transactionRollback();
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Creates a THM_Groups profile for each existing Joomla user.
+     */
+    private function createProfiles()
+    {
+        $dbo     = JFactory::getDbo();
+        $query   = $dbo->getQuery(true);
+        $users = [];
+        $attribs = [];
+
+        // Get all users to import
+        $query->select("id, name, email")
+            ->from("#__users");
+        $dbo->setQuery($query);
+
+        try {
+            $users = $dbo->loadAssocList();
+        } catch (RuntimeException $exception) {
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
+        }
+
+        // Get all attributes for the profiles
+        $query->clear();
+        $query->select("id, name")
+            ->from("#__thm_groups_attribute");
+        $dbo->setQuery($query);
+
+        try {
+            $attribs = $dbo->loadAssocList();
+        } catch (RuntimeException $exception) {
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
+        }
+
+        // Create a profile entry for all existing users. Set profile associated groups and roles.
+        if (!empty($users) && !empty($attribs)) {
+            foreach ($users as $user) {
+                // Avoid unsupported char '
+                if (strpos($user['name'], "'") != false) {
+                    continue;
+                }
+
+                $names = str_word_count($user['name'], 1, '-´');
+
+                $dbo->transactionStart();
+                $query->clear();
+
+                // Insert profile for this user.
+                $query->insert("#__thm_groups_profiles")
+                    ->columns("id, published, injoomla, canEdit, qpPublished")
+                    ->values($user['id'] . ", 0, 1, 1, 0");
+
+                $dbo->setQuery($query);
+
+                try {
+                    $dbo->execute();
+                    $dbo->transactionCommit();
+
+                } catch (RuntimeException $exception) {
+                    JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
+                    $dbo->transactionRollback();
+                }
+
+                // Create entries for all attributes in the current profile.
+                foreach ($attribs as $attr) {
+                    $dbo->transactionStart();
+                    $query->clear();
+
+                    // Profile value.
+                    $value = '';
+
+                    // Check if Joomla user name can be set for profile attribute.
+                    if (($attr['id'] == 1) && (count($names) == 2)) {
+                        $value = $names[0];
+                    } elseif (($attr['id'] == 1)) {
+                        $value = '';
+                    } elseif (($attr['id'] == 2) && (count($names) == 2)) {
+                        $value = $names[1];
+                    } elseif (($attr['id'] == 2) && (count($names) > 2)) {
+                        $value = $user['name'];
+                    }
+
+                    // Set Joomla user email.
+                    if ($attr['id'] == 4) {
+                        $value = $user['email'];
+                    }
+
+                    // Insert the profile attribute.
+                    $query->insert("#__thm_groups_profile_attributes")
+                        ->columns("profileID, attributeID, value, published")
+                        ->values($user['id'] . ", " . $attr['id'] . ", '" . $value . "', 1");
+
+                    $dbo->setQuery($query);
+
+                    try {
+                        $dbo->execute();
+                        $dbo->transactionCommit();
+                    } catch (RuntimeException $exception) {
+                        JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
+                        $dbo->transactionRollback();
+                    }
+                }
+
+                // Assoicate groups and roles to this profile.
+                $this->associateProfileGroups($user);
+            }
+        }
+    }
+
+    /**
      * Install runs after the database scripts are executed. If the extension is new, the install method is run.
      *
      * @param   $parent  is the class calling this method.
@@ -67,6 +268,14 @@ class Com_THM_GroupsInstallerScript
      */
     public function install($parent)
     {
+        // Import Joomla groups to thm_groups and set member role to default.
+        $this->importGroups();
+
+        // Import Joomla users to thm_groups and add a profile for each.
+        $this->createProfiles();
+
+        // TODO add standard profile template to standard groups
+        // Creates a folder for all user profile pictures.
         return $this->createImageFolder();
     }
 
@@ -120,56 +329,69 @@ class Com_THM_GroupsInstallerScript
             }
         }
 
-        // Define FK's for groups tables
-        // Table name => foreign key, desired fk name, referenced table name, referenced primary key, optional
+        /**
+        * Define FK's for groups table.
+        *
+        * $foreignKeys:
+        * Table name => [foreign key, desired fk name, referenced table name, referenced primary key,
+        * Changed referenced table name, changed FK column name].
+        **/
         $foreignKeys = array(
             'thm_groups_profiles'              => [
-                ['id', 'profiles_usersid_fk', 'users', 'id', '']
+                ['id', 'profiles_usersid_fk', 'users', 'id', '', '']
             ],
             'thm_groups_profile_attributes'    => [
-                ['usersID', 'profile_attributes_profilesid_fk', 'users', 'id', 'thm_groups_profiles'],
-                ['attributeID', 'profile_attributes_attributeid_fk', 'thm_groups_attribute', 'id', '']
+                ['usersID', 'profile_attributes_profilesid_fk', 'users', 'id', 'thm_groups_profiles', 'profileID'],
+                ['attributeID', 'profile_attributes_attributeid_fk', 'thm_groups_attribute', 'id', '', '']
             ],
             'thm_groups_categories'            => [
-                ['usersID', 'categories_profilesid_fk', 'thm_groups_profiles', 'id', ''],
-                ['categoriesID', 'categories_categoriesid_fk', 'categories', 'id', '']
+                ['usersID', 'categories_profilesid_fk', 'thm_groups_profiles', 'id', '', 'profileID'],
+                ['categoriesID', 'categories_categoriesid_fk', 'categories', 'id', '', '']
             ],
             'thm_groups_content'               => [
-                ['usersID', 'content_profilesid_fk', 'thm_groups_profiles', 'id', ''],
-                ['contentID', 'content_contentid_fk', 'content', 'id', '']
+                ['usersID', 'content_profilesid_fk', 'thm_groups_profiles', 'id', '', 'profileID'],
+                ['contentID', 'content_contentid_fk', 'content', 'id', '', '']
             ],
             'thm_groups_dynamic_type'          => [
-                ['static_typeID', 'dynamic_type_statictypeid_fk', 'thm_groups_static_type', 'id', '']
+                ['static_typeID', 'dynamic_type_statictypeid_fk', 'thm_groups_static_type', 'id', '', '']
             ],
             'thm_groups_attribute'             => [
-                ['dynamic_typeID', 'attribute_dynamictypeid_fk', 'thm_groups_dynamic_type', 'id', '']
+                ['dynamic_typeID', 'attribute_dynamictypeid_fk', 'thm_groups_dynamic_type', 'id', '', '']
             ],
             'thm_groups_role_associations'     => [
-                ['usergroupsID', 'role_associations_usergroupsid_fk', 'usergroups', 'id', ''],
-                ['rolesID', 'role_associations_groupsrolesid_fk', 'thm_groups_roles', 'id', '']
+                ['usergroupsID', 'role_associations_usergroupsid_fk', 'usergroups', 'id', '', ''],
+                ['rolesID', 'role_associations_groupsrolesid_fk', 'thm_groups_roles', 'id', '', '']
             ],
             'thm_groups_associations'          => [
-                ['usergroups_rolesID', 'associations_roleassociationsid_fk', 'thm_groups_role_associations', 'ID', ''],
-                ['usersID', 'associations_profilesid_fk', 'users', 'id', 'thm_groups_profiles']
+                ['usergroups_rolesID', 'associations_roleassociationsid_fk', 'thm_groups_role_associations', 'ID', '', 'role_assocID'],
+                ['usersID', 'associations_profilesid_fk', 'users', 'id', 'thm_groups_profiles', 'profileID']
             ],
             'thm_groups_template_attributes'   => [
-                ['profileID', 'template_attributes_templatesid_fk', 'thm_groups_templates', 'id', ''],
-                ['attributeID', 'template_attributes_attributeid_fk', 'thm_groups_attribute', 'id', '']
+                ['profileID', 'template_attributes_templatesid_fk', 'thm_groups_templates', 'id', '', 'templateID'],
+                ['attributeID', 'template_attributes_attributeid_fk', 'thm_groups_attribute', 'id', '', '']
             ],
             'thm_groups_template_associations' => [
-                ['profileID', 'template_associations_templatesid_fk', 'thm_groups_templates', 'id', ''],
-                ['usergroupsID', 'template_associations_usergroupsid_fk', 'usergroups', 'id', '']
+                ['profileID', 'template_associations_templatesid_fk', 'thm_groups_templates', 'id', '', 'templateID'],
+                ['usergroupsID', 'template_associations_usergroupsid_fk', 'usergroups', 'id', '', '']
             ]
         );
 
         // Get all FK's from current database information schema
         $query = $dbo->getQuery(true);
-        $query->select("table_name, constraint_name, referenced_table_name")
-            ->from("information_schema.REFERENTIAL_CONSTRAINTS")
-            ->where("constraint_schema = '" . $db_name . "' AND table_name LIKE '%thm_groups%'");
+        $query->select("DISTINCT rc.table_name, rc.constraint_name, rc.referenced_table_name, kcu.column_name, kcu.referenced_column_name")
+            ->from("information_schema.REFERENTIAL_CONSTRAINTS as rc, information_schema.KEY_COLUMN_USAGE as kcu")
+            ->where("(rc.constraint_schema = '" . $db_name . "' AND kcu.constraint_schema = '" . $db_name . "')", "AND")
+            ->where("rc.table_name like '%thm_groups%'", "AND")
+            ->where("rc.constraint_name = kcu.constraint_name", "AND")
+            ->where("kcu.referenced_column_name IS NOT NULL");
 
         $dbo->setQuery($query);
-        $result = $dbo->loadObjectList();
+
+        try {
+            $result = $dbo->loadObjectList();
+        } catch (RuntimeException $exc) {
+            return;
+        }
 
         if (empty($result)) {
             return;
@@ -186,9 +408,11 @@ class Com_THM_GroupsInstallerScript
 
                 // Check if referenced table names are equal
                 if ($expectedFK[2] == $storedFKname || $expectedFK[4] == $storedFKname) {
-                    // Check if stored FK name differs from the expected FK name
-                    if ($expectedFK[1] != $storedFK->constraint_name) {
-                        // Drop unnamed foreign key from table
+                    // Check if stored FK constraint name differs from the expected FK constraint name
+                    if ($expectedFK[1] != $storedFK->constraint_name ||
+                        (!empty($expectedFK[5]) && ($storedFK->column_name != $expectedFK[5]))
+                    ) {
+                        // Drop random named foreign key from table
                         $dbo->transactionStart();
 
                         $query = "ALTER TABLE `#__" . strstr($storedFK->table_name, 'thm') . "`
@@ -204,9 +428,26 @@ class Com_THM_GroupsInstallerScript
                             return;
                         }
 
-                        // Check for changed referenced table name
+                        // Check for changed referenced table and fk column name
                         if (!empty($expectedFK[4])) {
                             $expectedFK[2] = $expectedFK[4];
+                        }
+                        if (!empty($expectedFK[5]) && ($storedFK->column_name != $expectedFK[5])) {
+                            $query = "ALTER TABLE `#__" . strstr($storedFK->table_name, 'thm') . "`
+                                      CHANGE COLUMN `" . $storedFK->column_name . "` 
+                                      `" . $expectedFK[5] . "` INT(11) NOT NULL";
+                            $dbo->setQuery($query);
+
+                            try {
+                                $dbo->execute();
+                            } catch (RuntimeException $exception) {
+                                JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+                                $dbo->transactionRollback();
+
+                                return;
+                            }
+
+                            $expectedFK[0] = $expectedFK[5];
                         }
 
                         // Add foreign key constraint with expected FK name
@@ -289,7 +530,6 @@ class Com_THM_GroupsInstallerScript
                 JFolder::delete(JPATH_SITE . '/media/com_thm_groups/' . $mediaFolder);
             }
         } elseif ($type == 'install') {
-            require_once 'admin/install.php';
             $rel = $manifestVersion;
         }
 

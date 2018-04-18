@@ -104,7 +104,7 @@ class THM_GroupsHelperTemplate
 
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
-        $query->select("*")->from('#__thm_groups_template_attributes')->where("profileID = $templateID");
+        $query->select("*")->from('#__thm_groups_template_attributes')->where("templateID = $templateID");
         $dbo->setQuery($query);
 
         try {

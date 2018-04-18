@@ -55,7 +55,16 @@ class THM_GroupsViewGroup_Manager extends THM_GroupsViewList
             'templates' => JPATH_COMPONENT_ADMINISTRATOR . '/views/group_manager/tmpl/default_templates.php'
         );
 
-        $this->roles    = THM_GroupsHelperBatch::getRoles();
+        $this->roles = [];
+        $allRoles    = THM_GroupsHelperBatch::getRoles();
+
+        // Exclude member role from selection
+        foreach ($allRoles as $role) {
+            if ($role->value != 1) {
+                array_push($this->roles, $role);
+            }
+        }
+
         $this->profiles = THM_GroupsHelperBatch::getProfiles();
 
         parent::display($tpl);

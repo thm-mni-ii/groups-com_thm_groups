@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension type="component" version="3.*" method="upgrade">
     <name>COM_THM_GROUPS</name>
-    <creationDate>March 2018</creationDate>
+    <creationDate>April 2018</creationDate>
     <author>THM iCampus</author>
     <authorUrl>http://www.thm.de</authorUrl>
     <copyright>TH Mittelhessen 2018</copyright>
     <license>GNU/GPL Version 2</license>
-    <version>3.8.13</version>
+    <version>3.8.14</version>
     <scriptfile>script.php</scriptfile>
     <install>
         <sql>
@@ -74,9 +74,6 @@
             <menu alias="Roles" link="option=com_thm_groups&amp;view=role_manager" view="role_manager" alt="Roles">
                 COM_THM_GROUPS_ROLE_MANAGER
             </menu>
-            <menu alias="Static Types" link="option=com_thm_groups&amp;view=static_type_manager" view="static_type_manager" alt="Static Types">
-                COM_THM_GROUPS_STATIC_TYPE_MANAGER
-            </menu>
         </submenu>
 
         <files folder="admin">
@@ -84,7 +81,6 @@
             <filename>controller.php</filename>
             <filename>access.xml</filename>
             <filename>config.xml</filename>
-            <filename>install.php</filename>
             <folder>models</folder>
             <folder>sql</folder>
             <folder>tables</folder>

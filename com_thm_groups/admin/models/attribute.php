@@ -56,10 +56,10 @@ class THM_GroupsModelAttribute extends JModelLegacy
          * If you find a better solution, you replace it
          */
         $query = $this->_db->getQuery(true);
-        $query->insert('#__thm_groups_profile_attributes')->columns('usersID, attributeID, published');
+        $query->insert('#__thm_groups_profile_attributes')->columns('profileID, attributeID, published');
 
         foreach ($unAssocProfileIDs as $profileID) {
-            $query->values("'$profileID','$attributeID', '0'");
+            $query->values("'$profileID','$attributeID', '1'");
         }
 
         $this->_db->setQuery($query);
@@ -194,7 +194,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
     private function getAssocProfileIDs($attributeID)
     {
         $query = $this->_db->getQuery(true);
-        $query->select('usersID')->from('#__thm_groups_profile_attributes')->where("attributeID = $attributeID");
+        $query->select('profileID')->from('#__thm_groups_profile_attributes')->where("attributeID = $attributeID");
         $this->_db->setQuery($query);
 
         try {

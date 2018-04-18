@@ -58,11 +58,11 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
             ->select('groups.title AS groupName')
             ->select('GROUP_CONCAT(DISTINCT roles.id ORDER BY roles.name SEPARATOR ", ") AS roleID')
             ->select('GROUP_CONCAT(DISTINCT roles.name ORDER BY roles.name SEPARATOR ", ") AS roleName')
-            ->from('#__thm_groups_associations AS a')
-            ->leftJoin('#__thm_groups_role_associations AS b ON a.usergroups_rolesID = b.id')
-            ->leftJoin('#__usergroups AS groups ON b.usergroupsID = groups.id')
-            ->leftJoin('#__thm_groups_roles AS roles ON b.rolesID = roles.id')
-            ->where("a.usersID = $profileID AND b.usergroupsID > 1")
+            ->from('#__thm_groups_associations AS assoc')
+            ->leftJoin('#__thm_groups_role_associations AS roleAssoc ON assoc.role_assocID = roleAssoc.id')
+            ->leftJoin('#__usergroups AS groups ON roleAssoc.usergroupsID = groups.id')
+            ->leftJoin('#__thm_groups_roles AS roles ON roleAssoc.rolesID = roles.id')
+            ->where("assoc.profileID = $profileID AND roleAssoc.usergroupsID > 1")
             ->group('groupID');
 
         $this->_db->setQuery($query);
@@ -122,6 +122,11 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
 
                 // If there are many roles, show delete icon
                 foreach ($roles as $index => $role) {
+                    // Don't show member role when there are multiple roles
+                    if ($roleIDs[$index] == 1) {
+                        continue;
+                    }
+
                     // Allow to edit groups only for authorised users
                     if ($canEdit) {
                         $groupRoles[] = str_replace('ROLENAME', $role,
@@ -254,13 +259,13 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
         $query->from('#__thm_groups_profiles AS profile');
 
         // Forename
-        $query->innerJoin('#__thm_groups_profile_attributes AS fn ON fn.usersID = profile.id AND fn.attributeID = 1');
+        $query->innerJoin('#__thm_groups_profile_attributes AS fn ON fn.profileID = profile.id AND fn.attributeID = 1');
 
         // Surname
-        $query->innerJoin('#__thm_groups_profile_attributes AS sn ON sn.usersID = profile.id AND sn.attributeID = 2');
+        $query->innerJoin('#__thm_groups_profile_attributes AS sn ON sn.profileID = profile.id AND sn.attributeID = 2');
 
         // Email
-        $query->innerJoin('#__thm_groups_profile_attributes AS em ON em.usersID = profile.id AND em.attributeID = 4');
+        $query->innerJoin('#__thm_groups_profile_attributes AS em ON em.profileID = profile.id AND em.attributeID = 4');
 
         $this->setSearchFilter($query, ['profile.id', 'fn.value', 'sn.value', 'em.value']);
 
@@ -275,14 +280,14 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
 
         if ($filterGroups or $filterRoles) {
             // We don't need these unless filter is requested
-            $query->leftJoin('#__thm_groups_associations AS ugr ON ugr.usersID = profile.id');
-            $query->leftJoin('#__thm_groups_role_associations AS gr ON gr.ID = ugr.usergroups_rolesID');
+            $query->leftJoin('#__thm_groups_associations AS assoc ON assoc.profileID = profile.id');
+            $query->leftJoin('#__thm_groups_role_associations AS roleAssoc ON roleAssoc.ID = assoc.role_assocID');
 
             if ($filterGroups) {
-                $this->setIDFilter($query, 'gr.usergroupsID', ['list.groupID']);
+                $this->setIDFilter($query, 'roleAssoc.usergroupsID', ['list.groupID']);
             }
             if ($filterRoles) {
-                $this->setIDFilter($query, 'gr.rolesID', ['list.roleID']);
+                $this->setIDFilter($query, 'roleAssoc.rolesID', ['list.roleID']);
             }
         }
 

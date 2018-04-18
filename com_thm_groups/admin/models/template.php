@@ -98,10 +98,10 @@ class THM_GroupsModelTemplate extends JModelLegacy
         $query = $this->_db->getQuery(true);
 
         // First, we need to check if the role is already assigned to a group
-        $query->select('profileID, usergroupsID');
+        $query->select('templateID, usergroupsID');
         $query->from('#__thm_groups_template_associations');
-        $query->where('profileID IN (' . implode(',', $templateIDs) . ')');
-        $query->order('profileID');
+        $query->where('templateID IN (' . implode(',', $templateIDs) . ')');
+        $query->order('templateID');
 
         $this->_db->setQuery($query);
 
@@ -117,7 +117,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
         $templates = [];
 
         foreach ($templateGroups as $templateGroup) {
-            $templates[$templateGroup['profileID']][$templateGroup['usergroupsID']] = $templateGroup['usergroupsID'];
+            $templates[$templateGroup['templateID']][$templateGroup['usergroupsID']] = $templateGroup['usergroupsID'];
         }
 
         $query         = $this->_db->getQuery(true);
@@ -138,7 +138,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
         }
 
         $query->insert('#__thm_groups_template_associations');
-        $query->columns([$this->_db->quoteName('profileID'), $this->_db->quoteName('usergroupsID')]);
+        $query->columns([$this->_db->quoteName('templateID'), $this->_db->quoteName('usergroupsID')]);
         $this->_db->setQuery($query);
 
         try {
@@ -168,7 +168,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
 
         // Remove groups from the profile
         $query->delete('#__thm_groups_template_associations');
-        $query->where('profileID' . ' IN (' . implode(',', $profileIDs) . ')');
+        $query->where('templateID' . ' IN (' . implode(',', $profileIDs) . ')');
         $query->where('usergroupsID' . ' IN (' . implode(',', $groupIDs) . ')');
 
         $this->_db->setQuery($query);
@@ -247,16 +247,24 @@ class THM_GroupsModelTemplate extends JModelLegacy
             return false;
         }
 
-        $ids   = JFactory::getApplication()->input->get('cid', [], 'array');
-        $query = $this->_db->getQuery(true);
+        $ids = JFactory::getApplication()->input->get('cid', [], 'array');
 
-        $conditions = [$this->_db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')'];
+        // Exclude standard and advanced template from deletion.
+        if (in_array('1', $ids) || in_array('2', $ids)) {
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_CANNOT_DELETE_PROTECTED'), 'notice');
 
-        $query->delete($this->_db->quoteName('#__thm_groups_templates'));
-        $query->where($conditions);
-        $this->_db->setQuery($query);
+            return false;
+        } else {
+            $query = $this->_db->getQuery(true);
 
-        return $result = $this->_db->execute();
+            $conditions = [$this->_db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')'];
+
+            $query->delete($this->_db->quoteName('#__thm_groups_templates'));
+            $query->where($conditions);
+            $this->_db->setQuery($query);
+
+            return $result = $this->_db->execute();
+        }
     }
 
     /**
@@ -289,7 +297,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
         $query = $this->_db->getQuery(true);
         $query
             ->delete('#__thm_groups_template_associations')
-            ->where("profileID = '$templateID'")
+            ->where("templateID = '$templateID'")
             ->where("usergroupsID = '$groupID'");
         $this->_db->setQuery($query);
 
@@ -408,7 +416,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
             return false;
         }
 
-        $attribute['profileID'] = $templateID;
+        $attribute['templateID'] = $templateID;
         $attribute['published'] = (bool)$attribute['published'];
         $attribute['ordering']  = $ordering;
 
@@ -418,7 +426,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
         $attribute['params']     = json_encode($jsonParams);
 
         $templateAttribute = $this->getTable('Template_Attribute', 'THM_GroupsTable');
-        $templateAttribute->load(['profileID' => $templateID, 'attributeID' => $attribute['attributeID']]);
+        $templateAttribute->load(['templateID' => $templateID, 'attributeID' => $attribute['attributeID']]);
         $success = $templateAttribute->save($attribute);
 
         if (!$success) {

@@ -55,7 +55,7 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
 
         $this->setSearchFilter($query, array('a.title'));
         $this->setIDFilter($query, 'd.rolesID', array('filter.roles'));
-        $this->setIDFilter($query, 'f.profileID', array('filter.templates'));
+        $this->setIDFilter($query, 'f.templateID', array('filter.templates'));
         $this->setOrdering($query);
 
         return $query;
@@ -186,8 +186,8 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
         $query
             ->select('DISTINCT(role.id), role.name')
             ->from('#__thm_groups_roles AS role ')
-            ->innerJoin('#__thm_groups_role_associations AS ra ON role.id = ra.rolesID')
-            ->where("ra.usergroupsID = '$groupID'")
+            ->innerJoin('#__thm_groups_role_associations AS roleAssoc ON role.id = roleAssoc.rolesID')
+            ->where("roleAssoc.usergroupsID = '$groupID'")
             ->order('role.name ASC');
 
         $this->_db->setQuery($query);
@@ -205,11 +205,15 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
         $return = array();
         if (!empty($roles)) {
             foreach ($roles as $role) {
-                $deleteBtn = '<a onclick="removeRole(' . $groupID . ',' . $role->id . ')">' . $deleteIcon . '</a>';
+                if ($role->id != 1) {
+                    $deleteBtn = '<a onclick="removeRole(' . $groupID . ',' . $role->id . ')">' . $deleteIcon . '</a>';
 
-                $url = "index.php?option=com_thm_groups&view=role_edit&cid[]=$role->id";
+                    $url = "index.php?option=com_thm_groups&view=role_edit&cid[]=$role->id";
 
-                $return[] = "<a href=$url>" . $role->name . "</a> " . $deleteBtn;
+                    $return[] = "<a href=$url>" . $role->name . "</a> " . $deleteBtn;
+                } else {
+                    $return[] = $role->name;
+                }
             }
         }
 
@@ -231,9 +235,9 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
 
         $query
             ->select('template.id, template.name')
-            ->from('#__thm_groups_template_associations AS ta')
-            ->innerJoin('#__thm_groups_templates AS template ON template.id = ta.profileID')
-            ->where("ta.usergroupsID = $groupID");
+            ->from('#__thm_groups_template_associations AS templateAssoc')
+            ->innerJoin('#__thm_groups_templates AS template ON template.id = templateAssoc.templateID')
+            ->where("templateAssoc.usergroupsID = $groupID");
 
         $this->_db->setQuery($query);
 

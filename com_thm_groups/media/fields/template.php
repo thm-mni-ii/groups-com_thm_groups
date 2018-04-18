@@ -34,13 +34,13 @@ class JFormFieldTemplate extends JFormFieldList
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
 
-        $query->select("DISTINCT p.id AS value, p.name AS text");
-        $query->from('#__thm_groups_templates AS p');
+        $query->select("DISTINCT template.id AS value, template.name AS text");
+        $query->from('#__thm_groups_templates AS template');
 
         $associated = (bool)$this->getAttribute('associated', false);
 
         if ($associated) {
-            $query->innerJoin('#__thm_groups_template_associations AS tempAssoc ON tempAssoc.profileID = p.id');
+            $query->innerJoin('#__thm_groups_template_associations AS tempAssoc ON tempAssoc.templateID = template.id');
         }
 
         $query->order("text ASC");

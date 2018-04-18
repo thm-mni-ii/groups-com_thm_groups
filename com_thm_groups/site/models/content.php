@@ -66,37 +66,37 @@ class THM_GroupsModelContent extends JModelItem
 
         $query->select(
             $this->getState(
-                'item.select', 'a.id, a.asset_id, a.title, a.alias, a.introtext, a.fulltext, ' .
-                'a.state, a.catid, a.created, a.created_by, a.created_by_alias, ' .
+                'item.select', 'art.id, art.asset_id, art.title, art.alias, art.introtext, art.fulltext, ' .
+                'art.state, art.catid, art.created, art.created_by, art.created_by_alias, ' .
                 // Use created if modified is 0
-                'CASE WHEN a.modified = ' . $dbo->quote($dbo->getNullDate()) . ' THEN a.created ELSE a.modified END as modified, ' .
-                'a.modified_by, a.checked_out, a.checked_out_time, a.publish_up, a.publish_down, ' .
-                'a.images, a.urls, a.attribs, a.version, a.ordering, ' .
-                'a.metakey, a.metadesc, a.access, a.hits, a.metadata, a.featured, a.language, a.xreference'
+                'CASE WHEN art.modified = ' . $dbo->quote($dbo->getNullDate()) . ' THEN art.created ELSE art.modified END as modified, ' .
+                'art.modified_by, art.checked_out, art.checked_out_time, art.publish_up, art.publish_down, ' .
+                'art.images, art.urls, art.attribs, art.version, art.ordering, ' .
+                'art.metakey, art.metadesc, art.access, art.hits, art.metadata, art.featured, art.language, art.xreference'
             )
         );
-        $query->from('#__content AS a')->where('a.id = ' . (int)$contentID);
+        $query->from('#__content AS art')->where('art.id = ' . (int)$contentID);
 
         // Join on category table.
-        $query->select('c.title AS category_title, c.alias AS category_alias, c.access AS category_access');
-        $query->innerJoin('#__categories AS c on c.id = a.catid')->where('c.published > 0');
+        $query->select('cat.title AS category_title, cat.alias AS category_alias, cat.access AS category_access');
+        $query->innerJoin('#__categories AS cat on cat.id = art.catid')->where('cat.published > 0');
 
         // Join on user table.
-        $query->select('u.name AS author')->join('LEFT', '#__users AS u on u.id = a.created_by');
+        $query->select('usr.name AS author')->join('LEFT', '#__users AS usr on usr.id = art.created_by');
 
         // Filter by language
         if ($this->getState('filter.language')) {
-            $query->where('a.language in (' . $dbo->quote(JFactory::getLanguage()->getTag()) . ',' . $dbo->quote('*') . ')');
+            $query->where('art.language in (' . $dbo->quote(JFactory::getLanguage()->getTag()) . ',' . $dbo->quote('*') . ')');
         }
 
         // Join over the categories to get parent category titles
         $query->select('parent.title as parent_title, parent.id as parent_id, parent.path as parent_route, parent.alias as parent_alias');
-        $query->join('LEFT', '#__categories as parent ON parent.id = c.parent_id');
+        $query->join('LEFT', '#__categories as parent ON parent.id = cat.parent_id');
 
         //TODO: does anyone need this?
         // Join on voting table
         $query->select('ROUND(v.rating_sum / v.rating_count, 0) AS rating, v.rating_count as rating_count');
-        $query->join('LEFT', '#__content_rating AS v ON a.id = v.content_id');
+        $query->join('LEFT', '#__content_rating AS v ON art.id = v.content_id');
 
         $canEdit      = $user->authorise('core.edit', 'com_content');
         $canEditState = $user->authorise('core.edit.state', 'com_content');
@@ -109,8 +109,8 @@ class THM_GroupsModelContent extends JModelItem
             $date     = JFactory::getDate();
             $nowDate  = $dbo->quote($date->toSql());
 
-            $query->where('(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')');
-            $query->where('(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')');
+            $query->where('(art.publish_up = ' . $nullDate . ' OR art.publish_up <= ' . $nowDate . ')');
+            $query->where('(art.publish_down = ' . $nullDate . ' OR art.publish_down >= ' . $nowDate . ')');
         }
 
         // Filter by published state.
@@ -118,7 +118,7 @@ class THM_GroupsModelContent extends JModelItem
         $archived  = $this->getState('filter.archived');
 
         if (is_numeric($published) or is_numeric($archived)) {
-            $query->where('(a.state = ' . (int)$published . ' OR a.state =' . (int)$archived . ')');
+            $query->where('(art.state = ' . (int)$published . ' OR art.state =' . (int)$archived . ')');
         }
 
         $dbo->setQuery($query);

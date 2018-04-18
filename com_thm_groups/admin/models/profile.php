@@ -202,7 +202,7 @@ class THM_GroupsModelProfile extends JModelLegacy
         $selectQuery = $this->_db->getQuery(true);
         $selectQuery->select('value')
             ->from('#__thm_groups_profile_attributes')
-            ->where("usersID = '$profileID'")
+            ->where("profileID = '$profileID'")
             ->where("attributeID = '$attributeID'");
         $this->_db->setQuery($selectQuery);
 
@@ -231,7 +231,7 @@ class THM_GroupsModelProfile extends JModelLegacy
         // Update the database with new picture information
         $updateQuery->update('#__thm_groups_profile_attributes')
             ->set("value = ''")
-            ->where("usersID = '$profileID'")
+            ->where("profileID = '$profileID'")
             ->where("attributeID = '$attributeID'");
         $this->_db->setQuery($updateQuery);
 
@@ -277,7 +277,7 @@ class THM_GroupsModelProfile extends JModelLegacy
 
         $query
             ->delete('#__thm_groups_associations')
-            ->where("usersID = $profileID AND usergroups_rolesID = $idToDelete");
+            ->where("profileID = $profileID AND role_assocID = $idToDelete");
 
         $this->_db->setQuery($query);
 
@@ -437,10 +437,10 @@ class THM_GroupsModelProfile extends JModelLegacy
         $query = $this->_db->getQuery(true);
 
         // First, we need to check if the group-role relationship is already assigned to the user
-        $query->select('ID AS id, usersID AS profileID, usergroups_rolesID AS assocID')
+        $query->select('ID AS id, profileID, role_assocID AS assocID')
             ->from('#__thm_groups_associations')
-            ->where("usersID IN ('" . implode(',', $profileIDs) . "')")
-            ->order('usersID');
+            ->where("profileID IN ('" . implode(',', $profileIDs) . "')")
+            ->order('profileID');
 
         $this->_db->setQuery($query);
 
@@ -582,7 +582,7 @@ class THM_GroupsModelProfile extends JModelLegacy
         }
 
         $attributeID = $input->get('attributeID');
-        $newFileName = $profileID . "_" . $attributeID . "." . pathinfo($filename, PATHINFO_EXTENSION);
+        $newFileName = $profileID . "_" . $attributeID . "." . strtolower(pathinfo($filename, PATHINFO_EXTENSION));
         $pathAttr    = $this->getPicturePath($attributeID);
         $path        = $this->correctPathDS(JPATH_ROOT . $pathAttr . $newFileName);
 
@@ -642,7 +642,7 @@ class THM_GroupsModelProfile extends JModelLegacy
             $published = empty($attribute['published']) ? 0 : 1;
             $query->set("published = '$published'");
 
-            $query->where("usersID = '$profileID'");
+            $query->where("profileID = '$profileID'");
 
             $attributeID = (int)$attribute['attributeID'];
             $query->where("attributeID = '$attributeID'");
@@ -720,7 +720,7 @@ class THM_GroupsModelProfile extends JModelLegacy
             return true;
         }
 
-        $query->insert('#__thm_groups_associations')->columns(['usersID', 'usergroups_rolesID']);
+        $query->insert('#__thm_groups_associations')->columns(['profileID', 'role_assocID']);
         $this->_db->setQuery($query);
 
         try {

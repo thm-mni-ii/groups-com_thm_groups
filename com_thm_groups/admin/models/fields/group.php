@@ -1,4 +1,15 @@
 <?php
+/**
+ * @category    Joomla component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.admin
+ * @name        JFormFieldGroup
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @copyright   2016 TH Mittelhessen
+ * @license     GNU GPL v.2
+ * @link        www.thm.de
+ */
+
 defined('_JEXEC') or die;
 JFormHelper::loadFieldClass('list');
 
@@ -25,10 +36,10 @@ class JFormFieldGroup extends JFormFieldList
         $query = $dbo->getQuery(true);
 
         $query
-            ->select('a.id, a.title')
-            ->from('#__usergroups AS a')
-            ->innerJoin('#__thm_groups_role_associations AS b ON a.id = b.usergroupsID')
-            ->group('a.title');
+            ->select('gr.id, gr.title')
+            ->from('#__usergroups AS gr')
+            ->innerJoin('#__thm_groups_role_associations AS roleAssoc ON gr.id = roleAssoc.usergroupsID')
+            ->group('gr.title');
 
         $dbo->setQuery($query);
         $dbo->execute();

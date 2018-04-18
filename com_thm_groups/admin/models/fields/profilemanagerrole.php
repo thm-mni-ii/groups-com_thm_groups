@@ -1,11 +1,22 @@
 <?php
+/**
+ * @category    Joomla component
+ * @package     THM_Groups
+ * @subpackage  com_thm_groups.admin
+ * @name        JFormFieldUsermanagerrole
+ * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @copyright   2016 TH Mittelhessen
+ * @license     GNU GPL v.2
+ * @link        www.thm.de
+ */
+
 defined('_JEXEC') or die;
 JFormHelper::loadFieldClass('list');
 
-class JFormFieldUsermanagerrole extends JFormFieldList
+class JFormFieldProfilemanagerRole extends JFormFieldList
 {
 
-    protected $type = 'usermanagerrole';
+    protected $type = 'profilemanagerrole';
 
     /**
      * Cached array of the category items.
@@ -37,16 +48,16 @@ class JFormFieldUsermanagerrole extends JFormFieldList
             ->from('#__thm_groups_profiles');
 
         $query
-            ->select('r.id, r.name')
-            ->from('#__thm_groups_roles AS r')
-            ->innerJoin('#__thm_groups_role_associations AS a ON r.id = a.rolesID')
-            ->innerJoin('#__thm_groups_associations AS b ON a.id = b.usergroups_rolesID')
-            ->where('b.usersID IN (' . $nestedQuery . ')')
-            ->group('r.id')
-            ->order('r.name ASC');
+            ->select('role.id, role.name')
+            ->from('#__thm_groups_roles AS role')
+            ->innerJoin('#__thm_groups_role_associations AS roleAssoc ON role.id = roleAssoc.rolesID')
+            ->innerJoin('#__thm_groups_associations AS assoc ON roleAssoc.id = assoc.role_assocID')
+            ->where('assoc.profileID IN (' . $nestedQuery . ')')
+            ->group('role.id')
+            ->order('role.name ASC');
 
         if (!empty($groupID)) {
-            $query->where("a.usergroupsID = $groupID");
+            $query->where("roleAssoc.usergroupsID = $groupID");
         }
 
         $dbo->setQuery($query);

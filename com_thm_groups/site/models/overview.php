@@ -44,13 +44,13 @@ class THM_GroupsModelOverview extends JModelLegacy
         $query->select("pretitle.value as title");
         $query->select("posttitle.value as posttitle");
         $query->from("#__thm_groups_role_associations as roleAssoc");
-        $query->leftJoin("#__thm_groups_associations AS userRoles ON roleAssoc.ID = userRoles.usergroups_rolesID");
-        $query->leftJoin("#__thm_groups_profiles AS profile ON profile.id = userRoles.usersID");
-        $query->leftJoin("#__thm_groups_profile_attributes AS allAttr ON allAttr.usersID = profile.id");
-        $query->leftJoin("#__thm_groups_profile_attributes AS sname ON sname.usersID = profile.id AND sname.attributeID = 2");
-        $query->leftJoin("#__thm_groups_profile_attributes AS fname ON fname.usersID = profile.id AND fname.attributeID = 1");
-        $query->leftJoin("#__thm_groups_profile_attributes AS pretitle ON pretitle.usersID = profile.id AND pretitle.attributeID = '5'");
-        $query->leftJoin("#__thm_groups_profile_attributes AS posttitle ON posttitle.usersID = profile.id AND posttitle.attributeID = '7'");
+        $query->leftJoin("#__thm_groups_associations AS assoc ON roleAssoc.ID = assoc.role_assocID");
+        $query->leftJoin("#__thm_groups_profiles AS profile ON profile.id = assoc.profileID");
+        $query->leftJoin("#__thm_groups_profile_attributes AS allAttr ON allAttr.profileID = profile.id");
+        $query->leftJoin("#__thm_groups_profile_attributes AS sname ON sname.profileID = profile.id AND sname.attributeID = 2");
+        $query->leftJoin("#__thm_groups_profile_attributes AS fname ON fname.profileID = profile.id AND fname.attributeID = 1");
+        $query->leftJoin("#__thm_groups_profile_attributes AS pretitle ON pretitle.profileID = profile.id AND pretitle.attributeID = '5'");
+        $query->leftJoin("#__thm_groups_profile_attributes AS posttitle ON posttitle.profileID = profile.id AND posttitle.attributeID = '7'");
         $query->where("allAttr.published = 1");
         $query->where("profile.published = 1");
 

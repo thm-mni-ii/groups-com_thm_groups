@@ -84,7 +84,7 @@ class THM_GroupsModelGroup extends JModelLegacy
         $existingQuery = $this->_db->getQuery(true);
 
         // First, we need to check if the profile is already assigned to a group
-        $existingQuery->select('profileID')->from('#__thm_groups_template_associations')->where("usergroupsID = '$groupID'");
+        $existingQuery->select('templateID')->from('#__thm_groups_template_associations')->where("usergroupsID = '$groupID'");
         $this->_db->setQuery($existingQuery);
 
         try {
@@ -99,7 +99,7 @@ class THM_GroupsModelGroup extends JModelLegacy
         if (empty($existingTemplateID)) {
             $insertQuery = $this->_db->getQuery(true);
 
-            $insertQuery->insert('#__thm_groups_template_associations')->columns(['usergroupsID', 'profileID']);
+            $insertQuery->insert('#__thm_groups_template_associations')->columns(['usergroupsID', 'templateID']);
             $insertQuery->values("$groupID, $templateID");
 
             $this->_db->setQuery($insertQuery);
@@ -114,7 +114,7 @@ class THM_GroupsModelGroup extends JModelLegacy
         } else {
             $updateQuery = $this->_db->getQuery(true);
             $updateQuery->update('#__thm_groups_template_associations')
-                ->set("profileID = $templateID")
+                ->set("templateID = $templateID")
                 ->where("usergroupsID = $groupID");
 
             $this->_db->setQuery($updateQuery);
@@ -298,7 +298,7 @@ class THM_GroupsModelGroup extends JModelLegacy
         $query = $this->_db->getQuery(true);
         $query
             ->delete('#__thm_groups_template_associations')
-            ->where("profileID = '$templateID'")
+            ->where("templateID = '$templateID'")
             ->where("usergroupsID = '$groupID'");
         $this->_db->setQuery($query);
 

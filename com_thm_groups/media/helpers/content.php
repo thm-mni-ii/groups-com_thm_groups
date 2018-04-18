@@ -224,7 +224,7 @@ class THM_GroupsHelperContent
         $query->select('groupsCats.categoriesID');
         $query->from('#__thm_groups_categories AS groupsCats');
         $query->innerJoin('#__categories AS contentCats ON contentCats.id = groupsCats.categoriesID');
-        $query->where("groupsCats.usersID = '$profileID'");
+        $query->where("groupsCats.profileID = '$profileID'");
         $query->where("contentCats.extension = 'com_content'");
         $dbo->setQuery($query);
 
@@ -293,7 +293,7 @@ class THM_GroupsHelperContent
         $dbo   = JFactory::getDBO();
         $query = $dbo->getQuery(true);
 
-        $query->insert('#__thm_groups_categories')->set("usersID = '$profileID'")->set("categoriesID = '$categoryID'");
+        $query->insert('#__thm_groups_categories')->set("profileID = '$profileID'")->set("categoriesID = '$categoryID'");
 
         $dbo->setQuery($query);
         $dbo->execute();
@@ -310,7 +310,7 @@ class THM_GroupsHelperContent
     {
         $dbo   = JFactory::getDBO();
         $query = $dbo->getQuery(true);
-        $query->select('COUNT(ID)')->from('#__thm_groups_categories')->where("usersID = '$profileID'");
+        $query->select('COUNT(ID)')->from('#__thm_groups_categories')->where("profileID = '$profileID'");
         $dbo->setQuery($query);
 
         try {
@@ -510,7 +510,7 @@ class THM_GroupsHelperContent
         else {
             $profileID = JFactory::getUser()->id;
             $query->insert('#__thm_groups_content')
-                ->columns(['usersID', 'contentID', 'featured'])
+                ->columns(['profileID', 'contentID', 'featured'])
                 ->values("'$profileID','$contentID','$value'");
         }
 
