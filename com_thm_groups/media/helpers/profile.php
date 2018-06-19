@@ -520,11 +520,6 @@ class THM_GroupsHelperProfile
                     $text = THM_GroupsHelperComponent::cleanText($attribute['value']);
                     $text = trim(htmlspecialchars_decode($text));
 
-                    // Normalize new lines
-                    if (stripos($text, '<li>') === false && stripos($text, '<table') === false) {
-                        $text = nl2br($text);
-                    }
-
                     // The closing div for the toggled container is added later
                     if ($suppressText and strlen(strip_tags($text)) > 50) {
                         $value = '<span class="toggled-text-link">' . JText::_('COM_THM_GROUPS_ACTION_DISPLAY') . '</span></div>';
@@ -537,7 +532,7 @@ class THM_GroupsHelperProfile
 
                 case "TEXT":
                 default:
-                    $value = nl2br(htmlspecialchars_decode($attribute['value']));
+                    $value = htmlspecialchars_decode($attribute['value']);
 
                     break;
             }
