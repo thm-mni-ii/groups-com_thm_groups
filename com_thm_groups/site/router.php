@@ -35,9 +35,10 @@ function THM_GroupsBuildRoute(&$query)
     buildOptionsRoute($query);
 
     // Group & Profile/Name Segments
-    if (!empty($query['profileID'])) {
-        $profileSegment = $query['profileID'];
+    if (!empty($query['profileID']) or !empty($query['userID'])) {
+        $profileSegment = empty($query['profileID']) ? $query['userID'] : $query['profileID'];
         unset($query['profileID']);
+        unset($query['userID']);
 
         if (!empty($query['groupID']) or !empty($query['name'])) {
             $profileSegment .= ":";
@@ -201,26 +202,47 @@ function THM_GroupsParseRoute($segments)
  */
 function parseProfileSegment(&$vars, $segment)
 {
+    // Best case only the profile ID, worst case invalid
     if (strpos($segment, ':') === false) {
+        if (is_numeric($segment)) {
+            $vars['profileID'] = $segment;
+        }
         return;
     }
 
-    list($profileID, $profileData) = explode(':', $segment);
+    // The Joomla Standard is ID:alias, Groups uses id:alias, id:alias-groupID, or groupID:id-alias
+    $standardParts = explode(':', $segment);
+    $firstPart = $standardParts[0];
 
-    $vars['profileID'] = $profileID;
-
-    if (!empty($profileData)) {
-        $profileData = explode('-', $profileData);
-
-        if (is_numeric(end($profileData))) {
-            $vars['groupID'] = array_pop($profileData);
+    // No nested segmentation
+    if (strpos($standardParts[1], '-') === false) {
+        $vars['profileID'] = $firstPart;
+        if (empty($standardParts[1])) {
+            return;
         }
 
-        // Anything left is the profile's surname
-        if (!empty($profileData)) {
-            $vars['name'] = implode('-', $profileData);
+        if (is_numeric($standardParts[1])) {
+            $vars['groupID'] = $standardParts[1];
+        } else {
+            $vars['name'] = $standardParts[1];
         }
+        return;
     }
+
+    // Nested segmentation
+    $otherParts = explode('-', $standardParts[1]);
+    $newFormat = is_numeric(end($otherParts));
+    $oldFormat = is_numeric(reset($otherParts));
+
+    if ($newFormat) {
+        $vars['profileID'] = $firstPart;
+        $vars['groupID'] = array_pop($otherParts);
+    } elseif ($oldFormat) {
+        $vars['profileID'] = array_shift($otherParts);
+        $vars['groupID'] = $firstPart;
+    }
+    // Anything left after the pop are the names
+    $vars['name'] = implode('-', $otherParts);
 }
 
 /**
