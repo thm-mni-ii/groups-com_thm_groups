@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsViewRole_Edit
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -14,10 +12,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/views/edit.php';
 
 /**
  * Class loads persistent color information into display context
- *
- * @category    Joomla.Component.Admin
- * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
  */
 class THM_GroupsViewRole_Edit extends THM_GroupsViewEdit
 {

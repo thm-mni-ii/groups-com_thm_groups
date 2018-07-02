@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        JFormFieldUsermanagerrole
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -23,7 +21,7 @@ class JFormFieldProfilemanagerRole extends JFormFieldList
      *
      * @var    array
      */
-    protected static $options = array();
+    protected static $options = [];
 
     /**
      * Retrieves a list of roles, optionally for a selected group
@@ -34,7 +32,7 @@ class JFormFieldProfilemanagerRole extends JFormFieldList
     {
         $input = JFactory::getApplication()->input;
 
-        $list = $input->post->get('list', array(), 'array');
+        $list = $input->post->get('list', [], 'array');
         if (!empty($list['groupID'])) {
             $groupID = $list['groupID'];
         }
@@ -79,7 +77,7 @@ class JFormFieldProfilemanagerRole extends JFormFieldList
 
         if (!isset(static::$options[$hash])) {
             static::$options[$hash] = parent::getOptions();
-            $options                = array();
+            $options                = [];
 
             $arrayOfRoles = $this->getRolesFromDB();
 

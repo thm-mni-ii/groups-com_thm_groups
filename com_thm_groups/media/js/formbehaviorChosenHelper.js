@@ -3,6 +3,6 @@
  */
 function refreshChoosen(id)
 {
-	jQuery("#" + id).chosen("destroy");
-	jQuery("#" + id).chosen();
+    jQuery("#" + id).chosen("destroy");
+    jQuery("#" + id).chosen();
 }

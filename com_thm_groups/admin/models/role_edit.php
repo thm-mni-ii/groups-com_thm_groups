@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        role edit model
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -16,10 +14,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/models/edit.php';
 
 /**
  * Class loads form data to edit an entry.
- *
- * @category    Joomla.Component.Admin
- * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
  */
 class THM_GroupsModelRole_Edit extends THM_GroupsModelEdit
 {
@@ -28,7 +22,7 @@ class THM_GroupsModelRole_Edit extends THM_GroupsModelEdit
      *
      * @param   array $config An optional associative array of configuration settings.
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         parent::__construct($config);
     }

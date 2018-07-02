@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THMGroupsModelDynamic_Types_Manager
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -15,10 +13,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/static_type.php';
 
 /**
  * THMGroupsModelDynamic_Types_Manager class for component com_thm_groups
- *
- * @category  Joomla.Component.Admin
- * @package   com_thm_groups.admin
- * @link      www.thm.de
  */
 class THM_GroupsModelDynamic_Type_Manager extends THM_GroupsModelList
 {
@@ -32,8 +26,8 @@ class THM_GroupsModelDynamic_Type_Manager extends THM_GroupsModelList
      */
     public function checkDependencies()
     {
-        $ids    = JFactory::getApplication()->input->get('cid', array(), 'array');
-        $badIds = array();
+        $ids    = JFactory::getApplication()->input->get('cid', [], 'array');
+        $badIds = [];
 
         foreach ($ids as $id) {
             $query = $this->_db->getQuery(true);
@@ -61,14 +55,10 @@ class THM_GroupsModelDynamic_Type_Manager extends THM_GroupsModelList
      *
      * @param   array $config config array
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array(
-                'dynamic.id',
-                'dynamic.name',
-                'static.name'
-            );
+            $config['filter_fields'] = ['dynamic.id', 'dynamic.name', 'static.name'];
         }
 
         parent::__construct($config);
@@ -113,16 +103,16 @@ class THM_GroupsModelDynamic_Type_Manager extends THM_GroupsModelList
     public function getItems()
     {
         $items  = parent::getItems();
-        $return = array();
+        $return = [];
         if (empty($items)) {
             return $return;
         }
 
-        $doNotDelete = array(TEXT, TEXTFIELD, LINK, PICTURE, MULTISELECT, TABLE, NUMBER, DATE, TEMPLATE);
+        $doNotDelete = [TEXT, TEXTFIELD, LINK, PICTURE, MULTISELECT, TABLE, NUMBER, DATE, TEMPLATE];
         $index       = 0;
         foreach ($items as $item) {
             $url            = "index.php?option=com_thm_groups&view=dynamic_type_edit&id=$item->id";
-            $return[$index] = array();
+            $return[$index] = [];
 
             $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
             $return[$index][1] = $item->id;
@@ -157,7 +147,7 @@ class THM_GroupsModelDynamic_Type_Manager extends THM_GroupsModelList
         $ordering  = $this->state->get('list.ordering');
         $direction = $this->state->get('list.direction');
 
-        $headers                      = array();
+        $headers                      = [];
         $headers['checkbox']          = '';
         $headers['id']                = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'dynamic.id',
             $direction, $ordering);

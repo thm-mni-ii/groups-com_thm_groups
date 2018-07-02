@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        TableTemplate
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2016 TH Mittelhessen
@@ -16,10 +14,6 @@ jimport('joomla.application.component.table');
 
 /**
  * Class representing the profiles table.
- *
- * @category    Joomla.Component.Admin
- * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
  */
 class THM_GroupsTableTemplate extends JTable
 {

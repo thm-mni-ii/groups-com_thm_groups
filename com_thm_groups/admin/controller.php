@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THMGroupsController
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -14,10 +12,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
 
 /**
  * THMGroupsController class for component com_thm_groups
- *
- * @category  Joomla.Component.Admin
- * @package   com_thm_groups.admin
- * @link      www.thm.de
  */
 class THM_GroupsController extends JControllerLegacy
 {
@@ -28,7 +22,7 @@ class THM_GroupsController extends JControllerLegacy
      *
      * @param array $config An optional associative array of configuration settings.
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         parent::__construct($config);
         $task           = JFactory::getApplication()->input->get('task', '');
@@ -236,7 +230,7 @@ class THM_GroupsController extends JControllerLegacy
         $app = JFactory::getApplication();
         $app->input->set('view', "{$this->resource}_edit");
 
-        $requestedIDs = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('cid', array(), 'array'));
+        $requestedIDs = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('cid', [], 'array'));
         $requestedID  = (empty($requestedIDs) or empty($requestedIDs[0])) ?
             $app->input->getInt('id', 0) : $requestedIDs[0];
 
@@ -409,7 +403,7 @@ class THM_GroupsController extends JControllerLegacy
         $app               = JFactory::getApplication();
         $model             = $this->getModel($this->resource);
         $functionAvailable = (method_exists($model, 'save'));
-        $formData          = $app->input->get('jform', array(), 'array');
+        $formData          = $app->input->get('jform', [], 'array');
 
         if ($functionAvailable and !empty($formData['id'])) {
             $existingID     = $formData['id'];
@@ -501,7 +495,7 @@ class THM_GroupsController extends JControllerLegacy
 
         if ($functionAvailable) {
             // Get the input
-            $pks   = THM_GroupsHelperComponent::cleanIntCollection($this->input->get('cid', array(), 'array'));
+            $pks   = THM_GroupsHelperComponent::cleanIntCollection($this->input->get('cid', [], 'array'));
             $order = array_keys($pks);
 
             if ($model->saveorder($pks, $order)) {

@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        JFormFieldFields
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -14,10 +12,6 @@ JFormHelper::loadFieldClass('list');
 
 /**
  * Class loads a list of fields for selection
- *
- * @category    Joomla.Component
- * @package     THM_Groups
- * @subpackage  com_thm_groups.site
  */
 class JFormFieldDateList extends JFormFieldList
 {
@@ -51,7 +45,7 @@ class JFormFieldDateList extends JFormFieldList
 
         try {
             $resources = $dbo->loadAssocList();
-            $options   = array();
+            $options   = [];
             $option    = JFactory::getApplication()->input->get('option');
             $params    = JComponentHelper::getParams($option);
             $type      = $this->getAttribute('format');

@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsViewGroup_Manager
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -16,10 +14,6 @@ require_once JPATH_SITE . '/media/com_thm_groups/helpers/batch.php';
 
 /**
  * THM_GroupsViewGroup_Manager class for component com_thm_groups
- *
- * @category  Joomla.Component.Admin
- * @package   com_thm_groups.admin
- * @link      www.thm.de
  */
 class THM_GroupsViewGroup_Manager extends THM_GroupsViewList
 {
@@ -50,10 +44,10 @@ class THM_GroupsViewGroup_Manager extends THM_GroupsViewList
         }
 
         // Set batch template path
-        $this->batch = array(
+        $this->batch = [
             'roles'     => JPATH_COMPONENT_ADMINISTRATOR . '/views/group_manager/tmpl/default_roles.php',
             'templates' => JPATH_COMPONENT_ADMINISTRATOR . '/views/group_manager/tmpl/default_templates.php'
-        );
+        ];
 
         $this->roles = [];
         $allRoles    = THM_GroupsHelperBatch::getRoles();

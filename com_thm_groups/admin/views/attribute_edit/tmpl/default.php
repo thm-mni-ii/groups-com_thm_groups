@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THMGroupsViewAttribue_Edit
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
  * @copyright   2016 TH Mittelhessen

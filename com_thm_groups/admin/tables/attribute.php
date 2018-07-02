@@ -5,10 +5,6 @@ jimport('joomla.application.component.table');
 
 /**
  * Class representing the attributes table.
- *
- * @category    Joomla.Component.Admin
- * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
  * @link        www.thm.de
  */
 class THM_GroupsTableAttribute extends JTable

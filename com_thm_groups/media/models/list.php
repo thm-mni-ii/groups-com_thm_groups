@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.media
- * @name        THM_GroupsModelList
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @author      Ilja Michajlow, <Ilja.Michajlow@mni.thm.de>
  * @copyright   2017 TH Mittelhessen
@@ -14,10 +12,6 @@ defined('_JEXEC') or die;
 
 /**
  * Class creates a list of entries.
- *
- * @category    Joomla component
- * @package     THM_Groups
- * @subpackage  com_thm_groups.media
  */
 abstract class THM_GroupsModelList extends JModelList
 {

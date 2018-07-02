@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        THM_Groups Site Main File
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2

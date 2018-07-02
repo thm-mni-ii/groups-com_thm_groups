@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        THM_GroupsModelProfile_Edit
+ * @subpackate com_thm_groups
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
  * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
@@ -17,9 +15,6 @@ require_once JPATH_SITE . '/media/com_thm_groups/models/profile_edit_model.php';
 
 /**
  * THM_GroupsModelProfile_Edit class for component com_thm_groups
- *
- * @category  Joomla.Component.Site
- * @package   thm_groups
  */
 class THM_GroupsModelProfile_Edit extends THM_GroupsModelProfile_Edit_Model
 {

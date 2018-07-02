@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsViewStatic_Type_Extra_Options_Ajax
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -14,10 +12,6 @@ jimport('joomla.application.component.view');
 
 /**
  * Class loading persistent data into the view context
- *
- * @category    Joomla.Component.Admin
- * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
  * @link        www.thm.de
  */
 class THM_GroupsViewStatic_Type_Ajax extends JViewLegacy
@@ -48,7 +42,7 @@ class THM_GroupsViewStatic_Type_Ajax extends JViewLegacy
         if (!empty($staticTypeName)) {
             $functionName = 'get' . strtoupper($staticTypeName) . 'Options';
             if (method_exists($this, $functionName)) {
-                echo call_user_func(array($this, $functionName));
+                echo call_user_func([$this, $functionName]);
             }
         }
     }

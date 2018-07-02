@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        provides options
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -22,9 +20,6 @@ define('TEMPLATE', 9);
 
 /**
  * Class providing options
- *
- * @category  Joomla.Component.Admin
- * @package   thm_groups
  */
 class THM_GroupsHelperStatic_Type
 {

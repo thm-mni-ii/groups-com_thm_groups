@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsHelperProfile
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -16,9 +14,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
 
 /**
  * Class providing helper functions for batch select options
- *
- * @category  Joomla.Component.Admin
- * @package   thm_groups
  */
 class THM_GroupsHelperProfile
 {
@@ -47,10 +42,10 @@ class THM_GroupsHelperProfile
         } catch (Exception $exc) {
             JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-            return array();
+            return [];
         }
 
-        return empty($attributes) ? array() : $attributes;
+        return empty($attributes) ? [] : $attributes;
     }
 
     /**
@@ -508,7 +503,7 @@ class THM_GroupsHelperProfile
                         $value = JHTML::image(
                             JURI::root() . $relativePath . $attribute['value'],
                             $surname,
-                            array('class' => 'thm_groups_profile_container_profile_image')
+                            ['class' => 'thm_groups_profile_container_profile_image']
                         );
                     } else {
                         $value = '';

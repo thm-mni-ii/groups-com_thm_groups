@@ -5,38 +5,38 @@
  */
 function addProfiles(profileEntries)
 {
-	"use strict";
+    "use strict";
 
-	var profiles = jQuery.parseJSON(profileEntries);
+    var profiles = jQuery.parseJSON(profileEntries);
 
-	jQuery('#selectable-profiles').children().remove();
+    jQuery('#selectable-profiles').children().remove();
 
-	jQuery.each(profiles, function (key, value) {
+    jQuery.each(profiles, function (key, value) {
 
-		var row, rowID = 'profile' + key;
+        var row, rowID = 'profile' + key;
 
-		// Element already exists
-		if (!profiles.hasOwnProperty(key) || jQuery('#' + rowID).length)
-		{
-			return true;
-		}
+        // Element already exists
+        if (!profiles.hasOwnProperty(key) || jQuery('#' + rowID).length)
+        {
+            return true;
+        }
 
-		row = '<tr id="' + rowID + '">';
+        row = '<tr id="' + rowID + '">';
 
-		row += '<td class="order nowrap center" style="width: 1rem;">';
-		row += '<span class="sortable-handler" style="cursor: move;"><span class="icon-menu"></span></span>';
-		row += '</td>';
+        row += '<td class="order nowrap center" style="width: 1rem;">';
+        row += '<span class="sortable-handler" style="cursor: move;"><span class="icon-menu"></span></span>';
+        row += '</td>';
 
-		row += '<td class="profile-data" style="text-align: left">';
-		row += '<span class="check-span icon-checkbox-checked" onclick="processProfileRow(\'' + rowID + '\')"></span>';
-		row += '<span class="profile-name">' + value.name + '</span>';
-		row += '<span class="profile-id" style="display: none;">' + value.id + '</span>';
-		row += '<span class="profile-link" style="display: none;">' + value.link + '</span>';
-		row += '</td>';
-		row += '</tr>';
+        row += '<td class="profile-data" style="text-align: left">';
+        row += '<span class="check-span icon-checkbox-checked" onclick="processProfileRow(\'' + rowID + '\')"></span>';
+        row += '<span class="profile-name">' + value.name + '</span>';
+        row += '<span class="profile-id" style="display: none;">' + value.id + '</span>';
+        row += '<span class="profile-link" style="display: none;">' + value.link + '</span>';
+        row += '</td>';
+        row += '</tr>';
 
-		jQuery(row).appendTo('#selected-profiles');
-	});
+        jQuery(row).appendTo('#selected-profiles');
+    });
 }
 
 /**
@@ -46,18 +46,18 @@ function addProfiles(profileEntries)
  */
 function insertProfileLinks()
 {
-	"use strict";
+    "use strict";
 
-	var links = [];
+    var links = [];
 
-	jQuery.each(jQuery('#selected-profiles td.profile-data'), function (key, value) {
-		var name = value.children[1].textContent, link = value.children[3].textContent;
-		links.push('<a title="' + name + '"href="' + link + '">' + name + '</a>');
-	});
+    jQuery.each(jQuery('#selected-profiles td.profile-data'), function (key, value) {
+        var name = value.children[1].textContent, link = value.children[3].textContent;
+        links.push('<a title="' + name + '"href="' + link + '">' + name + '</a>');
+    });
 
-	jQuery('#selected-profiles').children().remove();
-	window.parent.jInsertEditorText(links.join(', '), editor);
-	window.parent.SqueezeBox.close();
+    jQuery('#selected-profiles').children().remove();
+    window.parent.jInsertEditorText(links.join(', '), editor);
+    window.parent.SqueezeBox.close();
 }
 
 /**
@@ -67,30 +67,30 @@ function insertProfileLinks()
  */
 function insertProfileParameters()
 {
-	"use strict";
+    "use strict";
 
-	var profileIDs = [], groupID = jQuery('#filter_groups').val(), templateID = jQuery('#filter_templates').val(),
-		useProfileIDs, useGroupID, useTemplateID, hook = '';
+    var profileIDs = [], groupID = jQuery('#filter_groups').val(), templateID = jQuery('#filter_templates').val(),
+        useProfileIDs, useGroupID, useTemplateID, hook = '';
 
-	jQuery.each(jQuery('#selected-profiles td.profile-data'), function (key, value) {
-		var id = value.children[2].textContent;
-		profileIDs.push(id);
-	});
+    jQuery.each(jQuery('#selected-profiles td.profile-data'), function (key, value) {
+        var id = value.children[2].textContent;
+        profileIDs.push(id);
+    });
 
-	hook += profileIDs.length > 0 ? 'profileIDs=' + profileIDs.join(',') + '|' : '';
-	hook += groupID != '' ? 'groupIDs=' + groupID + '|' : '';
+    hook += profileIDs.length > 0 ? 'profileIDs=' + profileIDs.join(',') + '|' : '';
+    hook += groupID != '' ? 'groupIDs=' + groupID + '|' : '';
 
-	// Without profile ids or a group id there is nothing to display
-	if (hook === '')
-	{
-		return;
-	}
+    // Without profile ids or a group id there is nothing to display
+    if (hook === '')
+    {
+        return;
+    }
 
-	hook += templateID != '' ? 'templateIDs=' + templateID : '';
+    hook += templateID != '' ? 'templateIDs=' + templateID : '';
 
-	jQuery('#selected-profiles').children().remove();
-	window.parent.jInsertEditorText('{thm_groups ' + hook + '}', editor);
-	window.parent.SqueezeBox.close();
+    jQuery('#selected-profiles').children().remove();
+    window.parent.jInsertEditorText('{thm_groups ' + hook + '}', editor);
+    window.parent.SqueezeBox.close();
 }
 
 /**
@@ -99,42 +99,42 @@ function insertProfileParameters()
  */
 function processProfileRow(rowID)
 {
-	"use strict";
+    "use strict";
 
-	var row = jQuery('#selected-profiles #' + rowID), checkSpan, sortSpan;
+    var row = jQuery('#selected-profiles #' + rowID), checkSpan, sortSpan;
 
-	// The row is in the selected area
-	if (row.length)
-	{
-		row.appendTo('#selectable-profiles');
+    // The row is in the selected area
+    if (row.length)
+    {
+        row.appendTo('#selectable-profiles');
 
-		checkSpan = jQuery('#' + rowID + ' span.icon-checkbox-checked');
-		checkSpan.removeClass('icon-checkbox-checked');
-		checkSpan.addClass('icon-checkbox-unchecked');
+        checkSpan = jQuery('#' + rowID + ' span.icon-checkbox-checked');
+        checkSpan.removeClass('icon-checkbox-checked');
+        checkSpan.addClass('icon-checkbox-unchecked');
 
-		sortSpan = jQuery('#' + rowID + ' span.sortable-handler');
-		sortSpan.addClass('inactive');
+        sortSpan = jQuery('#' + rowID + ' span.sortable-handler');
+        sortSpan.addClass('inactive');
 
-		return;
-	}
+        return;
+    }
 
-	row = jQuery('#selectable-profiles #' + rowID);
+    row = jQuery('#selectable-profiles #' + rowID);
 
-	if (!row.length)
-	{
-		return;
-	}
+    if (!row.length)
+    {
+        return;
+    }
 
-	row.appendTo('#selected-profiles');
+    row.appendTo('#selected-profiles');
 
-	checkSpan = jQuery('#' + rowID + ' span.icon-checkbox-unchecked');
-	checkSpan.removeClass('icon-checkbox-unchecked');
-	checkSpan.addClass('icon-checkbox-checked');
+    checkSpan = jQuery('#' + rowID + ' span.icon-checkbox-unchecked');
+    checkSpan.removeClass('icon-checkbox-unchecked');
+    checkSpan.addClass('icon-checkbox-checked');
 
-	sortSpan = jQuery('#' + rowID + ' span.sortable-handler');
-	sortSpan.removeClass('inactive');
+    sortSpan = jQuery('#' + rowID + ' span.sortable-handler');
+    sortSpan.removeClass('inactive');
 
-	return;
+    return;
 }
 
 /**
@@ -142,25 +142,25 @@ function processProfileRow(rowID)
  */
 function repopulateProfiles()
 {
-	"use strict";
+    "use strict";
 
-	var componentParameters, selectionParameters;
-	componentParameters = 'index.php?option=com_thm_groups&view=profile_ajax&format=raw&task=getContentOptions';
-	selectionParameters = '&groupID=' + jQuery('#filter_groups').val();
+    var componentParameters, selectionParameters;
+    componentParameters = 'index.php?option=com_thm_groups&view=profile_ajax&format=raw&task=getContentOptions';
+    selectionParameters = '&groupID=' + jQuery('#filter_groups').val();
 
-	jQuery.ajax({
-		type: 'GET',
-		url: rootURI + componentParameters + selectionParameters,
-		success: function (data) {
-			addProfiles(data);
-		},
-		error: function (xhr, textStatus, errorThrown) {
-			if (xhr.status === 404 || xhr.status === 500)
-			{
-				jQuery.ajax(repopulateProfiles());
-			}
-		}
-	});
+    jQuery.ajax({
+        type: 'GET',
+        url: rootURI + componentParameters + selectionParameters,
+        success: function (data) {
+            addProfiles(data);
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            if (xhr.status === 404 || xhr.status === 500)
+            {
+                jQuery.ajax(repopulateProfiles());
+            }
+        }
+    });
 }
 
 /**
@@ -168,10 +168,10 @@ function repopulateProfiles()
  */
 function resetProfiles()
 {
-	jQuery('#selected-profiles').children().remove();
-	jQuery('#selectable-profiles').children().remove();
-	jQuery('#filter_groups').val('');
-	jQuery('#filter_templates').val('');
+    jQuery('#selected-profiles').children().remove();
+    jQuery('#selectable-profiles').children().remove();
+    jQuery('#filter_groups').val('');
+    jQuery('#filter_templates').val('');
 }
 
 

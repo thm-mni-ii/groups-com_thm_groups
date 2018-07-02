@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsViewProfile_Manager
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -18,9 +16,6 @@ require_once JPATH_SITE . '/media/com_thm_groups/helpers/batch.php';
 
 /**
  * THM_GroupsViewProfile_Manager class for component com_thm_groups
- *
- * @category  Joomla.Component.Admin
- * @package   com_thm_groups.admin
  */
 class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
 {

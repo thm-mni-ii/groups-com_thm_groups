@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        THMGroupsViewAdvanced
+ * @subpackate com_thm_groups
  * @author      Dennis Priefer,  <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis,  <niklas.simonis@mni.thm.de>
  * @author      Alexander Boll,  <alexander.boll@mni.thm.de>

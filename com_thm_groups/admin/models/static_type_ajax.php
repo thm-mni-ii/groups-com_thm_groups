@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsModelStatic_Type_Extra_Options_Ajax
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
@@ -16,10 +14,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/static_type.php';
 
 /**
  * Class provides method for extra options of static types
- *
- * @category    Joomla.Component.Site
- * @package     THM_Groups
- * @subpackage  com_thm_groups.site
  */
 class THM_GroupsModelStatic_Type_Ajax extends JModelForm
 {
@@ -152,12 +146,12 @@ class THM_GroupsModelStatic_Type_Ajax extends JModelForm
      *
      * @since   12.2
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = [], $loadData = true)
     {
         $option = $this->get('option');
         $name   = $this->get('name');
 
-        return $this->loadForm("$option.$name", $name, array('control' => 'jform', 'load_data' => $loadData));
+        return $this->loadForm("$option.$name", $name, ['control' => 'jform', 'load_data' => $loadData]);
     }
 
     /**
@@ -179,7 +173,7 @@ class THM_GroupsModelStatic_Type_Ajax extends JModelForm
             $dynTypeOptions = THM_GroupsHelperStatic_Type::getOption($staticTypeID);
         }
 
-        $data        = array();
+        $data        = [];
         $attrOptions = json_decode($this->getAttributeOptionsByID($input->getInt('attributeID', 0)));
 
         // Attribute

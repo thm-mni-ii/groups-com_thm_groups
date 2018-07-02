@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsViewTHM_Groups
+ * @subpackate com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
@@ -18,9 +16,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
 
 /**
  * THM_GroupsViewTHM_Groups class for component com_thm_groups
- *
- * @category  Joomla.Component.Admin
- * @package   com_thm_groups.admin
  */
 class THM_GroupsViewTHM_Groups extends JViewLegacy
 {

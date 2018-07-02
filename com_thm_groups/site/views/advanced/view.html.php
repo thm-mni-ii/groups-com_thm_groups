@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        THMGroupsViewAdvanced
+ * @subpackate com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
@@ -17,10 +15,6 @@ require_once JPATH_ROOT . "/media/com_thm_groups/helpers/profile.php";
 
 /**
  * THMGroupsViewAdvanced class for component com_thm_groups
- *
- * @category  Joomla.Component.Site
- * @package   thm_groups
- * @link      www.thm.de
  */
 class THM_GroupsViewAdvanced extends JViewLegacy
 {
@@ -72,7 +66,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $this->suppressText = $params->get('suppress', true);
         $this->title        = empty($params->get('show_page_heading')) ? '' : $params->get('page_title', '');
 
-        $user = JFactory::getUser();
+        $user               = JFactory::getUser();
         $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
         $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
         $this->isAdmin      = ($isAdmin or $isComponentManager);

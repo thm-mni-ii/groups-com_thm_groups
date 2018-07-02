@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        THM_GroupsModelContent
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -18,9 +16,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/content.php';
 
 /**
  * Content Model
- *
- * @package        Joomla.Site
- * @subpackage     com_content
  */
 class THM_GroupsModelContent extends JModelItem
 {

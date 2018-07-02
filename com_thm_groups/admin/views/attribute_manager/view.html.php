@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsViewAttribute_Manager
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -17,10 +15,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/views/list.php';
 
 /**
  * THM_GroupsViewAttribute_Manager class for component com_thm_groups
- *
- * @category  Joomla.Component.Admin
- * @package   com_thm_groups.admin
- * @link      www.thm.de
  */
 class THM_GroupsViewAttribute_Manager extends THM_GroupsViewList
 {

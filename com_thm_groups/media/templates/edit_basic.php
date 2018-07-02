@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        THM_GroupsTemplateEdit_Basic
+ * @subpackate com_thm_groups
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
@@ -13,10 +11,6 @@
 
 /**
  * Class provides standardized output of list items
- *
- * @category    Joomla.Component
- * @package     THM_Groups
- * @subpackage  com_thm_groups.site
  */
 class THM_GroupsTemplateEdit_Basic
 {

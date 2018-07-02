@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        THM_GroupsViewProfile_Edit
+ * @subpackate com_thm_groups
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
  * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
@@ -20,10 +18,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
 
 /**
  * THM_GroupsViewProfile_Edit class for component com_thm_groups
- *
- * @category  Joomla.Component.Site
- * @package   thm_groups
- * @link      www.thm.de
  */
 class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 {
@@ -139,7 +133,7 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
             if (file_exists($filePath)) {
                 $file = JURI::root() . $relativePath . $value;
                 $alt  = (count($nameAttributes) == 2) ? implode(', ', $nameAttributes) : end($nameAttributes);
-                $html .= JHtml::image($file, $alt, array('class' => 'edit_img'));
+                $html .= JHtml::image($file, $alt, ['class' => 'edit_img']);
             }
         }
 
@@ -214,15 +208,15 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
         $options  = $attribute['options'];
         $required = (!empty($options) and !empty($options['required'])) ? $options['required'] : '';
         $html     = '<input type="text" ';
-        $html .= 'id="jform_' . $attribute['name'] . '" ';
-        $html .= 'name="jform[' . $attribute['name'] . '][value]" ';
-        $html .= 'class="hasTooltip" ';
-        $html .= 'data="" ';
-        $html .= 'data-original-title="' . $attribute['description'] . '" ';
-        $html .= 'data-placement="right" ';
-        $html .= 'data-req="' . $required . '" ';
-        $html .= 'onchange="validateInput(\'' . $attribute['regex'] . '\', \'jform_' . $attribute['name'] . '\')" ';
-        $html .= 'value="' . $attribute['value'] . '" />';
+        $html     .= 'id="jform_' . $attribute['name'] . '" ';
+        $html     .= 'name="jform[' . $attribute['name'] . '][value]" ';
+        $html     .= 'class="hasTooltip" ';
+        $html     .= 'data="" ';
+        $html     .= 'data-original-title="' . $attribute['description'] . '" ';
+        $html     .= 'data-placement="right" ';
+        $html     .= 'data-req="' . $required . '" ';
+        $html     .= 'onchange="validateInput(\'' . $attribute['regex'] . '\', \'jform_' . $attribute['name'] . '\')" ';
+        $html     .= 'value="' . $attribute['value'] . '" />';
 
         return $html;
     }

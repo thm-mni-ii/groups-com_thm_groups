@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsModelContent
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -15,9 +13,6 @@ require_once JPATH_SITE . '/media/com_thm_groups/helpers/componentHelper.php';
 
 /**
  * THM_GroupsModelContent class for component com_thm_groups
- *
- * @category  Joomla.Component.Admin
- * @package   com_thm_groups.admin
  */
 class THM_GroupsModelContent extends JModelLegacy
 {

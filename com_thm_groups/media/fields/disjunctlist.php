@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        JFormFieldFields
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -14,10 +12,6 @@ JFormHelper::loadFieldClass('list');
 
 /**
  * Class loads a list of fields for selection
- *
- * @category    Joomla.Component
- * @package     THM_Groups
- * @subpackage  com_thm_groups.site
  */
 class JFormFieldDisjunctList extends JFormFieldList
 {
@@ -52,7 +46,7 @@ class JFormFieldDisjunctList extends JFormFieldList
 
         try {
             $resources = $dbo->loadAssocList();
-            $options   = array();
+            $options   = [];
             foreach ($resources as $resource) {
                 // Removes glue from the end of entries
                 $glue = $this->getAttribute('glue', '');

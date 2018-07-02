@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        JFormFieldGroup
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -23,7 +21,7 @@ class JFormFieldGroup extends JFormFieldList
      *
      * @var    array
      */
-    protected static $options = array();
+    protected static $options = [];
 
     /**
      * Returns a list of all user groups
@@ -60,7 +58,7 @@ class JFormFieldGroup extends JFormFieldList
 
         if (!isset(static::$options[$hash])) {
             static::$options[$hash] = parent::getOptions();
-            $options                = array();
+            $options                = [];
 
             $arrayOfGroups = $this->getGroupsFromDB();
 

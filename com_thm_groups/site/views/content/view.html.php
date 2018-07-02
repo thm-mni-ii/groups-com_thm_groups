@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        THMGroupsSingleArticle
+ * @subpackate com_thm_groups
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
@@ -24,9 +22,6 @@ jimport('joomla.application.component.helper');
 
 /**
  * View class for a list of articles
- *
- * @category  Joomla.Component.Site
- * @package   thm_groups
  */
 class THM_GroupsViewContent extends JViewLegacy
 {
@@ -194,16 +189,16 @@ class THM_GroupsViewContent extends JViewLegacy
             if ($this->item->title) {
                 $title = $this->item->title;
             }
-            $path     = array(array('title' => $this->item->title, 'link' => ''));
+            $path     = [['title' => $this->item->title, 'link' => '']];
             $category = JCategories::getInstance('Content')->get($this->item->catid);
             while (
                 $category && ($menu->query['option'] != 'com_content' || $menu->query['view'] == 'article' || $id != $category->id)
                 && $category->id > 1
             ) {
-                $path[]   = array(
+                $path[]   = [
                     'title' => $category->title,
                     'link'  => ContentHelperRoute::getCategoryRoute($category->id)
-                );
+                ];
                 $category = $category->getParent();
             }
             $path = array_reverse($path);
@@ -286,28 +281,28 @@ class THM_GroupsViewContent extends JViewLegacy
         JPluginHelper::importPlugin('content');
         $results = $dispatcher->trigger(
             'onContentPrepare',
-            array('com_content.article', &$this->item, &$this->params, $pageNo)
+            ['com_content.article', &$this->item, &$this->params, $pageNo]
         );
 
         $this->item->event = new stdClass;
 
         $results = $dispatcher->trigger(
             'onContentAfterTitle',
-            array('com_content.article', &$this->item, &$this->params, $pageNo)
+            ['com_content.article', &$this->item, &$this->params, $pageNo]
         );
 
         $this->item->event->afterDisplayTitle = trim(implode("\n", $results));
 
         $results = $dispatcher->trigger(
             'onContentBeforeDisplay',
-            array('com_content.article', &$this->item, &$this->params, $pageNo)
+            ['com_content.article', &$this->item, &$this->params, $pageNo]
         );
 
         $this->item->event->beforeDisplayContent = trim(implode("\n", $results));
 
         $results = $dispatcher->trigger(
             'onContentAfterDisplay',
-            array('com_content.article', &$this->item, &$this->params, $pageNo)
+            ['com_content.article', &$this->item, &$this->params, $pageNo]
         );
 
         $this->item->event->afterDisplayContent = trim(implode("\n", $results));

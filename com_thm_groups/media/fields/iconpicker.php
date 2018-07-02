@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        JFormFieldFields
+ * @subpackate com_thm_groups
  * @author      Lavinia Popa-Rössel, <lavinia.popa-roessel@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -15,10 +13,6 @@ defined('_JEXEC') or die;
 
 /**
  * Class loads a list of fields for selection
- *
- * @category    Joomla.Component
- * @package     THM_Groups
- * @subpackage  com_thm_groups.site
  */
 class JFormFieldIconPicker extends JFormField
 {
@@ -67,7 +61,7 @@ class JFormFieldIconPicker extends JFormField
 
         while (($line = fgets($file)) !== false) {
             if (strpos($line, '.icon-') !== false) {
-                $suchMuster        = array("/(\.)/", "/(:before\s*{?,?)\s*/");
+                $suchMuster        = ["/(\.)/", "/(:before\s*{?,?)\s*/"];
                 $iconClassName     = preg_replace($suchMuster, "", $line);
                 $displayedIconName = str_replace("icon-", "", $iconClassName);
                 $selected          = (!empty($this->value) and ($this->value === $iconClassName));

@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        TableGroupmanager
+ * @subpackate com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
@@ -16,10 +14,6 @@ jimport('joomla.application.component.table');
 
 /**
  * TableGroupmanager class for component com_thm_groups
- *
- * @category  Joomla.Component.Admin
- * @package   com_thm_groups.admin
- * @link      www.thm.de
  */
 class TableGroupmanager extends JTable
 {

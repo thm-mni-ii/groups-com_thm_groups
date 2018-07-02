@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        THMGroupsModelProfile
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -15,9 +13,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
 
 /**
  * THMGroupsModelProfile class for component com_thm_groups
- *
- * @category  Joomla.Component.Site
- * @package   thm_groups
  */
 class THM_GroupsModelProfile extends JModelItem
 {

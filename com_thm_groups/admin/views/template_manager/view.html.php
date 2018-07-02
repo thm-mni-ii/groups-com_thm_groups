@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsViewTemplate_Manager
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2016 TH Mittelhessen
@@ -18,10 +16,6 @@ require_once JPATH_SITE . '/media/com_thm_groups/helpers/batch.php';
 
 /**
  * THM_GroupsViewTemplate_Manager class for component com_thm_groups
- *
- * @category  Joomla.Component.Admin
- * @package   com_thm_groups.admin
- * @link      www.thm.de
  */
 class THM_GroupsViewTemplate_Manager extends THM_GroupsViewList
 {
@@ -51,7 +45,7 @@ class THM_GroupsViewTemplate_Manager extends THM_GroupsViewList
 
         // Set batch template path
         $batchPath   = JPATH_COMPONENT_ADMINISTRATOR . '/views/template_manager/tmpl/default_batch.php';
-        $this->batch = array('batch' => $batchPath);
+        $this->batch = ['batch' => $batchPath];
 
         $this->groups = THM_GroupsHelperBatch::getGroupOptions();
 

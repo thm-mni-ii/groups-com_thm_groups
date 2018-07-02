@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.media
- * @name        THM_GroupsHelperRole
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -12,9 +10,6 @@
 
 /**
  * Class providing helper functions role entities
- *
- * @category  Joomla.Component.Media
- * @package   com_thm_groups
  */
 class THM_GroupsHelperRole
 {

@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        THMGroupsSingleArticle
+ * @subpackate com_thm_groups
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -22,11 +20,11 @@ if ($urls && (!empty($urls->urla) || !empty($urls->urlb) || !empty($urls->urlc))
     <div class="content-links">
         <ul>
             <?php
-            $urlarray = array(
-                array($urls->urla, $urls->urlatext, $urls->targeta, 'a'),
-                array($urls->urlb, $urls->urlbtext, $urls->targetb, 'b'),
-                array($urls->urlc, $urls->urlctext, $urls->targetc, 'c')
-            );
+            $urlarray = [
+                [$urls->urla, $urls->urlatext, $urls->targeta, 'a'],
+                [$urls->urlb, $urls->urlbtext, $urls->targetb, 'b'],
+                [$urls->urlc, $urls->urlctext, $urls->targetc, 'c']
+            ];
             foreach ($urlarray as $url) {
                 $link   = $url[0];
                 $label  = $url[1];

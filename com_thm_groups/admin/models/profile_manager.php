@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsModelProfile_Manager
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2016 TH Mittelhessen
@@ -15,9 +13,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
 
 /**
  * THM_GroupsModelProfile_Manager class for component com_thm_groups
- *
- * @category  Joomla.Component.Admin
- * @package   com_thm_groups.admin
  */
 class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
 {

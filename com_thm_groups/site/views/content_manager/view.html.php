@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsViewContent_Manager
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -22,10 +20,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
 
 /**
  * Class displays content in the profile's content category
- *
- * @category  Joomla.Component.Admin
- * @package   com_thm_groups.admin
- * @link      www.thm.de
  */
 class THM_GroupsViewContent_Manager extends JViewLegacy
 {
@@ -110,10 +104,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
                 . $this->categoryID . '&return=' . $returnURL
             );
 
-            $attribs = array(
-                'title' => JText::_('COM_THM_GROUPS_NEW_ARTICLE'),
-                'class' => 'btn'
-            );
+            $attribs = ['title' => JText::_('COM_THM_GROUPS_NEW_ARTICLE'), 'class' => 'btn'];
 
             $text = '<span class="icon-new"></span> ' . JText::_('COM_THM_GROUPS_NEW_ARTICLE');
 
@@ -130,18 +121,16 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
      */
     public function getProfileButton()
     {
-        $profileID = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
-        $groupID   = THM_GroupsHelperProfile::getDefaultGroup($profileID);
-        $surname   = THM_GroupsHelperProfile::getAttributeValue($profileID, 2);
-        $buttonURL = "index.php?view=profile&profileID=$profileID&name=$surname";
-        $buttonURL .= empty($groupID) ? '' : "&groupID=$groupID";
+        $profileID   = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
+        $groupID     = THM_GroupsHelperProfile::getDefaultGroup($profileID);
+        $surname     = THM_GroupsHelperProfile::getAttributeValue($profileID, 2);
+        $buttonURL   = "index.php?view=profile&profileID=$profileID&name=$surname";
+        $buttonURL   .= empty($groupID) ? '' : "&groupID=$groupID";
         $buttonRoute = JRoute::_($buttonURL);
 
         $buttonText = '<span class="icon-user"></span>' . JText::_('COM_THM_GROUPS_MY_PROFILE');
 
-        $attribs = array(
-            'class' => 'btn'
-        );
+        $attribs = ['class' => 'btn'];
 
         return JHTML::_('link', $buttonRoute, $buttonText, $attribs);
     }
@@ -160,7 +149,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
             $sortIcon  = '<span class="sortable-handler" style="cursor: move;"><i class="icon-menu"></i></span>';
             $sortInput = '<input type="text" style="display:none" name="order[]" size="5" ';
             $sortInput .= 'value="' . (string)$item->ordering . '" class="width-20 text-area-order">';
-            $sort = '<td class="order nowrap center" style="width: 40px;">' . $sortIcon . $sortInput . '</td>';
+            $sort      = '<td class="order nowrap center" style="width: 40px;">' . $sortIcon . $sortInput . '</td>';
         } else {
             $sort = '';
         }
@@ -270,13 +259,13 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
      */
     public function getTitle($key, &$item)
     {
-        $profileID = JFactory::getUser()->id;
-        $surname   = THM_GroupsHelperProfile::getAttributeValue(JFactory::getUser()->id, 2);
-        $menuID    = JFactory::getApplication()->input->getInt('Itemid', 0);
-        $viewURL   = 'index.php?option=com_thm_groups&view=content';
-        $viewURL .= "&id=$item->id&alias=$item->alias&profileID=$profileID&name=$surname";
+        $profileID   = JFactory::getUser()->id;
+        $surname     = THM_GroupsHelperProfile::getAttributeValue(JFactory::getUser()->id, 2);
+        $menuID      = JFactory::getApplication()->input->getInt('Itemid', 0);
+        $viewURL     = 'index.php?option=com_thm_groups&view=content';
+        $viewURL     .= "&id=$item->id&alias=$item->alias&profileID=$profileID&name=$surname";
         $viewRoute   = JRoute::_($viewURL, false);
-        $viewAttribs = array('title' => JText::_('COM_THM_GROUPS_VIEW'), 'class' => 'jgrid', 'target' => '_blank');
+        $viewAttribs = ['title' => JText::_('COM_THM_GROUPS_VIEW'), 'class' => 'jgrid', 'target' => '_blank'];
 
         if ($item->canEdit) {
             $lock = '';
@@ -288,10 +277,10 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 
             $returnURL = base64_encode(JUri::current());
             $editURL   = 'index.php?option=com_content&task=article.edit';
-            $editURL .= "&Itemid=$menuID'&a_id=$item->id&return=$returnURL";
+            $editURL   .= "&Itemid=$menuID'&a_id=$item->id&return=$returnURL";
             $editRoute = JRoute::_($editURL);
 
-            $editAttribs = array('title' => JText::_('COM_THM_GROUPS_EDIT'));
+            $editAttribs = ['title' => JText::_('COM_THM_GROUPS_EDIT')];
             $editLink    = $lock . JHTML::_('link', $editRoute, $item->title, $editAttribs);
 
             $viewText = '<span class="icon-eye-open"></span>';
@@ -327,7 +316,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
             $tip        = 'COM_THM_GROUPS_UNPUBLISHED';
         }
 
-        $attributes                = array();
+        $attributes                = [];
         $attributes['title']       = JText::_($tip);
         $attributes['data-toggle'] = "tooltip";
 

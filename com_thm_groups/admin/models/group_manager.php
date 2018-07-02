@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsModelGroup_Manager
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
@@ -16,10 +14,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
 
 /**
  * Class loads form data to edit an entry.
- *
- * @category    Joomla.Component.Admin
- * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
  */
 class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
 {
@@ -53,9 +47,9 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
             ->group('a.id, a.lft, a.rgt, a.parent_id, a.title');
 
 
-        $this->setSearchFilter($query, array('a.title'));
-        $this->setIDFilter($query, 'd.rolesID', array('filter.roles'));
-        $this->setIDFilter($query, 'f.templateID', array('filter.templates'));
+        $this->setSearchFilter($query, ['a.title']);
+        $this->setIDFilter($query, 'd.rolesID', ['filter.roles']);
+        $this->setIDFilter($query, 'f.templateID', ['filter.templates']);
         $this->setOrdering($query);
 
         return $query;
@@ -69,7 +63,7 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
     public function getItems()
     {
         $items  = parent::getItems();
-        $return = array();
+        $return = [];
 
         if (empty($items)) {
             return $return;
@@ -86,7 +80,7 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
 
             $levelIndicator = str_repeat('<span class="gi">|&mdash;</span>', $item->level);
             $groupText      = $canEditGroups ? JHtml::_('link', $url, $item->title,
-                array('target' => '_blank')) : $item->title;
+                ['target' => '_blank']) : $item->title;
 
             $return[$index][2] = "$levelIndicator $groupText";
             $return[$index][3] = $this->getRoles($item->id);
@@ -136,7 +130,7 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
         $ordering  = $this->state->get('list.ordering');
         $direction = $this->state->get('list.direction');
 
-        $headers                = array();
+        $headers                = [];
         $headers['checkbox']    = '';
         $headers['id']          = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'a.id', $direction,
             $ordering);
@@ -202,7 +196,7 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
 
         $deleteIcon = '<span class="icon-trash"></span>';
 
-        $return = array();
+        $return = [];
         if (!empty($roles)) {
             foreach ($roles as $role) {
                 if ($role->id != 1) {
@@ -273,7 +267,7 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
      */
     public function getHiddenFields()
     {
-        $fields = array();
+        $fields = [];
 
         // Hidden fields for batch processing
         $fields[] = '<input type="hidden" name="groupID" value="">';

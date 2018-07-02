@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsHelperDatabase_Compare
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -12,9 +10,6 @@
 
 /**
  * Class providing helper functions for group manager
- *
- * @category  Joomla.Component.Admin
- * @package   thm_groups
  */
 class THM_GroupsHelperDatabase_Compare
 {

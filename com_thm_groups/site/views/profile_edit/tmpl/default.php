@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THMGroupsViewProfile_Edit
+ * @subpackate com_thm_groups
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -11,7 +9,7 @@
  */
 defined('_JEXEC') or die;
 
-$nameAttributes = array();
+$nameAttributes = [];
 
 if (!empty($attributes[1]) && $attributes[1]['value']) {
     $nameAttributes[2] = $attribute['value'];

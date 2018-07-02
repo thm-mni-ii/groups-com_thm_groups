@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsViewRole_Manager
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -13,10 +11,10 @@
 defined('_JEXEC') or die;
 
 // Create the copy/move options.
-$options = array(
+$options = [
     JHtml::_('select.option', 'add', JText::_('COM_THM_GROUPS_ADD')),
     JHtml::_('select.option', 'delete', JText::_('COM_THM_GROUPS_DELETE')),
-);
+];
 
 ?>
 <div class="modal hide fade" id="collapseModal">

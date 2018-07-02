@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsModelTemplate_Edit
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -17,10 +15,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/models/edit.php';
 
 /**
  * Class loads form data to edit an entry.
- *
- * @category    Joomla.Component.Admin
- * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
  */
 class THM_GroupsModelTemplate_Edit extends THM_GroupsModelEdit
 {
@@ -34,7 +28,7 @@ class THM_GroupsModelTemplate_Edit extends THM_GroupsModelEdit
      *
      * @return  JTable object
      */
-    public function getTable($name = 'Template', $prefix = 'THM_GroupsTable', $options = array())
+    public function getTable($name = 'Template', $prefix = 'THM_GroupsTable', $options = [])
     {
         return JTable::getInstance($name, $prefix, $options);
     }
@@ -47,7 +41,7 @@ class THM_GroupsModelTemplate_Edit extends THM_GroupsModelEdit
     protected function loadFormData()
     {
         $app = JFactory::getApplication();
-        $ids = $app->input->get('cid', array(), 'array');
+        $ids = $app->input->get('cid', [], 'array');
 
         // Input->get because id is in url
         $id = (empty($ids)) ? $app->input->get->get('id') : $ids[0];

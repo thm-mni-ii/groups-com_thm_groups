@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        JFormFieldRegex
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -30,7 +28,7 @@ class JFormFieldRegex extends JFormFieldGroupedList
      */
     protected function getGroups()
     {
-        $groups     = array();
+        $groups     = [];
         $groups[][] = JHtml::_('select.option', '', 'No regex');
 
         $groups['Text'][] = JHtml::_('select.option', '^([a-zA-ZäöüÄÖÜ])*[a-zA-ZäöüÄÖÜ]$',

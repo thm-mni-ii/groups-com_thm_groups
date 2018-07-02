@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        dynamic type model
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
@@ -19,10 +17,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
 
 /**
  * Class loads form data to edit an entry.
- *
- * @category    Joomla.Component.Admin
- * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
  */
 class THM_GroupsModelRole_Manager extends THM_GroupsModelList
 {
@@ -45,8 +39,8 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
             ->leftJoin('#__thm_groups_role_associations AS roleAssoc ON roles.id = roleAssoc.rolesID')
             ->group('roles.id');
 
-        $this->setSearchFilter($query, array('roles.name'));
-        $this->setIDFilter($query, 'roleAssoc.usergroupsID', array('filter.groups'));
+        $this->setSearchFilter($query, ['roles.name']);
+        $this->setIDFilter($query, 'roleAssoc.usergroupsID', ['filter.groups']);
         $this->setOrdering($query);
 
         return $query;
@@ -60,15 +54,15 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
     public function getItems()
     {
         $items  = parent::getItems();
-        $return = array();
+        $return = [];
 
         if (empty($items)) {
             return $return;
         }
 
-        $url          = "index.php?option=com_thm_groups&view=role_edit&id=";
-        $generalOrder = '<input type="text" style="display:none" name="order[]" size="5" ';
-        $generalOrder .= 'value="XX" class="width-20 text-area-order " />';
+        $url             = "index.php?option=com_thm_groups&view=role_edit&id=";
+        $generalOrder    = '<input type="text" style="display:none" name="order[]" size="5" ';
+        $generalOrder    .= 'value="XX" class="width-20 text-area-order " />';
         $generalSortIcon = '<span class="sortable-handlerXXX"><i class="icon-menu"></i></span>';
         $canManage       = JFactory::getUser()->authorise('core.edit', 'com_thm_groups');
         $index           = 0;
@@ -93,14 +87,11 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
 
             $specificOrder = ($canManage and $orderingActive) ? str_replace('XX', $orderingValue, $generalOrder) : '';
 
-            $return[$index] = array();
+            $return[$index] = [];
 
-            $return[$index]['attributes'] = array('class' => 'order nowrap center', 'id' => $item->id);
+            $return[$index]['attributes'] = ['class' => 'order nowrap center', 'id' => $item->id];
 
-            $return[$index]['ordering']['attributes'] = array(
-                'class' => "order nowrap center",
-                'style' => "width: 40px;"
-            );
+            $return[$index]['ordering']['attributes'] = ['class' => "order nowrap center", 'style' => "width: 40px;"];
             $return[$index]['ordering']['value']      = str_replace('XXX', $iconClass,
                     $generalSortIcon) . $specificOrder;
 
@@ -124,7 +115,7 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
         $ordering  = $this->state->get('list.ordering');
         $direction = $this->state->get('list.direction');
 
-        $headers             = array();
+        $headers             = [];
         $headers['order']    = JHtml::_('searchtools.sort', '', 'roles.ordering', $direction, $ordering, null, 'asc',
             'JGRID_HEADING_ORDERING', 'icon-menu-2');
         $headers['checkbox'] = '';
@@ -181,7 +172,7 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
         $this->_db->setQuery($query);
         $groups = $this->_db->loadObjectList();
 
-        $return = array();
+        $return = [];
         if (!empty($groups)) {
             foreach ($groups as $group) {
                 // Delete button
@@ -205,7 +196,7 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
      */
     public function getHiddenFields()
     {
-        $fields = array();
+        $fields = [];
 
         // Hidden fields for deletion of one group at once
         $fields[] = '<input type="hidden" name="groupID" value="">';

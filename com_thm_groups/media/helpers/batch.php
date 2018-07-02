@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsHelperBatch
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2016 TH Mittelhessen
@@ -13,9 +11,6 @@
 
 /**
  * Class providing helper functions for batch select options
- *
- * @category  Joomla.Component.Admin
- * @package   thm_groups
  */
 class THM_GroupsHelperBatch
 {
@@ -77,7 +72,7 @@ class THM_GroupsHelperBatch
         } catch (Exception $exc) {
             JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-            return array();
+            return [];
         }
 
         for ($i = 0, $n = count($options); $i < $n; $i++) {

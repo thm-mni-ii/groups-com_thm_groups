@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla.Component
  * @package     com_thm_groups
- * @subpackage  com_thm_groups.media
- * @name        JFormFieldTemplate
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -15,10 +13,6 @@ JFormHelper::loadFieldClass('list');
 
 /**
  * Class loads a list of templates
- *
- * @category    Joomla.Component
- * @package     com_thm_groups
- * @subpackage  com_thm_groups.site
  */
 class JFormFieldTemplate extends JFormFieldList
 {

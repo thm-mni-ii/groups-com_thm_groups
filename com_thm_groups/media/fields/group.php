@@ -12,7 +12,7 @@ class JFormFieldGroup extends JFormFieldList
      *
      * @var    array
      */
-    protected static $options = array();
+    protected static $options = [];
 
     /**
      * Method to get the options to populate to populate list

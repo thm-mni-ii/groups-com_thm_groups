@@ -5,10 +5,6 @@ jimport('joomla.application.component.table');
 
 /**
  * Class representing the dynamic types table.
- *
- * @category    Joomla.Component.Admin
- * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
  * @link        www.thm.de
  */
 class THM_GroupsTableDynamic_Type extends JTable

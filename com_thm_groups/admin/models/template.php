@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsModelTemplate
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -15,10 +13,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
 
 /**
  * Class loads form data to edit an entry.
- *
- * @category    Joomla.Component.Admin
- * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
  */
 class THM_GroupsModelTemplate extends JModelLegacy
 {
@@ -417,8 +411,8 @@ class THM_GroupsModelTemplate extends JModelLegacy
         }
 
         $attribute['templateID'] = $templateID;
-        $attribute['published'] = (bool)$attribute['published'];
-        $attribute['ordering']  = $ordering;
+        $attribute['published']  = (bool)$attribute['published'];
+        $attribute['ordering']   = $ordering;
 
         $jsonParams              = [];
         $jsonParams['showLabel'] = isset($attribute['show_label']) ? (int)$attribute['show_label'] : 0;

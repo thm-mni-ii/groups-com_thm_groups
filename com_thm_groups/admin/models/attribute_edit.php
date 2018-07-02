@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        attribute edit
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
  * @author      Lavinia Popa-Rössel, <lavinia.popa-roessel@mni.thm.de>
@@ -17,10 +15,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/models/edit.php';
 
 /**
  * Class loads form data to edit an entry.
- *
- * @category    Joomla.Component.Admin
- * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
  */
 class THM_GroupsModelAttribute_Edit extends THM_GroupsModelEdit
 {
@@ -31,7 +25,7 @@ class THM_GroupsModelAttribute_Edit extends THM_GroupsModelEdit
      *
      * @param   array $config An optional associative array of configuration settings.
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         parent::__construct($config);
     }
@@ -46,11 +40,11 @@ class THM_GroupsModelAttribute_Edit extends THM_GroupsModelEdit
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = [], $loadData = true)
     {
         if (empty($this->form)) {
             $this->form = $this->loadForm('com_thm_groups.attribute_edit', 'attribute_edit',
-                array('control' => 'jform', 'load_data' => $loadData));
+                ['control' => 'jform', 'load_data' => $loadData]);
         }
 
         return $this->form;
@@ -65,7 +59,7 @@ class THM_GroupsModelAttribute_Edit extends THM_GroupsModelEdit
      *
      * @return  JTable|mixed
      */
-    public function getTable($type = 'Attribute', $prefix = 'THM_GroupsTable', $config = array())
+    public function getTable($type = 'Attribute', $prefix = 'THM_GroupsTable', $config = [])
     {
         return JTable::getInstance($type, $prefix, $config);
     }
@@ -81,7 +75,7 @@ class THM_GroupsModelAttribute_Edit extends THM_GroupsModelEdit
         $name          = $this->get('name');
         $resource      = str_replace('_edit', '', $name);
         $task          = $input->getCmd('task', "$resource.add");
-        $resourceArray = $input->get('cid', array(), 'array');
+        $resourceArray = $input->get('cid', [], 'array');
         $resourceID    = empty($resourceArray) ? $input->getInt('id', 0) : $resourceArray[0];
 
         $add = (($task != "$resource.edit") and empty($resourceID));

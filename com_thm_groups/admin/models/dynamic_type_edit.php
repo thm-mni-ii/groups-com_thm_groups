@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        dynamic type model
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
@@ -19,10 +17,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/models/edit.php';
 
 /**
  * Class loads form data to edit an entry.
- *
- * @category    Joomla.Component.Admin
- * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
  */
 class THM_GroupsModelDynamic_Type_Edit extends THM_GroupsModelEdit
 {
@@ -38,11 +32,11 @@ class THM_GroupsModelDynamic_Type_Edit extends THM_GroupsModelEdit
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = [], $loadData = true)
     {
         if (empty($this->form)) {
             $this->form = $this->loadForm('com_thm_groups.dynamic_type_edit', 'dynamic_type_edit',
-                array('control' => 'jform', 'load_data' => $loadData));
+                ['control' => 'jform', 'load_data' => $loadData]);
         }
 
         return $this->form;
@@ -57,7 +51,7 @@ class THM_GroupsModelDynamic_Type_Edit extends THM_GroupsModelEdit
      *
      * @return  JTable|mixed
      */
-    public function getTable($type = 'Dynamic_Type', $prefix = 'THM_GroupsTable', $config = array())
+    public function getTable($type = 'Dynamic_Type', $prefix = 'THM_GroupsTable', $config = [])
     {
         return JTable::getInstance($type, $prefix, $config);
     }
@@ -78,7 +72,7 @@ class THM_GroupsModelDynamic_Type_Edit extends THM_GroupsModelEdit
 
         if ($edit) {
             if (empty($dynTypeID)) {
-                $selected = $input->get('cid', array(), 'array');
+                $selected = $input->get('cid', [], 'array');
 
                 if (empty($selected)) {
                     return $this->getItem(0);

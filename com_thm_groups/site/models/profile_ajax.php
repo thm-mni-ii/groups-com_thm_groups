@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        THM_GroupsModelPool_Ajax
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -18,10 +16,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
 
 /**
  * Class provides methods to retrieve data for pool ajax calls
- *
- * @category    Joomla.Component.Site
- * @package     THM_Groups
- * @subpackage  com_thm_groups.site
  */
 class THM_GroupsModelProfile_Ajax extends JModelLegacy
 {

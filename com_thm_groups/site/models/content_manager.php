@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsModelContent_Manager
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2016 TH Mittelhessen
@@ -16,9 +14,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/content.php';
 
 /**
  * Class retrieves information about content for the profile's content category
- *
- * @category  Joomla.Component.Admin
- * @package   com_thm_groups.admin
  */
 class THM_GroupsModelContent_Manager extends JModelList
 {
@@ -35,10 +30,10 @@ class THM_GroupsModelContent_Manager extends JModelList
      *
      * @param   array $config config array
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array();
+            $config['filter_fields'] = [];
         }
 
         $profileID = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);

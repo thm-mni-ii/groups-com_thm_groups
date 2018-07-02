@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsModelAttribute_Manager
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -16,10 +14,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
 
 /**
  * THM_GroupsModelAttribute_Manager class for component com_thm_groups
- *
- * @category  Joomla.Component.Admin
- * @package   com_thm_groups.admin
- * @link      www.thm.de
  */
 class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
 {
@@ -41,11 +35,7 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
      */
     public function __construct($config = [])
     {
-        $config['filter_fields'] = [
-            'attribute.id',
-            'attribute.name',
-            'dynamic.name'
-        ];
+        $config['filter_fields'] = ['attribute.id', 'attribute.name', 'dynamic.name'];
 
         parent::__construct($config);
     }
@@ -109,10 +99,7 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
             $return[$index]               = [];
             $return[$index]['attributes'] = ['class' => 'order nowrap center', 'id' => $item->id];
 
-            $return[$index]['ordering']['attributes'] = [
-                'class' => "order nowrap center",
-                'style' => "width: 40px;"
-            ];
+            $return[$index]['ordering']['attributes'] = ['class' => "order nowrap center", 'style' => "width: 40px;"];
 
             if ($canEdit) {
                 $orderingActive = $this->state->get('list.ordering') == 'attribute.ordering';

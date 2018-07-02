@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsModelContent_Manager
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2017 TH Mittelhessen
@@ -17,10 +15,6 @@ require_once JPATH_SITE . '/media/com_thm_groups/helpers/content.php';
 
 /**
  * THM_GroupsModelContent_Manager is a class which deals with the information preparation for the administrator view.
- *
- * @category  Joomla.Component.Admin
- * @package   com_thm_groups.admin
- * @link      www.thm.de
  */
 class THM_GroupsModelContent_Manager extends THM_GroupsModelList
 {
@@ -100,7 +94,7 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
     {
         $rootCategory = THM_GroupsHelperContent::getRootCategory();
 
-        $return = array();
+        $return = [];
 
         if (!empty($rootCategory)) {
             $items = parent::getItems();
@@ -115,8 +109,8 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
             return $return;
         }
 
-        $generalOrder = '<input type="text" style="display:none" name="order[]" size="5" ';
-        $generalOrder .= 'value="XX" class="width-20 text-area-order " />';
+        $generalOrder    = '<input type="text" style="display:none" name="order[]" size="5" ';
+        $generalOrder    .= 'value="XX" class="width-20 text-area-order " />';
         $generalSortIcon = '<span class="sortable-handlerXXX"><i class="icon-menu"></i></span>';
         $canSort         = JFactory::getUser()->authorise('core.edit', 'com_thm_groups');
         $orderingActive  = $this->state->get('list.ordering') == 'content.ordering';
@@ -136,14 +130,11 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
 
             $specificOrder = ($canSort and $orderingActive) ? str_replace('XX', $item->ordering, $generalOrder) : '';
 
-            $return[$index] = array();
+            $return[$index] = [];
 
-            $return[$index]['attributes'] = array('class' => 'order nowrap center', 'id' => $item->id);
+            $return[$index]['attributes'] = ['class' => 'order nowrap center', 'id' => $item->id];
 
-            $return[$index]['ordering']['attributes'] = array(
-                'class' => "order nowrap center",
-                'style' => "width: 40px;"
-            );
+            $return[$index]['ordering']['attributes'] = ['class' => "order nowrap center", 'style' => "width: 40px;"];
             $return[$index]['ordering']['value']      = str_replace('XXX', $iconClass,
                     $generalSortIcon) . $specificOrder;
 
@@ -153,7 +144,7 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
 
             if ($canEdit) {
                 $url               = JRoute::_('index.php?option=com_content&task=article.edit&id=' . $item->id);
-                $return[$index][1] = JHtml::link($url, $item->title, array('target' => '_blank'));
+                $return[$index][1] = JHtml::link($url, $item->title, ['target' => '_blank']);
             } else {
                 $return[$index][1] = $item->title;
             }
@@ -179,7 +170,7 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
         $ordering  = $this->state->get('list.ordering');
         $direction = $this->state->get('list.direction');
 
-        $headers             = array();
+        $headers             = [];
         $headers['order']    = JHtml::_('searchtools.sort', '', 'content.ordering', $direction, $ordering, null, 'asc',
             'JGRID_HEADING_ORDERING', 'icon-menu-2');
         $headers['checkbox'] = '';
@@ -202,6 +193,6 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
      */
     public function getHiddenFields()
     {
-        return array();
+        return [];
     }
 }

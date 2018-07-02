@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.general
- * @name        Script
+ * @subpackate com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
@@ -16,10 +14,6 @@ defined('_JEXEC') or die;
 
 /**
  * ThmGroupsInstaller
- *
- * @category    Joomla.Component.General
- * @package     THM_Groups
- * @subpackage  com_thm_groups
  */
 class Com_THM_GroupsInstallerScript
 {
@@ -64,8 +58,8 @@ class Com_THM_GroupsInstallerScript
      */
     private function importGroups()
     {
-        $dbo     = JFactory::getDbo();
-        $query   = $dbo->getQuery(true);
+        $dbo    = JFactory::getDbo();
+        $query  = $dbo->getQuery(true);
         $groups = [];
 
         $query->select("id")
@@ -109,8 +103,8 @@ class Com_THM_GroupsInstallerScript
      */
     private function associateProfileGroups($user)
     {
-        $dbo     = JFactory::getDbo();
-        $query   = $dbo->getQuery(true);
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
 
         // Get group and association id for the user.
         $query->select("usr.group_id, roleAssoc.ID")
@@ -158,7 +152,7 @@ class Com_THM_GroupsInstallerScript
     {
         $dbo     = JFactory::getDbo();
         $query   = $dbo->getQuery(true);
-        $users = [];
+        $users   = [];
         $attribs = [];
 
         // Get all users to import
@@ -295,7 +289,7 @@ class Com_THM_GroupsInstallerScript
         $db_name = JFactory::getConfig()->get('db');
 
         // Rename tables if necessary
-        $tablesToRename = array(
+        $tablesToRename = [
             ['thm_groups_users', 'thm_groups_profiles'],
             ['thm_groups_users_attribute', 'thm_groups_profile_attributes'],
             ['thm_groups_users_categories', 'thm_groups_categories'],
@@ -305,7 +299,7 @@ class Com_THM_GroupsInstallerScript
             ['thm_groups_profile', 'thm_groups_templates'],
             ['thm_groups_profile_attribute', 'thm_groups_template_attributes'],
             ['thm_groups_profile_usergroups', 'thm_groups_template_associations']
-        );
+        ];
 
         $query->select("table_name")
             ->from("information_schema.TABLES")
@@ -330,13 +324,13 @@ class Com_THM_GroupsInstallerScript
         }
 
         /**
-        * Define FK's for groups table.
-        *
-        * $foreignKeys:
-        * Table name => [foreign key, desired fk name, referenced table name, referenced primary key,
-        * Changed referenced table name, changed FK column name].
-        **/
-        $foreignKeys = array(
+         * Define FK's for groups table.
+         *
+         * $foreignKeys:
+         * Table name => [foreign key, desired fk name, referenced table name, referenced primary key,
+         * Changed referenced table name, changed FK column name].
+         **/
+        $foreignKeys = [
             'thm_groups_profiles'              => [
                 ['id', 'profiles_usersid_fk', 'users', 'id', '', '']
             ],
@@ -363,7 +357,14 @@ class Com_THM_GroupsInstallerScript
                 ['rolesID', 'role_associations_groupsrolesid_fk', 'thm_groups_roles', 'id', '', '']
             ],
             'thm_groups_associations'          => [
-                ['usergroups_rolesID', 'associations_roleassociationsid_fk', 'thm_groups_role_associations', 'ID', '', 'role_assocID'],
+                [
+                    'usergroups_rolesID',
+                    'associations_roleassociationsid_fk',
+                    'thm_groups_role_associations',
+                    'ID',
+                    '',
+                    'role_assocID'
+                ],
                 ['usersID', 'associations_profilesid_fk', 'users', 'id', 'thm_groups_profiles', 'profileID']
             ],
             'thm_groups_template_attributes'   => [
@@ -374,7 +375,7 @@ class Com_THM_GroupsInstallerScript
                 ['profileID', 'template_associations_templatesid_fk', 'thm_groups_templates', 'id', '', 'templateID'],
                 ['usergroupsID', 'template_associations_usergroupsid_fk', 'usergroups', 'id', '', '']
             ]
-        );
+        ];
 
         // Get all FK's from current database information schema
         $query = $dbo->getQuery(true);

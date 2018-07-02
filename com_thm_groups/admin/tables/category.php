@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_thm_groups
+ * @subpackate com_thm_groups
  *
  * @copyright   2016 TH Mittelhessen
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -11,9 +11,6 @@ defined('_JEXEC') or die;
 
 /**
  * Category table
- *
- * @package     Joomla.Administrator
- * @subpackage  com_categories
  */
 class TableCategory extends JTableCategory
 {

@@ -23,7 +23,6 @@
             <schemapath type="mysql">sql/updates/mysql</schemapath>
         </schemas>
     </update>
-
     <media folder="media" destination="com_thm_groups">
         <folder>css</folder>
         <folder>fields</folder>
@@ -36,7 +35,6 @@
         <folder>templates</folder>
         <folder>views</folder>
     </media>
-
     <files folder="site">
         <folder>models</folder>
         <folder>views</folder>
@@ -44,38 +42,40 @@
         <filename>router.php</filename>
         <filename>thm_groups.php</filename>
     </files>
-
     <languages>
         <language tag="en-GB" client="site">language/en-GB/en-GB.com_thm_groups.ini</language>
         <language tag="de-DE" client="site">language/de-DE/de-DE.com_thm_groups.ini</language>
     </languages>
-
     <administration>
         <menu>COM_THM_GROUPS</menu>
         <submenu>
-            <menu alias="Profile Content" link="option=com_thm_groups&amp;view=content_manager" view="content_manager" alt="Content">
+            <menu alias="Profile Content" link="option=com_thm_groups&amp;view=content_manager" view="content_manager"
+                  alt="Content">
                 COM_THM_GROUPS_CONTENT_MANAGER
             </menu>
-            <menu alias="Dynamic Types" link="option=com_thm_groups&amp;view=dynamic_type_manager" view="dynamic_type_manager" alt="Dynamic Types">
+            <menu alias="Dynamic Types" link="option=com_thm_groups&amp;view=dynamic_type_manager"
+                  view="dynamic_type_manager" alt="Dynamic Types">
                 COM_THM_GROUPS_DYNAMIC_TYPE_MANAGER
             </menu>
             <menu alias="Groups" link="option=com_thm_groups&amp;view=group_manager" view="group_manager" alt="Groups">
                 COM_THM_GROUPS_GROUP_MANAGER
             </menu>
-            <menu alias="Profiles" link="option=com_thm_groups&amp;view=profile_manager" view="profile_manager" alt="Profiles">
+            <menu alias="Profiles" link="option=com_thm_groups&amp;view=profile_manager" view="profile_manager"
+                  alt="Profiles">
                 COM_THM_GROUPS_PROFILE_MANAGER
             </menu>
-            <menu alias="Attributes" link="option=com_thm_groups&amp;view=attribute_manager" view="attribute_manager" alt="Attributes">
+            <menu alias="Attributes" link="option=com_thm_groups&amp;view=attribute_manager" view="attribute_manager"
+                  alt="Attributes">
                 COM_THM_GROUPS_ATTRIBUTE_MANAGER
             </menu>
-            <menu alias="Profile Templates" link="option=com_thm_groups&amp;view=template_manager" view="template_manager" alt="Profile Templates">
+            <menu alias="Profile Templates" link="option=com_thm_groups&amp;view=template_manager"
+                  view="template_manager" alt="Profile Templates">
                 COM_THM_GROUPS_TEMPLATE_MANAGER
             </menu>
             <menu alias="Roles" link="option=com_thm_groups&amp;view=role_manager" view="role_manager" alt="Roles">
                 COM_THM_GROUPS_ROLE_MANAGER
             </menu>
         </submenu>
-
         <files folder="admin">
             <filename>thm_groups.php</filename>
             <filename>controller.php</filename>
@@ -86,20 +86,16 @@
             <folder>tables</folder>
             <folder>views</folder>
         </files>
-
         <languages>
             <language tag="en-GB">language/en-GB/en-GB.com_thm_groups.ini</language>
             <language tag="en-GB">language/en-GB/en-GB.com_thm_groups.sys.ini</language>
             <language tag="de-DE">language/de-DE/de-DE.com_thm_groups.ini</language>
             <language tag="de-DE">language/de-DE/de-DE.com_thm_groups.sys.ini</language>
         </languages>
-
     </administration>
-
     <updateservers>
         <server type="extension" priority="1" name="THM Groups Component Update Site">
             http://jenkins-ci.mni.thm.de/view/THM%20Control/job/Releases/lastSuccessfulBuild/artifact/updates/com_thm_groups.xml
         </server>
     </updateservers>
-
 </extension>

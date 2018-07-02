@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsHelperProfile
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -12,9 +10,6 @@
 
 /**
  * Class providing helper functions for template editing
- *
- * @category  Joomla.Component.Admin
- * @package   thm_groups
  */
 class THM_GroupsHelperTemplate
 {
@@ -115,6 +110,6 @@ class THM_GroupsHelperTemplate
             return false;
         }
 
-        return empty($attributes) ? array() : $attributes;
+        return empty($attributes) ? [] : $attributes;
     }
 }

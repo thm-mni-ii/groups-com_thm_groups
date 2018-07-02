@@ -5,27 +5,15 @@
     </layout>
     <fields name="params">
         <fieldset name="basic">
-            <field name="showTitles"
-                   type="list"
-                   default="1"
-                   label="JGLOBAL_SHOW_TITLE_LABEL"
+            <field name="showTitles" type="list" default="1" label="JGLOBAL_SHOW_TITLE_LABEL"
                    description="JGLOBAL_SHOW_TITLE_DESC">
                 <option value="1">JSHOW</option>
                 <option value="0">JHIDE</option>
             </field>
-            <field name="groupID"
-                   type="usergroup"
-                   label="COM_THM_GROUPS_GROUP"
-                   description="COM_THM_GROUPS_SELECT_GROUP_DESC"
-                   multiple="false"/>
-            <field name="columnCount"
-                   type="integer"
-                   label="COM_THM_GROUPS_COLUMNS"
-                   description="COM_THM_GROUPS_COLUMNS_DESC"
-                   first="1"
-                   last="3"
-                   step="1"
-                   default="3"/>
+            <field name="groupID" type="usergroup" label="COM_THM_GROUPS_GROUP"
+                   description="COM_THM_GROUPS_SELECT_GROUP_DESC" multiple="false"/>
+            <field name="columnCount" type="integer" label="COM_THM_GROUPS_COLUMNS"
+                   description="COM_THM_GROUPS_COLUMNS_DESC" first="1" last="3" step="1" default="3"/>
         </fieldset>
     </fields>
 </metadata>

@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        THM_GroupsViewOverview
+ * @subpackate com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
@@ -24,16 +22,12 @@ define('POSTTITLE', 3);
 
 /**
  * Class provides an overview of group profiles.
- *
- * @category  Joomla.Component.Site
- * @package   thm_groups
- * @link      www.thm.de
  */
 class THM_GroupsViewOverview extends JViewLegacy
 {
     public $model = null;
 
-    public $params = array();
+    public $params = [];
 
     public $groupID = 0;
 
@@ -41,9 +35,9 @@ class THM_GroupsViewOverview extends JViewLegacy
 
     public $title = '';
 
-    public $profiles = array();
+    public $profiles = [];
 
-    public $letterProfiles = array();
+    public $letterProfiles = [];
 
     /**
      * Creates a link to the parametrized profile target using the profile name

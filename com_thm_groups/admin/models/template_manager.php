@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsModelTemplate_Manager
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -14,10 +12,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
 
 /**
  * THMGroupsModelProfile_Manager class for component com_thm_groups
- *
- * @category  Joomla.Component.Admin
- * @package   com_thm_groups.admin
- * @link      www.thm.de
  */
 class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
 {
@@ -106,10 +100,7 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
             $orderingActive = $this->state->get('list.ordering') == 'p.ordering';
 
             $return[$index]                           = [];
-            $return[$index]['attributes']             = [
-                'class' => 'order center hidden-phone',
-                'id'    => $item->id
-            ];
+            $return[$index]['attributes']             = ['class' => 'order center hidden-phone', 'id' => $item->id];
             $return[$index]['ordering']['attributes'] = [
                 'class' => 'order center hidden-phone',
                 'style' => "width: 40px;"

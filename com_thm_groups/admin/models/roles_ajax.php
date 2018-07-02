@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsModelRoles
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -14,10 +12,6 @@ jimport('joomla.application.component.model');
 
 /**
  * Class provides methods for building a model of the roles in JSON format
- *
- * @category    Joomla.Component.Site
- * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
  */
 class THM_GroupsModelRoles_Ajax extends JModelLegacy
 {
@@ -57,7 +51,7 @@ class THM_GroupsModelRoles_Ajax extends JModelLegacy
 
         $roles = $this->_db->loadObjectList();
 
-        $result = array();
+        $result = [];
         foreach ($roles as $role) {
             $result[(int)$role->id] = $role->name;
         }

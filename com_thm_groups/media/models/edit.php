@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        THM_GroupsModelEdit
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -13,10 +11,6 @@ defined('_JEXEC') or die;
 
 /**
  * Class loads form data to edit an entry.
- *
- * @category    Joomla.Component
- * @package     THM_Groups
- * @subpackage  com_thm_groups.site
  */
 class THM_GroupsModelEdit extends JModelAdmin
 {

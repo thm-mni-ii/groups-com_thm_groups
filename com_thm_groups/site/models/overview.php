@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        THM_GroupsModelOverview
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -16,9 +14,6 @@ jimport('joomla.filesystem.path');
 
 /**
  * Class provides methods to provide information for an overview of profiles associated with a group.
- *
- * @category  Joomla.Component.Site
- * @package   com_thm_groups.site
  */
 class THM_GroupsModelOverview extends JModelLegacy
 {
@@ -63,10 +58,10 @@ class THM_GroupsModelOverview extends JModelLegacy
         } catch (Exception $exc) {
             JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-            return array();
+            return [];
         }
 
-        $profiles = array();
+        $profiles = [];
         foreach ($items as $profile) {
             // Normal substring messes up special characters
             $letter = strtoupper(mb_substr($profile->surname, 0, 1));
@@ -84,7 +79,7 @@ class THM_GroupsModelOverview extends JModelLegacy
                     break;
             }
             if (!array_key_exists($letter, $profiles)) {
-                $profiles[$letter] = array();
+                $profiles[$letter] = [];
             }
             $profiles[$letter][] = $profile;
         }

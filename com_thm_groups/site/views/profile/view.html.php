@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        THMGroupsViewProfile
+ * @subpackate com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
@@ -21,10 +19,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/template.php';
 
 /**
  * THMGroupsViewProfile class for component com_thm_groups
- *
- * @category    Joomla.Component.Site
- * @package     thm_Groups
- * @subpackage  com_thm_groups.site
  */
 class THM_GroupsViewProfile extends JViewLegacy
 {
@@ -121,9 +115,9 @@ class THM_GroupsViewProfile extends JViewLegacy
 
             $lastName = trim($lastName);
             $path     = "index.php?option=com_thm_groups&view=profile_edit";
-            $path .= "&groupID=$this->groupID&profileID=$this->profileID&name=$lastName&Itemid=$this->menuID";
-            $url  = JRoute::_($path);
-            $text = '<span class="icon-edit"></span> ' . JText::_('COM_THM_GROUPS_EDIT');
+            $path     .= "&groupID=$this->groupID&profileID=$this->profileID&name=$lastName&Itemid=$this->menuID";
+            $url      = JRoute::_($path);
+            $text     = '<span class="icon-edit"></span> ' . JText::_('COM_THM_GROUPS_EDIT');
             $editLink .= JHtml::_('link', $url, $text, $attributes);
         }
 

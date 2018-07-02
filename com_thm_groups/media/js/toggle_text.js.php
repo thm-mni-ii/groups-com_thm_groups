@@ -1,5 +1,6 @@
 <script type='text/javascript'>
-    'use strict';
+    'use strict
+';
     jQuery(document).ready(function ()
     {
         jQuery(".toggled-text-link").click(function () {
@@ -11,6 +12,6 @@
             next.slideToggle();
 
             this.innerHTML = display !== 'none' ? texts.read : texts.hide;
-            });
-        })
+        });
+    })
 </script>

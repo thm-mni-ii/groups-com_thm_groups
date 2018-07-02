@@ -1,8 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @copyright   2017 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -42,7 +41,7 @@ $filters = $this->filterForm->getGroup('filter');
                             onclick="insertProfileParameters();return false;">
                         <span class="icon-cogs"></span>
                         <span
-                            class="buttonText"><?php echo JText::_('COM_THM_GROUPS_INSERT_MODULE_PARAMETERS'); ?></span>
+                                class="buttonText"><?php echo JText::_('COM_THM_GROUPS_INSERT_MODULE_PARAMETERS'); ?></span>
                     </button>
                 </div>
                 <div class="btn-wrapper">
@@ -104,10 +103,8 @@ $filters = $this->filterForm->getGroup('filter');
     </div>
 </div>
 <script type="text/javascript">
-    jQuery(document).ready(function ()
-    {
-        jQuery(function ()
-        {
+    jQuery(document).ready(function () {
+        jQuery(function () {
             jQuery(".selected-profiles-sortable tbody").sortable().disableSelection();
         });
         jQuery().popover({container: 'body'})

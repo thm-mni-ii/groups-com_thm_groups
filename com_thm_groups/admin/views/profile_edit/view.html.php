@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THMGroupsViewProfile_Edit
+ * @subpackate com_thm_groups
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2016 TH Mittelhessen
@@ -18,10 +16,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/views/profile_edit_view.php';
 
 /**
  * THMGroupsViewProfile_Edit class for component com_thm_groups
- *
- * @category  Joomla.Component.Admin
- * @package   com_thm_groups.admin
- * @link      www.thm.de
  */
 class THM_GroupsViewProfile_Edit extends THM_GroupsViewProfile_Edit_View
 {

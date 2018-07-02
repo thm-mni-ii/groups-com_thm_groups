@@ -1,8 +1,6 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @name        THM_GroupsTemplateList
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Ilja Michajlow, <Ilja.Michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
@@ -12,10 +10,6 @@
 
 /**
  * Class provides standardized output of list items
- *
- * @category    Joomla.Component
- * @package     THM_Groups
- * @subpackage  com_thm_groups.site
  */
 class THM_GroupsTemplateList
 {
@@ -31,7 +25,7 @@ class THM_GroupsTemplateList
         if (!empty($view->sidebar)) {
             echo '<div id="j-sidebar-container" class="span2">' . $view->sidebar . '</div>';
         }
-        $data    = array('view' => $view, 'options' => array());
+        $data    = ['view' => $view, 'options' => []];
         $filters = $view->filterForm->getGroup('filter');
         ?>
         <div id="j-main-container" class="span10">

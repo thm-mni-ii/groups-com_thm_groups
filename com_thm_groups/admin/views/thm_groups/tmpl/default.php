@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THMGroupsViewTHMGroups
+ * @subpackate com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @authors     Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
@@ -13,7 +11,7 @@
 
 defined('_JEXEC') or die;
 $logoURL = 'media/com_thm_groups/images/logo_THM_Groups.png';
-$attribs = array('class' => 'thm_groups_main_image');
+$attribs = ['class' => 'thm_groups_main_image'];
 $image   = JHtml::_('image', $logoURL, JText::_('COM_THM_GROUPS'), $attribs);
 ?>
 <div id="j-sidebar-container" class="span2"><?php echo $this->sidebar; ?></div>

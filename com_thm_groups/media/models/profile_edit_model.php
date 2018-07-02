@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        dynamic type model
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
@@ -20,10 +18,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
 
 /**
  * Class loads form data to edit an entry.
- *
- * @category    Joomla.Component.Admin
- * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
  */
 class THM_GroupsModelProfile_Edit_Model extends THM_GroupsModelEdit
 {
@@ -39,7 +33,7 @@ class THM_GroupsModelProfile_Edit_Model extends THM_GroupsModelEdit
         $profileID = empty($profileID) ? JFactory::getApplication()->input->getInt('profileID') : $profileID;
 
         if (empty($profileID)) {
-            return array();
+            return [];
         }
 
         return THM_GroupsHelperProfile::getProfile($profileID);
@@ -53,7 +47,7 @@ class THM_GroupsModelProfile_Edit_Model extends THM_GroupsModelEdit
     protected function loadFormData()
     {
         $input       = JFactory::getApplication()->input;
-        $selectedIDs = $input->get('cid', array(), 'array');
+        $selectedIDs = $input->get('cid', [], 'array');
         $id          = (empty($selectedIDs)) ? $input->getInt('id', 0) : $selectedIDs[0];
 
         return $this->getItem($id);

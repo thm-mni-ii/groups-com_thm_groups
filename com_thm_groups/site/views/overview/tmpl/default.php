@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        THM_GroupsViewOverview
+ * @subpackate com_thm_groups
  * @copyright   2012 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de

@@ -1,8 +1,6 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @name        THM_GroupsViewList
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Ilja Michajlow, <Ilja.Michajlow@mni.thm.de>
  * @copyright   2014 TH Mittelhessen
@@ -12,10 +10,6 @@
 
 /**
  * Class provides standardized output of list items
- *
- * @category    Joomla.Component
- * @package     THM_Groups
- * @subpackage  com_thm_groups.site
  */
 abstract class THM_GroupsViewList extends JViewLegacy
 {
@@ -85,6 +79,6 @@ abstract class THM_GroupsViewList extends JViewLegacy
         JHtml::_('bootstrap.tooltip');
         JHtml::_('behavior.multiselect');
         JHtml::_('formbehavior.chosen', 'select');
-        JHtml::_('searchtools.form', '#adminForm', array());
+        JHtml::_('searchtools.form', '#adminForm', []);
     }
 }

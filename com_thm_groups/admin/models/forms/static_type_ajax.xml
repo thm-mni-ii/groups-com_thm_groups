@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fieldset name="text">
-        <field name="length"
-               type="text"
-               size="40"
-               label="Size"
-               description=""
-               required="false"/>
+        <field name="length" type="text" size="40" label="Size" description="" required="false"/>
     </fieldset>
     <fieldset name="textfield">
-        <field name="length"
-               type="text"
-               size="40"
-               label="Size"
-               description=""
-               required="false"/>
+        <field name="length" type="text" size="40" label="Size" description="" required="false"/>
     </fieldset>
-    <fieldset name="picture">
-    </fieldset>
+    <fieldset name="picture"></fieldset>
 </form>
 

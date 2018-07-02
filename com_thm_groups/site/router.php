@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        THM_GroupsRouter
+ * @subpackate com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
@@ -23,7 +21,7 @@
 function THM_GroupsBuildRoute(&$query)
 {
     // Contains all SEF Elements as list
-    $segments = array();
+    $segments = [];
     $view     = '';
 
     if (!empty($query['view'])) {
@@ -106,7 +104,7 @@ function buildOptionsRoute(&$query)
  */
 function THM_GroupsParseRoute($segments)
 {
-    $vars         = array();
+    $vars         = [];
     $vars['view'] = $segments[0];
 
     switch ($segments[0]) {
@@ -148,7 +146,7 @@ function THM_GroupsParseRoute($segments)
                     // TODO: This temporary prevents a crash.
                     if ($segments[2] == 'index.php') {
                         // Leeds to previous page.
-                        $vars = array();
+                        $vars = [];
 
                         return $vars;
                     }
@@ -207,12 +205,13 @@ function parseProfileSegment(&$vars, $segment)
         if (is_numeric($segment)) {
             $vars['profileID'] = $segment;
         }
+
         return;
     }
 
     // The Joomla Standard is ID:alias, Groups uses id:alias, id:alias-groupID, or groupID:id-alias
     $standardParts = explode(':', $segment);
-    $firstPart = $standardParts[0];
+    $firstPart     = $standardParts[0];
 
     // No nested segmentation
     if (strpos($standardParts[1], '-') === false) {
@@ -226,20 +225,21 @@ function parseProfileSegment(&$vars, $segment)
         } else {
             $vars['name'] = $standardParts[1];
         }
+
         return;
     }
 
     // Nested segmentation
     $otherParts = explode('-', $standardParts[1]);
-    $newFormat = is_numeric(end($otherParts));
-    $oldFormat = is_numeric(reset($otherParts));
+    $newFormat  = is_numeric(end($otherParts));
+    $oldFormat  = is_numeric(reset($otherParts));
 
     if ($newFormat) {
         $vars['profileID'] = $firstPart;
-        $vars['groupID'] = array_pop($otherParts);
+        $vars['groupID']   = array_pop($otherParts);
     } elseif ($oldFormat) {
         $vars['profileID'] = array_shift($otherParts);
-        $vars['groupID'] = $firstPart;
+        $vars['groupID']   = $firstPart;
     }
     // Anything left after the pop are the names
     $vars['name'] = implode('-', $otherParts);

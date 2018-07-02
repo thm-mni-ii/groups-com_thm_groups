@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        JFormFieldAuthors
+ * @subpackate com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -16,10 +14,6 @@ require_once JPATH_ROOT . "/media/com_thm_groups/helpers/content.php";
 
 /**
  * Class JFormFieldAuthors which returns authors of specific content.
- *
- * @category    Joomla.Component.Admin
- * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
  */
 class JFormFieldAuthors extends JFormFieldList
 {
@@ -31,7 +25,7 @@ class JFormFieldAuthors extends JFormFieldList
      *
      * @var    array
      */
-    protected static $options = array();
+    protected static $options = [];
 
     /**
      * Returns a list of all authors associated with THM Groups, even they don't have
@@ -93,7 +87,7 @@ class JFormFieldAuthors extends JFormFieldList
      */
     protected function getOptions()
     {
-        $options = array();
+        $options = [];
 
         $rootCategory = THM_GroupsHelperContent::getRootCategory();
 

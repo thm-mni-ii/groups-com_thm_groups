@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsHelperGroup
+ * @subpackate com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -12,9 +10,6 @@
 
 /**
  * Class providing helper functions for batch select options
- *
- * @category  Joomla.Component.Admin
- * @package   thm_groups
  */
 class THM_GroupsHelperGroup
 {
@@ -46,10 +41,10 @@ class THM_GroupsHelperGroup
         } catch (Exception $exc) {
             JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
 
-            return array();
+            return [];
         }
 
-        $letters = array();
+        $letters = [];
         foreach ($surnames as $surname) {
             $letter = strtoupper(substr($surname, 0, 1));
             if (!in_array($letter, $letters)) {
@@ -120,7 +115,7 @@ class THM_GroupsHelperGroup
         } catch (Exception $exception) {
             JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-            return array();
+            return [];
         }
 
         return empty($profileIDs) ? [] : $profileIDs;
@@ -135,9 +130,9 @@ class THM_GroupsHelperGroup
      */
     public static function getProfileIDsByRole($groupID)
     {
-        $return      = array();
+        $return      = [];
         $roleIDs     = (empty($sortedRoles)) ? self::getRoleIDs($groupID) : $sortedRoles;
-        $excludeList = array();
+        $excludeList = [];
         $dbo         = JFactory::getDbo();
 
         $query = $dbo->getQuery(true);
@@ -166,7 +161,7 @@ class THM_GroupsHelperGroup
             } catch (Exception $exception) {
                 JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-                return array();
+                return [];
             }
 
             if (empty($profileIDs)) {
@@ -203,10 +198,10 @@ class THM_GroupsHelperGroup
         } catch (Exception $exception) {
             JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-            return array();
+            return [];
         }
 
-        return empty($assocIDs) ? array() : $assocIDs;
+        return empty($assocIDs) ? [] : $assocIDs;
     }
 
     /**
@@ -228,10 +223,10 @@ class THM_GroupsHelperGroup
         } catch (Exception $exception) {
             JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-            return array();
+            return [];
         }
 
-        return empty($roleIDs) ? array() : $roleIDs;
+        return empty($roleIDs) ? [] : $roleIDs;
     }
 
     /**
@@ -322,7 +317,7 @@ class THM_GroupsHelperGroup
         } catch (Exception $exc) {
             JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
-            return array();
+            return [];
         }
 
         return empty($list) ? [] : $list;

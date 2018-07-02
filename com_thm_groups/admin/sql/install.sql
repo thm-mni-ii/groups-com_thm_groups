@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_profiles` (
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_categories` (
   `ID`           INT(11) NOT NULL AUTO_INCREMENT,
-  `profileID`      INT(11) NOT NULL,
+  `profileID`    INT(11) NOT NULL,
   `categoriesID` INT(11) NOT NULL,
   PRIMARY KEY (`ID`),
   CONSTRAINT `categories_profilesid_fk` FOREIGN KEY (`profileID`) REFERENCES `#__thm_groups_profiles` (`id`)
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_categories` (
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_content` (
   `ID`        INT(11)          NOT NULL AUTO_INCREMENT,
-  `profileID`   INT(11)          NOT NULL,
+  `profileID` INT(11)          NOT NULL,
   `contentID` INT(11) UNSIGNED NOT NULL,
   `featured`  TINYINT(1)       NULL,
   PRIMARY KEY (`ID`),
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_attribute` (
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_profile_attributes` (
   `ID`          INT(11)    NOT NULL AUTO_INCREMENT,
-  `profileID`     INT(11)    NOT NULL,
+  `profileID`   INT(11)    NOT NULL,
   `attributeID` INT(11)    NOT NULL,
   `value`       TEXT       NULL,
   `published`   TINYINT(1) NULL,
@@ -127,8 +127,8 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_role_associations` (
   AUTO_INCREMENT = 1;
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_associations` (
-  `ID`                 INT(11) NOT NULL AUTO_INCREMENT,
-  `profileID`            INT(11) NOT NULL,
+  `ID`           INT(11) NOT NULL AUTO_INCREMENT,
+  `profileID`    INT(11) NOT NULL,
   `role_assocID` INT(11) NOT NULL,
   PRIMARY KEY (`ID`),
   CONSTRAINT `associations_roleassociationsid_fk` FOREIGN KEY (`role_assocID`) REFERENCES `#__thm_groups_role_associations` (`ID`)
@@ -150,7 +150,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_templates` (
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_template_attributes` (
   `ID`          INT(11) NOT NULL AUTO_INCREMENT,
-  `templateID`   INT(11) NOT NULL,
+  `templateID`  INT(11) NOT NULL,
   `attributeID` INT(11) NOT NULL,
   `published`   INT(3)  NOT NULL,
   `ordering`    INT(11) NOT NULL,
@@ -167,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_template_attributes` (
 
 CREATE TABLE IF NOT EXISTS `#__thm_groups_template_associations` (
   `ID`           INT(11)          NOT NULL AUTO_INCREMENT,
-  `templateID`    INT(11)          NOT NULL,
+  `templateID`   INT(11)          NOT NULL,
   `usergroupsID` INT(11) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `template_associations_templatesid_fk` FOREIGN KEY (`templateID`) REFERENCES `#__thm_groups_templates` (`id`)

@@ -1,9 +1,7 @@
 <?php
 /**
- * @category    Joomla component
  * @package     THM_Groups
- * @subpackage  com_thm_groups.site
- * @name        THMGroupsController
+ * @subpackate com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @copyright   2016 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -16,10 +14,6 @@ jimport('joomla.application.component.controller');
  * Site controller class for component com_thm_groups
  *
  * Main controller for the site section of the component
- *
- * @category    Joomla.Component.Site
- * @package     thm_Groups
- * @subpackage  com_thm_groups.site
  * @link        www.thm.de
  */
 class THM_GroupsController extends JControllerLegacy
@@ -43,7 +37,7 @@ class THM_GroupsController extends JControllerLegacy
      *
      * @param array $config An optional associative array of configuration settings.
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         parent::__construct($config);
         $task           = JFactory::getApplication()->input->get('task', '');
@@ -160,7 +154,7 @@ class THM_GroupsController extends JControllerLegacy
     private function preProcess()
     {
         $input = JFactory::getApplication()->input;
-        $data  = $input->get('jform', array(), 'array');
+        $data  = $input->get('jform', [], 'array');
 
         $this->groupID   = $data['groupID'];
         $this->menuID    = $data['menuID'];
@@ -279,7 +273,7 @@ class THM_GroupsController extends JControllerLegacy
 
         if ($functionAvailable) {
             // Get the input
-            $pks   = THM_GroupsHelperComponent::cleanIntCollection($this->input->get('cid', array(), 'array'));
+            $pks   = THM_GroupsHelperComponent::cleanIntCollection($this->input->get('cid', [], 'array'));
             $order = array_keys($pks);
 
             if ($model->saveorder($pks, $order)) {

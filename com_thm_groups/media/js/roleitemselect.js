@@ -1,6 +1,6 @@
 /**
  * @package        Joomla
- * @subpackage    GiessenLatestNews
+ * @subpackate com_thm_groups
  * @author        Dieudonne Timma
  * @copyright    Copyright (C) 2015 FH Giessen-Friedberg / University of Applied Sciences
  * @license        GNU/GPL, see LICENSE.php
@@ -12,19 +12,19 @@
  */
 
 jQuery(document).ready(function () {
-	jQuery("#paramsattr").sortable({
-		stop: function (event, ui) {
-			var listul = [];
-			jQuery('#paramsattr li').each(function () {
-				if (jQuery(this).val() !== 0)
-				{
-					listul.push(jQuery(this).val());
-				}
-			});
-			var result = listul.toString();
-			console.log(result);
-			jQuery("#sortedgrouproles").val(result);
-		}
-	});
+    jQuery("#paramsattr").sortable({
+        stop: function (event, ui) {
+            var listul = [];
+            jQuery('#paramsattr li').each(function () {
+                if (jQuery(this).val() !== 0)
+                {
+                    listul.push(jQuery(this).val());
+                }
+            });
+            var result = listul.toString();
+            console.log(result);
+            jQuery("#sortedgrouproles").val(result);
+        }
+    });
 });
 
