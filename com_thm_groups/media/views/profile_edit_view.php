@@ -1,19 +1,19 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
  * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 
 defined('_JEXEC') or die;
 
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/component.php';
 
 
 /**
@@ -73,15 +73,22 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
      * @param   string $name        the name of the attribute
      * @param   int    $attributeID the id of the attribute type
      * @param   int    $profileID   the id of the user profile being edited
+     * @param   bool   $hasPicture  whether or not the user already has a picture saved
      *
      * @return  string  the HTML output of the crop button
      */
-    public function getChangeButton($name, $attributeID, $profileID)
+    public function getChangeButton($name, $attributeID, $profileID, $hasPicture)
     {
         $button = '<button type="button" id="' . $name . '_upload" class="btn image-button" ';
         $button .= 'onclick="bindImageCropper(\'' . $name . '\', \'' . $attributeID . '\', \'' . $profileID . '\');" ';
         $button .= 'data-toggle="modal" data-target="#' . $name . '_Modal">';
-        $button .= '<span class="icon-edit"></span>' . JText::_('COM_THM_GROUPS_EDITGROUP_BUTTON_PICTURE_CHANGE');
+        if ($hasPicture) {
+            $button .= '<span class="icon-edit"></span>';
+            $button .= JText::_('COM_THM_GROUPS_IMAGE_BUTTON_CHANGE');
+        } else {
+            $button .= '<span class="icon-upload"></span>';
+            $button .= JText::_('COM_THM_GROUPS_IMAGE_BUTTON_UPLOAD');
+        }
         $button .= '</button>';
 
         return $button;
@@ -101,7 +108,7 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
         $button = '<button id="' . $name . '_del" class="btn image-button" ';
         $button .= 'onclick="deletePic(\'' . $name . '\', \'' . $attributeID . '\', \'' . $id . '\');" ';
         $button .= 'type="button">';
-        $button .= '<span class="icon-delete"></span>' . JText::_('COM_THM_GROUPS_DELETE');
+        $button .= '<span class="icon-delete"></span>' . JText::_('COM_THM_GROUPS_IMAGE_BUTTON_DELETE');
         $button .= '</button>';
 
         return $button;
@@ -118,12 +125,13 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
     public function getPicture($attribute, $nameAttributes)
     {
         $name        = $attribute['name'];
-        $attributeID = $attribute['structid'];
+        $attributeID = $attribute['id'];
         $value       = !empty(trim($attribute['value'])) ? trim($attribute['value']) : '';
+        $hasPicture  = !empty($value);
 
         $html = '<div id="' . $name . '_IMG" class="image-container">';
 
-        if (!empty($value)) {
+        if ($hasPicture) {
             $options = $attribute['options'];
 
             $position     = explode('images/', $options['path'], 2);
@@ -141,8 +149,10 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
         $html .= '<input id="jform_' . $name . '_value" name="jform[' . $name . '][value]" type="hidden" value="' . $value . '" />';
 
         $html .= '<div class="image-button-container">';
-        $html .= $this->getChangeButton($name, $attributeID, $this->profileID);
-        $html .= $this->getPicDeleteButton($name, $attributeID, $this->profileID);
+        $html .= $this->getChangeButton($name, $attributeID, $this->profileID, $hasPicture);
+        if ($hasPicture) {
+            $html .= $this->getPicDeleteButton($name, $attributeID, $this->profileID);
+        }
         $html .= '</div>';
 
         // Load variables into context for the crop modal template
@@ -177,7 +187,7 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
     }
 
     /**
-     * Creates a checkbox for the structid of the attribute being iterated
+     * Creates a checkbox for the id of the attribute being iterated
      *
      * @param   string $inputName  the name of the attribute
      * @param   string $structName the name of the property
@@ -238,7 +248,7 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
         JHtml::script('media/com_thm_groups/js/formbehaviorChosenHelper.js');
         JHtml::script('media/com_thm_groups/js/cropbox.js');
 
-        // TODO: Are both of these necessary? Assuming that the second one checks against the dyntype regex...
+        // TODO: Are both of these necessary? Assuming that the second one checks against the abstractName regex...
         JHtml::script('media/com_thm_groups/js/validators.js');
         JHtml::script('media/com_thm_groups/js/inputValidation.js');
 

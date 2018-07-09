@@ -1,9 +1,9 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -34,10 +34,10 @@ class JFormFieldGroup extends JFormFieldList
         $query = $dbo->getQuery(true);
 
         $query
-            ->select('gr.id, gr.title')
-            ->from('#__usergroups AS gr')
-            ->innerJoin('#__thm_groups_role_associations AS roleAssoc ON gr.id = roleAssoc.usergroupsID')
-            ->group('gr.title');
+            ->select('ug.id, ug.title')
+            ->from('#__usergroups AS ug')
+            ->innerJoin('#__thm_groups_role_associations AS ra ON gr.id = ra.groupID')
+            ->group('ug.title');
 
         $dbo->setQuery($query);
         $dbo->execute();

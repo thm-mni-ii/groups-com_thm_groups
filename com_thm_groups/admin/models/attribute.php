@@ -1,16 +1,16 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 
 defined('_JEXEC') or die;
 
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/static_type.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/field_types.php';
 
 /**
  * Class loads form data to edit an entry.
@@ -93,10 +93,10 @@ class THM_GroupsModelAttribute extends JModelLegacy
         $attributeIDs = array_diff($selected, $doNotDelete);
 
         $selectQuery = $this->_db->getQuery(true);
-        $selectQuery->select('*')->from('#__thm_groups_attribute');
+        $selectQuery->select('*')->from('#__thm_groups_attributes');
 
         $deleteQuery = $this->_db->getQuery(true);
-        $deleteQuery->delete('#__thm_groups_attribute');
+        $deleteQuery->delete('#__thm_groups_attributes');
 
         foreach ($attributeIDs as $attributeID) {
             $selectQuery->clear('where');
@@ -244,11 +244,11 @@ class THM_GroupsModelAttribute extends JModelLegacy
             return false;
         }
 
-        $data         = $app->input->get('jform', [], 'array');
-        $staticTypeID = $this->getStaticTypeIDByDynTypeID($data['dynamic_typeID']);
-        $options      = THM_GroupsHelperStatic_Type::getOption($staticTypeID);
+        $data        = $app->input->get('jform', [], 'array');
+        $fieldTypeID = $this->getStaticTypeIDByDynTypeID($data['abstractID']);
+        $options     = THM_GroupsHelperField_Types::getOption($fieldTypeID);
 
-        if ($staticTypeID === 1 or $staticTypeID === 2) {
+        if ($fieldTypeID === 1 or $fieldTypeID === 2) {
             $options->length = empty($data['length']) ? $options->length : (int)$data['length'];
         }
 
@@ -263,7 +263,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
 
         $this->_db->transactionStart();
 
-        $attribute      = $this->getTable('Attribute', 'THM_GroupsTable');
+        $attribute      = $this->getTable('Attributes', 'THM_GroupsTable');
         $attributeSaved = $attribute->save($data);
 
         if (!$attributeSaved) {
@@ -288,22 +288,22 @@ class THM_GroupsModelAttribute extends JModelLegacy
     }
 
     /**
-     * Returns a static type ID of a dynamic type by its ID
+     * Returns a field type ID of an abstract attribute by its ID
      *
-     * @param   int $dynTypeID dynamic type ID
+     * @param   int $abstractID abstract attribute ID
      *
      * @return int On success, else false
      *
      * @throws Exception
      */
-    private function getStaticTypeIDByDynTypeID($dynTypeID)
+    private function getStaticTypeIDByDynTypeID($abstractID)
     {
         $query = $this->_db->getQuery(true);
 
         $query
-            ->select('static_typeID')
-            ->from('#__thm_groups_dynamic_type')
-            ->where('id = ' . (int)$dynTypeID);
+            ->select('field_typeID')
+            ->from('#__thm_groups_abstract_attributes')
+            ->where('id = ' . (int)$abstractID);
         $this->_db->setQuery($query);
 
         try {
@@ -356,7 +356,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
 
         $query = $this->_db->getQuery(true);
 
-        $query->update('#__thm_groups_attribute')
+        $query->update('#__thm_groups_attributes')
             ->set("published = '$value'")
             ->where("id IN ( $id )");
 
@@ -398,7 +398,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
             return false;
         }
 
-        $table = $this->getTable('Attribute', 'THM_GroupsTable');
+        $table = $this->getTable('Attributes', 'THM_GroupsTable');
 
         // Update ordering values
         foreach ($pks as $i => $pk) {

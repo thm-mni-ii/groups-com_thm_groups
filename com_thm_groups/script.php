@@ -1,12 +1,12 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
- * @copyright   2017 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -79,7 +79,7 @@ class Com_THM_GroupsInstallerScript
 
                 $query->clear();
                 $query->insert("#__thm_groups_role_associations")
-                    ->columns("usergroupsID, rolesID")
+                    ->columns("groupID, roleID")
                     ->values($group["id"] . ", 1");
 
                 $dbo->setQuery($query);
@@ -107,9 +107,9 @@ class Com_THM_GroupsInstallerScript
         $query = $dbo->getQuery(true);
 
         // Get group and association id for the user.
-        $query->select("usr.group_id, roleAssoc.ID")
-            ->from("#__user_usergroup_map AS usr, #__thm_groups_role_associations AS roleAssoc")
-            ->where("usr.user_id = " . $user["id"] . " AND roleAssoc.usergroupsID = usr.group_id");
+        $query->select("map.group_id, roleAssoc.id")
+            ->from("#__user_usergroup_map AS map, #__thm_groups_role_associations AS roleAssoc")
+            ->where("map.user_id = " . $user["id"] . " AND roleAssoc.groupID = map.group_id");
 
         $dbo->setQuery($query);
         $assignedGroups = [];
@@ -127,9 +127,9 @@ class Com_THM_GroupsInstallerScript
                     $dbo->transactionStart();
 
                     $query->clear();
-                    $query->insert("#__thm_groups_associations")
-                        ->columns("profileID, role_assocID")
-                        ->values($user["id"] . ", " . $userGroup["ID"]);
+                    $query->insert("#__thm_groups_profile_associations")
+                        ->columns("profileID, role_associationID")
+                        ->values($user["id"] . ", " . $userGroup["id"]);
 
                     $dbo->SetQuery($query);
 
@@ -169,7 +169,7 @@ class Com_THM_GroupsInstallerScript
         // Get all attributes for the profiles
         $query->clear();
         $query->select("id, name")
-            ->from("#__thm_groups_attribute");
+            ->from("#__thm_groups_attributes");
         $dbo->setQuery($query);
 
         try {
@@ -193,8 +193,8 @@ class Com_THM_GroupsInstallerScript
 
                 // Insert profile for this user.
                 $query->insert("#__thm_groups_profiles")
-                    ->columns("id, published, injoomla, canEdit, qpPublished")
-                    ->values($user['id'] . ", 0, 1, 1, 0");
+                    ->columns("id, published, canEdit, contentEnabled")
+                    ->values($user['id'] . ", 0, 1, 0");
 
                 $dbo->setQuery($query);
 
@@ -274,210 +274,6 @@ class Com_THM_GroupsInstallerScript
     }
 
     /**
-     * This method is called after a component is updated.
-     * Renames old tables if necessary and ensures that named
-     * foreign key constraints are set correctly.
-     *
-     * @param $parent
-     *
-     * @return void
-     */
-    public function update($parent)
-    {
-        $dbo     = JFactory::getDbo();
-        $query   = $dbo->getQuery(true);
-        $db_name = JFactory::getConfig()->get('db');
-
-        // Rename tables if necessary
-        $tablesToRename = [
-            ['thm_groups_users', 'thm_groups_profiles'],
-            ['thm_groups_users_attribute', 'thm_groups_profile_attributes'],
-            ['thm_groups_users_categories', 'thm_groups_categories'],
-            ['thm_groups_users_content', 'thm_groups_content'],
-            ['thm_groups_users_usergroups_roles', 'thm_groups_associations'],
-            ['thm_groups_usergroups_roles', 'thm_groups_role_associations'],
-            ['thm_groups_profile', 'thm_groups_templates'],
-            ['thm_groups_profile_attribute', 'thm_groups_template_attributes'],
-            ['thm_groups_profile_usergroups', 'thm_groups_template_associations']
-        ];
-
-        $query->select("table_name")
-            ->from("information_schema.TABLES")
-            ->where("table_schema = '" . $db_name . "' AND table_name LIKE '%thm_groups%'");
-        $dbo->setQuery($query);
-        $tableNames = $dbo->loadAssocList();
-
-        foreach ($tableNames as $tableName) {
-            foreach ($tablesToRename as $table) {
-                if (strstr($tableName['table_name'], 'thm') == $table[0]) {
-                    $dbo->transactionStart();
-
-                    try {
-                        $dbo->renameTable("#__" . strstr($tableName['table_name'], 'thm'), "#__" . $table[1]);
-                    } catch (RuntimeException $exception) {
-                        $dbo->transactionRollback();
-                    }
-
-                    $dbo->transactionCommit();
-                }
-            }
-        }
-
-        /**
-         * Define FK's for groups table.
-         *
-         * $foreignKeys:
-         * Table name => [foreign key, desired fk name, referenced table name, referenced primary key,
-         * Changed referenced table name, changed FK column name].
-         **/
-        $foreignKeys = [
-            'thm_groups_profiles'              => [
-                ['id', 'profiles_usersid_fk', 'users', 'id', '', '']
-            ],
-            'thm_groups_profile_attributes'    => [
-                ['usersID', 'profile_attributes_profilesid_fk', 'users', 'id', 'thm_groups_profiles', 'profileID'],
-                ['attributeID', 'profile_attributes_attributeid_fk', 'thm_groups_attribute', 'id', '', '']
-            ],
-            'thm_groups_categories'            => [
-                ['usersID', 'categories_profilesid_fk', 'thm_groups_profiles', 'id', '', 'profileID'],
-                ['categoriesID', 'categories_categoriesid_fk', 'categories', 'id', '', '']
-            ],
-            'thm_groups_content'               => [
-                ['usersID', 'content_profilesid_fk', 'thm_groups_profiles', 'id', '', 'profileID'],
-                ['contentID', 'content_contentid_fk', 'content', 'id', '', '']
-            ],
-            'thm_groups_dynamic_type'          => [
-                ['static_typeID', 'dynamic_type_statictypeid_fk', 'thm_groups_static_type', 'id', '', '']
-            ],
-            'thm_groups_attribute'             => [
-                ['dynamic_typeID', 'attribute_dynamictypeid_fk', 'thm_groups_dynamic_type', 'id', '', '']
-            ],
-            'thm_groups_role_associations'     => [
-                ['usergroupsID', 'role_associations_usergroupsid_fk', 'usergroups', 'id', '', ''],
-                ['rolesID', 'role_associations_groupsrolesid_fk', 'thm_groups_roles', 'id', '', '']
-            ],
-            'thm_groups_associations'          => [
-                [
-                    'usergroups_rolesID',
-                    'associations_roleassociationsid_fk',
-                    'thm_groups_role_associations',
-                    'ID',
-                    '',
-                    'role_assocID'
-                ],
-                ['usersID', 'associations_profilesid_fk', 'users', 'id', 'thm_groups_profiles', 'profileID']
-            ],
-            'thm_groups_template_attributes'   => [
-                ['profileID', 'template_attributes_templatesid_fk', 'thm_groups_templates', 'id', '', 'templateID'],
-                ['attributeID', 'template_attributes_attributeid_fk', 'thm_groups_attribute', 'id', '', '']
-            ],
-            'thm_groups_template_associations' => [
-                ['profileID', 'template_associations_templatesid_fk', 'thm_groups_templates', 'id', '', 'templateID'],
-                ['usergroupsID', 'template_associations_usergroupsid_fk', 'usergroups', 'id', '', '']
-            ]
-        ];
-
-        // Get all FK's from current database information schema
-        $query = $dbo->getQuery(true);
-        $query->select("DISTINCT rc.table_name, rc.constraint_name, rc.referenced_table_name, kcu.column_name, kcu.referenced_column_name")
-            ->from("information_schema.REFERENTIAL_CONSTRAINTS as rc, information_schema.KEY_COLUMN_USAGE as kcu")
-            ->where("(rc.constraint_schema = '" . $db_name . "' AND kcu.constraint_schema = '" . $db_name . "')", "AND")
-            ->where("rc.table_name like '%thm_groups%'", "AND")
-            ->where("rc.constraint_name = kcu.constraint_name", "AND")
-            ->where("kcu.referenced_column_name IS NOT NULL");
-
-        $dbo->setQuery($query);
-
-        try {
-            $result = $dbo->loadObjectList();
-        } catch (RuntimeException $exc) {
-            return;
-        }
-
-        if (empty($result)) {
-            return;
-        }
-
-        // Compare FK names from information schema with defined, change if different
-        foreach ($result as $storedFK) {
-            // Loop trough foreign keys of selected table
-            foreach ($foreignKeys[strstr($storedFK->table_name, 'thm')] as $expectedFK) {
-                $storedFKname = substr(
-                    $storedFK->referenced_table_name,
-                    strpos($storedFK->referenced_table_name, '_') + 1
-                );
-
-                // Check if referenced table names are equal
-                if ($expectedFK[2] == $storedFKname || $expectedFK[4] == $storedFKname) {
-                    // Check if stored FK constraint name differs from the expected FK constraint name
-                    if ($expectedFK[1] != $storedFK->constraint_name ||
-                        (!empty($expectedFK[5]) && ($storedFK->column_name != $expectedFK[5]))
-                    ) {
-                        // Drop random named foreign key from table
-                        $dbo->transactionStart();
-
-                        $query = "ALTER TABLE `#__" . strstr($storedFK->table_name, 'thm') . "`
-                                  DROP FOREIGN KEY " . $storedFK->constraint_name . " ";
-                        $dbo->setQuery($query);
-
-                        try {
-                            $dbo->execute();
-                        } catch (RuntimeException $exception) {
-                            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-                            $dbo->transactionRollback();
-
-                            return;
-                        }
-
-                        // Check for changed referenced table and fk column name
-                        if (!empty($expectedFK[4])) {
-                            $expectedFK[2] = $expectedFK[4];
-                        }
-                        if (!empty($expectedFK[5]) && ($storedFK->column_name != $expectedFK[5])) {
-                            $query = "ALTER TABLE `#__" . strstr($storedFK->table_name, 'thm') . "`
-                                      CHANGE COLUMN `" . $storedFK->column_name . "` 
-                                      `" . $expectedFK[5] . "` INT(11) NOT NULL";
-                            $dbo->setQuery($query);
-
-                            try {
-                                $dbo->execute();
-                            } catch (RuntimeException $exception) {
-                                JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-                                $dbo->transactionRollback();
-
-                                return;
-                            }
-
-                            $expectedFK[0] = $expectedFK[5];
-                        }
-
-                        // Add foreign key constraint with expected FK name
-                        $query = "ALTER TABLE `#__" . strstr($storedFK->table_name, 'thm') . "`
-                                  ADD CONSTRAINT " . $expectedFK[1] . "
-                                  FOREIGN KEY (" . $expectedFK[0] . ") REFERENCES `#__" . $expectedFK[2] . "` (" . $expectedFK[3] . ")
-                                  ON UPDATE CASCADE 
-                                  ON DELETE CASCADE";
-                        $dbo->setQuery($query);
-
-                        try {
-                            $dbo->execute();
-                        } catch (RuntimeException $exception) {
-                            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-                            $dbo->transactionRollback();
-
-                            return;
-                        }
-
-                        $dbo->transactionCommit();
-                    }
-                }
-            }
-        }
-
-        return;
-    }
-
-    /**
      * Preflight runs before anything else and while the extracted files are in the uploaded temp folder.
      *
      * @param   $parent  is the class calling this method.
@@ -487,6 +283,7 @@ class Com_THM_GroupsInstallerScript
      */
     public function preflight($type, $parent)
     {
+
         echo '<hr>';
 
         // Installing component manifest file version

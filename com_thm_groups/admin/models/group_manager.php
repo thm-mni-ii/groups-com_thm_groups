@@ -1,10 +1,10 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -17,7 +17,7 @@ require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
  */
 class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
 {
-    protected $defaultOrdering = 'a.lft';
+    protected $defaultOrdering = 'ug1.lft';
 
     protected $defaultDirection = 'ASC';
 
@@ -31,25 +31,20 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
         $query = $this->_db->getQuery(true);
 
         // Select the required fields from the table.
-        $query->select(
-            $this->getState(
-                'list.select',
-                'a.*'
-            )
-        );
-        $query->from($this->_db->quoteName('#__usergroups') . ' AS a');
-
-        // Add the level in the tree.
-        $query->select('COUNT(DISTINCT c2.id) AS level')
-            ->join('LEFT OUTER', $this->_db->quoteName('#__usergroups') . ' AS c2 ON a.lft > c2.lft AND a.rgt < c2.rgt')
-            ->leftJoin('#__thm_groups_role_associations AS d ON d.usergroupsID = a.id')
-            ->leftJoin('#__thm_groups_template_associations AS f ON f.usergroupsID = a.id')
-            ->group('a.id, a.lft, a.rgt, a.parent_id, a.title');
+        $query->select($this->getState('list.select', 'ug1.*'))
+            ->select('COUNT(DISTINCT ug2.id) AS level')
+            ->select('COUNT(DISTINCT map.user_id) AS memberCount')
+            ->from('#__usergroups AS ug1')
+            ->leftJoin('#__usergroups AS ug2 ON ug1.lft > ug2.lft AND ug1.rgt < ug2.rgt')
+            ->leftJoin('#__user_usergroup_map AS map ON map.group_id = ug1.id')
+            ->leftJoin('#__thm_groups_role_associations AS ra ON ra.groupID = ug1.id')
+            ->leftJoin('#__thm_groups_template_associations AS ta ON ta.groupID = ug1.id')
+            ->group('ug1.id');
 
 
-        $this->setSearchFilter($query, ['a.title']);
-        $this->setIDFilter($query, 'd.rolesID', ['filter.roles']);
-        $this->setIDFilter($query, 'f.templateID', ['filter.templates']);
+        $this->setSearchFilter($query, ['ug1.title']);
+        $this->setIDFilter($query, 'ra.roleID', ['filter.roles']);
+        $this->setIDFilter($query, 'ta.templateID', ['filter.templates']);
         $this->setOrdering($query);
 
         return $query;
@@ -84,40 +79,13 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
 
             $return[$index][2] = "$levelIndicator $groupText";
             $return[$index][3] = $this->getRoles($item->id);
-            $return[$index][4] = $this->getProfiles($item->id);
-            $return[$index][5] = $this->getUserCount($item->id);
+            $return[$index][4] = $this->getTemplates($item->id);
+            $return[$index][5] = $item->memberCount;
 
             $index++;
         }
 
         return $return;
-    }
-
-    /**
-     * Retrieves the sum of users associated with the group of the given id
-     *
-     * @param int $groupID the group's id
-     *
-     * @return int the count of users if successful, otherwise 0
-     */
-    private function getUserCount($groupID)
-    {
-        // Get the counts from the database only for the users in the list.
-        $query = $this->_db->getQuery(true);
-
-        // Count the objects in the user group.
-        $query->select('COUNT(DISTINCT map.user_id)')->from('#__user_usergroup_map AS map')->where("map.group_id = '$groupID'");
-        $this->_db->setQuery($query);
-
-        try {
-            $count = $this->_db->loadResult();
-        } catch (Exception $exception) {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-
-            return 0;
-        }
-
-        return empty($count) ? 0 : $count;
     }
 
     /**
@@ -132,13 +100,15 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
 
         $headers                = [];
         $headers['checkbox']    = '';
-        $headers['id']          = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'a.id', $direction,
+        $headers['id']          = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'ug1.id', $direction,
             $ordering);
-        $headers['name']        = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 'a.title', $direction,
+        $headers['name']        = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 'ug1.title', $direction,
             $ordering);
-        $headers['roles']       = JText::_('COM_THM_GROUPS_GROUP_MANAGER_ROLES');
-        $headers['templates']   = JText::_('COM_THM_GROUPS_GROUP_MANAGER_PROFILE');
-        $headers['users_count'] = JText::_('COM_THM_GROUPS_GROUP_MANAGER_MEMBERS_IN_GROUP');
+        $headers['roles']       = JText::_('COM_THM_GROUPS_ROLES');
+        $headers['templates']   = JText::_('COM_THM_GROUPS_TEMPLATES');
+        $headers['users_count'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_MEMBER_COUNT'), 'memberCount',
+            $direction,
+            $ordering);
 
         return $headers;
     }
@@ -163,7 +133,7 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
         $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
-        parent::populateState("a.lft", "ASC");
+        parent::populateState("ug1.lft", "ASC");
     }
 
     /**
@@ -180,8 +150,8 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
         $query
             ->select('DISTINCT(role.id), role.name')
             ->from('#__thm_groups_roles AS role ')
-            ->innerJoin('#__thm_groups_role_associations AS roleAssoc ON role.id = roleAssoc.rolesID')
-            ->where("roleAssoc.usergroupsID = '$groupID'")
+            ->innerJoin('#__thm_groups_role_associations AS roleAssoc ON role.id = roleAssoc.roleID')
+            ->where("roleAssoc.groupID = '$groupID'")
             ->order('role.name ASC');
 
         $this->_db->setQuery($query);
@@ -200,7 +170,7 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
         if (!empty($roles)) {
             foreach ($roles as $role) {
                 if ($role->id != 1) {
-                    $deleteBtn = '<a onclick="removeRole(' . $groupID . ',' . $role->id . ')">' . $deleteIcon . '</a>';
+                    $deleteBtn = '<a onclick="deleteRoleAssociation(' . $groupID . ',' . $role->id . ')">' . $deleteIcon . '</a>';
 
                     $url = "index.php?option=com_thm_groups&view=role_edit&cid[]=$role->id";
 
@@ -223,7 +193,7 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
      *
      * @throws Exception
      */
-    private function getProfiles($groupID)
+    private function getTemplates($groupID)
     {
         $query = $this->_db->getQuery(true);
 
@@ -231,12 +201,12 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
             ->select('template.id, template.name')
             ->from('#__thm_groups_template_associations AS templateAssoc')
             ->innerJoin('#__thm_groups_templates AS template ON template.id = templateAssoc.templateID')
-            ->where("templateAssoc.usergroupsID = $groupID");
+            ->where("templateAssoc.groupID = $groupID");
 
         $this->_db->setQuery($query);
 
         try {
-            $profile = $this->_db->loadObject();
+            $template = $this->_db->loadObject();
         } catch (Exception $exception) {
             JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
@@ -244,16 +214,16 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
         }
 
         $return = '';
-        if (!empty($profile)) {
+        if (!empty($template)) {
             $deleteIcon = '<span class="icon-trash"></span>';
-            $deleteBtn  = "<a href='javascript:removeTemplate(" . $groupID . "," . $profile->id . ")'>" . $deleteIcon . "</a>";
+            $deleteBtn  = "<a onclick='deleteTemplateAssociation($groupID,{$template->id});'>$deleteIcon</a>";
 
-            $url = "index.php?option=com_thm_groups&view=profile_edit&id=$profile->id";
+            $url = "index.php?option=com_thm_groups&view=profile_edit&id=$template->id";
 
             if (JFactory::getUser()->authorise('core.edit', 'com_thm_groups')) {
-                $return = "<a href=$url>" . $profile->name . "</a> " . $deleteBtn;
+                $return = "<a href=$url>" . $template->name . "</a> " . $deleteBtn;
             } else {
-                $return = $profile->name;
+                $return = $template->name;
             }
         }
 

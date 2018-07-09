@@ -1,12 +1,12 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
  * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -38,26 +38,12 @@ class THM_GroupsViewProfile_Edit extends THM_GroupsViewProfile_Edit_View
         $html = '<div class="frontend-toolbar">';
         $html .= '<button type="submit" class="btn btn-primary" ';
         $html .= 'onclick="document.adminForm.task.value=\'profile.apply\';return true;">';
-        $html .= '<span class="icon-save"></span>' . JText::_('COM_THM_GROUPS_APPLY');
+        $html .= '<span class="icon-edit"></span>' . JText::_('COM_THM_GROUPS_APPLY');
         $html .= '</button>';
         $html .= '<button type="submit" class="btn btn-primary" ';
         $html .= 'onclick="document.adminForm.task.value = \'profile.save2profile\';return true;">';
-        $html .= '<span class="icon-user"></span>' . JText::_('COM_THM_GROUPS_SAVE_TO_PROFILE');
+        $html .= '<span class="icon-save"></span>' . JText::_('COM_THM_GROUPS_SAVE');
         $html .= '</button>';
-        $html .= '<button type="submit" class="btn btn-primary" ';
-
-        $breadcrumbs = JFactory::getApplication()->getPathway()->getPathway();
-
-        if (count($breadcrumbs)) {
-            $lastLocation = end($breadcrumbs);
-            $menuURL      = $lastLocation->link;
-        }
-
-        if (!empty($menuURL)) {
-            $html .= '<button type="submit" class="btn btn-primary" ';
-            $html .= 'onclick="document.adminForm.task.value=\'profile.save2list\';return true;">';
-            $html .= '<span class="icon-list"></span>' . JText::_('COM_THM_GROUPS_SAVE_TO_LIST') . '</button>';
-        }
 
         $app         = JFactory::getApplication();
         $referrer    = $app->input->server->getString('HTTP_REFERER');

@@ -1,12 +1,14 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
+ * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
+
 defined('_JEXEC') or die;
 
 require_once JPATH_ROOT . '/media/com_thm_groups/views/list.php';
@@ -16,13 +18,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/views/list.php';
  */
 class THM_GroupsViewRole_Manager extends THM_GroupsViewList
 {
-
-    public $items;
-
-    public $pagination;
-
-    public $state;
-
     public $batch;
 
     /**
@@ -39,9 +34,7 @@ class THM_GroupsViewRole_Manager extends THM_GroupsViewList
             JErrorPage::render($exc);
         }
 
-        $this->batch = ['batch' => JPATH_COMPONENT_ADMINISTRATOR . '/views/role_manager/tmpl/default_batch.php'];
-
-        JFactory::getDocument()->addScript(JURI::root(true) . '/media/com_thm_groups/js/role_manager.js');
+        $this->batch = ['batch' => JPATH_COMPONENT . '/views/role_manager/tmpl/default_batch.php'];
 
         parent::display($tpl);
     }
@@ -53,28 +46,35 @@ class THM_GroupsViewRole_Manager extends THM_GroupsViewList
      */
     protected function addToolbar()
     {
-        // Get the toolbar object instance
-        $bar = JToolBar::getInstance('toolbar');
-
-        JToolBarHelper::title(JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_ROLE_MANAGER'),
-            'role_manager');
+        JToolBarHelper::title(JText::_('COM_THM_GROUPS_ROLE_MANAGER_TITLE'), 'role_manager');
 
         JToolBarHelper::addNew('role.add');
         JToolBarHelper::editList('role.edit');
         JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM', 'role.delete', 'JTOOLBAR_DELETE');
 
-        $title = JText::_('COM_THM_GROUPS_ROLE_MANAGER_BATCH');
-
-        // Instantiate a new JLayoutFile instance and render the batch button
         $layout = new JLayoutFile('joomla.toolbar.batch');
+        $title  = JText::_('COM_THM_GROUPS_GROUP_ASSOCIATIONS_BATCH');
+        $batch  = $layout->render(['title' => $title]);
 
-        $dhtml = $layout->render(['title' => $title]);
-        $bar->appendButton('Custom', $dhtml, 'batch');
+        $bar = JToolBar::getInstance('toolbar');
+        $bar->appendButton('Custom', $batch, 'batch');
 
-        $user = JFactory::getUser();
-        if ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups')) {
+        if (JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
             JToolBarHelper::divider();
             JToolBarHelper::preferences('com_thm_groups');
         }
+    }
+
+    /**
+     * Adds styles and scripts to the document
+     *
+     * @return  void  modifies the document
+     */
+    protected function modifyDocument()
+    {
+        parent::modifyDocument();
+
+        // The parent has to be initialized first to ensure that jQuery is available.
+        JFactory::getDocument()->addScript(JURI::root() . 'media/com_thm_groups/js/remove_association.js');
     }
 }

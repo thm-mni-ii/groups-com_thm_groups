@@ -1,9 +1,9 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -18,13 +18,6 @@ require_once JPATH_ROOT . "/media/com_thm_groups/views/list.php";
  */
 class THM_GroupsViewContent_Manager extends THM_GroupsViewList
 {
-
-    public $items;
-
-    public $pagination;
-
-    public $state;
-
     /**
      * Method to get display
      *

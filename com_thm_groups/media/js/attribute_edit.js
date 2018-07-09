@@ -2,25 +2,25 @@
 
 jQuery(document).ready(function () {
     jQuery('.adminform').append("<div id='ajax-container'></div>");
-    var jformDynamicTypeIDSelector = jQuery('#jform_dynamic_typeID');
-    var dynTypeID = jformDynamicTypeIDSelector.val();
+    var jformDynamicTypeIDSelector = jQuery('#jform_abstractID');
+    var abstractID = jformDynamicTypeIDSelector.val();
     var attributeID = jQuery('#jform_id').val();
 
-    getExtraOptions(attributeID, dynTypeID);
+    getExtraOptions(attributeID, abstractID);
 
     jformDynamicTypeIDSelector.change(function () {
-        dynTypeID = this.value;
-        getExtraOptions(attributeID, dynTypeID);
+        abstractID = this.value;
+        getExtraOptions(attributeID, abstractID);
     });
 
-    function getExtraOptions(attributeID, dynTypeID)
+    function getExtraOptions(attributeID, abstractID)
     {
         jQuery.ajax({
             type: "POST",
-            url: "index.php?option=com_thm_groups&view=static_type_ajax&task=attribute&format=raw",
+            url: "index.php?option=com_thm_groups&view=field_type_ajax&task=attribute&format=raw",
             data: {
                 attributeID: attributeID,
-                dynTypeID: dynTypeID
+                abstractID: abstractID
             },
             success: function (response) {
                 jQuery('#ajax-container').html(response);

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -12,21 +12,12 @@
 defined('_JEXEC') or die;
 
 require_once JPATH_ROOT . '/media/com_thm_groups/views/list.php';
-require_once JPATH_SITE . '/media/com_thm_groups/helpers/batch.php';
 
 /**
  * THM_GroupsViewTemplate_Manager class for component com_thm_groups
  */
 class THM_GroupsViewTemplate_Manager extends THM_GroupsViewList
 {
-    public $items;
-
-    public $pagination;
-
-    public $state;
-
-    public $groups;
-
     public $batch;
 
     /**
@@ -43,11 +34,7 @@ class THM_GroupsViewTemplate_Manager extends THM_GroupsViewList
             JErrorPage::render($exc);
         }
 
-        // Set batch template path
-        $batchPath   = JPATH_COMPONENT_ADMINISTRATOR . '/views/template_manager/tmpl/default_batch.php';
-        $this->batch = ['batch' => $batchPath];
-
-        $this->groups = THM_GroupsHelperBatch::getGroupOptions();
+        $this->batch = ['batch' => JPATH_COMPONENT . '/views/template_manager/tmpl/default_batch.php'];
 
         parent::display($tpl);
     }
@@ -59,19 +46,21 @@ class THM_GroupsViewTemplate_Manager extends THM_GroupsViewList
      */
     protected function addToolbar()
     {
+        $bar = JToolBar::getInstance('toolbar');
+
         JToolBarHelper::title(JText::_('COM_THM_GROUPS_TEMPLATE_MANAGER_TITLE'), 'template_manager');
 
-        JToolBarHelper::addNew('template.add', 'COM_THM_GROUPS_NEW', false);
-        JToolBarHelper::editList('template.edit', 'COM_THM_GROUPS_EDIT');
-        JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM_DEPENDENCIES', 'template.delete',
-            'JTOOLBAR_DELETE');
+        JToolBarHelper::addNew('template.add');
+        JToolBarHelper::editList('template.edit');
+        JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM', 'template.delete', 'JTOOLBAR_DELETE');
 
-        $bar   = JToolbar::getInstance('toolbar');
-        $title = JText::_('COM_THM_GROUPS_BATCH_GROUPS');
-        $html  = "<button id='add_group_to_profile_btn' data-toggle='modal' data-target='#collapseModal' class='btn btn-small'>";
-        $html  .= "<i class='icon-users' title='$title'></i> $title</button>";
+        $title = JText::_('COM_THM_GROUPS_GROUP_ASSOCIATIONS_BATCH');
 
-        $bar->appendButton('Custom', $html, 'batch');
+        // Instantiate a new JLayoutFile instance and render the batch button
+        $layout = new JLayoutFile('joomla.toolbar.batch');
+
+        $batch = $layout->render(['title' => $title]);
+        $bar->appendButton('Custom', $batch, 'batch');
 
         $user = JFactory::getUser();
         if ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups')) {
@@ -88,6 +77,7 @@ class THM_GroupsViewTemplate_Manager extends THM_GroupsViewList
     protected function modifyDocument()
     {
         parent::modifyDocument();
-        JHtml::script(JUri::root() . 'media/com_thm_groups/js/template_manager.js');
+
+        JFactory::getDocument()->addScript(JURI::root() . 'media/com_thm_groups/js/remove_association.js');
     }
 }

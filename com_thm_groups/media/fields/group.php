@@ -28,7 +28,7 @@ class JFormFieldGroup extends JFormFieldList
         $query
             ->select('groups.id AS value, groups.title AS text')
             ->from('#__usergroups AS groups')
-            ->innerJoin('#__thm_groups_role_associations AS assoc ON groups.id = assoc.usergroupsID')
+            ->innerJoin('#__thm_groups_role_associations AS assoc ON groups.id = assoc.groupID')
             ->group('text');
 
         $dbo->setQuery($query);

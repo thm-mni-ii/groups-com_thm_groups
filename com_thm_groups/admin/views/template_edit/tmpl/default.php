@@ -1,9 +1,9 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -30,7 +30,7 @@ defined('_JEXEC') or die;
             </th>
             <th><span class="hasTooltip"
                       title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_LABEL',
-                          'COM_THM_GROUPS_TEMPLATE_EDIT_LABEL_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_LABEL'); ?></span>
+                          'COM_THM_GROUPS_ATTRIBUTE_LABEL_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_LABEL'); ?></span>
             </th>
             <th><span class="hasTooltip"
                       title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_PUBLISHED',

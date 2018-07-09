@@ -27,58 +27,55 @@ require_once JPATH_BASE . '/administrator/components/com_thm_groups/models/addro
  */
 class THMGroupsModelAddRoleAdminTest extends PHPUnit_Framework_TestCase
 {
-	protected $instance;
+    protected $instance;
 
-	/**
-	 * set up function before tests
-	 *
-	 * @return void
-	 */
-	public function setUp()
-	{
-		$this->instance = new THMGroupsModelAddRole;
-	}
+    /**
+     * set up function before tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        $this->instance = new THMGroupsModelAddRole;
+    }
 
-	/**
-	 * kill function after tests
-	 *
-	 * @return void
-	 */
-	public function tearDown()
-	{
-		$this->instance = null;
-		parent::tearDown();
-	}
+    /**
+     * kill function after tests
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        $this->instance = null;
+        parent::tearDown();
+    }
 
-	/**
-	 * tests store
-	 * function inserts value in database
-	 * should return true
-	 * delete value
-	 *
-	 * @return void
-	 */
-	public function teststore()
-	{
+    /**
+     * tests store
+     * function inserts value in database
+     * should return true
+     * delete value
+     *
+     * @return void
+     */
+    public function teststore()
+    {
 
-		$array['role_name'] = 'THMGroupsTestSuite';
-		JRequest::set($array, 'post');
+        $array['role_name'] = 'THMGroupsTestSuite';
+        JRequest::set($array, 'post');
 
-		$result   = $this->instance->store();
-		$expected = true;
+        $result   = $this->instance->store();
+        $expected = true;
 
-		$db    = JFactory::getDBO();
-		$query = "DELETE FROM #__thm_groups_roles WHERE name = 'THMGroupsTestSuite'";
-		$db->setQuery($query);
-		if ($db->query())
-		{
-			$delete = true;
-		}
-		else
-		{
-			$delete = false;
-		}
-		$this->assertTrue($delete == true);
-		$this->assertTrue($result == $expected);
-	}
+        $db    = JFactory::getDBO();
+        $query = "DELETE FROM #__thm_groups_roles WHERE name = 'THMGroupsTestSuite'";
+        $db->setQuery($query);
+        if ($db->query()) {
+            $delete = true;
+        } else {
+            $delete = false;
+        }
+        $this->assertTrue($delete == true);
+        $this->assertTrue($result == $expected);
+    }
 }

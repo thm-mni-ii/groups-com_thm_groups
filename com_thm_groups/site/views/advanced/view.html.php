@@ -1,17 +1,17 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2017 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 
-require_once JPATH_ROOT . "/media/com_thm_groups/helpers/profile.php";
+require_once JPATH_ROOT . "/media/com_thm_groups/helpers/profiles.php";
 
 /**
  * THMGroupsViewAdvanced class for component com_thm_groups
@@ -197,9 +197,9 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $container .= $this->getActionContainer($profileID, $lastName);
 
         $attributeContainers   = [];
-        $attributeContainers[] = THM_GroupsHelperProfile::getNameContainer($attributes);
+        $attributeContainers[] = THM_GroupsHelperProfiles::getNameContainer($attributes);
 
-        $titleContainer = THM_GroupsHelperProfile::getTitleContainer($attributes);
+        $titleContainer = THM_GroupsHelperProfiles::getTitleContainer($attributes);
 
         if (!empty($titleContainer)) {
             $attributeContainers[] = $titleContainer;
@@ -220,7 +220,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
                 continue;
             }
 
-            $attributeContainer = THM_GroupsHelperProfile::getAttributeContainer($attribute, $lastName,
+            $attributeContainer = THM_GroupsHelperProfiles::getAttributeContainer($attribute, $lastName,
                 $this->suppressText);
 
             if (($attribute['type'] == 'PICTURE')) {

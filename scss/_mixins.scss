@@ -4,22 +4,6 @@
   margin-right: .5rem;
 }
 
-button, a.btn {
-
-  border: $border-thick;
-  font-family: $font-family-regular;
-  padding: .4rem .6rem .2rem .6rem;
-
-  &:hover {
-    background-color: $font-color;
-    color: $foreground-color;
-
-    span:before {
-      color: $foreground-color;
-    }
-  }
-}
-
 //********************************************************************************************************************//
 // Media Queries for Backend
 //********************************************************************************************************************//

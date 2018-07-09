@@ -1,18 +1,17 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 
-use MongoDB\BSON\Type;
-
 defined('_JEXEC') or die;
+
 require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
 
 /**
@@ -36,11 +35,11 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
         $query
             ->select('roles.id, roles.name, roles.ordering')
             ->from('#__thm_groups_roles AS roles')
-            ->leftJoin('#__thm_groups_role_associations AS roleAssoc ON roles.id = roleAssoc.rolesID')
+            ->leftJoin('#__thm_groups_role_associations AS roleAssoc ON roles.id = roleAssoc.roleID')
             ->group('roles.id');
 
         $this->setSearchFilter($query, ['roles.name']);
-        $this->setIDFilter($query, 'roleAssoc.usergroupsID', ['filter.groups']);
+        $this->setIDFilter($query, 'roleAssoc.groupID', ['filter.groups']);
         $this->setOrdering($query);
 
         return $query;
@@ -163,26 +162,27 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
         $query = $this->_db->getQuery(true);
 
         $query
-            ->select('DISTINCT(ug.id), ug.title')
+            ->select('DISTINCT ug.id, ug.title')
             ->from('#__usergroups AS ug')
-            ->innerJoin('#__thm_groups_role_associations AS roleAssoc ON ug.id = roleAssoc.usergroupsID')
-            ->where("roleAssoc.rolesID = $roleID")
+            ->innerJoin('#__thm_groups_role_associations AS roleAssoc ON ug.id = roleAssoc.groupID')
+            ->where("roleAssoc.roleID = $roleID")
             ->order('ug.title ASC');
 
         $this->_db->setQuery($query);
-        $groups = $this->_db->loadObjectList();
+        $groups = $this->_db->loadAssocList();
 
         $return = [];
         if (!empty($groups)) {
+            $buttonStart = '<a onclick="deleteGroupAssociation(';
+            $buttonEnd   = ');"><span class="icon-trash"></span></a>';
             foreach ($groups as $group) {
                 // Delete button
-                $deleteIcon = '<span class="icon-trash"></span>';
-                $deleteBtn  = "<a href='javascript:deleteGroupAssociation(" . $roleID . "," . $group->id . ")'>" . $deleteIcon . "</a>";
+                $deleteButton = $buttonStart . "'role', {$group['id']}, $roleID" . $buttonEnd;
 
                 // Link to edit view of a group
-                $url = JRoute::_('index.php?option=com_users&task=group.edit&id=' . $group->id);
+                $url = JRoute::_('index.php?option=com_users&task=group.edit&id=' . $group['id']);
 
-                $return[] = "<a href=$url>" . $group->title . "</a> " . $deleteBtn;
+                $return[] = "<a href=$url>" . $group['title'] . "</a> " . $deleteButton;
             }
         }
 

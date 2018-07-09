@@ -1,17 +1,17 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 
 defined('_JEXEC') or die;
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/content.php';
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/component.php';
 
 /**
  * Class loads form data to edit an entry.
@@ -135,7 +135,7 @@ class THM_GroupsModelProfile extends JModelLegacy
         }
 
         $groupsQuery = $this->_db->getQuery(true);
-        $groupsQuery->delete('#__thm_groups_associations')
+        $groupsQuery->delete('#__thm_groups_profile_associations')
             ->where("id IN ('" . implode("','", $disposableAssocs) . "')");
         $this->_db->setQuery($groupsQuery);
 
@@ -270,8 +270,8 @@ class THM_GroupsModelProfile extends JModelLegacy
         $query = $this->_db->getQuery(true);
 
         $query
-            ->delete('#__thm_groups_associations')
-            ->where("profileID = $profileID AND role_assocID = $idToDelete");
+            ->delete('#__thm_groups_profile_associations')
+            ->where("profileID = '$profileID' AND role_associationID = '$idToDelete'");
 
         $this->_db->setQuery($query);
 
@@ -299,10 +299,10 @@ class THM_GroupsModelProfile extends JModelLegacy
         $query = $this->_db->getQuery(true);
 
         $query
-            ->select('ID')
+            ->select('id')
             ->from('#__thm_groups_role_associations')
-            ->where("usergroupsID = '$groupID'")
-            ->where("rolesID = '$roleID'");
+            ->where("groupID = '$groupID'")
+            ->where("roleID = '$roleID'");
 
         $this->_db->setQuery($query);
 
@@ -329,9 +329,9 @@ class THM_GroupsModelProfile extends JModelLegacy
         $query = $this->_db->getQuery(true);
 
         $query
-            ->select('ID')
+            ->select('id')
             ->from('#__thm_groups_role_associations')
-            ->where("usergroupsID = '$groupID'");
+            ->where("groupID = '$groupID'");
 
         $this->_db->setQuery($query);
 
@@ -360,10 +360,10 @@ class THM_GroupsModelProfile extends JModelLegacy
         foreach ($requestedAssocs as $requestedAssoc) {
             foreach ($requestedAssoc['roles'] as $role) {
                 $query = $this->_db->getQuery(true);
-                $query->select('ID as id')
+                $query->select('id')
                     ->from('#__thm_groups_role_associations')
-                    ->where("usergroupsID = '{$requestedAssoc['id']}'")
-                    ->where("rolesID = {$role['id']}");
+                    ->where("groupID = '{$requestedAssoc['id']}'")
+                    ->where("roleID = {$role['id']}");
                 $this->_db->setQuery($query);
 
                 try {
@@ -392,7 +392,7 @@ class THM_GroupsModelProfile extends JModelLegacy
     {
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
-        $query->select('options')->from('#__thm_groups_attribute')->where("id = '$attributeID'");
+        $query->select('options')->from('#__thm_groups_attributes')->where("id = '$attributeID'");
         $dbo->setQuery($query);
 
         try {
@@ -431,8 +431,8 @@ class THM_GroupsModelProfile extends JModelLegacy
         $query = $this->_db->getQuery(true);
 
         // First, we need to check if the group-role relationship is already assigned to the user
-        $query->select('ID AS id, profileID, role_assocID AS assocID')
-            ->from('#__thm_groups_associations')
+        $query->select('id, profileID, role_associationID AS assocID')
+            ->from('#__thm_groups_profile_associations')
             ->where("profileID IN ('" . implode(',', $profileIDs) . "')")
             ->order('profileID');
 
@@ -471,7 +471,7 @@ class THM_GroupsModelProfile extends JModelLegacy
     public function publishContent()
     {
         $input = JFactory::getApplication()->input;
-        $input->set('attribute', 'qpPublished');
+        $input->set('attribute', 'contentEnabled');
         $input->set('value', '1');
 
         return $this->toggle();
@@ -580,7 +580,7 @@ class THM_GroupsModelProfile extends JModelLegacy
         $pathAttr    = $this->getPicturePath($attributeID);
         $path        = $this->correctPathDS(JPATH_ROOT . $pathAttr . $newFileName);
 
-        $profile = THM_GroupsHelperProfile::getProfile($profileID);
+        $profile = THM_GroupsHelperProfiles::getProfile($profileID);
 
         // Out with the old
         $deleted = $this->deletePicture($profile, $attributeID);
@@ -714,7 +714,7 @@ class THM_GroupsModelProfile extends JModelLegacy
             return true;
         }
 
-        $query->insert('#__thm_groups_associations')->columns(['profileID', 'role_assocID']);
+        $query->insert('#__thm_groups_profile_associations')->columns(['profileID', 'role_associationID']);
         $this->_db->setQuery($query);
 
         try {
@@ -813,7 +813,7 @@ class THM_GroupsModelProfile extends JModelLegacy
             return false;
         }
 
-        if ($column == 'qpPublished') {
+        if ($column == 'contentEnabled') {
             $this->createCategory($selectedUsers);
         }
 

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -49,15 +49,14 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
         $query = $this->_db->getQuery(true);
 
         $query
-            ->select('groups.id as groupID')
-            ->select('groups.title AS groupName')
+            ->select('ug.id as groupID, ug.title AS groupName')
             ->select('GROUP_CONCAT(DISTINCT roles.id ORDER BY roles.name SEPARATOR ", ") AS roleID')
             ->select('GROUP_CONCAT(DISTINCT roles.name ORDER BY roles.name SEPARATOR ", ") AS roleName')
-            ->from('#__thm_groups_associations AS assoc')
-            ->leftJoin('#__thm_groups_role_associations AS roleAssoc ON assoc.role_assocID = roleAssoc.id')
-            ->leftJoin('#__usergroups AS groups ON roleAssoc.usergroupsID = groups.id')
-            ->leftJoin('#__thm_groups_roles AS roles ON roleAssoc.rolesID = roles.id')
-            ->where("assoc.profileID = $profileID AND roleAssoc.usergroupsID > 1")
+            ->from('#__thm_groups_profile_associations AS pa')
+            ->leftJoin('#__thm_groups_role_associations AS ra ON pa.role_associationID = ra.id')
+            ->leftJoin('#__usergroups AS ug ON ra.groupID = ug.id')
+            ->leftJoin('#__thm_groups_roles AS roles ON ra.roleID = roles.id')
+            ->where("pa.profileID = $profileID AND ra.groupID > 1")
             ->group('groupID');
 
         $this->_db->setQuery($query);
@@ -86,16 +85,21 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
         $associations = $this->getAssociations($profileID);
         $result       = "";
         $deleteIcon   = '<span class="icon-delete"></span>';
-        $roleHREF     = 'javascript:deleteRoleAssociation(PROFILEID,GROUPID,ROLEID);';
-        $roleTitle    = JText::_('COM_THM_GROUPS_GROUP') . ": GROUPNAME - ";
-        $roleTitle    .= JText::_('COM_THM_GROUPS_ROLE') . ": ROLENAME::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE');
-        $rawRoleLink  = "<a href='$roleHREF' title='$roleTitle' class='hasTooltip'>{$deleteIcon}</a>ROLENAME";
-        $groupHREF    = 'javascript:deleteGroupAssociation(PROFILEID,GROUPID);';
-        $groupTitle   = JText::_('COM_THM_GROUPS_GROUP') . ": GROUPNAME::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES');
-        $rawGroupLink = "<a href='$groupHREF' class='hasTooltip' title='$groupTitle'>{$deleteIcon}</a>";
-        $rawGroupLink .= "<strong>GROUPNAME</strong> : ";
+
+        $deleteRoleParameters = "$profileID,GROUPID,ROLEID";
+        $roleTitle            = JText::_('COM_THM_GROUPS_GROUP') . ": GROUPNAME - ";
+        $roleTitle            .= JText::_('COM_THM_GROUPS_ROLE') . ": ROLENAME::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE');
+        $rawRoleLink          = '<a onlick="deleteRoleAssociation(' . $deleteRoleParameters . ');" ';
+        $rawRoleLink          .= 'title="' . $roleTitle . '" class="hasTooltip">' . $deleteIcon . '</a>ROLENAME';
+
+        $deleteGroupParameters = "'profile',GROUPID,$profileID";
+        $groupTitle            = JText::_('COM_THM_GROUPS_GROUP') . ": GROUPNAME::" . JText::_('COM_THM_GROUPS_REMOVE_ALL_ROLES');
+        $rawGroupLink          = '<a onclick="deleteGroupAssociation(' . $deleteGroupParameters . ');" ';
+        $rawGroupLink          .= 'title="' . $groupTitle . '" class="hasTooltip">' . $deleteIcon;
+        $rawGroupLink          .= '</a><strong>GROUPNAME</strong> : ';
 
         foreach ($associations as $association) {
+
             // Don't show Public and Registered groups
             if (($association['groupName'] == "Public" or $association['groupName'] == "Registered")) {
                 continue;
@@ -104,16 +108,14 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
             $roles      = explode(', ', $association['roleName']);
             $groupRoles = [];
             $groupName  = $association['groupName'];
-            $uRoleLink  = str_replace('PROFILEID', $profileID, $rawRoleLink);
-            $uGroupLink = str_replace('PROFILEID', $profileID, $rawGroupLink);
 
             // If there is only one role in group, don't show delete icon
             if (count($roles) == 1) {
                 $groupRoles[] = $roles[0];
             } else {
-                $roleIDs   = explode(', ', $association['roleID']);
-                $gRoleLink = str_replace('GROUPNAME', $groupName,
-                    str_replace('GROUPID', $association['groupID'], $uRoleLink));
+                $roleIDs          = explode(', ', $association['roleID']);
+                $specificRoleLink = str_replace('GROUPID', $association['groupID'], $rawRoleLink);
+                $specificRoleLink = str_replace('GROUPNAME', $groupName, $specificRoleLink);
 
                 // If there are many roles, show delete icon
                 foreach ($roles as $index => $role) {
@@ -125,7 +127,7 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
                     // Allow to edit groups only for authorised users
                     if ($canEdit) {
                         $groupRoles[] = str_replace('ROLENAME', $role,
-                            str_replace('ROLEID', $roleIDs[$index], $gRoleLink));
+                            str_replace('ROLEID', $roleIDs[$index], $specificRoleLink));
 
                     } else {
                         $groupRoles[] = $role;
@@ -136,9 +138,15 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
 
             // Allow to edit groups only for authorised users
             if ($canEdit) {
-                $result .= str_replace('GROUPNAME', $groupName,
-                    str_replace('GROUPID', $association['groupID'], $uGroupLink));
-                $result .= implode(', ', $groupRoles) . '<br>';
+
+                // If the user is only in one group, do not allow the removal of the association in this component.
+                if (count($associations) === 1) {
+                    $groupLink = "<strong>$groupName</strong> : ";
+                } else {
+                    $groupLink = str_replace('GROUPID', $association['groupID'], $rawGroupLink);
+                    $groupLink = str_replace('GROUPNAME', $groupName, $groupLink);
+                }
+                $result .= $groupLink . implode(', ', $groupRoles) . '<br>';
             }
         }
 
@@ -155,22 +163,23 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
         $ordering  = $this->state->get('list.ordering');
         $direction = $this->state->get('list.direction');
 
-        $headers                = [];
-        $headers['checkbox']    = '';
-        $headers['surname']     = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_SURNAME'), 'surname',
+        $headers                   = [];
+        $headers['checkbox']       = '';
+        $headers['surname']        = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_SURNAME'), 'surname',
             $direction, $ordering);
-        $headers['forename']    = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_FORENAME'), 'forename',
+        $headers['forename']       = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_FORENAME'), 'forename',
             $direction, $ordering);
-        $headers['email']       = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_EMAIL'), 'email', $direction,
+        $headers['email']          = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_EMAIL'), 'email', $direction,
             $ordering);
-        $headers['published']   = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_PROFILE_PUBLISHED'),
+        $headers['published']      = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_PROFILE_PUBLISHED'),
             'published', $direction, $ordering);
-        $headers['canEdit']     = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_PROFILE_EDIT'), 'canEdit',
+        $headers['canEdit']        = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_PROFILE_EDIT'), 'canEdit',
             $direction, $ordering);
-        $headers['qpPublished'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_CONTENT_ENABLED'),
-            'qpPublished', $direction, $ordering);
-        $headers[]              = JText::_('COM_THM_GROUPS_ASSOCIATED_GROUPS_AND_ROLES');
-        $headers['id']          = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'profileID', $direction,
+        $headers['contentEnabled'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_CONTENT_ENABLED'),
+            'contentEnabled', $direction, $ordering);
+        $headers[]                 = JText::_('COM_THM_GROUPS_ASSOCIATED_GROUPS_AND_ROLES');
+        $headers['id']             = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'profileID',
+            $direction,
             $ordering);
 
         return $headers;
@@ -228,7 +237,8 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
             }
             $return[$index][4] = $this->getToggle($item->profileID, $item->published, 'profile', '', 'published');
             $return[$index][5] = $this->getToggle($item->profileID, $item->canEdit, 'profile', '', 'canEdit');
-            $return[$index][6] = $this->getToggle($item->profileID, $item->qpPublished, 'profile', '', 'qpPublished');
+            $return[$index][6] = $this->getToggle($item->profileID, $item->contentEnabled, 'profile', '',
+                'contentEnabled');
             $return[$index][7] = $this->getAssocLinks($item->profileID, $canEdit);
             $return[$index][8] = $item->profileID;
 
@@ -247,7 +257,7 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
     {
         $query = $this->_db->getQuery(true);
 
-        $select = 'DISTINCT profile.id as profileID, profile.published, profile.canEdit, profile.qpPublished, ';
+        $select = 'DISTINCT profile.id as profileID, profile.published, profile.canEdit, profile.contentEnabled, ';
         $select .= 'fn.value as forename, sn.value as surname, em.value as email';
 
         $query->select($select);
@@ -266,7 +276,7 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
 
         $this->setIDFilter($query, 'profile.published', ['filter.published']);
         $this->setIDFilter($query, 'profile.canEdit', ['filter.canEdit']);
-        $this->setIDFilter($query, 'profile.qpPublished', ['filter.qpPublished']);
+        $this->setIDFilter($query, 'profile.contentEnabled', ['filter.contentEnabled']);
 
         $app          = JFactory::getApplication();
         $list         = $app->input->get('list', [], 'array');
@@ -275,14 +285,14 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
 
         if ($filterGroups or $filterRoles) {
             // We don't need these unless filter is requested
-            $query->leftJoin('#__thm_groups_associations AS assoc ON assoc.profileID = profile.id');
-            $query->leftJoin('#__thm_groups_role_associations AS roleAssoc ON roleAssoc.ID = assoc.role_assocID');
+            $query->leftJoin('#__thm_groups_profile_associations AS pa ON pa.profileID = profile.id');
+            $query->leftJoin('#__thm_groups_role_associations AS ra ON ra.ID = pa.role_associationID');
 
             if ($filterGroups) {
-                $this->setIDFilter($query, 'roleAssoc.usergroupsID', ['list.groupID']);
+                $this->setIDFilter($query, 'ra.groupID', ['list.groupID']);
             }
             if ($filterRoles) {
-                $this->setIDFilter($query, 'roleAssoc.rolesID', ['list.roleID']);
+                $this->setIDFilter($query, 'ra.roleID', ['list.roleID']);
             }
         }
 

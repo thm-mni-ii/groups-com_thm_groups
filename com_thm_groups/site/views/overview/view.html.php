@@ -1,18 +1,18 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 
 defined('_JEXEC') or die;
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
 
 // Unfortunately these have nothing to do with the attribute IDS
 define('PRETITLE', 0);
@@ -51,7 +51,7 @@ class THM_GroupsViewOverview extends JViewLegacy
         $url = $this->profileLink . "&profileID=$profile->id&groupID=$this->groupID&name=" . trim($profile->surname);
 
         $showTitles    = $this->params->get('showTitles', 1);
-        $displayedText = THM_GroupsHelperProfile::getLNFName($profile->id, $showTitles, true);
+        $displayedText = THM_GroupsHelperProfiles::getLNFName($profile->id, $showTitles, true);
 
         return JHtml::link(JRoute::_($url), $displayedText);
     }
@@ -77,7 +77,7 @@ class THM_GroupsViewOverview extends JViewLegacy
         $this->profileLink = "index.php?option=com_thm_groups&view=profile&Itemid=$menuID";
 
         // Sizing attributes
-        $this->totalUsers    = THM_GroupsHelperGroup::getUserCount($this->groupID);
+        $this->totalUsers    = THM_GroupsHelperGroups::getUserCount($this->groupID);
         $columns             = $this->params->get('columnCount', 4);
         $this->maxColumnSize = ceil(($this->totalUsers) / $columns);
 
@@ -107,7 +107,7 @@ class THM_GroupsViewOverview extends JViewLegacy
         }
 
         $pathway = $app->getPathway();
-        $pathway->addItem(THM_GroupsHelperProfile::getDisplayName($profileID), '');
+        $pathway->addItem(THM_GroupsHelperProfiles::getDisplayName($profileID), '');
     }
 
     /**

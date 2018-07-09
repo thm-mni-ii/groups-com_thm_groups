@@ -3,7 +3,7 @@
  * @package     THM_Groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Ilja Michajlow, <Ilja.Michajlow@mni.thm.de>
- * @copyright   2014 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -20,8 +20,6 @@ abstract class THM_GroupsViewList extends JViewLegacy
     public $pagination = null;
 
     public $filterForm = null;
-
-    public $activeFilters = null;
 
     public $headers = null;
 
@@ -41,10 +39,7 @@ abstract class THM_GroupsViewList extends JViewLegacy
         $this->state      = $this->get('State');
         $this->items      = $this->get('Items');
         $this->pagination = $this->get('Pagination');
-
-        // Don't know which of these filters does what if anything active had no effect on the active highlighting
-        $this->filterForm    = $this->get('FilterForm');
-        $this->activeFilters = $this->get('ActiveFilters');
+        $this->filterForm = $this->get('FilterForm');
 
         // Items common across list views
         $this->headers      = $this->get('Headers');
@@ -53,7 +48,7 @@ abstract class THM_GroupsViewList extends JViewLegacy
         $this->items = $this->get('Items');
 
         // Allows for component specific menu handling
-        require_once JPATH_ROOT . "/media/com_thm_groups/helpers/componentHelper.php";
+        require_once JPATH_ROOT . "/media/com_thm_groups/helpers/component.php";
         THM_GroupsHelperComponent::addSubmenu($this);
 
         // Allows for view specific toolbar handling

@@ -1,9 +1,9 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -18,13 +18,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/views/list.php';
  */
 class THM_GroupsViewAttribute_Manager extends THM_GroupsViewList
 {
-
-    public $items;
-
-    public $pagination;
-
-    public $state;
-
     /**
      * Method to get display
      *
@@ -50,12 +43,12 @@ class THM_GroupsViewAttribute_Manager extends THM_GroupsViewList
     protected function addToolbar()
     {
         JToolBarHelper::title(
-            JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_ATTRIBUTE_MANAGER'), 'dynamic_type_manager'
+            JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_ATTRIBUTE_MANAGER'), 'attribute_manager'
         );
 
         JToolBarHelper::addNew('attribute.add', 'COM_THM_GROUPS_NEW', false);
         JToolBarHelper::editList('attribute.edit', 'COM_THM_GROUPS_EDIT');
-        JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM_DEPENDENCIES', 'attribute.delete',
+        JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM', 'attribute.delete',
             'JTOOLBAR_DELETE');
 
         $user = JFactory::getUser();

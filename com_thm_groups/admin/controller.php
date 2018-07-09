@@ -1,14 +1,14 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2017 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/component.php';
 
 /**
  * THMGroupsController class for component com_thm_groups
@@ -177,7 +177,6 @@ class THM_GroupsController extends JControllerLegacy
      */
     public function deleteGroupAssociation()
     {
-        $app               = JFactory::getApplication();
         $model             = $this->getModel($this->resource);
         $functionAvailable = (method_exists($model, 'deleteGroupAssociation'));
 
@@ -196,6 +195,7 @@ class THM_GroupsController extends JControllerLegacy
             $type = 'error';
         }
 
+        $app = JFactory::getApplication();
         $app->enqueueMessage($msg, $type);
         $app->input->set('view', "{$this->resource}_manager");
         parent::display();
@@ -208,16 +208,58 @@ class THM_GroupsController extends JControllerLegacy
      */
     public function deleteRoleAssociation()
     {
-        $model   = $this->getModel('profile');
-        $success = $model->deleteRoleAssociation();
-        if ($success) {
-            $msg  = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
-            $type = 'message';
+        $model             = $this->getModel($this->resource);
+        $functionAvailable = (method_exists($model, 'deleteRoleAssociation'));
+
+        if ($functionAvailable) {
+            $success = $model->deleteRoleAssociation();
+
+            if ($success) {
+                $msg  = JText::_('COM_THM_GROUPS_SAVE_SUCCESS');
+                $type = 'message';
+            } else {
+                $msg  = JText::_('COM_THM_GROUPS_SAVE_FAIL');
+                $type = 'error';
+            }
         } else {
-            $msg  = JText::_('COM_THM_GROUPS_SAVE_FAIL');
+            $msg  = JText::_('COM_THM_GROUPS_ACTION_UNAVAILABLE');
             $type = 'error';
         }
-        $this->setRedirect("index.php?option=com_thm_groups&view=profile_manager", $msg, $type);
+
+        $app = JFactory::getApplication();
+        $app->enqueueMessage($msg, $type);
+        $app->input->set('view', "{$this->resource}_manager");
+        parent::display();
+    }
+
+    /**
+     * Removes the profile's association with the given group
+     *
+     * @return void
+     */
+    public function deleteTemplateAssociation()
+    {
+        $model             = $this->getModel($this->resource);
+        $functionAvailable = (method_exists($model, 'deleteTemplateAssociation'));
+
+        if ($functionAvailable) {
+            $success = $model->deleteTemplateAssociation();
+
+            if ($success) {
+                $msg  = JText::_('COM_THM_GROUPS_DELETED');
+                $type = 'message';
+            } else {
+                $this->setMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'warning');
+            }
+        } else {
+            $msg  = JText::_('COM_THM_GROUPS_ACTION_UNAVAILABLE');
+            $type = 'error';
+        }
+
+        $app = JFactory::getApplication();
+        $app->enqueueMessage($msg, $type);
+        $app->input->set('view', "{$this->resource}_manager");
+        parent::display();
     }
 
     /**
@@ -297,66 +339,6 @@ class THM_GroupsController extends JControllerLegacy
             $type = 'error';
         }
 
-        $app->enqueueMessage($msg, $type);
-        $app->input->set('view', "{$this->resource}_manager");
-        parent::display();
-    }
-
-    /**
-     * Removes the role's association with the given group
-     *
-     * @return void
-     */
-    public function removeRole()
-    {
-        $model             = $this->getModel($this->resource);
-        $functionAvailable = (method_exists($model, 'removeRole'));
-
-        if ($functionAvailable) {
-            $success = $model->removeRole();
-
-            if ($success) {
-                $msg  = JText::_('COM_THM_GROUPS_DELETED');
-                $type = 'message';
-            } else {
-                $this->setMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'warning');
-            }
-        } else {
-            $msg  = JText::_('COM_THM_GROUPS_ACTION_UNAVAILABLE');
-            $type = 'error';
-        }
-
-        $app = JFactory::getApplication();
-        $app->enqueueMessage($msg, $type);
-        $app->input->set('view', "{$this->resource}_manager");
-        parent::display();
-    }
-
-    /**
-     * Removes the profile's association with the given group
-     *
-     * @return void
-     */
-    public function removeTemplate()
-    {
-        $model             = $this->getModel($this->resource);
-        $functionAvailable = (method_exists($model, 'removeTemplate'));
-
-        if ($functionAvailable) {
-            $success = $model->removeTemplate();
-
-            if ($success) {
-                $msg  = JText::_('COM_THM_GROUPS_DELETED');
-                $type = 'message';
-            } else {
-                $this->setMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'warning');
-            }
-        } else {
-            $msg  = JText::_('COM_THM_GROUPS_ACTION_UNAVAILABLE');
-            $type = 'error';
-        }
-
-        $app = JFactory::getApplication();
         $app->enqueueMessage($msg, $type);
         $app->input->set('view', "{$this->resource}_manager");
         parent::display();

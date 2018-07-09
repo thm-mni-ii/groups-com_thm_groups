@@ -1,15 +1,15 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 
-require_once "group.php";
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
+require_once "groups.php";
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/component.php';
 
 
 /**
@@ -18,7 +18,7 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
 class THM_GroupsHelperProfile
 {
     /**
-     * Retrieves all available attributes with information about their dynamic and static types.
+     * Retrieves all available attributes with information about their abstract attributes and field types.
      *
      * @return array the attribute information, empty if nothing could be found or an error occurred
      */
@@ -27,14 +27,14 @@ class THM_GroupsHelperProfile
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
 
-        $query->select('attribute.id AS id, attribute.name AS field , attribute.options');
-        $query->select('dynType.options AS dyn_options');
-        $query->select('statType.name AS type');
-        $query->from('#__thm_groups_attribute AS attribute');
-        $query->leftJoin('#__thm_groups_dynamic_type AS dynType ON attribute.dynamic_typeID = dynType.id');
-        $query->leftJoin('#__thm_groups_static_type AS statType ON  dynType.static_typeID = statType.id');
-        $query->where("attribute.id <> '3'");
-        $query->order('attribute.id');
+        $query->select('a.id AS id, a.name AS field , a.options');
+        $query->select('aa.options AS abstractOptions');
+        $query->select('ft.name AS type');
+        $query->from('#__thm_groups_attributes AS a');
+        $query->leftJoin('#__thm_groups_abstract_attributes AS aa ON a.abstractID = aa.id');
+        $query->leftJoin('#__thm_groups_field_types AS ft ON  aa.field_typeID = ft.id');
+        $query->where("a.id <> '3'");
+        $query->order('a.id');
         $dbo->setQuery($query);
 
         try {
@@ -141,15 +141,15 @@ class THM_GroupsHelperProfile
     {
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
-        $query->select('roleAssoc.usergroupsID');
-        $query->from('#__thm_groups_role_associations as roleAssoc');
-        $query->innerJoin('#__thm_groups_associations as assoc on assoc.role_assocID = roleAssoc.id');
-        $query->innerJoin('#__thm_groups_template_associations as tAssoc ON roleAssoc.usergroupsID = tAssoc.usergroupsID');
-        $query->innerJoin('#__thm_groups_templates as t ON tAssoc.templateID = t.id');
-        $query->where('assoc.profileID = "' . $profileID . '"');
+        $query->select('ra.groupID');
+        $query->from('#__thm_groups_role_associations as ra');
+        $query->innerJoin('#__thm_groups_profile_associations as pa on pa.role_associationID = ra.id');
+        $query->innerJoin('#__thm_groups_template_associations as ta ON ra.groupID = ta.groupID');
+        $query->innerJoin('#__thm_groups_templates as t ON ta.templateID = t.id');
+        $query->where('pa.profileID = "' . $profileID . '"');
 
         // TODO: make these categories configurable
-        $query->where('roleAssoc.usergroupsID NOT IN ("1","2")');
+        $query->where('ra.groupID NOT IN ("1","2")');
         $dbo->setQuery($query);
 
         try {
@@ -317,21 +317,21 @@ class THM_GroupsHelperProfile
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
 
-        $query->select('DISTINCT attr.id AS structid, attr.name as name, attr.options as options, attr.description AS description');
-        $query->select('dt.options as dynOptions, dt.regex as regex, dt.name as dyntype');
-        $query->select('st.name as type');
-        $query->select('pAttr.profileID as id, pAttr.value, pAttr.published as publish');
-        $query->from('#__thm_groups_attribute AS attr');
-        $query->innerJoin('#__thm_groups_dynamic_type AS dt ON dt.id = attr.dynamic_typeID');
-        $query->innerJoin('#__thm_groups_static_type AS st ON st.id = dt.static_typeID');
-        $query->leftJoin("#__thm_groups_profile_attributes AS pAttr ON pAttr.attributeID = attr.id");
+        $query->select('DISTINCT a.id as id, a.name as name, a.options as options, a.description AS description');
+        $query->select('aa.options as dynOptions, aa.regex as regex, aa.name as abstractName');
+        $query->select('ft.name as type');
+        $query->select('pat.value, pat.published as publish');
+        $query->from('#__thm_groups_attributes AS a');
+        $query->innerJoin('#__thm_groups_abstract_attributes AS aa ON aa.id = a.abstractID');
+        $query->innerJoin('#__thm_groups_field_types AS ft ON ft.id = aa.field_typeID');
+        $query->leftJoin("#__thm_groups_profile_attributes AS pat ON pat.attributeID = a.id");
 
-        $query->where("pAttr.profileID = '$profileID'");
+        $query->where("pat.profileID = '$profileID'");
 
         if (!empty($templateID)) {
             $query->select('ta.params as params, ta.ordering');
             $query->where("t.id = '$templateID'");
-            $query->innerJoin('#__thm_groups_template_attributes AS ta ON ta.attributeID = attr.id');
+            $query->innerJoin('#__thm_groups_template_attributes AS ta ON ta.attributeID = a.id');
             $query->innerJoin('#__thm_groups_templates AS t ON  t.id = ta.templateID');
             $query->order("ta.ordering");
 
@@ -340,36 +340,34 @@ class THM_GroupsHelperProfile
             }
         } // Default ordering from the attributes themselves
         else {
-            $query->order("attr.ordering");
+            $query->order("a.ordering");
         }
 
         if ($onlyPublished == true) {
-            $query->where("pAttr.published = '1'");
-            $query->where("attr.published = '1'");
+            $query->where("pat.published = '1'");
+            $query->where("a.published = '1'");
         }
 
         if ($onlyFilled) {
-            $query->where("(pAttr.value IS NOT NULL  and pAttr.value != '')");
+            $query->where("(pat.value IS NOT NULL  and pat.value != '')");
         }
-
-        $query->group("attr.id");
 
         $dbo->setQuery($query);
 
         try {
-            $profile = $dbo->loadAssocList('structid');
+            $profile = $dbo->loadAssocList('id');
         } catch (Exception $exc) {
             JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
             return [];
         }
 
-        foreach ($profile as $attributeID => $attribute) {
-            $profile[$attributeID]['dynOptions'] = empty($attribute['dynOptions']) ? [] : json_decode($attribute['dynOptions'],
+        foreach ($profile as $key => $attribute) {
+            $profile[$key]['dynOptions'] = empty($attribute['dynOptions']) ? [] : json_decode($attribute['dynOptions'],
                 true);
-            $profile[$attributeID]['options']    = empty($attribute['options']) ? [] : json_decode($attribute['options'],
+            $profile[$key]['options']    = empty($attribute['options']) ? [] : json_decode($attribute['options'],
                 true);
-            $profile[$attributeID]['params']     = empty($attribute['params']) ? [] : json_decode($attribute['params'],
+            $profile[$key]['params']     = empty($attribute['params']) ? [] : json_decode($attribute['params'],
                 true);
         }
 
@@ -389,7 +387,7 @@ class THM_GroupsHelperProfile
         $query = $dbo->getQuery(true);
         $query->select('templateID');
         $query->from('#__thm_groups_template_associations');
-        $query->where("usergroupsID = '$groupID'");
+        $query->where("groupID = '$groupID'");
         $dbo->setQuery($query);
 
         try {
@@ -433,7 +431,7 @@ class THM_GroupsHelperProfile
         $query->select('t.name');
         $query->from('#__thm_groups_templates as t');
         $query->innerJoin('#__thm_groups_template_associations as ta ON t.id = ta.templateID');
-        $query->where("usergroupsID = '$groupID'");
+        $query->where("groupID = '$groupID'");
         $dbo->setQuery($query);
 
         try {
@@ -480,11 +478,27 @@ class THM_GroupsHelperProfile
      */
     private static function getValueContainer($attribute, $surname, $labeled, $suppressText = true)
     {
-        if ($attribute['dyntype'] == 'Email') {
-            $value = '<div class="tooltip">';
-            $value .= JHTML::_('email.cloak', $attribute['value']);
-            $value .= '<span class="tooltiptext">' . JHTML::_('email.cloak', $attribute['value'], 0) . '</span>';
-            $value .= '</div>';
+        if ($attribute['abstractName'] == 'Email') {
+            $address = $attribute['value'];
+            if (!$suppressText) {
+                $value = JHTML::_('email.cloak', $attribute['value']);
+            }  else {
+                $exceedsLength = false;
+                $mailParts = explode('-', $address);
+                foreach ($mailParts as $mailPart) {
+                    $exceedsLength = strlen($mailPart) > 28 ? true : $exceedsLength;
+                }
+
+                if ($exceedsLength) {
+                    $value = '<div class="tooltip">';
+                    $value .= JHTML::_('email.cloak', $address);
+                    $value .= '<span class="tooltiptext">' . JHTML::_('email.cloak', $address, 0) . '</span>';
+                    $value .= '</div>';
+                } else {
+                    $value = JHTML::_('email.cloak', $address);
+                }
+
+            }
         } else {
             switch ($attribute['type']) {
                 case "LINK":

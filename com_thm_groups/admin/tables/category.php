@@ -1,9 +1,9 @@
 <?php
 /**
  * @package     Joomla.Administrator
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  *
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 

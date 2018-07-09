@@ -1,10 +1,10 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2017 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -38,22 +38,15 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
             return $query;
         }
 
-        $contentSelect = 'content.id, content.title, content.alias, content.checked_out, content.checked_out_time, ';
-        $contentSelect .= 'content.catid, content.state, content.access, content.created, content.featured, ';
-        $contentSelect .= 'content.created_by, content.ordering, content.language, content.hits, content.publish_up, ';
-        $contentSelect .= 'content.publish_down';
-        $query->select($contentSelect);
-        $query->select('language.title AS language_title');
-        $query->select('ag.title AS access_level');
-        $query->select('cats.title AS category_title');
-        $query->select('users.name AS author_name');
-        $query->select('pContent.featured as featured');
-        $query->from('#__content AS content');
-        $query->leftJoin('#__languages AS language ON language.lang_code = content.language');
-        $query->leftJoin('#__viewlevels AS ag ON ag.id = content.access');
-        $query->leftJoin('#__categories AS cats ON cats.id = content.catid');
-        $query->leftJoin('#__users AS users ON users.id = content.created_by');
-        $query->leftJoin('#__thm_groups_content AS pContent ON pContent.contentID = content.id');
+        $query->select('content.*')
+            ->select('users.name AS author_name')
+            ->select('pContent.featured as featured')
+            ->from('#__content AS content')
+            ->innerJoin('#__thm_groups_content AS pContent ON pContent.id = content.id')
+            ->innerJoin('#__categories AS cCats ON cCats.id = content.catid')
+            ->innerJoin('#__thm_groups_categories AS pCats ON pCats.id = cCats.id')
+            ->innerJoin('#__users AS users ON users.id = pCats.profileID')
+            ->where("cCats.parent_id= '$rootCategory' ");
 
         $search = $this->getState('filter.search');
         if (!empty($search)) {
@@ -61,17 +54,15 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
                     explode(' ', $search)) . "%')");
         }
 
-        $query->where("cats.parent_id= '$rootCategory' ");
-
         $authorID = $this->getState('filter.author');
         if (!empty($authorID)) {
             $query->where("users.id = '$authorID'");
         }
 
         $featured = $this->getState('filter.featured');
-        if (isset($featured) and $featured === 0) {
+        if (isset($featured) and $featured == '0') {
             $query->where("(pContent.featured = '0' OR pContent.featured IS NULL)");
-        } elseif ($featured === 1) {
+        } elseif ($featured == '1') {
             $query->where("pContent.featured = '1'");
         }
 
@@ -177,7 +168,8 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
         $headers['title']    = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_TITLE', 'title', $direction, $ordering);
         $headers['author']   = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_AUTHOR', 'author_name', $direction,
             $ordering);
-        $headers['featured'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_PROFILE_MENU', 'featured', $direction,
+        $headers['featured'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_PROFILE_MENU', 'pContent.featured',
+            $direction,
             $ordering);
         $headers['status']   = JHtml::_('searchtools.sort', 'JSTATUS', 'content.state', $direction, $ordering);
         $headers['id']       = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'content.id', $direction,

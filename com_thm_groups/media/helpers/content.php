@@ -1,9 +1,9 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -216,20 +216,20 @@ class THM_GroupsHelperContent
         $dbo   = JFactory::getDBO();
         $query = $dbo->getQuery(true);
 
-        $query->select('groupsCats.categoriesID');
-        $query->from('#__thm_groups_categories AS groupsCats');
-        $query->innerJoin('#__categories AS contentCats ON contentCats.id = groupsCats.categoriesID');
-        $query->where("groupsCats.profileID = '$profileID'");
-        $query->where("contentCats.extension = 'com_content'");
+        $query->select('id');
+        $query->from('#__thm_groups_categories');
+        $query->where("profileID = '$profileID'");
         $dbo->setQuery($query);
 
         try {
-            return $dbo->loadResult();
+            $categoryID = $dbo->loadResult();
         } catch (Exception $exc) {
             JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
             return 0;
         }
+
+        return (empty($categoryID)) ? 0 : $categoryID;
     }
 
     /**
@@ -288,7 +288,7 @@ class THM_GroupsHelperContent
         $dbo   = JFactory::getDBO();
         $query = $dbo->getQuery(true);
 
-        $query->insert('#__thm_groups_categories')->set("profileID = '$profileID'")->set("categoriesID = '$categoryID'");
+        $query->insert('#__thm_groups_categories')->set("profileID = '$profileID'")->set("categoryID = '$categoryID'");
 
         $dbo->setQuery($query);
         $dbo->execute();

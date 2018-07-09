@@ -1,10 +1,10 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -13,7 +13,7 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
 require_once JPATH_COMPONENT . '/../com_content/helpers/route.php';
 require_once JPATH_COMPONENT . '/../com_content/helpers/query.php';
 require_once JPATH_COMPONENT . '/../com_content/models/article.php';
@@ -53,9 +53,9 @@ class THM_GroupsViewContent extends JViewLegacy
         $name      = $input->get('name', '');
         $menuID    = $input->getInt('Itemid', 0);
 
-        $dynamicQuery = "&profileID=$profileID&groupID=$groupID&name=$name&Itemid=$menuID";
-        $profileURL   = JRoute::_("index.php?option=com_thm_groups&view=profile$dynamicQuery");
-        $nameText     = THM_GroupsHelperProfile::getDisplayName($profileID);
+        $abstractQuery = "&profileID=$profileID&groupID=$groupID&name=$name&Itemid=$menuID";
+        $profileURL    = JRoute::_("index.php?option=com_thm_groups&view=profile$abstractQuery");
+        $nameText      = THM_GroupsHelperProfiles::getDisplayName($profileID);
         $app->getPathway()->addItem($nameText, $profileURL);
 
         $this->item = $this->get('Item');

@@ -1,16 +1,16 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 
 defined('_JEXEC') or die;
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/component.php';
 
 /**
  * Class provides functions for modifying
@@ -30,10 +30,10 @@ class THM_GroupsModelGroup extends JModelLegacy
         $existingQuery = $this->_db->getQuery(true);
 
         // First, we need to check if the profile is already assigned to a group
-        $existingQuery->select('rolesID')
+        $existingQuery->select('roleID')
             ->from('#__thm_groups_role_associations')
-            ->where("usergroupsID = '$groupID'")
-            ->where("rolesID = '$roleID'");
+            ->where("groupID = '$groupID'")
+            ->where("roleID = '$roleID'");
         $this->_db->setQuery($existingQuery);
 
         try {
@@ -50,7 +50,7 @@ class THM_GroupsModelGroup extends JModelLegacy
 
         $insertQuery = $this->_db->getQuery(true);
 
-        $insertQuery->insert('#__thm_groups_role_associations')->columns(['usergroupsID', 'rolesID']);
+        $insertQuery->insert('#__thm_groups_role_associations')->columns(['groupID', 'roleID']);
         $insertQuery->values("$groupID, $roleID");
         $this->_db->setQuery($insertQuery);
 
@@ -78,7 +78,7 @@ class THM_GroupsModelGroup extends JModelLegacy
         $existingQuery = $this->_db->getQuery(true);
 
         // First, we need to check if the profile is already assigned to a group
-        $existingQuery->select('templateID')->from('#__thm_groups_template_associations')->where("usergroupsID = '$groupID'");
+        $existingQuery->select('templateID')->from('#__thm_groups_template_associations')->where("groupID = '$groupID'");
         $this->_db->setQuery($existingQuery);
 
         try {
@@ -93,7 +93,7 @@ class THM_GroupsModelGroup extends JModelLegacy
         if (empty($existingTemplateID)) {
             $insertQuery = $this->_db->getQuery(true);
 
-            $insertQuery->insert('#__thm_groups_template_associations')->columns(['usergroupsID', 'templateID']);
+            $insertQuery->insert('#__thm_groups_template_associations')->columns(['groupID', 'templateID']);
             $insertQuery->values("$groupID, $templateID");
 
             $this->_db->setQuery($insertQuery);
@@ -109,7 +109,7 @@ class THM_GroupsModelGroup extends JModelLegacy
             $updateQuery = $this->_db->getQuery(true);
             $updateQuery->update('#__thm_groups_template_associations')
                 ->set("templateID = $templateID")
-                ->where("usergroupsID = $groupID");
+                ->where("groupID = $groupID");
 
             $this->_db->setQuery($updateQuery);
 
@@ -190,14 +190,14 @@ class THM_GroupsModelGroup extends JModelLegacy
                         $success = $this->associateTemplate($selectedID, $groupID);
                         break;
 
-                    case 'removeRole':
+                    case 'deleteRoleAssociation':
 
-                        $success = $this->removeRole($selectedID, $groupID);
+                        $success = $this->deleteRoleAssociation($selectedID, $groupID);
                         break;
 
-                    case 'removeTemplate':
+                    case 'deleteTemplateAssociation':
 
-                        $success = $this->removeTemplate($selectedID, $groupID);
+                        $success = $this->deleteTemplateAssociation($selectedID, $groupID);
                         break;
                 }
 
@@ -220,7 +220,7 @@ class THM_GroupsModelGroup extends JModelLegacy
      *
      * @return bool true if the association was successfully removed, otherwise false
      */
-    public function removeRole($roleID = 0, $groupID = 0)
+    public function deleteRoleAssociation($roleID = 0, $groupID = 0)
     {
         $app  = JFactory::getApplication();
         $user = JFactory::getUser();
@@ -244,7 +244,7 @@ class THM_GroupsModelGroup extends JModelLegacy
         }
 
         $query = $this->_db->getQuery(true);
-        $query->delete('#__thm_groups_role_associations')->where("rolesID = '$roleID'")->where("usergroupsID = '$groupID'");
+        $query->delete('#__thm_groups_role_associations')->where("roleID = '$roleID'")->where("groupID = '$groupID'");
         $this->_db->setQuery($query);
 
         try {
@@ -266,7 +266,7 @@ class THM_GroupsModelGroup extends JModelLegacy
      *
      * @return bool true if the association was successfully removed, otherwise false
      */
-    public function removeTemplate($templateID = 0, $groupID = 0)
+    public function deleteTemplateAssociation($templateID = 0, $groupID = 0)
     {
         $app  = JFactory::getApplication();
         $user = JFactory::getUser();
@@ -293,7 +293,7 @@ class THM_GroupsModelGroup extends JModelLegacy
         $query
             ->delete('#__thm_groups_template_associations')
             ->where("templateID = '$templateID'")
-            ->where("usergroupsID = '$groupID'");
+            ->where("groupID = '$groupID'");
         $this->_db->setQuery($query);
 
         try {

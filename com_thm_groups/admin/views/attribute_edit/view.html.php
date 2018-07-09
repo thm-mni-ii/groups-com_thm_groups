@@ -1,10 +1,10 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -33,10 +33,10 @@ class THM_GroupsViewAttribute_Edit extends THM_GroupsViewEdit
         $input = JFactory::getApplication()->input;
         $id    = $input->getInt('id', 0);
 
-        // Disable editing of the selected dynamic type
+        // Disable editing of the selected abstract attribute
         if ($id != 0) {
             $form = $this->get('Form');
-            $form->setFieldAttribute('dynamic_typeID', 'readonly', 'true');
+            $form->setFieldAttribute('abstractID', 'readonly', 'true');
         }
 
         parent::display($tpl);

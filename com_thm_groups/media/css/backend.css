@@ -2,21 +2,6 @@
     margin-right: .5rem;
 }
 
-button, a.btn {
-    border: 2px solid #4a5c66;
-    font-family: "THM-Regular";
-    padding: .4rem .6rem .2rem .6rem;
-}
-
-button:hover, a.btn:hover {
-    background-color: #394a59;
-    color: white;
-}
-
-button:hover span:before, a.btn:hover span:before {
-    color: white;
-}
-
 [class^="icon-"], [class*=" icon-"] {
     font-family: icomoon;
 }
@@ -182,19 +167,19 @@ tbody tr:first-child td {
         padding-right: 20px;
     }
 
-    #quickpage_manager-list thead th, #quickpage_manager-list tbody td, #plugin_manager-list thead th, #plugin_manager-list tbody td, #static_type_manager-list thead th, #static_type_manager-list tbody td {
+    #quickpage_manager-list thead th, #quickpage_manager-list tbody td, #plugin_manager-list thead th, #plugin_manager-list tbody td {
         display: none;
     }
 
-    #quickpage_manager-list thead th:nth-child(2), #quickpage_manager-list tbody td:nth-child(2), #plugin_manager-list thead th:nth-child(2), #plugin_manager-list tbody td:nth-child(2), #static_type_manager-list thead th:nth-child(2), #static_type_manager-list tbody td:nth-child(2) {
+    #quickpage_manager-list thead th:nth-child(2), #quickpage_manager-list tbody td:nth-child(2), #plugin_manager-list thead th:nth-child(2), #plugin_manager-list tbody td:nth-child(2) {
         display: table-cell;
     }
 
-    #quickpage_manager-list thead th:nth-child(3), #quickpage_manager-list tbody td:nth-child(3), #plugin_manager-list thead th:nth-child(3), #plugin_manager-list tbody td:nth-child(3), #static_type_manager-list thead th:nth-child(3), #static_type_manager-list tbody td:nth-child(3) {
+    #quickpage_manager-list thead th:nth-child(3), #quickpage_manager-list tbody td:nth-child(3), #plugin_manager-list thead th:nth-child(3), #plugin_manager-list tbody td:nth-child(3) {
         display: table-cell;
     }
 
-    #quickpage_manager-list thead th:nth-child(2), #quickpage_manager-list tbody td:nth-child(2), #plugin_manager-list thead th:nth-child(2), #plugin_manager-list tbody td:nth-child(2), #static_type_manager-list thead th:nth-child(2), #static_type_manager-list tbody td:nth-child(2) {
+    #quickpage_manager-list thead th:nth-child(2), #quickpage_manager-list tbody td:nth-child(2), #plugin_manager-list thead th:nth-child(2), #plugin_manager-list tbody td:nth-child(2) {
         padding-left: 8px;
     }
 

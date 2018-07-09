@@ -1,6 +1,6 @@
 /**
  * @package        Joomla
- * @subpackate com_thm_groups
+ * @extension com_thm_groups
  * @author        Dieudonne Timma
  * @copyright    Copyright (C) 2015 FH Giessen-Friedberg / University of Applied Sciences
  * @license        GNU/GPL, see LICENSE.php

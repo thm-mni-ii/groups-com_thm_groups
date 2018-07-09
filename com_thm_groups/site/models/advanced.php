@@ -1,19 +1,19 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 
 defined('_JEXEC') or die;
 
-require_once JPATH_ROOT . "/media/com_thm_groups/helpers/group.php";
-require_once JPATH_ROOT . "/media/com_thm_groups/helpers/profile.php";
-require_once JPATH_ROOT . "/media/com_thm_groups/helpers/role.php";
+require_once JPATH_ROOT . "/media/com_thm_groups/helpers/groups.php";
+require_once JPATH_ROOT . "/media/com_thm_groups/helpers/profiles.php";
+require_once JPATH_ROOT . "/media/com_thm_groups/helpers/roles.php";
 jimport('joomla.filesystem.path');
 
 /**
@@ -53,7 +53,7 @@ class THM_GroupsModelAdvanced extends JModelLegacy
         $this->groupID    = $this->params->get('groupID');
         $this->menuID     = JFactory::getApplication()->input->getInt('Itemid', 0);
         $menuTemplateID   = $this->params->get('templateID', 0);
-        $this->templateID = empty($menuTemplateID) ? THM_GroupsHelperGroup::getTemplateID($this->groupID) : $menuTemplateID;
+        $this->templateID = empty($menuTemplateID) ? THM_GroupsHelperGroups::getTemplateID($this->groupID) : $menuTemplateID;
         $this->setGroups();
     }
 
@@ -117,7 +117,7 @@ class THM_GroupsModelAdvanced extends JModelLegacy
         $groupedProfiles = [];
 
         foreach ($this->groups as $group) {
-            $groupRoleAssocs                      = THM_GroupsHelperGroup::getRoleAssocIDs($group->id);
+            $groupRoleAssocs                      = THM_GroupsHelperGroups::getRoleAssocIDs($group->id);
             $groupedProfiles[$group->id]          = array_flip($groupRoleAssocs);
             $groupedProfiles[$group->id]['title'] = $group->title;
         }
@@ -132,21 +132,21 @@ class THM_GroupsModelAdvanced extends JModelLegacy
                     continue;
                 }
 
-                $profileIDs = THM_GroupsHelperGroup::getProfileIDsByAssoc($assocID);
+                $profileIDs = THM_GroupsHelperGroups::getProfileIDsByAssoc($assocID);
 
                 if (empty($profileIDs)) {
                     unset($groupedProfiles[$groupID][$assocID]);
                     continue;
                 }
 
-                $roleName = THM_GroupsHelperRole::getNameByAssoc($assocID, $sort);
+                $roleName = THM_GroupsHelperRoles::getNameByAssoc($assocID, $sort);
 
                 $groupedProfiles[$groupID][$assocID] = ['name' => $roleName, 'profiles' => []];
 
                 // Get the role name
 
                 foreach ($profileIDs as $profileID) {
-                    $profile = THM_GroupsHelperProfile::getProfile($profileID, $this->templateID, true);
+                    $profile = THM_GroupsHelperProfiles::getProfile($profileID, $this->templateID, true);
 
                     // No surname
                     if (empty($profile[2]['value'])) {
@@ -173,7 +173,7 @@ class THM_GroupsModelAdvanced extends JModelLegacy
     }
 
     /**
-     * Sorts nested groups. Used dynamically by array sort functions => ignore usage warnings.
+     * Sorts nested groups. Used in call-backs for array sort functions => ignore usage warnings.
      *
      * @param object $group1 the first group being compared
      * @param object $group2 the second group being compared

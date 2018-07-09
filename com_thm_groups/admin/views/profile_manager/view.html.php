@@ -1,9 +1,10 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
+ * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -11,7 +12,6 @@
 defined('_JEXEC') or die;
 
 require_once JPATH_ROOT . '/media/com_thm_groups/views/list.php';
-
 require_once JPATH_SITE . '/media/com_thm_groups/helpers/batch.php';
 
 /**
@@ -19,13 +19,6 @@ require_once JPATH_SITE . '/media/com_thm_groups/helpers/batch.php';
  */
 class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
 {
-
-    public $items;
-
-    public $pagination;
-
-    public $state;
-
     public $batch;
 
     public $groups;
@@ -44,7 +37,6 @@ class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
             JErrorPage::render($exc);
         }
 
-        // Set batch template path
         $this->batch = ['batch' => JPATH_COMPONENT_ADMINISTRATOR . '/views/profile_manager/tmpl/default_batch.php'];
 
         $this->groups = THM_GroupsHelperBatch::getGroupOptions();
@@ -64,22 +56,18 @@ class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
         JToolBarHelper::editList('profile.edit');
         JToolBarHelper::publishList('profile.publish', 'COM_THM_GROUPS_PUBLISH_PROFILE');
         JToolBarHelper::unpublishList('profile.unpublish', 'COM_THM_GROUPS_UNPUBLISH_PROFILE');
-        JToolBarHelper::publishList('profile.publishContent', 'COM_THM_GROUPS_ACTIVATE_CONTENT_MANAGMENT');
+        JToolBarHelper::publishList('profile.publishContent', 'COM_THM_GROUPS_ACTIVATE_CONTENT_MANAGEMENT');
         JToolBarHelper::unpublishList('profile.unpublishContent', 'COM_THM_GROUPS_DEACTIVATE_CONTENT_MANAGEMENT');
         JToolBarHelper::divider();
 
+        $layout = new JLayoutFile('joomla.toolbar.batch');
+        $title  = JText::_('COM_THM_GROUPS_ADD_ROLES');
+        $batch  = $layout->render(['title' => $title]);
+
         $bar = JToolBar::getInstance('toolbar');
-        JHtml::_('bootstrap.modal', 'myModal');
-        $title = JText::_('COM_THM_GROUPS_ADD_ROLES');
+        $bar->appendButton('Custom', $batch, 'batch');
 
-        // Instantiate a new JLayoutFile instance and render the batch button
-
-        $html = "<button data-toggle='modal' data-target='#collapseModal' class='btn btn-small'>";
-        $html .= "<i class='icon-new' title='$title'></i> $title</button>";
-        $bar->appendButton('Custom', $html, 'batch');
-
-        $user = JFactory::getUser();
-        if ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups')) {
+        if (JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
             JToolBarHelper::divider();
             JToolBarHelper::preferences('com_thm_groups');
         }
@@ -97,5 +85,6 @@ class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
         $document = JFactory::getDocument();
         $document->addScript(JURI::root(true) . '/media/com_thm_groups/js/jquery.chained.remote.js');
         $document->addScript(JURI::root(true) . '/media/com_thm_groups/js/profile_manager.js');
+        $document->addScript(JURI::root(true) . '/media/com_thm_groups/js/remove_association.js');
     }
 }

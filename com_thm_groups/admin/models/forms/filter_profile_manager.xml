@@ -13,17 +13,19 @@
             <option value="1">JYES</option>
             <option value="0">JNO</option>
         </field>
-        <field name="qpPublished" type="list" label="COM_THM_GROUPS_PUBLISHED" onchange="this.form.submit();">
+        <field name="contentEnabled" type="list" label="COM_THM_GROUPS_PUBLISHED" onchange="this.form.submit();">
             <option value="">JALL</option>
             <option value="1">JYES</option>
             <option value="0">JNO</option>
         </field>
     </fields>
     <fields name="list">
-        <field addfieldpath="/administrator/com_thm_groups/models/fields" name="groupID" type="profilemanagergroup"
-               label="COM_THM_GROUPS_GROUPS_FILTER" onchange="this.form.submit();"></field>
-        <field addfieldpath="/administrator/com_thm_groups/models/fields" name="roleID" type="profilemanagerrole"
-               label="COM_THM_GROUPS_ROLES_FILTER" onchange="this.form.submit();"></field>
+        <field name="groupID" type="groupfilter" label="COM_THM_GROUPS_GROUPS_FILTER" onchange="this.form.submit();">
+            <option value="">COM_THM_GROUPS_ALL_GROUPS</option>
+        </field>
+        <field name="roleID" type="rolefilter" label="COM_THM_GROUPS_ROLES_FILTER" onchange="this.form.submit();">
+            <option value="">COM_THM_GROUPS_ALL_ROLES</option>
+        </field>
         <field name="limit" type="limitbox" class="input-mini" default="25" label="COM_CONTENT_LIST_LIMIT"
                description="COM_CONTENT_LIST_LIMIT_DESC" onchange="this.form.submit();"/>
         <field name="profileID" type="hidden" default=""/>

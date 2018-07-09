@@ -1,14 +1,14 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
- * @copyright   2012 TH Mittelhessen
+ * @extension   com_thm_groups
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 
 $tolerance  = 3;
-$totalUsers = THM_GroupsHelperGroup::getUserCount($this->groupID);
+$totalUsers = THM_GroupsHelperGroups::getUserCount($this->groupID);
 $columns    = $this->params->get('columnCount', 3);
 
 // TODO: make this configurable

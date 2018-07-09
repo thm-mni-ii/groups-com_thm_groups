@@ -1,18 +1,18 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 
 defined('_JEXEC') or die;
 /** @noinspection PhpIncludeInspection */
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/group.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/groups.php';
 /** @noinspection PhpIncludeInspection */
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
 
 /**
  * Class provides methods to retrieve data for pool ajax calls
@@ -34,17 +34,17 @@ class THM_GroupsModelProfile_Ajax extends JModelLegacy
         }
 
         $profiles   = [];
-        $profileIDs = THM_GroupsHelperGroup::getProfileIDs($groupID);
+        $profileIDs = THM_GroupsHelperGroups::getProfileIDs($groupID);
 
         foreach ($profileIDs as $profileID) {
-            $surname = THM_GroupsHelperProfile::getSurname($profileID);
+            $surname = THM_GroupsHelperProfiles::getSurname($profileID);
 
             if (empty($surname)) {
                 continue;
             }
 
             $surname     = JFilterOutput::stringURLSafe($surname);
-            $displayName = THM_GroupsHelperProfile::getDisplayName($profileID, true);
+            $displayName = THM_GroupsHelperProfiles::getDisplayName($profileID, true);
             $link        = "?option=com_thm_groups&view=profile&profileID=$profileID&groupID=$groupID&name=$surname";
 
             $profiles[$profileID] = ['id' => $profileID, 'name' => $displayName, 'link' => $link];

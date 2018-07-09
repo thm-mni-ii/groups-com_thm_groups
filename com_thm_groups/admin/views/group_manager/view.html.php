@@ -1,12 +1,14 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
+ * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
+
 defined('_JEXEC') or die;
 
 require_once JPATH_ROOT . '/media/com_thm_groups/views/list.php';
@@ -17,12 +19,6 @@ require_once JPATH_SITE . '/media/com_thm_groups/helpers/batch.php';
  */
 class THM_GroupsViewGroup_Manager extends THM_GroupsViewList
 {
-    public $items;
-
-    public $pagination;
-
-    public $state;
-
     public $batch;
 
     public $roles;
@@ -49,16 +45,12 @@ class THM_GroupsViewGroup_Manager extends THM_GroupsViewList
             'templates' => JPATH_COMPONENT_ADMINISTRATOR . '/views/group_manager/tmpl/default_templates.php'
         ];
 
-        $this->roles = [];
-        $allRoles    = THM_GroupsHelperBatch::getRoles();
-
-        // Exclude member role from selection
-        foreach ($allRoles as $role) {
-            if ($role->value != 1) {
-                array_push($this->roles, $role);
-            }
+        function filterMemberRole($role)
+        {
+            return $role->value != 1;
         }
 
+        $this->roles    = array_filter(THM_GroupsHelperBatch::getRoles(), 'filterMemberRole');
         $this->profiles = THM_GroupsHelperBatch::getProfiles();
 
         parent::display($tpl);
@@ -71,18 +63,18 @@ class THM_GroupsViewGroup_Manager extends THM_GroupsViewList
      */
     protected function addToolbar()
     {
-
         JToolBarHelper::title(JText::_('COM_THM_GROUPS_GROUP_MANAGER_TITLE'), 'group_manager');
 
-        $rolesTitle = JText::_('COM_THM_GROUPS_BATCH_ROLES');
-
+        $rolesTitle  = JText::_('COM_THM_GROUPS_BATCH_ROLES');
         $rolesButton = '<button id="group-roles" data-toggle="modal" data-target="#modal-roles" class="btn btn-small">';
-        $rolesButton .= '<i class="icon-edit" title="' . $rolesTitle . '"></i>' . " $rolesTitle" . '</button>';
+        $rolesButton .= '<i class="icon-checkbox-partial" title="' . $rolesTitle . '"></i>';
+        $rolesButton .= " $rolesTitle</button>";
 
-        $templatesTitle = JText::_('COM_THM_GROUPS_BATCH_TEMPLATES');
-
-        $templatesButton = '<button id="group-templates" data-toggle="modal" data-target="#modal-templates" class="btn btn-small">';
-        $templatesButton .= '<i class="icon-edit" title="' . $templatesTitle . '"></i>' . " $templatesTitle" . '</button>';
+        $templatesTitle  = JText::_('COM_THM_GROUPS_BATCH_TEMPLATES');
+        $templatesButton = '<button id="group-templates" data-toggle="modal" data-target="#modal-templates" ';
+        $templatesButton .= 'class="btn btn-small">';
+        $templatesButton .= '<i class="icon-checkbox-partial" title="' . $templatesTitle . '"></i>';
+        $templatesButton .= " $templatesTitle</button>";
 
         $bar = JToolBar::getInstance('toolbar');
         $bar->appendButton('Custom', $rolesButton, 'batch');
@@ -103,6 +95,7 @@ class THM_GroupsViewGroup_Manager extends THM_GroupsViewList
     {
         parent::modifyDocument();
 
-        JFactory::getDocument()->addScript(JURI::root() . 'media/com_thm_groups/js/group_manager.js');
+        // The parent has to be initialized first to ensure that jQuery is available.
+        JFactory::getDocument()->addScript(JURI::root() . 'media/com_thm_groups/js/remove_association.js');
     }
 }

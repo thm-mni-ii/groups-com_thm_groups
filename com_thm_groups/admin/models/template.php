@@ -1,15 +1,15 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 
 defined('_JEXEC') or die;
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/component.php';
 
 /**
  * Class loads form data to edit an entry.
@@ -92,7 +92,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
         $query = $this->_db->getQuery(true);
 
         // First, we need to check if the role is already assigned to a group
-        $query->select('templateID, usergroupsID');
+        $query->select('templateID, groupID');
         $query->from('#__thm_groups_template_associations');
         $query->where('templateID IN (' . implode(',', $templateIDs) . ')');
         $query->order('templateID');
@@ -111,7 +111,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
         $templates = [];
 
         foreach ($templateGroups as $templateGroup) {
-            $templates[$templateGroup['templateID']][$templateGroup['usergroupsID']] = $templateGroup['usergroupsID'];
+            $templates[$templateGroup['templateID']][$templateGroup['groupID']] = $templateGroup['groupID'];
         }
 
         $query         = $this->_db->getQuery(true);
@@ -132,7 +132,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
         }
 
         $query->insert('#__thm_groups_template_associations');
-        $query->columns([$this->_db->quoteName('templateID'), $this->_db->quoteName('usergroupsID')]);
+        $query->columns([$this->_db->quoteName('templateID'), $this->_db->quoteName('groupID')]);
         $this->_db->setQuery($query);
 
         try {
@@ -163,7 +163,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
         // Remove groups from the profile
         $query->delete('#__thm_groups_template_associations');
         $query->where('templateID' . ' IN (' . implode(',', $profileIDs) . ')');
-        $query->where('usergroupsID' . ' IN (' . implode(',', $groupIDs) . ')');
+        $query->where('groupID' . ' IN (' . implode(',', $groupIDs) . ')');
 
         $this->_db->setQuery($query);
 
@@ -190,7 +190,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
         $app      = JFactory::getApplication();
         $formData = $app->input->get('jform', [], 'array');
 
-        $template = $this->getTable('Template', 'THM_GroupsTable');
+        $template = $this->getTable('Templates', 'THM_GroupsTable');
 
         // Only changing the name
         if (!empty($formData['id'])) {
@@ -292,7 +292,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
         $query
             ->delete('#__thm_groups_template_associations')
             ->where("templateID = '$templateID'")
-            ->where("usergroupsID = '$groupID'");
+            ->where("groupID = '$groupID'");
         $this->_db->setQuery($query);
 
         try {
@@ -454,7 +454,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
         }
 
         JTable::addIncludePath(JPATH_ROOT . '/administrator/components/com_thm_groups/tables/');
-        $table = $this->getTable('Template', 'THM_GroupsTable');
+        $table = $this->getTable('Templates', 'THM_GroupsTable');
 
         $conditions = [];
 

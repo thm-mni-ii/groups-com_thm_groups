@@ -1,9 +1,9 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2017 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -29,7 +29,7 @@ class THM_GroupsHelperRole
         $query
             ->select("roles.name, roles.id")
             ->from('#__thm_groups_role_associations AS groups')
-            ->innerJoin('#__thm_groups_roles AS roles ON groups.rolesID = roles.id')
+            ->innerJoin('#__thm_groups_roles AS roles ON groups.roleID = roles.id')
             ->where("groups.ID = '$assocID'");
 
         $dbo->setQuery($query);

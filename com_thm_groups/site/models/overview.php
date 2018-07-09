@@ -1,15 +1,15 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/group.php';
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/groups.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
 jimport('joomla.filesystem.path');
 
 /**
@@ -32,24 +32,23 @@ class THM_GroupsModelOverview extends JModelLegacy
         $dbo   = JFactory::getDBO();
         $query = $dbo->getQuery(true);
 
-        $query->select("DISTINCT profile.id AS id, sname.value as surname");
+        $query->select("DISTINCT p.id AS id, sname.value as surname");
         $query->select("fname.value as forename");
         $query->select("allAttr.published as published");
-        $query->select("profile.injoomla as injoomla");
         $query->select("pretitle.value as title");
         $query->select("posttitle.value as posttitle");
-        $query->from("#__thm_groups_role_associations as roleAssoc");
-        $query->leftJoin("#__thm_groups_associations AS assoc ON roleAssoc.ID = assoc.role_assocID");
-        $query->leftJoin("#__thm_groups_profiles AS profile ON profile.id = assoc.profileID");
-        $query->leftJoin("#__thm_groups_profile_attributes AS allAttr ON allAttr.profileID = profile.id");
-        $query->leftJoin("#__thm_groups_profile_attributes AS sname ON sname.profileID = profile.id AND sname.attributeID = 2");
-        $query->leftJoin("#__thm_groups_profile_attributes AS fname ON fname.profileID = profile.id AND fname.attributeID = 1");
-        $query->leftJoin("#__thm_groups_profile_attributes AS pretitle ON pretitle.profileID = profile.id AND pretitle.attributeID = '5'");
-        $query->leftJoin("#__thm_groups_profile_attributes AS posttitle ON posttitle.profileID = profile.id AND posttitle.attributeID = '7'");
+        $query->from("#__thm_groups_role_associations as ra");
+        $query->leftJoin("#__thm_groups_profile_associations AS pa ON ra.ID = pa.role_associationID");
+        $query->leftJoin("#__thm_groups_profiles AS p ON p.id = pa.profileID");
+        $query->leftJoin("#__thm_groups_profile_attributes AS allAttr ON allAttr.profileID = p.id");
+        $query->leftJoin("#__thm_groups_profile_attributes AS sname ON sname.profileID = p.id AND sname.attributeID = 2");
+        $query->leftJoin("#__thm_groups_profile_attributes AS fname ON fname.profileID = p.id AND fname.attributeID = 1");
+        $query->leftJoin("#__thm_groups_profile_attributes AS pretitle ON pretitle.profileID = p.id AND pretitle.attributeID = '5'");
+        $query->leftJoin("#__thm_groups_profile_attributes AS posttitle ON posttitle.profileID = p.id AND posttitle.attributeID = '7'");
         $query->where("allAttr.published = 1");
-        $query->where("profile.published = 1");
+        $query->where("p.published = 1");
 
-        $query->where("roleAssoc.usergroupsID = " . $groupID);
+        $query->where("ra.groupID = " . $groupID);
         $query->order("surname");
         $dbo->setQuery($query);
 

@@ -1,9 +1,9 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -25,19 +25,16 @@ JHtml::_('formbehavior.chosen', 'select');
     </div>
     <div class="modal-body modal-batch">
         <div class="row-fluid">
-            <div id="batch-choose-action" class="combo control-group">
-                <label id="batch-choose-action-lbl" class="control-label" for="batch-group-id">
-                    <?php echo JText::_('COM_THM_GROUPS_BATCH_GROUP') ?>
-                </label>
-            </div>
-            <div id="batch-choose-action" class="combo controls">
-                <div class="control-group">
-                    <select name="batch[]" id="batch-group-id" multiple>
-                        <option value="" disabled><?php echo JText::_('JSELECT') ?></option>
-                        <?php echo JHtml::_('select.options', $this->groups); ?>
-                    </select>
+            <?php foreach ($this->filterForm->getGroup('batch') as $batchField): ?>
+                <div id="batch-choose-action" class="combo control-group">
+                    <?php echo $batchField->label; ?>
                 </div>
-            </div>
+                <div id="batch-choose-action" class="combo controls">
+                    <div class="control-group">
+                        <?php echo $batchField->input; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
             <div class="control-group radio">
                 <?php echo JHtml::_('select.radiolist', $options, 'batch_action', '', 'value', 'text', 'add') ?>
             </div>

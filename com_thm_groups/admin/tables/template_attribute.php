@@ -17,6 +17,6 @@ class THM_GroupsTableTemplate_Attribute extends JTable
      */
     public function __construct(&$dbo)
     {
-        parent::__construct('#__thm_groups_template_attributes', 'ID', $dbo);
+        parent::__construct('#__thm_groups_template_attributes', 'id', $dbo);
     }
 }

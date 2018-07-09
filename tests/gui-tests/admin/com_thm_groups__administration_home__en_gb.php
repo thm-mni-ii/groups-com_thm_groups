@@ -2,53 +2,53 @@
 
 class ComThmGroupsAdministrationHomeEnGb extends JoomlaSeleniumTest
 {
-	public function testThmGroupsLinkAvailable()
-	{
-		$this->performBackendLogin();
-		$this->assertTrue($this->isElementPresent("link=THM Groups"));
+    public function testThmGroupsLinkAvailable()
+    {
+        $this->performBackendLogin();
+        $this->assertTrue($this->isElementPresent("link=THM Groups"));
 
-		$this->performBackendLogout();
-	}
+        $this->performBackendLogout();
+    }
 
-	public function testHomeLinkAvailable()
-	{
-		$this->performBackendLogin();
-		$this->assertTrue($this->isElementPresent("link=Home"));
+    public function testHomeLinkAvailable()
+    {
+        $this->performBackendLogin();
+        $this->assertTrue($this->isElementPresent("link=Home"));
 
-		$this->performBackendLogout();
-	}
+        $this->performBackendLogout();
+    }
 
-	public function testMembermanagerLinkAvailable()
-	{
-		$this->performBackendLogin();
-		$this->assertTrue($this->isElementPresent("link=Membermanager"));
+    public function testMembermanagerLinkAvailable()
+    {
+        $this->performBackendLogin();
+        $this->assertTrue($this->isElementPresent("link=Membermanager"));
 
-		$this->performBackendLogout();
-	}
+        $this->performBackendLogout();
+    }
 
-	public function testGroupmanagerLinkAvailable()
-	{
-		$this->performBackendLogin();
-		$this->assertTrue($this->isElementPresent("link=Groupmanager"));
+    public function testGroupmanagerLinkAvailable()
+    {
+        $this->performBackendLogin();
+        $this->assertTrue($this->isElementPresent("link=Groupmanager"));
 
-		$this->performBackendLogout();
-	}
+        $this->performBackendLogout();
+    }
 
-	public function testRolemanagerLinkAvailable()
-	{
-		$this->performBackendLogin();
-		$this->assertTrue($this->isElementPresent("link=Rolemanager"));
+    public function testRolemanagerLinkAvailable()
+    {
+        $this->performBackendLogin();
+        $this->assertTrue($this->isElementPresent("link=Rolemanager"));
 
-		$this->performBackendLogout();
-	}
+        $this->performBackendLogout();
+    }
 
-	public function testStructureLinkAvailable()
-	{
-		$this->performBackendLogin();
-		$this->assertTrue($this->isElementPresent("link=Structuremanager"));
+    public function testStructureLinkAvailable()
+    {
+        $this->performBackendLogin();
+        $this->assertTrue($this->isElementPresent("link=Structuremanager"));
 
-		$this->performBackendLogout();
-	}
+        $this->performBackendLogout();
+    }
 }
 
 ?>

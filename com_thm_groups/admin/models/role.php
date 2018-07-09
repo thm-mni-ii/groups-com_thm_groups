@@ -1,16 +1,16 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 
 defined('_JEXEC') or die;
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/component.php';
 
 /**
  * Class loads form data to edit an entry.
@@ -94,10 +94,10 @@ class THM_GroupsModelRole extends JModelLegacy
         $existingQuery = $this->_db->getQuery(true);
 
         // Search for existing associations matching the requested
-        $existingQuery->select('usergroupsID AS groupID, rolesID AS roleID')
+        $existingQuery->select('groupID, roleID')
             ->from('#__thm_groups_role_associations')
-            ->where('rolesID IN (' . implode(',', $roleIDs) . ')')
-            ->order('rolesID');
+            ->where('roleID IN (' . implode(',', $roleIDs) . ')')
+            ->order('roleID');
 
         $this->_db->setQuery($existingQuery);
 
@@ -135,7 +135,7 @@ class THM_GroupsModelRole extends JModelLegacy
         }
 
         $insertQuery->insert('#__thm_groups_role_associations')
-            ->columns('usergroupsID, rolesID');
+            ->columns('groupID, roleID');
         $this->_db->setQuery($insertQuery);
 
         try {
@@ -163,8 +163,8 @@ class THM_GroupsModelRole extends JModelLegacy
 
         // Remove groups from the profile
         $query->delete('#__thm_groups_role_associations');
-        $query->where('rolesID' . ' IN (' . implode(',', $roleIDs) . ')');
-        $query->where('usergroupsID' . ' IN (' . implode(',', $groupIDs) . ')');
+        $query->where('roleID' . ' IN (' . implode(',', $roleIDs) . ')');
+        $query->where('groupID' . ' IN (' . implode(',', $groupIDs) . ')');
 
         $this->_db->setQuery($query);
 
@@ -250,8 +250,8 @@ class THM_GroupsModelRole extends JModelLegacy
         $query = $this->_db->getQuery(true);
         $query
             ->delete('#__thm_groups_role_associations')
-            ->where("rolesID = '$roleID'")
-            ->where("usergroupsID = '$groupID'");
+            ->where("roleID = '$roleID'")
+            ->where("groupID = '$groupID'");
         $this->_db->setQuery($query);
 
         try {
@@ -266,7 +266,7 @@ class THM_GroupsModelRole extends JModelLegacy
     }
 
     /**
-     * saves the dynamic types
+     * Saves the role
      *
      * @return bool true on success, otherwise false
      */

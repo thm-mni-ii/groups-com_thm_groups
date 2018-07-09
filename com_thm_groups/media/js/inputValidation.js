@@ -3,9 +3,9 @@
  */
 
 /**
- * Validates the user input of all input fields that belongs to dynamicType text or text field.
- * Regex are saved in the specific dynamicType in the database.
- * Required is saved in Json object inside the 'options' field in dynamicType entry.
+ * Validates the user input of all input fields that belongs to abstract attribute text or text field.
+ * Regex are saved in the specific abstract attribute in the database.
+ * Required is saved in Json object inside the 'options' field in abstract attribute entry.
  *
  * @return null
  **/

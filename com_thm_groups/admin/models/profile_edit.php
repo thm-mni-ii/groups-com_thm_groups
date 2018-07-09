@@ -1,18 +1,16 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 
-use MongoDB\BSON\Type;
-
 defined('_JEXEC') or die;
 require_once JPATH_ROOT . '/media/com_thm_groups/models/edit.php';
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
 
 /**
  * Class loads form data to edit an entry.
@@ -34,7 +32,7 @@ class THM_GroupsModelProfile_Edit extends THM_GroupsModelEdit
             return [];
         }
 
-        return THM_GroupsHelperProfile::getProfile($profileID);
+        return THM_GroupsHelperProfiles::getProfile($profileID);
     }
 
     /**

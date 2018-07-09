@@ -1,20 +1,20 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
  * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
  * @author      Alexander Boll, <alexander.boll@mni.thm.de>
  * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
 
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/componentHelper.php';
-require_once JPATH_ROOT . "/media/com_thm_groups/helpers/profile.php";
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/component.php';
+require_once JPATH_ROOT . "/media/com_thm_groups/helpers/profiles.php";
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/template.php';
 
 /**
@@ -52,7 +52,7 @@ class THM_GroupsViewProfile extends JViewLegacy
         $this->templateName = JFilterOutput::stringURLSafe(THM_GroupsHelperTemplate::getName($this->templateID));
 
         // Adds the user name to the breadcrumb
-        JFactory::getApplication()->getPathway()->addItem(THM_GroupsHelperProfile::getDisplayName($this->profileID),
+        JFactory::getApplication()->getPathway()->addItem(THM_GroupsHelperProfiles::getDisplayName($this->profileID),
             '');
 
         $this->modifyDocument();
@@ -76,7 +76,7 @@ class THM_GroupsViewProfile extends JViewLegacy
 
         foreach ($this->profile as $attribute) {
             // These were already taken care of in the name/title containers
-            $processed = in_array($attribute['structid'], [1, 2, 5, 7]);
+            $processed = in_array($attribute['id'], [1, 2, 5, 7]);
 
             // Special indexes and attributes with no saved value are irrelevant
             $irrelevant = (empty($attribute['value']) or empty(trim($attribute['value'])));
@@ -85,7 +85,7 @@ class THM_GroupsViewProfile extends JViewLegacy
                 continue;
             }
 
-            $attributeContainer = THM_GroupsHelperProfile::getAttributeContainer($attribute, $surname);
+            $attributeContainer = THM_GroupsHelperProfiles::getAttributeContainer($attribute, $surname);
 
             if (($attribute['type'] == 'PICTURE')) {
                 array_unshift($attributes, $attributeContainer);
@@ -122,32 +122,6 @@ class THM_GroupsViewProfile extends JViewLegacy
         }
 
         return $editLink;
-    }
-
-    /**
-     * Redirects back to the previous
-     *
-     * @return  string  the Link HTML markup
-     */
-    public function getBackLink()
-    {
-        if (empty(JComponentHelper::getParams('com_thm_groups')->get('backButtonForProfile'))) {
-            return '';
-        }
-
-        $text       = '<span class="icon-arrow-left-22"></span> ' . JText::_("COM_THM_GROUPS_BACK_BUTTON");
-        $attributes = ['class' => 'btn'];
-
-        $menuID = JFactory::getApplication()->input->get('Itemid');
-
-        if (empty($menuID)) {
-            $attributes = ['onclick' => 'window.history.back()'];
-            $url        = '#';
-        } else {
-            $url = JRoute::_("index.php?option=com_thm_groups&Itemid=$menuID");
-        }
-
-        return JHtml::link($url, $text, $attributes);
     }
 
     /**

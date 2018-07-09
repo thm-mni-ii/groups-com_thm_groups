@@ -1,11 +1,11 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
  * @author      Peter Janauschek, <peter.janauschek@mni.thm.de>
  * @author      Lavinia Popa-Rössel, <lavinia.popa-roessel@mni.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -19,16 +19,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/models/edit.php';
 class THM_GroupsModelAttribute_Edit extends THM_GroupsModelEdit
 {
     protected $form = false;
-
-    /**
-     * Constructor.
-     *
-     * @param   array $config An optional associative array of configuration settings.
-     */
-    public function __construct($config = [])
-    {
-        parent::__construct($config);
-    }
 
     /**
      * Method to get the form
@@ -59,7 +49,7 @@ class THM_GroupsModelAttribute_Edit extends THM_GroupsModelEdit
      *
      * @return  JTable|mixed
      */
-    public function getTable($type = 'Attribute', $prefix = 'THM_GroupsTable', $config = [])
+    public function getTable($type = 'Attributes', $prefix = 'THM_GroupsTable', $config = [])
     {
         return JTable::getInstance($type, $prefix, $config);
     }

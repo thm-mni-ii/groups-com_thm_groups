@@ -1,10 +1,10 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -44,7 +44,7 @@ class THM_GroupsHelperBatch
     }
 
     /**
-     * Returns groups as select field
+     * Returns groups as a select field
      * It shows only groups with users in it, because this select field
      * will be used only for filtering in backend-user-manager
      *
@@ -59,8 +59,8 @@ class THM_GroupsHelperBatch
         $select = 'ug.id, ug.title, COUNT(DISTINCT ugTemp.id) AS level';
         $query->select($select);
         $query->from('#__usergroups as ug');
+        $query->innerJoin('#__thm_groups_role_associations AS roleAssoc ON ug.id = roleAssoc.groupID');
         $query->leftJoin('#__usergroups AS ugTemp ON ug.lft > ugTemp.lft AND ug.rgt < ugTemp.rgt');
-        $query->leftJoin('#__thm_groups_role_associations AS roleAssoc ON ug.id = roleAssoc.usergroupsID');
         $query->where('ug.id NOT IN  (1,2)');
         $query->group('ug.id, ug.title, ug.lft, ug.rgt');
         $query->order('ug.lft ASC');

@@ -27,76 +27,76 @@ require_once JPATH_BASE . '/administrator/components/com_thm_groups/models/addst
  */
 class THMGroupsModelAddStructureAdminTest extends PHPUnit_Framework_TestCase
 {
-	protected $instance;
+    protected $instance;
 
-	/**
-	 * set up function before tests
-	 *
-	 * @return void
-	 */
-	public function setUp()
-	{
-		$this->instance = new THMGroupsModelAddStructure;
-	}
+    /**
+     * set up function before tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        $this->instance = new THMGroupsModelAddStructure;
+    }
 
-	/**
-	 * kill function after tests
-	 *
-	 * @return void
-	 */
-	public function tearDown()
-	{
-		$this->instance = null;
-		parent::tearDown();
-	}
+    /**
+     * kill function after tests
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        $this->instance = null;
+        parent::tearDown();
+    }
 
-	/**
-	 * tests _buildQuery
-	 * function returns an SQL query
-	 * should start with SELECT
-	 *
-	 * @return void
-	 */
-	public function test_buildQuery()
-	{
-		$result   = $this->instance->_buildQuery();
-		$expected = "SELECT ";
-		$this->assertContains($expected, $result);
-	}
+    /**
+     * tests _buildQuery
+     * function returns an SQL query
+     * should start with SELECT
+     *
+     * @return void
+     */
+    public function test_buildQuery()
+    {
+        $result   = $this->instance->_buildQuery();
+        $expected = "SELECT ";
+        $this->assertContains($expected, $result);
+    }
 
-	/**
-	 * tests getData
-	 * function returns array
-	 * first object should be Type "Date"
-	 *
-	 * @return void
-	 */
-	public function testgetData()
-	{
-		$result = $this->instance->getData();
-		$this->assertTrue($result[0]->Type == "DATE");
-	}
+    /**
+     * tests getData
+     * function returns array
+     * first object should be Type "Date"
+     *
+     * @return void
+     */
+    public function testgetData()
+    {
+        $result = $this->instance->getData();
+        $this->assertTrue($result[0]->Type == "DATE");
+    }
 
-	/**
-	 * tests store
-	 * function inserts value in database
-	 * sholud return true
-	 *
-	 * @return void
-	 */
-	public function teststore()
-	{
+    /**
+     * tests store
+     * function inserts value in database
+     * sholud return true
+     *
+     * @return void
+     */
+    public function teststore()
+    {
 
-		$array['name']     = 'THMGroupsTestSuite';
-		$array['relation'] = 'TEXT';
-		JRequest::set($array, 'post');
+        $array['name']     = 'THMGroupsTestSuite';
+        $array['relation'] = 'TEXT';
+        JRequest::set($array, 'post');
 
-		$result = $this->instance->store();
-		$db     = JFactory::getDBO();
-		$query  = "DELETE FROM #__thm_groups_structure WHERE field = 'THMGroupsTestSuite'";
-		$db->setQuery($query);
-		$db->query();
+        $result = $this->instance->store();
+        $db     = JFactory::getDBO();
+        $query  = "DELETE FROM #__thm_groups_structure WHERE field = 'THMGroupsTestSuite'";
+        $db->setQuery($query);
+        $db->query();
 
-		$this->assertTrue($result);
-	}
+        $this->assertTrue($result);
+    }
 }

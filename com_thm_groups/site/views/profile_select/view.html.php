@@ -1,9 +1,9 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@mni.thm.de>
- * @copyright   2017 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -35,7 +35,6 @@ class THM_GroupsViewProfile_Select extends JViewLegacy
         $document->addStyleSheet($ownURI . 'media/com_thm_groups/css/profile_select.css');
         $document->addScript($ownURI . 'media/com_thm_groups/js/profile_select.js');
 
-        // Don't know which of these filters does what if anything active had no effect on the active highlighting
         $this->filterForm = $this->get('FilterForm');
 
         parent::display();

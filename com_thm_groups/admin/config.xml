@@ -7,11 +7,6 @@
             <option value="1">JON</option>
             <option value="0">JOFF</option>
         </field>
-        <field name="backButtonForProfile" type="radio" class="btn-group btn-group-yesno" default="1"
-               label="COM_THM_GROUPS_SHOW_PROFILE_BACK" description="COM_THM_GROUPS_SHOW_PROFILE_BACK_DESC">
-            <option value="1">JSHOW</option>
-            <option value="0">JHIDE</option>
-        </field>
         <field name="enabled" type="radio" default="0" class="btn-group btn-group-yesno"
                label="COM_THM_GROUPS_ENABLE_CONTENT" description="COM_THM_GROUPS_ENABLE_CONTENT_DESC">
             <option value="1">JON</option>

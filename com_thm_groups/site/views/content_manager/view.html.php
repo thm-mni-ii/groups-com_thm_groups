@@ -1,9 +1,9 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2017 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -16,7 +16,7 @@ define('UNPUBLISHED', 0);
 define('ARCHIVED', 2);
 define('TRASHED', -2);
 
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
 
 /**
  * Class displays content in the profile's content category
@@ -62,7 +62,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
         $this->menuID     = JFactory::getApplication()->input->getInt('Itemid', 0);
 
         $this->profileID = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
-        $profileName     = THM_GroupsHelperProfile::getDisplayName($this->profileID);
+        $profileName     = THM_GroupsHelperProfiles::getDisplayName($this->profileID);
         $contextTitle    = $this->profileID == JFactory::getUser()->id ?
             JText::_('COM_THM_GROUPS_MY_CONTENT') : JText::sprintf('COM_THM_GROUPS_MANAGE_CONTENT', $profileName);
 
@@ -122,8 +122,8 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
     public function getProfileButton()
     {
         $profileID   = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
-        $groupID     = THM_GroupsHelperProfile::getDefaultGroup($profileID);
-        $surname     = THM_GroupsHelperProfile::getAttributeValue($profileID, 2);
+        $groupID     = THM_GroupsHelperProfiles::getDefaultGroup($profileID);
+        $surname     = THM_GroupsHelperProfiles::getAttributeValue($profileID, 2);
         $buttonURL   = "index.php?view=profile&profileID=$profileID&name=$surname";
         $buttonURL   .= empty($groupID) ? '' : "&groupID=$groupID";
         $buttonRoute = JRoute::_($buttonURL);
@@ -162,7 +162,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
             $published .= '</td>';
 
             $listed = '<td class="btn-column">';
-            $listed .= $this->getToggle($item->id, $item->groups_featured, 'featured');
+            $listed .= $this->getToggle($item->id, $item->featured, 'featured');
             $listed .= '</td>';
         } elseif ($this->canEditOne) {
             $published = '<td>';
@@ -172,7 +172,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
             $published .= '</td>';
 
             $listed = '<td class="btn-column">';
-            $listed .= $this->getToggle($item->id, $item->groups_featured, 'featured');
+            $listed .= $this->getToggle($item->id, $item->featured, 'featured');
             $listed .= '</td>';
         } else {
             $published = '';
@@ -260,7 +260,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
     public function getTitle($key, &$item)
     {
         $profileID   = JFactory::getUser()->id;
-        $surname     = THM_GroupsHelperProfile::getAttributeValue(JFactory::getUser()->id, 2);
+        $surname     = THM_GroupsHelperProfiles::getAttributeValue(JFactory::getUser()->id, 2);
         $menuID      = JFactory::getApplication()->input->getInt('Itemid', 0);
         $viewURL     = 'index.php?option=com_thm_groups&view=content';
         $viewURL     .= "&id=$item->id&alias=$item->alias&profileID=$profileID&name=$surname";
@@ -318,6 +318,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 
         $attributes                = [];
         $attributes['title']       = JText::_($tip);
+        $attributes['class']       = 'btn';
         $attributes['data-toggle'] = "tooltip";
 
         $icon = '<span class="icon-' . $iconClass . ' ' . $colorClass . '"></span>';

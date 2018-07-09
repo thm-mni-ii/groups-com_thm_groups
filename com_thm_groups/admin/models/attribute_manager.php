@@ -1,9 +1,9 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2017 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -24,7 +24,7 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
     const TITLE = 5;
     const POSTTITLE = 7;
 
-    protected $defaultOrdering = 'attribute.id';
+    protected $defaultOrdering = 'a.id';
 
     protected $defaultDirection = 'ASC';
 
@@ -35,7 +35,7 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
      */
     public function __construct($config = [])
     {
-        $config['filter_fields'] = ['attribute.id', 'attribute.name', 'dynamic.name'];
+        $config['filter_fields'] = ['a.id', 'a.name', 'aa.name'];
 
         parent::__construct($config);
     }
@@ -51,16 +51,16 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
         $direction = $this->state->get('list.direction');
         $headers   = [];
 
-        $headers['order']       = JHtml::_('searchtools.sort', '', 'attribute.ordering', $direction, $ordering, null,
+        $headers['order']       = JHtml::_('searchtools.sort', '', 'a.ordering', $direction, $ordering, null,
             'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2');
         $headers['checkbox']    = '';
-        $headers['id']          = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'attribute.id', $direction,
+        $headers['id']          = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'a.id', $direction,
             $ordering);
-        $headers['attribute']   = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_NAME', 'attribute.name', $direction,
+        $headers['attribute']   = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_NAME', 'a.name', $direction,
             $ordering);
         $headers['published']   = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ATTRIBUTE_PUBLISHED',
-            'attribute.published', $direction, $ordering);
-        $headers['dynamic']     = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_DYNAMIC_TYPE', 'dynamic.name',
+            'a.published', $direction, $ordering);
+        $headers['abstract']    = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ABSTRACT_ATTRIBUTE', 'aa.name',
             $direction, $ordering);
         $headers['description'] = JText::_('COM_THM_GROUPS_DESCRIPTION');
 
@@ -102,7 +102,7 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
             $return[$index]['ordering']['attributes'] = ['class' => "order nowrap center", 'style' => "width: 40px;"];
 
             if ($canEdit) {
-                $orderingActive = $this->state->get('list.ordering') == 'attribute.ordering';
+                $orderingActive = $this->state->get('list.ordering') == 'a.ordering';
 
                 if (!$orderingActive) {
                     $iconClass = ' inactive tip-top hasTooltip';
@@ -132,7 +132,7 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
                 $return[$index][3] = '<span class="icon-' . $published . '"></span>';
             }
 
-            $return[$index][4] = $item->dynamic_type_name;
+            $return[$index][4] = $item->abstractName;
             $return[$index][5] = $item->description;
             $index++;
         }
@@ -149,25 +149,25 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
     {
         $query = $this->_db->getQuery(true);
 
-        $select = 'attribute.id, attribute.name, attribute.options, attribute.published, attribute.ordering, attribute.description, ';
-        $select .= 'dynamic.name as dynamic_type_name';
+        $select = 'a.id, a.name, a.options, a.published, a.ordering, a.description, ';
+        $select .= 'aa.name as abstractName';
 
-        $query->select($select)->from('#__thm_groups_attribute AS attribute')
-            ->innerJoin('#__thm_groups_dynamic_type AS dynamic ON attribute.dynamic_typeID = dynamic.id');
+        $query->select($select)->from('#__thm_groups_attributes AS a')
+            ->innerJoin('#__thm_groups_abstract_attributes AS aa ON a.abstractID = aa.id');
 
-        $this->setIDFilter($query, 'attribute.published', ['filter.published']);
+        $this->setIDFilter($query, 'a.published', ['filter.published']);
 
         $search = $this->getState('filter.search');
 
         if (!empty($search)) {
-            $query->where("(attribute.name LIKE '%" . implode("%' OR attribute.name LIKE '%",
+            $query->where("(a.name LIKE '%" . implode("%' OR a.name LIKE '%",
                     explode(' ', $search)) . "%')");
         }
 
-        $dynamic = $this->getState('filter.dynamic');
+        $abstract = $this->getState('filter.abstract');
 
-        if (!empty($dynamic) && $dynamic != '*') {
-            $query->where("attribute.dynamic_typeID = '$dynamic'");
+        if (!empty($abstract) && $abstract != '*') {
+            $query->where("a.abstractID = '$abstract'");
         }
 
         $this->setOrdering($query);
@@ -197,9 +197,9 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
         $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
-        $static = $app->getUserStateFromRequest($this->context . '.filter.static', 'filter_static');
-        $this->setState('filter.dynamic', $static);
+        $abstract = $app->getUserStateFromRequest($this->context . '.filter.abstract', 'filter_abstract');
+        $this->setState('filter.abstract', $abstract);
 
-        parent::populateState("attribute.id", "ASC");
+        parent::populateState("a.id", "ASC");
     }
 }

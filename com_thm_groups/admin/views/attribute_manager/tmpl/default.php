@@ -1,10 +1,10 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2017 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 
 $listOrder = $this->escape($this->state->get('list.ordering'));
 
-if ($listOrder == 'attribute.ordering') {
+if ($listOrder == 'a.ordering') {
     $saveOrderingUrl = 'index.php?option=com_thm_groups&task=attribute.saveOrderAjax&tmpl=component';
     JHtml::_('sortablelist.sortable', 'attribute_manager-list', 'adminForm', null, $saveOrderingUrl);
 }

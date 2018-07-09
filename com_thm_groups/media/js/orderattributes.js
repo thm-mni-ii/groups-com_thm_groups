@@ -1,6 +1,6 @@
 /**
  * @package Joomla
- * @subpackate com_thm_groups Groups List View
+ * @extension com_thm_groups
  * @author Dieudonne Timma
  * @copyright Copyright (C) 2015 THM
  */

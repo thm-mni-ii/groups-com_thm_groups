@@ -4,29 +4,29 @@ require_once JPATH_BASE . '/components/com_thm_groups/views/profile/view.html.ph
 
 class THMGroupsViewProfileTest extends PHPUnit_Framework_TestCase
 {
-	// contains the object handle of the string class
-	protected $instance;
+    // contains the object handle of the string class
+    protected $instance;
 
-	// called before the test functions will be executed
-	// this function is defined in PHPUnit_TestCase and overwritten
-	// here
-	function setUp()
-	{
-		//--- set test user
+    // called before the test functions will be executed
+    // this function is defined in PHPUnit_TestCase and overwritten
+    // here
+    function setUp()
+    {
+        //--- set test user
 
-		$this->instance = new THMGroupsViewProfile();
-	}
+        $this->instance = new THMGroupsViewProfile();
+    }
 
-	// called after the test functions are executed
-	// this function is defined in PHPUnit_TestCase and overwritten
-	// here
-	function tearDown()
-	{
-		// "benutztes" Objekt entfernen
-		$this->instance = null;
-		// tearDown der Elternklasse aufrufen
-		parent::tearDown();
-	}
+    // called after the test functions are executed
+    // this function is defined in PHPUnit_TestCase and overwritten
+    // here
+    function tearDown()
+    {
+        // "benutztes" Objekt entfernen
+        $this->instance = null;
+        // tearDown der Elternklasse aufrufen
+        parent::tearDown();
+    }
 }
 
 ?>

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -93,25 +93,15 @@ class THM_GroupsModelContent_Manager extends JModelList
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
 
-        $contentSelect = 'content.id, content.title, content.alias, content.checked_out, content.checked_out_time, ';
-        $contentSelect .= 'content.catid, content.state, content.access, content.created, ';
-        $contentSelect .= 'content.created_by, content.ordering, content.language, content.hits, content.publish_up, ';
-        $contentSelect .= 'content.publish_down';
-
-        $query->select($contentSelect);
-        $query->select('language.title AS language_title');
-        $query->select('ag.title AS access_level');
-        $query->select('cats.title AS category_title');
-        $query->select('users.name AS author_name');
-
-        $query->select('pContent.featured AS groups_featured');
-        $query->from('#__content AS content');
-        $query->leftJoin('#__languages AS language ON language.lang_code = content.language');
-        $query->leftJoin('#__viewlevels AS ag ON ag.id = content.access');
-        $query->leftJoin('#__categories AS cats ON cats.id = content.catid');
-        $query->leftJoin('#__users AS users ON users.id = content.created_by');
-        $query->leftJoin('#__thm_groups_content AS pContent ON pContent.contentID = content.id');
-        $query->where("cats.id = '$this->categoryID'");
+        $query->select('content.*')
+            ->select('users.name AS author_name')
+            ->select('pContent.featured AS featured')
+            ->from('#__content AS content')
+            ->innerJoin('#__thm_groups_content AS pContent ON pContent.id = content.id')
+            ->innerJoin('#__categories AS cCats ON cCats.id = content.catid')
+            ->innerJoin('#__thm_groups_categories AS pCats ON pCats.id = cCats.id')
+            ->innerJoin('#__users AS users ON users.id = pCats.profileID')
+            ->where("cCats.id = '$this->categoryID'");
 
         // User cannot edit anything => only show published
         if (!$this->canEditSome) {

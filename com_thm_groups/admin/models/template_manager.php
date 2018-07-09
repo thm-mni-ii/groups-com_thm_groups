@@ -1,9 +1,9 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2017 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -42,11 +42,12 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
         $direction = $this->state->get('list.direction');
 
         $headers             = [];
-        $headers['order']    = JHtml::_('searchtools.sort', '', 'p.ordering', $direction, $ordering, null, 'asc',
+        $headers['order']    = JHtml::_('searchtools.sort', '', 't.ordering', $direction, $ordering, null, 'asc',
             'JGRID_HEADING_ORDERING', 'icon-menu-2');
         $headers['checkbox'] = '';
-        $headers['id']       = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'id', $direction, $ordering);
-        $headers['name']     = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 'name', $direction,
+        $headers['id']       = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 't.id', $direction,
+            $ordering);
+        $headers['name']     = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 't.name', $direction,
             $ordering);
         $headers['groups']   = JText::_('COM_THM_GROUPS_PROFILE_MANAGER_GROUPS');
 
@@ -97,7 +98,7 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
         $return['attributes'] = ['class' => 'ui-sortable'];
 
         foreach ($items as $key => $item) {
-            $orderingActive = $this->state->get('list.ordering') == 'p.ordering';
+            $orderingActive = $this->state->get('list.ordering') == 't.ordering';
 
             $return[$index]                           = [];
             $return[$index]['attributes']             = ['class' => 'order center hidden-phone', 'id' => $item->id];
@@ -121,7 +122,7 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
                 $return[$index]['name'] = !empty($item->name) ? JHtml::_('link', $url . $item->id, $item->name) : '';
             }
 
-            $return[$index]['profiles'] = $this->getProfileGroups($item->id);
+            $return[$index]['groups'] = $this->getProfileGroups($item->id);
             $index++;
         }
 
@@ -137,12 +138,38 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
     {
         $query = $this->_db->getQuery(true);
 
-        $query->select('id, name, ordering')->from('#__thm_groups_templates');
+        $query->select('t.id, t.name, t.ordering')->from('#__thm_groups_templates AS t')
+            ->leftJoin('#__thm_groups_template_associations AS ta ON ta.templateID = t.id')
+            ->group('t.id');
 
-        $this->setSearchFilter($query, ['name']);
+        $this->setSearchFilter($query, ['t.name']);
+        $this->setIDFilter($query, 'ta.groupID', ['filter.groups']);
         $this->setOrdering($query);
 
         return $query;
+    }
+
+    /**
+     * populates State
+     *
+     * @param   null $ordering  ?
+     * @param   null $direction ?
+     *
+     * @return void
+     */
+    protected function populateState($ordering = null, $direction = null)
+    {
+        $app = JFactory::getApplication();
+
+        // Adjust the context to support modal layouts.
+        if ($layout = $app->input->get('layout')) {
+            $this->context .= '.' . $layout;
+        }
+
+        $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $this->setState('filter.search', $search);
+
+        parent::populateState("t.id", "ASC");
     }
 
     /**
@@ -158,7 +185,7 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
 
         $query->select('usergr.id, usergr.title');
         $query->from('#__thm_groups_template_associations AS tempAssoc');
-        $query->innerJoin('#__usergroups AS usergr ON usergr.id = tempAssoc.usergroupsID');
+        $query->innerJoin('#__usergroups AS usergr ON usergr.id = tempAssoc.groupID');
         $query->where("tempAssoc.templateID = '$templateID'");
         $this->_db->setQuery($query);
 
@@ -172,19 +199,16 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
             return '';
         }
 
-        $usersAdmin     = JFactory::getUser()->authorise('core.admin', 'com_users');
-        $return         = [];
-        $buttonTemplate = '<a onclick="deleteGroupAssociation(GROUPID,TEMPLATEID)"><span class="icon-trash"></span></a>';
+        $return = [];
+        if (!empty($groups)) {
+            $buttonStart = '<a onclick="deleteGroupAssociation(';
+            $buttonEnd   = ');"><span class="icon-trash"></span></a>';
 
-        foreach ($groups as $group) {
-            $deleteButton = '';
+            foreach ($groups as $group) {
+                $deleteButton = $buttonStart . "'template', {$group['id']}, $templateID" . $buttonEnd;
 
-            if ($usersAdmin) {
-                $deleteButton = str_replace('GROUPID', $group['id'], $buttonTemplate);
-                $deleteButton = ' ' . str_replace('TEMPLATEID', $templateID, $deleteButton);
+                $return[] = $group['title'] . $deleteButton;
             }
-
-            $return[] = $group['title'] . $deleteButton;
         }
 
         return implode('<br /> ', $return);

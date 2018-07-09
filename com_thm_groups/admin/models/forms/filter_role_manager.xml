@@ -2,10 +2,23 @@
 <form>
     <fields name="filter" addfieldpath="/media/com_thm_groups/fields">
         <field name="search" type="text" label="COM_THM_GROUPS_FILTER_SEARCH_DESC" hint="JSEARCH_FILTER"/>
-        <field name="groups" type="group" label="COM_THM_GROUPS_GROUPS_FILTER" onchange="this.form.submit();"></field>
+        <field name="groups" type="genericlist" valueColumn="ug.id" textColumn="ug.title"
+               table="usergroups AS ug,thm_groups_role_associations AS ra ON ra.groupID = ug.id"
+               label="COM_THM_GROUPS_ROLES" onchange="this.form.submit();">
+            <option value="">JALL</option>
+            <option value="-1">JNONE</option>
+        </field>
     </fields>
     <fields name="list">
         <field name="limit" type="limitbox" class="input-mini" default="25" label="COM_CONTENT_LIST_LIMIT"
                description="COM_CONTENT_LIST_LIMIT_DESC" onchange="this.form.submit();"/>
+    </fields>
+    <fields name="batch">
+        <field name="batch" type="genericlist" valueColumn="ug.id" textColumn="ug.title"
+               table="usergroups AS ug,thm_groups_role_associations AS ra ON ra.groupID = ug.id,thm_groups_profile_associations AS pa ON pa.role_associationID = ra.id"
+               label="COM_THM_GROUPS_ROLES">
+            <option value="">JALL</option>
+            <option value="-1">JNONE</option>
+        </field>
     </fields>
 </form>

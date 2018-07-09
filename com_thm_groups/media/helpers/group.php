@@ -1,9 +1,9 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
@@ -25,15 +25,15 @@ class THM_GroupsHelperGroup
         $dbo   = JFactory::getDBO();
         $query = $dbo->getQuery(true);
 
-        $query->select("DISTINCT profileAttr.value");
-        $query->from("`#__thm_groups_profile_attributes` AS profileAttr");
-        $query->leftJoin("`#__thm_groups_associations` AS assoc ON assoc.profileID = profileAttr.profileID");
-        $query->leftJoin("`#__thm_groups_role_associations` AS groups ON assoc.role_assocID = groups.id");
-        $query->leftJoin("`#__thm_groups_profiles` AS profile ON profile.id = assoc.profileID");
-        $query->where("profileAttr.attributeID = '2'");
-        $query->where("profileAttr.published = '1'");
-        $query->where("profile.published = '1'");
-        $query->where("groups.usergroupsID = '$groupID'");
+        $query->select("DISTINCT pat.value");
+        $query->from("`#__thm_groups_profile_attributes` AS pat");
+        $query->leftJoin("`#__thm_groups_profile_associations` AS pas ON pas.profileID = pat.profileID");
+        $query->leftJoin("`#__thm_groups_role_associations` AS ra ON pas.role_associationID = ra.id");
+        $query->leftJoin("`#__thm_groups_profiles` AS p ON p.id = pas.profileID");
+        $query->where("pat.attributeID = '2'");
+        $query->where("pat.published = '1'");
+        $query->where("p.published = '1'");
+        $query->where("ra.groupID = '$groupID'");
         $dbo->setQuery($query);
 
         try {
@@ -67,12 +67,12 @@ class THM_GroupsHelperGroup
     {
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
-        $query->select("DISTINCT profile.id AS profileID")
-            ->from('#__thm_groups_role_associations as roleAssoc')
-            ->leftJoin('#__thm_groups_associations as assoc on roleAssoc.ID = assoc.role_assocID')
-            ->leftJoin('#__thm_groups_profiles as profile on profile.id = assoc.profileID')
-            ->where("roleAssoc.usergroupsID = '$groupID'")
-            ->where("profile.published = '1'");
+        $query->select("DISTINCT p.id AS profileID")
+            ->from('#__thm_groups_role_associations as ra')
+            ->leftJoin('#__thm_groups_profile_associations as pa on ra.ID = pa.role_associationID')
+            ->leftJoin('#__thm_groups_profiles as p on p.id = pa.profileID')
+            ->where("ra.groupID = '$groupID'")
+            ->where("p.published = '1'");
 
         $dbo->setQuery($query);
 
@@ -100,13 +100,13 @@ class THM_GroupsHelperGroup
 
         $query = $dbo->getQuery(true);
         $query
-            ->select("profile.id AS profileID")
-            ->from('#__thm_groups_role_associations as roleAssoc')
-            ->leftJoin('#__thm_groups_associations as assoc on roleAssoc.ID = assoc.role_assocID')
-            ->leftJoin('#__thm_groups_profiles as profile on profile.id = assoc.profileID');
+            ->select("p.id AS profileID")
+            ->from('#__thm_groups_role_associations as ra')
+            ->leftJoin('#__thm_groups_profile_associations as pa on ra.ID = pa.role_associationID')
+            ->leftJoin('#__thm_groups_profiles as p on p.id = pa.profileID');
 
-        $query->where("roleAssoc.ID = '$assocID'");
-        $query->where("profile.published = '1'");
+        $query->where("ra.ID = '$assocID'");
+        $query->where("p.published = '1'");
 
         $dbo->setQuery($query);
 
@@ -137,17 +137,17 @@ class THM_GroupsHelperGroup
 
         $query = $dbo->getQuery(true);
         $query
-            ->select("profile.id AS profileID, roles.ordering as roleOrder")
-            ->from('#__thm_groups_role_associations as roleAssoc')
-            ->innerJoin('#__thm_groups_roles AS roles ON roleAssoc.rolesID = roles.id')
-            ->leftJoin('#__thm_groups_associations as assoc on roleAssoc.ID = assoc.role_assocID')
-            ->leftJoin('#__thm_groups_profiles as profile on profile.id = assoc.profileID');
+            ->select("p.id AS profileID, roles.ordering as roleOrder")
+            ->from('#__thm_groups_role_associations as ra')
+            ->innerJoin('#__thm_groups_roles AS r ON ra.roleID = r.id')
+            ->leftJoin('#__thm_groups_profile_associations as pa on ra.ID = pa.role_associationID')
+            ->leftJoin('#__thm_groups_profiles as p on p.id = pa.profileID');
 
         foreach ($roleIDs as $roleID) {
             $query->clear('where');
-            $query->where("roleAssoc.usergroupsID = '$groupID'");
-            $query->where("roleAssoc.rolesID = '$roleID'");
-            $query->where("profile.published = '1'");
+            $query->where("ra.groupID = '$groupID'");
+            $query->where("ra.roleID = '$roleID'");
+            $query->where("p.published = '1'");
 
             if (!empty($excludeList)) {
                 $query->where("profile.id NOT IN (" . implode(",", $excludeList) . ")");
@@ -188,8 +188,8 @@ class THM_GroupsHelperGroup
         $query = $dbo->getQuery(true);
         $query->select('DISTINCT assoc.ID')
             ->from('#__thm_groups_role_associations AS assoc')
-            ->innerJoin('#__thm_groups_roles AS roles ON assoc.rolesID = roles.id')
-            ->where("usergroupsID = '$groupID'")
+            ->innerJoin('#__thm_groups_roles AS roles ON assoc.roleID = roles.id')
+            ->where("groupID = '$groupID'")
             ->order('roles.ordering');
         $dbo->setQuery($query);
 
@@ -215,7 +215,7 @@ class THM_GroupsHelperGroup
     {
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
-        $query->select('DISTINCT rolesID')->from('#__thm_groups_role_associations')->where("usergroupsID = '$groupID'");
+        $query->select('DISTINCT roleID')->from('#__thm_groups_role_associations')->where("groupID = '$groupID'");
         $dbo->setQuery($query);
 
         try {
@@ -246,7 +246,7 @@ class THM_GroupsHelperGroup
         $query = $dbo->getQuery(true);
         $query->select('templateID');
         $query->from('#__thm_groups_template_associations');
-        $query->where("usergroupsID = '$groupID'");
+        $query->where("groupID = '$groupID'");
         $dbo->setQuery($query);
 
         try {
@@ -273,24 +273,23 @@ class THM_GroupsHelperGroup
         $dbo   = JFactory::getDBO();
         $query = $dbo->getQuery(true);
 
-        $query->select("DISTINCT profile.id AS id, sname.value as surname");
+        $query->select("DISTINCT p.id AS id, sname.value as surname");
         $query->select("fname.value as forename");
         $query->select("email.value as email");
         $query->select("allAttr.published as published");
-        $query->select("profile.injoomla as injoomla");
         $query->select("pretitle.value as title");
         $query->select("posttitle.value as posttitle");
-        $query->from("#__thm_groups_role_associations as roleAssoc");
-        $query->leftJoin("#__thm_groups_associations AS assoc ON roleAssoc.ID = assoc.role_assocID");
-        $query->leftJoin("#__thm_groups_profiles AS profile ON profile.id = assoc.profileID");
-        $query->leftJoin("#__thm_groups_profile_attributes AS allAttr ON allAttr.profileID = profile.id");
-        $query->leftJoin("#__thm_groups_profile_attributes AS sname ON sname.profileID = profile.id AND sname.attributeID = 2");
-        $query->leftJoin("#__thm_groups_profile_attributes AS fname ON fname.profileID = profile.id AND fname.attributeID = 1");
-        $query->leftJoin("#__thm_groups_profile_attributes AS email ON email.profileID = profile.id AND email.attributeID = 4");
-        $query->leftJoin("#__thm_groups_profile_attributes AS pretitle ON pretitle.profileID = profile.id AND pretitle.attributeID = '5'");
-        $query->leftJoin("#__thm_groups_profile_attributes AS posttitle ON posttitle.profileID = profile.id AND posttitle.attributeID = '7'");
+        $query->from("#__thm_groups_role_associations as ra");
+        $query->leftJoin("#__thm_groups_profile_associations AS pa ON ra.ID = pa.role_associationID");
+        $query->leftJoin("#__thm_groups_profiles AS p ON p.id = pa.profileID");
+        $query->leftJoin("#__thm_groups_profile_attributes AS allAttr ON allAttr.profileID = p.id");
+        $query->leftJoin("#__thm_groups_profile_attributes AS sname ON sname.profileID = p.id AND sname.attributeID = 2");
+        $query->leftJoin("#__thm_groups_profile_attributes AS fname ON fname.profileID = p.id AND fname.attributeID = 1");
+        $query->leftJoin("#__thm_groups_profile_attributes AS email ON email.profileID = p.id AND email.attributeID = 4");
+        $query->leftJoin("#__thm_groups_profile_attributes AS pretitle ON pretitle.profileID = p.id AND pretitle.attributeID = '5'");
+        $query->leftJoin("#__thm_groups_profile_attributes AS posttitle ON posttitle.profileID = p.id AND posttitle.attributeID = '7'");
         $query->where("allAttr.published = 1");
-        $query->where("profile.published = 1");
+        $query->where("p.published = 1");
 
         switch ($letter) {
             case 'A':
@@ -308,7 +307,7 @@ class THM_GroupsHelperGroup
         }
 
         $query->where($letterClause);
-        $query->where("roleAssoc.usergroupsID = " . $groupID);
+        $query->where("ra.groupID = " . $groupID);
         $query->order("surname");
         $dbo->setQuery($query);
 
@@ -335,12 +334,12 @@ class THM_GroupsHelperGroup
         $dbo   = JFactory::getDBO();
         $query = $dbo->getQuery(true);
 
-        $query->select("COUNT(distinct assoc.profileID) AS total");
-        $query->from("`#__thm_groups_role_associations` AS roleAssoc");
-        $query->innerJoin("`#__thm_groups_associations` AS assoc ON roleAssoc.id = assoc.role_assocID");
-        $query->innerJoin("`#__thm_groups_profiles` AS profile ON profile.id = assoc.profileID");
-        $query->where("profile.published = 1");
-        $query->where("roleAssoc.usergroupsID = $groupID");
+        $query->select("COUNT(distinct pa.profileID) AS total");
+        $query->from("`#__thm_groups_role_associations` AS ra");
+        $query->innerJoin("`#__thm_groups_profile_associations` AS pa ON ra.id = pa.role_associationID");
+        $query->innerJoin("`#__thm_groups_profiles` AS p ON p.id = pa.profileID");
+        $query->where("p.published = 1");
+        $query->where("ra.groupID = '$groupID'");
         $dbo->setQuery($query);
 
         try {

@@ -1,21 +1,21 @@
 <?php
 /**
  * @package     THM_Groups
- * @subpackate com_thm_groups
+ * @extension   com_thm_groups
  * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
- * @copyright   2016 TH Mittelhessen
+ * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
 
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profile.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/template.php';
 require_once JPATH_ROOT . '/media/com_thm_groups/views/edit.php';
 
 /**
- * THM_GroupsViewDynamic_Type_Edit class for component com_thm_groups
+ * Provides a form for the creation or editing of a profile template.
  */
 class THM_GroupsViewTemplate_Edit extends THM_GroupsViewEdit
 {
@@ -36,7 +36,7 @@ class THM_GroupsViewTemplate_Edit extends THM_GroupsViewEdit
             JErrorPage::render($exc);
         }
 
-        $allAttributes = THM_GroupsHelperProfile::getAllAttributes();
+        $allAttributes = THM_GroupsHelperProfiles::getAllAttributes();
         $id            = JFactory::getApplication()->input->getInt('id', 0);
 
         if (empty($id)) {

@@ -27,122 +27,122 @@ require_once JPATH_BASE . '/administrator/components/com_thm_groups/models/edit.
  */
 class THMGroupsModeleditAdminTest extends PHPUnit_Framework_TestCase
 {
-	protected $instance;
+    protected $instance;
 
-	/**
-	 * set up function before tests
-	 *
-	 * @return void
-	 */
-	public function setUp()
-	{
-		$this->instance = new THMGroupsModeledit;
-	}
+    /**
+     * set up function before tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        $this->instance = new THMGroupsModeledit;
+    }
 
-	/**
-	 * kill function after tests
-	 *
-	 * @return void
-	 */
-	public function tearDown()
-	{
-		$this->instance = null;
-		parent::tearDown();
-	}
+    /**
+     * kill function after tests
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        $this->instance = null;
+        parent::tearDown();
+    }
 
-	/**
-	 * tests getStructure
-	 * returns an objectlist
-	 * first object is "Titel", type -> Texts
-	 *
-	 * @return void
-	 */
-	public function testgetStructure()
-	{
-		$result   = $this->instance->getStructure();
-		$expected = "TEXT";
-		$this->assertEquals($expected, $result[0]->type);
-	}
+    /**
+     * tests getStructure
+     * returns an objectlist
+     * first object is "Titel", type -> Texts
+     *
+     * @return void
+     */
+    public function testgetStructure()
+    {
+        $result   = $this->instance->getStructure();
+        $expected = "TEXT";
+        $this->assertEquals($expected, $result[0]->type);
+    }
 
-	/**
-	 * tests getTypes
-	 * function returns objectlist
-	 * first object type should be "LINK"
-	 *
-	 * @return void
-	 */
-	public function testgetTypes()
-	{
-		$result = $this->instance->getTypes();
-		$this->assertTrue($result[0]->Type != null);
-	}
+    /**
+     * tests getTypes
+     * function returns objectlist
+     * first object type should be "LINK"
+     *
+     * @return void
+     */
+    public function testgetTypes()
+    {
+        $result = $this->instance->getTypes();
+        $this->assertTrue($result[0]->Type != null);
+    }
 
-	/**
-	 * tests updatePic
-	 * inserts an value in database
-	 * function sholud update value
-	 * but picFile is null, function return false
-	 *
-	 * @return void
-	 */
-	public function testupdatePic()
-	{
-		$db    = JFactory::getDBO();
-		$query = "INSERT INTO #__thm_groups_picture (userid, structid, value, publish, group)";
-		$query .= "VALUES ('99999','88888',' ','0','0')";
-		$db->setQuery($query);
-		$db->query();
+    /**
+     * tests updatePic
+     * inserts an value in database
+     * function sholud update value
+     * but picFile is null, function return false
+     *
+     * @return void
+     */
+    public function testupdatePic()
+    {
+        $db    = JFactory::getDBO();
+        $query = "INSERT INTO #__thm_groups_picture (userid, structid, value, publish, group)";
+        $query .= "VALUES ('99999','88888',' ','0','0')";
+        $db->setQuery($query);
+        $db->query();
 
-		$picField = null;
-		$result   = $this->instance->updatePic("99999", "88888", $picField);
-		$expected = false;
+        $picField = null;
+        $result   = $this->instance->updatePic("99999", "88888", $picField);
+        $expected = false;
 
-		$sql = "DELETE FROM #__thm_groups_picture WHERE userid = '99999'";
-		$db->setQuery($sql);
-		$db->query();
+        $sql = "DELETE FROM #__thm_groups_picture WHERE userid = '99999'";
+        $db->setQuery($sql);
+        $db->query();
 
-		$this->assertEquals($expected, $result);
-	}
+        $this->assertEquals($expected, $result);
+    }
 
-	/**
-	 * tests delPic
-	 * insert an value in database
-	 * function updates the value and returns true
-	 *
-	 * @return void
-	 */
-	public function testdelPic()
-	{
-		$array['userid']   = '99999';
-		$array['structid'] = '88888';
-		JRequest::set($array, 'post');
+    /**
+     * tests delPic
+     * insert an value in database
+     * function updates the value and returns true
+     *
+     * @return void
+     */
+    public function testdelPic()
+    {
+        $array['userid']   = '99999';
+        $array['structid'] = '88888';
+        JRequest::set($array, 'post');
 
-		$db    = JFactory::getDBO();
-		$query = "INSERT INTO #__thm_groups_picture (userid, structid, value, publish, group)";
-		$query .= "VALUES ('99999','88888',' ','0','0')";
-		$db->setQuery($query);
-		$db->query();
+        $db    = JFactory::getDBO();
+        $query = "INSERT INTO #__thm_groups_picture (userid, structid, value, publish, group)";
+        $query .= "VALUES ('99999','88888',' ','0','0')";
+        $db->setQuery($query);
+        $db->query();
 
-		$result   = $this->instance->delPic();
-		$expected = true;
+        $result   = $this->instance->delPic();
+        $expected = true;
 
-		$sql = "DELETE FROM #__thm_groups_picture WHERE userid = '99999'";
-		$db->setQuery($sql);
-		$db->query();
-		$this->assertEquals($expected, $result);
-	}
+        $sql = "DELETE FROM #__thm_groups_picture WHERE userid = '99999'";
+        $db->setQuery($sql);
+        $db->query();
+        $this->assertEquals($expected, $result);
+    }
 
-	/**
-	 * tests getForm
-	 * returns JForm object
-	 *
-	 * @return void
-	 */
-	public function testgetForm()
-	{
-		$result   = $this->instance->getForm();
-		$options  = '';
-		$expected = new JForm($options);
-		$this->assertNotSame($expected, $result);
-	}
+    /**
+     * tests getForm
+     * returns JForm object
+     *
+     * @return void
+     */
+    public function testgetForm()
+    {
+        $result   = $this->instance->getForm();
+        $options  = '';
+        $expected = new JForm($options);
+        $this->assertNotSame($expected, $result);
+    }
 }

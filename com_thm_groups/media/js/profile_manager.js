@@ -11,7 +11,7 @@ jQuery(document).ready(function () {
     // Chained select field
     jQuery("#batch-roles-id").remoteChained({
         parents: "#batch-groups-id",
-        url: "index.php?option=com_thm_groups&view=roles_ajax&format=raw"
+        url: "index.php?option=com_thm_groups&view=role_ajax&format=raw"
     });
 
     gr = new BatchData();
@@ -25,7 +25,7 @@ jQuery(document).ready(function () {
         jQuery('#error-label').empty();
 
         // get selected group id
-        var groupID = jQuery("#batch-groups-id option:selected").val();
+        var groupID = parseInt(jQuery("#batch-groups-id option:selected").val());
         // get selected group name
         var groupName = jQuery("#batch-groups-id option:selected").text();
         // get selected role ids, comma separated
@@ -52,7 +52,7 @@ jQuery(document).ready(function () {
                 // this line is here because of bug, without this check bug appears randomly
                 if (typeof roleNames[key] !== 'undefined')
                 {
-                    roles.push({id: value, name: roleNames[key].innerHTML});
+                    roles.push({id: parseInt(value), name: roleNames[key].innerHTML});
                 }
             }
         });
@@ -132,7 +132,7 @@ if (!Array.prototype.find)
  */
 function BatchData()
 {
-    // {id: 1, name: "asd", roles: [ {id: 1, roleName: "asd"} ]}
+    // {id: GroupID, name: "GroupName", roles: [ {id: RoleID, roleName: "RoleName"} ]}
     var data = [], me = this;
 
     /**
@@ -235,11 +235,16 @@ function BatchData()
      * @param   int  roleID   A role id
      */
     this.removeRoleFromGroup = function (groupID, roleID) {
-        var group = this.getGroup(groupID);
+        var seven = 7, group = this.getGroup(groupID);
 
         group.roles = group.roles.filter(function (role) {
             return role.id !== roleID;
         });
+
+        if (group.roles.length === 0)
+        {
+            this.removeGroup(groupID);
+        }
     };
 
     /**
@@ -250,21 +255,4 @@ function BatchData()
     this.toString = function () {
         return JSON.stringify(data);
     };
-}
-
-function deleteGroupAssociation(profileID, groupID)
-{
-    document.getElementsByName('task')[0].value = "profile.deleteGroupAssociation";
-    document.getElementsByName('groupID')[0].value = groupID;
-    document.getElementsByName('profileID')[0].value = profileID;
-    document.adminForm.submit();
-}
-
-function deleteRoleAssociation(profileID, groupID, roleID)
-{
-    document.getElementsByName('task')[0].value = "profile.deleteRoleAssociation";
-    document.getElementsByName('groupID')[0].value = groupID;
-    document.getElementsByName('profileID')[0].value = profileID;
-    document.getElementsByName('roleID')[0].value = roleID;
-    document.adminForm.submit();
 }
