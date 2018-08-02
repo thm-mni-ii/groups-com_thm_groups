@@ -19,7 +19,12 @@ $currentProfilesCount = 0;
 $currentRowCount      = 1;
 $totalLettersOutput   = 0;
 $totalRowsOutput      = 0;
-?>
+
+if ($this->params->get('jyaml_header_image')) : ?>
+    <div class="headerimage">
+        <img src="<?php echo $this->params->get('jyaml_header_image'); ?>" class="contentheaderimage nothumb" alt=""/>
+    </div>
+<?php endif; ?>
 <div class="thm_groups-overview">
     <?php if ($this->params->get('show_page_heading')) : ?>
         <div class="page-header">
@@ -45,7 +50,7 @@ $totalRowsOutput      = 0;
                     }
 
                     echo '<li>';
-                    echo $this->getProfileLink($profile);
+                    echo $this->getProfileLink($profile->id);
                     echo '</li>';
 
                     $currentProfilesCount++;

@@ -41,7 +41,7 @@ class THM_GroupsViewProfile_Edit extends THM_GroupsViewProfile_Edit_View
         $html .= '<span class="icon-edit"></span>' . JText::_('COM_THM_GROUPS_APPLY');
         $html .= '</button>';
         $html .= '<button type="submit" class="btn btn-primary" ';
-        $html .= 'onclick="document.adminForm.task.value = \'profile.save2profile\';return true;">';
+        $html .= 'onclick="document.adminForm.task.value = \'profile.save\';return true;">';
         $html .= '<span class="icon-save"></span>' . JText::_('COM_THM_GROUPS_SAVE');
         $html .= '</button>';
 

@@ -10,7 +10,7 @@
  */
 defined('_JEXEC') or die;
 
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/content.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/categories.php';
 
 /**
  * Class retrieves information about content for the profile's content category
@@ -21,7 +21,7 @@ class THM_GroupsModelContent_Manager extends JModelList
 
     public $canEditOne = false;
 
-    private $canEditSome = false;
+    private $canPotentiallyEdit = false;
 
     public $categoryID;
 
@@ -38,17 +38,16 @@ class THM_GroupsModelContent_Manager extends JModelList
 
         $profileID = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
 
-        $this->categoryID = THM_GroupsHelperContent::getCategoryID($profileID);
+        $this->categoryID = THM_GroupsHelperCategories::getIDByProfileID($profileID);
 
         $user       = JFactory::getUser();
-        $canEditAll = $user->authorise('core.edit', 'com_content.category.' . $this->categoryID);
+        $this->canEditAll = $user->authorise('core.edit', 'com_content.category.' . $this->categoryID);
 
-        if ($canEditAll) {
-            $this->canEditAll  = true;
-            $this->canEditSome = true;
-            $this->canEditOne  = true;
+        if ($this->canEditAll) {
+            $this->canPotentiallyEdit = true;
+            $this->canEditOne         = true;
         } else {
-            $this->canEditSome = $user->authorise('core.edit.own', 'com_content.category.' . $this->categoryID);
+            $this->canPotentiallyEdit = $user->authorise('core.edit.own', 'com_content.category.' . $this->categoryID);
         }
 
         parent::__construct($config);
@@ -64,6 +63,7 @@ class THM_GroupsModelContent_Manager extends JModelList
         $items = parent::getItems();
 
         $user       = JFactory::getUser();
+        $canEditAll = true;
         $canEditOwn = $user->authorise('core.edit.own', 'com_content.category.' . $this->categoryID);
 
         foreach ($items as $item) {
@@ -71,12 +71,8 @@ class THM_GroupsModelContent_Manager extends JModelList
                 $item->canEdit = true;
             } else {
                 $item->canEdit = ($canEditOwn and $item->created_by == $user->id);
-
-                if ($this->canEditAll and !$item->canEdit) {
-                    $this->canEditAll = false;
-                } elseif ($item->canEdit) {
-                    $this->canEditOne = true;
-                }
+                $canEditAll = ($canEditAll and $item->canEdit);
+                $this->canEditOne = ($this->canEditOne or $item->canEdit);
             }
         }
 
@@ -104,7 +100,7 @@ class THM_GroupsModelContent_Manager extends JModelList
             ->where("cCats.id = '$this->categoryID'");
 
         // User cannot edit anything => only show published
-        if (!$this->canEditSome) {
+        if (!$this->canPotentiallyEdit) {
             $date       = JFactory::getDate();
             $quotedDate = $dbo->quote($date->toSql());
 

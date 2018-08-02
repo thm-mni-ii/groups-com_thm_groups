@@ -46,12 +46,13 @@ class THM_GroupsViewOverview extends JViewLegacy
      *
      * @return  string  the HTML output for the profile link
      */
-    public function getProfileLink($profile)
+    public function getProfileLink($profileID)
     {
-        $url = $this->profileLink . "&profileID=$profile->id&groupID=$this->groupID&name=" . trim($profile->surname);
+        $alias = THM_GroupsHelperProfiles::getAlias($profileID);
+        $url = $this->profileLink . "&profileID=$profileID&groupID=$this->groupID&name=$alias";
 
         $showTitles    = $this->params->get('showTitles', 1);
-        $displayedText = THM_GroupsHelperProfiles::getLNFName($profile->id, $showTitles, true);
+        $displayedText = THM_GroupsHelperProfiles::getLNFName($profileID, $showTitles, true);
 
         return JHtml::link(JRoute::_($url), $displayedText);
     }

@@ -47,7 +47,7 @@ class THM_GroupsViewProfile extends JViewLegacy
         $this->profileID  = $this->model->profileID;
         $this->templateID = $this->model->templateID;
 
-        $this->canEdit = THM_GroupsHelperComponent::canEditProfile($this->profileID);
+        $this->canEdit = THM_GroupsHelperProfiles::canEdit($this->profileID);
 
         $this->templateName = JFilterOutput::stringURLSafe(THM_GroupsHelperTemplate::getName($this->templateID));
 
@@ -131,7 +131,9 @@ class THM_GroupsViewProfile extends JViewLegacy
      */
     private function modifyDocument()
     {
-        JFactory::getDocument()->addStyleSheet('media/com_thm_groups/css/profile_item.css');
+        $doc = JFactory::getDocument();
+        $doc->addStyleSheet('media/com_thm_groups/css/profile_item.css');
         JHtml::_('bootstrap.framework');
+        $doc->setTitle(THM_GroupsHelperProfiles::getDisplayName($this->profileID, true));
     }
 }

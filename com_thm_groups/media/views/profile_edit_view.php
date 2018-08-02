@@ -13,7 +13,7 @@
 
 defined('_JEXEC') or die;
 
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/component.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
 
 
 /**
@@ -44,7 +44,7 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
         $standardID      = $input->getInt('id', 0);
         $this->profileID = $input->getInt('profileID', $standardID);
 
-        $canEdit = THM_GroupsHelperComponent::canEditProfile($this->profileID);
+        $canEdit = THM_GroupsHelperProfiles::canEdit($this->profileID);
 
         if (!$canEdit) {
             $exc = new Exception(JText::_('JLIB_RULES_NOT_ALLOWED'), 401);

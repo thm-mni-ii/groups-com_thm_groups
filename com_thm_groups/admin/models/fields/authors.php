@@ -38,7 +38,7 @@ class JFormFieldAuthors extends JFormFieldList
         $dbo      = JFactory::getDbo();
         $catQuery = $dbo->getQuery(true);
 
-        $rootCategory = THM_GroupsHelperContent::getRootCategory();
+        $rootCategory = THM_GroupsHelperCategories::getRoot();
         $catQuery
             ->select('users.id, users.name, cat.id AS catid')
             ->from('#__users AS users')
@@ -89,7 +89,7 @@ class JFormFieldAuthors extends JFormFieldList
     {
         $options = [];
 
-        $rootCategory = THM_GroupsHelperContent::getRootCategory();
+        $rootCategory = THM_GroupsHelperCategories::getRoot();
 
         if (empty($rootCategory)) {
             return parent::getOptions();

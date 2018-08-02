@@ -12,6 +12,7 @@ define('PUBLISH', 1);
 define('UNPUBLISH', 0);
 define('ARCHIVE', 2);
 define('TRASH', -2);
+require_once "categories.php";
 
 /**
  * Class providing helper functions for batch select options
@@ -51,9 +52,7 @@ class THM_GroupsHelperContent
     private static function canReorder($contentIDs)
     {
         foreach ($contentIDs as $contentID) {
-            $canReorder = THM_GroupsHelperContent::canEditState($contentID);
-
-            if (empty($canReorder)) {
+            if (empty(THM_GroupsHelperContent::canEditState($contentID))) {
                 return false;
             }
         }
@@ -62,19 +61,20 @@ class THM_GroupsHelperContent
     }
 
     /**
-     * Changes created_user_id (author) attribute for a given category
+     * Associates content with a given profile
      *
-     * @param   int $profileID user ID
-     * @param   int $catID     category ID
+     * @param   int $contentID the id of the content
+     * @param   int $profileID the id of the profile to be associated with the content
      *
-     * @return bool true on success, otherwise false
+     * @return  bool  true if the content was associated, otherwise false
+     * @throws Exception
      */
-    private static function changeCategoryCreator($profileID, $catID)
+    public static function associate($contentID, $profileID)
     {
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
 
-        $query->update('#__categories')->set("created_user_id = '$profileID'")->where("id = $catID");
+        $query->insert('#__thm_groups_content')->columns('id, profileID')->values("'$contentID', '$profileID'");
         $dbo->setQuery($query);
 
         try {
@@ -85,163 +85,66 @@ class THM_GroupsHelperContent
             return false;
         }
 
-        return empty($success) ? false : true;
+        return (bool) $success;
     }
 
     /**
-     * Checks if an article were previously featured or published for modules
+     * Retrieves the alias for the given content id
      *
      * @param   int $contentID the id of the content
      *
-     * @return  bool  true if the content already exists, otherwise false
+     * @return  string the alias of the content
+     * @throws Exception
      */
-    public static function contentExists($contentID)
+    public static function getAlias($contentID)
     {
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
 
-        $query->select('*')->from('#__thm_groups_content')->where("contentID = '$contentID'");
+        $query->select('cc.alias')
+            ->from('#__content AS cc')
+            ->innerJoin('#__thm_groups_content AS gc ON gc.id = cc.id')
+            ->where("cc.id = '$contentID'");
         $dbo->setQuery($query);
 
         try {
-            $result = $dbo->loadObject();
+            $alias = $dbo->loadResult();
         } catch (Exception $exception) {
             JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-            return false;
+            return '';
         }
 
-        return empty($result) ? false : true;
+        return empty($alias) ? '' : $alias;
     }
 
     /**
-     * Creates a content category for the user's personal content
+     * Retrieves the id for the given content by its associated alias
      *
-     * @param   string $title     Category Title
-     * @param   string $alias     Category Alias
-     * @param   int    $parentID  Parent ID of this Category entry
-     * @param   int    $profileID Id of user
+     * @param   string $alias the alias associated with the content
      *
-     * @return  mixed int the id of the created category on success, otherwise false
+     * @return  int the id of the content
      */
-    private static function createCategory($title, $alias, $parentID, $profileID)
+    public static function getIDByAlias($alias)
     {
-        $dbo = JFactory::getDBO();
-
-        // Get the path of the root category
+        $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
-        $query->select("path")->from("#__categories")->where("id = '$parentID'");
+
+        $query->select('cc.id')
+            ->from('#__content AS cc')
+            ->innerJoin('#__thm_groups_content AS gc ON gc.id = cc.id')
+            ->where("alias = '$alias'");
         $dbo->setQuery($query);
 
         try {
-            $path = $dbo->loadResult();
+            $id = $dbo->loadResult();
         } catch (Exception $exception) {
             JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-            return false;
+            return '';
         }
 
-        $properties                    = [];
-        $properties['title']           = $title;
-        $properties['alias']           = $alias;
-        $properties['path']            = "$path/$alias";
-        $properties['extension']       = 'com_content';
-        $properties['published']       = 1;
-        $properties['access']          = 1;
-        $properties['params']          = '{"target":"","image":""}';
-        $properties['metadata']        = '{"page_title":"","author":"","robots":""}';
-        $properties['created_user_id'] = $profileID;
-        $properties['language']        = '*';
-
-        $table = JTable::getInstance('Category', 'JTable', []);
-
-        // Append category to parent as last child
-        $table->setLocation($parentID, 'last-child');
-
-        // Bind properties, check and save the category
-        $success = $table->save($properties);
-
-        return empty($success) ? false : $table->id;
-    }
-
-    /**
-     * Creates a content category for the profile
-     *
-     * @param   int $profileID the id of the user for whom the category is to be created
-     *
-     * @return void
-     */
-    public static function createProfileCategory($profileID)
-    {
-        $user = JFactory::getUser($profileID);
-
-        // Remove overhead from name, although honestly they should not be making personal content from non-personal accounts
-        $overhead   = ["(", ")", "Admin", "Webmaster"];
-        $namePieces = explode(" ", str_replace($overhead, '', $user->name));
-        $surname    = array_pop($namePieces);
-
-        // Surname, Forename(s);
-        $title = trim($surname) . ", " . trim(implode(" ", $namePieces));
-
-        $rawAlias = trim($surname) . "-" . trim(implode("-", $namePieces)) . "-" . $profileID;
-        $alias    = JFilterOutput::stringURLSafe($rawAlias);
-
-        $parentID = self::getRootCategory();
-
-        if ($parentID > 0) {
-            // Create category and get its ID
-            $categoryID = self::createCategory($title, $alias, $parentID, $profileID);
-
-            // Change created_user_id attribute in db, because of bug
-            self::changeCategoryCreator($profileID, $categoryID);
-
-            // Map category to profile
-            self::mapUserCategory($profileID, $categoryID);
-        }
-    }
-
-    /**
-     * Gets the profile's category id
-     *
-     * @param   int $profileID the user id
-     *
-     * @return  mixed  int on successful query, null if the query failed, 0 on exception or if user is empty
-     */
-    public static function getCategoryID($profileID)
-    {
-        if (empty($profileID)) {
-            return 0;
-        }
-
-        $dbo   = JFactory::getDBO();
-        $query = $dbo->getQuery(true);
-
-        $query->select('id');
-        $query->from('#__thm_groups_categories');
-        $query->where("profileID = '$profileID'");
-        $dbo->setQuery($query);
-
-        try {
-            $categoryID = $dbo->loadResult();
-        } catch (Exception $exc) {
-            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
-
-            return 0;
-        }
-
-        return (empty($categoryID)) ? 0 : $categoryID;
-    }
-
-    /**
-     * Returns the root category for profile content
-     *
-     * @return mixed
-     */
-    public static function getRootCategory()
-    {
-        $params = JComponentHelper::getParams('com_thm_groups');
-
-        return $params->get('rootCategory');
+        return empty($id) ? 0 : $id;
     }
 
     /**
@@ -276,47 +179,35 @@ class THM_GroupsHelperContent
     }
 
     /**
-     * Inserts a new data row into the content mapping table.
+     * Checks if the content is already associated with THM_Groups
      *
-     * @param   int $profileID  the profile ID
-     * @param   int $categoryID the category ID to be associated with the profile
+     * @param   int $contentID the id of the content
+     * @param   int $profileID the id of the profile associated with the content
      *
-     * @return  void
+     * @return  bool  true if the content is associated with groups, otherwise false
+     * @throws Exception
      */
-    private static function mapUserCategory($profileID, $categoryID)
+    public static function isAssociated($contentID, $profileID = null)
     {
-        $dbo   = JFactory::getDBO();
+        $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
 
-        $query->insert('#__thm_groups_categories')->set("profileID = '$profileID'")->set("categoryID = '$categoryID'");
+        $query->select('id')->from('#__thm_groups_content')->where("id = '$contentID'");
 
-        $dbo->setQuery($query);
-        $dbo->execute();
-    }
-
-    /**
-     * Determines whether a category entry exists for a user or group.
-     *
-     * @param   int $profileID the user id to check against groups categories
-     *
-     * @return  boolean  true, if a category exists, otherwise false
-     */
-    public static function profileCategoriesExist($profileID)
-    {
-        $dbo   = JFactory::getDBO();
-        $query = $dbo->getQuery(true);
-        $query->select('COUNT(ID)')->from('#__thm_groups_categories')->where("profileID = '$profileID'");
+        if (!empty($profileID)) {
+            $query->where("profileID = '$profileID'");
+        }
         $dbo->setQuery($query);
 
         try {
-            $result = $dbo->loadResult();
+            $result = $dbo->loadObject();
         } catch (Exception $exception) {
             JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
             return false;
         }
 
-        return ($result > 0);
+        return empty($result) ? false : true;
     }
 
     /**
@@ -366,21 +257,20 @@ class THM_GroupsHelperContent
     }
 
     /**
-     * Saves the manually set order of records.
+     * Saves drag & drop ordering changes.
      *
      * @param   array $contentIDs an array of primary content ids
      * @param   array $order      the order for the content items
      *
-     * @return  mixed
+     * @return  bool true on success, otherwise false
      *
      */
     public static function saveorder($contentIDs = null, $order = null)
     {
-        if (empty($contentIDs)) {
+        $contentIDs = THM_GroupsHelperComponent::cleanIntCollection($contentIDs);
+        if (empty($contentIDs) or empty(self::canReorder($contentIDs))) {
             return false;
         }
-
-        $canReorder = self::canReorder($contentIDs);
 
         JTable::addIncludePath(JPATH_ROOT . '/libraries/legacy/table');
         $table      = JTable::getInstance('Content', 'JTable');
@@ -388,7 +278,7 @@ class THM_GroupsHelperContent
 
         // Update ordering values
         foreach ($contentIDs as $index => $contentID) {
-            $table->load((int)$contentID);
+            $table->load($contentID);
 
             if ($table->ordering != $order[$index]) {
                 $table->ordering = $order[$index];
@@ -399,7 +289,7 @@ class THM_GroupsHelperContent
 
                 // Remember to reorder within position and client_id
                 $condition   = [];
-                $condition[] = 'catid = ' . (int)$table->catid;
+                $condition[] = 'catid = ' . $table->catid;
 
                 $found = false;
 
@@ -430,9 +320,48 @@ class THM_GroupsHelperContent
     }
 
     /**
-     * Toggles the binary attribute 'featured'
+     * Checks the THM Groups featured value for the chosen content
      *
-     * @return  mixed  integer on success, otherwise false
+     * @param   int $contentID the content id
+     * @param   int $value     the THM Groups featured flag for the given article
+     *
+     * @return  bool true if the value was successfully changed, otherwise false
+     * @throws Exception
+     */
+    private static function setFeatured($contentID, $value)
+    {
+        $dbo       = JFactory::getDbo();
+        $query     = $dbo->getQuery(true);
+
+        $contentExists = self::isAssociated($contentID);
+
+        if ($contentExists) {
+            $query->update('#__thm_groups_content')->set("featured = '$value'")->where("id = '$contentID'");
+        } else {
+            $profileID = JFactory::getUser()->id;
+            $query->insert('#__thm_groups_content')
+                ->columns(['profileID', 'contentID', 'featured'])
+                ->values("'$profileID','$contentID','$value'");
+        }
+
+        $dbo->setQuery($query);
+
+        try {
+            $success = $dbo->execute();
+        } catch (Exception $exc) {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+
+            return false;
+        }
+
+        return empty($success) ? false : true;
+    }
+
+    /**
+     * Toggles the THM Groups 'featured' value for associated content.
+     *
+     * @return  bool  true on success, otherwise false
+     * @throws Exception
      */
     public static function toggle()
     {
@@ -454,16 +383,6 @@ class THM_GroupsHelperContent
             $value = !$value;
         }
 
-        $attribute        = $input->getString('attribute', '');
-        $invalidAttribute = (empty($attribute) or $attribute != 'featured');
-
-        // Should only occur by url manipulation, general error
-        if ($invalidAttribute) {
-            $app->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
-
-            return false;
-        }
-
         foreach ($selectedContent as $contentID) {
             $canEditState = JFactory::getUser()->authorise('core.edit.state', "com_content.article.$contentID");
 
@@ -473,7 +392,7 @@ class THM_GroupsHelperContent
                 return false;
             }
 
-            $success = self::updateState($contentID, $value);
+            $success = self::setFeatured($contentID, $value);
 
             if (!$success) {
                 return false;
@@ -481,44 +400,5 @@ class THM_GroupsHelperContent
         }
 
         return true;
-    }
-
-    /**
-     * Checks if a THM Groups article exists and executes a corresponding query
-     *
-     * @param   int $contentID ID of the THM Groups article
-     * @param   int $value     Value to save, 0 or 1
-     *
-     * @return  mixed
-     */
-    private static function updateState($contentID, $value)
-    {
-        $dbo       = JFactory::getDbo();
-        $query     = $dbo->getQuery(true);
-        $tableName = '#__thm_groups_content';
-
-        $contentExists = THM_GroupsHelperContent::contentExists($contentID);
-
-        if ($contentExists) {
-            $query->update($tableName)->set("featured = '$value'")->where("contentID = '$contentID'");
-        } // TODO: There is no synchronization plugin or event. This block is necessary to synchronize group attributes with content
-        else {
-            $profileID = JFactory::getUser()->id;
-            $query->insert('#__thm_groups_content')
-                ->columns(['profileID', 'contentID', 'featured'])
-                ->values("'$profileID','$contentID','$value'");
-        }
-
-        $dbo->setQuery($query);
-
-        try {
-            $success = $dbo->execute();
-        } catch (Exception $exc) {
-            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
-
-            return false;
-        }
-
-        return empty($success) ? false : true;
     }
 }

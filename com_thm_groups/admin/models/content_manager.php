@@ -32,7 +32,7 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
     {
         $query = $this->_db->getQuery(true);
 
-        $rootCategory = THM_GroupsHelperContent::getRootCategory();
+        $rootCategory = THM_GroupsHelperCategories::getRoot();
 
         if (empty($rootCategory)) {
             return $query;
@@ -83,7 +83,7 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
      */
     public function getItems()
     {
-        $rootCategory = THM_GroupsHelperContent::getRootCategory();
+        $rootCategory = THM_GroupsHelperCategories::getRoot();
 
         $return = [];
 

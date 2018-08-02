@@ -9,6 +9,8 @@
  */
 defined('_JEXEC') or die;
 jimport('joomla.application.component.controller');
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/component.php';
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
 
 /**
  * Site controller class for component com_thm_groups
@@ -162,7 +164,7 @@ class THM_GroupsController extends JControllerLegacy
         $this->referrer  = $data['referrer'];
         $this->surname   = $data['name'];
 
-        if (!THM_GroupsHelperComponent::canEditProfile($this->profileID)) {
+        if (!THM_GroupsHelperProfiles::canEdit($this->profileID)) {
             JFactory::getApplication()->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
             $this->redirectNoAccess();
         }
@@ -189,37 +191,11 @@ class THM_GroupsController extends JControllerLegacy
     }
 
     /**
-     * Saves changes to the profile and displays to the profile on success
-     *
-     * @return  void
-     */
-    public function save2List()
-    {
-        $this->preProcess();
-
-        JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_thm_groups/models');
-        $model   = JModelLegacy::getInstance('profile', 'THM_GroupsModel');
-        $success = $model->save();
-
-        $app = JFactory::getApplication();
-        $URL = "{$this->baseURL}&Itemid={$this->menuID}";
-
-        if ($success) {
-            $app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_SUCCESS'));
-        } else {
-            $app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'error');
-            $URL .= "&groupID={$this->groupID}&name={$this->surname}&profileID={$this->profileID}&view=profile_edit";
-        }
-
-        $app->redirect(JRoute::_($URL));
-    }
-
-    /**
      * Saves changes to the profile and redirects to the profile on success
      *
      * @return  void
      */
-    public function save2Profile()
+    public function save()
     {
         $this->preProcess();
 
@@ -228,18 +204,18 @@ class THM_GroupsController extends JControllerLegacy
         $success = $model->save();
 
         $app = JFactory::getApplication();
-        $URL = "{$this->baseURL}&Itemid={$this->menuID}";
-        $URL .= "&groupID={$this->groupID}&name={$this->surname}&profileID={$this->profileID}";
 
         if ($success) {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_SUCCESS'));
-            $URL .= '&view=profile';
+            $URL = JUri::base() . THM_GroupsHelperProfiles::getAlias($this->profileID);
         } else {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'error');
-            $URL .= '&view=profile_edit';
+            $URL = "{$this->baseURL}&Itemid={$this->menuID}&groupID={$this->groupID}";
+            $URL .= "&name={$this->surname}&profileID={$this->profileID}&view=profile_edit";
+            $URL = JRoute::_($URL);
         }
 
-        $app->redirect(JRoute::_($URL));
+        $app->redirect($URL);
     }
 
     /**

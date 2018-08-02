@@ -247,7 +247,7 @@ class Com_THM_GroupsInstallerScript
                     }
                 }
 
-                // Assoicate groups and roles to this profile.
+                // Associate groups and roles to this profile.
                 $this->associateProfileGroups($user);
             }
         }

@@ -16,6 +16,7 @@ define('UNPUBLISHED', 0);
 define('ARCHIVED', 2);
 define('TRASHED', -2);
 
+require_once JPATH_ROOT . '/media/com_thm_groups/helpers/content.php';
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
 
 /**
@@ -99,9 +100,12 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
     {
         if ($this->canCreate) {
             $menuID    = JFactory::getApplication()->input->getInt('Itemid', 0);
-            $returnURL = base64_encode("index.php?option=com_thm_groups&view=content_manager&Itemid=$menuID");
+            $currentURL = Joomla\CMS\Uri\Uri::current();
+            $returnURL = strpos($currentURL, '?') === false ?
+                "$currentURL?Itemid=$menuID" : "$currentURL&Itemid=$menuID";
+            $return = base64_encode($returnURL);
             $addURL    = JRoute::_('index.php?option=com_content&view=form&layout=edit&catid='
-                . $this->categoryID . '&return=' . $returnURL
+                . $this->categoryID . '&return=' . $return
             );
 
             $attribs = ['title' => JText::_('COM_THM_GROUPS_NEW_ARTICLE'), 'class' => 'btn'];
@@ -112,27 +116,6 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
         } else {
             return '';
         }
-    }
-
-    /**
-     * Creates the HTML for a link to the user profile
-     *
-     * @return  string  the HTML string for the profile button
-     */
-    public function getProfileButton()
-    {
-        $profileID   = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
-        $groupID     = THM_GroupsHelperProfiles::getDefaultGroup($profileID);
-        $surname     = THM_GroupsHelperProfiles::getAttributeValue($profileID, 2);
-        $buttonURL   = "index.php?view=profile&profileID=$profileID&name=$surname";
-        $buttonURL   .= empty($groupID) ? '' : "&groupID=$groupID";
-        $buttonRoute = JRoute::_($buttonURL);
-
-        $buttonText = '<span class="icon-user"></span>' . JText::_('COM_THM_GROUPS_MY_PROFILE');
-
-        $attribs = ['class' => 'btn'];
-
-        return JHTML::_('link', $buttonRoute, $buttonText, $attribs);
     }
 
     /**
@@ -149,14 +132,16 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
             $sortIcon  = '<span class="sortable-handler" style="cursor: move;"><i class="icon-menu"></i></span>';
             $sortInput = '<input type="text" style="display:none" name="order[]" size="5" ';
             $sortInput .= 'value="' . (string)$item->ordering . '" class="width-20 text-area-order">';
-            $sort      = '<td class="order nowrap center" style="width: 40px;">' . $sortIcon . $sortInput . '</td>';
+            $sort      = '<td class="order nowrap center btn-column" style="width: 40px;">' . $sortIcon . $sortInput;
+            $sort      .= '</td>';
         } else {
             $sort = '';
         }
 
-        if ($item->canEdit) {
+        $title = '<td class="title-column">' . $this->getTitle($key, $item) . '</td>';
 
-            $published = '<td>';
+        if ($item->canEdit) {
+            $published = '<td class="publish-column">';
             $published .= THM_GroupsHelperContent::getStatusDropdown($key, $item);
             $published .= JHtml::_('grid.id', $key, $item->id);
             $published .= '</td>';
@@ -165,10 +150,21 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
             $listed .= $this->getToggle($item->id, $item->featured, 'featured');
             $listed .= '</td>';
         } elseif ($this->canEditOne) {
-            $published = '<td>';
-            $published .= JHtml::_('jgrid.published', $item->state, $key, "", false, 'cb', $item->publish_up,
-                $item->publish_down);
-            $published .= JHtml::_('grid.id', $key, $item->id);
+            $published = '<td class="publish-column">';
+            switch ($item->state) {
+                case 1:
+                    $published .= '<span class="icon-publish"></span>';
+                    break;
+                case 2:
+                    $published .= '<span class="icon-archive"></span>';
+                    break;
+                case 0:
+                    $published .= '<span class="icon-unpublish"></span>';
+                    break;
+                case -2:
+                    $published .= '<span class="icon-trash"></span>';
+                    break;
+            }
             $published .= '</td>';
 
             $listed = '<td class="btn-column">';
@@ -178,8 +174,6 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
             $published = '';
             $listed    = '';
         }
-
-        $title = '<td class="title-column">' . $this->getTitle($key, $item) . '</td>';
 
         return $sort . $title . $published . $listed;
     }
@@ -265,7 +259,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
         $viewURL     = 'index.php?option=com_thm_groups&view=content';
         $viewURL     .= "&id=$item->id&alias=$item->alias&profileID=$profileID&name=$surname";
         $viewRoute   = JRoute::_($viewURL, false);
-        $viewAttribs = ['title' => JText::_('COM_THM_GROUPS_VIEW'), 'class' => 'jgrid', 'target' => '_blank'];
+        $viewAttribs = ['title' => JText::_('COM_THM_GROUPS_VIEW'), 'class' => 'view-link', 'target' => '_blank'];
 
         if ($item->canEdit) {
             $lock = '';

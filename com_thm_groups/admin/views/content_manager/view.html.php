@@ -46,7 +46,7 @@ class THM_GroupsViewContent_Manager extends THM_GroupsViewList
             JText::_('COM_THM_GROUPS_CONTENT_MANAGER_VIEW_TITLE'), 'content_manager'
         );
 
-        $rootCategory = THM_GroupsHelperContent::getRootCategory();
+        $rootCategory = THM_GroupsHelperCategories::getRoot();
 
         if (!empty($rootCategory)) {
             JToolBarHelper::publishList('content.feature', 'COM_THM_GROUPS_FEATURE');

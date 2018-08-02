@@ -18,9 +18,88 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/component.php';
 class THM_GroupsHelperProfiles
 {
     /**
+     * Method to check if the current user can edit the profile
+     *
+     * @param   int $profileID the id of the profile user
+     *
+     * @return  boolean  true if the current user is authorized to edit the profile, otherwise false
+     */
+    public static function canEdit($profileID)
+    {
+        $user = JFactory::getUser();
+
+        if (empty($user->id)) {
+            return false;
+        }
+
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if ($isAdmin or $isComponentManager) {
+            return true;
+        }
+
+        $params  = JComponentHelper::getParams('com_thm_groups');
+        if (!$params->get('editownprofile', 0) or empty($profileID) or $user->id != $profileID) {
+            return false;
+        }
+
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query->select('canEdit')->from('#__thm_groups_profiles')->where("id = '$profileID'");
+        $dbo->setQuery($query);
+
+        try {
+            $canEdit = $dbo->loadResult();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            return false;
+        }
+
+        return empty($canEdit) ? false : true;
+    }
+
+    /**
+     * Gets the alias for the given profile id
+     *
+     * @param int $profileID the id of the given profile
+     *
+     * @return string an url friendly string with the profile's names
+     *
+     * @throws Exception
+     */
+    public static function getAlias($profileID)
+    {
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+
+        $query->select('alias')->from('#__thm_groups_profiles')->where("id = '$profileID'");
+        $dbo->setQuery($query);
+
+        try {
+            $alias = $dbo->loadResult();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+            return '';
+        }
+
+        if (empty($alias)) {
+            if (self::setAlias($profileID)) {
+                return self::getAlias($profileID);
+            }
+
+            return '';
+        }
+
+        return $alias;
+    }
+
+    /**
      * Retrieves all available attributes with information about their abstract attributes and field types.
      *
      * @return array the attribute information, empty if nothing could be found or an error occurred
+     * @throws Exception
      */
     public static function getAllAttributes()
     {
@@ -107,6 +186,7 @@ class THM_GroupsHelperProfiles
      * @param   int $attributeID the id of the attribute
      *
      * @return  string  the attribute value
+     * @throws Exception
      */
     public static function getAttributeValue($profileID, $attributeID)
     {
@@ -136,6 +216,7 @@ class THM_GroupsHelperProfiles
      * @param   int $profileID the user's profile information
      *
      * @return  string  the profile name
+     * @throws Exception
      */
     public static function getDefaultGroup($profileID)
     {
@@ -174,6 +255,7 @@ class THM_GroupsHelperProfiles
      * @param   bool $withSpan  whether the attributes should be contained in individual spans for style assignments
      *
      * @return  string  the profile name
+     * @throws Exception
      */
     public static function getDisplayName($profileID, $withTitle = false, $withSpan = false)
     {
@@ -230,6 +312,7 @@ class THM_GroupsHelperProfiles
      * @param   bool $withSpan  whether the attributes should be contained in individual spans for style assignments
      *
      * @return  string  the profile name
+     * @throws Exception
      */
     public static function getLNFName($profileID, $withTitle = false, $withSpan = false)
     {
@@ -311,6 +394,7 @@ class THM_GroupsHelperProfiles
      * @param   bool $onlyFilled    whether or not attributes need to have a non-empty value
      *
      * @return  array  array of arrays with profile information
+     * @throws Exception
      */
     public static function getProfile($profileID, $templateID = null, $onlyPublished = false, $onlyFilled = false)
     {
@@ -375,11 +459,210 @@ class THM_GroupsHelperProfiles
     }
 
     /**
+     * Retrieves the id of the profile associated with the given alias.
+     *
+     * @param string $alias the given profile alias
+     *
+     * @return int the profile id on success, otherwise 0
+     *
+     * @throws Exception
+     */
+    public static function getProfileIDByAlias($alias)
+    {
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query->select('DISTINCT id')
+            ->from('#__thm_groups_profiles')
+            ->where('alias = ' . $dbo->quote($alias));
+
+        $dbo->setQuery($query);
+
+        try {
+            $profileID = $dbo->loadResult();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+            return 0;
+        }
+
+        return empty($profileID) ? self::getProfileIDByNames($alias) : $profileID;
+    }
+
+    /**
+     * Gets the most plausible profile id for a given set of 'names'.
+     *
+     * @param string $names the names used to identify the profile
+     *
+     * @return int the profile id if found, otherwise 0
+     *
+     * @throws Exception
+     */
+    public static function getProfileIDByNames($originalNames)
+    {
+        $dbo        = JFactory::getDbo();
+        $aliasQuery = $dbo->getQuery(true);
+
+        // Serves as a basis for existing and non-existing aliases
+        $cleanedNames = THM_GroupsHelperComponent::filterText($originalNames, 'alphanum');
+
+        // Search for an existing alias by inclusion of all the terms given
+        $tlNames   = THM_GroupsHelperComponent::transliterate($cleanedNames);
+        $tlNames   = explode(' ', $tlNames);
+        $nameCount = count($tlNames);
+
+        $aliasQuery->select('DISTINCT id')->from('#__thm_groups_profiles');
+        if ($nameCount === 1) {
+
+            $aliasQuery->where("alias LIKE '%{$tlNames[0]}'");
+        } // Forename and surname or potentially two surnames
+        elseif ($nameCount === 2) {
+            $wherray   = [];
+            $wherray[] = "(alias LIKE '%$tlNames[0]%' AND alias LIKE '%$tlNames[1]')";
+            $wherray[] = "(alias LIKE '%$tlNames[1]%' AND alias LIKE '%$tlNames[0]')";
+            $wherray[] = "(alias LIKE '%$tlNames[0]-$tlNames[1]')";
+            $aliasQuery->where('(' . implode(' OR ', $wherray) . ')');
+        } else {
+            foreach ($tlNames as $tlName) {
+                $aliasQuery->where("alias LIKE '%$tlName%'");
+            }
+        }
+
+        $dbo->setQuery($aliasQuery);
+
+        try {
+            $profileID = $dbo->loadResult();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+            return 0;
+        }
+
+        if (!empty($profileID)) {
+            return $profileID;
+        }
+
+        // No profile with existing alias was found => search name values
+
+        $attributesQuery = $dbo->getQuery(true);
+
+        // Running both now avoids running them for individual words later or checking if a transliteration is necessary.
+        $scNames = THM_GroupsHelperComponent::resolveTransliteration($cleanedNames);
+        $scNames = explode(' ', $scNames);
+        $tlNames = THM_GroupsHelperComponent::transliterate($cleanedNames);
+        $tlNames = explode(' ', $tlNames);
+
+        $attributesQuery->select('DISTINCT sn.profileID')
+            ->from('#__thm_groups_profile_attributes AS sn')
+            ->innerJoin('#__thm_groups_profile_attributes AS fn ON sn.profileID = fn.profileID')
+            ->where("sn.attributeID = '2'")
+            ->where("fn.attributeID = '1'");
+
+        // Only surname
+        if ($nameCount === 1) {
+            $attributesQuery->where("sn.value LIKE '{$scNames[0]}' OR sn.value LIKE '{$tlNames[0]}'");
+        } // Forename and surname or potentially two surnames
+        elseif ($nameCount === 2) {
+            $wherray      = [];
+            $firstCaseSN  = "(sn.value LIKE '$tlNames[0]' OR sn.value LIKE '$scNames[0]')";
+            $firstCaseFN  = "(fn.value LIKE '%$tlNames[1]%' OR fn.value LIKE '%$scNames[1]%')";
+            $wherray[]    = "($firstCaseSN AND $firstCaseFN)";
+            $secondCaseSN = "(sn.value LIKE '$tlNames[1]' OR sn.value LIKE '$scNames[1]')";
+            $secondCaseFN = "(fn.value LIKE '%$tlNames[0]%' OR fn.value LIKE '%$scNames[0]%')";
+            $wherray[]    = "($secondCaseSN AND $secondCaseFN)";
+            $wherray[]    = "(sn.value LIKE '$tlNames[0]%' AND sn.value LIKE '%$tlNames[1]')";
+            $wherray[]    = "(sn.value LIKE '$scNames[0]%' AND sn.value LIKE '%$scNames[1]')";
+            $wherray[]    = "(sn.value LIKE '$tlNames[0]%' AND sn.value LIKE '%$scNames[1]')";
+            $wherray[]    = "(sn.value LIKE '$scNames[0]%' AND sn.value LIKE '%$tlNames[1]')";
+            $attributesQuery->where('(' . implode(' OR ', $wherray) . ')');
+        } // One or two surnames on the beginning or end and the rest forenames.
+        else {
+            $wherray = [];
+
+            // one + rest
+            $clause       = "(";
+            $tempTLNames = $tlNames;
+            $rawSurname   = array_shift($tempTLNames);
+            $tempSCNames  = $scNames;
+            $scSurname    = array_shift($tempSCNames);
+            $clause       .= "(sn.value LIKE '$rawSurname' OR sn.value LIKE '$scSurname')";
+            foreach ($tempTLNames as $key => $tempRawName) {
+                $clause .= "AND (fn.value LIKE '%$tempRawName%' OR fn.value LIKE '%{$tempSCNames[$key]}%')";
+            }
+            $clause    .= ")";
+            $wherray[] = $clause;
+
+            // rest + one
+            $tempTLNames = $tlNames;
+            $rawSurname   = array_pop($tempTLNames);
+            $clause       = "(";
+            $tempSCNames  = $scNames;
+            $scSurname    = array_pop($tempSCNames);
+            $clause       .= "(sn.value LIKE '$rawSurname' OR sn.value LIKE '$scSurname')";
+            foreach ($tempTLNames as $key => $tempRawName) {
+                $clause .= "AND (fn.value LIKE '%$tempRawName%' OR fn.value LIKE '%{$tempSCNames[$key]}%')";
+            }
+            $clause    .= ")";
+            $wherray[] = $clause;
+
+            // two + rest
+            $tempTLNames = $tlNames;
+            $rawSurname1  = array_shift($tempTLNames);
+            $rawSurname2  = array_shift($tempTLNames);
+            $clause       = "(";
+            $tempSCNames  = $scNames;
+            $scSurname1   = array_shift($tempSCNames);
+            $scSurname2   = array_shift($tempSCNames);
+            $clause       .= "((sn.value LIKE '$rawSurname1%' AND sn.value LIKE '%$rawSurname2') ";
+            $clause       .= "OR (sn.value LIKE '$scSurname1%' AND sn.value LIKE '%$scSurname2') ";
+            $clause       .= "OR (sn.value LIKE '$rawSurname1%' AND sn.value LIKE '%$scSurname2') ";
+            $clause       .= "OR (sn.value LIKE '$scSurname1%' AND sn.value LIKE '%$rawSurname2')) ";
+            foreach ($tempTLNames as $key => $tempRawName) {
+                $clause .= "AND (fn.value LIKE '%$tempRawName%' OR fn.value LIKE '%{$tempSCNames[$key]}%')";
+            }
+            $clause    .= ")";
+            $wherray[] = $clause;
+
+            // rest + two
+            $tempTLNames = $tlNames;
+            $rawSurname2  = array_pop($tempTLNames);
+            $rawSurname1  = array_pop($tempTLNames);
+            $clause       = "(";
+            $tempSCNames  = $scNames;
+            $scSurname2   = array_pop($tempSCNames);
+            $scSurname1   = array_pop($tempSCNames);
+            $clause       .= "((sn.value LIKE '$rawSurname1%' AND sn.value LIKE '%$rawSurname2') ";
+            $clause       .= "OR (sn.value LIKE '$scSurname1%' AND sn.value LIKE '%$scSurname2') ";
+            $clause       .= "OR (sn.value LIKE '$rawSurname1%' AND sn.value LIKE '%$scSurname2') ";
+            $clause       .= "OR (sn.value LIKE '$scSurname1%' AND sn.value LIKE '%$rawSurname2')) ";
+            foreach ($tempTLNames as $key => $tempRawName) {
+                $clause .= " AND (fn.value LIKE '%$tempRawName%' OR fn.value LIKE '%{$tempSCNames[$key]}%')";
+            }
+            $clause    .= ")";
+            $wherray[] = $clause;
+            $attributesQuery->where('(' . implode(' OR ', $wherray) . ')');
+        }
+
+        $dbo->setQuery($attributesQuery);
+
+        try {
+            $profileID = $dbo->loadResult();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+            return 0;
+        }
+
+        return empty($profileID) ? 0 : $profileID;
+
+    }
+
+    /**
      * Retrieves the default profile ID of a group
      *
      * @param   int $groupID the user group id
      *
      * @return  int  id of the default group profile, or 1 (the default profile id)
+     * @throws Exception
      */
     public static function getProfileIDByGroupID($groupID = 1)
     {
@@ -423,6 +706,7 @@ class THM_GroupsHelperProfiles
      * @param   int $groupID the user group id
      *
      * @return  int  id of the default group profile, or 1 (the default profile id)
+     * @throws Exception
      */
     public static function getTemplateNameByGroupID($groupID = 1)
     {
@@ -482,9 +766,9 @@ class THM_GroupsHelperProfiles
             $address = $attribute['value'];
             if (!$suppressText) {
                 $value = JHTML::_('email.cloak', $attribute['value']);
-            }  else {
+            } else {
                 $exceedsLength = false;
-                $mailParts = explode('-', $address);
+                $mailParts     = explode('-', $address);
                 foreach ($mailParts as $mailPart) {
                     $exceedsLength = strlen($mailPart) > 28 ? true : $exceedsLength;
                 }
@@ -526,7 +810,7 @@ class THM_GroupsHelperProfiles
                     break;
 
                 case "TEXTFIELD":
-                    $text = THM_GroupsHelperComponent::cleanText($attribute['value']);
+                    $text = THM_GroupsHelperComponent::removeEmptyTags($attribute['value']);
                     $text = trim(htmlspecialchars_decode($text));
 
                     // The closing div for the toggled container is added later
@@ -568,11 +852,41 @@ class THM_GroupsHelperProfiles
     }
 
     /**
+     * Determines whether a category entry exists for a user or group.
+     *
+     * @param   int $profileID the user id to check against groups categories
+     *
+     * @return  boolean  true, if a category exists, otherwise false
+     * @throws Exception
+     */
+    public static function hasCategoryAssociation($profileID)
+    {
+        $dbo   = JFactory::getDBO();
+        $query = $dbo->getQuery(true);
+        $query->select('cc.id')
+            ->from('#__categories AS cc')
+            ->innerJoin('#__thm_groups_categories AS gc ON gc.id = cc.id')
+            ->where("profileID = '$profileID'");
+        $dbo->setQuery($query);
+
+        try {
+            $result = $dbo->loadResult();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+            return false;
+        }
+
+        return !empty($result);
+    }
+
+    /**
      * Checks whether the given user profile is present and published
      *
      * @param   int $profileID the profile id
      *
      * @return  bool  true if the profile exists and is published
+     * @throws Exception
      */
     public static function isPublished($profileID)
     {
@@ -591,5 +905,88 @@ class THM_GroupsHelperProfiles
 
             return false;
         }
+    }
+
+    /**
+     * Sets the profile alias based on the profile's fore- and surename attributes
+     *
+     * @param int $profileID the id of the profile for which the alias is to be set
+     *
+     * @return bool true on success, otherwise false
+     *
+     * @throws Exception
+     */
+    public static function setAlias($profileID)
+    {
+        $dbo         = JFactory::getDbo();
+        $searchQuery = $dbo->getQuery(true);
+        $searchQuery->select('DISTINCT sn.value AS surname, fn.value AS forename')
+            ->from('#__thm_groups_profile_attributes AS sn')
+            ->innerJoin('#__thm_groups_profile_attributes AS fn ON sn.profileID = fn.profileID')
+            ->where("sn.profileID = '$profileID'")
+            ->where("sn.attributeID = '2'")
+            ->where("fn.attributeID = '1'");
+        $dbo->setQuery($searchQuery);
+
+        try {
+            $names = $dbo->loadAssoc();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+            return false;
+        }
+
+        if (empty($names)) {
+            return false;
+        }
+
+        $alias = empty($names['forename']) ? $names['surname'] : "{$names['forename']}-{$names['surname']}";
+        $alias = THM_GroupsHelperComponent::trim($alias);
+        $alias = THM_GroupsHelperComponent::transliterate($alias);
+        $alias = THM_GroupsHelperComponent::filterText($alias);
+        $alias = strtolower(str_replace(' ', '-', $alias));
+
+        // Check for an existing alias which matches the base alias for the profile and react. (duplicate names)
+        $initial = true;
+        $number = 2;
+        while (true) {
+            $tempAlias = $initial ? $alias : "$alias-$number";
+            $uniqueQuery = $dbo->getQuery(true);
+            $uniqueQuery->select('id')
+                ->from('#__thm_groups_profiles')
+                ->where("alias = '$tempAlias'")
+                ->where("id != '$profileID'");
+            $dbo->setQuery($uniqueQuery);
+
+            try {
+                $existingID = $dbo->loadAssoc();
+            } catch (Exception $exception) {
+                JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+                return false;
+            }
+
+            if (empty($existingID)) {
+                $alias = $tempAlias;
+                break;
+            } else {
+                $initial = false;
+                $number++;
+            }
+        }
+
+        $updateQuery = $dbo->getQuery(true);
+        $updateQuery->update('#__thm_groups_profiles')->set("alias = '$alias'")->where("id = '$profileID'");
+        $dbo->setQuery($updateQuery);
+
+        try {
+            $success = $dbo->execute();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+            return false;
+        }
+
+        return empty($success) ? false : true;
     }
 }

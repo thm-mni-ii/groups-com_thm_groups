@@ -55,6 +55,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         }
 
         $this->model = $this->getModel();
+        $this->params  = $app->getParams();
         $params      = $this->model->params;
 
         $this->columns      = $params->get('columns', 2);

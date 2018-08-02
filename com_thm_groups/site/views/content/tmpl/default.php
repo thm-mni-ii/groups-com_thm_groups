@@ -14,13 +14,29 @@ jimport('joomla.application.component.helper');
 JHtml::addIncludePath(JPATH_COMPONENT . '/../com_content/helpers');
 
 // Create shortcuts to some parameters.
-$params  = $this->item->params;
-$images  = json_decode($this->item->images);
-$urls    = json_decode($this->item->urls);
-$canEdit = $this->item->params->get('access-edit');
-$user    = JFactory::getUser();
+$params           = $this->item->params;
+$images           = json_decode($this->item->images);
+$urls             = json_decode($this->item->urls);
+$canEdit          = $this->item->params->get('access-edit');
+$user             = JFactory::getUser();
+$articleheaderimg = (isset($images->image_intro) && !empty($images->image_intro));
 
 echo '<div class="item-page' . $this->pageclass_sfx . ' groups-content">';
+
+if ($articleheaderimg) : ?>
+    <div class="headerimage">
+        <img src="<?php echo $images->image_intro; ?>" class="contentheaderimage nothumb" alt=""/>
+
+        <?php if ($params->get('show_title', 1)) : ?>
+            <div class="titlebar">
+                <h2>
+                    <?php echo $this->escape($this->item->title); ?>
+                </h2>
+            </div>
+        <?php endif; ?>
+    </div>
+<?php
+endif;
 
 if ($canEdit || $params->get('show_print_icon') || $params->get('show_email_icon')) {
     echo '<ul class="actions">';
@@ -44,7 +60,7 @@ if ($canEdit || $params->get('show_print_icon') || $params->get('show_email_icon
     echo '</ul>';
 }
 
-if ($this->params->get('show_page_heading')) {
+if ($this->params->get('show_page_heading') and !$articleheaderimg) {
     echo '<h1>' . $this->escape($this->params->get('page_heading')) . '</h1>';
 }
 
@@ -228,9 +244,4 @@ if (!empty($this->item->pagination) and $this->item->pagination and $this->item-
 }
 
 echo $this->item->event->afterDisplayContent;
-
-if (JComponentHelper::getParams('com_thm_groups')->get('backButtonForContent') == 1) {
-    echo '<input type="button" class="btn btn-thm" value="' . JText::_("COM_THM_GROUPS_BACK_BUTTON") . '" onclick="window.history.back()">';
-}
-
 echo '</div>';

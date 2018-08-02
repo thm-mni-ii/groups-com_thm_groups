@@ -153,10 +153,10 @@ class THM_GroupsModelAdvanced extends JModelLegacy
                         continue;
                     }
 
-                    $urlName    = JFilterOutput::stringURLSafe($profile[2]['value']);
-                    $profileURL = $groupURL . "&profileID=$profileID&name=$urlName";
+                    $alias    = THM_GroupsHelperProfiles::getAlias($profileID);
+                    $profileURL = $groupURL . "&profileID=$profileID&name=$alias";
 
-                    $profile['URL'] = JRoute::_($profileURL);
+                    $profile['URL'] = JUri::base() . $profileURL;
 
                     $groupedProfiles[$groupID][$assocID]['profiles'][$profileID] = $profile;
                 }

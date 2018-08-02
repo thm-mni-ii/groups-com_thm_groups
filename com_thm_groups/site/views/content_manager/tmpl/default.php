@@ -26,20 +26,19 @@ $rowClass = $this->canEditAll ? 'order dndlist-sortable' : '';
         </div>
         <div class="toolbar">
             <?php echo $this->getNewButton(); ?>
-            <?php echo $this->getProfileButton(); ?>
         </div>
         <div class="thm_table_area">
             <table class="table table-striped" id="content_manager-list">
                 <thead>
                 <tr>
                     <?php if ($this->canEditAll) : ?>
-                        <th></th>
+                        <th class="btn-column"></th>
                     <?php endif; ?>
                     <th>
                         <?php echo JText::_('COM_THM_GROUPS_TITLE'); ?>
                     </th>
                     <?php if ($this->canEditOne) : ?>
-                        <th class="hasTip" title="<?php echo JText::_('COM_THM_GROUPS_STATUS_TIP') ?>">
+                        <th class="hasTip publish-column" title="<?php echo JText::_('COM_THM_GROUPS_STATUS_TIP') ?>">
                             <?php echo JText::_('COM_THM_GROUPS_STATUS'); ?>
                         </th>
                         <th class="hasTip btn-column" title="<?php echo JText::_('COM_THM_GROUPS_MENU_TIP') ?>">

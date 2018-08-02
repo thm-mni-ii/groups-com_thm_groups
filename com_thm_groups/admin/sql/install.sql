@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_abstract_attributes` (
   `description`  TEXT,
   `options`      TEXT,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC)
+  UNIQUE (`name`)
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_attributes` (
   `published`   TINYINT(1)   UNSIGNED NOT NULL DEFAULT 0,
   `ordering`    TINYINT(1)   UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC)
+  UNIQUE (`name`)
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_field_types` (
   `name`        VARCHAR(100)          NOT NULL,
   `description` TEXT,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC)
+  UNIQUE (`name`)
 )
   ENGINE = INNODB
   DEFAULT CHARSET = utf8mb4
@@ -93,7 +93,9 @@ CREATE TABLE IF NOT EXISTS `#__thm_groups_profiles` (
   `published`      TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
   `canEdit`        TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
   `contentEnabled` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`)
+  `alias`          VARCHAR(190)        NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  UNIQUE (`alias`)
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4

@@ -1,10 +1,7 @@
 @import 'mixins';
+@import 'buttons';
 
 div.manager-page {
-
-  [class^="icon-"], [class*=" icon-"] {
-    font-family: icomoon;
-  }
 
   .page-header {
 
@@ -20,50 +17,39 @@ div.manager-page {
     float: right;
   }
 
-  button, a.btn {
-    box-shadow: none;
-    margin-left: 10px;
-    margin-bottom: 20px;
+  [class^="icon-"], [class*=" icon-"] {
+    font-family: icomoon;
+    margin-right: 0;
   }
 
-  .btn-group, .btn-column {
+  a.view-link {
+    margin-left: 8px;
+  }
 
+  input[type="checkbox"] {
+    display: none;
+  }
+
+  .publish-column, .btn-column {
+    padding-left: .5rem;
+    padding-right: .5rem;
+    text-align: center;
+  }
+
+  .publish-column {
+    width: 6rem;
+  }
+
+  .btn-column {
+    width: 3rem;
+  }
+
+  .btn-group {
     display: inline-block;
-
-    button, a.btn {
-
-      background-color: transparent;
-      border: $border;
-      border-radius: 0;
-      color: $font-color;
-      margin-bottom: 0;
-
-      span:before {
-        color: $font-color;
-        margin-left: 0;
-      }
-
-      span.caret {
-        border-top-color: $font-color;
-      }
-
-      &:hover, &:focus {
-        background-color: $background-foot;
-        color: $foreground-color;
-
-        span:before {
-          color: $foreground-color;
-        }
-
-        span.caret {
-          border-top-color: $foreground-color;
-        }
-      }
-    }
 
     .dropdown-toggle {
 
-      text-align: left;
+      // Ensures the two control elements have the same height
       padding-bottom: .25rem;
 
       .element-invisible {
@@ -94,6 +80,7 @@ div.manager-page {
     }
 
     ul {
+      border-radius: 0;
       margin: 0;
       padding: 0;
     }
@@ -107,9 +94,16 @@ div.manager-page {
         padding: 6px 10px;
 
         &:hover {
-          background: $background-navigation-color;
+          background: $background-foot;
+          span::before {
+            color: $foreground-color;
+          }
         }
       }
+    }
+
+    & > .btn {
+      border-radius: 0;
     }
   }
 
@@ -119,41 +113,20 @@ div.manager-page {
     padding: 0;
   }
 
-  .btn-column {
-    text-align: center;
-    width: 40px;
-  }
-
-  th span:before {
-    color: $foreground-color;
-  }
-
   td span.status-container {
     margin-right: 8px;
     vertical-align: middle;
   }
 
-  // TODO: move these to _variables
-  td span {
+  td .btn {
+    border: $border-input;
 
-    &.green:before {
-      color: #409740;
+    &.active {
+      box-shadow: none;
     }
-
-    &.red:before {
-      color: #942a25;
+    &:hover span.caret{
+      border-top-color: $foreground-color;
     }
   }
 
-  td a.jgrid {
-    margin-left: 8px;
-  }
-
-  .dropdown-menu {
-    border-radius: 0;
-  }
-
-  input[type="checkbox"] {
-    display: none;
-  }
 }

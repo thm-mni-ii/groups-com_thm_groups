@@ -94,8 +94,8 @@ class THM_GroupsModelProfile extends JModelLegacy
     private function createCategory($profileIDs)
     {
         foreach ($profileIDs as $profileID) {
-            if (!THM_GroupsHelperContent::profileCategoriesExist($profileID)) {
-                THM_GroupsHelperContent::createProfileCategory($profileID);
+            if (!THM_GroupsHelperProfiles::hasCategoryAssociation($profileID)) {
+                THM_GroupsHelperCategories::create($profileID);
             }
         }
     }
@@ -187,7 +187,7 @@ class THM_GroupsModelProfile extends JModelLegacy
         $profileID   = $app->input->getInt('profileID', $profileID);
         $attributeID = $app->input->getString('attributeID', $attributeID);
 
-        if (!THM_GroupsHelperComponent::canEditProfile($profileID)) {
+        if (!THM_GroupsHelperProfiles::canEdit($profileID)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
@@ -515,7 +515,7 @@ class THM_GroupsModelProfile extends JModelLegacy
         // Ensuring int will fail access checks on manipulated ids.
         $profileID = $data['profileID'];
 
-        if (!THM_GroupsHelperComponent::canEditProfile($profileID)) {
+        if (!THM_GroupsHelperProfiles::canEdit($profileID)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
@@ -552,7 +552,7 @@ class THM_GroupsModelProfile extends JModelLegacy
         $input     = $app->input;
         $profileID = $input->getInt('profileID');
 
-        if (!THM_GroupsHelperComponent::canEditProfile($profileID)) {
+        if (!THM_GroupsHelperProfiles::canEdit($profileID)) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
@@ -625,7 +625,7 @@ class THM_GroupsModelProfile extends JModelLegacy
             }
 
             $rawValue     = empty(strip_tags(trim($attribute['value']))) ? '' : trim($attribute['value']);
-            $cleanedValue = THM_GroupsHelperComponent::cleanText($rawValue);
+            $cleanedValue = THM_GroupsHelperComponent::removeEmptyTags($rawValue);
 
             $query = $this->_db->getQuery(true);
             $query->update('#__thm_groups_profile_attributes');
