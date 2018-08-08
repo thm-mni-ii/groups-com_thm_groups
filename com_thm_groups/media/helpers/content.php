@@ -20,6 +20,70 @@ require_once "categories.php";
 class THM_GroupsHelperContent
 {
     /**
+     * Associates content with a given profile
+     *
+     * @param   int $contentID the id of the content
+     * @param   int $profileID the id of the profile to be associated with the content
+     *
+     * @return  bool  true if the content was associated, otherwise false
+     * @throws Exception
+     */
+    public static function associate($contentID, $profileID)
+    {
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+
+        if (self::isAssociated($contentID)) {
+            $query->update('#__thm_groups_content')->set("profileID = '$profileID'")->where("id = '$contentID'");
+        } else {
+            $query->insert('#__thm_groups_content')->columns('id, profileID')->values("'$contentID', '$profileID'");
+        }
+
+        $dbo->setQuery($query);
+
+        try {
+            $success = $dbo->execute();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+            return false;
+        }
+
+        return (bool)$success;
+    }
+
+    /**
+     * Checks whether the user is authorized to edit the given content
+     *
+     * @param int $contentID the id of the content
+     *
+     * @return bool true if the user may edit the content, otherwise false
+     */
+    public static function canEdit($contentID)
+    {
+        $user               = JFactory::getUser();
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if ($isAdmin or $isComponentManager) {
+            return true;
+        }
+
+        $canEdit    = $user->authorise('core.edit', "com_content.article.$contentID");
+        $canEditOwn = $user->authorise('core.edit.own', "com_content.article.$contentID");
+        $profileID      = self::getProfileID($contentID);
+        $isOwn          = $profileID === $user->id;
+
+        // Irregardless of configuration only administrators and content owners should be able to edit
+        $editEnabled = (($canEdit or $canEditOwn) and $isOwn);
+        $isPublished    = THM_GroupsHelperProfiles::isPublished($profileID);
+        $contentEnabled = THM_GroupsHelperProfiles::contentEnabled($profileID);
+        $profileEnabled = ($isPublished and $contentEnabled);
+
+        return ($editEnabled and $profileEnabled);
+    }
+
+    /**
      * Method which checks user edit state permissions for content.
      *
      * @param   int $contentID the id of the content
@@ -30,12 +94,7 @@ class THM_GroupsHelperContent
      */
     public static function canEditState($contentID)
     {
-        $user = JFactory::getUser();
-
-        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
-        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-
-        if ($isAdmin or $isComponentManager) {
+        if (self::canEdit($contentID)) {
             return true;
         }
 
@@ -61,20 +120,52 @@ class THM_GroupsHelperContent
     }
 
     /**
-     * Associates content with a given profile
+     * Corrects invalid content => author associations which occur because Joomla does not call events from batch
+     * processing.
      *
-     * @param   int $contentID the id of the content
-     * @param   int $profileID the id of the profile to be associated with the content
-     *
-     * @return  bool  true if the content was associated, otherwise false
      * @throws Exception
      */
-    public static function associate($contentID, $profileID)
+    public static function correctAuthors()
+    {
+        $dbo         = JFactory::getDbo();
+        $selectQuery = $dbo->getQuery(true);
+        $selectQuery->select('DISTINCT content.id as contentID, category.profileID as profileID')
+            ->from('#__content as content')
+            ->innerJoin('#__thm_groups_categories as category ON content.catid = category.id')
+            ->where('content.created_by != category.profileID');
+        $dbo->setQuery($selectQuery);
+
+        try {
+            $associations = $dbo->loadAssocList();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+            return;
+        }
+
+        if (empty($associations)) {
+            return;
+        }
+
+        foreach ($associations as $association) {
+            THM_GroupsHelperContent::setAuthor($association['contentID'], $association['profileID']);
+            THM_GroupsHelperContent::associate($association['contentID'], $association['profileID']);
+        }
+    }
+
+    /**
+     * Disassociates content
+     *
+     * @param   int $contentID the id of the content
+     *
+     * @return  bool  true if the content was disassociated, otherwise false
+     * @throws Exception
+     */
+    public static function disassociate($contentID)
     {
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
-
-        $query->insert('#__thm_groups_content')->columns('id, profileID')->values("'$contentID', '$profileID'");
+        $query->delete('#__thm_groups_content')->where("id = '$contentID'");
         $dbo->setQuery($query);
 
         try {
@@ -85,7 +176,7 @@ class THM_GroupsHelperContent
             return false;
         }
 
-        return (bool) $success;
+        return (bool)$success;
     }
 
     /**
@@ -121,11 +212,12 @@ class THM_GroupsHelperContent
     /**
      * Retrieves the id for the given content by its associated alias
      *
-     * @param   string $alias the alias associated with the content
+     * @param string $alias     the alias associated with the content
+     * @param int    $profileID the id of the profile which is associated with this content
      *
      * @return  int the id of the content
      */
-    public static function getIDByAlias($alias)
+    public static function getIDByAlias($alias, $profileID)
     {
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
@@ -133,7 +225,8 @@ class THM_GroupsHelperContent
         $query->select('cc.id')
             ->from('#__content AS cc')
             ->innerJoin('#__thm_groups_content AS gc ON gc.id = cc.id')
-            ->where("alias = '$alias'");
+            ->where("alias = '$alias'")
+            ->where("profileID = '$profileID'");
         $dbo->setQuery($query);
 
         try {
@@ -184,7 +277,7 @@ class THM_GroupsHelperContent
      * @param   int $contentID the id of the content
      * @param   int $profileID the id of the profile associated with the content
      *
-     * @return  bool  true if the content is associated with groups, otherwise false
+     * @return  int  the profileID of the associated profile if associated, otherwise 0
      * @throws Exception
      */
     public static function isAssociated($contentID, $profileID = null)
@@ -192,7 +285,7 @@ class THM_GroupsHelperContent
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
 
-        $query->select('id')->from('#__thm_groups_content')->where("id = '$contentID'");
+        $query->select('profileID')->from('#__thm_groups_content')->where("id = '$contentID'");
 
         if (!empty($profileID)) {
             $query->where("profileID = '$profileID'");
@@ -200,14 +293,28 @@ class THM_GroupsHelperContent
         $dbo->setQuery($query);
 
         try {
-            $result = $dbo->loadObject();
+            $result = $dbo->loadResult();
         } catch (Exception $exception) {
             JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-            return false;
+            return 0;
         }
 
-        return empty($result) ? false : true;
+        return empty($result) ? 0 : $result;
+    }
+
+    /**
+     * Method to check whether the content is published
+     *
+     * @return  boolean  true on success, otherwise false
+     */
+    public static function isPublished($contentID)
+    {
+        JTable::addIncludePath(JPATH_ROOT . '/libraries/legacy/table');
+        $table = JTable::getInstance('Content', 'JTable');
+        $table->load($contentID);
+
+        return $table->state === 1;
     }
 
     /**
@@ -320,6 +427,21 @@ class THM_GroupsHelperContent
     }
 
     /**
+     * Method to check whether the content is published
+     *
+     * @return  boolean  true on success, otherwise false
+     */
+    public static function setAuthor($contentID, $profileID)
+    {
+        JTable::addIncludePath(JPATH_ROOT . '/libraries/legacy/table');
+        $content = JTable::getInstance('Content', 'JTable');
+        $content->load($contentID);
+        $content->created_by = $profileID;
+
+        return $content->store();
+    }
+
+    /**
      * Checks the THM Groups featured value for the chosen content
      *
      * @param   int $contentID the content id
@@ -330,8 +452,8 @@ class THM_GroupsHelperContent
      */
     private static function setFeatured($contentID, $value)
     {
-        $dbo       = JFactory::getDbo();
-        $query     = $dbo->getQuery(true);
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
 
         $contentExists = self::isAssociated($contentID);
 

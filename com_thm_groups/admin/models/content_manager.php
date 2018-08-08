@@ -19,9 +19,21 @@ require_once JPATH_SITE . '/media/com_thm_groups/helpers/content.php';
 class THM_GroupsModelContent_Manager extends THM_GroupsModelList
 {
 
-    protected $defaultOrdering = 'users.name';
+    protected $defaultOrdering = 'author_name';
 
     protected $defaultDirection = 'ASC';
+
+    /**
+     * Constructor.
+     *
+     * @param   array $config An optional associative array of configuration settings.
+     */
+    public function __construct($config = array())
+    {
+        parent::__construct($config);
+
+        THM_GroupsHelperContent::correctAuthors();
+    }
 
     /**
      * Method to build an SQL query to load the list data.
@@ -39,14 +51,18 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
         }
 
         $query->select('content.*')
-            ->select('users.name AS author_name')
             ->select('pContent.featured as featured')
+            ->select($query->concatenate(['pa1.value', 'pa2.value'], '->') . ' as author_name')
             ->from('#__content AS content')
             ->innerJoin('#__thm_groups_content AS pContent ON pContent.id = content.id')
             ->innerJoin('#__categories AS cCats ON cCats.id = content.catid')
             ->innerJoin('#__thm_groups_categories AS pCats ON pCats.id = cCats.id')
             ->innerJoin('#__users AS users ON users.id = pCats.profileID')
-            ->where("cCats.parent_id= '$rootCategory' ");
+            ->innerJoin('#__thm_groups_profile_attributes AS pa1 ON pa1.profileID = pCats.profileID')
+            ->innerJoin('#__thm_groups_profile_attributes AS pa2 ON pa2.profileID = pCats.profileID')
+            ->where("cCats.parent_id= '$rootCategory' ")
+            ->where("pa1.attributeID = '2' ")
+            ->where("pa2.attributeID = '1' ");
 
         $search = $this->getState('filter.search');
         if (!empty($search)) {
@@ -56,7 +72,7 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
 
         $authorID = $this->getState('filter.author');
         if (!empty($authorID)) {
-            $query->where("users.id = '$authorID'");
+            $query->where("pCats.profileID = '$authorID'");
         }
 
         $featured = $this->getState('filter.featured');
@@ -131,7 +147,7 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
 
             $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
 
-            $canEdit = JFactory::getUser()->authorise('core.edit', 'com_content.article.' . $item->id);
+            $canEdit = THM_GroupsHelperContent::canEdit($item->id);
 
             if ($canEdit) {
                 $url               = JRoute::_('index.php?option=com_content&task=article.edit&id=' . $item->id);
@@ -140,7 +156,8 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
                 $return[$index][1] = $item->title;
             }
 
-            $return[$index][2] = $item->author_name;
+            $authorParts = explode('->', $item->author_name);
+            $return[$index][2] = count($authorParts) > 1 ? "{$authorParts[0]}, {$authorParts[1]}" : $authorParts[0];
             $return[$index][3] = $this->getToggle($item->id, $item->featured, 'content', '', 'featured');
             $return[$index][4] = THM_GroupsHelperContent::getStatusDropdown($index, $item);
             $return[$index][5] = $item->id;
@@ -166,7 +183,7 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
             'JGRID_HEADING_ORDERING', 'icon-menu-2');
         $headers['checkbox'] = '';
         $headers['title']    = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_TITLE', 'title', $direction, $ordering);
-        $headers['author']   = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_AUTHOR', 'author_name', $direction,
+        $headers['author']   = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_PROFILE', 'author_name', $direction,
             $ordering);
         $headers['featured'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_PROFILE_MENU', 'pContent.featured',
             $direction,

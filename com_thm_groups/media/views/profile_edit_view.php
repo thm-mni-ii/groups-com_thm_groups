@@ -126,22 +126,20 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
     {
         $name        = $attribute['name'];
         $attributeID = $attribute['id'];
-        $value       = !empty(trim($attribute['value'])) ? trim($attribute['value']) : '';
+        $value       = strtolower(trim($attribute['value']));
         $hasPicture  = !empty($value);
 
         $html = '<div id="' . $name . '_IMG" class="image-container">';
 
         if ($hasPicture) {
-            $options = $attribute['options'];
+            $relativePath = "images/com_thm_groups/profile/$value";
+            $file    = JPATH_ROOT . "/$relativePath";
 
-            $position     = explode('images/', $options['path'], 2);
-            $relativePath = 'images/' . $position[1];
-            $filePath     = JPATH_ROOT . "/$relativePath{$attribute['value']}";
-
-            if (file_exists($filePath)) {
-                $file = JURI::root() . $relativePath . $value;
+            if (file_exists($file)) {
+                $random   = rand(1, 100);
+                $url = JUri::root() . $relativePath . "?force=$random";
                 $alt  = (count($nameAttributes) == 2) ? implode(', ', $nameAttributes) : end($nameAttributes);
-                $html .= JHtml::image($file, $alt, ['class' => 'edit_img']);
+                $html .= JHtml::image($url, $alt, ['class' => 'edit_img']);
             }
         }
 

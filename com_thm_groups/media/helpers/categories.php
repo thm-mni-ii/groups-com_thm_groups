@@ -16,6 +16,65 @@ require_once 'profiles.php';
 class THM_GroupsHelperCategories
 {
     /**
+     * Checks whether the user is authorized to edit the contents of the given category
+     *
+     * @param int $categoryID the id of the category
+     * @param int $profileID  the id of the profile for which edit rights are being checked
+     *
+     * @return bool true if the user may edit the the category's content, otherwise false
+     */
+    public static function canCreate($categoryID)
+    {
+        $user               = JFactory::getUser();
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if ($isAdmin or $isComponentManager) {
+            return true;
+        }
+
+        $canCreate      = $user->authorise('core.create', 'com_content.category.' . $categoryID);
+        $profileID      = self::getProfileID($categoryID);
+        $isOwn          = $profileID === $user->id;
+        $isPublished    = THM_GroupsHelperProfiles::isPublished($profileID);
+        $contentEnabled = THM_GroupsHelperProfiles::contentEnabled($profileID);
+
+        return ($canCreate and $isOwn and $isPublished and $contentEnabled);
+    }
+
+    /**
+     * Checks whether the user is authorized to edit the contents of the given category
+     *
+     * @param int $categoryID the id of the category
+     * @param int $profileID  the id of the profile for which edit rights are being checked
+     *
+     * @return bool true if the user may edit the the category's content, otherwise false
+     */
+    public static function canEdit($categoryID)
+    {
+        $user               = JFactory::getUser();
+        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
+        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
+
+        if ($isAdmin or $isComponentManager) {
+            return true;
+        }
+
+        $canEdit    = $user->authorise('core.edit', 'com_content.category.' . $categoryID);
+        $canEditOwn = $user->authorise('core.edit.own', 'com_content.category.' . $categoryID);
+        $profileID      = self::getProfileID($categoryID);
+        $isOwn          = $profileID === $user->id;
+
+        // Irregardless of configuration only administrators and content owners should be able to edit
+        $editEnabled = (($canEdit or $canEditOwn) and $isOwn);
+        $isPublished    = THM_GroupsHelperProfiles::isPublished($profileID);
+        $contentEnabled = THM_GroupsHelperProfiles::contentEnabled($profileID);
+        $profileEnabled = ($isPublished and $contentEnabled);
+
+        return ($editEnabled and $profileEnabled);
+    }
+
+    /**
      * Creates a content category for the profile
      *
      * @param   int $profileID the id of the user for whom the category is to be created

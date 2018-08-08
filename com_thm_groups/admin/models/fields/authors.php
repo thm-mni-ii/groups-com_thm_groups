@@ -33,50 +33,34 @@ class JFormFieldAuthors extends JFormFieldList
      *
      * @return  mixed  array on success, otherwise false
      */
-    public function getQPAuthors()
+    public function getAuthors()
     {
-        $dbo      = JFactory::getDbo();
-        $catQuery = $dbo->getQuery(true);
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query->select('DISTINCT pa1.profileID as value, pa1.value as surname, pa2.value as forename')
+            ->from('#__thm_groups_profile_attributes as pa1')
+            ->innerJoin('#__thm_groups_profile_attributes as pa2 on pa2.profileID = pa1.profileID')
+            ->innerJoin('#__thm_groups_content as content on content.profileID = pa1.profileID')
+            ->where("pa1.attributeID = '2'")
+            ->where("pa2.attributeID = '1'")
+            ->order('surname, forename');
 
-        $rootCategory = THM_GroupsHelperCategories::getRoot();
-        $catQuery
-            ->select('users.id, users.name, cat.id AS catid')
-            ->from('#__users AS users')
-            ->leftJoin('#__categories AS cat on cat.created_user_id = users.id')
-            ->where("cat.parent_id = $rootCategory")
-            ->where("cat.published = 1")
-            ->order('users.name')
-            ->group('users.id');
-
-        $dbo->setQuery($catQuery);
+        $dbo->setQuery($query);
 
         try {
-            $allProfiles = $dbo->loadAssocList();
+            $profiles = $dbo->loadAssocList();
         } catch (Exception $exception) {
             JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
             return false;
         }
 
-        foreach ($allProfiles as $index => $profile) {
-            $contentQuery = $dbo->getQuery(true);
-            $contentQuery->select("count('*')")->from('#__content')->where("catid = '{$profile['catid']}'");
-            $dbo->setQuery($contentQuery);
-
-            try {
-                $contentCount = $dbo->loadResult();
-            } catch (Exception $exception) {
-                JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-
-                return false;
-            }
-
-            if (empty($contentCount)) {
-                unset($allProfiles[$index]);
-            }
+        foreach ($profiles as $index => $profile) {
+            $profiles[$index]['text'] = empty($profile['forename']) ?
+                $profile['surname'] : "{$profile['surname']}, {$profile['forename']}";
         }
 
-        return $allProfiles;
+        return $profiles;
     }
 
     /**
@@ -95,11 +79,11 @@ class JFormFieldAuthors extends JFormFieldList
             return parent::getOptions();
         }
 
-        $qpAuthors = $this->getQPAuthors();
+        $profiles = $this->getAuthors();
 
         // Convert array to options
-        foreach ($qpAuthors as $key => $value) {
-            $options[] = JHTML::_('select.option', $value['id'], $value['name']);
+        foreach ($profiles as $key => $value) {
+            $options[] = JHTML::_('select.option', $value['value'], $value['text']);
         }
 
         return array_merge(parent::getOptions(), $options);

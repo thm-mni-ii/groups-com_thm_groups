@@ -17,12 +17,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/categories.php';
  */
 class THM_GroupsModelContent_Manager extends JModelList
 {
-    public $canEditAll = false;
-
-    public $canEditOne = false;
-
-    private $canPotentiallyEdit = false;
-
     public $categoryID;
 
     /**
@@ -32,51 +26,11 @@ class THM_GroupsModelContent_Manager extends JModelList
      */
     public function __construct($config = [])
     {
-        if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = [];
-        }
-
-        $profileID = JFactory::getApplication()->input->getInt('profileID', JFactory::getUser()->id);
-
+        $user             = JFactory::getUser();
+        $profileID        = JFactory::getApplication()->input->getInt('profileID', $user->id);
         $this->categoryID = THM_GroupsHelperCategories::getIDByProfileID($profileID);
 
-        $user       = JFactory::getUser();
-        $this->canEditAll = $user->authorise('core.edit', 'com_content.category.' . $this->categoryID);
-
-        if ($this->canEditAll) {
-            $this->canPotentiallyEdit = true;
-            $this->canEditOne         = true;
-        } else {
-            $this->canPotentiallyEdit = $user->authorise('core.edit.own', 'com_content.category.' . $this->categoryID);
-        }
-
         parent::__construct($config);
-    }
-
-    /**
-     * Function to feed the data in the table body correctly to the list view
-     *
-     * @return array consisting of items in the body
-     */
-    public function getItems()
-    {
-        $items = parent::getItems();
-
-        $user       = JFactory::getUser();
-        $canEditAll = true;
-        $canEditOwn = $user->authorise('core.edit.own', 'com_content.category.' . $this->categoryID);
-
-        foreach ($items as $item) {
-            if ($this->canEditAll) {
-                $item->canEdit = true;
-            } else {
-                $item->canEdit = ($canEditOwn and $item->created_by == $user->id);
-                $canEditAll = ($canEditAll and $item->canEdit);
-                $this->canEditOne = ($this->canEditOne or $item->canEdit);
-            }
-        }
-
-        return empty($items) ? [] : $items;
     }
 
     /**
@@ -89,18 +43,15 @@ class THM_GroupsModelContent_Manager extends JModelList
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
 
-        $query->select('content.*')
-            ->select('users.name AS author_name')
-            ->select('pContent.featured AS featured')
+        $query->select('content.*, pContent.featured AS featured')
             ->from('#__content AS content')
             ->innerJoin('#__thm_groups_content AS pContent ON pContent.id = content.id')
             ->innerJoin('#__categories AS cCats ON cCats.id = content.catid')
             ->innerJoin('#__thm_groups_categories AS pCats ON pCats.id = cCats.id')
-            ->innerJoin('#__users AS users ON users.id = pCats.profileID')
             ->where("cCats.id = '$this->categoryID'");
 
-        // User cannot edit anything => only show published
-        if (!$this->canPotentiallyEdit) {
+        // User cannot edit anything => only show published and featured
+        if (!THM_GroupsHelperCategories::canEdit($this->categoryID)) {
             $date       = JFactory::getDate();
             $quotedDate = $dbo->quote($date->toSql());
 

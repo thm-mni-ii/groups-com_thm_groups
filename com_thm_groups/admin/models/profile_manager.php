@@ -35,6 +35,7 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
         }
 
         parent::__construct($config);
+        THM_GroupsHelperProfiles::correctGroups();
     }
 
     /**
@@ -278,12 +279,10 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
         $this->setIDFilter($query, 'profile.canEdit', ['filter.canEdit']);
         $this->setIDFilter($query, 'profile.contentEnabled', ['filter.contentEnabled']);
 
-        $app          = JFactory::getApplication();
-        $list         = $app->input->get('list', [], 'array');
-        $filterGroups = empty($list['groupID']) ? false : true;
-        $filterRoles  = empty($list['roleID']) ? false : true;
+        $filterGroups  = $this->state->get('list.groupID');
+        $filterRoles = $this->state->get('list.roleID');
 
-        if ($filterGroups or $filterRoles) {
+        if (!empty($filterGroups) or !empty($filterRoles)) {
             // We don't need these unless filter is requested
             $query->leftJoin('#__thm_groups_profile_associations AS pa ON pa.profileID = profile.id');
             $query->leftJoin('#__thm_groups_role_associations AS ra ON ra.ID = pa.role_associationID');

@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
 
 $saveOrderingUrl = 'index.php?option=com_thm_groups&task=content.saveOrderAjax&tmpl=component';
 JHtml::_('sortablelist.sortable', 'content_manager-list', 'adminForm', null, $saveOrderingUrl);
-$rowClass = $this->canEditAll ? 'order dndlist-sortable' : '';
+$rowClass = $this->canEdit ? 'order dndlist-sortable' : '';
 
 ?>
 <div id="j-main-container" class="manager-page">
@@ -31,13 +31,13 @@ $rowClass = $this->canEditAll ? 'order dndlist-sortable' : '';
             <table class="table table-striped" id="content_manager-list">
                 <thead>
                 <tr>
-                    <?php if ($this->canEditAll) : ?>
+                    <?php if ($this->canEdit) : ?>
                         <th class="btn-column"></th>
                     <?php endif; ?>
                     <th>
                         <?php echo JText::_('COM_THM_GROUPS_TITLE'); ?>
                     </th>
-                    <?php if ($this->canEditOne) : ?>
+                    <?php if ($this->canEdit) : ?>
                         <th class="hasTip publish-column" title="<?php echo JText::_('COM_THM_GROUPS_STATUS_TIP') ?>">
                             <?php echo JText::_('COM_THM_GROUPS_STATUS'); ?>
                         </th>
