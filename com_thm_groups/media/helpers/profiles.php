@@ -129,11 +129,19 @@ class THM_GroupsHelperProfiles
      */
     public static function contentEnabled($profileID)
     {
-        JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables/');
-        $table = JTable::getInstance('Profiles', 'THM_GroupsTable');
-        $table->load($profileID);
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query->select('contentEnabled')->from('#__thm_groups_profiles')->where("id = '$profileID'");
+        $dbo->setQuery($query);
 
-        return (bool)$table->contentEnabled;
+        try {
+            $contentEnabled = $dbo->loadResult();
+        } catch (Exception $exc) {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            return false;
+        }
+
+        return (bool)$contentEnabled;
     }
 
     /**
@@ -858,11 +866,19 @@ class THM_GroupsHelperProfiles
      */
     public static function isPublished($profileID)
     {
-        JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables/');
-        $table = JTable::getInstance('Profiles', 'THM_GroupsTable');
-        $table->load($profileID);
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query->select('published')->from('#__thm_groups_profiles')->where("id = '$profileID'");
+        $dbo->setQuery($query);
 
-        return (bool)$table->published;
+        try {
+            $published = $dbo->loadResult();
+        } catch (Exception $exc) {
+            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            return false;
+        }
+
+        return (bool)$published;
     }
 
     /**
