@@ -766,7 +766,7 @@ class THM_GroupsHelperProfiles
                 case "LINK":
                     $URL   = strpos($attribute['value'],
                         'http') === false ? "http://{$attribute['value']}" : $attribute['value'];
-                    $value = JHtml::link($URL, $attribute['value']);
+                    $value = JHtml::link($URL, $attribute['value'], ['target' => '_blank']);
 
                     break;
 

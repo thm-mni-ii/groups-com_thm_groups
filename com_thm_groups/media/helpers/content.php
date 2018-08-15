@@ -241,6 +241,35 @@ class THM_GroupsHelperContent
     }
 
     /**
+     * Retrieves the profile id associated with the given content id
+     *
+     * @param   int $contentID the id of the content
+     *
+     * @return  int the id of the associated profile
+     * @throws Exception
+     */
+    public static function getProfileID($contentID)
+    {
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+
+        $query->select('profileID')
+            ->from('#__thm_groups_content')
+            ->where("id = '$contentID'");
+        $dbo->setQuery($query);
+
+        try {
+            $profileID = $dbo->loadResult();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+            return '';
+        }
+
+        return empty($profileID) ? '' : $profileID;
+    }
+
+    /**
      * Returns dropdown for changing content status
      *
      * @param   int    $index the current row index
