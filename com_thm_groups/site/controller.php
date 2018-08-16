@@ -61,6 +61,8 @@ class THM_GroupsController extends JControllerLegacy
         $success = $model->save();
 
         $app = JFactory::getApplication();
+        $URL = "{$this->baseURL}&Itemid={$this->menuID}&groupID={$this->groupID}&profileID={$this->profileID}";
+        $URL .= "&view=profile_edit&name=" . THM_GroupsHelperProfiles::getAlias($this->profileID);
 
         if ($success) {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_SUCCESS'));
@@ -68,14 +70,7 @@ class THM_GroupsController extends JControllerLegacy
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'error');
         }
 
-        $input = $app->input;
-        $input->set('profileID', $this->profileID);
-        $input->set('groupID', $this->groupID);
-        $input->set('name', $this->surname);
-        $input->set('Itemid', $this->menuID);
-        $input->set('referrer', $this->referrer);
-
-        parent::display();
+        $app->redirect(JRoute::_($URL));
     }
 
     /**
@@ -122,6 +117,30 @@ class THM_GroupsController extends JControllerLegacy
     }
 
     /**
+     * Sets object variables and checks access rights. Redirects on insufficient access.
+     *
+     * @return  void
+     */
+    private function preProcess()
+    {
+        $input = JFactory::getApplication()->input;
+        $data  = $input->get('jform', [], 'array');
+
+        $this->groupID   = $data['groupID'];
+        $this->menuID    = $data['menuID'];
+        $this->profileID = $data['profileID'];
+        $this->referrer  = $data['referrer'];
+        $this->surname   = $data['name'];
+
+        if (!THM_GroupsHelperProfiles::canEdit($this->profileID)) {
+            JFactory::getApplication()->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
+            $this->redirectNoAccess();
+        }
+
+        return;
+    }
+
+    /**
      * Publishes the resource
      *
      * @return void
@@ -146,30 +165,6 @@ class THM_GroupsController extends JControllerLegacy
 
         $referrer = $app->input->server->getString('HTTP_REFERER');
         $app->redirect($referrer);
-    }
-
-    /**
-     * Sets object variables and checks access rights. Redirects on insufficient access.
-     *
-     * @return  void
-     */
-    private function preProcess()
-    {
-        $input = JFactory::getApplication()->input;
-        $data  = $input->get('jform', [], 'array');
-
-        $this->groupID   = $data['groupID'];
-        $this->menuID    = $data['menuID'];
-        $this->profileID = $data['profileID'];
-        $this->referrer  = $data['referrer'];
-        $this->surname   = $data['name'];
-
-        if (!THM_GroupsHelperProfiles::canEdit($this->profileID)) {
-            JFactory::getApplication()->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
-            $this->redirectNoAccess();
-        }
-
-        return;
     }
 
     /**
@@ -204,18 +199,18 @@ class THM_GroupsController extends JControllerLegacy
         $success = $model->save();
 
         $app = JFactory::getApplication();
+        $URL = "{$this->baseURL}&Itemid={$this->menuID}&groupID={$this->groupID}&profileID={$this->profileID}";
+        $URL .= "&name=" . THM_GroupsHelperProfiles::getAlias($this->profileID);
 
         if ($success) {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_SUCCESS'));
-            $URL = JUri::base() . THM_GroupsHelperProfiles::getAlias($this->profileID);
+            $URL .= "&view=profile";
         } else {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'error');
-            $URL = "{$this->baseURL}&Itemid={$this->menuID}&groupID={$this->groupID}";
-            $URL .= "&name={$this->surname}&profileID={$this->profileID}&view=profile_edit";
-            $URL = JRoute::_($URL);
+            $URL .= "&view=profile_edit";
         }
 
-        $app->redirect($URL);
+        $app->redirect(JRoute::_($URL));
     }
 
     /**
