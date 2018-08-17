@@ -35,8 +35,6 @@ class THM_GroupsModelAdvanced extends JModelLegacy
 
     private $groups;
 
-    private $menuID;
-
     public $params;
 
     private $templateID;
@@ -51,7 +49,6 @@ class THM_GroupsModelAdvanced extends JModelLegacy
         parent::__construct($config);
         $this->params     = JFactory::getApplication()->getParams();
         $this->groupID    = $this->params->get('groupID');
-        $this->menuID     = JFactory::getApplication()->input->getInt('Itemid', 0);
         $menuTemplateID   = $this->params->get('templateID', 0);
         $this->templateID = empty($menuTemplateID) ? THM_GroupsHelperGroups::getTemplateID($this->groupID) : $menuTemplateID;
         $this->setGroups();
@@ -122,10 +119,9 @@ class THM_GroupsModelAdvanced extends JModelLegacy
             $groupedProfiles[$group->id]['title'] = $group->title;
         }
 
-        $URL = "index.php?option=com_thm_groups&view=profile&Itemid={$this->menuID}";
+        $baseURL = "index.php?option=com_thm_groups&view=profile";
 
         foreach ($groupedProfiles as $groupID => $assocs) {
-            $groupURL = $URL . "&groupID=$groupID";
 
             foreach (array_keys($assocs) as $assocID) {
                 if ($assocID == 'title') {
@@ -146,7 +142,7 @@ class THM_GroupsModelAdvanced extends JModelLegacy
                 // Get the role name
 
                 foreach ($profileIDs as $profileID) {
-                    $profile = THM_GroupsHelperProfiles::getProfile($profileID, $this->templateID, true);
+                    $profile = THM_GroupsHelperProfiles::getProfile($profileID, true, $this->templateID);
 
                     // No surname
                     if (empty($profile[2]['value'])) {
@@ -154,7 +150,7 @@ class THM_GroupsModelAdvanced extends JModelLegacy
                     }
 
                     $alias    = THM_GroupsHelperProfiles::getAlias($profileID);
-                    $profileURL = $groupURL . "&profileID=$profileID&name=$alias";
+                    $profileURL = $baseURL . "&profileID=$profileID&name=$alias";
 
                     $profile['URL'] = JUri::base() . $profileURL;
 

@@ -24,8 +24,6 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
     private $isAdmin;
 
-    private $menuID;
-
     public $profiles;
 
     private $showRoles;
@@ -54,13 +52,12 @@ class THM_GroupsViewAdvanced extends JViewLegacy
             $this->addBreadCrumb($profileID);
         }
 
-        $this->model = $this->getModel();
-        $this->params  = $app->getParams();
-        $params      = $this->model->params;
+        $this->model  = $this->getModel();
+        $this->params = $app->getParams();
+        $params       = $this->model->params;
 
         $this->columns      = $params->get('columns', 2);
         $this->groupID      = $params->get('groupID');
-        $this->menuID       = $input->get('Itemid', 0, 'get');
         $this->profiles     = $this->model->getProfiles();
         $this->showRoles    = $params->get('showRoles', true);
         $this->sort         = $params->get('sort', 1);
@@ -135,55 +132,15 @@ class THM_GroupsViewAdvanced extends JViewLegacy
     }
 
     /**
-     * Creates a container for the edit link button
-     *
-     * @param $profileID
-     * @param $lastName
-     *
-     * @return string
-     *
-     * @since version
-     */
-    private function getActionContainer($profileID, $lastName)
-    {
-        $container  = '';
-        $canEditOwn = (bool)JComponentHelper::getParams('com_thm_groups')->get('editownprofile', 0);
-        $ownProfile = JFactory::getUser()->id == $profileID;
-        $canEdit    = (($canEditOwn and $ownProfile) or $this->isAdmin);
-
-        if ($canEdit) {
-            $container .= '<div class="action-container">';
-
-            $linkTitle = JText::_('COM_THM_GROUPS_EDIT');
-            $data      = [
-                'option'    => 'com_thm_groups',
-                'view'      => 'profile_edit',
-                'groupID'   => $this->groupID,
-                'profileID' => $profileID,
-                'name'      => $lastName,
-                'Itemid'    => $this->menuID
-            ];
-
-            $link      = 'index.php?' . http_build_query($data);
-            $container .= JHtml::link(JRoute::_($link), '<span class="icon-edit"></span>', $linkTitle);
-            $container .= "</div>";
-            $container .= '<div class="clearFix"></div>';
-        }
-
-        return $container;
-    }
-
-    /**
      * Creates a HTML container with profile information
      *
-     * @param int   $profileID  the profile's id
      * @param array $attributes the profile's attributes
      * @param bool  $half       whether or not the profile should only take half the row width
      * @param int   $groupID    the id of the profile's group
      *
      * @return string the HTML of the profile container
      */
-    public function getProfileContainer($profileID, $attributes, $half, $groupID = null)
+    public function getProfileContainer($attributes, $half)
     {
         $container = '';
 
@@ -193,14 +150,10 @@ class THM_GroupsViewAdvanced extends JViewLegacy
             $container .= '<div class="profile-container">';
         }
 
-        $lastName = $attributes[2]['value'];
-
-        $container .= $this->getActionContainer($profileID, $lastName);
-
+        $lastName              = $attributes[2]['value'];
         $attributeContainers   = [];
         $attributeContainers[] = THM_GroupsHelperProfiles::getNameContainer($attributes);
-
-        $titleContainer = THM_GroupsHelperProfiles::getTitleContainer($attributes);
+        $titleContainer        = THM_GroupsHelperProfiles::getTitleContainer($attributes);
 
         if (!empty($titleContainer)) {
             $attributeContainers[] = $titleContainer;

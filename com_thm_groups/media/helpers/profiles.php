@@ -443,8 +443,9 @@ class THM_GroupsHelperProfiles
         }
 
         $text .= '<span class="attribute-name">' . $attributes[2]['value'] . '</span>';
+        $link = JHtml::link($attributes['URL'], $text, ['target' => '_blank']);
 
-        return '<div class="attribute-inline">' . JHtml::link($attributes['URL'], $text) . '</div>';
+        return '<div class="attribute-inline">' . $link . '</div>';
     }
 
     /**
@@ -479,14 +480,13 @@ class THM_GroupsHelperProfiles
      * Gets all user attributes, optionally filtering according to a profile template and the attribute pubished status.
      *
      * @param   int  $profileID     the profile ID
-     * @param   int  $templateID    the template ID
      * @param   bool $onlyPublished whether or not attributes should be filtered according to their published status
-     * @param   bool $onlyFilled    whether or not attributes need to have a non-empty value
+     * @param   int  $templateID    the template ID
      *
      * @return  array  array of arrays with profile information
      * @throws Exception
      */
-    public static function getProfile($profileID, $templateID = null, $onlyPublished = false, $onlyFilled = false)
+    public static function getProfile($profileID, $onlyPublished = false, $templateID = null)
     {
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
@@ -520,10 +520,6 @@ class THM_GroupsHelperProfiles
         if ($onlyPublished == true) {
             $query->where("pat.published = '1'");
             $query->where("a.published = '1'");
-        }
-
-        if ($onlyFilled) {
-            $query->where("(pat.value IS NOT NULL  and pat.value != '')");
         }
 
         $dbo->setQuery($query);

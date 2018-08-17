@@ -60,7 +60,7 @@ foreach ($this->profiles as $groupID => $assocs) {
                 $row = '<div class="row-container">';
             }
 
-            $row .= $this->getProfileContainer($profileID, $attributes, $half, $groupID);
+            $row .= $this->getProfileContainer($attributes, $half);
 
             $endRow = ($profileCount % $this->columns == $this->columns - 1 or $profileCount == $lastProfile);
 

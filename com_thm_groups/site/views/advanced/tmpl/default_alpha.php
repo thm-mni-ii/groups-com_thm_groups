@@ -28,7 +28,7 @@ foreach ($this->profiles as $profileID => $profileAttributes) {
         $row = '<div class="row-container">';
     }
 
-    $row .= $this->getProfileContainer($profileID, $profileAttributes, $this->columns == 2);
+    $row .= $this->getProfileContainer($profileAttributes, $this->columns == 2);
 
     $endRow = ($profileCount % $this->columns == $this->columns - 1 or $profileCount == $lastProfile);
 

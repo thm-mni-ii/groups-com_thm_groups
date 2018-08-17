@@ -87,10 +87,10 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
         $result       = "";
         $deleteIcon   = '<span class="icon-delete"></span>';
 
-        $deleteRoleParameters = "$profileID,GROUPID,ROLEID";
+        $deleteRoleParameters = "GROUPID,ROLEID,$profileID";
         $roleTitle            = JText::_('COM_THM_GROUPS_GROUP') . ": GROUPNAME - ";
         $roleTitle            .= JText::_('COM_THM_GROUPS_ROLE') . ": ROLENAME::" . JText::_('COM_THM_GROUPS_REMOVE_ROLE');
-        $rawRoleLink          = '<a onlick="deleteRoleAssociation(' . $deleteRoleParameters . ');" ';
+        $rawRoleLink          = '<a onclick="deleteRoleAssociation(' . $deleteRoleParameters . ');" ';
         $rawRoleLink          .= 'title="' . $roleTitle . '" class="hasTooltip">' . $deleteIcon . '</a>ROLENAME';
 
         $deleteGroupParameters = "'profile',GROUPID,$profileID";

@@ -16,13 +16,9 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
  */
 class THM_GroupsModelProfile extends JModelItem
 {
-    public $groupID;
-
     public $profile;
 
     public $profileID;
-
-    public $templateID;
 
     /**
      * Constructor
@@ -41,17 +37,7 @@ class THM_GroupsModelProfile extends JModelItem
             JErrorPage::render($exc);
         }
 
-        $params = JFactory::getApplication()->getParams();
-
-        // Linked > Menu > Default
-        $defaultGroupID = THM_GroupsHelperProfiles::getDefaultGroup($this->profileID);
-        $menuGroupID    = $params->get('groupID', $defaultGroupID);
-        $this->groupID  = $input->getInt('groupID', $menuGroupID);
-
-        $defaultTemplateID = THM_GroupsHelperGroups::getTemplateID($this->groupID);
-        $this->templateID  = $params->get('templateID', $defaultTemplateID);
-
-        $this->profile = THM_GroupsHelperProfiles::getProfile($this->profileID, $this->templateID, true);
+        $this->profile = THM_GroupsHelperProfiles::getProfile($this->profileID, true);
 
         parent::__construct();
     }
