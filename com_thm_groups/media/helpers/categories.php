@@ -152,6 +152,12 @@ class THM_GroupsHelperCategories
      */
     public static function getIDByProfileID($profileID)
     {
+        $contentEnabled = THM_GroupsHelperProfiles::contentEnabled($profileID);
+
+        if (!$contentEnabled) {
+            return 0;
+        }
+
         $dbo   = JFactory::getDBO();
         $query = $dbo->getQuery(true);
 
@@ -169,7 +175,13 @@ class THM_GroupsHelperCategories
             return 0;
         }
 
-        return (empty($categoryID)) ? 0 : $categoryID;
+        if (!empty($categoryID)) {
+            return $categoryID;
+        }
+
+        self::create($profileID);
+
+        return self::getIDByProfileID($profileID);
     }
 
     /**
