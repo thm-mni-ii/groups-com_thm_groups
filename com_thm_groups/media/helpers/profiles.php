@@ -590,11 +590,9 @@ class THM_GroupsHelperProfiles
         $aliasQuery = $dbo->getQuery(true);
 
         // Serves as a basis for existing and non-existing aliases
-        $cleanedNames = THM_GroupsHelperComponent::filterText($originalNames, 'alphanum');
-
-        // Search for an existing alias by inclusion of all the terms given
-        $tlNames = THM_GroupsHelperComponent::transliterate($cleanedNames);
-        $tlNames = explode(' ', $tlNames);
+        $tlNames = THM_GroupsHelperComponent::transliterate($originalNames);
+        $cleanedNames = THM_GroupsHelperComponent::filterText($tlNames);
+        $names = explode(' ', $cleanedNames);
 
         $aliasQuery->select('DISTINCT id, alias')->from('#__thm_groups_profiles');
         $dbo->setQuery($aliasQuery);
@@ -613,8 +611,8 @@ class THM_GroupsHelperProfiles
             }
             $found        = true;
             $profileNames = explode('-', $profile['alias']);
-            foreach ($tlNames as $tlName) {
-                $found = ($found and in_array($tlName, $profileNames));
+            foreach ($names as $name) {
+                $found = ($found and in_array($name, $profileNames));
             }
             if ($found) {
                 $profileIDs[] = $profile['id'];
@@ -910,11 +908,11 @@ class THM_GroupsHelperProfiles
             return false;
         }
 
-        $alias = empty($names['forename']) ? $names['surname'] : "{$names['forename']}-{$names['surname']}";
+        $alias = empty($names['forename']) ? $names['surname'] : "{$names['forename']}{$names['surname']}";
         $alias = THM_GroupsHelperComponent::trim($alias);
         $alias = THM_GroupsHelperComponent::transliterate($alias);
         $alias = THM_GroupsHelperComponent::filterText($alias);
-        $alias = strtolower(str_replace(' ', '-', $alias));
+        $alias = str_replace(' ', '-', $alias);
 
         // Check for an existing alias which matches the base alias for the profile and react. (duplicate names)
         $initial = true;

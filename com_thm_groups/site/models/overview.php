@@ -18,16 +18,12 @@ jimport('joomla.filesystem.path');
 class THM_GroupsModelOverview extends JModelLegacy
 {
     /**
-     * Method to get group number
+     * Retrieves the profiles available whose surnames sorted by the first letter of the first surname
      *
-     * @return int group id
+     * @return array an array of profiles grouped by letter
+     * @throws Exception
      */
-    public function getGroupNumber()
-    {
-        return JFactory::getApplication()->getParams()->get('groupID');
-    }
-
-    public function getProfilesByLetter($groupID)
+    public function getProfilesByLetter()
     {
         $dbo   = JFactory::getDBO();
         $query = $dbo->getQuery(true);
@@ -48,7 +44,22 @@ class THM_GroupsModelOverview extends JModelLegacy
         $query->where("allAttr.published = 1");
         $query->where("p.published = 1");
 
-        $query->where("ra.groupID = " . $groupID);
+        $app = JFactory::getApplication();
+        $groupID = $app->getParams()->get('groupID', 0);
+        if ($groupID) {
+            $query->where("ra.groupID = '$groupID'");
+        } else {
+            $search = $app->input->get('search', '');
+            $search = THM_GroupsHelperComponent::trim($search);
+
+            if (!empty('search')) {
+                $search = THM_GroupsHelperComponent::transliterate($search);
+                $search = THM_GroupsHelperComponent::filterText($search);
+                $searchTerms = explode('-', $search);
+                $query->where("p.alias LIKE '%" . implode("%' AND p.alias LIKE '%", $searchTerms) . "%'");
+            }
+        }
+
         $query->order("surname");
         $dbo->setQuery($query);
 
