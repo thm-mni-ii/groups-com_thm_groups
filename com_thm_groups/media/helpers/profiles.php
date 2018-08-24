@@ -377,10 +377,9 @@ class THM_GroupsHelperProfiles
      */
     private static function getLabelContainer($attribute)
     {
-        $iconParametersSet = (isset($attribute['params']['showIcon']) and isset($attribute['params']['icon']));
-        $showIcon          = ($iconParametersSet AND $attribute['params']['showIcon'] AND $attribute['params']['icon']);
+        $showIcon          = (isset($attribute['params']['icon']) AND !empty($attribute['params']['icon']));
         $text              = empty($attribute['name']) ? '' : $attribute['name'];
-        $showLabel         = (!empty($attribute['params']['showLabel']) and !empty($text));
+        $showLabel         = (empty($showIcon) and !empty($text));
         $label             = '';
 
         if ($showIcon) {
