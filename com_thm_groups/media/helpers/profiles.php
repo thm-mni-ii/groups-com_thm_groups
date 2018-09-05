@@ -228,6 +228,9 @@ class THM_GroupsHelperProfiles
     public static function getAttributeContainer($attribute, $surname, $suppressText = false)
     {
         $container = '';
+        if (empty($attribute['value'])) {
+            return $container;
+        }
 
         $params     = empty($attribute['params']) ? [] : $attribute['params'];
         $dynOptions = empty($attribute['dynOptions']) ? [] : $attribute['dynOptions'];
@@ -758,7 +761,7 @@ class THM_GroupsHelperProfiles
             switch ($attribute['type']) {
                 case "LINK":
                     $URL   = strpos($attribute['value'],
-                        'http') === false ? "http://{$attribute['value']}" : $attribute['value'];
+                        'https') === false ? "https://{$attribute['value']}" : $attribute['value'];
                     $value = JHtml::link($URL, $attribute['value'], ['target' => '_blank']);
 
                     break;

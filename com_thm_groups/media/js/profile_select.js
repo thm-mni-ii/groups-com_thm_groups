@@ -78,7 +78,7 @@ function insertProfileParameters()
     });
 
     hook += profileIDs.length > 0 ? 'profileIDs=' + profileIDs.join(',') + '|' : '';
-    hook += groupID != '' ? 'groupIDs=' + groupID + '|' : '';
+    hook += groupID != '' ? 'groupID=' + groupID + '|' : '';
 
     // Without profile ids or a group id there is nothing to display
     if (hook === '')
@@ -86,7 +86,7 @@ function insertProfileParameters()
         return;
     }
 
-    hook += templateID != '' ? 'templateIDs=' + templateID : '';
+    hook += templateID != '' ? 'templateID=' + templateID : '';
 
     jQuery('#selected-profiles').children().remove();
     window.parent.jInsertEditorText('{thm_groups ' + hook + '}', editor);
