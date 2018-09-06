@@ -19,13 +19,27 @@ abstract class THM_GroupsModelList extends JModelList
 
     protected $defaultDirection = 'ASC';
 
-    protected $defaultLimit = '20';
+    protected $defaultLimit;
 
     protected $defaultStart = '0';
 
     protected $defaultFilters = [];
 
     public $actions = null;
+    /**
+     * Constructor.
+     *
+     * @param   array  $config  An optional associative array of configuration settings.
+     *
+     * @see     \JModelLegacy
+     * @since   1.6
+     */
+    public function __construct($config = array())
+    {
+        parent::__construct($config);
+
+        $this->defaultLimit = JFactory::getApplication()->get('list_limit', '20');
+    }
 
     /**
      * Method to get the data that should be injected in the form.

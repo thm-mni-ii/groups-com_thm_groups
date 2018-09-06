@@ -21,8 +21,6 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
 
     protected $defaultDirection = "ASC";
 
-    protected $defaultLimit = "20";
-
     /**
      * Constructor
      *
