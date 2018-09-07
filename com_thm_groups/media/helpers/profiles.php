@@ -445,7 +445,7 @@ class THM_GroupsHelperProfiles
         }
 
         $text .= '<span class="attribute-name">' . $attributes[2]['value'] . '</span>';
-        $link = JHtml::link($attributes['URL'], $text, ['target' => '_blank']);
+        $link = JHtml::link(JRoute::_($attributes['URL']), $text, ['target' => '_blank']);
 
         return '<div class="attribute-inline">' . $link . '</div>';
     }

@@ -28,8 +28,6 @@ class THM_GroupsViewProfile extends JViewLegacy
 
     protected $links;
 
-    public $templateName;
-
     /**
      * Method to get display
      *
@@ -41,15 +39,11 @@ class THM_GroupsViewProfile extends JViewLegacy
     {
         $this->model = $this->getModel();
 
-        $this->groupID    = $this->model->groupID;
-        $this->menuID     = JFactory::getApplication()->input->get('Itemid', 0);
-        $this->profile    = $this->model->profile;
-        $this->profileID  = $this->model->profileID;
-        $this->templateID = $this->model->templateID;
+        $this->profile   = $this->model->profile;
+        $this->profileID = $this->model->profileID;
 
         $this->canEdit = THM_GroupsHelperProfiles::canEdit($this->profileID);
 
-        $this->templateName = JFilterOutput::stringURLSafe(THM_GroupsHelperTemplate::getName($this->templateID));
 
         // Adds the user name to the breadcrumb
         JFactory::getApplication()->getPathway()->addItem(THM_GroupsHelperProfiles::getDisplayName($this->profileID),
@@ -115,7 +109,7 @@ class THM_GroupsViewProfile extends JViewLegacy
 
             $lastName = trim($lastName);
             $path     = "index.php?option=com_thm_groups&view=profile_edit";
-            $path     .= "&groupID=$this->groupID&profileID=$this->profileID&name=$lastName&Itemid=$this->menuID";
+            $path     .= "&profileID=$this->profileID&name=$lastName";
             $url      = JRoute::_($path);
             $text     = '<span class="icon-edit"></span> ' . JText::_('COM_THM_GROUPS_EDIT');
             $editLink .= JHtml::_('link', $url, $text, $attributes);

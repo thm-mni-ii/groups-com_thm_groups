@@ -26,6 +26,7 @@ abstract class THM_GroupsModelList extends JModelList
     protected $defaultFilters = [];
 
     public $actions = null;
+
     /**
      * Constructor.
      *

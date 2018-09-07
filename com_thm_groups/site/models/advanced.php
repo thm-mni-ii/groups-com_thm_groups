@@ -150,9 +150,7 @@ class THM_GroupsModelAdvanced extends JModelLegacy
                     }
 
                     $alias    = THM_GroupsHelperProfiles::getAlias($profileID);
-                    $profileURL = $baseURL . "&profileID=$profileID&name=$alias";
-
-                    $profile['URL'] = JUri::base() . $profileURL;
+                    $profile['URL'] = $baseURL . "&profileID=$profileID&name=$alias";
 
                     $groupedProfiles[$groupID][$assocID]['profiles'][$profileID] = $profile;
                 }

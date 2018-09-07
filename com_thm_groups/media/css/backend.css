@@ -2,22 +2,6 @@
     margin-right: .5rem;
 }
 
-[class^="icon-"], [class*=" icon-"] {
-    font-family: icomoon;
-}
-
-.icon-mni::before {
-    content: "\e600";
-}
-
-.icon-diff, .icon-import, .icon-import-all, .icon-merge-all {
-    font-weight: bold;
-}
-
-.icon-add-Space {
-    font-size: 14px;
-}
-
 .sidebar-nav {
     color: #394a59;
 }
