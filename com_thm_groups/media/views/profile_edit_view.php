@@ -23,11 +23,7 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
 {
     public $profileID;
 
-    public $groupID;
-
     public $name;
-
-    public $menuID;
 
     public $attributes = null;
 
@@ -50,9 +46,6 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
             $exc = new Exception(JText::_('JLIB_RULES_NOT_ALLOWED'), 401);
             JErrorPage::render($exc);
         }
-
-        $this->menuID  = $input->getInt('Itemid');
-        $this->groupID = $input->getInt('groupID', 1);
 
         // Get user data for edit view.
         $this->attributes = $this->getModel()->getAttributes($this->profileID);

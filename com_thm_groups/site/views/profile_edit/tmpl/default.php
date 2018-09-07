@@ -20,12 +20,11 @@ if (!empty($attributes[2]) && $attributes[2]['value']) {
 }
 
 $editor  = JFactory::getConfig()->get('editor');
-$toolbar = $this->getToolbar();
 ?>
 <form id="adminForm" name="adminForm" class="form-horizontal form-validate"
       action="index.php?option=com_thm_groups" method="post" enctype="multipart/form-data">
     <div class="form-horizontal">
-        <?php echo $toolbar; ?>
+        <?php echo $this->getToolbar(); ?>
         <div class="field-container">
             <?php
             foreach ($this->attributes as $attribute) {
@@ -69,13 +68,8 @@ $toolbar = $this->getToolbar();
             <?php } ?>
         </div>
     </div>
-    <input type='hidden' id='jform_groupID' name='jform[groupID]' value='<?php echo $this->groupID; ?>'/>
-    <?php if (!empty($this->menuID)): ?>
-        <input type='hidden' id='jform_menuID' name='jform[menuID]' value='<?php echo $this->menuID; ?>'/>
-    <?php endif; ?>
     <input type='hidden' id='jform_name' name='jform[name]' value='<?php echo $this->name; ?>'/>
     <input type='hidden' id='jform_profileID' name='jform[profileID]' value='<?php echo $this->profileID; ?>'/>
-    <input type='hidden' id='jform_referrer' name='jform[referrer]' value='<?php echo $this->referrer; ?>'/>
     <input type="hidden" name="option" value="com_thm_groups"/>
     <input type="hidden" name="task" value=""/>
     <?php echo JHtml::_('form.token'); ?>

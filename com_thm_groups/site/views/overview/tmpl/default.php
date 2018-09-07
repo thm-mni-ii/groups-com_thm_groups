@@ -7,24 +7,14 @@
  * @link        www.thm.de
  */
 
-$tolerance  = 3;
-$totalUsers = THM_GroupsHelperGroups::getUserCount($this->groupID);
-$columns    = $this->params->get('columnCount', 3);
-
-// TODO: make this configurable
-$columnSize    = ceil(($totalUsers) / $columns);
-$maxColumnSize = $columnSize + $tolerance;
-
+$tolerance            = $this->columnCount;
 $currentProfilesCount = 0;
 $currentRowCount      = 1;
 $totalLettersOutput   = 0;
 $totalRowsOutput      = 0;
 
-if ($this->params->get('jyaml_header_image')) : ?>
-    <div class="headerimage">
-        <img src="<?php echo $this->params->get('jyaml_header_image'); ?>" class="contentheaderimage nothumb" alt=""/>
-    </div>
-<?php endif; ?>
+echo $this->getHeaderImage();
+?>
 <div class="thm_groups-overview">
     <?php if ($this->params->get('show_page_heading')) : ?>
         <div class="page-header">
@@ -55,7 +45,7 @@ if ($this->params->get('jyaml_header_image')) : ?>
 
                     $currentProfilesCount++;
                     $letterDone     = $currentProfilesCount == count($profiles);
-                    $maxRowsReached = $maxColumnSize == $currentRowCount;
+                    $maxRowsReached = $this->maxColumnSize == $currentRowCount;
                     if ($letterDone or $maxRowsReached) {
                         echo '</ul></div>';
                     }
@@ -72,7 +62,7 @@ if ($this->params->get('jyaml_header_image')) : ?>
 
                     $currentRowCount++;
                     $totalRowsOutput++;
-                    $rowsAvailable    = $maxColumnSize - $currentRowCount;
+                    $rowsAvailable    = $this->maxColumnSize - $currentRowCount;
                     $nextFitsInColumn = (!empty($nextSize) and $nextSize <= $rowsAvailable);
                     $nextBreaksWell   = (!empty($nextSize) and $nextSize >= $tolerance * 2);
                     $startNextLetter  = (($nextFitsInColumn or $nextBreaksWell) and $rowsAvailable >= $tolerance);

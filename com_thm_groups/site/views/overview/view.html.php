@@ -25,19 +25,77 @@ define('POSTTITLE', 3);
  */
 class THM_GroupsViewOverview extends JViewLegacy
 {
-    public $model = null;
+    public $columnCount;
 
-    public $params = [];
-
-    public $groupID = 0;
-
-    public $profileLink = '';
+    public $maxColumnSize;
 
     public $title = '';
 
+    public $profileLink = "index.php?option=com_thm_groups&view=profile";
+
     public $profiles = [];
 
-    public $letterProfiles = [];
+    /**
+     * Method to get display
+     *
+     * @param   Object $tpl template
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function display($tpl = null)
+    {
+        $app          = JFactory::getApplication();
+        $this->params = $app->getParams();
+        $input        = $app->input;
+
+        $this->profiles = $this->getModel()->getProfilesByLetter();
+        $groupID        = $this->params->get('groupID');
+        if (empty($groupID)) {
+            $totalProfiles = 0;
+            foreach ($this->profiles as $letter => $profiles) {
+                $totalProfiles += count($profiles);
+            }
+
+            if (empty($input->get('search'))) {
+                $this->columnCount   = 3;
+                $this->maxColumnSize = ceil($totalProfiles / $this->columnCount) + $this->columnCount;
+            } else {
+                $this->columnCount   = 1;
+                $this->maxColumnSize = $totalProfiles;
+            }
+        } else {
+            $totalProfiles       = THM_GroupsHelperGroups::getProfileCount($groupID);
+            $this->columnCount   = $this->params->get('columnCount', 3);
+            $this->maxColumnSize = ceil($totalProfiles / $this->columnCount) + $this->columnCount;
+        }
+
+        $this->modifyDocument();
+        $this->setTitle();
+        $this->setPathway();
+
+        parent::display($tpl);
+    }
+
+    /**
+     * Generates the header image if set in the menu settings.
+     *
+     * @return string the html of the header image
+     */
+    public function getHeaderImage()
+    {
+        $headerImage = '';
+        if (!$this->params->get('jyaml_header_image_disable', false)
+            and !empty($this->params->get('jyaml_header_image'))) {
+            $path = $this->params->get('jyaml_header_image');
+
+            $headerImage .= '<div class="headerimage" >';
+            $headerImage .= '<img src="' . $path . '" class="contentheaderimage nothumb" alt = "" />';
+            $headerImage .= '</div >';
+        }
+
+        return $headerImage;
+    }
 
     /**
      * Creates a link to the parametrized profile target using the profile name
@@ -49,48 +107,24 @@ class THM_GroupsViewOverview extends JViewLegacy
     public function getProfileLink($profileID)
     {
         $alias = THM_GroupsHelperProfiles::getAlias($profileID);
-        $url = $this->profileLink . "&profileID=$profileID&groupID=$this->groupID&name=$alias";
+        $url = $this->profileLink . "&profileID=$profileID&name=$alias";
 
         $showTitles    = $this->params->get('showTitles', 1);
         $displayedText = THM_GroupsHelperProfiles::getLNFName($profileID, $showTitles, true);
 
-        return JHtml::link(JRoute::_($url), $displayedText);
+        return JHtml::link(JRoute::_($url), $displayedText, ['target' => '_blank']);
     }
 
     /**
-     * Method to get display
+     * Adds css and javascript files to the document
      *
-     * @param   Object $tpl template
-     *
-     * @return void
+     * @return  void  modifies the document
      */
-    public function display($tpl = null)
+    private function modifyDocument()
     {
-        $app = JFactory::getApplication();
-
-        // Calling this first ensures helpers are loaded
-        $this->model = $this->getModel();
-
-        $this->params  = $app->getParams();
-        $this->groupID = $this->model->getGroupNumber();
-
-        $menuID            = $app->input->get('Itemid', 0);
-        $this->profileLink = "index.php?option=com_thm_groups&view=profile&Itemid=$menuID";
-
-        // Sizing attributes
-        $this->totalUsers    = THM_GroupsHelperGroups::getUserCount($this->groupID);
-        $columns             = $this->params->get('columnCount', 4);
-        $this->maxColumnSize = ceil(($this->totalUsers) / $columns);
-
-        // Title handling
-        $heading     = $this->params->get('page_heading', '');
-        $title       = $this->params->get('page_title', JText::_('COM_THM_GROUPS_OVERVIEW_TITLE'));
-        $this->title = empty($heading) ? $title : $heading;
-
-        $this->profiles = $this->model->getProfilesByLetter($this->groupID);
-        $this->setPathway();
-        $this->modifyDocument();
-        parent::display($tpl);
+        $document = JFactory::getDocument();
+        $document->addStyleSheet('media/com_thm_groups/css/overview.css');
+        JHtml::_('bootstrap.framework');
     }
 
     /**
@@ -112,39 +146,24 @@ class THM_GroupsViewOverview extends JViewLegacy
     }
 
     /**
-     * Adds css and javascript files to the document
+     * Sets the page title
      *
-     * @return  void  modifies the document
+     * @return void sets the title property of the document and the view object
+     * @throws Exception
      */
-    private function modifyDocument()
+    private function setTitle()
     {
-        $document = JFactory::getDocument();
-        $document->addStyleSheet('media/com_thm_groups/css/overview.css');
-        JHtml::_('bootstrap.framework');
-    }
-
-    /**
-     * Translates various umlaut encodings to the corresponding HTML Entities
-     *
-     * @param   string $text the text to be processed
-     *
-     * @return  string  the text with HTML umlaut encodings
-     */
-    public function umlaut2HTML($text)
-    {
-        $text = str_replace("Ãƒâ€“", "&Ouml;", $text);
-        $text = str_replace("ÃƒÂ¶", "&ouml;", $text);
-        $text = str_replace("Ãƒâ€ž", "&Auml;", $text);
-        $text = str_replace("ÃƒÂ¤", "&auml;", $text);
-        $text = str_replace("ÃƒÅ“", "&Uuml;", $text);
-        $text = str_replace("ÃƒÂ¼", "&uuml;", $text);
-        $text = str_replace("ÃƒÆ’Ã‚Â¶", "&Ouml;", $text);
-        $text = str_replace("ÃƒÆ’Ã‚Â¶", "&ouml;", $text);
-        $text = str_replace("ÃƒÆ’Ã‚Â¤", "&auml;", $text);
-        $text = str_replace("ÃƒÆ’Ã‚Â¤", "&Auml;", $text);
-        $text = str_replace("ÃƒÆ’Ã‚Â¼", "&uuml;", $text);
-        $text = str_replace("ÃƒÆ’Ã‚Â¼", "&Uuml;", $text);
-
-        return $text;
+        $input = JFactory::getApplication()->input;
+        $groupID = $this->params->get('groupID');
+        if ($groupID) {
+            $title = THM_GroupsHelperGroups::getName($groupID);
+        } elseif (empty($input->get('search'))) {
+            $title = JText::_('COM_THM_GROUPS_OVERVIEW');
+        } else {
+            $title = JText::_('COM_THM_GROUPS_DISAMBIGUATION');
+        }
+        //    show_title
+        $this->document->setTitle($title);
+        $this->title = $title;
     }
 }

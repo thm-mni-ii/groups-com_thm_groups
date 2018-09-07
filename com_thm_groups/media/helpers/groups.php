@@ -57,6 +57,30 @@ class THM_GroupsHelperGroups
     }
 
     /**
+     * Gets the name of the usergroup requested
+     *
+     * @param int $groupID the id of the usergroup
+     *
+     * @return string the group's title on success, otherwise empty
+     * @throws Exception
+     */
+    public static function getName($groupID) {
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query->select('title')->from('#__usergroups')->where("id = '$groupID'");
+        $dbo->setQuery($query);
+
+        try {
+            $title = $dbo->loadResult();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            return '';
+        }
+
+        return empty($title) ? '' : $title;
+    }
+
+    /**
      * Retrieves profileIDs for the given group grouped by the optionally pre-selected group roles.
      *
      * @param   int $groupID the id of the group
@@ -329,7 +353,7 @@ class THM_GroupsHelperGroups
      *
      * @return  int  the number of profiles associated with the group
      */
-    public static function getUserCount($groupID)
+    public static function getProfileCount($groupID)
     {
         $dbo   = JFactory::getDBO();
         $query = $dbo->getQuery(true);

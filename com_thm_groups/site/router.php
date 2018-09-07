@@ -30,8 +30,6 @@ function THM_GroupsBuildRoute(&$query)
         unset($query['view']);
     }
 
-    buildOptionsRoute($query);
-
     // Group & Profile/Name Segments
     if (!empty($query['profileID']) or !empty($query['userID'])) {
         $profileSegment = empty($query['profileID']) ? $query['userID'] : $query['profileID'];
@@ -70,29 +68,6 @@ function THM_GroupsBuildRoute(&$query)
     }
 
     return $segments;
-}
-
-/**
- * builds back options
- *
- * @param   array &$query query
- *
- * @return  void
- */
-function buildOptionsRoute(&$query)
-{
-    if (isset($query['option_back']) && isset($query['view_back'])) {
-        unset($query['option_back']);
-        unset($query['view_back']);
-
-        if (isset($query['layout_back'])) {
-            unset($query['layout_back']);
-        }
-
-        if (isset($query['Itemid_back'])) {
-            unset($query['Itemid_back']);
-        }
-    }
 }
 
 /**
@@ -231,16 +206,22 @@ function parseProfileSegment(&$vars, $segment)
 
     // Nested segmentation
     $otherParts = explode('-', $standardParts[1]);
-    $newFormat  = is_numeric(end($otherParts));
-    $oldFormat  = is_numeric(reset($otherParts));
+    $groupFormat  = is_numeric(end($otherParts));
+    $deprecatedFormat  = is_numeric(reset($otherParts));
 
-    if ($newFormat) {
+    if ($groupFormat) {
+        // Format <profileID>-<name>-<groupID>
         $vars['profileID'] = $firstPart;
         $vars['groupID']   = array_pop($otherParts);
-    } elseif ($oldFormat) {
+    } elseif ($deprecatedFormat) {
+        // Format from before my time <groupID>-<profileID>-<name>
         $vars['profileID'] = array_shift($otherParts);
         $vars['groupID']   = $firstPart;
+    } else {
+        // <profileID>-<name>
+        $vars['profileID'] = $firstPart;
     }
+
     // Anything left after the pop are the names
     $vars['name'] = implode('-', $otherParts);
 }

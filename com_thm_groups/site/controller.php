@@ -24,10 +24,6 @@ class THM_GroupsController extends JControllerLegacy
 
     private $profileID;
 
-    private $groupID;
-
-    private $menuID;
-
     private $referrer;
 
     private $surname;
@@ -61,8 +57,8 @@ class THM_GroupsController extends JControllerLegacy
         $success = $model->save();
 
         $app = JFactory::getApplication();
-        $URL = "{$this->baseURL}&Itemid={$this->menuID}&groupID={$this->groupID}&profileID={$this->profileID}";
-        $URL .= "&view=profile_edit&name=" . THM_GroupsHelperProfiles::getAlias($this->profileID);
+        $URL = "{$this->baseURL}&profileID={$this->profileID}&view=profile_edit&name=";
+        $URL .= THM_GroupsHelperProfiles::getAlias($this->profileID);
 
         if ($success) {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_SUCCESS'));
@@ -71,6 +67,21 @@ class THM_GroupsController extends JControllerLegacy
         }
 
         $app->redirect(JRoute::_($URL));
+    }
+
+    /**
+     * Saves changes to the profile and returns to the edit view
+     *
+     * @return  void
+     */
+    public function cancel()
+    {
+        $this->preProcess();
+
+        $URL = "{$this->baseURL}&profileID={$this->profileID}";
+        $URL .= "&view=profile&name=" . THM_GroupsHelperProfiles::getAlias($this->profileID);
+
+        JFactory::getApplication()->redirect(JRoute::_($URL));
     }
 
     /**
@@ -126,8 +137,6 @@ class THM_GroupsController extends JControllerLegacy
         $input = JFactory::getApplication()->input;
         $data  = $input->get('jform', [], 'array');
 
-        $this->groupID   = $data['groupID'];
-        $this->menuID    = $data['menuID'];
         $this->profileID = $data['profileID'];
         $this->referrer  = $data['referrer'];
         $this->surname   = $data['name'];
@@ -177,9 +186,7 @@ class THM_GroupsController extends JControllerLegacy
     public function redirectNoAccess()
     {
         $this->input->set('view', 'profile');
-        $this->input->set('groupID', $this->groupID);
         $this->input->set('profileID', $this->profileID);
-        $this->input->set('Itemid', $this->menuID);
         $this->input->set('name', $this->surname);
 
         parent::display();
@@ -199,8 +206,8 @@ class THM_GroupsController extends JControllerLegacy
         $success = $model->save();
 
         $app = JFactory::getApplication();
-        $URL = "{$this->baseURL}&Itemid={$this->menuID}&groupID={$this->groupID}&profileID={$this->profileID}";
-        $URL .= "&name=" . THM_GroupsHelperProfiles::getAlias($this->profileID);
+        $URL = "{$this->baseURL}&profileID={$this->profileID}&name=";
+        $URL .= THM_GroupsHelperProfiles::getAlias($this->profileID);
 
         if ($success) {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_SUCCESS'));
