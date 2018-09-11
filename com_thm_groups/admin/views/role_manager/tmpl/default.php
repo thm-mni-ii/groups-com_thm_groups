@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 
 $listOrder = $this->escape($this->state->get('list.ordering'));
 
-if ($listOrder == 'r.ordering') {
+if ($listOrder == 'roles.ordering') {
     $saveOrderingUrl = 'index.php?option=com_thm_groups&task=role.saveOrderAjax&tmpl=component';
     JHtml::_('sortablelist.sortable', 'role_manager-list', 'adminForm', null, $saveOrderingUrl);
 }

@@ -51,8 +51,8 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
         $direction = $this->state->get('list.direction');
         $headers   = [];
 
-        $headers['order']       = JHtml::_('searchtools.sort', '', 'a.ordering', $direction, $ordering, null,
-            'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2');
+        $headers['order']       = JHtml::_('searchtools.sort', '', 'a.ordering', $direction, $ordering, null, 'asc',
+            'JGRID_HEADING_ORDERING', 'icon-menu-2');
         $headers['checkbox']    = '';
         $headers['id']          = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'a.id', $direction,
             $ordering);
@@ -81,31 +81,30 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
             return $return;
         }
 
-        $url         = "index.php?option=com_thm_groups&view=attribute_edit&id=";
-        $sortIcon    = '<span class="sortable-handlerXXX"><i class="icon-menu"></i></span>';
+        $return['attributes'] = ['class' => 'ui-sortable'];
+        $canEdit              = THM_GroupsHelperComponent::isAdmin();
+        $url                  = "index.php?option=com_thm_groups&view=attribute_edit&id=";
+
+        $iconClass = '';
+        if (!$canEdit) {
+            $iconClass = ' inactive';
+        } elseif ($this->state->get('list.ordering') != 'a.ordering') {
+            $iconClass = ' inactive tip-top hasTooltip';
+        }
+        $sortIcon = '<span class="sortable-handler' . $iconClass . '"><i class="icon-menu"></i></span>';
+
         $generalLock = '<span class="icon-lock hasTooltip" title="XXXX"></span>';
         $doNotDelete = [self::FORENAME, self::SURNAME, self::EMAIL, self::TITLE, self::POSTTITLE];
 
-        $canEdit            = THM_GroupsHelperComponent::isManager();
-
-        $return['attributes'] = ['class' => 'ui-sortable'];
-
         $index = 0;
         foreach ($items as $item) {
-            $iconClass                    = '';
             $return[$index]               = [];
             $return[$index]['attributes'] = ['class' => 'order nowrap center', 'id' => $item->id];
 
             $return[$index]['ordering']['attributes'] = ['class' => "order nowrap center", 'style' => "width: 40px;"];
+            $return[$index]['ordering']['value'] = $sortIcon;
 
             if ($canEdit) {
-                $orderingActive = $this->state->get('list.ordering') == 'a.ordering';
-
-                if (!$orderingActive) {
-                    $iconClass = ' inactive tip-top hasTooltip';
-                }
-
-                $return[$index]['ordering']['value'] = str_replace('XXX', $iconClass, $sortIcon);
                 $return[$index][0]                   = JHtml::_('grid.id', $index, $item->id);
                 $return[$index][1]                   = $item->id;
                 $lock                                = '';
@@ -119,8 +118,6 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
                 $return[$index][3] = $this->getToggle($item->id, $item->published, 'attribute', '', 'published');
 
             } else {
-                $iconClass                           = ' inactive';
-                $return[$index]['ordering']['value'] = str_replace('XXX', $iconClass, $sortIcon);
                 $return[$index][0]                   = '';
                 $return[$index][1]                   = $item->id;
                 $return[$index][2]                   = $item->name;

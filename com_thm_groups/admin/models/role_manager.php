@@ -24,133 +24,6 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
     protected $defaultDirection = 'ASC';
 
     /**
-     * Method to build an SQL query to load the list data.
-     *
-     * @return      string  An SQL query
-     */
-    protected function getListQuery()
-    {
-        $query = $this->_db->getQuery(true);
-
-        $query
-            ->select('roles.id, roles.name, roles.ordering')
-            ->from('#__thm_groups_roles AS roles')
-            ->leftJoin('#__thm_groups_role_associations AS roleAssoc ON roles.id = roleAssoc.roleID')
-            ->group('roles.id');
-
-        $this->setSearchFilter($query, ['roles.name']);
-        $this->setIDFilter($query, 'roleAssoc.groupID', ['filter.groups']);
-        $this->setOrdering($query);
-
-        return $query;
-    }
-
-    /**
-     * Function to feed the data in the table body correctly to the list view
-     *
-     * @return array consisting of items in the body
-     */
-    public function getItems()
-    {
-        $items  = parent::getItems();
-        $return = [];
-
-        if (empty($items)) {
-            return $return;
-        }
-
-        $url             = "index.php?option=com_thm_groups&view=role_edit&id=";
-        $generalOrder    = '<input type="text" style="display:none" name="order[]" size="5" ';
-        $generalOrder    .= 'value="XX" class="width-20 text-area-order " />';
-        $generalSortIcon = '<span class="sortable-handlerXXX"><i class="icon-menu"></i></span>';
-        $canManage       = JFactory::getUser()->authorise('core.edit', 'com_thm_groups');
-        $index           = 0;
-        $tempOrdering    = 1;
-
-        foreach ($items as $item) {
-            $orderingActive = $this->state->get('list.ordering') == 'roles.ordering';
-            $iconClass      = '';
-
-            if (!$canManage) {
-                $iconClass = ' inactive';
-            } elseif (!$orderingActive) {
-                $iconClass = ' inactive tip-top hasTooltip';
-            }
-
-            if (empty($item->ordering)) {
-                $orderingValue = $tempOrdering;
-                $tempOrdering++;
-            } else {
-                $orderingValue = $item->ordering;
-            }
-
-            $specificOrder = ($canManage and $orderingActive) ? str_replace('XX', $orderingValue, $generalOrder) : '';
-
-            $return[$index] = [];
-
-            $return[$index]['attributes'] = ['class' => 'order nowrap center', 'id' => $item->id];
-
-            $return[$index]['ordering']['attributes'] = ['class' => "order nowrap center", 'style' => "width: 40px;"];
-            $return[$index]['ordering']['value']      = str_replace('XXX', $iconClass,
-                    $generalSortIcon) . $specificOrder;
-
-            $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
-            $return[$index][1] = $item->id;
-            $return[$index][2] = ($canManage) ? JHtml::_('link', $url . $item->id, $item->name) : $item->name;
-            $return[$index][3] = $this->getGroups($item->id);
-            $index++;
-        }
-
-        return $return;
-    }
-
-    /**
-     * Function to get table headers
-     *
-     * @return array including headers
-     */
-    public function getHeaders()
-    {
-        $ordering  = $this->state->get('list.ordering');
-        $direction = $this->state->get('list.direction');
-
-        $headers             = [];
-        $headers['order']    = JHtml::_('searchtools.sort', '', 'roles.ordering', $direction, $ordering, null, 'asc',
-            'JGRID_HEADING_ORDERING', 'icon-menu-2');
-        $headers['checkbox'] = '';
-        $headers['id']       = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'roles.id', $direction,
-            $ordering);
-        $headers['name']     = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 'roles.name', $direction,
-            $ordering);
-        $headers['groups']   = JText::_('COM_THM_GROUPS_GROUPS');
-
-        return $headers;
-    }
-
-    /**
-     * populates State
-     *
-     * @param   null $ordering  ?
-     * @param   null $direction ?
-     *
-     * @return void
-     */
-    protected function populateState($ordering = null, $direction = null)
-    {
-        $app = JFactory::getApplication();
-
-        // Adjust the context to support modal layouts.
-        if ($layout = $app->input->get('layout')) {
-            $this->context .= '.' . $layout;
-        }
-
-        $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
-        $this->setState('filter.search', $search);
-
-        parent::populateState("roles.id", "ASC");
-    }
-
-    /**
      * Returns all group of a role
      *
      * @param   int $roleID An id of the role
@@ -190,6 +63,29 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
     }
 
     /**
+     * Function to get table headers
+     *
+     * @return array including headers
+     */
+    public function getHeaders()
+    {
+        $ordering  = $this->state->get('list.ordering');
+        $direction = $this->state->get('list.direction');
+
+        $headers             = [];
+        $headers['order']    = JHtml::_('searchtools.sort', '', 'roles.ordering', $direction, $ordering, null, 'asc',
+            'JGRID_HEADING_ORDERING', 'icon-menu-2');
+        $headers['checkbox'] = '';
+        $headers['id']       = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'roles.id', $direction,
+            $ordering);
+        $headers['name']     = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 'roles.name', $direction,
+            $ordering);
+        $headers['groups']   = JText::_('COM_THM_GROUPS_GROUPS');
+
+        return $headers;
+    }
+
+    /**
      * Returns hidden fields for page
      *
      * @return array
@@ -203,5 +99,95 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
         $fields[] = '<input type="hidden" name="roleID" value="">';
 
         return $fields;
+    }
+
+    /**
+     * Function to feed the data in the table body correctly to the list view
+     *
+     * @return array consisting of items in the body
+     */
+    public function getItems()
+    {
+        $items  = parent::getItems();
+        $return = [];
+
+        if (empty($items)) {
+            return $return;
+        }
+
+        $return['attributes'] = ['class' => 'ui-sortable'];
+        $canEdit              = THM_GroupsHelperComponent::isAdmin();
+        $url                  = "index.php?option=com_thm_groups&view=role_edit&id=";
+
+        $iconClass = '';
+        if (!$canEdit) {
+            $iconClass = ' inactive';
+        } elseif ($this->state->get('list.ordering') != 'roles.ordering') {
+            $iconClass = ' inactive tip-top hasTooltip';
+        }
+        $sortIcon = '<span class="sortable-handler' . $iconClass . '"><i class="icon-menu"></i></span>';
+
+        $index = 0;
+        foreach ($items as $item) {
+            $return[$index]               = [];
+            $return[$index]['attributes'] = ['class' => 'order nowrap center', 'id' => $item->id];
+
+            $return[$index]['ordering']['attributes'] = ['class' => "order nowrap center", 'style' => "width: 40px;"];
+            $return[$index]['ordering']['value'] = $sortIcon;
+
+
+            $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
+            $return[$index][1] = $item->id;
+            $return[$index][2] = ($canEdit) ? JHtml::_('link', $url . $item->id, $item->name) : $item->name;
+            $return[$index][3] = $this->getGroups($item->id);
+            $index++;
+        }
+
+        return $return;
+    }
+
+    /**
+     * Method to build an SQL query to load the list data.
+     *
+     * @return      string  An SQL query
+     */
+    protected function getListQuery()
+    {
+        $query = $this->_db->getQuery(true);
+
+        $query
+            ->select('roles.id, roles.name, roles.ordering')
+            ->from('#__thm_groups_roles AS roles')
+            ->leftJoin('#__thm_groups_role_associations AS roleAssoc ON roles.id = roleAssoc.roleID')
+            ->group('roles.id');
+
+        $this->setSearchFilter($query, ['roles.name']);
+        $this->setIDFilter($query, 'roleAssoc.groupID', ['filter.groups']);
+        $this->setOrdering($query);
+
+        return $query;
+    }
+
+    /**
+     * populates State
+     *
+     * @param   null $ordering  ?
+     * @param   null $direction ?
+     *
+     * @return void
+     */
+    protected function populateState($ordering = null, $direction = null)
+    {
+        $app = JFactory::getApplication();
+
+        // Adjust the context to support modal layouts.
+        if ($layout = $app->input->get('layout')) {
+            $this->context .= '.' . $layout;
+        }
+
+        $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $this->setState('filter.search', $search);
+
+        parent::populateState("roles.id", "ASC");
     }
 }
