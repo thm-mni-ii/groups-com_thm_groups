@@ -89,11 +89,7 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
         $url      = "index.php?option=com_thm_groups&view=template_edit&id=";
         $sortIcon = '<span class="sortable-handlerXXX"><i class="icon-menu"></i></span>';
 
-        $user               = JFactory::getUser();
-        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
-        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-        $canEdit            = ($isAdmin or $isComponentManager);
-
+        $canEdit              = THM_GroupsHelperComponent::isManager();
         $index                = 0;
         $return['attributes'] = ['class' => 'ui-sortable'];
 

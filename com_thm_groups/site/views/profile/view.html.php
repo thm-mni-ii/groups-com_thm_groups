@@ -13,7 +13,6 @@
  */
 defined('_JEXEC') or die;
 
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/component.php';
 require_once JPATH_ROOT . "/media/com_thm_groups/helpers/profiles.php";
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/template.php';
 

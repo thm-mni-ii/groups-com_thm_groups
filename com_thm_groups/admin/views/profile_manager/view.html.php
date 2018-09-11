@@ -32,7 +32,7 @@ class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
      */
     public function display($tpl = null)
     {
-        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups')) {
+        if (!THM_GroupsHelperComponent::isManager()) {
             $exc = new Exception(JText::_('JLIB_RULES_NOT_ALLOWED'), 401);
             JErrorPage::render($exc);
         }
@@ -58,7 +58,6 @@ class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
         JToolBarHelper::unpublishList('profile.unpublish', 'COM_THM_GROUPS_UNPUBLISH_PROFILE');
         JToolBarHelper::publishList('profile.publishContent', 'COM_THM_GROUPS_ACTIVATE_CONTENT_MANAGEMENT');
         JToolBarHelper::unpublishList('profile.unpublishContent', 'COM_THM_GROUPS_DEACTIVATE_CONTENT_MANAGEMENT');
-        JToolBarHelper::divider();
 
         $layout = new JLayoutFile('joomla.toolbar.batch');
         $title  = JText::_('COM_THM_GROUPS_ADD_ROLES');
@@ -67,8 +66,7 @@ class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
         $bar = JToolBar::getInstance('toolbar');
         $bar->appendButton('Custom', $batch, 'batch');
 
-        if (JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
-            JToolBarHelper::divider();
+        if (THM_GroupsHelperComponent::isAdmin()) {
             JToolBarHelper::preferences('com_thm_groups');
         }
     }

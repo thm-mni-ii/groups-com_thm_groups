@@ -86,10 +86,7 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
         $generalLock = '<span class="icon-lock hasTooltip" title="XXXX"></span>';
         $doNotDelete = [self::FORENAME, self::SURNAME, self::EMAIL, self::TITLE, self::POSTTITLE];
 
-        $user               = JFactory::getUser();
-        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
-        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-        $canEdit            = ($isAdmin or $isComponentManager);
+        $canEdit            = THM_GroupsHelperComponent::isManager();
 
         $return['attributes'] = ['class' => 'ui-sortable'];
 

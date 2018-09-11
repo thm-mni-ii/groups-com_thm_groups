@@ -12,7 +12,6 @@
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/component.php';
 
 /**
  * THM_GroupsViewTHM_Groups class for component com_thm_groups
@@ -28,7 +27,7 @@ class THM_GroupsViewTHM_Groups extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups')) {
+        if (!THM_GroupsHelperComponent::isManager()) {
             $exc = new Exception(JText::_('JLIB_RULES_NOT_ALLOWED'), 401);
             JErrorPage::render($exc);
         }
@@ -51,8 +50,7 @@ class THM_GroupsViewTHM_Groups extends JViewLegacy
     {
         JToolBarHelper::title(JText::_('COM_THM_GROUPS'), 'logo');
 
-        if (JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
-            JToolBarHelper::divider();
+        if (THM_GroupsHelperComponent::isAdmin()) {
             JToolBarHelper::preferences('com_thm_groups');
         }
     }

@@ -47,16 +47,7 @@ class THM_GroupsModelEdit extends JModelAdmin
      */
     public function getItem($pk = null)
     {
-        $user = JFactory::getUser();
-
-        if (empty($user->id)) {
-            return false;
-        }
-
-        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
-        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-
-        if (!($isAdmin or $isComponentManager)) {
+        if (!THM_GroupsHelperComponent::isManager()) {
             throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 404);
         }
 

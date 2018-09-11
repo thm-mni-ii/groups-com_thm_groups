@@ -57,10 +57,7 @@ class THM_GroupsHelperProfiles
             return false;
         }
 
-        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
-        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-
-        if ($isAdmin or $isComponentManager) {
+        if (THM_GroupsHelperComponent::isManager()) {
             return true;
         }
 
@@ -622,7 +619,7 @@ class THM_GroupsHelperProfiles
         }
 
         if (count($profileIDs) > 1) {
-            return implode('-', $tlNames);
+            return implode('-', $names);
         } elseif (count($profileIDs) === 1) {
             return $profileIDs[0];
         }

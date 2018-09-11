@@ -61,21 +61,18 @@ class THM_GroupsHelperContent
      */
     public static function canEdit($contentID)
     {
-        $user               = JFactory::getUser();
-        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
-        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-
-        if ($isAdmin or $isComponentManager) {
+        if (THM_GroupsHelperComponent::isManager()) {
             return true;
         }
 
+        $user       = JFactory::getUser();
         $canEdit    = $user->authorise('core.edit', "com_content.article.$contentID");
         $canEditOwn = $user->authorise('core.edit.own', "com_content.article.$contentID");
-        $profileID      = self::getProfileID($contentID);
-        $isOwn          = $profileID === $user->id;
+        $profileID  = self::getProfileID($contentID);
+        $isOwn      = $profileID === $user->id;
 
         // Irregardless of configuration only administrators and content owners should be able to edit
-        $editEnabled = (($canEdit or $canEditOwn) and $isOwn);
+        $editEnabled    = (($canEdit or $canEditOwn) and $isOwn);
         $isPublished    = THM_GroupsHelperProfiles::isPublished($profileID);
         $contentEnabled = THM_GroupsHelperProfiles::contentEnabled($profileID);
         $profileEnabled = ($isPublished and $contentEnabled);

@@ -9,7 +9,6 @@
  */
 defined('_JEXEC') or die;
 jimport('joomla.application.component.controller');
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/component.php';
 require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
 
 /**

@@ -24,7 +24,7 @@ class THM_GroupsViewAbstract_Attribute_Edit extends THM_GroupsViewEdit
      */
     public function display($tpl = null)
     {
-        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups')) {
+        if (!THM_GroupsHelperComponent::isManager()) {
             $exc = new Exception(JText::_('JLIB_RULES_NOT_ALLOWED'), 401);
             JErrorPage::render($exc);
         }

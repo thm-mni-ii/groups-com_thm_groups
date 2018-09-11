@@ -10,7 +10,6 @@
  */
 
 defined('_JEXEC') or die;
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/component.php';
 
 /**
  * Class provides functions for modifying
@@ -134,12 +133,8 @@ class THM_GroupsModelGroup extends JModelLegacy
     public function batch()
     {
         $app  = JFactory::getApplication();
-        $user = JFactory::getUser();
 
-        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
-        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-
-        if (!($isAdmin or $isComponentManager)) {
+        if (!THM_GroupsHelperComponent::isManager()) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
@@ -223,12 +218,8 @@ class THM_GroupsModelGroup extends JModelLegacy
     public function deleteRoleAssociation($roleID = 0, $groupID = 0)
     {
         $app  = JFactory::getApplication();
-        $user = JFactory::getUser();
 
-        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
-        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-
-        if (!($isAdmin or $isComponentManager)) {
+        if (!THM_GroupsHelperComponent::isManager()) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
@@ -269,12 +260,8 @@ class THM_GroupsModelGroup extends JModelLegacy
     public function deleteTemplateAssociation($templateID = 0, $groupID = 0)
     {
         $app  = JFactory::getApplication();
-        $user = JFactory::getUser();
 
-        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
-        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-
-        if (!($isAdmin or $isComponentManager)) {
+        if (!THM_GroupsHelperComponent::isManager()) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;

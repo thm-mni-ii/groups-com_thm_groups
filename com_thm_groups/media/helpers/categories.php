@@ -25,14 +25,11 @@ class THM_GroupsHelperCategories
      */
     public static function canCreate($categoryID)
     {
-        $user               = JFactory::getUser();
-        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
-        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-
-        if ($isAdmin or $isComponentManager) {
+        if (THM_GroupsHelperComponent::isManager()) {
             return true;
         }
 
+        $user           = JFactory::getUser();
         $canCreate      = $user->authorise('core.create', 'com_content.category.' . $categoryID);
         $profileID      = self::getProfileID($categoryID);
         $isOwn          = $profileID === $user->id;
@@ -52,21 +49,18 @@ class THM_GroupsHelperCategories
      */
     public static function canEdit($categoryID)
     {
-        $user               = JFactory::getUser();
-        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
-        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-
-        if ($isAdmin or $isComponentManager) {
+        if (THM_GroupsHelperComponent::isManager()) {
             return true;
         }
 
+        $user       = JFactory::getUser();
         $canEdit    = $user->authorise('core.edit', 'com_content.category.' . $categoryID);
         $canEditOwn = $user->authorise('core.edit.own', 'com_content.category.' . $categoryID);
-        $profileID      = self::getProfileID($categoryID);
-        $isOwn          = $profileID === $user->id;
+        $profileID  = self::getProfileID($categoryID);
+        $isOwn      = $profileID === $user->id;
 
         // Irregardless of configuration only administrators and content owners should be able to edit
-        $editEnabled = (($canEdit or $canEditOwn) and $isOwn);
+        $editEnabled    = (($canEdit or $canEditOwn) and $isOwn);
         $isPublished    = THM_GroupsHelperProfiles::isPublished($profileID);
         $contentEnabled = THM_GroupsHelperProfiles::contentEnabled($profileID);
         $profileEnabled = ($isPublished and $contentEnabled);

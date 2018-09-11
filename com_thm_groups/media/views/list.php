@@ -48,7 +48,6 @@ abstract class THM_GroupsViewList extends JViewLegacy
         $this->items = $this->get('Items');
 
         // Allows for component specific menu handling
-        require_once JPATH_ROOT . "/media/com_thm_groups/helpers/component.php";
         THM_GroupsHelperComponent::addSubmenu($this);
 
         // Allows for view specific toolbar handling

@@ -70,8 +70,7 @@ class THM_GroupsHelperComponent
     public static function allowEdit(&$model, $itemID = 0)
     {
         // Admins can edit anything. Department and monitor editing is implicitly covered here.
-        $isAdmin = $model->actions->{'core.admin'};
-        if ($isAdmin) {
+        if (self::isAdmin()) {
             return true;
         }
 
@@ -204,6 +203,25 @@ class THM_GroupsHelperComponent
         $text = str_replace('.', '', $text);
 
         return self::trim($text);
+    }
+
+    /**
+     * Checks whether the user has admin access to the component.
+     *
+     * @return bool true if the user has admin access, otherwise false
+     */
+    public static function isAdmin() {
+        $user = JFactory::getUser();
+        return ($user->authorise('core.admin') OR $user->authorise('core.admin', 'com_thm_groups'));
+    }
+
+    /**
+     * Checks whether the user has manage access to the component.
+     *
+     * @return bool true if the user has admin access, otherwise false
+     */
+    public static function isManager() {
+        return (self::isAdmin() or JFactory::getUser()->authorise('core.manage', 'com_thm_groups'));
     }
 
     /**

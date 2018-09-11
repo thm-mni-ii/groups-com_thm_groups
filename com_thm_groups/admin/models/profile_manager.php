@@ -215,11 +215,7 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
             return $return;
         }
 
-        $user               = JFactory::getUser();
-        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
-        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-        $canEdit            = ($isAdmin or $isComponentManager);
-
+        $canEdit = THM_GroupsHelperComponent::isManager();
         $index = 0;
         foreach ($items as $key => $item) {
             $url            = "index.php?option=com_thm_groups&view=profile_edit&id=$item->profileID";
@@ -278,8 +274,8 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
         $this->setIDFilter($query, 'profile.canEdit', ['filter.canEdit']);
         $this->setIDFilter($query, 'profile.contentEnabled', ['filter.contentEnabled']);
 
-        $filterGroups  = $this->state->get('list.groupID');
-        $filterRoles = $this->state->get('list.roleID');
+        $filterGroups = $this->state->get('list.groupID');
+        $filterRoles  = $this->state->get('list.roleID');
 
         if (!empty($filterGroups) or !empty($filterRoles)) {
             // We don't need these unless filter is requested

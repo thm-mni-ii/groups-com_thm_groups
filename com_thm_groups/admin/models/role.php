@@ -10,7 +10,6 @@
  */
 
 defined('_JEXEC') or die;
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/component.php';
 
 /**
  * Class loads form data to edit an entry.
@@ -27,12 +26,8 @@ class THM_GroupsModelRole extends JModelLegacy
     public function batch()
     {
         $app  = JFactory::getApplication();
-        $user = JFactory::getUser();
 
-        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
-        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-
-        if (!($isAdmin or $isComponentManager)) {
+        if (!THM_GroupsHelperComponent::isManager()) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
@@ -189,12 +184,8 @@ class THM_GroupsModelRole extends JModelLegacy
     public function delete()
     {
         $app  = JFactory::getApplication();
-        $user = JFactory::getUser();
 
-        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
-        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-
-        if (!($isAdmin or $isComponentManager)) {
+        if (!THM_GroupsHelperComponent::isManager()) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
@@ -233,12 +224,8 @@ class THM_GroupsModelRole extends JModelLegacy
     public function deleteGroupAssociation()
     {
         $app  = JFactory::getApplication();
-        $user = JFactory::getUser();
 
-        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
-        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-
-        if (!($isAdmin or $isComponentManager)) {
+        if (!THM_GroupsHelperComponent::isManager()) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
@@ -273,12 +260,8 @@ class THM_GroupsModelRole extends JModelLegacy
     public function save()
     {
         $app  = JFactory::getApplication();
-        $user = JFactory::getUser();
 
-        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
-        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-
-        if (!($isAdmin or $isComponentManager)) {
+        if (!THM_GroupsHelperComponent::isManager()) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
             return false;
@@ -302,12 +285,7 @@ class THM_GroupsModelRole extends JModelLegacy
      */
     public function saveorder($pks = null, $order = null)
     {
-        $user = JFactory::getUser();
-
-        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
-        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-
-        if (!($isAdmin or $isComponentManager)) {
+        if (!THM_GroupsHelperComponent::isManager()) {
             return false;
         }
 

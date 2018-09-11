@@ -9,7 +9,6 @@
  */
 defined('_JEXEC') or die;
 require_once JPATH_SITE . '/media/com_thm_groups/helpers/content.php';
-require_once JPATH_SITE . '/media/com_thm_groups/helpers/component.php';
 
 /**
  * THM_GroupsModelContent class for component com_thm_groups

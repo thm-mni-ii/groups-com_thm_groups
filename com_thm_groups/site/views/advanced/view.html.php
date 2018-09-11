@@ -63,11 +63,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         $this->sort         = $params->get('sort', 1);
         $this->suppressText = $params->get('suppress', true);
         $this->title        = empty($params->get('show_page_heading')) ? '' : $params->get('page_title', '');
-
-        $user               = JFactory::getUser();
-        $isAdmin            = ($user->authorise('core.admin') or $user->authorise('core.admin', 'com_thm_groups'));
-        $isComponentManager = $user->authorise('core.manage', 'com_thm_groups');
-        $this->isAdmin      = ($isAdmin or $isComponentManager);
+        $this->isAdmin      = THM_GroupsHelperComponent::isManager();
 
         $this->modifyDocument();
 

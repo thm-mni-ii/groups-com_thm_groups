@@ -9,13 +9,12 @@
  */
 defined('_JEXEC') or die;
 
-try {
-    if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups')) {
-        throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 404);
-    }
+if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups')) {
+    throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 404);
+}
+require_once JPATH_SITE . "/media/com_thm_groups/helpers/component.php";
 
-    /** @noinspection PhpIncludeInspection */
-    require_once JPATH_SITE . "/media/com_thm_groups/helpers/component.php";
+try {
     THM_GroupsHelperComponent::callController();
 } catch (Exception $exc) {
     JLog::add($exc->__toString(), JLog::ERROR, 'com_thm_groups');

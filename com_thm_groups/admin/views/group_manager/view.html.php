@@ -34,7 +34,7 @@ class THM_GroupsViewGroup_Manager extends THM_GroupsViewList
      */
     public function display($tpl = null)
     {
-        if (!JFactory::getUser()->authorise('core.manage', 'com_thm_groups')) {
+        if (!THM_GroupsHelperComponent::isManager()) {
             $exc = new Exception(JText::_('JLIB_RULES_NOT_ALLOWED'), 401);
             JErrorPage::render($exc);
         }
@@ -80,8 +80,7 @@ class THM_GroupsViewGroup_Manager extends THM_GroupsViewList
         $bar->appendButton('Custom', $rolesButton, 'batch');
         $bar->appendButton('Custom', $templatesButton, 'batch');
 
-        if (JFactory::getUser()->authorise('core.admin', 'com_thm_groups')) {
-            JToolBarHelper::divider();
+        if (THM_GroupsHelperComponent::isAdmin()) {
             JToolBarHelper::preferences('com_thm_groups');
         }
     }
