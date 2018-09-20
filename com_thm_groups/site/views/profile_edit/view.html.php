@@ -39,7 +39,7 @@ class THM_GroupsViewProfile_Edit extends THM_GroupsViewProfile_Edit_View
         $html .= '</button>';
         $html .= '<button type="submit" class="btn" ';
         $html .= 'onclick="document.adminForm.task.value=\'profile.cancel\';return true;">';
-        $html .= '<span class="icon-edit"></span>' . JText::_('COM_THM_GROUPS_APPLY');
+        $html .= '<span class="icon-edit"></span>' . JText::_('COM_THM_GROUPS_CANCEL');
         $html .= '</button>';
         $html   .= '</div>';
 
