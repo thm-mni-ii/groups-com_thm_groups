@@ -24,6 +24,7 @@ class THM_GroupsModelProfile_Edit_Model extends THM_GroupsModelEdit
      * @param   int $profileID the user id
      *
      * @return  array  array of arrays containing profile information
+     * @throws Exception
      */
     public function getAttributes($profileID)
     {
@@ -40,6 +41,7 @@ class THM_GroupsModelProfile_Edit_Model extends THM_GroupsModelEdit
      * Method to load the form data
      *
      * @return  mixed  Object on success, false on failure.
+     * @throws exception
      */
     protected function loadFormData()
     {

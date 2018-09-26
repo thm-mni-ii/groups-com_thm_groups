@@ -30,6 +30,7 @@ class JFormFieldLocalizedList extends JFormFieldList
      * Use the show_root attribute to specify whether to show the global category root in the list.
      *
      * @return  array  The field option objects.
+     * @throws Exception
      */
     protected function getOptions()
     {

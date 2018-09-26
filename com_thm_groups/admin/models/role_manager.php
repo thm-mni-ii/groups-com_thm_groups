@@ -175,6 +175,7 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
      * @param   null $direction ?
      *
      * @return void
+     * @throws Exception
      */
     protected function populateState($ordering = null, $direction = null)
     {

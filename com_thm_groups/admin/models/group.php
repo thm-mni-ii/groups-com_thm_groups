@@ -23,6 +23,7 @@ class THM_GroupsModelGroup extends JModelLegacy
      * @param   array $groupID the group with which the role ist to be associated
      *
      * @return bool true on success, otherwise false
+     * @throws Exception
      */
     private function associateRole($roleID, $groupID)
     {
@@ -71,6 +72,7 @@ class THM_GroupsModelGroup extends JModelLegacy
      * @param   array $groupID    the group with which the template ist to be associated
      *
      * @return bool true on success, otherwise false
+     * @throws Exception
      */
     private function associateTemplate($templateID, $groupID)
     {
@@ -129,6 +131,7 @@ class THM_GroupsModelGroup extends JModelLegacy
      * TODO make generic function which handle all types of batch operations
      *
      * @return  boolean  Returns true on success, false on failure.
+     * @throws Exception
      */
     public function batch()
     {
@@ -214,6 +217,7 @@ class THM_GroupsModelGroup extends JModelLegacy
      * @param  int $groupID the id of the group to be removed
      *
      * @return bool true if the association was successfully removed, otherwise false
+     * @throws Exception
      */
     public function deleteRoleAssociation($roleID = 0, $groupID = 0)
     {
@@ -256,6 +260,7 @@ class THM_GroupsModelGroup extends JModelLegacy
      * @param  int $groupID    the id of the group to be removed
      *
      * @return bool true if the association was successfully removed, otherwise false
+     * @throws Exception
      */
     public function deleteTemplateAssociation($templateID = 0, $groupID = 0)
     {

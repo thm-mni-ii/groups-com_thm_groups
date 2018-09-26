@@ -21,6 +21,7 @@ class JFormFieldRoleFilter extends JFormFieldList
      *
      * @return  array  The field option objects.
      *
+     * @throws Exception
      */
     protected function getOptions()
     {

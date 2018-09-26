@@ -40,6 +40,7 @@ class THM_GroupsViewContent extends JViewLegacy
      * @param   Object $tpl template
      *
      * @return void
+     * @throws Exception
      */
     public function display($tpl = null)
     {
@@ -163,6 +164,7 @@ class THM_GroupsViewContent extends JViewLegacy
      * Prepares the document
      *
      * @return  void
+     * @throws Exception
      */
     protected function _prepareDocument()
     {

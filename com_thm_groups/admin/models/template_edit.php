@@ -37,6 +37,7 @@ class THM_GroupsModelTemplate_Edit extends THM_GroupsModelEdit
      * Method to load the form data
      *
      * @return  Object
+     * @throws exception
      */
     protected function loadFormData()
     {

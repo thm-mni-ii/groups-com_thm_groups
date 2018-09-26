@@ -19,6 +19,7 @@ class THM_GroupsHelperGroups
      * @param   int $groupID the group id
      *
      * @return  array  the first letters of the surnames
+     * @throws Exception
      */
     public static function getFirstLetters($groupID)
     {
@@ -86,6 +87,7 @@ class THM_GroupsHelperGroups
      * @param   int $groupID the id of the group
      *
      * @return  array the profile ids for the given group, grouped by role id
+     * @throws Exception
      */
     public static function getProfileIDs($groupID)
     {
@@ -117,6 +119,7 @@ class THM_GroupsHelperGroups
      * @param   int $assocID the id of the group -> role association
      *
      * @return  array the profile ids for the given association
+     * @throws Exception
      */
     public static function getProfileIDsByAssoc($assocID)
     {
@@ -151,6 +154,7 @@ class THM_GroupsHelperGroups
      * @param   int $groupID the id of the group
      *
      * @return  array the profile ids for the given group, grouped by role id
+     * @throws Exception
      */
     public static function getProfileIDsByRole($groupID)
     {
@@ -205,6 +209,7 @@ class THM_GroupsHelperGroups
      * @param   int $groupID the group id
      *
      * @return array the group -> role associations
+     * @throws Exception
      */
     public static function getRoleAssocIDs($groupID)
     {
@@ -234,6 +239,7 @@ class THM_GroupsHelperGroups
      * @param   int $groupID the group id
      *
      * @return array the associated roles
+     * @throws Exception
      */
     public static function getRoleIDs($groupID)
     {
@@ -259,6 +265,7 @@ class THM_GroupsHelperGroups
      * @param   int $groupID the user group id
      *
      * @return  int  id of the default group profile, or 1 (the default profile id)
+     * @throws Exception
      */
     public static function getTemplateID($groupID)
     {
@@ -291,6 +298,7 @@ class THM_GroupsHelperGroups
      * @param   string $letter  the first letter of the surname
      *
      * @return array
+     * @throws Exception
      */
     public static function getUsersByLetter($groupID, $letter)
     {
@@ -352,6 +360,7 @@ class THM_GroupsHelperGroups
      * @param   int $groupID GroupID
      *
      * @return  int  the number of profiles associated with the group
+     * @throws Exception
      */
     public static function getProfileCount($groupID)
     {

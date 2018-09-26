@@ -58,6 +58,7 @@ class THM_GroupsHelperContent
      * @param int $contentID the id of the content
      *
      * @return bool true if the user may edit the content, otherwise false
+     * @throws Exception
      */
     public static function canEdit($contentID)
     {
@@ -88,6 +89,7 @@ class THM_GroupsHelperContent
      * @return  boolean  True if allowed to change the state of the record.
      *          Defaults to the permission for the component.
      *
+     * @throws Exception
      */
     public static function canEditState($contentID)
     {
@@ -104,6 +106,7 @@ class THM_GroupsHelperContent
      * @param array $contentIDs the content ids submitted by the form
      *
      * @return bool true if the user can edit the state all referenced content, otherwise false
+     * @throws Exception
      */
     private static function canReorder($contentIDs)
     {
@@ -213,6 +216,7 @@ class THM_GroupsHelperContent
      * @param int    $profileID the id of the profile which is associated with this content
      *
      * @return  int the id of the content
+     * @throws Exception
      */
     public static function getIDByAlias($alias, $profileID)
     {
@@ -273,6 +277,7 @@ class THM_GroupsHelperContent
      * @param   object $item  the content item being iterated
      *
      * @return  string the HTML for the status selection dialog
+     * @throws Exception
      */
     public static function getStatusDropdown($index, $item)
     {
@@ -347,6 +352,7 @@ class THM_GroupsHelperContent
      * Method to change the core published state of THM Groups articles.
      *
      * @return  boolean  true on success, otherwise false
+     * @throws Exception
      */
     public static function publish()
     {
@@ -397,6 +403,7 @@ class THM_GroupsHelperContent
      *
      * @return  bool true on success, otherwise false
      *
+     * @throws Exception
      */
     public static function saveorder($contentIDs = null, $order = null)
     {

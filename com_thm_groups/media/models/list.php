@@ -30,10 +30,11 @@ abstract class THM_GroupsModelList extends JModelList
     /**
      * Constructor.
      *
-     * @param   array  $config  An optional associative array of configuration settings.
+     * @param   array $config An optional associative array of configuration settings.
      *
      * @see     \JModelLegacy
      * @since   1.6
+     * @throws Exception
      */
     public function __construct($config = array())
     {
@@ -46,6 +47,7 @@ abstract class THM_GroupsModelList extends JModelList
      * Method to get the data that should be injected in the form.
      *
      * @return  mixed  The data for the form.
+     * @throws Exception
      */
     protected function loadFormData()
     {
@@ -128,6 +130,7 @@ abstract class THM_GroupsModelList extends JModelList
      * @return  void  sets object state variables
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @throws Exception
      */
     protected function populateState($ordering = null, $direction = null)
     {

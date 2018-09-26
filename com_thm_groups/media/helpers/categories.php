@@ -22,6 +22,7 @@ class THM_GroupsHelperCategories
      * @param int $profileID  the id of the profile for which edit rights are being checked
      *
      * @return bool true if the user may edit the the category's content, otherwise false
+     * @throws Exception
      */
     public static function canCreate($categoryID)
     {
@@ -46,6 +47,7 @@ class THM_GroupsHelperCategories
      * @param int $profileID  the id of the profile for which edit rights are being checked
      *
      * @return bool true if the user may edit the the category's content, otherwise false
+     * @throws Exception
      */
     public static function canEdit($categoryID)
     {
@@ -74,6 +76,7 @@ class THM_GroupsHelperCategories
      * @param   int $profileID the id of the user for whom the category is to be created
      *
      * @return void
+     * @throws Exception
      */
     public static function create($profileID)
     {
@@ -143,6 +146,7 @@ class THM_GroupsHelperCategories
      * @param   int $profileID the user id
      *
      * @return  mixed  int on successful query, null if the query failed, 0 on exception or if user is empty
+     * @throws Exception
      */
     public static function getIDByProfileID($profileID)
     {
@@ -306,6 +310,7 @@ class THM_GroupsHelperCategories
      * @param   int $categoryID category id
      *
      * @return bool true on success, otherwise false
+     * @throws Exception
      */
     private static function setCreator($profileID, $categoryID)
     {

@@ -81,6 +81,7 @@ class THM_GroupsModelEdit extends JModelAdmin
      * Method to load the form data
      *
      * @return  Object
+     * @throws exception
      */
     protected function loadFormData()
     {

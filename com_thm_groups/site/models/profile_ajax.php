@@ -24,6 +24,7 @@ class THM_GroupsModelProfile_Ajax extends JModelLegacy
      * Gets profile options for use in content
      *
      * @return string the concatenated profile options
+     * @throws Exception
      */
     public function getContentOptions()
     {

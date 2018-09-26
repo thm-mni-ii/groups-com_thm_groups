@@ -19,6 +19,7 @@ class THM_GroupsModelContent extends JModelLegacy
      * Activates personal menu display for specific content articles.
      *
      * @return  bool  true on success, otherwise false
+     * @throws Exception
      */
     public function feature()
     {
@@ -33,6 +34,7 @@ class THM_GroupsModelContent extends JModelLegacy
      * Deactivates personal menu display for specific content articles.
      *
      * @return  bool true on success, otherwise false
+     * @throws Exception
      */
     public function unfeature()
     {
@@ -47,6 +49,7 @@ class THM_GroupsModelContent extends JModelLegacy
      * Method to change the core published state of THM Groups articles.
      *
      * @return  boolean  true on success, otherwise false
+     * @throws Exception
      */
     public function publish()
     {
@@ -71,6 +74,7 @@ class THM_GroupsModelContent extends JModelLegacy
      * Toggles the binary attribute featured
      *
      * @return  mixed  integer on success, otherwise false
+     * @throws Exception
      */
     public function toggle()
     {

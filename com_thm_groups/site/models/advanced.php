@@ -43,6 +43,8 @@ class THM_GroupsModelAdvanced extends JModelLegacy
      * Constructor
      *
      * @param   array $config An array of configuration options (name, state, dbo, table_path, ignore_request).
+     *
+     * @throws Exception
      */
     public function __construct(array $config = [])
     {
@@ -106,6 +108,7 @@ class THM_GroupsModelAdvanced extends JModelLegacy
      * Returns array with every group members and related attribute. The group is predefined as view parameter
      *
      * @return  array  array with group members and related user attributes
+     * @throws Exception
      */
     public function getProfiles()
     {

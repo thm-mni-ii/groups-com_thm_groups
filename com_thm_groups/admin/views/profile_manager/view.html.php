@@ -29,6 +29,7 @@ class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
      * @param   Object $tpl template
      *
      * @return void
+     * @throws Exception
      */
     public function display($tpl = null)
     {

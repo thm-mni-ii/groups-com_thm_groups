@@ -32,6 +32,7 @@ class JFormFieldAuthors extends JFormFieldList
      * articles in their categories
      *
      * @return  mixed  array on success, otherwise false
+     * @throws Exception
      */
     public function getAuthors()
     {
@@ -68,6 +69,7 @@ class JFormFieldAuthors extends JFormFieldList
      *
      * @return  array  The field option objects.
      *
+     * @throws Exception
      */
     protected function getOptions()
     {

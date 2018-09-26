@@ -31,6 +31,7 @@ class THM_GroupsModelContent extends JModelItem
      * ability to edit the row.
      *
      * @return  bool  true on success, otherwise false
+     * @throws Exception
      */
     public function checkIn()
     {
@@ -138,6 +139,7 @@ class THM_GroupsModelContent extends JModelItem
      * Method to get content data.
      *
      * @return  object|boolean|JException  Menu item data object on success, boolean false or JException instance on error
+     * @throws Exception
      */
     public function getItem()
     {
@@ -222,6 +224,7 @@ class THM_GroupsModelContent extends JModelItem
      * Method to populate the model state.
      *
      * @return void
+     * @throws Exception
      */
     protected function populateState()
     {
@@ -253,6 +256,7 @@ class THM_GroupsModelContent extends JModelItem
      * Method to change the core published state of THM Groups articles.
      *
      * @return  boolean  true on success, otherwise false
+     * @throws Exception
      */
     public function publish()
     {
@@ -345,6 +349,7 @@ class THM_GroupsModelContent extends JModelItem
      * Toggles THM Groups article attributes like 'published' and 'featured'
      *
      * @return  mixed  integer on success, otherwise false
+     * @throws Exception
      */
     public function toggle()
     {

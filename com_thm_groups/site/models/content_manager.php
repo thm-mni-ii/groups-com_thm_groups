@@ -23,6 +23,8 @@ class THM_GroupsModelContent_Manager extends JModelList
      * Constructor
      *
      * @param   array $config config array
+     *
+     * @throws Exception
      */
     public function __construct($config = [])
     {
@@ -37,6 +39,7 @@ class THM_GroupsModelContent_Manager extends JModelList
      * Method to build an SQL query to load the list data.
      *
      * @return      string  An SQL query
+     * @throws Exception
      */
     protected function getListQuery()
     {

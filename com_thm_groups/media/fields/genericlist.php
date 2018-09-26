@@ -125,6 +125,7 @@ class JFormFieldGenericList extends JFormFieldList
      * @param   array &$options the input options
      *
      * @return  void  sets option values
+     * @throws Exception
      */
     private function setValueParameters(&$options)
     {

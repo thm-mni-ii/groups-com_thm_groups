@@ -20,6 +20,7 @@ class THM_GroupsHelperRoles
      * @param   bool $block   whether redundant roles ('Mitglied') should be blocked
      *
      * @return  string the name of the role referenced in the association
+     * @throws Exception
      */
     public static function getNameByAssoc($assocID, $block)
     {

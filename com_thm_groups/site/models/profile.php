@@ -23,6 +23,7 @@ class THM_GroupsModelProfile extends JModelItem
     /**
      * Constructor
      *
+     * @throws Exception
      */
     public function __construct()
     {

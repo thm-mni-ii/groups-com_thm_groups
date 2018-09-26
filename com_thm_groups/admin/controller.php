@@ -20,6 +20,8 @@ class THM_GroupsController extends JControllerLegacy
      * Class constructor
      *
      * @param array $config An optional associative array of configuration settings.
+     *
+     * @throws Exception
      */
     public function __construct($config = [])
     {
@@ -33,6 +35,7 @@ class THM_GroupsController extends JControllerLegacy
      * Adding
      *
      * @return  void redirects to the edit view for a new resource entry
+     * @throws Exception
      */
     public function add()
     {
@@ -46,6 +49,7 @@ class THM_GroupsController extends JControllerLegacy
      * Saves changes to the resource and redirects back to the edit view of the same resource.
      *
      * @return void
+     * @throws Exception
      */
     public function apply()
     {
@@ -83,6 +87,7 @@ class THM_GroupsController extends JControllerLegacy
      * Saves changes to multiple resources and redirects back to resource list view.
      *
      * @return void
+     * @throws Exception
      */
     public function batch()
     {
@@ -114,6 +119,7 @@ class THM_GroupsController extends JControllerLegacy
      * Cancels the edit of the resource and redirects to the list view
      *
      * @return void
+     * @throws Exception
      */
     public function cancel()
     {
@@ -125,6 +131,7 @@ class THM_GroupsController extends JControllerLegacy
      * Deletes selected resource entries
      *
      * @return void
+     * @throws Exception
      */
     public function delete()
     {
@@ -156,6 +163,7 @@ class THM_GroupsController extends JControllerLegacy
      * Calls delete function for picture in the model
      *
      * @return  void outputs a blank string on success, otherwise affects no change
+     * @throws Exception
      */
     public function deletePicture()
     {
@@ -173,6 +181,7 @@ class THM_GroupsController extends JControllerLegacy
      * Deletes all roles in a group by user ID
      *
      * @return void
+     * @throws Exception
      */
     public function deleteGroupAssociation()
     {
@@ -204,6 +213,7 @@ class THM_GroupsController extends JControllerLegacy
      * Deletes a role of a user by user id
      *
      * @return void
+     * @throws Exception
      */
     public function deleteRoleAssociation()
     {
@@ -235,6 +245,7 @@ class THM_GroupsController extends JControllerLegacy
      * Removes the profile's association with the given group
      *
      * @return void
+     * @throws Exception
      */
     public function deleteTemplateAssociation()
     {
@@ -265,6 +276,7 @@ class THM_GroupsController extends JControllerLegacy
      * Redirects to the edit view for the resource
      *
      * @return void
+     * @throws Exception
      */
     public function edit()
     {
@@ -284,6 +296,7 @@ class THM_GroupsController extends JControllerLegacy
      * Featured content is offered in profile menus
      *
      * @return  void
+     * @throws Exception
      */
     public function feature()
     {
@@ -316,6 +329,7 @@ class THM_GroupsController extends JControllerLegacy
      * Publishes the resource
      *
      * @return void
+     * @throws Exception
      */
     public function publish()
     {
@@ -347,6 +361,7 @@ class THM_GroupsController extends JControllerLegacy
      * Saves changes to the resource and redirects to the list view
      *
      * @return void
+     * @throws Exception
      */
     public function save()
     {
@@ -378,6 +393,7 @@ class THM_GroupsController extends JControllerLegacy
      * Saves changes to the resource and redirects to the list view
      *
      * @return void
+     * @throws Exception
      */
     public function save2copy()
     {
@@ -417,6 +433,7 @@ class THM_GroupsController extends JControllerLegacy
      * to create a new attribute
      *
      * @return void
+     * @throws Exception
      */
     public function save2new()
     {
@@ -450,6 +467,7 @@ class THM_GroupsController extends JControllerLegacy
      * the rest of the functions of this class.
      *
      * @return  void outputs the saved image on success, otherwise affects no change
+     * @throws Exception
      */
     public function saveCropped()
     {
@@ -468,6 +486,7 @@ class THM_GroupsController extends JControllerLegacy
      *
      * @return  void
      *
+     * @throws Exception
      */
     public function saveOrderAjax()
     {
@@ -492,6 +511,7 @@ class THM_GroupsController extends JControllerLegacy
      * Toggles binary resource properties and redirects back to the list view
      *
      * @return void
+     * @throws Exception
      */
     public function toggle()
     {
@@ -523,6 +543,7 @@ class THM_GroupsController extends JControllerLegacy
      * Hides the public display of the resource
      *
      * @return void
+     * @throws Exception
      */
     public function unpublish()
     {

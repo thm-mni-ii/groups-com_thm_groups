@@ -18,6 +18,7 @@ class THM_GroupsHelperBatch
      * Return all existing roles as select field
      *
      * @return  array  an array of options for drop-down list
+     * @throws Exception
      */
     public static function getRoles()
     {
@@ -49,6 +50,7 @@ class THM_GroupsHelperBatch
      * will be used only for filtering in backend-user-manager
      *
      * @return array
+     * @throws Exception
      */
     public static function getGroupOptions()
     {
@@ -87,6 +89,7 @@ class THM_GroupsHelperBatch
      * Return all existing profiles as select field
      *
      * @return array options for profile selection
+     * @throws Exception
      */
     public static function getProfiles()
     {

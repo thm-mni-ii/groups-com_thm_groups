@@ -19,6 +19,7 @@ class THM_GroupsTemplateList_Modal
      * @param   object &$view the view context calling the function
      *
      * @return void
+     * @throws Exception
      */
     public static function render(&$view)
     {

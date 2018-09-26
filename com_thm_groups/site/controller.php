@@ -33,6 +33,8 @@ class THM_GroupsController extends JControllerLegacy
      * Class constructor
      *
      * @param array $config An optional associative array of configuration settings.
+     *
+     * @throws Exception
      */
     public function __construct($config = [])
     {
@@ -46,6 +48,7 @@ class THM_GroupsController extends JControllerLegacy
      * Saves changes to the profile and returns to the edit view
      *
      * @return  void
+     * @throws Exception
      */
     public function apply()
     {
@@ -72,6 +75,7 @@ class THM_GroupsController extends JControllerLegacy
      * Saves changes to the profile and returns to the edit view
      *
      * @return  void
+     * @throws Exception
      */
     public function cancel()
     {
@@ -87,6 +91,7 @@ class THM_GroupsController extends JControllerLegacy
      * Checks in content
      *
      * @return void
+     * @throws Exception
      */
     public function checkin()
     {
@@ -114,6 +119,7 @@ class THM_GroupsController extends JControllerLegacy
      * Calls delete function for picture in the model
      *
      * @return  void outputs a blank string on success, otherwise affects no change
+     * @throws Exception
      */
     public function deletePicture()
     {
@@ -130,6 +136,7 @@ class THM_GroupsController extends JControllerLegacy
      * Sets object variables and checks access rights. Redirects on insufficient access.
      *
      * @return  void
+     * @throws Exception
      */
     private function preProcess()
     {
@@ -152,6 +159,7 @@ class THM_GroupsController extends JControllerLegacy
      * Publishes the resource
      *
      * @return void
+     * @throws Exception
      */
     public function publish()
     {
@@ -195,6 +203,7 @@ class THM_GroupsController extends JControllerLegacy
      * Saves changes to the profile and redirects to the profile on success
      *
      * @return  void
+     * @throws Exception
      */
     public function save()
     {
@@ -223,6 +232,7 @@ class THM_GroupsController extends JControllerLegacy
      * Saves the cropped image and outputs the saved image on success.
      *
      * @return  void outputs the saved image on success, otherwise affects no change
+     * @throws Exception
      */
     public function saveCropped()
     {
@@ -242,6 +252,7 @@ class THM_GroupsController extends JControllerLegacy
      *
      * @return  void
      *
+     * @throws Exception
      */
     public function saveOrderAjax()
     {
@@ -266,6 +277,7 @@ class THM_GroupsController extends JControllerLegacy
      * Toggles binary resource properties and redirects back to the list view
      *
      * @return void
+     * @throws Exception
      */
     public function toggle()
     {
@@ -293,6 +305,7 @@ class THM_GroupsController extends JControllerLegacy
      * Hides display of personal content
      *
      * @return void
+     * @throws Exception
      */
     public function unpublish()
     {

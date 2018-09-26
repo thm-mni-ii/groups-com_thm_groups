@@ -40,6 +40,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
      * @param   Object $tpl template
      *
      * @return  void
+     * @throws Exception
      */
     public function display($tpl = null)
     {
@@ -76,6 +77,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
      * @param   int $profileID the profile id of the selected user
      *
      * @return void adds the selected username to the application's path context
+     * @throws Exception
      */
     private function addBreadCrumb($profileID)
     {

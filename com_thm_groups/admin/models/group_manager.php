@@ -54,6 +54,7 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
      * Function to feed the data in the table body correctly to the list view
      *
      * @return array consisting of items in the body
+     * @throws Exception
      */
     public function getItems()
     {
@@ -120,6 +121,7 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
      * @param   null $direction ?
      *
      * @return void
+     * @throws Exception
      */
     protected function populateState($ordering = null, $direction = null)
     {
@@ -142,6 +144,7 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
      * @param   int $groupID An id of the group
      *
      * @return  string     A string with all roles comma separated
+     * @throws Exception
      */
     private function getRoles($groupID)
     {

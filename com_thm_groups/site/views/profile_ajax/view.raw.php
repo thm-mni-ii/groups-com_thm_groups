@@ -23,6 +23,7 @@ class THM_GroupsViewProfile_Ajax extends JViewLegacy
      * @return void
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @throws Exception
      */
     public function display($tpl = null)
     {

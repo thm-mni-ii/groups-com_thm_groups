@@ -103,6 +103,7 @@ class THM_GroupsViewOverview extends JViewLegacy
      * @param   object $profile object with user profile information
      *
      * @return  string  the HTML output for the profile link
+     * @throws Exception
      */
     public function getProfileLink($profileID)
     {
@@ -131,6 +132,7 @@ class THM_GroupsViewOverview extends JViewLegacy
      * Alters the breadcrumbs to reflect user profile selection
      *
      * @return  void
+     * @throws Exception
      */
     private function setPathway()
     {

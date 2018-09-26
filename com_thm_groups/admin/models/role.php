@@ -22,6 +22,7 @@ class THM_GroupsModelRole extends JModelLegacy
      *
      * @return  boolean  Returns true on success, false on failure.
      *
+     * @throws Exception
      */
     public function batch()
     {
@@ -83,6 +84,7 @@ class THM_GroupsModelRole extends JModelLegacy
      * @param   array $roleIDs  the ids of the roles to be associated with
      *
      * @return  bool  true on success, otherwise false
+     * @throws Exception
      */
     private function batchAssociation($groupIDs, $roleIDs)
     {
@@ -151,6 +153,7 @@ class THM_GroupsModelRole extends JModelLegacy
      * @param   array $roleIDs  the ids of the profiles from which the associations are to be removed
      *
      * @return  bool  true on success, otherwise false
+     * @throws Exception
      */
     private function batchDelete($groupIDs, $roleIDs)
     {
@@ -180,6 +183,7 @@ class THM_GroupsModelRole extends JModelLegacy
      * Delete item
      *
      * @return mixed
+     * @throws Exception
      */
     public function delete()
     {
@@ -256,6 +260,7 @@ class THM_GroupsModelRole extends JModelLegacy
      * Saves the role
      *
      * @return bool true on success, otherwise false
+     * @throws Exception
      */
     public function save()
     {
@@ -282,6 +287,7 @@ class THM_GroupsModelRole extends JModelLegacy
      *
      * @return  mixed
      *
+     * @throws Exception
      */
     public function saveorder($pks = null, $order = null)
     {
