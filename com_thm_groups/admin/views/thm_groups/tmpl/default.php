@@ -24,11 +24,4 @@ $image   = JHtml::_('image', $logoURL, JText::_('COM_THM_GROUPS'), $attribs);
         Add resource information here!
     </div>
 </div>
-<form action="index.php" id="adminForm" method="post" name="adminForm">
-    <input type="hidden" name="task" value=""/>
-    <input type="hidden" name="boxchecked" value="0"/>
-    <input type="hidden" name="option" value="<?php echo JFactory::getApplication()->input->get('option'); ?>"/>
-    <input type="hidden" name="view" value="<?php echo $this->get('name'); ?>"/>
-    <?php echo JHtml::_('form.token'); ?>
-</form>
 
