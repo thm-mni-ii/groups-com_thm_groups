@@ -19,7 +19,6 @@ class THM_GroupsHelperCategories
      * Checks whether the user is authorized to edit the contents of the given category
      *
      * @param int $categoryID the id of the category
-     * @param int $profileID  the id of the profile for which edit rights are being checked
      *
      * @return bool true if the user may edit the the category's content, otherwise false
      * @throws Exception
@@ -44,7 +43,6 @@ class THM_GroupsHelperCategories
      * Checks whether the user is authorized to edit the contents of the given category
      *
      * @param int $categoryID the id of the category
-     * @param int $profileID  the id of the profile for which edit rights are being checked
      *
      * @return bool true if the user may edit the the category's content, otherwise false
      * @throws Exception
@@ -185,7 +183,7 @@ class THM_GroupsHelperCategories
     /**
      * Returns the id of the profile associated with the category
      *
-     * @param int $categoryID the id of the category
+     * @param string $search the search contents
      *
      * @return int the id of the profile on success, otherwise 0
      *

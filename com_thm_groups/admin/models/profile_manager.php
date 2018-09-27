@@ -206,6 +206,7 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
      * Function to feed the data in the table body correctly to the list view
      *
      * @return array consisting of items in the body
+     * @throws Exception
      */
     public function getItems()
     {

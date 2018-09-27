@@ -77,8 +77,6 @@ class THM_GroupsModelContent_Manager extends JModelList
      * @param   string $direction the direction in which this column should be ordered
      *
      * @return  void  sets object state variables
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function populateState($ordering = null, $direction = null)
     {

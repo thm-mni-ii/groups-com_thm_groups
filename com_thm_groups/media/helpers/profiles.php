@@ -577,7 +577,7 @@ class THM_GroupsHelperProfiles
     /**
      * Gets the most plausible profile id for a given set of 'names'.
      *
-     * @param string $names the names used to identify the profile
+     * @param string $originalNames the names used to identify the profile
      *
      * @return int the profile id if found, otherwise 0
      *

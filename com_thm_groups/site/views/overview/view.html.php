@@ -100,7 +100,7 @@ class THM_GroupsViewOverview extends JViewLegacy
     /**
      * Creates a link to the parametrized profile target using the profile name
      *
-     * @param   object $profile object with user profile information
+     * @param   int $profileID the profile id
      *
      * @return  string  the HTML output for the profile link
      * @throws Exception

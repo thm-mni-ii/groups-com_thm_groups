@@ -63,7 +63,7 @@ class THM_GroupsModelContent extends JModelLegacy
      * @param   integer $order +1 or -1
      *
      * @return  mixed
-     *
+     * @throws Exception
      */
     public function saveorder($pks = null, $order = null)
     {

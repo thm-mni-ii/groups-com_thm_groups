@@ -21,8 +21,6 @@ class TableCategory extends JTableCategory
      * @param   boolean $children True to delete child nodes, false to move them up a level.
      *
      * @return  boolean  True on success.
-     *
-     * @see     http://docs.joomla.org/JTableNested/delete
      */
     public function delete($pk = null, $children = false)
     {

@@ -337,6 +337,8 @@ class THM_GroupsHelperContent
     /**
      * Method to check whether the content is published
      *
+     * @param int $contentID the id of the content
+     *
      * @return  boolean  true on success, otherwise false
      */
     public static function isPublished($contentID)
@@ -461,6 +463,9 @@ class THM_GroupsHelperContent
 
     /**
      * Method to check whether the content is published
+     *
+     * @param int $contentID the content id
+     * @param int $profileID the id of the profile with which it should be associated
      *
      * @return  boolean  true on success, otherwise false
      */

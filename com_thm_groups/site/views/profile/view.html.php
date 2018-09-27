@@ -93,7 +93,7 @@ class THM_GroupsViewProfile extends JViewLegacy
     /**
      * Gets a link to the profile edit view
      *
-     * @params   mixed $attributes An associative array (or simple string) of attributes to add
+     * @param mixed $attributes An associative array (or simple string) of attributes to add
      *
      * @return  string  the Link HTML markup
      */

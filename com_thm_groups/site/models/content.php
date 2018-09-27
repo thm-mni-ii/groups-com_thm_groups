@@ -51,8 +51,7 @@ class THM_GroupsModelContent extends JModelItem
      *
      * @param $contentID
      *
-     *
-     * @since version
+     * @return mixed object on success, otherwise false
      */
     private function getContent($contentID)
     {
@@ -270,7 +269,7 @@ class THM_GroupsModelContent extends JModelItem
      * @param   array $order      the order for the content items
      *
      * @return  mixed
-     *
+     * @throws Exception
      */
     public function saveorder($contentIDs = null, $order = null)
     {

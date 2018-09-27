@@ -186,8 +186,6 @@ class THM_GroupsController extends JControllerLegacy
     /**
      * Sets display parameters and redirects
      *
-     * @param string $view the view name to redirect to.
-     *
      * @return void redirects to the next page
      */
     public function redirectNoAccess()

@@ -21,8 +21,6 @@ class THM_GroupsViewProfile_Ajax extends JViewLegacy
      * @param string $tpl the name of the template to be used
      *
      * @return void
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @throws Exception
      */
     public function display($tpl = null)

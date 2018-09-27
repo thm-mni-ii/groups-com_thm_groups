@@ -272,8 +272,6 @@ class THM_GroupsViewContent extends JViewLegacy
      * Initiates triggers for content plugins and handles the results.
      *
      * @param int $pageNo the number of the page being displayed
-     *
-     * @since version
      */
     private function triggerPlugins($pageNo)
     {

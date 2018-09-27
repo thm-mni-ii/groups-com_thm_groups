@@ -32,8 +32,6 @@ abstract class THM_GroupsModelList extends JModelList
      *
      * @param   array $config An optional associative array of configuration settings.
      *
-     * @see     \JModelLegacy
-     * @since   1.6
      * @throws Exception
      */
     public function __construct($config = array())
@@ -128,8 +126,6 @@ abstract class THM_GroupsModelList extends JModelList
      * @param   string $direction An optional direction (asc|desc).
      *
      * @return  void  sets object state variables
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @throws Exception
      */
     protected function populateState($ordering = null, $direction = null)

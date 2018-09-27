@@ -134,7 +134,6 @@ class THM_GroupsViewAdvanced extends JViewLegacy
      *
      * @param array $attributes the profile's attributes
      * @param bool  $half       whether or not the profile should only take half the row width
-     * @param int   $groupID    the id of the profile's group
      *
      * @return string the HTML of the profile container
      */
