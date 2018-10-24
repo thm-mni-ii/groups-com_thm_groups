@@ -73,6 +73,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
      * Deletes selected attributes from the db. Protected attributes are automatically removed from the selection.
      *
      * @return  mixed  true on success, otherwise false
+     * @throws Exception
      */
     public function delete()
     {
@@ -138,6 +139,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
      * @param   array $attribute Object of attribute
      *
      * @return  boolean true on success, otherwise false
+     * @throws Exception
      */
     private function deletePictures($attribute)
     {
@@ -227,6 +229,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
      * Saves the attribute
      *
      * @return mixed int attribute id on success, otherwise bool false
+     * @throws Exception
      */
     public function save()
     {
@@ -315,6 +318,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
      * Toggles binary attribute attribute values.
      *
      * @return  boolean  true on success, otherwise false
+     * @throws Exception
      */
     public function toggle()
     {
@@ -369,6 +373,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
      * @param   array $order the ordering values corresponding to the table keys
      *
      * @return bool true on success, otherwise false
+     * @throws Exception
      */
     public function saveorder($pks = null, $order = null)
     {

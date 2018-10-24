@@ -27,8 +27,7 @@ class THM_GroupsModelAttribute_Edit extends THM_GroupsModelEdit
      * @param   Boolean $loadData Load data  (default: true)
      *
      * @return  object the form
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @throws Exception
      */
     public function getForm($data = [], $loadData = true)
     {
@@ -58,6 +57,7 @@ class THM_GroupsModelAttribute_Edit extends THM_GroupsModelEdit
      * Method to load the form data
      *
      * @return  Object
+     * @throws exception
      */
     protected function loadFormData()
     {

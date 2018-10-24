@@ -23,6 +23,8 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
      * Constructor.
      *
      * @param   array $config An optional associative array of configuration settings.
+     *
+     * @throws Exception
      */
     public function __construct($config = [])
     {
@@ -148,10 +150,11 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
     /**
      * populates State
      *
-     * @param   null $ordering  ?
-     * @param   null $direction ?
+     * @param   string $ordering  the column to order by
+     * @param   string $direction the sort direction
      *
      * @return void
+     * @throws Exception
      */
     protected function populateState($ordering = null, $direction = null)
     {

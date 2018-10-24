@@ -26,6 +26,8 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
      * Constructor
      *
      * @param   array $config config array
+     *
+     * @throws Exception
      */
     public function __construct($config = [])
     {
@@ -43,6 +45,7 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
      * @param   int profileID the user ID
      *
      * @return  array the association IDs
+     * @throws Exception
      */
     private function getAssociations($profileID)
     {
@@ -79,6 +82,7 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
      * @param   bool $canEdit   whether or not the user is authorized to edit associations
      *
      * @return  string the HTML output
+     * @throws Exception
      */
     private function getAssocLinks($profileID, $canEdit)
     {

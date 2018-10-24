@@ -42,6 +42,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
      * @param   Object $tpl template
      *
      * @return void
+     * @throws Exception
      */
     public function display($tpl = null)
     {
@@ -113,6 +114,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
      * @param   object $item the content item
      *
      * @return  string  the HTML for the row to be rendered
+     * @throws Exception
      */
     public function getRow($key, $item)
     {
@@ -214,6 +216,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
      * @param object &$item An object item
      *
      * @return  string the HTML for the title
+     * @throws Exception
      */
     public function getTitle($key, &$item)
     {
@@ -254,6 +257,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
      * @param   string $attribute the resource attribute to be changed (useful if multiple entries can be toggled)
      *
      * @return  string  a HTML string
+     * @throws Exception
      */
     public function getToggle($id, $value, $attribute)
     {

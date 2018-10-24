@@ -22,6 +22,7 @@ abstract class THM_GroupsViewEdit extends JViewLegacy
      * @param   Object $tpl template  (default: null)
      *
      * @return  void
+     * @throws Exception
      */
     public function display($tpl = null)
     {

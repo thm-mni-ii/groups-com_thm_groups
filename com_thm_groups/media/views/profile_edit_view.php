@@ -33,6 +33,7 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
      * @param   Object $tpl template (default: null)
      *
      * @return  void
+     * @throws Exception
      */
     public function display($tpl = null)
     {

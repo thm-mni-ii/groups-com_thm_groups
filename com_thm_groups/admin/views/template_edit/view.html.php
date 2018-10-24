@@ -28,6 +28,7 @@ class THM_GroupsViewTemplate_Edit extends THM_GroupsViewEdit
      * @param   string $tpl the name of the template to be used
      *
      * @return void
+     * @throws Exception
      */
     public function display($tpl = null)
     {
@@ -56,6 +57,7 @@ class THM_GroupsViewTemplate_Edit extends THM_GroupsViewEdit
      * Adds items to the toolbar
      *
      * @return  void  modifies the JToolbar
+     * @throws Exception
      */
     protected function addToolbar()
     {

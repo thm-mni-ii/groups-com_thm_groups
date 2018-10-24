@@ -33,6 +33,7 @@ class THM_GroupsViewProfile extends JViewLegacy
      * @param   Object $tpl template
      *
      * @return void
+     * @throws Exception
      */
     public function display($tpl = null)
     {
@@ -121,6 +122,7 @@ class THM_GroupsViewProfile extends JViewLegacy
      * Adds css and javascript files to the document
      *
      * @return  void  modifies the document
+     * @throws Exception
      */
     private function modifyDocument()
     {

@@ -101,6 +101,7 @@ class THM_GroupsHelperComponent
      * @param boolean $isAdmin whether the file is being called from the backend
      *
      * @return  void
+     * @throws Exception
      */
     public static function callController($isAdmin = true)
     {
@@ -125,6 +126,7 @@ class THM_GroupsHelperComponent
      * Clean the cache
      *
      * @return  void
+     * @throws Exception
      */
     public static function cleanCache()
     {
@@ -199,7 +201,7 @@ class THM_GroupsHelperComponent
 
         $text = preg_replace($pattern, ' ', $text);
 
-        // For some reason the patterns do not filter periods out
+        // The letter filter seems to include periods
         $text = str_replace('.', '', $text);
 
         return self::trim($text);
@@ -350,6 +352,7 @@ class THM_GroupsHelperComponent
      * Redirects to the homepage and displays a message about missing access rights
      *
      * @return  void
+     * @throws Exception
      */
     public static function noAccess()
     {

@@ -42,6 +42,8 @@ class Com_THM_GroupsInstallerScript
      * Get a variable from the manifest file (actually, from the manifest cache).
      *
      * @param   string $name param what you need, for example version
+     *
+     * @return mixed the parameter value at the named index
      */
     public function getParam($name)
     {
@@ -55,6 +57,8 @@ class Com_THM_GroupsInstallerScript
     /**
      * Import all Groups that exist in Joomla to THM_Groups and
      * set the member role as default.
+     *
+     * @throws Exception
      */
     private function importGroups()
     {
@@ -96,10 +100,13 @@ class Com_THM_GroupsInstallerScript
     }
 
     /**
-     * Assoicate all groups to a user profile with the default member
+     * Associate all groups to a user profile with the default member
      * role.
      *
-     * @param $user
+     * @param array $user an array with user data
+     *
+     * @return void
+     * @throws Exception
      */
     private function associateProfileGroups($user)
     {
@@ -147,6 +154,8 @@ class Com_THM_GroupsInstallerScript
 
     /**
      * Creates a THM_Groups profile for each existing Joomla user.
+     *
+     * @throws Exception
      */
     private function createProfiles()
     {
@@ -258,7 +267,8 @@ class Com_THM_GroupsInstallerScript
      *
      * @param   $parent  is the class calling this method.
      *
-     * @return  return if the installation succeeded, otherwise false.
+     * @return  bool true if the installation succeeded, otherwise false.
+     * @throws Exception
      */
     public function install($parent)
     {

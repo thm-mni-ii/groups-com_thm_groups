@@ -82,7 +82,7 @@ class THM_GroupsHelperGroups
     }
 
     /**
-     * Retrieves profileIDs for the given group grouped by the optionally pre-selected group roles.
+     * Retrieves profileIDs for the given group.
      *
      * @param   int $groupID the id of the group
      *

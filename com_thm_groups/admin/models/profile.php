@@ -21,6 +21,7 @@ class THM_GroupsModelProfile extends JModelLegacy
      * Associates a group and potentially multiple roles with the selected users
      *
      * @return  bool true on success, otherwise false.
+     * @throws Exception
      */
     public function batch()
     {
@@ -85,6 +86,7 @@ class THM_GroupsModelProfile extends JModelLegacy
      * @param   array $profileIDs array with ids
      *
      * @return  void
+     * @throws Exception
      */
     private function createCategory($profileIDs)
     {
@@ -171,6 +173,7 @@ class THM_GroupsModelProfile extends JModelLegacy
      * @param int $attributeID the id of the attribute under which the value is stored.
      *
      * @return mixed
+     * @throws Exception
      */
     public function deletePicture($profileID = 0, $attributeID = 0)
     {
@@ -280,6 +283,7 @@ class THM_GroupsModelProfile extends JModelLegacy
      * @param   int $roleID  the id of the role
      *
      * @return int the id of the association on success, otherwise 0
+     * @throws Exception
      */
     private function getAssocID($groupID, $roleID)
     {
@@ -310,6 +314,7 @@ class THM_GroupsModelProfile extends JModelLegacy
      * @param   int $groupID the Joomla / THM Groups user group ids
      *
      * @return array the ids associated with the group
+     * @throws Exception
      */
     private function getAssocIDs($groupID)
     {
@@ -339,6 +344,7 @@ class THM_GroupsModelProfile extends JModelLegacy
      * @param   array $requestedAssocs An array with groups and roles
      *
      * @return  array with ids
+     * @throws Exception
      */
     private function getGroupAssociations($requestedAssocs)
     {
@@ -412,6 +418,7 @@ class THM_GroupsModelProfile extends JModelLegacy
      * @param   array $profileIDs An array with user ids
      *
      * @return array
+     * @throws Exception
      */
     private function getUserAssociations($profileIDs)
     {
@@ -440,6 +447,7 @@ class THM_GroupsModelProfile extends JModelLegacy
      * Allows the public display of the user's profile. Access checks are performed in toggle.
      *
      * @return bool
+     * @throws Exception
      */
     public function publish()
     {
@@ -454,6 +462,7 @@ class THM_GroupsModelProfile extends JModelLegacy
      * Allows public display of personal content. Access checks are performed in toggle.
      *
      * @return bool
+     * @throws Exception
      */
     public function publishContent()
     {
@@ -490,9 +499,8 @@ class THM_GroupsModelProfile extends JModelLegacy
     /**
      * Saves user profile information
      *
-     * @TODO  Add handling of failures
-     *
      * @return  mixed  int profile ID on success, otherwise false
+     * @throws Exception
      */
     public function save()
     {
@@ -532,6 +540,7 @@ class THM_GroupsModelProfile extends JModelLegacy
      * Saves the cropped image that was uploaded via ajax in the profile_edit.view
      *
      * @return  bool|mixed|string
+     * @throws Exception
      */
     public function saveCropped()
     {
@@ -601,6 +610,7 @@ class THM_GroupsModelProfile extends JModelLegacy
      * @param   array $formData the submitted form data
      *
      * @return  bool true on success, otherwise false
+     * @throws Exception
      */
     private function saveValues($formData)
     {
@@ -647,17 +657,13 @@ class THM_GroupsModelProfile extends JModelLegacy
     }
 
     /**
-     * Perform batch operations.
-     * The main idea for this function is to assign groups-roles
-     * relationships to a user.
-     * The function can be extended to perform another
-     * batch operations.
+     * Associates the profile with the given groups/roles
      *
      * @param   array $profileIDs      the profile IDs which assignments are being edited
      * @param   array $requestedAssocs an array of groups and roles
      *
      * @return  boolean  True on success, false on failure
-     *
+     * @throws Exception
      */
     private function setGroupsAssociations($profileIDs, $requestedAssocs)
     {
@@ -722,6 +728,7 @@ class THM_GroupsModelProfile extends JModelLegacy
      * @param   array $batchData  an array with groups and roles
      *
      * @return bool true on success, otherwise false
+     * @throws Exception
      */
     private function setJoomlaAssociations($profileIDs, $batchData)
     {
@@ -761,6 +768,7 @@ class THM_GroupsModelProfile extends JModelLegacy
      * Toggles a binary entity property value
      *
      * @return  boolean  true on success, otherwise false
+     * @throws Exception
      */
     public function toggle()
     {
@@ -821,6 +829,7 @@ class THM_GroupsModelProfile extends JModelLegacy
      * Hides the public display of the user's profile. Access checks are performed in toggle.
      *
      * @return bool
+     * @throws Exception
      */
     public function unpublish()
     {

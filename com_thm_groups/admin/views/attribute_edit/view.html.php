@@ -22,6 +22,7 @@ class THM_GroupsViewAttribute_Edit extends THM_GroupsViewEdit
      * @param   Object $tpl template  (default: null)
      *
      * @return  void
+     * @throws Exception
      */
     public function display($tpl = null)
     {

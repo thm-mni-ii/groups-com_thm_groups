@@ -136,6 +136,7 @@ class THM_GroupsViewAdvanced extends JViewLegacy
      * @param bool  $half       whether or not the profile should only take half the row width
      *
      * @return string the HTML of the profile container
+     * @throws Exception
      */
     public function getProfileContainer($attributes, $half)
     {

@@ -176,8 +176,7 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
      * @param   string $direction An optional direction (asc|desc).
      *
      * @return  void  sets object state variables
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @throws Exception
      */
     protected function populateState($ordering = null, $direction = null)
     {

@@ -179,6 +179,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
      * Save the template's basic information
      *
      * @return  mixed  int table id on success, otherwise false
+     * @throws Exception
      */
     private function saveTemplate()
     {
@@ -221,6 +222,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
      * Delete item
      *
      * @return mixed
+     * @throws Exception
      */
     public function delete()
     {
@@ -321,6 +323,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
      * Saves the profile templates
      *
      * @return  mixed int on success, false otherwise
+     * @throws Exception
      */
     public function save()
     {

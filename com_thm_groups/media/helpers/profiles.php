@@ -48,6 +48,7 @@ class THM_GroupsHelperProfiles
      * @param   int $profileID the id of the profile user
      *
      * @return  boolean  true if the current user is authorized to edit the profile, otherwise false
+     * @throws Exception
      */
     public static function canEdit($profileID)
     {

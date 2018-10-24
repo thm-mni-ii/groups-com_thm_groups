@@ -26,11 +26,11 @@ class THM_GroupsViewGroup_Manager extends THM_GroupsViewList
     public $profiles;
 
     /**
-     * Method to get display
+     * Execute and display a view script.
      *
-     * @param   Object $tpl template
+     * @param   string $tpl The name of the layout file to parse; automatically searches through the layout paths.
      *
-     * @return void
+     * @return  mixed  A string if successful, otherwise an Error object.
      * @throws Exception
      */
     public function display($tpl = null)
