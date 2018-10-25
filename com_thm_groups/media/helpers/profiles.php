@@ -350,22 +350,9 @@ class THM_GroupsHelperProfiles
      */
     public static function getDisplayName($profileID, $withTitle = false, $withSpan = false)
     {
-        $profile = self::getProfile($profileID);
-        $indexes = $withTitle ? [5, 1, 2, 7] : [1, 2];
-        $text    = '';
+        $ntData = self::getNamesAndTitles($profileID, $withTitle, $withSpan);
 
-        foreach ($indexes as $index) {
-            if (!empty($profile[$index]) and !empty($profile[$index]['value'])) {
-                if ($withSpan) {
-                    $span = ($index === 1 or $index === 2) ? '<span class="name-value">' : '<span class="title-value">';
-                    $span .= $profile[$index]['value'];
-                    $span .= ' </span>';
-                    $text .= $span;
-                } else {
-                    $text .= "{$profile[$index]['value']} ";
-                }
-            }
-        }
+        $text = "{$ntData['preTitle']} {$ntData['forename']} {$ntData['surname']} {$ntData['postTitle']}  ";
 
         return trim($text);
     }
@@ -407,23 +394,10 @@ class THM_GroupsHelperProfiles
      */
     public static function getLNFName($profileID, $withTitle = false, $withSpan = false)
     {
-        $profile = self::getProfile($profileID);
-        $indexes = $withTitle ? [2, 1, 5, 7] : [2, 1];
-        $text    = '';
+        $ntData = self::getNamesAndTitles($profileID, $withTitle, $withSpan);
 
-        foreach ($indexes as $index) {
-            if (!empty($profile[$index]) and !empty($profile[$index]['value'])) {
-                if ($withSpan) {
-                    $span = ($index === 1 or $index === 2) ? '<span class="name-value">' : '<span class="title-value">';
-                    $span .= ($index === 2 and !empty($profile[1])) ?
-                        "{$profile[$index]['value']}," : $profile[$index]['value'];
-                    $span .= ' </span>';
-                    $text .= $span;
-                } else {
-                    $text .= "{$profile[$index]['value']} ";
-                }
-            }
-        }
+        $text = empty($ntData['forename'])? $ntData['surname'] : "{$ntData['surname']}, {$ntData['forename']} ";
+        $text .= " {$ntData['preTitle']} {$ntData['postTitle']}";
 
         return trim($text);
     }
@@ -447,6 +421,64 @@ class THM_GroupsHelperProfiles
         $link = JHtml::link(JRoute::_($attributes['URL']), $text, ['target' => '_blank']);
 
         return '<div class="attribute-inline">' . $link . '</div>';
+    }
+
+    /**
+     * Retrieves data to be used in functions returning profile names and titles
+     *
+     * @param   int  $profileID the user id
+     * @param   bool $withTitle whether the titles should be displayed
+     * @param   bool $withSpan  whether the attributes should be contained in individual spans for style assignments
+     *
+     * @return  array the name and title data
+     * @throws Exception
+     */
+    private static function getNamesAndTitles($profileID, $withTitle, $withSpan)
+    {
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query->select('sn.value AS surname, fn.value AS forename')
+            ->from('#__thm_groups_profile_attributes AS sn')
+            ->innerJoin('#__thm_groups_profile_attributes AS fn ON fn.profileID = sn.profileID')
+            ->where("sn.profileID = '$profileID'")
+            ->where("sn.attributeID = " . SURNAME)
+            ->where("fn.attributeID = " . FORENAME);
+
+        if ($withTitle) {
+            $query->select('prt.value AS preTitle, prt.published AS prePublished')
+                ->leftJoin('#__thm_groups_profile_attributes AS prt ON prt.profileID = sn.profileID')
+                ->where("prt.attributeID = " . TITLE)
+                ->select('pot.value AS postTitle, pot.published AS postPublished')
+                ->leftJoin('#__thm_groups_profile_attributes AS pot ON pot.profileID = sn.profileID')
+                ->where("pot.attributeID = " . POSTTITLE);
+        }
+
+        $dbo->setQuery($query);
+
+        try {
+            $results = $dbo->loadAssoc();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+            return [];
+        }
+
+        if (empty($results['prePublished'])) {
+            $results['preTitle'] = '';
+        }
+
+        if (empty($results['postPublished'])) {
+            $results['postTitle'] = '';
+        }
+
+        if ($withSpan) {
+            $results['surname']   = empty($results['surname']) ? '' : '<span class="name-value">' . $results['surname'] . '</span>';
+            $results['forename']  = empty($results['forename']) ? '' : '<span class="name-value">' . $results['forename'] . '</span>';
+            $results['preTitle']  = empty($results['preTitle']) ? '' : '<span class="title-value">' . $results['preTitle'] . '</span>';
+            $results['postTitle'] = empty($results['postTitle']) ? '' : '<span class="title-value">' . $results['postTitle'] . '</span>';
+        }
+
+        return empty($results) ? [] : $results;
     }
 
     /**
