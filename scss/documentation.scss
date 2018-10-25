@@ -1,0 +1,45 @@
+@import 'variables';
+
+.groups-documentation {
+
+  font-family: $font-family;
+  font-size: .9rem;
+
+  h3 {
+    color: $font-color;
+    background-color: $background-active;
+    font-size: 1.2rem;
+    padding: .5rem 0 .5rem 1rem;
+  }
+
+  p, dl {
+    padding: .5rem 1rem;
+  }
+
+  div.list {
+    position: relative;
+  }
+
+  div.label, div.description {
+    float: left;
+    display: table-cell;
+    margin-top: .5rem;
+    vertical-align: middle;
+  }
+
+  div.label {
+    clear: left;
+    font-size: 1rem;
+    text-align: right;
+    width: 6.5rem;
+  }
+
+  div.description {
+    margin-left: 1rem;
+    width: calc(100% - 7.5rem);
+  }
+
+  div.clearFix {
+    clear: both;
+  }
+}

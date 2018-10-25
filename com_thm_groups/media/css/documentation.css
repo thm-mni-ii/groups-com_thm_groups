@@ -1,0 +1,42 @@
+.groups-documentation {
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+    font-size: .9rem;
+}
+
+.groups-documentation h3 {
+    color: #394a59;
+    background-color: #dfeec8;
+    font-size: 1.2rem;
+    padding: .5rem 0 .5rem 1rem;
+}
+
+.groups-documentation p, .groups-documentation dl {
+    padding: .5rem 1rem;
+}
+
+.groups-documentation div.list {
+    position: relative;
+}
+
+.groups-documentation div.label, .groups-documentation div.description {
+    float: left;
+    display: table-cell;
+    margin-top: .5rem;
+    vertical-align: middle;
+}
+
+.groups-documentation div.label {
+    clear: left;
+    font-size: 1rem;
+    text-align: right;
+    width: 6.5rem;
+}
+
+.groups-documentation div.description {
+    margin-left: 1rem;
+    width: calc(100% - 7.5rem);
+}
+
+.groups-documentation div.clearFix {
+    clear: both;
+}
