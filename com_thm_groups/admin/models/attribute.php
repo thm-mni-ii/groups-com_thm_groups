@@ -77,7 +77,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
      */
     public function delete()
     {
-        $app  = JFactory::getApplication();
+        $app = JFactory::getApplication();
 
         if (!THM_GroupsHelperComponent::isManager()) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
@@ -144,7 +144,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
     private function deletePictures($attribute)
     {
         $query = $this->_db->getQuery(true);
-        $query->select('ID, value, attributeID')
+        $query->select('id, value, attributeID')
             ->from('#__thm_groups_profile_attributes')
             ->where("attributeID = '{$attribute['id']}'");
         $this->_db->setQuery($query);
@@ -233,7 +233,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
      */
     public function save()
     {
-        $app  = JFactory::getApplication();
+        $app = JFactory::getApplication();
 
         if (!THM_GroupsHelperComponent::isManager()) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
@@ -322,7 +322,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
      */
     public function toggle()
     {
-        $app  = JFactory::getApplication();
+        $app = JFactory::getApplication();
 
         if (!THM_GroupsHelperComponent::isManager()) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
@@ -377,7 +377,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
      */
     public function saveorder($pks = null, $order = null)
     {
-        $app  = JFactory::getApplication();
+        $app = JFactory::getApplication();
 
         if (!THM_GroupsHelperComponent::isManager()) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');

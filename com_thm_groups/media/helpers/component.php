@@ -142,7 +142,7 @@ class THM_GroupsHelperComponent
         try {
             $cache = JCache::getInstance('callback', $options);
             $cache->clean();
-        } catch (JCacheException $exception) {
+        } catch (Exception $exception) {
             $options['result'] = false;
         }
         // Set the clean cache event

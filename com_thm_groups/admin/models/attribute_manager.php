@@ -29,18 +29,6 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
     protected $defaultDirection = 'ASC';
 
     /**
-     * Constructor.
-     *
-     * @param   array $config An optional associative array of configuration settings.
-     */
-    public function __construct($config = [])
-    {
-        $config['filter_fields'] = ['a.id', 'a.name', 'aa.name'];
-
-        parent::__construct($config);
-    }
-
-    /**
      * Function to get table headers
      *
      * @return array including headers

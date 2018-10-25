@@ -37,6 +37,7 @@ class THM_GroupsHelperProfiles
             $dbo->execute();
         } catch (Exception $exception) {
             JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
             return;
         }
 
