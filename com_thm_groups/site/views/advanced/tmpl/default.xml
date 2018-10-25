@@ -12,10 +12,8 @@
                 <option value="1">JYES</option>
                 <option value="0">JNO</option>
             </field>
-            <field name="templateID" type="template" none="0" label="COM_THM_GROUPS_TEMPLATE"
-                   description="COM_THM_GROUPS_TEMPLATE_SELECT_DESC"/>
-            <field name="templateID" type="genericlist" valueColumn="id" textColumn="name" table="thm_groups_templates"
-                   label="COM_THM_GROUPS_TEMPLATES" onchange="this.form.submit();"></field>
+            <field name="templateID" type="genericlist" valueColumn="id" textColumn="templateName" table="thm_groups_templates"
+                   label="COM_THM_GROUPS_TEMPLATES"></field>
             <field name="sort" type="radio" label="COM_THM_GROUPS_SORT" description="COM_THM_GROUPS_ADVANCED_SORT_DESC"
                    default="1">
                 <option value="0">COM_THM_GROUPS_ROLE</option>

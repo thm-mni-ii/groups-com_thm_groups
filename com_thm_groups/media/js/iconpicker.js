@@ -20,7 +20,7 @@ function selectIcon(event)
 
     selectedItem.closest('.iconPicker').find('[data-bind="label"]').html(selectedItemHtml);
 
-    jQuery("input[name='jform[iconpicker]']").val(classNameOfIcon).submit();
+    jQuery("input[name='jform[icon]']").val(classNameOfIcon).submit();
 
     return selectedItem;
 }

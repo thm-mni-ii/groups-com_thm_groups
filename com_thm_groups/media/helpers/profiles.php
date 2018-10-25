@@ -94,7 +94,7 @@ class THM_GroupsHelperProfiles
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
         $query->select('DISTINCT pAssoc.profileID, rAssoc.groupID, uum.user_id')
-            ->from('#__thm_groups_profile_associations as pAssoc')
+            ->from('#__thm_groups_profile_associations AS pAssoc')
             ->innerJoin('#__thm_groups_role_associations as rAssoc on pAssoc.role_associationID = rAssoc.id')
             ->leftJoin('#__user_usergroup_map as uum on uum.user_id = pAssoc.profileID and uum.group_id = rAssoc.groupID')
             ->where('uum.user_id IS NULL');
@@ -127,7 +127,7 @@ class THM_GroupsHelperProfiles
      */
     public static function contentEnabled($profileID)
     {
-        $dbo = JFactory::getDbo();
+        $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
         $query->select('contentEnabled')->from('#__thm_groups_profiles')->where("id = '$profileID'");
         $dbo->setQuery($query);
@@ -136,6 +136,7 @@ class THM_GroupsHelperProfiles
             $contentEnabled = $dbo->loadResult();
         } catch (Exception $exc) {
             JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+
             return false;
         }
 

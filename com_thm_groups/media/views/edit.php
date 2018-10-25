@@ -32,6 +32,8 @@ abstract class THM_GroupsViewEdit extends JViewLegacy
         $this->form = $this->get('Form');
 
         // Allows for view specific toolbar handling
+
+        JFactory::getApplication()->input->set('hidemainmenu', 1);
         $this->addToolBar();
         parent::display($tpl);
     }

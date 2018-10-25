@@ -17,6 +17,8 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/content.php';
  */
 class THM_GroupsModelProfile extends JModelLegacy
 {
+    const IMAGE_PATH = JPATH_ROOT . '/images/com_thm_groups/profile';
+
     /**
      * Associates a group and potentially multiple roles with the selected users
      *
@@ -25,7 +27,7 @@ class THM_GroupsModelProfile extends JModelLegacy
      */
     public function batch()
     {
-        $app  = JFactory::getApplication();
+        $app = JFactory::getApplication();
 
         if (!THM_GroupsHelperComponent::isManager()) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
@@ -63,24 +65,6 @@ class THM_GroupsModelProfile extends JModelLegacy
     }
 
     /**
-     * Fixes file path resolution problems stemming from incorrect directory separators.
-     *
-     * @param   string $path the configured local path
-     *
-     * @return  string  the corrected path
-     */
-    private function correctPathDS($path)
-    {
-        if (DIRECTORY_SEPARATOR == '/') {
-            return str_replace('\\', '/', $path);
-        } elseif (DIRECTORY_SEPARATOR == '\\') {
-            return str_replace('/', '\\', $path);
-        }
-
-        return $path;
-    }
-
-    /**
      * Create content category for user(s)
      *
      * @param   array $profileIDs array with ids
@@ -106,7 +90,7 @@ class THM_GroupsModelProfile extends JModelLegacy
      */
     public function deleteGroupAssociation()
     {
-        $app  = JFactory::getApplication();
+        $app = JFactory::getApplication();
 
         if (!THM_GroupsHelperComponent::isManager()) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
@@ -207,10 +191,8 @@ class THM_GroupsModelProfile extends JModelLegacy
             return true;
         }
 
-        $filePath = $this->getPicturePath($attributeID);
-
-        if (file_exists(realpath(JPATH_ROOT . $filePath . $fileName))) {
-            unlink(realpath(JPATH_ROOT . $filePath . $fileName));
+        if (file_exists(self::IMAGE_PATH . $fileName)) {
+            unlink(self::IMAGE_PATH . $fileName);
         }
 
         // Update new picture filename
@@ -243,7 +225,7 @@ class THM_GroupsModelProfile extends JModelLegacy
      */
     public function deleteRoleAssociation()
     {
-        $app  = JFactory::getApplication();
+        $app = JFactory::getApplication();
 
         if (!THM_GroupsHelperComponent::isManager()) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
@@ -372,44 +354,6 @@ class THM_GroupsModelProfile extends JModelLegacy
         }
 
         return $assocs;
-    }
-
-    /**
-     * Gets the local path that is needed to save the picture to the filesystem.
-     *
-     * @param   int $attributeID the attribute id of the picture
-     *
-     * @return  mixed
-     */
-    private function getPicturePath($attributeID)
-    {
-        $dbo   = JFactory::getDbo();
-        $query = $dbo->getQuery(true);
-        $query->select('options')->from('#__thm_groups_attributes')->where("id = '$attributeID'");
-        $dbo->setQuery($query);
-
-        try {
-            $optionsString = $dbo->loadResult();
-        } catch (Exception $exc) {
-            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
-
-            return false;
-        }
-
-        $options = json_decode($optionsString, true);
-
-        if (empty($options) or empty($options['path'])) {
-            return true;
-        }
-
-        $configuredPath = $options['path'];
-        $position       = strpos($options['path'], '/images/');
-
-        if ($position === false) {
-            return true;
-        }
-
-        return substr($configuredPath, $position);
     }
 
     /**
@@ -573,8 +517,7 @@ class THM_GroupsModelProfile extends JModelLegacy
 
         $attributeID = $input->get('attributeID');
         $newFileName = $profileID . "_" . $attributeID . "." . strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-        $pathAttr    = $this->getPicturePath($attributeID);
-        $path        = $this->correctPathDS(JPATH_ROOT . $pathAttr . $newFileName);
+        $path        = self::IMAGE_PATH . "/$newFileName";
 
         $profile = THM_GroupsHelperProfiles::getProfile($profileID);
 
@@ -772,7 +715,7 @@ class THM_GroupsModelProfile extends JModelLegacy
      */
     public function toggle()
     {
-        $app  = JFactory::getApplication();
+        $app = JFactory::getApplication();
 
         if (!THM_GroupsHelperComponent::isManager()) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');

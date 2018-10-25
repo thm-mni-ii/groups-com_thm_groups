@@ -26,11 +26,11 @@ class Com_THM_GroupsInstallerScript
      */
     public function createImageFolder()
     {
-        $imagesPath  = JPATH_ROOT . '/images';
-        $dirToCreate = $imagesPath . '/com_thm_groups/profile';
+        $dirToCreate = JPATH_ROOT . '/images/com_thm_groups/profile';
 
         if (!file_exists($dirToCreate) && !mkdir($dirToCreate, 0755, true)) {
-            JFactory::getApplication()->enqueueMessage("Failed to create a new Folder $dirToCreate", 'error');
+            $msg = "Failed to create the images directory $dirToCreate. This can lead to errors saving image attributes.";
+            JFactory::getApplication()->enqueueMessage($msg, 'error');
 
             return false;
         }

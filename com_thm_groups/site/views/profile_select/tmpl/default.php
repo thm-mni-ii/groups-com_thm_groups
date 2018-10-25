@@ -13,7 +13,7 @@ defined("_JEXEC") or die;
 $filters = $this->filterForm->getGroup('filter');
 ?>
 <script type="text/javascript">
-    var rootURI = '<?php echo JUri::root(); ?>',
+    const rootURI = '<?php echo JUri::root(); ?>',
         editor = '<?php echo JFactory::getApplication()->input->getString('editor')?>';
 </script>
 <div id="profile-select-container" class="profile-select-container">
