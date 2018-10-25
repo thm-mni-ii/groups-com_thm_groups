@@ -17,14 +17,7 @@ require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
  */
 class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
 {
-    // Standard immutable values
-    const FORENAME = 1;
-    const SURNAME = 2;
-    const EMAIL = 4;
-    const TITLE = 5;
-    const POSTTITLE = 7;
-
-    protected $defaultOrdering = 'a.id';
+    protected $defaultOrdering = 'a.ordering';
 
     protected $defaultDirection = 'ASC';
 
@@ -83,6 +76,8 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
 
         $generalLock = '<span class="icon-lock hasTooltip" title="XXXX"></span>';
         $doNotDelete = [self::FORENAME, self::SURNAME, self::EMAIL, self::TITLE, self::POSTTITLE];
+
+        $doNotDelete = [FORENAME, SURNAME, EMAIL, TITLE, POSTTITLE];
 
         $index = 0;
         foreach ($items as $item) {

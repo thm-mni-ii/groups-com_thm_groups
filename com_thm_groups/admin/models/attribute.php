@@ -17,12 +17,7 @@ require_once JPATH_ROOT . '/media/com_thm_groups/helpers/field_types.php';
  */
 class THM_GroupsModelAttribute extends JModelLegacy
 {
-    // Standard immutable attribute ids
-    const FORENAME = 1;
-    const SURNAME = 2;
-    const EMAIL = 4;
-    const TITLE = 5;
-    const POSTTITLE = 7;
+    const IMAGE_PATH = JPATH_ROOT . '/images/com_thm_groups/profile';
 
     /**
      * Generates a row for this attribute's value for all existing user profiles
@@ -85,7 +80,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
             return false;
         }
 
-        $doNotDelete = [self::FORENAME, self::SURNAME, self::EMAIL, self::TITLE, self::POSTTITLE];
+        $doNotDelete = [FORENAME, SURNAME, EMAIL_ATTRIBUTE, TITLE, POSTTITLE];
         $selected    = $app->input->get('cid', [], 'array');
         Joomla\Utilities\ArrayHelper::toInteger($selected);
         $attributeIDs = array_diff($selected, $doNotDelete);
@@ -157,17 +152,10 @@ class THM_GroupsModelAttribute extends JModelLegacy
             return false;
         }
 
-        // Get path
-        $options = json_decode($attribute['options']);
-
-        if (empty($options->path)) {
-            return true;
-        }
-
-        foreach (scandir($options->path) as $file) {
+        foreach (scandir(self::IMAGE_PATH) as $file) {
             foreach ($pictures as $picture) {
                 if ($file == $picture['value']) {
-                    unlink($options->path . $file);
+                    unlink(self::IMAGE_PATH . $file);
                 }
             }
         }
@@ -241,21 +229,9 @@ class THM_GroupsModelAttribute extends JModelLegacy
             return false;
         }
 
-        $data        = $app->input->get('jform', [], 'array');
-        $fieldTypeID = $this->getStaticTypeIDByDynTypeID($data['abstractID']);
-        $options     = THM_GroupsHelperField_Types::getOption($fieldTypeID);
-
-        if ($fieldTypeID === 1 or $fieldTypeID === 2) {
-            $options->length = empty($data['length']) ? $options->length : (int)$data['length'];
-        }
-
-        $options->required = isset($data['validate']) ? (bool)$data['validate'] : false;
-
-        if (!empty($data['iconpicker'])) {
-            $options->icon = $data['iconpicker'];
-        }
-
-        $data['options']     = json_encode($options);
+        $data                = $app->input->get('jform', [], 'array');
+        $fieldTypeID         = THM_GroupsHelperAttribute_Types::getFieldID($data['typeID']);
+        $data['options']     = json_encode(THM_GroupsHelperFields::getOptions($fieldTypeID, $data));
         $data['description'] = empty($data['description']) ? "" : $this->_db->escape($data['description']);
 
         $this->_db->transactionStart();
@@ -282,36 +258,6 @@ class THM_GroupsModelAttribute extends JModelLegacy
         $this->_db->transactionCommit();
 
         return $attribute->id;
-    }
-
-    /**
-     * Returns a field type ID of an abstract attribute by its ID
-     *
-     * @param   int $abstractID abstract attribute ID
-     *
-     * @return int On success, else false
-     *
-     * @throws Exception
-     */
-    private function getStaticTypeIDByDynTypeID($abstractID)
-    {
-        $query = $this->_db->getQuery(true);
-
-        $query
-            ->select('field_typeID')
-            ->from('#__thm_groups_abstract_attributes')
-            ->where('id = ' . (int)$abstractID);
-        $this->_db->setQuery($query);
-
-        try {
-            $result = $this->_db->loadResult();
-        } catch (Exception $exception) {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-
-            return false;
-        }
-
-        return $result;
     }
 
     /**
@@ -347,12 +293,18 @@ class THM_GroupsModelAttribute extends JModelLegacy
             return false;
         }
 
+        $attribute       = $input->getString('attribute');
+        $validAttributes = ['published', 'showLabel', 'showIcon'];
+        if (empty($attribute) or !in_array($attribute, $validAttributes)) {
+            return false;
+        }
+
         $value = $input->getInt('value', 1) ? 0 : 1;
 
         $query = $this->_db->getQuery(true);
 
         $query->update('#__thm_groups_attributes')
-            ->set("published = '$value'")
+            ->set("$attribute = '$value'")
             ->where("id IN ( $id )");
 
         $this->_db->setQuery($query);
