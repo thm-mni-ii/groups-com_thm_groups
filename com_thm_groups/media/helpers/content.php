@@ -12,7 +12,9 @@ define('PUBLISH', 1);
 define('UNPUBLISH', 0);
 define('ARCHIVE', 2);
 define('TRASH', -2);
-require_once "categories.php";
+require_once 'categories.php';
+// Added here for calls from plugins
+require_once 'component.php';
 
 /**
  * Class providing helper functions for batch select options

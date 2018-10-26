@@ -8,7 +8,7 @@
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
-require_once JPATH_SITE . '/media/com_thm_groups/helpers/content.php';
+require_once HELPERS . 'content.php';
 
 /**
  * THM_GroupsModelContent class for component com_thm_groups

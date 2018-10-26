@@ -13,7 +13,7 @@ $skipIndexes = [1, 2, 5, 7];
 <div class="toolbar">
     <?php echo $this->getEditLink('class="btn btn-toolbar-thm"'); ?>
 </div>
-<div id="profile-container" class="profile-container row-fluid template-<?php echo $this->templateName; ?>">
+<div id="profile-container" class="profile-container row-fluid">
     <div class="page-header">
         <h2><?php echo THM_GroupsHelperProfiles::getDisplayName($this->profileID, true); ?></h2>
     </div>

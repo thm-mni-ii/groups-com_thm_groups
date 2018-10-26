@@ -38,7 +38,7 @@ abstract class THM_GroupsModelList extends JModelList
     {
         parent::__construct($config);
 
-        $this->defaultLimit = JFactory::getApplication()->get('list_limit', '20');
+        $this->defaultLimit = JFactory::getApplication()->get('list_limit', '0');
     }
 
     /**

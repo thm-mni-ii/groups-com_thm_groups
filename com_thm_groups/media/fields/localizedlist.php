@@ -9,7 +9,7 @@
  */
 defined('_JEXEC') or die;
 JFormHelper::loadFieldClass('list');
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/language.php';
+require_once HELPERS . 'language.php';
 
 /**
  * Class loads a list of fields for selection

@@ -134,6 +134,10 @@ tbody tr:first-child td {
   border-top-style: none;
 }
 
+td input[type="checkbox"] {
+  margin: 0;
+}
+
 //********************************************************************************************************************//
 // toolbar -> new/edit
 //********************************************************************************************************************//
@@ -225,6 +229,9 @@ tbody tr:first-child td {
 
   .dropdown-menu {
     margin-bottom: 50px;
+    height:10rem;
+    overflow:hidden;
+    overflow-y:scroll;
 
     .selected {
       background-color: $background-icon-list;

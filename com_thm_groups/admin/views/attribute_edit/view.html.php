@@ -62,8 +62,6 @@ class THM_GroupsViewAttribute_Edit extends THM_GroupsViewEdit
      */
     public function addToolbar()
     {
-        JFactory::getApplication()->input->set('hidemainmenu', true);
-
         $title = $this->item->id == 0 ? JText::_('COM_THM_GROUPS_ATTRIBUTE_EDIT_NEW_TITLE') : JText::_('COM_THM_GROUPS_ATTRIBUTE_EDIT_EDIT_TITLE');
 
         JToolBarHelper::title($title, 'edit');

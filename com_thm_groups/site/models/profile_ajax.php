@@ -9,10 +9,8 @@
  */
 
 defined('_JEXEC') or die;
-/** @noinspection PhpIncludeInspection */
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/groups.php';
-/** @noinspection PhpIncludeInspection */
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
+require_once HELPERS . 'groups.php';
+require_once HELPERS . 'profiles.php';
 
 /**
  * Class provides methods to retrieve data for pool ajax calls
@@ -38,15 +36,11 @@ class THM_GroupsModelProfile_Ajax extends JModelLegacy
         $profileIDs = THM_GroupsHelperGroups::getProfileIDs($groupID);
 
         foreach ($profileIDs as $profileID) {
-            $surname = THM_GroupsHelperProfiles::getSurname($profileID);
-
-            if (empty($surname)) {
+            $displayName = THM_GroupsHelperProfiles::getDisplayName($profileID, true);
+            if (empty($displayName)) {
                 continue;
             }
-
-            $surname     = JFilterOutput::stringURLSafe($surname);
-            $displayName = THM_GroupsHelperProfiles::getDisplayName($profileID, true);
-            $link        = "?option=com_thm_groups&view=profile&profileID=$profileID&groupID=$groupID&name=$surname";
+            $link        = "?option=com_thm_groups&view=profile&profileID=$profileID";
 
             $profiles[$profileID] = ['id' => $profileID, 'name' => $displayName, 'link' => $link];
         }

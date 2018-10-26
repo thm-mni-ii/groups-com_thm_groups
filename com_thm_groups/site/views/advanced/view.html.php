@@ -118,15 +118,11 @@ class THM_GroupsViewAdvanced extends JViewLegacy
         JHtml::_('bootstrap.framework');
 
         $document = JFactory::getDocument();
-        $document->addStyleSheet($this->baseurl . '/media/com_thm_groups/css/advanced.css');
-
-        // Truncate Long Info Text
-        if ($this->suppressText) {
-            $hide = JText::_('COM_THM_GROUPS_ACTION_HIDE');
-            $read = JText::_('COM_THM_GROUPS_ACTION_DISPLAY');
-            $document->addScriptOptions('com_thm_groups', ['hide' => $hide, 'read' => $read]);
-            require_once JPATH_ROOT . "/media/com_thm_groups/js/toggle_text.js.php";
-        }
+        $document->addStyleSheet(JUri::root() . 'media/com_thm_groups/css/advanced.css');
+        $hide = JText::_('COM_THM_GROUPS_ACTION_HIDE');
+        $read = JText::_('COM_THM_GROUPS_ACTION_DISPLAY');
+        $document->addScriptOptions('com_thm_groups', ['hide' => $hide, 'read' => $read]);
+        $document->addScript(JUri::root() . 'media/com_thm_groups/js/toggle_text.js');
     }
 
     /**

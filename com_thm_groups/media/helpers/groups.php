@@ -95,7 +95,7 @@ class THM_GroupsHelperGroups
         $query = $dbo->getQuery(true);
         $query->select("DISTINCT p.id AS profileID")
             ->from('#__thm_groups_role_associations as ra')
-            ->leftJoin('#__thm_groups_profile_associations as pa on ra.ID = pa.role_associationID')
+            ->leftJoin('#__thm_groups_profile_associations as pa on ra.id = pa.role_associationID')
             ->leftJoin('#__thm_groups_profiles as p on p.id = pa.profileID')
             ->where("ra.groupID = '$groupID'")
             ->where("p.published = '1'");
@@ -132,7 +132,7 @@ class THM_GroupsHelperGroups
             ->leftJoin('#__thm_groups_profile_associations as pa on ra.ID = pa.role_associationID')
             ->leftJoin('#__thm_groups_profiles as p on p.id = pa.profileID');
 
-        $query->where("ra.ID = '$assocID'");
+        $query->where("ra.id = '$assocID'");
         $query->where("p.published = '1'");
 
         $dbo->setQuery($query);
@@ -215,7 +215,7 @@ class THM_GroupsHelperGroups
     {
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
-        $query->select('DISTINCT assoc.ID')
+        $query->select('DISTINCT assoc.id')
             ->from('#__thm_groups_role_associations AS assoc')
             ->innerJoin('#__thm_groups_roles AS roles ON assoc.roleID = roles.id')
             ->where("groupID = '$groupID'")

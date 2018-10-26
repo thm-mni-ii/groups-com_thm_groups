@@ -288,7 +288,6 @@ class THM_GroupsController extends JControllerLegacy
             $app->input->getInt('id', 0) : $requestedIDs[0];
 
         $app->input->set('id', $requestedID);
-        $app->input->set('hidemainmenu', 1);
         parent::display();
     }
 

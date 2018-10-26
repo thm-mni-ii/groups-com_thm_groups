@@ -2,10 +2,6 @@
 /**
  * @package     THM_Groups
  * @extension   com_thm_groups
- * @author      Dennis Priefer, <dennis.priefer@mni.thm.de>
- * @author      Niklas Simonis, <niklas.simonis@mni.thm.de>
- * @author      Alexander Boll, <alexander.boll@mni.thm.de>
- * @author      Dieudonne Timma Meyatchie, <dieudonne.timma.meyatchie@mni.thm.de>
  * @author      James Antrim, <james.antrim@nm.thm.de>
  * @copyright   2018 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -13,8 +9,7 @@
  */
 defined('_JEXEC') or die;
 
-require_once JPATH_ROOT . "/media/com_thm_groups/helpers/profiles.php";
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/template.php';
+require_once HELPERS . 'profiles.php';
 
 /**
  * THMGroupsViewProfile class for component com_thm_groups
@@ -44,11 +39,7 @@ class THM_GroupsViewProfile extends JViewLegacy
 
         $this->canEdit = THM_GroupsHelperProfiles::canEdit($this->profileID);
 
-
-        // Adds the user name to the breadcrumb
-        JFactory::getApplication()->getPathway()->addItem(THM_GroupsHelperProfiles::getDisplayName($this->profileID),
-            '');
-
+        $this->setPath();
         $this->modifyDocument();
         parent::display($tpl);
     }
@@ -103,19 +94,25 @@ class THM_GroupsViewProfile extends JViewLegacy
         $editLink = "";
 
         if ($this->canEdit) {
-            $fullName  = JFactory::getUser($this->profileID)->get('name');
-            $nameArray = explode(" ", $fullName);
-            $lastName  = array_key_exists(1, $nameArray) ? $nameArray[1] : "";
-
-            $lastName = trim($lastName);
-            $path     = "index.php?option=com_thm_groups&view=profile_edit";
-            $path     .= "&profileID=$this->profileID&name=$lastName";
-            $url      = JRoute::_($path);
+            $alias    = THM_GroupsHelperProfiles::getAlias($this->profileID);
+            $path     = "index.php?option=com_thm_groups&view=profile_edit&profileID=$this->profileID&name=$alias";
             $text     = '<span class="icon-edit"></span> ' . JText::_('COM_THM_GROUPS_EDIT');
-            $editLink .= JHtml::_('link', $url, $text, $attributes);
+            $editLink .= JHtml::_('link', JRoute::_($path), $text, $attributes);
         }
 
         return $editLink;
+    }
+
+    /**
+     * Adds the profile name to the breadcrumb
+     *
+     * @return void modifies the pathway object
+     * @throws Exception
+     */
+    private function setPath()
+    {
+        $pathway = JFactory::getApplication()->getPathway();
+        $pathway->addItem(THM_GroupsHelperProfiles::getDisplayName($this->profileID), false);
     }
 
     /**

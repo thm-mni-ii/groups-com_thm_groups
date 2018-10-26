@@ -19,7 +19,7 @@ require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
  */
 class THM_GroupsModelRole_Manager extends THM_GroupsModelList
 {
-    protected $defaultOrdering = 'roles.id';
+    protected $defaultOrdering = 'roles.ordering';
 
     protected $defaultDirection = 'ASC';
 
@@ -29,6 +29,7 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
      * @param   int $roleID An id of the role
      *
      * @return  string     A string with all group comma separated
+     * @throws Exception
      */
     public function getGroups($roleID)
     {
@@ -133,7 +134,7 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
             $return[$index]['attributes'] = ['class' => 'order nowrap center', 'id' => $item->id];
 
             $return[$index]['ordering']['attributes'] = ['class' => "order nowrap center", 'style' => "width: 40px;"];
-            $return[$index]['ordering']['value'] = $sortIcon;
+            $return[$index]['ordering']['value']      = $sortIcon;
 
 
             $return[$index][0] = JHtml::_('grid.id', $index, $item->id);

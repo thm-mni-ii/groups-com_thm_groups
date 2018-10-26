@@ -226,7 +226,7 @@ class THM_GroupsModelTemplate extends JModelLegacy
      */
     public function delete()
     {
-        $app  = JFactory::getApplication();
+        $app = JFactory::getApplication();
 
         if (!THM_GroupsHelperComponent::isManager()) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
@@ -234,17 +234,17 @@ class THM_GroupsModelTemplate extends JModelLegacy
             return false;
         }
 
-        $ids = JFactory::getApplication()->input->get('cid', [], 'array');
+        $templateIDs = JFactory::getApplication()->input->get('cid', [], 'array');
 
         // Exclude standard and advanced template from deletion.
-        if (in_array('1', $ids) || in_array('2', $ids)) {
-            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_CANNOT_DELETE_PROTECTED'), 'notice');
+        if (in_array('1', $templateIDs)) {
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_PROTECTED_TEMPLATE_NOTICE'), 'notice');
 
             return false;
         } else {
             $query = $this->_db->getQuery(true);
 
-            $conditions = [$this->_db->quoteName('id') . 'IN' . '(' . join(',', $ids) . ')'];
+            $conditions = [$this->_db->quoteName('id') . 'IN' . '(' . join(',', $templateIDs) . ')'];
 
             $query->delete($this->_db->quoteName('#__thm_groups_templates'));
             $query->where($conditions);

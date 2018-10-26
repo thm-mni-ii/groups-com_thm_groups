@@ -13,7 +13,7 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
+require_once HELPERS . 'profiles.php';
 require_once JPATH_COMPONENT . '/../com_content/helpers/route.php';
 require_once JPATH_COMPONENT . '/../com_content/helpers/query.php';
 require_once JPATH_COMPONENT . '/../com_content/models/article.php';
@@ -80,7 +80,7 @@ class THM_GroupsViewContent extends JViewLegacy
         if (count($errors = $this->get('Errors'))) {
             JError::raiseWarning(500, implode("\n", $errors));
 
-            return false;
+            return;
         }
 
         // Create a shortcut for $item.

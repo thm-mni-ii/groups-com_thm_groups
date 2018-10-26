@@ -10,7 +10,7 @@
  */
 defined('_JEXEC') or die;
 
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/categories.php';
+require_once HELPERS . 'categories.php';
 
 /**
  * Class retrieves information about content for the profile's content category

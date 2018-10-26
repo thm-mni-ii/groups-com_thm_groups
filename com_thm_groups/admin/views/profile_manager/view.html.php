@@ -11,8 +11,8 @@
 
 defined('_JEXEC') or die;
 
+require_once HELPERS . 'batch.php';
 require_once JPATH_ROOT . '/media/com_thm_groups/views/list.php';
-require_once JPATH_SITE . '/media/com_thm_groups/helpers/batch.php';
 
 /**
  * THM_GroupsViewProfile_Manager class for component com_thm_groups

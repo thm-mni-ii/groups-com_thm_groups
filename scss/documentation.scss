@@ -39,6 +39,11 @@
     width: calc(100% - 7.5rem);
   }
 
+  a {
+    color: $font-color-link;
+    text-decoration: none;
+  }
+
   div.clearFix {
     clear: both;
   }

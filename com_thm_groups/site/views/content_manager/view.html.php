@@ -11,19 +11,19 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-define('PUBLISHED', 1);
-define('UNPUBLISHED', 0);
-define('ARCHIVED', 2);
-define('TRASHED', -2);
-
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/content.php';
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
+require_once HELPERS . 'content.php';
+require_once HELPERS . 'profiles.php';
 
 /**
  * Class displays content in the profile's content category
  */
 class THM_GroupsViewContent_Manager extends JViewLegacy
 {
+    const ARCHIVED = 2;
+    const PUBLISHED = 1;
+    const TRASHED = -2;
+    const UNPUBLISHED = 0;
+
     private $canCreate;
 
     public $canEdit;
@@ -120,7 +120,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
     {
         if ($this->canEdit) {
             $sortIcon  = '<span class="sortable-handler" style="cursor: move;"><i class="icon-menu"></i></span>';
-            $sortInput = '<input type="text" style="display:none" name="order[]" size="5" ';
+            $sortInput = '<input type="text" style="display:none" name="order[]" ';
             $sortInput .= 'value="' . (string)$item->ordering . '" class="width-20 text-area-order">';
             $sort      = '<td class="order nowrap center btn-column" style="width: 40px;">' . $sortIcon . $sortInput;
             $sort      .= '</td>';
@@ -158,19 +158,19 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
         $spanTip   = '';
 
         switch ($state) {
-            case PUBLISHED:
+            case self::PUBLISHED:
                 $spanClass = 'icon-publish green';
                 $spanTip   = JText::_('COM_THM_GROUPS_PUBLISHED');
                 break;
-            case UNPUBLISHED:
+            case self::UNPUBLISHED:
                 $spanClass = 'icon-unpublish red';
                 $spanTip   = JText::_('COM_THM_GROUPS_UNPUBLISHED');
                 break;
-            case ARCHIVED:
+            case self::ARCHIVED:
                 $spanClass = 'icon-archive red';
                 $spanTip   = JText::_('COM_THM_GROUPS_ARCHIVED');
                 break;
-            case TRASHED:
+            case self::TRASHED:
                 $spanClass = 'icon-trash red';
                 $spanTip   = JText::_('COM_THM_GROUPS_TRASHED');
                 break;
@@ -183,22 +183,22 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
         $select .= '<span class="icon-arrow-down-3 pull-right"></span></a>';
         $select .= '<ul id="category" class="dropdown-menu">';
 
-        if ($state != PUBLISHED) {
+        if ($state != self::PUBLISHED) {
             $select .= '<li><a href="javascript://" onclick="listItemTask(\'cb' . $key . '\', \'content.publish\')">';
             $select .= '<i class="icon-publish"></i> ' . JText::_('COM_THM_GROUPS_PUBLISH');
             $select .= '</a></li>';
         }
-        if ($state != UNPUBLISHED) {
+        if ($state != self::UNPUBLISHED) {
             $select .= '<li><a href="javascript://" onclick="listItemTask(\'cb' . $key . '\', \'content.unpublish\')">';
             $select .= '<i class="icon-unpublish"></i> ' . JText::_('COM_THM_GROUPS_UNPUBLISH');
             $select .= '</a></li>';
         }
-        if ($state != ARCHIVED) {
+        if ($state != self::ARCHIVED) {
             $select .= '<li><a href="javascript://" onclick="listItemTask(\'cb' . $key . '\', \'content.archive\')">';
             $select .= '<i class="icon-archive"></i> ' . JText::_('COM_THM_GROUPS_ARCHIVE');
             $select .= '</a></li>';
         }
-        if ($state != TRASHED) {
+        if ($state != self::TRASHED) {
             $select .= '<li><a href="javascript://" onclick="listItemTask(\'cb' . $key . '\', \'content.trash\')">';
             $select .= '<i class="icon-trash"></i> ' . JText::_('COM_THM_GROUPS_TRASH');
             $select .= '</a></li>';

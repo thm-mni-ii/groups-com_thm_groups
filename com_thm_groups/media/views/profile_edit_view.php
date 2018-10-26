@@ -13,7 +13,7 @@
 
 defined('_JEXEC') or die;
 
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
+require_once HELPERS . 'profiles.php';
 
 
 /**
@@ -38,12 +38,9 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
     public function display($tpl = null)
     {
         $input           = JFactory::getApplication()->input;
-        $standardID      = $input->getInt('id', 0);
-        $this->profileID = $input->getInt('profileID', $standardID);
+        $this->profileID = $input->getInt('profileID', $input->getInt('id', 0));
 
-        $canEdit = THM_GroupsHelperProfiles::canEdit($this->profileID);
-
-        if (!$canEdit) {
+        if (!THM_GroupsHelperProfiles::canEdit($this->profileID)) {
             $exc = new Exception(JText::_('JLIB_RULES_NOT_ALLOWED'), 401);
             JErrorPage::render($exc);
         }
@@ -233,16 +230,22 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
         JHtml::_('jquery.framework');
         JHtml::_('bootstrap.tooltip');
         JHtml::_('behavior.framework', true);
-        JHtml::_('behavior.formvalidation');
+        JHtml::_('behavior.formvalidator');
         JHtml::_('formbehavior.chosen', 'select');
 
         JHtml::stylesheet('media/com_thm_groups/css/profile_edit.css');
         JHtml::script('media/com_thm_groups/js/formbehaviorChosenHelper.js');
         JHtml::script('media/com_thm_groups/js/cropbox.js');
-
-        // TODO: Are both of these necessary? Assuming that the second one checks against the abstractName regex...
         JHtml::script('media/com_thm_groups/js/validators.js');
-        JHtml::script('media/com_thm_groups/js/inputValidation.js');
+
+        JText::script('COM_THM_GROUPS_INVALID_DATE_EU');
+        JText::script('COM_THM_GROUPS_INVALID_EMAIL');
+        JText::script('COM_THM_GROUPS_INVALID_FORM');
+        JText::script('COM_THM_GROUPS_INVALID_NAME');
+        JText::script('COM_THM_GROUPS_INVALID_REQUIRED');
+        JText::script('COM_THM_GROUPS_INVALID_TELEPHONE');
+        JText::script('COM_THM_GROUPS_INVALID_TEXT');
+        JText::script('COM_THM_GROUPS_INVALID_URL');
 
         // Close modal after editing
         JFactory::getDocument()->addScriptDeclaration("window.onbeforeunload = function() { window.parent.location.reload(); };");

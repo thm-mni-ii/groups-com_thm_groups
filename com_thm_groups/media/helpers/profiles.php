@@ -409,6 +409,7 @@ class THM_GroupsHelperProfiles
      * @param array $attributes the attributes of the profile
      *
      * @return string the HTML string containing name information
+     * @throws Exception
      */
     public static function getNameContainer($attributes)
     {
@@ -624,9 +625,9 @@ class THM_GroupsHelperProfiles
         $aliasQuery = $dbo->getQuery(true);
 
         // Serves as a basis for existing and non-existing aliases
-        $tlNames = THM_GroupsHelperComponent::transliterate($originalNames);
+        $tlNames      = THM_GroupsHelperComponent::transliterate($originalNames);
         $cleanedNames = THM_GroupsHelperComponent::filterText($tlNames);
-        $names = explode(' ', $cleanedNames);
+        $names        = explode(' ', $cleanedNames);
 
         $aliasQuery->select('DISTINCT id, alias')->from('#__thm_groups_profiles');
         $dbo->setQuery($aliasQuery);
@@ -894,7 +895,7 @@ class THM_GroupsHelperProfiles
      */
     public static function isPublished($profileID)
     {
-        $dbo = JFactory::getDbo();
+        $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
         $query->select('published')->from('#__thm_groups_profiles')->where("id = '$profileID'");
         $dbo->setQuery($query);
@@ -903,6 +904,7 @@ class THM_GroupsHelperProfiles
             $published = $dbo->loadResult();
         } catch (Exception $exc) {
             JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+
             return false;
         }
 

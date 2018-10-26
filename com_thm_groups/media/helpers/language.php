@@ -15,6 +15,49 @@
 class THM_GroupsHelperLanguage
 {
     /**
+     * Sets the Joomla Language based on input from the language switch
+     *
+     * @param string $shortTag the language's short tag for manual requests
+     *
+     * @return JLanguage
+     * @throws Exception
+     */
+    public static function getLanguage($shortTag = null)
+    {
+        $requested          = empty($shortTag) ? self::getShortTag() : $shortTag;
+        $supportedLanguages = ['en', 'de'];
+
+        if (in_array($requested, $supportedLanguages)) {
+            switch ($requested) {
+                case 'de':
+                    $lang = new JLanguage('de-DE');
+                    break;
+                case 'en':
+                default:
+                    $lang = new JLanguage('en-GB');
+                    break;
+            }
+        } else {
+            $lang = new JLanguage('en-GB');
+        }
+
+        $lang->load('com_thm_groups');
+
+        return $lang;
+    }
+
+    /**
+     * Retrieves the two letter language identifier
+     *
+     * @return string
+     * @throws Exception
+     */
+    public static function getLongTag()
+    {
+        return self::resolveShortTag(self::getShortTag());
+    }
+
+    /**
      * Retrieves the two letter language identifier
      *
      * @return  string

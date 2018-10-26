@@ -8,8 +8,8 @@
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/groups.php';
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
+require_once HELPERS . 'groups.php';
+require_once HELPERS . 'profiles.php';
 jimport('joomla.filesystem.path');
 
 /**
@@ -23,7 +23,7 @@ class THM_GroupsModelOverview extends JModelLegacy
      * @return array an array of profiles grouped by letter
      * @throws Exception
      */
-    public function getProfilesByLetter()
+    public function getProfiles()
     {
         $dbo   = JFactory::getDBO();
         $query = $dbo->getQuery(true);
@@ -34,7 +34,7 @@ class THM_GroupsModelOverview extends JModelLegacy
         $query->select("pretitle.value as title");
         $query->select("posttitle.value as posttitle");
         $query->from("#__thm_groups_role_associations as ra");
-        $query->leftJoin("#__thm_groups_profile_associations AS pa ON ra.ID = pa.role_associationID");
+        $query->leftJoin("#__thm_groups_profile_associations AS pa ON ra.id = pa.role_associationID");
         $query->leftJoin("#__thm_groups_profiles AS p ON p.id = pa.profileID");
         $query->leftJoin("#__thm_groups_profile_attributes AS allAttr ON allAttr.profileID = p.id");
         $query->leftJoin("#__thm_groups_profile_attributes AS sname ON sname.profileID = p.id AND sname.attributeID = 2");

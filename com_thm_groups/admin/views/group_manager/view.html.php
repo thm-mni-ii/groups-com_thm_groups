@@ -11,8 +11,8 @@
 
 defined('_JEXEC') or die;
 
+require_once HELPERS . 'batch.php';
 require_once JPATH_ROOT . '/media/com_thm_groups/views/list.php';
-require_once JPATH_SITE . '/media/com_thm_groups/helpers/batch.php';
 
 /**
  * THM_GroupsViewGroup_Manager class for component com_thm_groups
@@ -48,7 +48,7 @@ class THM_GroupsViewGroup_Manager extends THM_GroupsViewList
 
         function filterMemberRole($role)
         {
-            return $role->value != 1;
+            return $role->value != MEMBER;
         }
 
         $this->roles    = array_filter(THM_GroupsHelperBatch::getRoles(), 'filterMemberRole');

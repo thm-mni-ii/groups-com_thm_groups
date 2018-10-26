@@ -9,7 +9,7 @@
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
+require_once HELPERS . 'profiles.php';
 require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
 
 /**
@@ -36,6 +36,8 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
         }
 
         parent::__construct($config);
+
+        $this->defaultLimit = JFactory::getApplication()->get('list_limit', '50');
         THM_GroupsHelperProfiles::correctGroups();
     }
 
@@ -52,7 +54,7 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
         $query = $this->_db->getQuery(true);
 
         $query
-            ->select('ug.id as groupID, ug.title AS groupName')
+            ->select('ug.id AS groupID, ug.title AS groupName')
             ->select('GROUP_CONCAT(DISTINCT roles.id ORDER BY roles.name SEPARATOR ", ") AS roleID')
             ->select('GROUP_CONCAT(DISTINCT roles.name ORDER BY roles.name SEPARATOR ", ") AS roleName')
             ->from('#__thm_groups_profile_associations AS pa')

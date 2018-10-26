@@ -10,8 +10,8 @@
  */
 defined('_JEXEC') or die;
 
+require_once HELPERS . 'content.php';
 require_once JPATH_SITE . '/media/com_thm_groups/models/list.php';
-require_once JPATH_SITE . '/media/com_thm_groups/helpers/content.php';
 
 /**
  * THM_GroupsModelContent_Manager is a class which deals with the information preparation for the administrator view.
@@ -119,7 +119,7 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
             return $return;
         }
 
-        $generalOrder    = '<input type="text" style="display:none" name="order[]" size="5" ';
+        $generalOrder    = '<input type="text" style="display:none" name="order[]" ';
         $generalOrder    .= 'value="XX" class="width-20 text-area-order " />';
         $generalSortIcon = '<span class="sortable-handlerXXX"><i class="icon-menu"></i></span>';
         $canSort         = JFactory::getUser()->authorise('core.edit', 'com_thm_groups');
@@ -196,15 +196,5 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
             $ordering);
 
         return $headers;
-    }
-
-    /**
-     * Returns custom hidden fields for page
-     *
-     * @return array
-     */
-    public function getHiddenFields()
-    {
-        return [];
     }
 }

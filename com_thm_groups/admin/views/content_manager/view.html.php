@@ -10,7 +10,7 @@
 
 defined('_JEXEC') or die;
 
-require_once JPATH_ROOT . "/media/com_thm_groups/helpers/content.php";
+require_once HELPERS . 'content.php';
 require_once JPATH_ROOT . "/media/com_thm_groups/views/list.php";
 
 /**
@@ -53,7 +53,6 @@ class THM_GroupsViewContent_Manager extends THM_GroupsViewList
             JToolBarHelper::unpublishList('content.unfeature', 'COM_THM_GROUPS_UNFEATURE');
         }
 
-        $user = JFactory::getUser();
         if (THM_GroupsHelperComponent::isAdmin()) {
             JToolBarHelper::preferences('com_thm_groups');
         }

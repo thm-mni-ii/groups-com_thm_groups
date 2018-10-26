@@ -12,13 +12,7 @@
  */
 
 defined('_JEXEC') or die;
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
-
-// Unfortunately these have nothing to do with the attribute IDS
-define('PRETITLE', 0);
-define('FORENAME', 1);
-define('SURNAME', 2);
-define('POSTTITLE', 3);
+require_once HELPERS . 'profiles.php';
 
 /**
  * Class provides an overview of group profiles.
@@ -49,7 +43,7 @@ class THM_GroupsViewOverview extends JViewLegacy
         $this->params = $app->getParams();
         $input        = $app->input;
 
-        $this->profiles = $this->getModel()->getProfilesByLetter();
+        $this->profiles = $this->getModel()->getProfiles();
         $groupID        = $this->params->get('groupID');
         if (empty($groupID)) {
             $totalProfiles = 0;
@@ -157,13 +151,17 @@ class THM_GroupsViewOverview extends JViewLegacy
     {
         $input = JFactory::getApplication()->input;
         $groupID = $this->params->get('groupID');
+
+        // If there is a group ID the view was called from a menu item
         if ($groupID) {
-            $title = THM_GroupsHelperGroups::getName($groupID);
+            $title = (!empty($this->params->get('show_page_heading')) and !empty($this->params->get('page_title'))) ?
+                    $this->params->get('page_title') : THM_GroupsHelperGroups::getName($groupID);
         } elseif (empty($input->get('search'))) {
             $title = JText::_('COM_THM_GROUPS_OVERVIEW');
         } else {
             $title = JText::_('COM_THM_GROUPS_DISAMBIGUATION');
         }
+
         //    show_title
         $this->document->setTitle($title);
         $this->title = $title;
