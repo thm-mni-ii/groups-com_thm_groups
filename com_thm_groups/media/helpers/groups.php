@@ -14,50 +14,6 @@
 class THM_GroupsHelperGroups
 {
     /**
-     * Method to get the distinct first letters of the user surnames
-     *
-     * @param   int $groupID the group id
-     *
-     * @return  array  the first letters of the surnames
-     * @throws Exception
-     */
-    public static function getFirstLetters($groupID)
-    {
-        $dbo   = JFactory::getDBO();
-        $query = $dbo->getQuery(true);
-
-        $query->select("DISTINCT pat.value");
-        $query->from("`#__thm_groups_profile_attributes` AS pat");
-        $query->leftJoin("`#__thm_groups_profile_associations` AS pas ON pas.profileID = pat.profileID");
-        $query->leftJoin("`#__thm_groups_role_associations` AS ra ON pas.role_associationID = ra.id");
-        $query->leftJoin("`#__thm_groups_profiles` AS p ON p.id = pas.profileID");
-        $query->where("pat.attributeID = '2'");
-        $query->where("pat.published = '1'");
-        $query->where("p.published = '1'");
-        $query->where("ra.groupID = '$groupID'");
-        $dbo->setQuery($query);
-
-        try {
-            $surnames = $dbo->loadColumn();
-        } catch (Exception $exc) {
-            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
-
-            return [];
-        }
-
-        $letters = [];
-        foreach ($surnames as $surname) {
-            $letter = strtoupper(substr($surname, 0, 1));
-            if (!in_array($letter, $letters)) {
-                $letters[] = $letter;
-            }
-        }
-        sort($letters);
-
-        return $letters;
-    }
-
-    /**
      * Gets the name of the usergroup requested
      *
      * @param int $groupID the id of the usergroup
@@ -127,10 +83,10 @@ class THM_GroupsHelperGroups
 
         $query = $dbo->getQuery(true);
         $query
-            ->select("p.id AS profileID")
-            ->from('#__thm_groups_role_associations as ra')
-            ->leftJoin('#__thm_groups_profile_associations as pa on ra.ID = pa.role_associationID')
-            ->leftJoin('#__thm_groups_profiles as p on p.id = pa.profileID');
+            ->select("p.id")
+            ->from('#__thm_groups_profiles as p')
+            ->innerJoin('#__thm_groups_profile_associations as pa on pa.profileID = p.id')
+            ->innerJoin('#__thm_groups_role_associations as ra on ra.id = pa.role_associationID');
 
         $query->where("ra.id = '$assocID'");
         $query->where("p.published = '1'");

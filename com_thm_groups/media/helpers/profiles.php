@@ -92,6 +92,7 @@ class THM_GroupsHelperProfiles
      */
     public static function correctGroups()
     {
+        // Associations that are in groups, but not in Joomla
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
         $query->select('DISTINCT pAssoc.profileID, rAssoc.groupID, uum.user_id')
@@ -109,12 +110,35 @@ class THM_GroupsHelperProfiles
             return;
         }
 
-        if (empty($missingAssociations)) {
+        if (!empty($missingAssociations)) {
+            foreach ($missingAssociations as $missingAssociation) {
+                self::associateJoomlaGroup($missingAssociation['profileID'], $missingAssociation['groupID']);
+            }
+        }
+
+        // Associations that are in Joomla, but not in groups
+        $query = $dbo->getQuery(true);
+        $query->select('DISTINCT uum.user_id as profileID, ra.id as role_associationID')
+            ->from('#__user_usergroup_map AS uum')
+            ->innerJoin('#__thm_groups_profiles AS profile ON profile.id = uum.user_id')
+            ->innerJoin('#__thm_groups_role_associations AS ra ON ra.groupID = uum.group_id AND ra.roleID = 1')
+            ->leftJoin('#__thm_groups_profile_associations AS pa ON pa.profileID = profile.id AND pa.role_associationID = ra.id')
+            ->where('uum.group_id NOT IN (1,2,3,4,5,6,7,8)')
+            ->where('pa.id IS NULL');
+        $dbo->setQuery($query);
+
+        try {
+            $missingAssociations = $dbo->loadAssocList();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
             return;
         }
 
-        foreach ($missingAssociations as $missingAssociation) {
-            self::associateJoomlaGroup($missingAssociation['profileID'], $missingAssociation['groupID']);
+        if (!empty($missingAssociations)) {
+            foreach ($missingAssociations as $missingAssociation) {
+                THM_GroupsHelperRoles::associateProfile($missingAssociation['profileID'], $missingAssociation['role_associationID']);
+            }
         }
     }
 
@@ -397,7 +421,7 @@ class THM_GroupsHelperProfiles
     {
         $ntData = self::getNamesAndTitles($profileID, $withTitle, $withSpan);
 
-        $text = empty($ntData['forename'])? $ntData['surname'] : "{$ntData['surname']}, {$ntData['forename']} ";
+        $text = empty($ntData['forename']) ? $ntData['surname'] : "{$ntData['surname']}, {$ntData['forename']} ";
         $text .= " {$ntData['preTitle']} {$ntData['postTitle']}";
 
         return trim($text);
@@ -664,74 +688,33 @@ class THM_GroupsHelperProfiles
     }
 
     /**
-     * Retrieves the default profile ID of a group
+     * Gets the role association ids associated with the profile
      *
-     * @param   int $groupID the user group id
+     * @param int $profileID the id of the profile
      *
-     * @return  int  id of the default group profile, or 1 (the default profile id)
+     * @return array the role association ids associated with the profile
      * @throws Exception
      */
-    public static function getProfileIDByGroupID($groupID = 1)
+    public static function getRoleAssociations($profileID)
     {
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
-        $query->select('templateID');
-        $query->from('#__thm_groups_template_associations');
-        $query->where("groupID = '$groupID'");
+
+        $query->select('role_associationID')
+            ->from('#__thm_groups_profile_associations')
+            ->where("profileID = $profileID");
+
         $dbo->setQuery($query);
 
         try {
-            return $dbo->loadResult();
-        } catch (Exception $exc) {
-            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
+            $assocs = $dbo->loadColumn();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-            return 1;
-        }
-    }
-
-    /**
-     * Retrieves the profile's surname
-     *
-     * @param   int $profileID the profile id
-     *
-     * @return  string  the profile name
-     */
-    public static function getSurname($profileID)
-    {
-        $profile = self::getProfile($profileID);
-
-        if (!empty($profile[2]) and !empty($profile[2]['value'])) {
-            return trim($profile[2]['value']);
+            return [];
         }
 
-        return '';
-    }
-
-    /**
-     * Retrieves the default profile ID of a group
-     *
-     * @param   int $groupID the user group id
-     *
-     * @return  int  id of the default group profile, or 1 (the default profile id)
-     * @throws Exception
-     */
-    public static function getTemplateNameByGroupID($groupID = 1)
-    {
-        $dbo   = JFactory::getDbo();
-        $query = $dbo->getQuery(true);
-        $query->select('t.name');
-        $query->from('#__thm_groups_templates as t');
-        $query->innerJoin('#__thm_groups_template_associations as ta ON t.id = ta.templateID');
-        $query->where("groupID = '$groupID'");
-        $dbo->setQuery($query);
-
-        try {
-            return $dbo->loadResult();
-        } catch (Exception $exc) {
-            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
-
-            return 1;
-        }
+        return empty($assocs) ? [] : $assocs;
     }
 
     /**

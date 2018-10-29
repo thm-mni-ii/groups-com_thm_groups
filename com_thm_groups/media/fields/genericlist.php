@@ -40,6 +40,7 @@ class JFormFieldGenericList extends JFormFieldList
 
         $query->select("DISTINCT $valueColumn AS value, $textColumn AS text");
         $this->setFrom($query);
+        $this->setWhere($query);
         $query->order("text ASC");
         $dbo->setQuery($query);
 
@@ -116,6 +117,30 @@ class JFormFieldGenericList extends JFormFieldList
 
         for ($index = 1; $index < $count; $index++) {
             $query->innerjoin("#__{$tables[$index]}");
+        }
+    }
+
+    /**
+     * Applies restrictions
+     *
+     * @param   object &$query the query object
+     *
+     * @return  void modifies the query object
+     */
+    private function setWhere(&$query)
+    {
+        $whereParameters = $this->getAttribute('restriction');
+        if (empty($whereParameters)) {
+            return;
+        }
+
+        $restrictions    = explode(';', $whereParameters);
+        if (empty($restrictions)) {
+            return;
+        }
+
+        foreach ($restrictions as $restriction) {
+            $query->where($restriction);
         }
     }
 

@@ -9,7 +9,9 @@
  */
 
 defined('_JEXEC') or die;
+require_once HELPERS . 'groups.php';
 require_once HELPERS . 'profiles.php';
+require_once HELPERS . 'roles.php';
 require_once HELPERS . 'content.php';
 
 /**
@@ -101,13 +103,13 @@ class THM_GroupsModelProfile extends JModelLegacy
         $profileID = $app->input->getInt('profileID', 0);
         $groupID   = $app->input->getInt('groupID', 0);
 
-        $userAssocs       = $this->getUserAssociations([$profileID]);
-        $assocIDs         = $this->getAssocIDs($groupID);
+        $profileAssocs    = THM_GroupsHelperProfiles::getRoleAssociations($profileID);
+        $groupAssocs      = THM_GroupsHelperGroups::getRoleAssocIDs($groupID);
         $disposableAssocs = [];
 
-        foreach ($userAssocs as $key => $assoc) {
-            if (in_array($assoc['assocID'], $assocIDs)) {
-                array_push($disposableAssocs, $assoc['id']);
+        foreach ($profileAssocs as $pAssocID) {
+            if (in_array($pAssocID, $groupAssocs)) {
+                array_push($disposableAssocs, $pAssocID);
             }
         }
 
@@ -237,7 +239,7 @@ class THM_GroupsModelProfile extends JModelLegacy
         $profileID = $app->input->getInt('profileID', 0);
         $roleID    = $app->input->getInt('roleID', 0);
 
-        $idToDelete = $this->getAssocID($groupID, $roleID);
+        $idToDelete = THM_GroupsHelperRoles::getAssocID($roleID, $groupID);
 
         $query = $this->_db->getQuery(true);
 
@@ -256,68 +258,6 @@ class THM_GroupsModelProfile extends JModelLegacy
         }
 
         return empty($success) ? false : true;
-    }
-
-    /**
-     * Retrieves the id of a specific usergroup/role association.
-     *
-     * @param   int $groupID the id of the Joomla / THM Groups user group
-     * @param   int $roleID  the id of the role
-     *
-     * @return int the id of the association on success, otherwise 0
-     * @throws Exception
-     */
-    private function getAssocID($groupID, $roleID)
-    {
-        $query = $this->_db->getQuery(true);
-
-        $query
-            ->select('id')
-            ->from('#__thm_groups_role_associations')
-            ->where("groupID = '$groupID'")
-            ->where("roleID = '$roleID'");
-
-        $this->_db->setQuery($query);
-
-        try {
-            $result = $this->_db->loadResult();
-        } catch (Exception $exception) {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-
-            return 0;
-        }
-
-        return empty($result) ? 0 : $result;
-    }
-
-    /**
-     * Returns a list of usergroup/role association ids.
-     *
-     * @param   int $groupID the Joomla / THM Groups user group ids
-     *
-     * @return array the ids associated with the group
-     * @throws Exception
-     */
-    private function getAssocIDs($groupID)
-    {
-        $query = $this->_db->getQuery(true);
-
-        $query
-            ->select('id')
-            ->from('#__thm_groups_role_associations')
-            ->where("groupID = '$groupID'");
-
-        $this->_db->setQuery($query);
-
-        try {
-            $assocIDs = $this->_db->loadColumn();
-        } catch (Exception $exception) {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-
-            return [];
-        }
-
-        return empty($assocIDs) ? [] : $assocIDs;
     }
 
     /**
@@ -354,37 +294,6 @@ class THM_GroupsModelProfile extends JModelLegacy
         }
 
         return $assocs;
-    }
-
-    /**
-     * Returns an array with profile associations matching the request data
-     *
-     * @param   array $profileIDs An array with user ids
-     *
-     * @return array
-     * @throws Exception
-     */
-    private function getUserAssociations($profileIDs)
-    {
-        $query = $this->_db->getQuery(true);
-
-        // First, we need to check if the group-role relationship is already assigned to the user
-        $query->select('id, profileID, role_associationID AS assocID')
-            ->from('#__thm_groups_profile_associations')
-            ->where("profileID IN ('" . implode(',', $profileIDs) . "')")
-            ->order('profileID');
-
-        $this->_db->setQuery($query);
-
-        try {
-            $assocs = $this->_db->loadAssocList();
-        } catch (Exception $exception) {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-
-            return [];
-        }
-
-        return empty($assocs) ? [] : $this->_db->loadAssocList();
     }
 
     /**
@@ -582,58 +491,46 @@ class THM_GroupsModelProfile extends JModelLegacy
      */
     private function setGroupsAssociations($profileIDs, $requestedAssocs)
     {
-        $app = JFactory::getApplication();
+        // Can only occur by manipulation.
+        if (empty($profileIDs) or empty($requestedAssocs)) {
+            return true;
+        }
 
-        $userAssocs  = $this->getUserAssociations($profileIDs);
-        $groupAssocs = $this->getGroupAssociations($requestedAssocs);
+        $roleAssociations = $this->getGroupAssociations($requestedAssocs);
 
-        $performInsert = false;
-        $query         = $this->_db->getQuery(true);
+        // Can only occur by manipulation.
+        if (empty($roleAssociations)) {
+            return false;
+        }
+
+        $completeSuccess = true;
+        $partialSuccess  = false;
 
         foreach ($profileIDs as $profileID) {
-            foreach ($groupAssocs as $groupAssocID) {
-                $assocExists = false;
 
-                foreach ($userAssocs as $userAssoc) {
-                    $notUser = $profileID != $userAssoc['profileID'];
+            $profileAssociations = THM_GroupsHelperProfiles::getRoleAssociations($profileID);
 
-                    if ($notUser) {
-                        continue;
-                    }
-
-                    $notAssoc = $groupAssocID != $userAssoc['assocID'];
-
-                    if ($notAssoc) {
-                        continue;
-                    }
-
-                    $assocExists = true;
-                }
-
-                if (!$assocExists) {
-                    $performInsert = true;
-                    $query->values("'$profileID', '$groupAssocID'");
+            foreach ($roleAssociations as $rAssoc) {
+                if (!in_array($rAssoc, $profileAssociations)) {
+                    $success         = THM_GroupsHelperRoles::associateProfile($profileID, $rAssoc);
+                    $completeSuccess = ($completeSuccess and $success);
+                    $partialSuccess  = ($partialSuccess or $success);
                 }
             }
         }
 
-        // All requested associations already exist.
-        if (!$performInsert) {
-            return true;
+        if ($completeSuccess) {
+            return $completeSuccess;
         }
 
-        $query->insert('#__thm_groups_profile_associations')->columns(['profileID', 'role_associationID']);
-        $this->_db->setQuery($query);
+        // Is also a partial fail.
+        if ($partialSuccess) {
+            JFactory::getApplication()->enqueueMessage('COM_THM_GROUPS_PARTIAL_ASSOCIATION_FAIL', 'warning');
 
-        try {
-            $success = $this->_db->execute();
-        } catch (Exception $exception) {
-            $app->enqueueMessage($exception->getMessage(), 'error');
-
-            return false;
+            return $partialSuccess;
         }
 
-        return empty($success) ? false : true;
+        return false;
     }
 
     /**
