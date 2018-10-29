@@ -18,6 +18,61 @@ defined('_JEXEC') or die;
 class Com_THM_GroupsInstallerScript
 {
     /**
+     * Associate all groups to a user profile with the default member
+     * role.
+     *
+     * @param int $profileID the profile's id
+     *
+     * @return void
+     * @throws Exception
+     */
+    private function associateProfileGroups($profileID)
+    {
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+
+        // Get group and association id for the user.
+        $query->select("map.group_id, roleAssoc.id")
+            ->from("#__user_usergroup_map AS map, #__thm_groups_role_associations AS roleAssoc")
+            ->where("map.user_id = $profileID")
+            ->where("map.group_id NOT IN (1,2,3,4,5,6,7,8)")
+            ->where("roleAssoc.groupID = map.group_id");
+
+        $dbo->setQuery($query);
+
+        try {
+            $assignedGroups = $dbo->loadAssocList();
+        } catch (RuntimeException $exception) {
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
+        }
+
+        if (empty($assignedGroups)) {
+            $this->deleteProfile($profileID);
+
+            return;
+        }
+
+        $query = $dbo->getQuery(true);
+        $query->insert("#__thm_groups_profile_associations")
+            ->columns("profileID, role_associationID");
+
+        // Set profile associated groups and roles to be member.
+        foreach ($assignedGroups as $group) {
+
+            $query->clear('values');
+            $query->values("$profileID, {$group['id']}");
+
+            $dbo->SetQuery($query);
+
+            try {
+                $dbo->execute();
+            } catch (RuntimeException $exception) {
+                JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
+            }
+        }
+    }
+
+    /**
      * Creates a folder com_thm_groups/profile
      *
      * @return True on success
@@ -36,6 +91,107 @@ class Com_THM_GroupsInstallerScript
         }
 
         return true;
+    }
+
+    /**
+     * Creates a THM_Groups profile for each existing Joomla user.
+     *
+     * @throws Exception
+     */
+    private function createProfiles()
+    {
+        $dbo     = JFactory::getDbo();
+        $query   = $dbo->getQuery(true);
+
+        // Get all users to import
+        $query->select("id, name, email")
+            ->from("#__users");
+        $dbo->setQuery($query);
+
+        try {
+            $users = $dbo->loadAssocList();
+        } catch (RuntimeException $exception) {
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
+        }
+
+        if (empty($users)) {
+            return;
+        }
+
+        foreach ($users as $user) {
+
+            // Avoid unsupported char '
+            if (strpos($user['name'], "'") != false) {
+                continue;
+            }
+
+            $query->clear();
+
+            // Insert profile for this user.
+            $query->insert("#__thm_groups_profiles")
+                ->columns("id, published, canEdit, contentEnabled")
+                ->values("{$user['id']}, 1, 1, 0");
+
+            $dbo->setQuery($query);
+
+            try {
+                $dbo->execute();
+
+            } catch (RuntimeException $exception) {
+                JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
+                $dbo->transactionRollback();
+            }
+
+            $names    = explode(' ', $user['name']);
+            $surname  = array_pop($names);
+            $forename = implode(' ', $names);
+            $values   = [
+                "{$user['id']}, 1, '$forename'', 1",
+                "{$user['id']}, 2, '$surname', 1",
+                "{$user['id']}, 4, '{$user['email']}', 1"
+            ];
+
+            // Insert the profile attribute.
+            $query->insert("#__thm_groups_profile_attributes")
+                ->columns("profileID, attributeID, value, published")
+                ->values($values);
+
+            $dbo->setQuery($query);
+
+            try {
+                $dbo->execute();
+            } catch (RuntimeException $exception) {
+                JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
+                $dbo->transactionRollback();
+            }
+
+            // Associate groups and roles to this profile.
+            $this->associateProfileGroups($user['id']);
+        }
+    }
+
+    /**
+     * Deletes a profile which was not mapped to a relevant group
+     *
+     * @param int $profileID the id of the profile
+     *
+     * @throws Exception
+     */
+    private function deleteProfile($profileID)
+    {
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query->delete("#__thm_groups_profiles")
+            ->where("profileID = $profileID");
+        $dbo->setQuery($query);
+
+        try {
+            $dbo->execute();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+            return;
+        }
     }
 
     /**
@@ -67,7 +223,8 @@ class Com_THM_GroupsInstallerScript
         $groups = [];
 
         $query->select("id")
-            ->from("#__usergroups");
+            ->from("#__usergroups")
+            ->where('id NOT IN (1,2,3,4,5,6,7,8)');
         $dbo->setQuery($query);
 
         try {
@@ -76,188 +233,23 @@ class Com_THM_GroupsInstallerScript
             JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
         }
 
+        if (empty($groups)) {
+            return;
+        }
+
         // Set member role to all groups
-        if (!empty($groups)) {
-            foreach ($groups as $group) {
-                $dbo->transactionStart();
+        foreach ($groups as $group) {
+            $query->clear();
+            $query->insert("#__thm_groups_role_associations")
+                ->columns("groupID, roleID")
+                ->values($group["id"] . ", 1");
 
-                $query->clear();
-                $query->insert("#__thm_groups_role_associations")
-                    ->columns("groupID, roleID")
-                    ->values($group["id"] . ", 1");
+            $dbo->setQuery($query);
 
-                $dbo->setQuery($query);
-
-                try {
-                    $dbo->execute();
-                    $dbo->transactionCommit();
-                } catch (RuntimeException $exception) {
-                    JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
-                    $dbo->transactionRollback();
-                }
-            }
-        }
-    }
-
-    /**
-     * Associate all groups to a user profile with the default member
-     * role.
-     *
-     * @param array $user an array with user data
-     *
-     * @return void
-     * @throws Exception
-     */
-    private function associateProfileGroups($user)
-    {
-        $dbo   = JFactory::getDbo();
-        $query = $dbo->getQuery(true);
-
-        // Get group and association id for the user.
-        $query->select("map.group_id, roleAssoc.id")
-            ->from("#__user_usergroup_map AS map, #__thm_groups_role_associations AS roleAssoc")
-            ->where("map.user_id = " . $user["id"] . " AND roleAssoc.groupID = map.group_id");
-
-        $dbo->setQuery($query);
-        $assignedGroups = [];
-
-        try {
-            $assignedGroups = $dbo->loadAssocList();
-        } catch (RuntimeException $exception) {
-            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
-        }
-
-        // Set profile associated groups and roles to be member.
-        if (!empty($assignedGroups)) {
-            foreach ($assignedGroups as $userGroup) {
-                if (($userGroup["group_id"] != 1) && ($userGroup["group_id"] != 2)) {
-                    $dbo->transactionStart();
-
-                    $query->clear();
-                    $query->insert("#__thm_groups_profile_associations")
-                        ->columns("profileID, role_associationID")
-                        ->values($user["id"] . ", " . $userGroup["id"]);
-
-                    $dbo->SetQuery($query);
-
-                    try {
-                        $dbo->execute();
-                        $dbo->transactionCommit();
-                    } catch (RuntimeException $exception) {
-                        JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
-                        $dbo->transactionRollback();
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Creates a THM_Groups profile for each existing Joomla user.
-     *
-     * @throws Exception
-     */
-    private function createProfiles()
-    {
-        $dbo     = JFactory::getDbo();
-        $query   = $dbo->getQuery(true);
-        $users   = [];
-        $attribs = [];
-
-        // Get all users to import
-        $query->select("id, name, email")
-            ->from("#__users");
-        $dbo->setQuery($query);
-
-        try {
-            $users = $dbo->loadAssocList();
-        } catch (RuntimeException $exception) {
-            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
-        }
-
-        // Get all attributes for the profiles
-        $query->clear();
-        $query->select("id, name")
-            ->from("#__thm_groups_attributes");
-        $dbo->setQuery($query);
-
-        try {
-            $attribs = $dbo->loadAssocList();
-        } catch (RuntimeException $exception) {
-            JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
-        }
-
-        // Create a profile entry for all existing users. Set profile associated groups and roles.
-        if (!empty($users) && !empty($attribs)) {
-            foreach ($users as $user) {
-                // Avoid unsupported char '
-                if (strpos($user['name'], "'") != false) {
-                    continue;
-                }
-
-                $names = str_word_count($user['name'], 1, '-´');
-
-                $dbo->transactionStart();
-                $query->clear();
-
-                // Insert profile for this user.
-                $query->insert("#__thm_groups_profiles")
-                    ->columns("id, published, canEdit, contentEnabled")
-                    ->values($user['id'] . ", 0, 1, 0");
-
-                $dbo->setQuery($query);
-
-                try {
-                    $dbo->execute();
-                    $dbo->transactionCommit();
-
-                } catch (RuntimeException $exception) {
-                    JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
-                    $dbo->transactionRollback();
-                }
-
-                // Create entries for all attributes in the current profile.
-                foreach ($attribs as $attr) {
-                    $dbo->transactionStart();
-                    $query->clear();
-
-                    // Profile value.
-                    $value = '';
-
-                    // Check if Joomla user name can be set for profile attribute.
-                    if (($attr['id'] == 1) && (count($names) == 2)) {
-                        $value = $names[0];
-                    } elseif (($attr['id'] == 1)) {
-                        $value = '';
-                    } elseif (($attr['id'] == 2) && (count($names) == 2)) {
-                        $value = $names[1];
-                    } elseif (($attr['id'] == 2) && (count($names) > 2)) {
-                        $value = $user['name'];
-                    }
-
-                    // Set Joomla user email.
-                    if ($attr['id'] == 4) {
-                        $value = $user['email'];
-                    }
-
-                    // Insert the profile attribute.
-                    $query->insert("#__thm_groups_profile_attributes")
-                        ->columns("profileID, attributeID, value, published")
-                        ->values($user['id'] . ", " . $attr['id'] . ", '" . $value . "', 1");
-
-                    $dbo->setQuery($query);
-
-                    try {
-                        $dbo->execute();
-                        $dbo->transactionCommit();
-                    } catch (RuntimeException $exception) {
-                        JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
-                        $dbo->transactionRollback();
-                    }
-                }
-
-                // Associate groups and roles to this profile.
-                $this->associateProfileGroups($user);
+            try {
+                $dbo->execute();
+            } catch (RuntimeException $exception) {
+                JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
             }
         }
     }
