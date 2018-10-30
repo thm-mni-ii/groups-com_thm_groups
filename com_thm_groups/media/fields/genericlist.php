@@ -23,10 +23,7 @@ class JFormFieldGenericList extends JFormFieldList
     public $type = 'genericlist';
 
     /**
-     * Method to get the field options for category
-     * Use the extension attribute in a form to specify the.specific extension for
-     * which categories should be displayed.
-     * Use the show_root attribute to specify whether to show the global category root in the list.
+     * Method to get the options based upon information held in the database
      *
      * @return  array  The field option objects.
      */

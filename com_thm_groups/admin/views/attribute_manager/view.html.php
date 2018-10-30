@@ -55,5 +55,8 @@ class THM_GroupsViewAttribute_Manager extends THM_GroupsViewList
         if (THM_GroupsHelperComponent::isAdmin()) {
             JToolBarHelper::preferences('com_thm_groups');
         }
+
+        JToolbarHelper::help('COM_THM_GROUPS_TEMPLATES_DOCUMENTATION', '',
+            JUri::root() . 'media/com_thm_groups/documentation/attributes.php');
     }
 }

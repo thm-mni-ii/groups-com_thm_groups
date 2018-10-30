@@ -10,6 +10,13 @@
     padding: .5rem 0 .5rem 1rem;
 }
 
+.groups-documentation h4 {
+    border-bottom: 1px solid #f2f5f6;
+    color: #394a59;
+    font-size: 1rem;
+    padding: .5rem 0 .5rem 1rem;
+}
+
 .groups-documentation p, .groups-documentation dl {
     padding: .5rem 1rem;
 }
@@ -35,6 +42,11 @@
 .groups-documentation div.description {
     margin-left: 1rem;
     width: calc(100% - 7.5rem);
+}
+
+.groups-documentation a {
+    color: #9c132e;
+    text-decoration: none;
 }
 
 .groups-documentation div.clearFix {
