@@ -114,6 +114,10 @@ tbody tr:first-child td {
     border-top-style: none;
 }
 
+td input[type="checkbox"] {
+    margin: 0;
+}
+
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
     .controls input[type="file"] {
         line-height: 0;
@@ -216,6 +220,9 @@ tbody tr:first-child td {
 
 .iconPicker .dropdown-menu {
     margin-bottom: 50px;
+    height: 10rem;
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .iconPicker .dropdown-menu .selected {

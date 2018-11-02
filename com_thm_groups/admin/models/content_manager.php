@@ -53,7 +53,7 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
         }
 
         $query->select('content.*')
-            ->select('pContent.featured as featured')
+            ->select('pContent.featured AS featured')
             ->select($query->concatenate(['pa1.value', 'pa2.value'], '->') . ' as author_name')
             ->from('#__content AS content')
             ->innerJoin('#__thm_groups_content AS pContent ON pContent.id = content.id')
@@ -148,22 +148,22 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
             $return[$index]['ordering']['value']      = str_replace('XXX', $iconClass,
                     $generalSortIcon) . $specificOrder;
 
-            $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
+            $return[$index][0] = JHtml::_('grid.id', $index, $item->id) . " $item->id";
 
             $canEdit = THM_GroupsHelperContent::canEdit($item->id);
 
             if ($canEdit) {
                 $url               = JRoute::_('index.php?option=com_content&task=article.edit&id=' . $item->id);
-                $return[$index][1] = JHtml::link($url, $item->title, ['target' => '_blank']);
+                $return[$index][1] = JHtml::link($url, $item->title,
+                        ['target' => '_blank']) . " <span class=\"icon-edit\"></span>";
             } else {
                 $return[$index][1] = $item->title;
             }
 
-            $authorParts = explode('->', $item->author_name);
+            $authorParts       = explode('->', $item->author_name);
             $return[$index][2] = count($authorParts) > 1 ? "{$authorParts[0]}, {$authorParts[1]}" : $authorParts[0];
             $return[$index][3] = $this->getToggle($item->id, $item->featured, 'content', '', 'featured');
             $return[$index][4] = THM_GroupsHelperContent::getStatusDropdown($index, $item);
-            $return[$index][5] = $item->id;
 
             $index++;
         }
@@ -181,19 +181,20 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
         $ordering  = $this->state->get('list.ordering');
         $direction = $this->state->get('list.direction');
 
-        $headers             = [];
-        $headers['order']    = JHtml::_('searchtools.sort', '', 'content.ordering', $direction, $ordering, null, 'asc',
-            'JGRID_HEADING_ORDERING', 'icon-menu-2');
-        $headers['checkbox'] = '';
-        $headers['title']    = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_TITLE', 'title', $direction, $ordering);
-        $headers['author']   = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_PROFILE', 'author_name', $direction,
-            $ordering);
-        $headers['featured'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_PROFILE_MENU', 'pContent.featured',
-            $direction,
-            $ordering);
-        $headers['status']   = JHtml::_('searchtools.sort', 'JSTATUS', 'content.state', $direction, $ordering);
-        $headers['id']       = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'content.id', $direction,
-            $ordering);
+        $headers = ['order', 'id', 'title', 'author', 'featured', 'status'];
+        $headers = array_flip($headers);
+
+        $headers['id']    = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ID', 'content.id', $direction, $ordering);
+        $headers['title'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_TITLE', 'title', $direction, $ordering);
+
+        $headers['author']
+            = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_PROFILE', 'author_name', $direction, $ordering);
+        $headers['featured']
+            = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_PROFILE_MENU', 'pContent.featured', $direction, $ordering);
+        $headers['order']
+            = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ORDER', 'content.ordering', $direction, 'ASC');
+        $headers['status']
+            = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_STATUS', 'content.state', $direction, $ordering);
 
         return $headers;
     }

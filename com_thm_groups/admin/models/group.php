@@ -66,69 +66,7 @@ class THM_GroupsModelGroup extends JModelLegacy
     }
 
     /**
-     * Associates a template with a given group, overwriting any existing association
-     *
-     * @param   int   $templateID the id of the template to be associated
-     * @param   array $groupID    the group with which the template ist to be associated
-     *
-     * @return bool true on success, otherwise false
-     * @throws Exception
-     */
-    private function associateTemplate($templateID, $groupID)
-    {
-        $existingQuery = $this->_db->getQuery(true);
-
-        // First, we need to check if the profile is already assigned to a group
-        $existingQuery->select('templateID')->from('#__thm_groups_template_associations')->where("groupID = '$groupID'");
-        $this->_db->setQuery($existingQuery);
-
-        try {
-            $existingTemplateID = $this->_db->loadResult();
-        } catch (Exception $exception) {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-
-            return false;
-        }
-
-        // There are no previously saved group-profile mappings
-        if (empty($existingTemplateID)) {
-            $insertQuery = $this->_db->getQuery(true);
-
-            $insertQuery->insert('#__thm_groups_template_associations')->columns(['groupID', 'templateID']);
-            $insertQuery->values("$groupID, $templateID");
-
-            $this->_db->setQuery($insertQuery);
-
-            try {
-                $this->_db->execute();
-            } catch (Exception $exception) {
-                JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-
-                return false;
-            }
-        } else {
-            $updateQuery = $this->_db->getQuery(true);
-            $updateQuery->update('#__thm_groups_template_associations')
-                ->set("templateID = $templateID")
-                ->where("groupID = $groupID");
-
-            $this->_db->setQuery($updateQuery);
-
-            try {
-                $this->_db->execute();
-            } catch (Exception $exception) {
-                JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Method to perform batch operations on an item or a set of items.
-     * TODO make generic function which handle all types of batch operations
      *
      * @return  boolean  Returns true on success, false on failure.
      * @throws Exception
@@ -143,24 +81,18 @@ class THM_GroupsModelGroup extends JModelLegacy
             return false;
         }
 
-        $validActions = ['addRole', 'addTemplate', 'removeRole', 'removeTemplate'];
+        $validActions = ['addRole', 'removeRole'];
         $action       = $app->input->getCmd('batch_action', '');
 
         if (empty($action) or !in_array($action, $validActions)) {
             return false;
         }
 
-        $isRoleAction = strpos($action, 'Role') !== false;
-
-        // Role or Template IDs depending upon the batch used
+        // Role IDs selected in the batch modal
         $batchSelected = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('batch', [], 'array'));
 
         if (empty($batchSelected)) {
-            if ($isRoleAction) {
-                $app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ROLE_SELECTED'), 'error');
-            } else {
-                $app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_TEMPLATE_SELECTED'), 'error');
-            }
+            $app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ROLE_SELECTED'), 'error');
 
             return false;
         }
@@ -184,18 +116,9 @@ class THM_GroupsModelGroup extends JModelLegacy
                         $success = $this->associateRole($selectedID, $groupID);
                         break;
 
-                    case 'addTemplate':
-                        $success = $this->associateTemplate($selectedID, $groupID);
-                        break;
-
                     case 'deleteRoleAssociation':
 
                         $success = $this->deleteRoleAssociation($selectedID, $groupID);
-                        break;
-
-                    case 'deleteTemplateAssociation':
-
-                        $success = $this->deleteTemplateAssociation($selectedID, $groupID);
                         break;
                 }
 
@@ -251,51 +174,5 @@ class THM_GroupsModelGroup extends JModelLegacy
         }
 
         return empty($success) ? false : true;
-    }
-
-    /**
-     * Removes the association of a template to a group. Triggered by the trash icon next to the name of the template in the list.
-     *
-     * @param  int $templateID the id of the template to be removed
-     * @param  int $groupID    the id of the group to be removed
-     *
-     * @return bool true if the association was successfully removed, otherwise false
-     * @throws Exception
-     */
-    public function deleteTemplateAssociation($templateID = 0, $groupID = 0)
-    {
-        $app  = JFactory::getApplication();
-
-        if (!THM_GroupsHelperComponent::isManager()) {
-            $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
-
-            return false;
-        }
-
-        $input          = JFactory::getApplication()->input;
-        $templateID     = empty($templateID) ? $input->getInt('templateID', 0) : $templateID;
-        $groupID        = empty($groupID) ? $input->getInt('groupID', 0) : $groupID;
-        $invalidRequest = (empty($templateID) or empty($groupID));
-
-        if ($invalidRequest) {
-            return false;
-        }
-
-        $query = $this->_db->getQuery(true);
-        $query
-            ->delete('#__thm_groups_template_associations')
-            ->where("templateID = '$templateID'")
-            ->where("groupID = '$groupID'");
-        $this->_db->setQuery($query);
-
-        try {
-            $this->_db->execute();
-        } catch (Exception $exc) {
-            $app->enqueueMessage($exc->getMessage(), 'error');
-
-            return false;
-        }
-
-        return true;
     }
 }

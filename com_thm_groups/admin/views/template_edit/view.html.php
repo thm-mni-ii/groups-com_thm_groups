@@ -10,8 +10,7 @@
  */
 defined('_JEXEC') or die;
 
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/profiles.php';
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/template.php';
+require_once HELPERS . 'profiles.php';
 require_once JPATH_ROOT . '/media/com_thm_groups/views/edit.php';
 
 /**
@@ -37,18 +36,8 @@ class THM_GroupsViewTemplate_Edit extends THM_GroupsViewEdit
             JErrorPage::render($exc);
         }
 
-        $allAttributes = THM_GroupsHelperProfiles::getAllAttributes();
-        $id            = JFactory::getApplication()->input->getInt('id', 0);
-
-        if (empty($id)) {
-            $this->attributes = $allAttributes;
-        } else {
-            $templateAttributes = THM_GroupsHelperTemplate::getTemplateAttributes($id);
-            $this->attributes   = THM_GroupsHelperTemplate::assignParametersToAttributes($allAttributes,
-                $templateAttributes);
-
-            usort($this->attributes, ['THM_GroupsViewTemplate_Edit', 'orderSort']);
-        }
+        $this->templateID = JFactory::getApplication()->input->getInt('id', 0);
+        $this->attributes = $this->getModel()->getAttributes();
 
         parent::display($tpl);
     }
@@ -78,6 +67,9 @@ class THM_GroupsViewTemplate_Edit extends THM_GroupsViewEdit
         }
         JToolBarHelper::save2new('template.save2new');
         JToolBarHelper::cancel('template.cancel', $closeConstant);
+
+        JToolbarHelper::help('COM_THM_GROUPS_TEMPLATES_DOCUMENTATION', '',
+            JUri::root() . 'media/com_thm_groups/documentation/template_edit.php');
     }
 
     /**
@@ -93,29 +85,6 @@ class THM_GroupsViewTemplate_Edit extends THM_GroupsViewEdit
 
         JHtml::stylesheet(JUri::root() . 'media/jui/css/sortablelist.css');
         JHtml::stylesheet(JUri::root() . 'media/com_thm_groups/css/template_edit.css');
-    }
-
-    /**
-     * Sorts attributes according to their ordering property
-     *
-     * @param array $attributeOne the first attribute
-     * @param array $attributeTwo the second attribute
-     *
-     * @return int -1 if the first value should be after the second, 0 if the ordering is equal (initial state),
-     * or 1 if the first attribute should be displayed first.
-     */
-    private static function orderSort($attributeOne, $attributeTwo)
-    {
-        if (isset($attributeOne['ordering']) and isset($attributeTwo['ordering'])) {
-            if ($attributeOne['ordering'] == $attributeTwo['ordering']) {
-                return 0;
-            }
-
-            return ($attributeOne['ordering'] < $attributeTwo['ordering']) ? -1 : 1;
-        }
-
-        // Neither have yet been set and they therefore have the same ordering
-        return 0;
     }
 
     /**

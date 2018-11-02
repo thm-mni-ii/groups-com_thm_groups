@@ -8,7 +8,7 @@
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
-$skipIndexes = [1, 2, 5, 7];
+$special = [TITLE, FORENAME, SURNAME, POSTTITLE];
 ?>
 <div class="toolbar">
     <?php echo $this->getEditLink('class="btn btn-toolbar-thm"'); ?>
@@ -17,7 +17,7 @@ $skipIndexes = [1, 2, 5, 7];
     <div class="page-header">
         <h2><?php echo THM_GroupsHelperProfiles::getDisplayName($this->profileID, true); ?></h2>
     </div>
-    <?php $this->renderAttributes() ?>
+    <?php echo THM_GroupsHelperProfiles::getDisplay($this->profileID); ?>
     <div class="clearFix"></div>
 </div>
 

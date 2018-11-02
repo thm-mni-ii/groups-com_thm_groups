@@ -12,7 +12,7 @@
 /**
  * Class provides standardized output of list items
  */
-class THM_GroupsTemplateEdit_Basic
+class THM_GroupsLayoutEdit_Basic
 {
     /**
      * Method to create a form output based solely on the xml configuration.

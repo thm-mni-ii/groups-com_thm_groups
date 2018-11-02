@@ -1,6 +1,10 @@
 /**
  * Contains form validation expressions
  */
+/*
+
+
+ */
 
 jQuery(document).ready(function () {
     "use strict";
@@ -12,25 +16,25 @@ jQuery(document).ready(function () {
         function (value) {
             return (/^(0?[1-9]|[1,2]\d|3[0,1])\.(0?[1-9]|1[0-2])\.(((19|20)?\d{2}))$/).test(value);
         });
-    document.formvalidator.setHandler('html',
+    document.formvalidator.setHandler('european_telephone',
         function (value) {
-            return (/^[\s\S]+$/).test(value);
+            return (/^(\+[\d]+ ?)?( ?((\(0?[\d]*\))|(0?[\d]+(\/| \/)?)))?(([ \-]|[\d]+)+)$/).test(value);
         });
     document.formvalidator.setHandler('name',
         function (value) {
             return (/^[A-ZÀ-ÖØ-Þ]{1}[a-zß-ÿ]+([ |-]{1}[A-ZÀ-ÖØ-Þ]{1}[a-zß-ÿ]+)*$/).test(value);
         });
+    document.formvalidator.setHandler('name_supplement',
+        function (value) {
+            return (/^[A-ZÀ-ÖØ-Þa-zß-ÿ ,\.\-\(\)†]+$/).test(value);
+        });
     document.formvalidator.setHandler('simple_text',
         function (value) {
-            return (/^[^<>{}\n]+$/).test(value);
-        });
-    document.formvalidator.setHandler('telephone',
-        function (value) {
-            return (/^(\+[\d]+ ?)?( ?((\(0?[\d]*\))|(0?[\d]+(\/| \/)?)))?(([ \-]|[\d]+)+)$/).test(value);
+            return (/^[^<>{}]+$/).test(value);
         });
     document.formvalidator.setHandler('url',
         function (value) {
-            return (/^((https?|ftp):\/\/)?([\w\d\-_]+\.)*([\w\d\-_]+)(\/[\w\d\-_]*)*(\?[\w\d\-_]+(=[\w\d\-_]+)?([&\;][\w\d\-_]+(=[\w\d\-_]+)?)*)?(#[\w\d\-_]+)?$/).test(value);
+            return (/^((https?|ftp):\/\/)?([\w\d\-_]+\.)*([\w\d\-_]+\.[\w\d\-_]+)(\/[\w\d\-_]*)*(\?[\w\d\-_]+(=[\w\d\-_]+)?([&\;][\w\d\-_]+(=[\w\d\-_]+)?)*)?(#[\w\d\-_]+)?$/).test(value);
         });
 });
 

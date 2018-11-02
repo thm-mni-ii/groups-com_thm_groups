@@ -16,6 +16,9 @@ defined('_JEXEC') or die;
         <div class="span12">
             <fieldset class="form-vertical">
                 <?php
+                if ($this->templateID === 1) {
+                    $this->get('Form')->setFieldAttribute('templateName', 'readonly', 'true');
+                }
                 echo $this->form->renderFieldSet('details');
                 ?>
             </fieldset>
@@ -30,19 +33,19 @@ defined('_JEXEC') or die;
             </th>
             <th><span class="hasTooltip"
                       title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_LABEL',
-                          'COM_THM_GROUPS_ATTRIBUTE_LABEL_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_LABEL'); ?></span>
+                          'COM_THM_GROUPS_LABEL_DESC') ?>"><?php echo JText::_('COM_THM_GROUPS_LABEL'); ?></span>
             </th>
             <th><span class="hasTooltip"
                       title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_PUBLISHED',
-                          'COM_THM_GROUPS_TEMPLATE_EDIT_PUBLISHED_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_PUBLISHED'); ?></span>
+                          'COM_THM_GROUPS_PUBLISHED_DESC') ?>"><?php echo JText::_('COM_THM_GROUPS_PUBLISHED'); ?></span>
             </th>
             <th><span class="hasTooltip"
                       title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_SHOW_ICON',
-                          'COM_THM_GROUPS_TEMPLATE_EDIT_SHOW_ICON_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_SHOW_ICON'); ?></span>
+                          'COM_THM_GROUPS_SHOW_ICON_DESC') ?>"><?php echo JText::_('COM_THM_GROUPS_SHOW_ICON'); ?></span>
             </th>
             <th><span class="hasTooltip"
                       title="<?php echo JHtml::tooltipText('COM_THM_GROUPS_SHOW_LABEL',
-                          'COM_THM_GROUPS_TEMPLATE_EDIT_SHOW_LABEL_TIP') ?>"><?php echo JText::_('COM_THM_GROUPS_SHOW_LABEL'); ?></span>
+                          'COM_THM_GROUPS_SHOW_LABEL_DESC') ?>"><?php echo JText::_('COM_THM_GROUPS_SHOW_LABEL'); ?></span>
             </th>
         </tr>
         </thead>

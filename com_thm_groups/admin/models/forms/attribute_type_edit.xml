@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="details" addfieldpath="/media/com_thm_groups/fields">
+        <field name="id" type="hidden"/>
+        <field name="type" type="text" label="COM_THM_GROUPS_NAME" required="true"/>
+        <field name="fieldID" type="fieldlist"
+               label="COM_THM_GROUPS_FIELD" description="COM_THM_GROUPS_FIELD_DESC" default="1"/>
+        <field name="accept" type="text" label="COM_THM_GROUPS_ACCEPTED_FORMATS"
+               description="COM_THM_GROUPS_ACCEPTED_FORMATS_DESC" hint="COM_THM_GROUPS_ACCEPTED_FORMATS_HINT"/>
+        <field name="buttons" type="radio" class="btn-group btn-group-yesno" default="1"
+               label="COM_THM_GROUPS_EDITOR_BUTTONS" description="COM_THM_GROUPS_EDITOR_BUTTONS_DESC">
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="calendarformat" type="text" label="COM_THM_GROUPS_CALENDAR_FORMAT" maxlength="100"
+               description="COM_THM_GROUPS_CALENDAR_FORMAT_DESC" hint="COM_THM_GROUPS_CALENDAR_FORMAT_HINT"/>
+        <field name="hide" type="text" label="COM_THM_GROUPS_HIDDEN_BUTTONS"
+               description="COM_THM_GROUPS_HIDDEN_BUTTONS_DESC" hint="COM_THM_GROUPS_HIDDEN_BUTTONS_HINT"/>
+        <field name="hint" type="text" label="COM_THM_GROUPS_HINT"
+               description="COM_THM_GROUPS_HINT_DESC" hint="COM_THM_GROUPS_HINT_HINT"/>
+        <field name="maxlength" type="integer" label="COM_THM_GROUPS_MAX_LENGTH"
+               description="COM_THM_GROUPS_MAX_LENGTH_DESC" default="255" first="5" last="255" step="5"/>
+        <field name="mode" type="list" label="COM_THM_GROUPS_CROPPING"
+               description="COM_THM_GROUPS_CROPPING_MODE_DESC">
+            <option value="-1">COM_THM_GROUPS_MODE_SELECTABLE</option>
+            <option value="1">COM_THM_GROUPS_MODE_PROFILE</option>
+            <option value="0">COM_THM_GROUPS_MODE_LANDSCAPE</option>
+        </field>
+        <field name="regex" type="text" label="COM_THM_GROUPS_REGEX" maxlength="100"
+               description="COM_THM_GROUPS_REGEX_DESC"/>
+        <field name="showtime" type="radio" class="btn-group btn-group-yesno" default="0"
+               label="COM_THM_GROUPS_SHOW_TIME" description="COM_THM_GROUPS_SHOW_TIME_DESC">
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="timeformat" type="list" default="24"
+               label="COM_THM_GROUPS_TIME_FORMAT" description="COM_THM_GROUPS_TIME_FORMAT_DESC">
+            <option value="24">24</option>
+            <option value="12">12</option>
+        </field>
+        <field name="validate" type="hidden" value="1"/>
+    </fieldset>
+</form>

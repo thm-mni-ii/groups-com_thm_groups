@@ -84,36 +84,4 @@ class THM_GroupsHelperBatch
 
         return $groups;
     }
-
-    /**
-     * Return all existing profiles as select field
-     *
-     * @return array options for profile selection
-     * @throws Exception
-     */
-    public static function getProfiles()
-    {
-        $dbo   = JFactory::getDbo();
-        $query = $dbo->getQuery(true);
-
-        $query
-            ->select('id, name')
-            ->from('#__thm_groups_templates');
-
-        $dbo->setQuery($query);
-
-        try {
-            $options = $dbo->loadObjectList();
-        } catch (Exception $exc) {
-            JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
-
-            return [];
-        }
-
-        foreach ($options as $key => $option) {
-            $profiles[] = JHtml::_('select.option', $option->id, $option->name);
-        }
-
-        return $profiles;
-    }
 }

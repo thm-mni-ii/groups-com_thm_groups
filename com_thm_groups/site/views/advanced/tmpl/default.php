@@ -16,8 +16,8 @@ if ($this->params->get('jyaml_header_image')) : ?>
 echo '<h2 class="contentheading">' . $this->title . '</h2>';
 echo '<div id="advanced-container" class="advanced-container row-fluid">';
 
-if ($this->sort) {
-    echo $this->loadTemplate('alpha');
+if ($this->params->get('sort', ALPHASORT)) {
+    $this->renderRows($this->profiles);
 } else {
     echo $this->loadTemplate('roles');
 }

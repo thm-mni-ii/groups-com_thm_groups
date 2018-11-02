@@ -31,36 +31,27 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
      * @return  string     A string with all group comma separated
      * @throws Exception
      */
-    public function getGroups($roleID)
+    private function getGroupCount($roleID)
     {
         $query = $this->_db->getQuery(true);
 
-        $query
-            ->select('DISTINCT ug.id, ug.title')
+        $query->select('COUNT(DISTINCT ug.id)')
             ->from('#__usergroups AS ug')
             ->innerJoin('#__thm_groups_role_associations AS roleAssoc ON ug.id = roleAssoc.groupID')
             ->where("roleAssoc.roleID = $roleID")
             ->order('ug.title ASC');
 
         $this->_db->setQuery($query);
-        $groups = $this->_db->loadAssocList();
 
-        $return = [];
-        if (!empty($groups)) {
-            $buttonStart = '<a onclick="deleteGroupAssociation(';
-            $buttonEnd   = ');"><span class="icon-trash"></span></a>';
-            foreach ($groups as $group) {
-                // Delete button
-                $deleteButton = $buttonStart . "'role', {$group['id']}, $roleID" . $buttonEnd;
+        try {
+            $count = $this->_db->loadResult();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-                // Link to edit view of a group
-                $url = JRoute::_('index.php?option=com_users&task=group.edit&id=' . $group['id']);
-
-                $return[] = "<a href=$url>" . $group['title'] . "</a> " . $deleteButton;
-            }
+            return 0;
         }
 
-        return implode(',<br /> ', $return);
+        return empty($count) ? 0 : $count;
     }
 
     /**
@@ -74,12 +65,9 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
         $direction = $this->state->get('list.direction');
 
         $headers             = [];
-        $headers['order']    = JHtml::_('searchtools.sort', '', 'roles.ordering', $direction, $ordering, null, 'asc',
-            'JGRID_HEADING_ORDERING', 'icon-menu-2');
+        $headers['order']    = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ORDER', 'roles.ordering', $direction, 'ASC');
         $headers['checkbox'] = '';
-        $headers['id']       = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'roles.id', $direction,
-            $ordering);
-        $headers['name']     = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 'roles.name', $direction,
+        $headers['name']     = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_NAME', 'roles.name', $direction,
             $ordering);
         $headers['groups']   = JText::_('COM_THM_GROUPS_GROUPS');
 
@@ -138,9 +126,8 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
 
 
             $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
-            $return[$index][1] = $item->id;
-            $return[$index][2] = ($canEdit) ? JHtml::_('link', $url . $item->id, $item->name) : $item->name;
-            $return[$index][3] = $this->getGroups($item->id);
+            $return[$index][1] = ($canEdit) ? JHtml::_('link', $url . $item->id, $item->name) : $item->name;
+            $return[$index][2] = $this->getGroupCount($item->id);
             $index++;
         }
 

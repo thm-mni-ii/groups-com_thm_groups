@@ -11,6 +11,7 @@
  */
 
 defined('_JEXEC') or die;
+require_once HELPERS . 'attributes.php';
 require_once JPATH_ROOT . '/media/com_thm_groups/models/edit.php';
 
 /**
@@ -35,6 +36,9 @@ class THM_GroupsModelAttribute_Edit extends THM_GroupsModelEdit
             $this->form = $this->loadForm('com_thm_groups.attribute_edit', 'attribute_edit',
                 ['control' => 'jform', 'load_data' => $loadData]);
         }
+
+        $attributeID = JFactory::getApplication()->input->getInt('id', 0);
+        THM_GroupsHelperAttributes::configureForm($attributeID, $this->form);
 
         return $this->form;
     }
@@ -61,27 +65,20 @@ class THM_GroupsModelAttribute_Edit extends THM_GroupsModelEdit
      */
     protected function loadFormData()
     {
-        $input         = JFactory::getApplication()->input;
-        $name          = $this->get('name');
-        $resource      = str_replace('_edit', '', $name);
-        $task          = $input->getCmd('task', "$resource.add");
-        $resourceArray = $input->get('cid', [], 'array');
-        $resourceID    = empty($resourceArray) ? $input->getInt('id', 0) : $resourceArray[0];
+        $input  = JFactory::getApplication()->input;
+        $attributeID = $input->getInt('id', 0);
 
-        $add = (($task != "$resource.edit") and empty($resourceID));
-        if ($add) {
-            return $this->getItem(0);
-        }
+        // This avoids opening the edit view when the new button was pushed regardless of item selection
+        $task = $input->getCmd('task', "attribute.add");
+        $edit = (($task == "attribute.edit") or $attributeID > 0);
 
-        $item    = $this->getItem($resourceID);
-        $options = json_decode($item->options);
-        if (!empty($options)) {
-            $item->validate = empty($options->required) ? 0 : 1;
-            if (!empty($options->icon)) {
-                $item->iconpicker = $options->icon;
+        if ($edit and empty($attributeID)) {
+            $selected = $input->get('cid', [], 'array');
+            if (!empty($selected)) {
+                $attributeID = $selected[0];
             }
         }
 
-        return $item;
+        return $this->getItem($attributeID);
     }
 }

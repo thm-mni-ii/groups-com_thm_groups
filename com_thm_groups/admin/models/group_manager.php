@@ -33,18 +33,16 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
         // Select the required fields from the table.
         $query->select($this->getState('list.select', 'ug1.*'))
             ->select('COUNT(DISTINCT ug2.id) AS level')
-            ->select('COUNT(DISTINCT map.user_id) AS memberCount')
+            ->select('COUNT(DISTINCT map.user_id) AS members')
             ->from('#__usergroups AS ug1')
             ->leftJoin('#__usergroups AS ug2 ON ug1.lft > ug2.lft AND ug1.rgt < ug2.rgt')
             ->leftJoin('#__user_usergroup_map AS map ON map.group_id = ug1.id')
             ->leftJoin('#__thm_groups_role_associations AS ra ON ra.groupID = ug1.id')
-            ->leftJoin('#__thm_groups_template_associations AS ta ON ta.groupID = ug1.id')
             ->group('ug1.id');
 
 
         $this->setSearchFilter($query, ['ug1.title']);
         $this->setIDFilter($query, 'ra.roleID', ['filter.roles']);
-        $this->setIDFilter($query, 'ta.templateID', ['filter.templates']);
         $this->setOrdering($query);
 
         return $query;
@@ -65,23 +63,27 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
             return $return;
         }
 
+        $defaultGroups = [1, 2, 3, 4, 5, 6, 7, 8];
+
         $canEditGroups = JFactory::getUser()->authorise('core.edit', 'com_users');
         $index         = 0;
+
+        $protectedNotice = '<i class="icon-lock hasTooltip" title="XXXX"></i>';
+        $protectedNotice = str_replace('XXXX', JText::_('COM_THM_GROUPS_DEFAULT_GROUP_NOTICE'), $protectedNotice);
 
         foreach ($items as &$item) {
             $url = JRoute::_('index.php?option=com_users&task=group.edit&id=' . $item->id);
 
-            $return[$index][0] = JHtml::_('grid.id', $index, $item->id, false);
-            $return[$index][1] = $item->id;
+            $return[$index][0] = in_array($item->id, $defaultGroups) ?
+                $protectedNotice : JHtml::_('grid.id', $index, $item->id, false);
 
             $levelIndicator = str_repeat('<span class="gi">|&mdash;</span>', $item->level);
             $groupText      = $canEditGroups ? JHtml::_('link', $url, $item->title,
                 ['target' => '_blank']) : $item->title;
 
-            $return[$index][2] = "$levelIndicator $groupText";
-            $return[$index][3] = $this->getRoles($item->id);
-            $return[$index][4] = $this->getTemplates($item->id);
-            $return[$index][5] = $item->memberCount;
+            $return[$index][1] = "$levelIndicator $groupText";
+            $return[$index][2] = $this->getRoles($item->id);
+            $return[$index][3] = $item->members;
 
             $index++;
         }
@@ -99,15 +101,14 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
         $ordering  = $this->state->get('list.ordering');
         $direction = $this->state->get('list.direction');
 
-        $headers                = [];
-        $headers['checkbox']    = '';
-        $headers['id']          = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'ug1.id', $direction,
-            $ordering);
-        $headers['name']        = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 'ug1.title', $direction,
+        $headers = [];
+
+        $headers['structure'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ORDER', 'ug1.lft', $direction, 'ASC');
+
+        $headers['name']        = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_NAME', 'ug1.title', $direction,
             $ordering);
         $headers['roles']       = JText::_('COM_THM_GROUPS_ROLES');
-        $headers['templates']   = JText::_('COM_THM_GROUPS_TEMPLATES');
-        $headers['users_count'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_MEMBER_COUNT'), 'memberCount',
+        $headers['members'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_MEMBERS', 'members',
             $direction,
             $ordering);
 
@@ -188,52 +189,6 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
     }
 
     /**
-     * Returns a profile of a group
-     *
-     * @param   int $groupID An id of a group
-     *
-     * @return array|bool|string
-     *
-     * @throws Exception
-     */
-    private function getTemplates($groupID)
-    {
-        $query = $this->_db->getQuery(true);
-
-        $query
-            ->select('template.id, template.name')
-            ->from('#__thm_groups_template_associations AS templateAssoc')
-            ->innerJoin('#__thm_groups_templates AS template ON template.id = templateAssoc.templateID')
-            ->where("templateAssoc.groupID = $groupID");
-
-        $this->_db->setQuery($query);
-
-        try {
-            $template = $this->_db->loadObject();
-        } catch (Exception $exception) {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-
-            return false;
-        }
-
-        $return = '';
-        if (!empty($template)) {
-            $deleteIcon = '<span class="icon-trash"></span>';
-            $deleteBtn  = "<a onclick='deleteTemplateAssociation($groupID,{$template->id});'>$deleteIcon</a>";
-
-            $url = "index.php?option=com_thm_groups&view=profile_edit&id=$template->id";
-
-            if (JFactory::getUser()->authorise('core.edit', 'com_thm_groups')) {
-                $return = "<a href=$url>" . $template->name . "</a> " . $deleteBtn;
-            } else {
-                $return = $template->name;
-            }
-        }
-
-        return $return;
-    }
-
-    /**
      * Returns custom hidden fields for page
      *
      * @return array
@@ -246,7 +201,6 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
         $fields[] = '<input type="hidden" name="groupID" value="">';
         $fields[] = '<input type="hidden" name="profileID" value="">';
         $fields[] = '<input type="hidden" name="roleID" value="">';
-        $fields[] = '<input type="hidden" name="templateID" value="">';
 
         return $fields;
     }

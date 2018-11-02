@@ -16,11 +16,11 @@ require_once HELPERS . 'profiles.php';
  */
 class THM_GroupsViewProfile extends JViewLegacy
 {
-    private $profile;
+    public $attributes;
+
+    public $canEdit;
 
     public $profileID;
-
-    protected $links;
 
     /**
      * Method to get display
@@ -32,54 +32,19 @@ class THM_GroupsViewProfile extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        $this->model = $this->getModel();
+        $this->profileID = JFactory::getApplication()->input->getint('profileID', 0);
+        $published       = empty($this->profileID) ? false : THM_GroupsHelperProfiles::isPublished($this->profileID);
 
-        $this->profile   = $this->model->profile;
-        $this->profileID = $this->model->profileID;
+        if (!$published) {
+            $exc = new Exception(JText::_('COM_THM_GROUPS_PROFILE_NOT_FOUND'), '404');
+            JErrorPage::render($exc);
+        }
 
         $this->canEdit = THM_GroupsHelperProfiles::canEdit($this->profileID);
 
         $this->setPath();
         $this->modifyDocument();
         parent::display($tpl);
-    }
-
-    /**
-     * Renders the attributes of a profile
-     *
-     * @return void renders to the view
-     */
-    public function renderAttributes()
-    {
-        $attributes = [];
-
-        // Spoofs a textfield to borrow the styling of a textfield label
-        $contactHeader = '<h3>' . JText::_('COM_THM_GROUPS_CONTACT_HEADER') . '</h3>';
-        $attributes[]  = $contactHeader;
-
-        $surname = $this->profile[2]['value'];
-
-        foreach ($this->profile as $attribute) {
-            // These were already taken care of in the name/title containers
-            $processed = in_array($attribute['id'], [1, 2, 5, 7]);
-
-            // Special indexes and attributes with no saved value are irrelevant
-            $irrelevant = (empty($attribute['value']) or empty(trim($attribute['value'])));
-
-            if ($processed or $irrelevant) {
-                continue;
-            }
-
-            $attributeContainer = THM_GroupsHelperProfiles::getAttributeContainer($attribute, $surname);
-
-            if (($attribute['type'] == 'PICTURE')) {
-                array_unshift($attributes, $attributeContainer);
-            } else {
-                $attributes[] = $attributeContainer;
-            }
-        }
-
-        echo implode('', $attributes);
     }
 
     /**

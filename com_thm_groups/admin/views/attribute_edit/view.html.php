@@ -31,28 +31,7 @@ class THM_GroupsViewAttribute_Edit extends THM_GroupsViewEdit
             JErrorPage::render($exc);
         }
 
-        $input = JFactory::getApplication()->input;
-        $id    = $input->getInt('id', 0);
-
-        // Disable editing of the selected abstract attribute
-        if ($id != 0) {
-            $form = $this->get('Form');
-            $form->setFieldAttribute('abstractID', 'readonly', 'true');
-        }
-
         parent::display($tpl);
-    }
-
-    /**
-     * Adds styles and scripts to the document
-     *
-     * @return  void  modifies the document
-     */
-    protected function modifyDocument()
-    {
-        parent::modifyDocument();
-        $document = JFactory::getDocument();
-        $document->addScript(JUri::root() . "/media/com_thm_groups/js/attribute_edit.js");
     }
 
     /**

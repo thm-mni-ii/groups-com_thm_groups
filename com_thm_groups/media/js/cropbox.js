@@ -8,120 +8,127 @@
  *
  * @return null
  **/
-var cropboxEventElements = [];
+const cropboxEventElements = [];
 
-function bindImageCropper(element, attributeID, uID)
+function bindImageCropper(attributeID, uID, mode)
 {
-    var options, cropper, filename = null, previousIndex = false;
+    let cropper, filename = null, options, previousIndex = false;
 
     options =
         {
-            imageBox: '#' + element + '_imageBox',
-            thumbBox: '#' + element + '_thumbBox',
-            spinner: '#' + element + '_spinner'
+            imageBox: '#imageBox-' + attributeID,
+            mode: mode,
+            spinner: null,
+            thumbBox: '#thumbBox-' + attributeID
         };
+
+    if (mode === '-1')
+    {
+        options.spinner = '#spinner-' + attributeID;
+    }
 
     cropper = new cropbox(options);
 
-    for (var i = 0; i < cropboxEventElements.length; i++)
+    for (let i = 0; i < cropboxEventElements.length; i++)
     {
-        if (cropboxEventElements[i] === element)
+        if (cropboxEventElements[i] === attributeID)
         {
             previousIndex = i;
         }
     }
 
-    // No previous bind has occurred for the button
-    if (previousIndex === false)
+    // A previous bind has occurred for the button
+    if (previousIndex !== false)
     {
-        // Add element to event listener list to prevent multiple bindings
-        cropboxEventElements.push(element);
+        return;
+    }
 
-        document.querySelector('#jform_' + element).addEventListener('change', function () {
-            var reader = new FileReader();
+    cropboxEventElements.push(attributeID);
+    document.querySelector('#jform_' + attributeID).addEventListener('change', function () {
+        const reader = new FileReader();
+        let file;
 
-            reader.onload = function (e) {
-                options.imgSrc = e.target.result;
-                cropper = new cropbox(options);
-            };
+        reader.onload = function (e) {
+            options.imgSrc = e.target.result;
+            cropper = new cropbox(options);
+        };
 
-            var file = this.files[0];
-            reader.readAsDataURL(file);
+        file = this.files[0];
+        reader.readAsDataURL(file);
 
-            filename = file.name;
-        });
+        filename = file.name;
+    });
 
-        // Bind save action to 'Upload cropped' button
-        document.querySelector('#' + element + '_saveChanges').addEventListener('click', function () {
+    document.querySelector('#saveChanges-' + attributeID).addEventListener('click', function () {
 
-            // Get current picture
-            var blob = cropper.getBlob(),
-                fd = new FormData();
-            fd.append('fname', 'test.pic');
-            fd.append('data', blob);
+        // Get current picture
+        const blob = cropper.getBlob(), fd = new FormData();
+        fd.append('fname', 'test.pic');
+        fd.append('data', blob);
 
-            jQuery.ajax({
-                type: "POST",
-                url: "index.php?option=com_thm_groups&controller=profile&task=profile.saveCropped&tmpl=component&profileID="
-                + uID + "&element=" + element + "&attributeID=" + attributeID + "&filename="
+        jQuery.ajax({
+            type: "POST",
+            url: "index.php?option=com_thm_groups&controller=profile&task=profile.saveCropped&tmpl=component&profileID="
+                + uID + "&attributeID=" + attributeID + "&filename="
                 + filename + "",
-                data: fd,
-                dataType: 'html',
-                processData: false,
-                contentType: false
-            }).success(function (response) {
-                var fileType, value;
+            data: fd,
+            dataType: 'html',
+            processData: false,
+            contentType: false
+        }).success(function (response) {
+            let fileType, value;
 
-                if (response)
-                {
-                    document.getElementById(element + "_IMG").innerHTML = response;
-                    jQuery('#' + element + "_Modal").modal('toggle');
-                    fileType = filename.split('.').pop();
-                    value = uID + '_' + attributeID + '.' + fileType;
-                    jQuery("#jform_" + element + "_value").val(value);
-                }
-                else
-                {
-                    jQuery("#" + element + "_IMG").html('');
-                    jQuery("#jform_" + element + "_value").val('');
-                }
-            });
+            if (response)
+            {
+                document.getElementById('image-' + attributeID).innerHTML = response;
+                jQuery('#modal-' + attributeID).modal('toggle');
+                fileType = filename.split('.').pop();
+                value = uID + '_' + attributeID + '.' + fileType;
+                jQuery("#jform_" + attributeID + "_value").val(value);
+            }
+            else
+            {
+                jQuery("#image" + attributeID).html('');
+                jQuery("#jform_" + attributeID + "_value").val('');
+            }
         });
+    });
 
-        document.querySelector('#' + element + '_switch').addEventListener('click', function () {
-            var box = document.getElementById(element + '_thumbBox');
-
-            // Get old values:
-            var style = window.getComputedStyle(box);
-            var height = style.getPropertyValue('height');
-            var width = style.getPropertyValue('width');
+    if (mode === '-1')
+    {
+        document.querySelector('#switch-' + attributeID).addEventListener('click', function () {
+            const thumbBox = document.getElementById('thumbBox-' + attributeID),
+                style = window.getComputedStyle(thumbBox),
+                height = style.getPropertyValue('height'),
+                width = style.getPropertyValue('width');
 
             // Set new values:
-            box.style.height = width;
-            box.style.width = height;
-        });
-
-        document.querySelector('#' + element + '_btnZoomIn').addEventListener('click', function () {
-            cropper.zoomIn();
-        });
-        document.querySelector('#' + element + '_btnZoomOut').addEventListener('click', function () {
-            cropper.zoomOut();
+            thumbBox.style.height = width;
+            thumbBox.style.width = height;
         });
     }
+
+    document.querySelector('#btnZoomIn-' + attributeID).addEventListener('click', function () {
+        cropper.zoomIn();
+    });
+
+    document.querySelector('#btnZoomOut-' + attributeID).addEventListener('click', function () {
+        cropper.zoomOut();
+    });
 }
 
-function deletePic(name, attributeID, profileID)
+function deletePic(attributeID, profileID)
 {
     jQuery.ajax({
         type: "POST",
         url: "index.php?option=com_thm_groups&task=profile.deletePicture&tmpl=component&profileID="
-        + profileID + "&attributeID=" + attributeID + "&tmpl=component",
+            + profileID + "&attributeID=" + attributeID + "&tmpl=component",
         datatype: "HTML"
     }).success(function (response) {
         if (response === '')
         {
-            jQuery("#" + name + "_IMG").html('');
-            jQuery("#jform_" + name + "_value").val('');
+            jQuery("#image" + attributeID).html('');
+            jQuery("#jform_" + attributeID + "_value").val('');
         }
     });
 }
@@ -129,8 +136,8 @@ function deletePic(name, attributeID, profileID)
 /* Notice: cropbox works with the chopped image shown in the preview box, not the actual image file
  * as a result the cropped image can be considered like a snipped from a screen-shot that is converted into a blob.
  */
-var cropbox = function (options) {
-    var el = document.querySelector(options.imageBox),
+const cropbox = function (options) {
+    const el = document.querySelector(options.imageBox),
         obj =
             {
                 state: {},
@@ -292,7 +299,9 @@ var cropbox = function (options) {
         };
 
     obj.image.onload = function () {
-        obj.spinner.style.display = 'none';
+        if (options.mode === '-1') {
+            obj.spinner.style.display = 'none';
+        }
         setBackground();
 
         attachEvent(el, 'mousedown', imgMouseDown);

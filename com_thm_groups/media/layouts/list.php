@@ -11,7 +11,7 @@
 /**
  * Class provides standardized output of list items
  */
-class THM_GroupsTemplateList
+class THM_GroupsLayoutList
 {
     /**
      * Method to create a list output
@@ -19,6 +19,7 @@ class THM_GroupsTemplateList
      * @param   object &$view the view context calling the function
      *
      * @return void
+     * @throws Exception
      */
     public static function render(&$view)
     {
@@ -111,9 +112,24 @@ class THM_GroupsTemplateList
     {
         echo '<tr>';
         foreach ($headers as $header) {
-            echo "<th>$header</th>";
+            if (is_array($header)) {
+                if (!empty($header['attributes']) and is_array($header['attributes'])) {
+                    $hAttributes = '';
+                    foreach ($header['attributes'] as $hAttribute => $hAttributeValue) {
+                        $hAttributes .= $hAttribute . '="' . $hAttributeValue . '" ';
+                    }
+                    echo "<th $hAttributes>";
+                } else {
+                    echo "<th>";
+                }
+                echo $header['value'];
+            } else {
+                echo "<th>$header";
+            }
+            echo "</th>";
         }
         echo '</tr>';
+
     }
 
     /**

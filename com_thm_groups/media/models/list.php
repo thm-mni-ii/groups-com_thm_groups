@@ -384,7 +384,7 @@ abstract class THM_GroupsModelList extends JModelList
     protected function setLocalizedFilters(&$query, $filterNames)
     {
         /** @noinspection PhpIncludeInspection */
-        require_once JPATH_ROOT . '/media/com_thm_groups/helpers/language.php';
+        require_once HELPERS . 'language.php';
         $tag = THM_GroupsHelperLanguage::getShortTag();
         foreach ($filterNames as $name) {
             $value = $this->state->get("filter.$name", '');

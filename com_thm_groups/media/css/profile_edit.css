@@ -27,6 +27,7 @@ button:hover span:before, a.btn:hover span:before {
 
 #adminForm button, #adminForm a.btn {
     margin-left: 10px;
+    margin-right: 0;
 }
 
 #adminForm button.upload, #adminForm a.btn.upload {
@@ -37,6 +38,23 @@ button:hover span:before, a.btn:hover span:before {
     clear: both;
 }
 
+#adminForm .published-container input {
+    margin-top: -.15rem;
+}
+
+#adminForm .published-container span {
+    margin-right: .5rem;
+}
+
+#adminForm .inline {
+    display: inline-block;
+    margin-left: 1rem;
+}
+
+#adminForm .inline {
+    float: left;
+}
+
 #adminForm .control-group .control-label {
     display: inline-block;
     padding: 0;
@@ -44,7 +62,17 @@ button:hover span:before, a.btn:hover span:before {
 }
 
 #adminForm .control-group .control-label label {
+    font-weight: bold;
     width: auto;
+}
+
+#adminForm .control-group .controls + .control-supplement {
+    display: inline-block;
+    margin-left: .5rem;
+}
+
+#adminForm .control-group .controls + .control-supplement div {
+    margin-top: 0;
 }
 
 #adminForm .control-group .controls {
@@ -62,14 +90,34 @@ button:hover span:before, a.btn:hover span:before {
     width: 8rem;
 }
 
-#adminForm .control-group .publish-container {
+#adminForm .control-group .controls + .control-supplement {
     display: inline-block;
-    margin-left: .4rem;
-    vertical-align: top;
+    margin-left: .5rem;
 }
 
-#adminForm .control-group .publish-container input {
+#adminForm .control-group .controls + .control-supplement div:first-child {
     margin-top: 0;
+}
+
+#adminForm .control-group .view-level-container, #adminForm .control-group .published-container {
+    margin-top: .2rem;
+}
+
+#adminForm .control-group .view-level-container, #adminForm .control-group .published-container span {
+    font-size: .9rem;
+}
+
+#adminForm .control-group.control-site-text .control-label, #adminForm .control-group.control-site-text .controls, #adminForm .control-group.control-site-text .control-supplement {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#adminForm .control-group.control-site-text .control-label {
+    padding-top: .4rem;
+}
+
+#adminForm .control-group.control-site-text .controls, #adminForm .control-group.control-site-text .control-supplement {
+    padding-left: 1rem;
 }
 
 #adminForm .modal {
@@ -86,10 +134,6 @@ button:hover span:before, a.btn:hover span:before {
 #adminForm .modal.fade.in {
     left: calc(50% - 351px);
     top: calc(50% - 193px);
-}
-
-#adminForm .modal .modal-content {
-    padding: 5px;
 }
 
 #adminForm .modal .modal-content .modal-header, #adminForm .modal .modal-content .modal-footer {
@@ -134,6 +178,7 @@ button:hover span:before, a.btn:hover span:before {
     border-left: #f2f5f6 5px solid;
     border-right: #f2f5f6 5px solid;
     height: 230px;
+    width: 98%;
     padding: 0;
 }
 
@@ -180,4 +225,12 @@ button:hover span:before, a.btn:hover span:before {
     text-align: center;
     line-height: 400px;
     background: rgba(0, 0, 0, 0.7);
+}
+
+#adminForm.site-edit .control-label {
+    padding-top: .3rem;
+}
+
+#adminForm.site-edit .control-default .controls {
+    margin-top: .5rem;
 }

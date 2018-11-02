@@ -20,10 +20,15 @@
         </field>
     </fields>
     <fields name="list">
-        <field name="groupID" type="groupfilter" label="COM_THM_GROUPS_GROUPS_FILTER" onchange="this.form.submit();">
+        <field name="groupID" type="genericlist" valueColumn="ug.id" textColumn="ug.title"
+               table="usergroups AS ug,thm_groups_role_associations AS ra ON ra.groupID = ug.id"
+               restriction="ra.groupID NOT IN (1,2,3,4,5,6,7,8)"
+               label="COM_THM_GROUPS_GROUPS_FILTER" onchange="this.form.submit();">
             <option value="">COM_THM_GROUPS_ALL_GROUPS</option>
         </field>
-        <field name="roleID" type="rolefilter" label="COM_THM_GROUPS_ROLES_FILTER" onchange="this.form.submit();">
+        <field name="roleID" type="genericlist" valueColumn="r.id" textColumn="r.name"
+               table="thm_groups_roles as r,thm_groups_role_associations AS ra ON ra.roleID = r.id,thm_groups_profile_associations AS pa ON pa.role_associationID = ra.id"
+               label="COM_THM_GROUPS_ROLES_FILTER" onchange="this.form.submit();">
             <option value="">COM_THM_GROUPS_ALL_ROLES</option>
         </field>
         <field name="limit" type="limitbox" class="input-mini" label="COM_CONTENT_LIST_LIMIT"

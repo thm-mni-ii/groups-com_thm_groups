@@ -9,7 +9,7 @@
  */
 defined('_JEXEC') or die;
 
-
+require_once HELPERS . 'notices.php';
 require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
 
 /**
@@ -32,18 +32,26 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
         $direction = $this->state->get('list.direction');
         $headers   = [];
 
-        $headers['order']       = JHtml::_('searchtools.sort', '', 'a.ordering', $direction, $ordering, null, 'asc',
-            'JGRID_HEADING_ORDERING', 'icon-menu-2');
-        $headers['checkbox']    = '';
-        $headers['id']          = JHtml::_('searchtools.sort', JText::_('JGRID_HEADING_ID'), 'a.id', $direction,
+        $narrowAttributes                   = ['class' => "center", 'style' => "width: 6rem;"];
+        $headers['order']                   = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ORDER', 'a.ordering',
+            $direction, 'ASC');
+        $headers['checkbox']                = '';
+        $headers['attribute']               = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_NAME', 'a.name', $direction,
             $ordering);
-        $headers['attribute']   = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_NAME', 'a.name', $direction,
-            $ordering);
-        $headers['published']   = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ATTRIBUTE_PUBLISHED',
+        $headers['showLabel']['value']      = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_SHOW_LABEL',
+            'a.showLabel', $direction, $ordering);
+        $headers['showLabel']['attributes'] = $narrowAttributes;
+        $headers['showIcon']['value']       = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_SHOW_ICON',
+            'a.showIcon', $direction, $ordering);
+        $headers['showIcon']['attributes']  = $narrowAttributes;
+        $headers['published']['value']      = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_PUBLISHED',
             'a.published', $direction, $ordering);
-        $headers['abstract']    = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ABSTRACT_ATTRIBUTE', 'aa.name',
+        $headers['published']['attributes'] = $narrowAttributes;
+        $headers['viewLevelID']             = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_VIEW_LEVEL', 'vl.title',
             $direction, $ordering);
-        $headers['description'] = JText::_('COM_THM_GROUPS_DESCRIPTION');
+        $headers['type']                    = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ATTRIBUTE_TYPE',
+            'type',
+            $direction, $ordering);
 
         return $headers;
     }
@@ -63,54 +71,71 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
         }
 
         $return['attributes'] = ['class' => 'ui-sortable'];
-        $canEdit              = THM_GroupsHelperComponent::isAdmin();
         $url                  = "index.php?option=com_thm_groups&view=attribute_edit&id=";
 
         $iconClass = '';
-        if (!$canEdit) {
-            $iconClass = ' inactive';
-        } elseif ($this->state->get('list.ordering') != 'a.ordering') {
+        if ($this->state->get('list.ordering') != 'a.ordering') {
             $iconClass = ' inactive tip-top hasTooltip';
         }
-        $sortIcon = '<span class="sortable-handler' . $iconClass . '"><i class="icon-menu"></i></span>';
+        $sortAnchor = '<span class="sortable-handler' . $iconClass . '">XXXX</span>';
 
-        $generalLock = '<span class="icon-lock hasTooltip" title="XXXX"></span>';
-        $doNotDelete = [self::FORENAME, self::SURNAME, self::EMAIL, self::TITLE, self::POSTTITLE];
+        $sortIcon          = '<i class="icon-menu"></i>';
+        $labelingNotice    = THM_GroupsHelperNotices::getLabelingNotice();
+        $orderingNotice    = THM_GroupsHelperNotices::getOrderingNotice();
+        $protectedNotice   = THM_GroupsHelperNotices::getProtectedNotice();
+        $publicationNotice = THM_GroupsHelperNotices::getPublicationNotice();
+        $suppressionNotice = THM_GroupsHelperNotices::getSuppressionNotice();
 
-        $doNotDelete = [FORENAME, SURNAME, EMAIL, TITLE, POSTTITLE];
+        $doNotDelete        = [FORENAME, SURNAME, EMAIL_ATTRIBUTE, TITLE, POSTTITLE];
+        $specialAttributes  = [FORENAME, SURNAME, TITLE, POSTTITLE];
+        $specialTypes       = [IMAGE];
+        $noSuppression      = [FORENAME, SURNAME];
+        $limitedSuppression = [TITLE, POSTTITLE];
+        $narrowAttributes   = ['class' => "center", 'style' => "width: 6rem;"];
 
         $index = 0;
         foreach ($items as $item) {
-            $return[$index]               = [];
+            $special        = (in_array($item->id, $specialAttributes) OR in_array($item->typeID, $specialTypes));
+            $return[$index] = [];
+
             $return[$index]['attributes'] = ['class' => 'order nowrap center', 'id' => $item->id];
 
             $return[$index]['ordering']['attributes'] = ['class' => "order nowrap center", 'style' => "width: 40px;"];
-            $return[$index]['ordering']['value'] = $sortIcon;
 
-            if ($canEdit) {
-                $return[$index][0]                   = JHtml::_('grid.id', $index, $item->id);
-                $return[$index][1]                   = $item->id;
-                $lock                                = '';
+            $return[$index][0] = JHtml::_('grid.id', $index, $item->id);
 
-                if (in_array($item->id, $doNotDelete)) {
-                    $lockTip = JHtml::tooltipText($item->name, "COM_THM_GROUPS_CANT_DELETE_PREDEFINED_ELEMENT");
-                    $lock    .= in_array($item->id, $doNotDelete) ? str_replace('XXXX', $lockTip, $generalLock) : '';
-                }
+            $label = JHtml::_('link', $url . $item->id, $item->label);
+            $label .= $item->required ? '*' : '';
 
-                $return[$index][2] = $lock . JHtml::_('link', $url . $item->id, $item->name);
-                $return[$index][3] = $this->getToggle($item->id, $item->published, 'attribute', '', 'published');
-
+            $return[$index][1] = in_array($item->id, $doNotDelete) ? $protectedNotice . $label : $label;
+            if ($special) {
+                $return[$index]['ordering']['value'] = str_replace('XXXX', $orderingNotice, $sortAnchor);
+                $return[$index][2]['value']          = $labelingNotice;
+                $return[$index][3]['value']          = $labelingNotice;
             } else {
-                $return[$index][0]                   = '';
-                $return[$index][1]                   = $item->id;
-                $return[$index][2]                   = $item->name;
-
-                $published         = empty($item->published) ? 'unpublish' : 'publish';
-                $return[$index][3] = '<span class="icon-' . $published . '"></span>';
+                $return[$index]['ordering']['value'] = str_replace('XXXX', $sortIcon, $sortAnchor);
+                if (!empty($item->icon)) {
+                    $return[$index][1] .= ' - <span class="' . $item->icon . '"></span>';
+                }
+                $return[$index][2]['value'] = $this->getToggle($item->id, $item->showLabel, 'attribute', '',
+                    'showLabel');
+                $return[$index][3]['value'] = $this->getToggle($item->id, $item->showIcon, 'attribute', '',
+                    'showIcon');
             }
 
-            $return[$index][4] = $item->abstractName;
-            $return[$index][5] = $item->description;
+            $return[$index][2]['attributes'] = $narrowAttributes;
+            $return[$index][3]['attributes'] = $narrowAttributes;
+            if (in_array($item->id, $noSuppression)) {
+                $published = $publicationNotice;
+            } elseif (in_array($item->id, $limitedSuppression)) {
+                $published = $suppressionNotice;
+            } else {
+                $published = $this->getToggle($item->id, $item->published, 'attribute', '', 'published');
+            }
+            $return[$index][4]['value']      = $published;
+            $return[$index][4]['attributes'] = $narrowAttributes;
+            $return[$index][5]               = $item->vlTitle;
+            $return[$index][6]               = $item->type;
             $index++;
         }
 
@@ -126,25 +151,19 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
     {
         $query = $this->_db->getQuery(true);
 
-        $select = 'a.id, a.name, a.options, a.published, a.ordering, a.description, ';
-        $select .= 'aa.name as abstractName';
+        $query->select('a.*, at.type, vl.title AS vlTitle')
+            ->from('#__thm_groups_attributes AS a')
+            ->innerJoin('#__thm_groups_attribute_types AS at ON at.id = a.typeID')
+            ->leftJoin('#__viewlevels AS vl ON vl.id = a.viewLevelID');
 
-        $query->select($select)->from('#__thm_groups_attributes AS a')
-            ->innerJoin('#__thm_groups_abstract_attributes AS aa ON a.abstractID = aa.id');
-
+        $this->setIDFilter($query, 'a.showLabel', ['filter.showLabel']);
+        $this->setIDFilter($query, 'a.showIcon', ['filter.showIcon']);
         $this->setIDFilter($query, 'a.published', ['filter.published']);
+        $this->setIDFilter($query, 'a.viewLevelID', ['filter.viewLevelID']);
 
-        $search = $this->getState('filter.search');
-
-        if (!empty($search)) {
-            $query->where("(a.name LIKE '%" . implode("%' OR a.name LIKE '%",
-                    explode(' ', $search)) . "%')");
-        }
-
-        $abstract = $this->getState('filter.abstract');
-
-        if (!empty($abstract) && $abstract != '*') {
-            $query->where("a.abstractID = '$abstract'");
+        $type = $this->getState('filter.type');
+        if (!empty($type) && $type != '*') {
+            $query->where("a.typeID = '$type'");
         }
 
         $this->setOrdering($query);

@@ -440,7 +440,7 @@ class THM_GroupsModelProfile extends JModelLegacy
     {
         $profileID = $formData['profileID'];
 
-        foreach ($formData as $fieldName => $attribute) {
+        foreach ($formData as $attributeID => $attribute) {
             if (is_string($attribute)) {
                 continue;
             }
@@ -458,8 +458,6 @@ class THM_GroupsModelProfile extends JModelLegacy
             $query->set("published = '$published'");
 
             $query->where("profileID = '$profileID'");
-
-            $attributeID = (int)$attribute['attributeID'];
             $query->where("attributeID = '$attributeID'");
 
             $this->_db->setQuery($query);

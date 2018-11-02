@@ -34,8 +34,6 @@ class THM_GroupsViewRole_Manager extends THM_GroupsViewList
             JErrorPage::render($exc);
         }
 
-        $this->batch = ['batch' => JPATH_COMPONENT . '/views/role_manager/tmpl/default_batch.php'];
-
         parent::display($tpl);
     }
 
@@ -52,28 +50,11 @@ class THM_GroupsViewRole_Manager extends THM_GroupsViewList
         JToolBarHelper::editList('role.edit');
         JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM', 'role.delete', 'JTOOLBAR_DELETE');
 
-        $layout = new JLayoutFile('joomla.toolbar.batch');
-        $title  = JText::_('COM_THM_GROUPS_GROUP_ASSOCIATIONS_BATCH');
-        $batch  = $layout->render(['title' => $title]);
-
-        $bar = JToolBar::getInstance('toolbar');
-        $bar->appendButton('Custom', $batch, 'batch');
-
         if (THM_GroupsHelperComponent::isAdmin()) {
             JToolBarHelper::preferences('com_thm_groups');
         }
-    }
 
-    /**
-     * Adds styles and scripts to the document
-     *
-     * @return  void  modifies the document
-     */
-    protected function modifyDocument()
-    {
-        parent::modifyDocument();
-
-        // The parent has to be initialized first to ensure that jQuery is available.
-        JFactory::getDocument()->addScript(JURI::root() . 'media/com_thm_groups/js/remove_association.js');
+        JToolbarHelper::help('COM_THM_GROUPS_TEMPLATES_DOCUMENTATION', '',
+            JUri::root() . 'media/com_thm_groups/documentation/role_manager.php');
     }
 }

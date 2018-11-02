@@ -19,8 +19,6 @@ require_once JPATH_ROOT . '/media/com_thm_groups/views/profile_edit_view.php';
  */
 class THM_GroupsViewProfile_Edit extends THM_GroupsViewProfile_Edit_View
 {
-    public $attributes = null;
-
     /**
      * Method to generate buttons for user interaction
      *
@@ -28,12 +26,13 @@ class THM_GroupsViewProfile_Edit extends THM_GroupsViewProfile_Edit_View
      */
     protected function addToolBar()
     {
-        JFactory::getApplication()->input->set('hidemainmenu', true);
-
         JToolBarHelper::title(JText::_('COM_THM_GROUPS_PROFILE_EDIT_EDIT_TITLE'), 'title');
 
         JToolBarHelper::apply('profile.apply', 'JTOOLBAR_APPLY');
         JToolBarHelper::save('profile.save', 'JTOOLBAR_SAVE');
         JToolBarHelper::cancel('profile.cancel', 'JTOOLBAR_CLOSE');
+
+        JToolbarHelper::help('COM_THM_GROUPS_TEMPLATES_DOCUMENTATION', '',
+            JUri::root() . 'media/com_thm_groups/documentation/profile_edit.php');
     }
 }

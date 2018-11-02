@@ -8,75 +8,39 @@
  * @link        www.thm.de
  */
 
-$rows     = '';
-$rowIndex = 0;
+// Only show groups if there are multiple, one index is taken by the name
+$showGroups = (count($this->profiles) - 1) > 1;
 
-// One index is taken by the name
-$groupCount = count($this->profiles) - 1;
+foreach ($this->profiles as $roleAssociations) {
 
-foreach ($this->profiles as $groupID => $assocs) {
-    $groupSpan = $groupCount > 1 ? '<span class="group-title">' . $this->profiles[$groupID]['title'] . '</span>' : '';
+    $groupSpan = $showGroups ? '<span class="group-title">' . $roleAssociations['name'] . '</span>' : '';
 
-    // One index is taken up by the name
-    $assocCount = count($assocs) - 1;
+    // Only show roles if there are multiple, one index is taken by the name
+    $showRoles = (count($roleAssociations) - 1) > 1;
 
-    foreach ($assocs as $assocID => $data) {
-        if ($assocID == 'title') {
+    foreach ($roleAssociations as $assocID => $role) {
+
+        // The group name requires no further processing
+        if ($assocID == 'name') {
             continue;
         }
 
-        $roleSpan = (empty($data['name']) or $assocCount == 1) ?
-            '' : '<span class="role-title">' . $data['name'] . '</span>';
+        if ($showGroups or $showRoles) {
 
-        if (empty($groupSpan)) {
-            $assocName = $roleSpan;
-        } elseif (empty($roleSpan)) {
-            $assocName = $groupSpan;
-        } else {
-            $assocName = "$groupSpan: $roleSpan";
-        }
+            $roleSpan = ($showRoles and !empty($role['name'])) ?
+                '<span class="role-title">' . $role['name'] . '</span>' : '';
 
-        // Only print headings if there are differing groups/roles. Role count reduced because of the group name index.
-        if ($groupCount > 1 or $assocCount > 1) {
-            echo '<div class="role-heading">' . $assocName . '</div>';
-        }
-
-        $profileCount = 0;
-        $lastProfile  = count($data['profiles']) - 1;
-        $half         = ($this->columns == 2 and count($data['profiles']) > 1);
-
-        foreach ($data['profiles'] as $profileID => $attributes) {
-            // Skip profiles with no surname
-            if (empty($attributes[2])) {
-                // Reduce the end profile count to compensate for lack of output
-                $lastProfile = $lastProfile - 1;
-                continue;
+            if (empty($groupSpan)) {
+                $header = $roleSpan;
+            } elseif (empty($roleSpan)) {
+                $header = $groupSpan;
+            } else {
+                $header = "$groupSpan: $roleSpan";
             }
 
-            $startRow = ($profileCount % $this->columns == 0);
-
-            if ($startRow) {
-                $rowIndex++;
-                $row = '<div class="row-container">';
-            }
-
-            $row .= $this->getProfileContainer($attributes, $half);
-
-            $endRow = ($profileCount % $this->columns == $this->columns - 1 or $profileCount == $lastProfile);
-
-            if ($endRow) {
-                // Ensure the row container wraps around the profiles
-                $row .= '<div class="clearFix"></div>';
-
-                // Close the row
-                $row .= '</div>';
-
-                echo $row;
-            }
-
-            $profileCount++;
+            echo '<div class="role-heading">' . $header . '</div>';
         }
 
-        $rowIndex = 0;
+        $this->renderRows($role['profiles']);
     }
 }

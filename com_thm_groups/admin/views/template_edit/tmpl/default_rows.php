@@ -9,53 +9,67 @@
  */
 
 defined('_JEXEC') or die;
+require_once HELPERS . 'notices.php';
+$labelingNotice    = THM_GroupsHelperNotices::getLabelingNotice();
+$orderingNotice    = THM_GroupsHelperNotices::getOrderingNotice();
+$publicationNotice = THM_GroupsHelperNotices::getPublicationNotice();
+$suppressionNotice = THM_GroupsHelperNotices::getSuppressionNotice();
+
+$specialAttributes  = [FORENAME, SURNAME, TITLE, POSTTITLE];
+$specialTypes       = [IMAGE];
+$noSuppression      = [FORENAME, SURNAME];
+$limitedSuppression = [TITLE, POSTTITLE];
 
 foreach ($this->attributes as $key => $attribute) {
-    if (!empty($attribute['params'])) {
-        $params = json_decode($attribute['params'], true);
-    }
-
-    $published = isset($attribute['published']) ? $attribute['published'] : 1;
-    $useParams = !empty($params);
-
-    $showIcon = $showLabel = 1;
-
-    if ($useParams) {
-        $showIcon  = isset($params['showIcon']) ? $params['showIcon'] : 1;
-        $showLabel = isset($params['showLabel']) ? $params['showLabel'] : 1;
-    }
-
+    $attributeID = $attribute['id'];
+    $special = (in_array($attributeID, $specialAttributes) or in_array($attribute['typeID'], $specialTypes));
     ?>
 
     <tr class="ui-state-default">
         <td class="order nowrap center hidden-phone">
                 <span class="sortable-handler" style="cursor: move;">
-                    <span class="icon-menu"></span>
+                    <?php
+                    if ($special) {
+                        echo $orderingNotice;
+                    } else {
+                        echo '<span class="icon-menu"></span>';
+                    }
+                    ?>
                 </span>
         </td>
         <td>
             <?php
-            echo $attribute['field'];
-            echo "<input type='hidden' name='jform[attributes][{$attribute['id']}][attribute]' value='{$attribute['field']}' />";
-            echo "<input type='hidden' name='jform[attributes][{$attribute['id']}][attributeID]' value='{$attribute['id']}' />";
-            if (!empty($attribute->ID)) {
-                echo "<input type='hidden' name='jform[attributes][{$attribute['id']}][ID]' value='{$attribute['id']}' />";
+            echo $attribute['label'];
+            echo "<input type='hidden' name='jform[attributes][$attributeID][attribute]' value='{$attribute['label']}' />";
+            ?>
+        </td>
+        <td>
+            <?php
+            if (in_array($attributeID, $noSuppression)) {
+                echo $publicationNotice;
+            } elseif (in_array($attributeID, $limitedSuppression)) {
+                echo $suppressionNotice;
+            } else {
+                echo $this->renderRadioBtn('published', $attribute, $attribute['published']);
             }
             ?>
         </td>
         <td>
             <?php
-            echo $this->renderRadioBtn('published', $attribute, $published);
+            if ($special) {
+                echo $labelingNotice;
+            } else {
+                echo $this->renderRadioBtn('showIcon', $attribute, $attribute['showIcon']);
+            }
             ?>
         </td>
         <td>
             <?php
-            echo $this->renderRadioBtn('show_icon', $attribute, $showIcon);
-            ?>
-        </td>
-        <td>
-            <?php
-            echo $this->renderRadioBtn('show_label', $attribute, $showLabel);
+            if ($special) {
+                echo $labelingNotice;
+            } else {
+                echo $this->renderRadioBtn('showLabel', $attribute, $attribute['showLabel']);
+            }
             ?>
         </td>
     </tr>

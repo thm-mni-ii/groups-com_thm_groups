@@ -49,21 +49,6 @@ class THM_GroupsViewContent extends JViewLegacy
         $input = $app->input;
         $user  = JFactory::getUser();
 
-        $profileID = $input->getInt('profileID', 0);
-        $groupID   = $input->getInt('groupID', 0);
-        $name      = $input->get('name', '');
-        $menuID    = $input->getInt('Itemid', 0);
-
-        $abstractQuery = "&profileID=$profileID&groupID=$groupID&name=$name&Itemid=$menuID";
-        $profileURL    = JRoute::_("index.php?option=com_thm_groups&view=profile$abstractQuery");
-        $nameText      = THM_GroupsHelperProfiles::getDisplayName($profileID);
-        $app->getPathway()->addItem($nameText, $profileURL);
-
-        $this->item = $this->get('Item');
-
-        // Add article title in breadcrumb
-        $app->getPathway()->addItem($this->item->title);
-
         $this->item = $this->get('Item');
 
         //$this->print	= JRequest::getBool('print');
@@ -168,59 +153,7 @@ class THM_GroupsViewContent extends JViewLegacy
      */
     protected function _prepareDocument()
     {
-        $app   = JFactory::getApplication();
-        $menus = $app->getMenu();
-        $title = null;
-
-        // Because the application sets a default page title,
-        // we need to get it from the menu item itself
-        $menu = $menus->getActive();
-        if ($menu) {
-            $this->params->def('page_heading', $this->params->get('page_title', $menu->title));
-        } else {
-            $this->params->def('page_heading', JText::_('JGLOBAL_ARTICLES'));
-        }
-
-        $title = $this->params->get('page_title', '');
-
-        $id = (int)@$menu->query['id'];
-
-        // If the menu item does not concern this article
-        if ($menu && ($menu->query['option'] != 'com_content' || $menu->query['view'] != 'article' || $id != $this->item->id)) {
-            // If this is not a single article menu item, set the page title to the article title
-            if ($this->item->title) {
-                $title = $this->item->title;
-            }
-            $path     = [['title' => $this->item->title, 'link' => '']];
-            $category = JCategories::getInstance('Content')->get($this->item->catid);
-            while (
-                $category && ($menu->query['option'] != 'com_content' || $menu->query['view'] == 'article' || $id != $category->id)
-                && $category->id > 1
-            ) {
-                $path[]   = [
-                    'title' => $category->title,
-                    'link'  => ContentHelperRoute::getCategoryRoute($category->id)
-                ];
-                $category = $category->getParent();
-            }
-            $path = array_reverse($path);
-            /*foreach($path as $item)
-            {
-                $pathway->addItem($item['title'], $item['link']);
-            }*/
-        }
-        // Check for empty title and add site name if param is set
-        if (empty($title)) {
-            $title = $app->getCfg('sitename');
-        } elseif ($app->getCfg('sitename_pagetitles', 0) == 1) {
-            $title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
-        } elseif ($app->getCfg('sitename_pagetitles', 0) == 2) {
-            $title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
-        }
-        if (empty($title)) {
-            $title = $this->item->title;
-        }
-        $this->document->setTitle($title);
+        $app = JFactory::getApplication();
 
         if ($this->item->metadesc) {
             $this->document->setDescription($this->item->metadesc);
@@ -252,14 +185,23 @@ class THM_GroupsViewContent extends JViewLegacy
         // If there is a pagebreak heading or title, add it to the page title
         if (!empty($this->item->page_title)) {
             $this->item->title = $this->item->title . ' - ' . $this->item->page_title;
-            $this->document->setTitle(
-                $this->item->page_title . ' - '
-                . JText::sprintf(
-                    'PLG_CONTENT_PAGEBREAK_PAGE_NUM',
-                    $this->state->get('list.offset') + 1
-                )
-            );
+            $pageTitle         = $this->item->title . ' - ';
+            $pageTitle         .= JText::sprintf('PLG_CONTENT_PAGEBREAK_PAGE_NUM',
+                $this->state->get('list.offset') + 1);
+            $this->document->setTitle($pageTitle);
+        } else {
+            $this->document->setTitle($this->item->title);
         }
+
+        $pathway     = $app->getPathway();
+        if (empty($pathway->getPathway())) {
+            $pathway->addItem(JText::_('COM_THM_GROUPS_HOME'), JUri::base());
+        }
+        $profileID = $app->input->getInt('profileID');
+        $profileName = THM_GroupsHelperProfiles::getDisplayName($profileID);
+        $profileURL = THM_GroupsHelperRouter::build(['view' => 'profile', 'profileID' => $profileID], true);
+        $pathway->addItem($profileName, $profileURL);
+        $pathway->addItem($this->item->title, '');
 
         if ($this->print) {
             $this->document->setMetaData('robots', 'noindex, nofollow');

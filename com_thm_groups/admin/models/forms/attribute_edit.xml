@@ -1,22 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fieldset name="details" addfieldpath="/media/com_thm_groups/fields">
-        <field name="id" type="hidden"/>
-        <field name="name" type="text" class="inputbox input-large-text" size="40" label="COM_THM_GROUPS_NAME"
+        <field name="id" type="hidden" />
+        <field name="typeID" type="genericlist" valueColumn="id" textColumn="type"
+               table="thm_groups_attribute_types" label="COM_THM_GROUPS_ATTRIBUTE_TYPE"
+               description="COM_THM_GROUPS_ATTRIBUTE_TYPE_DESC" required="true"/>
+        <field name="label" type="text" maxlength="100" label="COM_THM_GROUPS_LABEL"
                required="true"/>
-        <field name="abstractID" type="genericlist" valueColumn="id" textColumn="name"
-               table="thm_groups_abstract_attributes" label="COM_THM_GROUPS_ABSTRACT_ATTRIBUTE"
-               description="COM_THM_GROUPS_ABSTRACT_ATTRIBUTE_DESC" required="true"/>
-        <field name="validate" type="radio" class="btn-group btn-group-yesno" default="0"
-               label="COM_THM_GROUPS_VALIDATE" description="COM_THM_GROUPS_ATTRIBUTE_EDIT_VALIDATE_DESC"
+        <field name="showLabel" type="radio" class="btn-group btn-group-yesno" default="0"
+               label="COM_THM_GROUPS_SHOW_LABEL" description="COM_THM_GROUPS_SHOW_LABEL_DESC"
                required="true">
             <option value="1">JYES</option>
             <option value="0">JNO</option>
         </field>
-        <field name="description" type="textarea" label="COM_THM_GROUPS_DESCRIPTION" rows="10" cols="5"
-               required="false"/>
-        <field name="extra_options_lbl" type="spacer" label="COM_THM_GROUPS_ADDITIONAL"/>
-        <field name="extra_options_spacer" type="spacer" hr="true"/>
-        <field name="iconpicker" type="iconpicker" label="COM_THM_GROUPS_ICON"/>
+        <field name="icon" type="iconpicker" label="COM_THM_GROUPS_ICON"/>
+        <field name="showIcon" type="radio" class="btn-group btn-group-yesno" default="0"
+               label="COM_THM_GROUPS_SHOW_ICON" description="COM_THM_GROUPS_SHOW_ICON_DESC"
+               required="true">
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="published" type="radio" class="btn-group btn-group-yesno" default="0"
+               label="COM_THM_GROUPS_PUBLISHED" description="COM_THM_GROUPS_PUBLISHED_DESC"
+               required="true">
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="required" type="radio" class="btn-group btn-group-yesno" default="0"
+               label="COM_THM_GROUPS_REQUIRED" description="COM_THM_GROUPS_REQUIRED_DESC"
+               required="true">
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="viewLevelID" type="genericlist" valueColumn="id" textColumn="title"
+               table="viewlevels" label="COM_THM_GROUPS_VIEW_LEVEL"
+               description="COM_THM_GROUPS_VIEW_LEVEL_DESC" default="1"/>
+        <field name="accept" type="text" label="COM_THM_GROUPS_ACCEPTED_FORMATS"
+               description="COM_THM_GROUPS_ACCEPTED_FORMATS_DESC" hint="COM_THM_GROUPS_ACCEPTED_FORMATS_HINT"/>
+        <field name="buttons" type="radio" class="btn-group btn-group-yesno" default="1"
+               label="COM_THM_GROUPS_EDITOR_BUTTONS" description="COM_THM_GROUPS_EDITOR_BUTTONS_DESC">
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="calendarformat" type="text" label="COM_THM_GROUPS_CALENDAR_FORMAT" maxlength="100"
+               description="COM_THM_GROUPS_CALENDAR_FORMAT_DESC" hint="COM_THM_GROUPS_CALENDAR_FORMAT_HINT"/>
+        <field name="hide" type="text" label="COM_THM_GROUPS_HIDDEN_BUTTONS"
+               description="COM_THM_GROUPS_HIDDEN_BUTTONS_DESC" hint="COM_THM_GROUPS_HIDDEN_BUTTONS_HINT"/>
+        <field name="hint" type="text" label="COM_THM_GROUPS_HINT"
+               description="COM_THM_GROUPS_HINT_DESC" hint="COM_THM_GROUPS_HINT_HINT"/>
+        <field name="maxlength" type="integer" label="COM_THM_GROUPS_MAX_LENGTH"
+               description="COM_THM_GROUPS_MAX_LENGTH_DESC" default="255" first="5" last="255" step="5"/>
+        <field name="mode" type="list" label="COM_THM_GROUPS_CROPPING"
+               description="COM_THM_GROUPS_CROPPING_MODE_DESC">
+            <option value="-1">COM_THM_GROUPS_MODE_SELECTABLE</option>
+            <option value="1">COM_THM_GROUPS_MODE_PROFILE</option>
+            <option value="0">COM_THM_GROUPS_MODE_LANDSCAPE</option>
+        </field>
+        <field name="regex" type="text" label="COM_THM_GROUPS_REGEX" maxlength="100"
+               description="COM_THM_GROUPS_REGEX_DESC"/>
+        <field name="showtime" type="radio" class="btn-group btn-group-yesno" default="0"
+               label="COM_THM_GROUPS_SHOW_TIME" description="COM_THM_GROUPS_SHOW_TIME_DESC">
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="timeformat" type="list" default="24"
+               label="COM_THM_GROUPS_TIME_FORMAT" description="COM_THM_GROUPS_TIME_FORMAT_DESC">
+            <option value="24">24</option>
+            <option value="12">12</option>
+        </field>
+        <field name="validate" type="hidden" value="1"/>
     </fieldset>
 </form>

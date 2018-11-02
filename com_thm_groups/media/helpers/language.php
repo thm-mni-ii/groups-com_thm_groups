@@ -60,13 +60,52 @@ class THM_GroupsHelperLanguage
     /**
      * Retrieves the two letter language identifier
      *
-     * @return  string
+     * @return string
+     * @throws Exception
      */
     public static function getShortTag()
     {
-        $fullTag  = JFactory::getLanguage()->getTag();
-        $tagParts = explode('-', $fullTag);
+        $app          = JFactory::getApplication();
+        $requestedTag = $app->input->get('languageTag');
 
-        return $tagParts[0];
+        if (!empty($requestedTag)) {
+            return $requestedTag;
+        }
+
+        $menu       = $app->getMenu();
+        if (empty($menu) or empty($menu->getActive()) or empty($menu->getActive()->params->get('initialLanguage'))) {
+
+            // Called outside of the normal Joomla context.
+            if (empty(JFactory::$language)) {
+                return 'de';
+            }
+
+            $fullTag    = JFactory::getLanguage()->getTag();
+            $defaultTag = explode('-', $fullTag)[0];
+            return $defaultTag;
+        }
+
+        return $menu->getActive()->params->get('initialLanguage');
+    }
+
+    /**
+     * Extends the tag to the regular language constant.
+     *
+     * @param string $shortTag the short tag for the language
+     *
+     * @return string the longTag
+     */
+    private static function resolveShortTag($shortTag = 'de')
+    {
+        switch ($shortTag) {
+            case 'en':
+                $tag = 'en-GB';
+                break;
+            case 'de':
+            default:
+                $tag = 'de-DE';
+        }
+
+        return $tag;
     }
 }

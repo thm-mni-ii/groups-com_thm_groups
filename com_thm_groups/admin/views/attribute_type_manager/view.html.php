@@ -14,9 +14,9 @@ defined('_JEXEC') or die;
 require_once JPATH_ROOT . '/media/com_thm_groups/views/list.php';
 
 /**
- * Provides a manageable list of abstract attributes.
+ * Provides a manageable list of attribute types.
  */
-class THM_GroupsViewAbstract_Attribute_Manager extends THM_GroupsViewList
+class THM_GroupsViewAttribute_Type_Manager extends THM_GroupsViewList
 {
     /**
      * Method to get display
@@ -43,18 +43,20 @@ class THM_GroupsViewAbstract_Attribute_Manager extends THM_GroupsViewList
     protected function addToolbar()
     {
         JToolBarHelper::title(
-            JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_ABSTRACT_ATTRIBUTE_MANAGER'),
-            'abstract_attribute_manager'
+            JText::_('COM_THM_GROUPS') . ': ' . JText::_('COM_THM_GROUPS_ATTRIBUTE_TYPE_MANAGER'),
+            'attribute_type_manager'
         );
 
-        JToolBarHelper::addNew('abstract_attribute.add', 'COM_THM_GROUPS_NEW', false);
-        JToolBarHelper::editList('abstract_attribute.edit', 'COM_THM_GROUPS_EDIT');
-        JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM', 'abstract_attribute.delete',
+        JToolBarHelper::addNew('attribute_type.add', 'COM_THM_GROUPS_NEW', false);
+        JToolBarHelper::editList('attribute_type.edit', 'COM_THM_GROUPS_EDIT');
+        JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM', 'attribute_type.delete',
             'JTOOLBAR_DELETE');
 
-        $user = JFactory::getUser();
         if (THM_GroupsHelperComponent::isAdmin()) {
             JToolBarHelper::preferences('com_thm_groups');
         }
+
+        JToolbarHelper::help('COM_THM_GROUPS_TEMPLATES_DOCUMENTATION', '',
+            JUri::root() . 'media/com_thm_groups/documentation/attribute_type_manager.php');
     }
 }

@@ -10,6 +10,7 @@
  */
 defined('_JEXEC') or die;
 require_once HELPERS . 'profiles.php';
+require_once HELPERS . 'roles.php';
 require_once JPATH_ROOT . '/media/com_thm_groups/models/list.php';
 
 /**
@@ -171,22 +172,15 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
 
         $headers                   = [];
         $headers['checkbox']       = '';
-        $headers['surname']        = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_SURNAME'), 'surname',
+        $headers['surname']        = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_NAME'), 'surname, forename',
             $direction, $ordering);
-        $headers['forename']       = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_FORENAME'), 'forename',
-            $direction, $ordering);
-        $headers['email']          = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_EMAIL'), 'email', $direction,
-            $ordering);
-        $headers['published']      = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_PROFILE_PUBLISHED'),
+        $headers['published']      = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_PUBLISHED'),
             'published', $direction, $ordering);
         $headers['canEdit']        = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_PROFILE_EDIT'), 'canEdit',
             $direction, $ordering);
         $headers['contentEnabled'] = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_CONTENT_ENABLED'),
             'contentEnabled', $direction, $ordering);
-        $headers[]                 = JText::_('COM_THM_GROUPS_ASSOCIATED_GROUPS_AND_ROLES');
-        $headers['id']             = JHtml::_('searchtools.sort', JText::_('COM_THM_GROUPS_ID'), 'profileID',
-            $direction,
-            $ordering);
+        $headers['gnr']            = JText::_('COM_THM_GROUPS_ASSOCIATED_GROUPS_AND_ROLES');
 
         return $headers;
     }
@@ -223,27 +217,19 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
         }
 
         $canEdit = THM_GroupsHelperComponent::isManager();
-        $index = 0;
+        $index   = 0;
         foreach ($items as $key => $item) {
             $url            = "index.php?option=com_thm_groups&view=profile_edit&id=$item->profileID";
             $return[$index] = [];
 
             $return[$index][0] = JHtml::_('grid.id', $index, $item->profileID);
-            if ($canEdit) {
-                $return[$index][1] = !empty($item->surname) ? JHtml::_('link', $url, $item->surname) : '';
-                $return[$index][2] = !empty($item->forename) ? JHtml::_('link', $url, $item->forename) : '';
-                $return[$index][3] = !empty($item->email) ? JHtml::_('link', $url, $item->email) : '';
-            } else {
-                $return[$index][1] = !empty($item->surname) ? $item->surname : '';
-                $return[$index][2] = !empty($item->forename) ? $item->forename : '';
-                $return[$index][3] = !empty($item->email) ? $item->email : '';
-            }
-            $return[$index][4] = $this->getToggle($item->profileID, $item->published, 'profile', '', 'published');
-            $return[$index][5] = $this->getToggle($item->profileID, $item->canEdit, 'profile', '', 'canEdit');
-            $return[$index][6] = $this->getToggle($item->profileID, $item->contentEnabled, 'profile', '',
+            $return[$index][1] = JHtml::_('link', $url, THM_GroupsHelperProfiles::getLNFName($item->profileID));
+
+            $return[$index][2] = $this->getToggle($item->profileID, $item->published, 'profile', '', 'published');
+            $return[$index][3] = $this->getToggle($item->profileID, $item->canEdit, 'profile', '', 'canEdit');
+            $return[$index][4] = $this->getToggle($item->profileID, $item->contentEnabled, 'profile', '',
                 'contentEnabled');
-            $return[$index][7] = $this->getAssocLinks($item->profileID, $canEdit);
-            $return[$index][8] = $item->profileID;
+            $return[$index][5] = $this->getAssocLinks($item->profileID, $canEdit);
 
             $index++;
         }
@@ -287,7 +273,7 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
         if (!empty($filterGroups) or !empty($filterRoles)) {
             // We don't need these unless filter is requested
             $query->leftJoin('#__thm_groups_profile_associations AS pa ON pa.profileID = profile.id');
-            $query->leftJoin('#__thm_groups_role_associations AS ra ON ra.ID = pa.role_associationID');
+            $query->leftJoin('#__thm_groups_role_associations AS ra ON ra.id = pa.role_associationID');
 
             if ($filterGroups) {
                 $this->setIDFilter($query, 'ra.groupID', ['list.groupID']);

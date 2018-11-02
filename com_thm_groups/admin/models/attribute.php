@@ -10,7 +10,8 @@
 
 defined('_JEXEC') or die;
 
-require_once JPATH_ROOT . '/media/com_thm_groups/helpers/field_types.php';
+require_once HELPERS . 'attribute_types.php';
+require_once HELPERS . 'fields.php';
 
 /**
  * Class loads form data to edit an entry.
@@ -155,7 +156,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
         foreach (scandir(self::IMAGE_PATH) as $file) {
             foreach ($pictures as $picture) {
                 if ($file == $picture['value']) {
-                    unlink(self::IMAGE_PATH . $file);
+                    unlink(self::IMAGE_PATH . "/$file");
                 }
             }
         }
@@ -230,8 +231,7 @@ class THM_GroupsModelAttribute extends JModelLegacy
         }
 
         $data                = $app->input->get('jform', [], 'array');
-        $fieldTypeID         = THM_GroupsHelperAttribute_Types::getFieldID($data['typeID']);
-        $data['options']     = json_encode(THM_GroupsHelperFields::getOptions($fieldTypeID, $data));
+        $data['options']     = json_encode(THM_GroupsHelperAttribute_Types::getOptions($data['typeID'], $data));
         $data['description'] = empty($data['description']) ? "" : $this->_db->escape($data['description']);
 
         $this->_db->transactionStart();

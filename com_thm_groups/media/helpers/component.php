@@ -21,18 +21,20 @@ define('POSTTITLE', 7);
 define('TEXT', 1);
 define('URL', 3);
 define('EMAIL', 6);
-define('TELEPHONE', 7);
 
 // Field types
 define('EDITOR', 2);
 define('FILE', 4);
 define('CALENDAR', 5);
+define('TELEPHONE', 7);
 
 // Attribute types
 define('HTML', 2);
 define('IMAGE', 4);
 define('DATE_EU', 5);
+define('TELEPHONE_EU', 7);
 define('NAME', 8);
+define('SUPPLEMENT', 9);
 
 // Protected Role
 define('MEMBER', 1);
@@ -63,7 +65,7 @@ class THM_GroupsHelperComponent
 
         $baseURL    = 'index.php?option=com_thm_groups&view=';
         $viewNames  = [
-            'abstract_attribute_manager',
+            'attribute_type_manager',
             'attribute_manager',
             'content_manager',
             'group_manager',
@@ -109,7 +111,7 @@ class THM_GroupsHelperComponent
         // Views accessible with component create/edit access
         $resourceEditViews = [
             'attribute_edit',
-            'abstract_attribute_edit',
+            'attribute_type_edit',
             'profile_edit',
             'role_edit',
             'template_edit'

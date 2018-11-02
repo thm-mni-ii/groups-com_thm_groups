@@ -4,10 +4,10 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.table');
 
 /**
- * Class representing the abstract attributes table.
+ * Class representing the attribute types table.
  * @link        www.thm.de
  */
-class THM_GroupsTableAbstract_Attributes extends JTable
+class THM_GroupsTableAttribute_Types extends JTable
 {
 
     /**
@@ -17,6 +17,6 @@ class THM_GroupsTableAbstract_Attributes extends JTable
      */
     public function __construct(&$dbo)
     {
-        parent::__construct('#__thm_groups_abstract_attributes', 'id', $dbo);
+        parent::__construct('#__thm_groups_attribute_types', 'id', $dbo);
     }
 }

@@ -40,11 +40,8 @@ class THM_GroupsViewGroup_Manager extends THM_GroupsViewList
             JErrorPage::render($exc);
         }
 
-        // Set batch template path
-        $this->batch = [
-            'roles'     => JPATH_COMPONENT_ADMINISTRATOR . '/views/group_manager/tmpl/default_roles.php',
-            'templates' => JPATH_COMPONENT_ADMINISTRATOR . '/views/group_manager/tmpl/default_templates.php'
-        ];
+        // Set batch layout path
+        $this->batch = ['roles' => JPATH_COMPONENT_ADMINISTRATOR . '/views/group_manager/tmpl/default_roles.php'];
 
         function filterMemberRole($role)
         {
@@ -52,7 +49,6 @@ class THM_GroupsViewGroup_Manager extends THM_GroupsViewList
         }
 
         $this->roles    = array_filter(THM_GroupsHelperBatch::getRoles(), 'filterMemberRole');
-        $this->profiles = THM_GroupsHelperBatch::getProfiles();
 
         parent::display($tpl);
     }
@@ -71,19 +67,15 @@ class THM_GroupsViewGroup_Manager extends THM_GroupsViewList
         $rolesButton .= '<i class="icon-checkbox-partial" title="' . $rolesTitle . '"></i>';
         $rolesButton .= " $rolesTitle</button>";
 
-        $templatesTitle  = JText::_('COM_THM_GROUPS_BATCH_TEMPLATES');
-        $templatesButton = '<button id="group-templates" data-toggle="modal" data-target="#modal-templates" ';
-        $templatesButton .= 'class="btn btn-small">';
-        $templatesButton .= '<i class="icon-checkbox-partial" title="' . $templatesTitle . '"></i>';
-        $templatesButton .= " $templatesTitle</button>";
-
         $bar = JToolBar::getInstance('toolbar');
         $bar->appendButton('Custom', $rolesButton, 'batch');
-        $bar->appendButton('Custom', $templatesButton, 'batch');
 
         if (THM_GroupsHelperComponent::isAdmin()) {
             JToolBarHelper::preferences('com_thm_groups');
         }
+
+        JToolbarHelper::help('COM_THM_GROUPS_TEMPLATES_DOCUMENTATION', '',
+            JUri::root() . 'media/com_thm_groups/documentation/group_manager.php');
     }
 
     /**

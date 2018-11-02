@@ -11,12 +11,5 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-$listOrder = $this->escape($this->state->get('list.ordering'));
-
-if ($listOrder == 't.ordering') {
-    $saveOrderingUrl = 'index.php?option=com_thm_groups&task=template.saveOrderAjax&tmpl=component';
-    JHtml::_('sortablelist.sortable', 'template_manager-list', 'adminForm', null, $saveOrderingUrl);
-}
-
-require_once JPATH_ROOT . '/media/com_thm_groups/templates/list.php';
-THM_GroupsTemplateList::render($this);
+require_once JPATH_ROOT . '/media/com_thm_groups/layouts/list.php';
+THM_GroupsLayoutList::render($this);

@@ -11,7 +11,14 @@
  * @link        www.thm.de
  */
 
-require_once JPATH_ROOT . "/media/com_thm_groups/helpers/profiles.php";
+require_once HELPERS . 'groups.php';
+require_once HELPERS . 'profiles.php';
+require_once HELPERS . 'roles.php';
+
+define('ROLESORT', 0);
+define('NO', 0);
+define('ALPHASORT', 1);
+define('YES', 1);
 
 /**
  * THMGroupsViewAdvanced class for component com_thm_groups
@@ -20,17 +27,9 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 {
     public $columns;
 
-    private $groupID;
-
-    private $isAdmin;
-
     public $profiles;
 
-    private $showRoles;
-
-    public $sort;
-
-    private $suppressText;
+    private $suppress;
 
     public $title;
 
@@ -44,68 +43,20 @@ class THM_GroupsViewAdvanced extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        $app = JFactory::getApplication();
-
-        $input     = $app->input;
-        $profileID = $input->get('profileID', 0);
-
-        if ($profileID) {
-            $this->addBreadCrumb($profileID);
-        }
-
+        $this->params = JFactory::getApplication()->getParams();
         $this->model  = $this->getModel();
-        $this->params = $app->getParams();
         $params       = $this->model->params;
 
-        $this->columns      = $params->get('columns', 2);
-        $this->groupID      = $params->get('groupID');
-        $this->profiles     = $this->model->getProfiles();
-        $this->showRoles    = $params->get('showRoles', true);
-        $this->sort         = $params->get('sort', 1);
-        $this->suppressText = $params->get('suppress', true);
-        $this->title        = empty($params->get('show_page_heading')) ? '' : $params->get('page_title', '');
-        $this->isAdmin      = THM_GroupsHelperComponent::isManager();
+        $this->profiles    = $this->model->getProfiles();
+        $defaultTemplateID = 1;
+        $menuTemplateID    = $this->params->get('templateID', 0);
+        $this->suppress    = $this->params->get('suppress', true);
+        $this->templateID  = empty($menuTemplateID) ? $defaultTemplateID : $menuTemplateID;
+        $this->title       = empty($params->get('show_page_heading')) ? '' : $params->get('page_title', '');
 
         $this->modifyDocument();
 
         parent::display($tpl);
-    }
-
-    /**
-     * Adds a the selected profile user's name to the path context (breadcrumbs)
-     *
-     * @param   int $profileID the profile id of the selected user
-     *
-     * @return void adds the selected username to the application's path context
-     * @throws Exception
-     */
-    private function addBreadCrumb($profileID)
-    {
-        $app = JFactory::getApplication();
-        $dbo = JFactory::getDbo();
-
-        $query = $dbo->getQuery(true);
-        $query->select('pa.attributeID, pa.value');
-        $query->from('#__thm_groups_profile_attributes AS pa');
-        $query->where('profileID = ' . $profileID);
-        $query->where('attributeID IN (1,2)');
-
-        $dbo->setQuery($query);
-
-        $nameValues = $dbo->loadAssocList();
-        $names      = [0 => '', 1 => ''];
-
-        foreach ($nameValues as $nameValue) {
-            if ((int)$nameValue['attributeID'] === 1) {
-                $names[1] = $nameValue['value'];
-            }
-            if ((int)$nameValue['attributeID'] === 2) {
-                $names[0] = $nameValue['value'];
-            }
-        }
-
-        $name = implode(", ", $names);
-        $app->getPathway()->addItem($name, '');
     }
 
     /**
@@ -128,61 +79,76 @@ class THM_GroupsViewAdvanced extends JViewLegacy
     /**
      * Creates a HTML container with profile information
      *
-     * @param array $attributes the profile's attributes
-     * @param bool  $half       whether or not the profile should only take half the row width
+     * @param array $profile the basic profile information id, name and roles.
+     * @param bool  $half    whether or not the profile should only take half the row width
      *
      * @return string the HTML of the profile container
      * @throws Exception
      */
-    public function getProfileContainer($attributes, $half)
+    public function getProfileContainer($profile, $half)
     {
-        $container = '';
+        $container = '<div class="profile-containerCLASSX">PROFILEX<div class="clearFix"></div></div>';
+
+        $nameContainer = THM_GroupsHelperProfiles::getNameContainer($profile['id']);
+
+        $showRoles = $this->params->get('showRoles', NO);
+        $sort      = $this->params->get('sort', ALPHASORT);
+
+        $roleContainer = ($showRoles and $sort == ALPHASORT) ?
+            THM_GroupsHelperRoles::getRoles($profile['id'], $this->params->get('groupID')) : '';
+
+        $attributes = THM_GroupsHelperProfiles::getDisplay($profile['id'], $this->templateID, $this->suppress);
+
+        $supplementalClasses = '';
 
         if ($half) {
-            $container .= '<div class="profile-container half">';
-        } else {
-            $container .= '<div class="profile-container">';
+            $supplementalClasses .= ' half';
+        }
+        if (strpos($attributes, 'attribute-image') !== false) {
+            $supplementalClasses .= ' with-image';
         }
 
-        $lastName              = $attributes[2]['value'];
-        $attributeContainers   = [];
-        $attributeContainers[] = THM_GroupsHelperProfiles::getNameContainer($attributes);
-        $titleContainer        = THM_GroupsHelperProfiles::getTitleContainer($attributes);
+        $container = str_replace('CLASSX', $supplementalClasses, $container);
 
-        if (!empty($titleContainer)) {
-            $attributeContainers[] = $titleContainer;
-        }
+        return str_replace('PROFILEX', $nameContainer . $roleContainer . $attributes, $container);
+    }
 
-        if ($this->showRoles and !empty($attributes['roles']) and !empty($this->sort)) {
-            $attributeContainers[] = '<div class="attribute-wrap attribute-roles">' . $attributes['roles'] . '</div>';
-        }
+    /**
+     * Displays rows of profiles
+     *
+     * @param array $profiles the profiles to be displayed
+     *
+     * @return void renders HTML
+     * @throws Exception
+     */
+    public function renderRows($profiles)
+    {
+        $columns           = $this->params->get('columns', 2);
+        $displayedProfiles = 0;
+        $lastColumn        = $columns - 1;
+        $lastProfile       = count($profiles) - 1;
+        foreach ($profiles as $profileData) {
 
-        foreach ($attributes as $attributeID => $attribute) {
-            // These were already taken care of in the name/title containers
-            $processed = in_array($attributeID, [1, 2, 5, 7]);
-
-            // Special indexes and attributes with no saved value are irrelevant
-            $irrelevant = (empty($attribute['value']) or empty(trim($attribute['value'])));
-
-            if ($processed or $irrelevant) {
-                continue;
+            // Start a new row
+            if ($displayedProfiles % $columns == 0) {
+                $row = '<div class="row-container">';
             }
 
-            $attributeContainer = THM_GroupsHelperProfiles::getAttributeContainer($attribute, $lastName,
-                $this->suppressText);
+            $row .= $this->getProfileContainer($profileData, $columns == 2);
 
-            if (($attribute['type'] == 'PICTURE')) {
-                array_unshift($attributeContainers, $attributeContainer);
-            } else {
-                $attributeContainers[] = $attributeContainer;
+            $lastRowItem = $displayedProfiles % $columns == $lastColumn;
+            $lastItem    = $displayedProfiles == $lastProfile;
+
+            if ($lastRowItem or $lastItem) {
+                // Ensure the row container wraps around the profiles
+                $row .= '<div class="clearFix"></div>';
+
+                $row .= '</div>';
+
+                echo $row;
             }
+
+            $displayedProfiles++;
         }
-
-        $container .= implode('', $attributeContainers);
-
-        $container .= '<div class="clearFix"></div>';
-        $container .= "</div>";
-
-        return $container;
     }
 }

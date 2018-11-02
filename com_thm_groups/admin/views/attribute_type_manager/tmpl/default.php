@@ -7,6 +7,8 @@
  * @license     GNU GPL v.2
  * @link        www.thm.de
  */
-defined('_JEXEC') or die('Restricted access');
-require_once JPATH_ROOT . '/media/com_thm_groups/templates/edit_basic.php';
-THM_GroupsTemplateEdit_Basic::render($this);
+
+// No direct access to this file
+defined('_JEXEC') or die;
+require_once JPATH_ROOT . '/media/com_thm_groups/layouts/list.php';
+THM_GroupsLayoutList::render($this);

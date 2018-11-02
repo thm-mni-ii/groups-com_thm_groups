@@ -1,7 +1,7 @@
 /**
  * Removes the group's association with the given resource
  *
- * @param string context    the context for the resource (profile, role, template)
+ * @param string context    the context for the resource (profile, role)
  * @param int    groupID    the id of the group which should no longer be associated with the resource
  * @param int    resourceID the id of the resource to with which the group is currently associated
  */
@@ -34,20 +34,6 @@ function deleteRoleAssociation(groupID, roleID, profileID)
 
     document.getElementsByName('groupID')[0].value = groupID;
     document.getElementsByName('roleID')[0].value = roleID;
-    document.adminForm.submit();
-}
-
-/**
- * Removes an association between a group and a template
- *
- * @param int groupID    the id of the currently associated group
- * @param int templateID the id of the currently associated template
- */
-function deleteTemplateAssociation(groupID, templateID)
-{
-    document.getElementsByName('task')[0].value = "group.deleteTemplateAssociation";
-    document.getElementsByName('groupID')[0].value = groupID;
-    document.getElementsByName('templateID')[0].value = templateID;
     document.adminForm.submit();
 }
 

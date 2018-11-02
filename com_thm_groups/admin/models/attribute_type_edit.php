@@ -11,12 +11,13 @@
  */
 
 defined('_JEXEC') or die;
+require_once HELPERS . 'attribute_types.php';
 require_once JPATH_ROOT . '/media/com_thm_groups/models/edit.php';
 
 /**
  * Class loads form data to edit an entry.
  */
-class THM_GroupsModelAbstract_Attribute_Edit extends THM_GroupsModelEdit
+class THM_GroupsModelAttribute_Type_Edit extends THM_GroupsModelEdit
 {
     protected $form = false;
 
@@ -27,15 +28,17 @@ class THM_GroupsModelAbstract_Attribute_Edit extends THM_GroupsModelEdit
      * @param   Boolean $loadData Load data  (default: true)
      *
      * @return  object the form
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @throws Exception
      */
     public function getForm($data = [], $loadData = true)
     {
         if (empty($this->form)) {
-            $this->form = $this->loadForm('com_thm_groups.abstract_attribute_edit', 'abstract_attribute_edit',
+            $this->form = $this->loadForm('com_thm_groups.attribute_type_edit', 'attribute_type_edit',
                 ['control' => 'jform', 'load_data' => $loadData]);
         }
+
+        $typeID = JFactory::getApplication()->input->getInt('id', 0);
+        THM_GroupsHelperAttribute_Types::configureForm($typeID, $this->form, true);
 
         return $this->form;
     }
@@ -49,7 +52,7 @@ class THM_GroupsModelAbstract_Attribute_Edit extends THM_GroupsModelEdit
      *
      * @return  JTable|mixed
      */
-    public function getTable($type = 'Abstract_Attributes', $prefix = 'THM_GroupsTable', $config = [])
+    public function getTable($type = 'Attribute_Types', $prefix = 'THM_GroupsTable', $config = [])
     {
         return JTable::getInstance($type, $prefix, $config);
     }
@@ -58,39 +61,25 @@ class THM_GroupsModelAbstract_Attribute_Edit extends THM_GroupsModelEdit
      * Method to load the form data
      *
      * @return  Object
+     * @throws exception
+     * @throws Exception
      */
     protected function loadFormData()
     {
-        $input      = JFactory::getApplication()->input;
-        $task       = $input->getCmd('task', "abstract_attribute.add");
-        $abstractID = $input->getInt('id', 0);
+        $input  = JFactory::getApplication()->input;
+        $typeID = $input->getInt('id', 0);
 
-        // Edit can only be explicitly called from the list view or implicitly with an id over a URL
-        $edit = (($task == "abstract_attribute.edit") or $abstractID > 0);
+        // This avoids opening the edit view when the new button was pushed regardless of item selection
+        $task = $input->getCmd('task', "attribute_type.add");
+        $edit = (($task == "attribute_type.edit") or $typeID > 0);
 
-        if ($edit) {
-            if (empty($abstractID)) {
-                $selected = $input->get('cid', [], 'array');
-
-                if (empty($selected)) {
-                    return $this->getItem(0);
-                }
-
-                $abstractID = $selected[0];
+        if ($edit and empty($typeID)) {
+            $selected = $input->get('cid', [], 'array');
+            if (!empty($selected)) {
+                $typeID = $selected[0];
             }
-
-            $item    = $this->getItem($abstractID);
-            $options = empty($item->options) ? '' : json_decode($item->options);
-
-            if (!empty($options)) {
-                if (isset($options->required)) {
-                    $item->validate = $options->required === false ? 0 : 1;
-                }
-            }
-
-            return $item;
         }
 
-        return $this->getItem(0);
+        return $this->getItem($typeID);
     }
 }

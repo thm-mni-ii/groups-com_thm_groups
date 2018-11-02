@@ -11,9 +11,6 @@
 
 defined('_JEXEC') or die;
 
-require_once JPATH_ROOT . "/media/com_thm_groups/helpers/groups.php";
-require_once JPATH_ROOT . "/media/com_thm_groups/helpers/profiles.php";
-require_once JPATH_ROOT . "/media/com_thm_groups/helpers/roles.php";
 jimport('joomla.filesystem.path');
 
 /**
@@ -23,21 +20,9 @@ jimport('joomla.filesystem.path');
  */
 class THM_GroupsModelAdvanced extends JModelLegacy
 {
-    const alphaSort = 1;
-
-    const no = 0;
-
-    const roleSort = 0;
-
-    const yes = 1;
-
-    private $groupID;
-
     private $groups;
 
     public $params;
-
-    private $templateID;
 
     /**
      * Constructor
@@ -49,10 +34,7 @@ class THM_GroupsModelAdvanced extends JModelLegacy
     public function __construct(array $config = [])
     {
         parent::__construct($config);
-        $this->params     = JFactory::getApplication()->getParams();
-        $this->groupID    = $this->params->get('groupID');
-        $menuTemplateID   = $this->params->get('templateID', 0);
-        $this->templateID = empty($menuTemplateID) ? THM_GroupsHelperGroups::getTemplateID($this->groupID) : $menuTemplateID;
+        $this->params = JFactory::getApplication()->getParams();
         $this->setGroups();
     }
 
@@ -66,34 +48,17 @@ class THM_GroupsModelAdvanced extends JModelLegacy
     private function getAlphabeticalProfiles($groupedProfiles)
     {
         $profiles = [];
-
-        $showRoles = $this->params->get('showRoles', self::no);
-        $showGroup = ($showRoles and (count($groupedProfiles) - 1) > 1);
-
         foreach ($groupedProfiles as $groupID => $assocs) {
-            $groupName = $showGroup ? $groupedProfiles[$groupID]['title'] : '';
 
             foreach ($assocs as $assocID => $data) {
-                if ($assocID == 'title') {
+
+                if ($assocID == 'name') {
                     continue;
                 }
 
-                if (empty($groupName)) {
-                    $assocName = $data['name'];
-                } elseif (empty($data['name'])) {
-                    $assocName = $groupName;
-                } else {
-                    $assocName = "$groupName: {$data['name']}";
-                }
-
-                foreach ($data['profiles'] as $profileID => $attributes) {
+                foreach ($data['profiles'] as $profileID => $profileData) {
                     if (empty($profiles[$profileID])) {
-                        $profiles[$profileID] = $attributes;
-                    }
-
-                    if (!empty($showRoles) and !empty($assocName)) {
-                        $profiles[$profileID]['roles'] = empty($profiles[$profileID]['roles']) ?
-                            $assocName : $profiles[$profileID]['roles'] . ", $assocName";
+                        $profiles[$profileID] = $profileData;
                     }
                 }
             }
@@ -112,57 +77,57 @@ class THM_GroupsModelAdvanced extends JModelLegacy
      */
     public function getProfiles()
     {
-        $sort = $this->params->get('sort', self::alphaSort);
+        $sort = $this->params->get('sort', ALPHASORT);
 
         $groupedProfiles = [];
 
         foreach ($this->groups as $group) {
-            $groupRoleAssocs                      = THM_GroupsHelperGroups::getRoleAssocIDs($group->id);
-            $groupedProfiles[$group->id]          = array_flip($groupRoleAssocs);
-            $groupedProfiles[$group->id]['title'] = $group->title;
+
+            // Get the role IDs associated with the group.
+            $groupRoleAssocs = THM_GroupsHelperGroups::getRoleAssocIDs($group->id);
+
+            // Turn the role ids into indexes
+            $groupedProfiles[$group->id]         = array_flip($groupRoleAssocs);
+            $groupedProfiles[$group->id]['name'] = $group->title;
         }
 
-        $baseURL = "index.php?option=com_thm_groups&view=profile";
+        foreach ($groupedProfiles as $groupID => $roleAssociations) {
 
-        foreach ($groupedProfiles as $groupID => $assocs) {
+            foreach (array_keys($roleAssociations) as $roleAssocID) {
 
-            foreach (array_keys($assocs) as $assocID) {
-                if ($assocID == 'title') {
+                // This index requires no processing
+                if ($roleAssocID == 'name') {
                     continue;
                 }
 
-                $profileIDs = THM_GroupsHelperGroups::getProfileIDsByAssoc($assocID);
+                $profileIDs = THM_GroupsHelperRoles::getProfileIDs($roleAssocID);
 
                 if (empty($profileIDs)) {
-                    unset($groupedProfiles[$groupID][$assocID]);
+                    unset($groupedProfiles[$groupID][$roleAssocID]);
                     continue;
                 }
 
-                $roleName = THM_GroupsHelperRoles::getNameByAssoc($assocID, $sort);
+                $roleName = THM_GroupsHelperRoles::getNameByAssoc($roleAssocID, $sort);
 
-                $groupedProfiles[$groupID][$assocID] = ['name' => $roleName, 'profiles' => []];
-
-                // Get the role name
-
+                $profiles = [];
                 foreach ($profileIDs as $profileID) {
-                    $profile = THM_GroupsHelperProfiles::getProfile($profileID, true, $this->templateID);
+                    $profileName = THM_GroupsHelperProfiles::getLNFName($profileID);
 
                     // No surname
-                    if (empty($profile[2]['value'])) {
+                    if (empty($profileName)) {
                         continue;
                     }
 
-                    $alias    = THM_GroupsHelperProfiles::getAlias($profileID);
-                    $profile['URL'] = $baseURL . "&profileID=$profileID&name=$alias";
-
-                    $groupedProfiles[$groupID][$assocID]['profiles'][$profileID] = $profile;
+                    $profiles[$profileID] = ['id' => $profileID, 'name' => $profileName];
                 }
 
-                uasort($groupedProfiles[$groupID][$assocID]['profiles'], ['THM_GroupsModelAdvanced', 'sortProfiles']);
+                uasort($profiles, ['THM_GroupsModelAdvanced', 'sortProfiles']);
+
+                $groupedProfiles[$groupID][$roleAssocID] = ['name' => $roleName, 'profiles' => $profiles];
             }
         }
 
-        if ($sort == self::roleSort) {
+        if ($sort == ROLESORT) {
             return $groupedProfiles;
         }
 
@@ -212,12 +177,12 @@ class THM_GroupsModelAdvanced extends JModelLegacy
     private function setGroups()
     {
         $ugHelper     = JHelperUsergroups::getInstance();
-        $parentGroup  = $ugHelper->get($this->groupID);
+        $parentGroup  = $ugHelper->get($this->params->get('groupID'));
         $allGroups    = $ugHelper->getAll();
         $this->groups = [];
 
         // If no subgroups are desired no further processing is needed
-        if ($this->params->get('subgroups', self::yes) == self::no) {
+        if ($this->params->get('subgroups', YES) == NO) {
             $this->groups[] = $parentGroup;
 
             return;
@@ -246,7 +211,7 @@ class THM_GroupsModelAdvanced extends JModelLegacy
      */
     private static function sortProfiles($profile1, $profile2)
     {
-        return $profile1[2]['value'] > $profile2[2]['value'];
+        return $profile1['name'] > $profile2['name'];
     }
 
 }

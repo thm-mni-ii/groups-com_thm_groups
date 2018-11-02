@@ -18,34 +18,84 @@ require_once JPATH_ROOT . '/media/com_thm_groups/models/edit.php';
 class THM_GroupsModelTemplate_Edit extends THM_GroupsModelEdit
 {
     /**
-     * Method to get a table object, load it if necessary. Can't be generalized because of irregular english plural
-     * spelling. :(
+     * Returns all attributes with parameters of a template
      *
-     * @param   string $name    The table name. Optional.
-     * @param   string $prefix  The class prefix. Optional.
-     * @param   array  $options Configuration array for model. Optional.
-     *
-     * @return  JTable object
+     * @return array the attribute information, empty if nothing could be found or an error occurred
+     * @throws Exception
      */
-    public function getTable($name = 'Templates', $prefix = 'THM_GroupsTable', $options = [])
+    public static function getAttributes()
     {
-        return JTable::getInstance($name, $prefix, $options);
-    }
+        $app        = JFactory::getApplication();
+        $templateID = $app->input->getInt('id', 0);
+        $dbo        = JFactory::getDbo();
 
-    /**
-     * Method to load the form data
-     *
-     * @return  Object
-     * @throws exception
-     */
-    protected function loadFormData()
-    {
-        $app = JFactory::getApplication();
-        $ids = $app->input->get('cid', [], 'array');
+        $attributeQuery = $dbo->getQuery(true);
 
-        // Input->get because id is in url
-        $id = (empty($ids)) ? $app->input->get->get('id') : $ids[0];
+        $attributeQuery->select('a.id, a.label, a.published, a.showIcon, a.showLabel, at.id AS typeID');
+        if (empty($templateID)) {
+            $attributeQuery->select('a.ordering');
+        }
+        $attributeQuery->from('#__thm_groups_attributes AS a')
+            ->innerJoin('#__thm_groups_attribute_types AS at ON at.id = a.typeID')
+            ->order('a.ordering');
+        $dbo->setQuery($attributeQuery);
 
-        return $this->getItem($id);
+        try {
+            $rawAttributes = $dbo->loadAssocList('id');
+        } catch (Exception $exc) {
+            $app->enqueueMessage($exc->getMessage(), 'error');
+
+            return [];
+        }
+
+        if (empty($templateID)) {
+            return empty($rawAttributes) ? [] : $rawAttributes;
+        }
+
+        $templateAttributes  = [];
+        $maxOrdering         = 0;
+        $missingAttributeIDs = [];
+
+        $taQuery = $dbo->getQuery(true);
+        $taQuery->select('ta.ordering AS ordering, ta.published AS published, ta.showIcon AS showIcon, ta.showLabel AS showLabel')
+            ->from('#__thm_groups_template_attributes AS ta')
+            ->innerJoin('#__thm_groups_attributes AS a ON a.id = ta.attributeID');
+
+        foreach ($rawAttributes as $attribute) {
+            $taQuery->clear('where')->where("a.id = '{$attribute['id']}'")->where("ta.templateID = '$templateID'");
+            $dbo->setQuery($taQuery);
+
+            try {
+                $templateAttribute = $dbo->loadAssoc();
+            } catch (Exception $exc) {
+                $app->enqueueMessage($exc->getMessage(), 'error');
+
+                return [];
+            }
+
+            if (empty($templateAttribute)) {
+                $missingAttributeIDs[] = $attribute['id'];
+            } else {
+                $templateAttribute['id']     = $attribute['id'];
+                $templateAttribute['label']  = $attribute['label'];
+                $templateAttribute['typeID'] = $attribute['typeID'];
+
+                $templateAttributes[$templateAttribute['ordering']] = $templateAttribute;
+
+                $maxOrdering = $maxOrdering > $templateAttribute['ordering'] ? $maxOrdering : $templateAttribute['ordering'];
+            }
+        }
+
+        foreach ($missingAttributeIDs as $missingAttributeID) {
+            $maxOrdering++;
+            $rawAttribute                     = $rawAttributes[$missingAttributeID];
+            $rawAttribute['ordering']         = $maxOrdering;
+            $rawAttribute['published']        = false;
+            $templateAttributes[$maxOrdering] = $rawAttribute;
+        }
+
+        ksort($templateAttributes);
+
+        return empty($templateAttributes) ? [] : $templateAttributes;
     }
 }

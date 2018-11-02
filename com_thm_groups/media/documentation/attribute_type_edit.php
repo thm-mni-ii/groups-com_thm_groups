@@ -30,6 +30,8 @@ $lang = THM_GroupsHelperLanguage::getLanguage(); ?>
             <div class="description"><?php echo $lang->_('COM_THM_GROUPS_HINT_DESC_LONG'); ?></div>
             <div class="label"><?php echo $lang->_('COM_THM_GROUPS_MAX_LENGTH'); ?></div>
             <div class="description"><?php echo $lang->_('COM_THM_GROUPS_MAX_LENGTH_DESC'); ?></div>
+            <div class="label"><?php echo $lang->_('COM_THM_GROUPS_REGEX'); ?></div>
+            <div class="description"><?php echo $lang->_('COM_THM_GROUPS_REGEX_DESC_LONG'); ?></div>
             <div class="clearFix"></div>
         </div>
         <h4><?php echo $lang->_('COM_THM_GROUPS_CALENDAR_TYPES'); ?></h4>

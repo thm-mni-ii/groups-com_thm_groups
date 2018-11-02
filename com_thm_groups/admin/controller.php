@@ -242,37 +242,6 @@ class THM_GroupsController extends JControllerLegacy
     }
 
     /**
-     * Removes the profile's association with the given group
-     *
-     * @return void
-     * @throws Exception
-     */
-    public function deleteTemplateAssociation()
-    {
-        $model             = $this->getModel($this->resource);
-        $functionAvailable = (method_exists($model, 'deleteTemplateAssociation'));
-
-        if ($functionAvailable) {
-            $success = $model->deleteTemplateAssociation();
-
-            if ($success) {
-                $msg  = JText::_('COM_THM_GROUPS_DELETED');
-                $type = 'message';
-            } else {
-                $this->setMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'warning');
-            }
-        } else {
-            $msg  = JText::_('COM_THM_GROUPS_ACTION_UNAVAILABLE');
-            $type = 'error';
-        }
-
-        $app = JFactory::getApplication();
-        $app->enqueueMessage($msg, $type);
-        $app->input->set('view', "{$this->resource}_manager");
-        parent::display();
-    }
-
-    /**
      * Redirects to the edit view for the resource
      *
      * @return void
