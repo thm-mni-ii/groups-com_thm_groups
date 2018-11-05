@@ -199,7 +199,8 @@ class THM_GroupsViewContent extends JViewLegacy
         }
         $profileID = $app->input->getInt('profileID');
         $profileName = THM_GroupsHelperProfiles::getDisplayName($profileID);
-        $profileURL = THM_GroupsHelperRouter::build(['view' => 'profile', 'profileID' => $profileID], true);
+        $alias = THM_GroupsHelperProfiles::getAlias($profileID);
+        $profileURL = JRoute::_("index.php?option=com_thm_groups&view=profile&profileID=$this->profileID&name=$alias");
         $pathway->addItem($profileName, $profileURL);
         $pathway->addItem($this->item->title, '');
 
