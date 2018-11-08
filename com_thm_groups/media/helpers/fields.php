@@ -148,7 +148,7 @@ class THM_GroupsHelperFields
         if ($fieldID == EDITOR) {
             $editorName = JFactory::getConfig()->get('editor');
             $editor     = JEditor::getInstance($editorName);
-            $buttons    = $attribute['buttons'] == 'false' ? false : true;
+            $buttons    = $attribute['buttons'] === '0' ? false : true;
             if ($buttons and !empty($attribute['hide'])) {
                 $buttons = explode(',', $attribute['hide']);
             }
@@ -227,7 +227,7 @@ class THM_GroupsHelperFields
         // Only configured field options will be saved to the options column of the resource
         if ($options) {
             foreach ($options as $property => $value) {
-                if (isset($fieldOptions[$property]) and !empty($value)) {
+                if (isset($fieldOptions[$property]) and $value !== '') {
                     $fieldOptions[$property] = $value;
                 }
             }

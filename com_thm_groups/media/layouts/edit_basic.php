@@ -28,7 +28,7 @@ class THM_GroupsLayoutEdit_Basic
               enctype="multipart/form-data"
               method="post"
               name="adminForm"
-              id="item-form"
+              id="adminForm"
               class="form-horizontal form-validate">
             <fieldset class="adminform">
                 <?php echo $view->form->renderFieldset('details'); ?>

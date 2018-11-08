@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 ?>
 <form action="?option=com_thm_groups" enctype="multipart/form-data" method="post" name="adminForm"
-      id="item-form" class="form-horizontal form-validate">
+      id="adminForm" class="form-horizontal form-validate">
     <div class="form-horizontal">
         <div class="span12">
             <fieldset class="form-vertical">

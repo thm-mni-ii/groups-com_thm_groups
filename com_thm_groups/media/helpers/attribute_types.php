@@ -123,7 +123,7 @@ class THM_GroupsHelperAttribute_Types
         // Accepts all data, later restricted by the field configuration
         if ($options) {
             foreach ($options as $property => $value) {
-                if (!empty($value)) {
+                if ($value !== '') {
                     $atOptions[$property] = $value;
                 }
             }

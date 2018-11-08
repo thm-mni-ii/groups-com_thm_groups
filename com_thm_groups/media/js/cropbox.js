@@ -127,7 +127,7 @@ function deletePic(attributeID, profileID)
     }).success(function (response) {
         if (response === '')
         {
-            jQuery("#image" + attributeID).html('');
+            jQuery("#image-" + attributeID).html('');
             jQuery("#jform_" + attributeID + "_value").val('');
         }
     });

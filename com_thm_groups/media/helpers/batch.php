@@ -60,28 +60,29 @@ class THM_GroupsHelperBatch
         // TODO: Explain the logic behind this
         $select = 'ug.id, ug.title, COUNT(DISTINCT ugTemp.id) AS level';
         $query->select($select);
-        $query->from('#__usergroups as ug');
-        $query->innerJoin('#__thm_groups_role_associations AS roleAssoc ON ug.id = roleAssoc.groupID');
+        $query->from('#__usergroups AS ug');
         $query->leftJoin('#__usergroups AS ugTemp ON ug.lft > ugTemp.lft AND ug.rgt < ugTemp.rgt');
-        $query->where('ug.id NOT IN  (1,2)');
         $query->group('ug.id, ug.title, ug.lft, ug.rgt');
         $query->order('ug.lft ASC');
 
         $dbo->setQuery($query);
 
         try {
-            $options = $dbo->loadObjectList();
+            $groups = $dbo->loadAssocList();
         } catch (Exception $exc) {
             JFactory::getApplication()->enqueueMessage($exc->getMessage(), 'error');
 
             return [];
         }
 
-        for ($i = 0, $n = count($options); $i < $n; $i++) {
-            $groups[] = JHtml::_('select.option', $options[$i]->id,
-                str_repeat('- ', $options[$i]->level) . $options[$i]->title);
+        $standardGroupIDS = [1, 2, 3, 4, 5, 6, 7, 8];
+        $options          = [];
+        foreach ($groups as $group) {
+            $label          = str_repeat('- ', $group['level']) . $group['title'];
+            $attribs        = in_array($group['id'], $standardGroupIDS) ? ['disable' => true] : [];
+            $options[]      = JHtml::_('select.option', $group['id'], $label, $attribs);
         }
 
-        return $groups;
+        return $options;
     }
 }
