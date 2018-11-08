@@ -380,6 +380,7 @@ abstract class THM_GroupsModelList extends JModelList
      * @param   array  $filterNames the filter names. names should be synonymous with db column names.
      *
      * @return  void
+     * @throws Exception
      */
     protected function setLocalizedFilters(&$query, $filterNames)
     {

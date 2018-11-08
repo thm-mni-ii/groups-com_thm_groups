@@ -10,7 +10,7 @@
  */
 
 /**
- * Class providing functions usefull to multiple component files
+ * Class providing functions useful to multiple component files
  */
 class THM_GroupsHelperLanguage
 {

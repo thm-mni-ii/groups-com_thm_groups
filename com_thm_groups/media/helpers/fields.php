@@ -62,7 +62,6 @@ class THM_GroupsHelperFields
      */
     public static function getCropper($profileID, $attribute)
     {
-        $label       = $attribute['label'];
         $attributeID = $attribute['id'];
         $mode        = $attribute['mode'];
         $value       = strtolower(trim($attribute['value']));

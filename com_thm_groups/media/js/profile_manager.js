@@ -14,7 +14,7 @@ jQuery(document).ready(function () {
         url: "index.php?option=com_thm_groups&view=role_ajax&format=raw"
     });
 
-    gr = new BatchData();
+    let gr = new BatchData();
 
     /*
      By click on Add button, selected group and roles will scanned
@@ -22,28 +22,25 @@ jQuery(document).ready(function () {
      */
     jQuery('#batch-add-btn').on('click', function () {
 
-        jQuery('#error-label').empty();
+        const selectedGroup = jQuery("#batch-groups-id option:selected"),
+            groupID = parseInt(selectedGroup.val()),
+            groupName = selectedGroup.text(),
+            roleIDs = jQuery("#batch-roles-id").chosen().val(),
+            roleNames = jQuery("#roles-div-id .result-selected")
+        errorLabel = jQuery('#error-label');
 
-        // get selected group id
-        var groupID = parseInt(jQuery("#batch-groups-id option:selected").val());
-        // get selected group name
-        var groupName = jQuery("#batch-groups-id option:selected").text();
-        // get selected role ids, comma separated
-        var roleIDs = jQuery("#batch-roles-id").chosen().val();
+        let roles;
 
-        // get selected role names
-        // Chosen plugin can't give the text of option normal :(
-        // Because if that we need to get it in another way
-        var roleNames = jQuery("#roles-div-id .result-selected");
+        errorLabel.empty();
 
-        if (roleIDs === null || groupID === "" || roleNames === null)
+        if (roleIDs === null || groupID == "" || roleNames === null)
         {
-            jQuery('#error-label').append("ERROR -> Yod didn't choose any group or role!");
+            errorLabel.append("ERROR -> Yod didn't choose any group or role!");
             return false;
         }
 
         // An array with roles of one group
-        var roles = [];
+        roles = [];
 
         // assign role name to role id
         jQuery.each(roleIDs, function (key, value) {
@@ -69,7 +66,7 @@ jQuery(document).ready(function () {
 
 function updateHiddenField()
 {
-    var data = gr.getData();
+    let data = gr.getData();
     jQuery('#batch-data').val(encodeURIComponent(JSON.stringify(data)));
 }
 
@@ -80,22 +77,22 @@ function updateHiddenField()
  */
 function updateView()
 {
-    var data = gr.getData();
-    // put groups with roles to div
-    jQuery('#group-roles-id').empty();
+    const data = gr.getData(),
+        roleAssociations = jQuery('#group-roles-id');
 
-    console.log(data);
+    roleAssociations.empty();
 
     jQuery.each(data, function (key, group) {
-        jQuery('#group-roles-id').append("<br /><b><span class='icon-trash' onclick='gr.removeGroup(" + group.id + ");updateView();'></span> " + group.name + "</b>");
-        jQuery('#group-roles-id').append(" : ");
+        const roles = [];
 
-        var roles = [];
+        roleAssociations.append("<br /><b><span class='icon-trash' onclick='gr.removeGroup(" + group.id + ");updateView();'></span> " + group.name + "</b>");
+        roleAssociations.append(" : ");
+
         jQuery.each(group.roles, function (key, role) {
             roles.push(role.name + " <span class='icon-trash' onclick='gr.removeRoleFromGroup(" + group.id + "," + role.id + ");updateView();'></span>");
         });
 
-        jQuery('#group-roles-id').append(roles.join(', '));
+        roleAssociations.append(roles.join(', '));
 
         updateHiddenField();
     });
@@ -105,6 +102,8 @@ function updateView()
 if (!Array.prototype.find)
 {
     Array.prototype.find = function (predicate) {
+        let i, value;
+
         if (this === null || this === undefined)
         {
             throw new TypeError('Array.prototype.find called on null or undefined');
@@ -114,9 +113,9 @@ if (!Array.prototype.find)
             throw new TypeError('predicate must be a function');
         }
 
-        for (var i = 0; i < this.length; i++)
+        for (i = 0; i < this.length; i++)
         {
-            var value = this[i];
+            value = this[i];
             if (predicate(value))
             {
                 return value;
@@ -133,7 +132,8 @@ if (!Array.prototype.find)
 function BatchData()
 {
     // {id: GroupID, name: "GroupName", roles: [ {id: RoleID, roleName: "RoleName"} ]}
-    var data = [], me = this;
+    const me = this;
+    let data = [];
 
     /**
      * Returns all groups with their roles
@@ -177,9 +177,10 @@ function BatchData()
      * @param   Object  group  A group object to push
      */
     this.addGroup = function (group) {
-        for (var i = 0; i < arguments.length; i++)
+        let i, gr;
+        for (i = 0; i < arguments.length; i++)
         {
-            var gr = data.find(function (g) {
+            gr = data.find(function (g) {
                 return g.id === group.id;
             });
 
@@ -197,7 +198,8 @@ function BatchData()
      * @param   Object  role     A role object
      */
     this.addRoleToGroup = function (groupID, role) {
-        var group = this.getGroup(groupID);
+        const group = this.getGroup(groupID);
+        let roleExists;
 
         if (typeof group !== 'undefined')
         {
@@ -206,7 +208,7 @@ function BatchData()
                 group.roles = [];
             }
 
-            var roleExists = group.roles.find(function (r) {
+            roleExists = group.roles.find(function (r) {
                 return r.id === role.id;
             });
 
@@ -235,7 +237,7 @@ function BatchData()
      * @param   int  roleID   A role id
      */
     this.removeRoleFromGroup = function (groupID, roleID) {
-        var seven = 7, group = this.getGroup(groupID);
+        const group = this.getGroup(groupID);
 
         group.roles = group.roles.filter(function (role) {
             return role.id !== roleID;

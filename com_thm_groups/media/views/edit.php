@@ -58,8 +58,6 @@ abstract class THM_GroupsViewEdit extends JViewLegacy
         JHtml::_('formbehavior.chosen', 'select');
 
         JHtml::stylesheet('media/com_thm_groups/css/backend.css');
-        JHtml::script('media/com_thm_groups/js/formbehaviorChosenHelper.js');
         JHtml::script('media/com_thm_groups/js/validators.js');
-        JHtml::script('media/com_thm_groups/js/submitButton.js');
     }
 }

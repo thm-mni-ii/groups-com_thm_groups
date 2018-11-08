@@ -30,7 +30,7 @@ class THM_GroupsViewGroup_Manager extends THM_GroupsViewList
      *
      * @param   string $tpl The name of the layout file to parse; automatically searches through the layout paths.
      *
-     * @return  mixed  A string if successful, otherwise an Error object.
+     * @return void
      * @throws Exception
      */
     public function display($tpl = null)

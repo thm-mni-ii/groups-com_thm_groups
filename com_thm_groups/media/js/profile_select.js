@@ -7,13 +7,14 @@ function addProfiles(profileEntries)
 {
     "use strict";
 
-    var profiles = jQuery.parseJSON(profileEntries);
+    const profiles = jQuery.parseJSON(profileEntries);
 
     jQuery('#selectable-profiles').children().remove();
 
     jQuery.each(profiles, function (key, value) {
 
-        var row, rowID = 'profile' + key;
+        const rowID = 'profile' + key;
+        let row;
 
         // Element already exists
         if (!profiles.hasOwnProperty(key) || jQuery('#' + rowID).length)
@@ -48,10 +49,11 @@ function insertProfileLinks()
 {
     "use strict";
 
-    var links = [];
+    const links = [];
 
     jQuery.each(jQuery('#selected-profiles td.profile-data'), function (key, value) {
-        var name = value.children[1].textContent, link = value.children[3].textContent;
+        const name = value.children[1].textContent,
+            link = value.children[3].textContent;
         links.push('<a title="' + name + '"href="' + link + '">' + name + '</a>');
     });
 
@@ -68,13 +70,14 @@ function insertProfileLinks()
 function insertProfileParameters()
 {
     "use strict";
+    const groupID = jQuery('#filter_groups').val(),
+        profileIDs = [],
+        templateID = jQuery('#filter_templates').val();
 
-    var profileIDs = [], groupID = jQuery('#filter_groups').val(), templateID = jQuery('#filter_templates').val(),
-        useProfileIDs, useGroupID, useTemplateID, hook = '';
+    let hook = '';
 
     jQuery.each(jQuery('#selected-profiles td.profile-data'), function (key, value) {
-        var id = value.children[2].textContent;
-        profileIDs.push(id);
+        profileIDs.push(value.children[2].textContent);
     });
 
     hook += profileIDs.length > 0 ? 'profileIDs=' + profileIDs.join(',') + '|' : '';
@@ -101,7 +104,8 @@ function processProfileRow(rowID)
 {
     "use strict";
 
-    var row = jQuery('#selected-profiles #' + rowID), checkSpan, sortSpan;
+    const sortSpan = jQuery('#' + rowID + ' span.sortable-handler');
+    let row = jQuery('#selected-profiles #' + rowID), checkSpan;
 
     // The row is in the selected area
     if (row.length)
@@ -112,7 +116,6 @@ function processProfileRow(rowID)
         checkSpan.removeClass('icon-checkbox-checked');
         checkSpan.addClass('icon-checkbox-unchecked');
 
-        sortSpan = jQuery('#' + rowID + ' span.sortable-handler');
         sortSpan.addClass('inactive');
 
         return;
@@ -131,10 +134,7 @@ function processProfileRow(rowID)
     checkSpan.removeClass('icon-checkbox-unchecked');
     checkSpan.addClass('icon-checkbox-checked');
 
-    sortSpan = jQuery('#' + rowID + ' span.sortable-handler');
     sortSpan.removeClass('inactive');
-
-    return;
 }
 
 /**
@@ -144,9 +144,8 @@ function repopulateProfiles()
 {
     "use strict";
 
-    var componentParameters, selectionParameters;
-    componentParameters = 'index.php?option=com_thm_groups&view=profile_ajax&format=raw&task=getContentOptions';
-    selectionParameters = '&groupID=' + jQuery('#filter_groups').val();
+    const componentParameters = 'index.php?option=com_thm_groups&view=profile_ajax&format=raw&task=getContentOptions',
+        selectionParameters = '&groupID=' + jQuery('#filter_groups').val();
 
     jQuery.ajax({
         type: 'GET',

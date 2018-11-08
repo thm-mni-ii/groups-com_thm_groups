@@ -53,6 +53,7 @@ class THM_GroupsViewProfile extends JViewLegacy
      * @param mixed $attributes An associative array (or simple string) of attributes to add
      *
      * @return  string  the Link HTML markup
+     * @throws Exception
      */
     public function getEditLink($attributes = null)
     {

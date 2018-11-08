@@ -1,13 +1,11 @@
 jQuery(document).ready(function () {
     'use strict';
     jQuery(".toggled-text-link").click(function () {
-        var self = jQuery(this),
-            next = self.parent().next(),
-            display = next.css('display'),
+        const next = jQuery(this).parent().next(),
             texts = Joomla.getOptions('com_thm_groups', []);
 
         next.slideToggle();
 
-        this.innerHTML = display !== 'none' ? texts.read : texts.hide;
+        this.innerHTML = next.css('display') !== 'none' ? texts.read : texts.hide;
     });
-})
+});

@@ -78,4 +78,4 @@ Joomla.submitbutton = function (task) {
 
         document.getElementById('system-message-container').innerHTML = errorMessage;
     }
-}
+};

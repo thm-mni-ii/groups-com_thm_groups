@@ -42,8 +42,7 @@
                     var data = {};
                     $(settings.parents).each(function () {
                         var id = $(this).attr(settings.attribute);
-                        var value = ($(this).is("select") ? $(":selected", this) : $(this)).val();
-                        data[id] = value;
+                        data[id] = ($(this).is("select") ? $(":selected", this) : $(this)).val();
 
                         /* Optionally also depend on values from these inputs. */
                         if (settings.depends)
@@ -52,9 +51,8 @@
                                 /* Do not include own value. */
                                 if (self !== this)
                                 {
-                                    var id = $(this).attr(settings.attribute);
-                                    var value = $(this).val();
-                                    data[id] = value;
+                                    const id = $(this).attr(settings.attribute);
+                                    data[id] = $(this).val();
                                 }
                             });
                         }

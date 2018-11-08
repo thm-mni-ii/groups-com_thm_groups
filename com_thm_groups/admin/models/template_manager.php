@@ -41,9 +41,6 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
      */
     public function getHeaders()
     {
-        $ordering  = $this->state->get('list.ordering');
-        $direction = $this->state->get('list.direction');
-
         $headers             = [];
         $headers['checkbox'] = '';
         $headers['template'] = JText::_('COM_THM_GROUPS_NAME');

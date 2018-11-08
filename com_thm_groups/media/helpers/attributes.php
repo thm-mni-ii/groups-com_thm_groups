@@ -9,6 +9,8 @@
  */
 
 require_once 'attribute_types.php';
+// Added here for calls from plugins
+require_once 'component.php';
 require_once 'fields.php';
 
 /**

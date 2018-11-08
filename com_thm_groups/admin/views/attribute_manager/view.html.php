@@ -51,7 +51,6 @@ class THM_GroupsViewAttribute_Manager extends THM_GroupsViewList
         JToolBarHelper::deleteList('COM_THM_GROUPS_DELETE_CONFIRM', 'attribute.delete',
             'JTOOLBAR_DELETE');
 
-        $user = JFactory::getUser();
         if (THM_GroupsHelperComponent::isAdmin()) {
             JToolBarHelper::preferences('com_thm_groups');
         }

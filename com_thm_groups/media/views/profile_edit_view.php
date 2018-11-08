@@ -68,7 +68,6 @@ class THM_GroupsViewProfile_Edit_View extends JViewLegacy
         JHtml::_('formbehavior.chosen', 'select');
 
         JHtml::stylesheet('media/com_thm_groups/css/profile_edit.css');
-        JHtml::script('media/com_thm_groups/js/formbehaviorChosenHelper.js');
         JHtml::script('media/com_thm_groups/js/cropbox.js');
         JHtml::script('media/com_thm_groups/js/validators.js');
 

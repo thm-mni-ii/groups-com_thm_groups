@@ -105,17 +105,11 @@ class THM_GroupsModelProfile extends JModelLegacy
 
         $profileAssocs    = THM_GroupsHelperProfiles::getRoleAssociations($profileID);
         $groupAssocs      = THM_GroupsHelperGroups::getRoleAssocIDs($groupID);
-        $disposableAssocs = [];
-
-        foreach ($profileAssocs as $pAssocID) {
-            if (in_array($pAssocID, $groupAssocs)) {
-                array_push($disposableAssocs, $pAssocID);
-            }
-        }
+        $disposableAssocs = array_intersect($profileAssocs, $groupAssocs);
 
         $groupsQuery = $this->_db->getQuery(true);
         $groupsQuery->delete('#__thm_groups_profile_associations')
-            ->where("id IN ('" . implode("','", $disposableAssocs) . "')");
+            ->where("role_associationID IN ('" . implode("','", $disposableAssocs) . "')");
         $this->_db->setQuery($groupsQuery);
 
         try {

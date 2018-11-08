@@ -4,14 +4,14 @@ jQuery(document).ready(function () {
     // adjust width of the iconPicker Button to the width of its dropdown-menu
     if (jQuery(".iconPicker").length)
     {
-        var dropdownWidth = jQuery(".iconPicker .dropdown-menu").outerWidth();
-        jQuery(".iconPicker .dropdown-toggle").outerWidth(dropdownWidth);
+        const dropDownWidth = jQuery(".iconPicker .dropdown-menu").outerWidth();
+        jQuery(".iconPicker .dropdown-toggle").outerWidth(dropDownWidth);
     }
 });
 
 function selectIcon(event)
 {
-    var selectedItem = jQuery(event.currentTarget),
+    const selectedItem = jQuery(event.currentTarget),
         selectedItemHtml = jQuery(selectedItem).html(),
         classNameOfIcon = jQuery(selectedItemHtml).first().attr('class');
 

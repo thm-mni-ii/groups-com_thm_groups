@@ -8,6 +8,8 @@
  * @link        www.thm.de
  */
 
+// Added here for calls from plugins
+require_once 'component.php';
 require_once 'profiles.php';
 
 /**

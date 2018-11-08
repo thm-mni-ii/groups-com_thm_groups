@@ -71,6 +71,7 @@ class JFormFieldGenericList extends JFormFieldList
      * @param   object &$query the query object
      *
      * @return  string  the string to use for text selection
+     * @throws Exception
      */
     private function resolveText(&$query)
     {
