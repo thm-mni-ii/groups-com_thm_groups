@@ -120,7 +120,7 @@ class THM_GroupsHelperProfiles
 
         // Associations that are in Joomla, but not in groups
         $query = $dbo->getQuery(true);
-        $query->select('DISTINCT uum.user_id as profileID, ra.id as role_associationID')
+        $query->select('DISTINCT uum.user_id AS profileID, ra.id AS role_associationID')
             ->from('#__user_usergroup_map AS uum')
             ->innerJoin('#__thm_groups_profiles AS profile ON profile.id = uum.user_id')
             ->innerJoin('#__thm_groups_role_associations AS ra ON ra.groupID = uum.group_id AND ra.roleID = 1')
@@ -139,7 +139,8 @@ class THM_GroupsHelperProfiles
 
         if (!empty($missingAssociations)) {
             foreach ($missingAssociations as $missingAssociation) {
-                THM_GroupsHelperRoles::associateProfile($missingAssociation['profileID'], $missingAssociation['role_associationID']);
+                THM_GroupsHelperRoles::associateProfile($missingAssociation['profileID'],
+                    $missingAssociation['role_associationID']);
             }
         }
     }
@@ -224,7 +225,12 @@ class THM_GroupsHelperProfiles
     {
         $ntData = self::getNamesAndTitles($profileID, $withTitle, $withSpan);
 
-        $text = "{$ntData['preTitle']} {$ntData['forename']} {$ntData['surname']} {$ntData['postTitle']}  ";
+        $text = "{$ntData['preTitle']} {$ntData['forename']} {$ntData['surname']}";
+
+        // The dagger for deceased was moved in the called function
+        if (!empty($ntData['postTitle'])) {
+            $text .= ", {$ntData['postTitle']}";
+        }
 
         return trim($text);
     }
@@ -254,9 +260,9 @@ class THM_GroupsHelperProfiles
                 continue;
             }
 
-            $attribute = THM_GroupsHelperAttributes::getAttribute($attributeID, $profileID);
+            $attribute = THM_GroupsHelperAttributes::getAttribute($attributeID, $profileID, true);
 
-            if (empty(trim($attribute['value']))) {
+            if (empty($attribute['value']) or empty(trim($attribute['value']))) {
                 continue;
             }
 
@@ -304,10 +310,10 @@ class THM_GroupsHelperProfiles
      */
     public static function getNameContainer($profileID)
     {
-        $text = '<span class="attribute-name">' . self::getDisplayName($profileID, true, true) . '</span>';
+        $text  = '<span class="attribute-name">' . self::getDisplayName($profileID, true, true) . '</span>';
         $alias = THM_GroupsHelperProfiles::getAlias($profileID);
-        $url  = JRoute::_("index.php?option=com_thm_groups&view=profile&profileID=$profileID&name=$alias");
-        $link = JHtml::link($url, $text, ['target' => '_blank']);
+        $url   = JRoute::_("index.php?option=com_thm_groups&view=profile&profileID=$profileID&name=$alias");
+        $link  = JHtml::link($url, $text, ['target' => '_blank']);
 
         return '<div class="attribute-wrap">' . $link . '<div class="clearFix"></div></div>';
     }
@@ -327,20 +333,17 @@ class THM_GroupsHelperProfiles
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
         $query->select('sn.value AS surname, fn.value AS forename')
+            ->select('prt.value AS preTitle, prt.published AS prePublished')
+            ->select('pot.value AS postTitle, pot.published AS postPublished')
             ->from('#__thm_groups_profile_attributes AS sn')
-            ->innerJoin('#__thm_groups_profile_attributes AS fn ON fn.profileID = sn.profileID')
+            ->leftJoin('#__thm_groups_profile_attributes AS fn ON fn.profileID = sn.profileID')
+            ->leftJoin('#__thm_groups_profile_attributes AS prt ON prt.profileID = sn.profileID')
+            ->leftJoin('#__thm_groups_profile_attributes AS pot ON pot.profileID = sn.profileID')
             ->where("sn.profileID = '$profileID'")
             ->where("sn.attributeID = " . SURNAME)
-            ->where("fn.attributeID = " . FORENAME);
-
-        if ($withTitle) {
-            $query->select('prt.value AS preTitle, prt.published AS prePublished')
-                ->leftJoin('#__thm_groups_profile_attributes AS prt ON prt.profileID = sn.profileID')
-                ->where("prt.attributeID = " . TITLE)
-                ->select('pot.value AS postTitle, pot.published AS postPublished')
-                ->leftJoin('#__thm_groups_profile_attributes AS pot ON pot.profileID = sn.profileID')
-                ->where("pot.attributeID = " . POSTTITLE);
-        }
+            ->where("fn.attributeID = " . FORENAME)
+            ->where("prt.attributeID = " . TITLE)
+            ->where("pot.attributeID = " . POSTTITLE);
 
         $dbo->setQuery($query);
 
@@ -352,12 +355,18 @@ class THM_GroupsHelperProfiles
             return [];
         }
 
-        if (empty($results['prePublished'])) {
+        if (empty($withTitle) or empty($results['prePublished'])) {
             $results['preTitle'] = '';
         }
 
-        if (empty($results['postPublished'])) {
+        if (empty($withTitle) or empty($results['postPublished'])) {
             $results['postTitle'] = '';
+        } else {
+            // Special handling for deceased
+            if (strpos($results['postTitle'], '†') !== false) {
+                $results['surname']   .= ' †';
+                $results['postTitle'] = trim(str_replace('†', '', $results['postTitle']));
+            }
         }
 
         if ($withSpan) {

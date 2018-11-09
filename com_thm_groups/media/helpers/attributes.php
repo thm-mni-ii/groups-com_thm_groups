@@ -76,29 +76,31 @@ class THM_GroupsHelperAttributes
     /**
      * Retrieves a single attribute
      *
-     * @param int $attributeID the attribute to be retrieved
-     * @param int $profileID   the id of the profile as necessary
+     * @param int  $attributeID the attribute to be retrieved
+     * @param int  $profileID   the id of the profile as necessary
+     * @param bool $published   whether the profile attribute must be published
      *
      * @return array the attribute information
      * @throws Exception
      */
-    public static function getAttribute($attributeID, $profileID = null)
+    public static function getAttribute($attributeID, $profileID, $published)
     {
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
         $query->select('a.id, a.typeID, a.label, a.ordering, a.required, a.viewLevelID')
             ->select('a.icon, a.showIcon, a.showLabel')
             ->select('at.fieldID, at.message')
+            ->select('pat.published, pat.value, pat.profileID')
             ->select('vl.title AS viewLevel')
             ->from('#__thm_groups_attributes AS a')
             ->innerJoin('#__thm_groups_attribute_types AS at ON at.id = a.typeID')
+            ->innerJoin("#__thm_groups_profile_attributes AS pat ON pat.attributeID = a.id")
             ->leftJoin("#__viewlevels AS vl ON vl.id = a.viewLevelID")
-            ->where("a.id = $attributeID");
+            ->where("a.id = $attributeID")
+            ->where("pat.profileID = '$profileID'");
 
-        if ($profileID) {
-            $query->select('pat.published, pat.value, pat.profileID')
-                ->innerJoin("#__thm_groups_profile_attributes AS pat ON pat.attributeID = a.id")
-                ->where("pat.profileID = '$profileID'");
+        if ($published) {
+            $query->where("pat.published = '$published'");
         }
 
         // Get the name of the default view level just
@@ -303,7 +305,7 @@ class THM_GroupsHelperAttributes
             $random = rand(1, 100);
             $url    = JUri::root() . $relativePath . "?force=$random";
 
-            $alt = empty($profileID)? JText::_('COM_THM_GROUPS_PROFILE_IMAGE') : THM_GroupsHelperProfiles::getDisplayName($profileID);
+            $alt = empty($profileID) ? JText::_('COM_THM_GROUPS_PROFILE_IMAGE') : THM_GroupsHelperProfiles::getDisplayName($profileID);
 
             return JHtml::image($url, $alt, ['class' => 'edit_img']);
         }
@@ -322,7 +324,7 @@ class THM_GroupsHelperAttributes
      */
     public static function getInput($attributeID, $profileID)
     {
-        $attribute = self::getAttribute($attributeID, $profileID);
+        $attribute = self::getAttribute($attributeID, $profileID, false);
 
         $label            = self::getLabel($attribute, true);
         $input            = THM_GroupsHelperFields::getInput($profileID, $attribute);
@@ -370,7 +372,10 @@ class THM_GroupsHelperAttributes
     {
         $html  = '';
         $label = $attribute['label'];
-        $label .= empty($attribute['required']) ? '' : '*';
+
+        if ($form) {
+            $label .= empty($attribute['required']) ? '' : '*';
+        }
 
         if ($form) {
             $html .= '<label id="jform_' . $attribute['id'] . '-lbl" for="jform_' . $attribute['id'] . '_value" aria-invalid="false">';
