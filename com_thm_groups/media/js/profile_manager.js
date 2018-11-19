@@ -59,12 +59,12 @@ jQuery(document).ready(function () {
             gr.addRoleToGroup(groupID, value);
         });
 
-        updateView();
-        updateHiddenField();
+        updateView(gr);
+        updateHiddenField(gr);
     });
 });
 
-function updateHiddenField()
+function updateHiddenField(gr)
 {
     let data = gr.getData();
     jQuery('#batch-data').val(encodeURIComponent(JSON.stringify(data)));
@@ -75,7 +75,7 @@ function updateHiddenField()
  *
  * @return void
  */
-function updateView()
+function updateView(gr)
 {
     const data = gr.getData(),
         roleAssociations = jQuery('#group-roles-id');
@@ -94,7 +94,7 @@ function updateView()
 
         roleAssociations.append(roles.join(', '));
 
-        updateHiddenField();
+        updateHiddenField(gr);
     });
 }
 
