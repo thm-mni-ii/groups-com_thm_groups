@@ -604,7 +604,7 @@ class THM_GroupsHelperProfiles
             return false;
         }
 
-        $alias = empty($names['forename']) ? $names['surname'] : "{$names['forename']}{$names['surname']}";
+        $alias = empty($names['forename']) ? $names['surname'] : "{$names['forename']}-{$names['surname']}";
         $alias = THM_GroupsHelperComponent::trim($alias);
         $alias = THM_GroupsHelperComponent::transliterate($alias);
         $alias = THM_GroupsHelperComponent::filterText($alias);
