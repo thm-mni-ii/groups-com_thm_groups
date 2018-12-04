@@ -87,27 +87,36 @@ class THM_GroupsModelAdvanced extends JModelLegacy
             $groupRoleAssocs = THM_GroupsHelperGroups::getRoleAssocIDs($group->id);
 
             // Turn the role ids into indexes
-            $groupedProfiles[$group->id]         = array_flip($groupRoleAssocs);
+            $groupedProfiles[$group->id]         = $groupRoleAssocs;
             $groupedProfiles[$group->id]['name'] = $group->title;
         }
 
         foreach ($groupedProfiles as $groupID => $roleAssociations) {
 
-            foreach (array_keys($roleAssociations) as $roleAssocID) {
+            $nonMemberIDs = [];
+            $memberIDs    = [];
+
+            foreach ($roleAssociations as $roleID => $assocID) {
 
                 // This index requires no processing
-                if ($roleAssocID == 'name') {
+                if ($roleID == 'name') {
                     continue;
                 }
 
-                $profileIDs = THM_GroupsHelperRoles::getProfileIDs($roleAssocID);
+                $profileIDs = THM_GroupsHelperRoles::getProfileIDs($assocID);
 
                 if (empty($profileIDs)) {
-                    unset($groupedProfiles[$groupID][$roleAssocID]);
+                    unset($groupedProfiles[$groupID][$roleID]);
                     continue;
                 }
 
-                $roleName = THM_GroupsHelperRoles::getNameByAssoc($roleAssocID, $sort);
+                if ($roleID !== 1) {
+                    $memberIDs = $profileIDs;
+                } else {
+                    $nonMemberProfileIDs = array_merge($nonMemberIDs, $profileIDs);
+                }
+
+                $roleName = THM_GroupsHelperRoles::getNameByAssoc($assocID, $sort);
 
                 $profiles = [];
                 foreach ($profileIDs as $profileID) {
@@ -123,7 +132,20 @@ class THM_GroupsModelAdvanced extends JModelLegacy
 
                 uasort($profiles, ['THM_GroupsModelAdvanced', 'sortProfiles']);
 
-                $groupedProfiles[$groupID][$roleAssocID] = ['name' => $roleName, 'profiles' => $profiles];
+                $groupedProfiles[$groupID][$roleID] = ['name' => $roleName, 'profiles' => $profiles];
+            }
+
+            $memberIDs = array_diff($memberIDs, $nonMemberIDs);
+
+            // Every group member has is a part of a more specific group
+            if (empty($memberIDs)) {
+                unset($groupedProfiles[$groupID][1]);
+            } else {
+                foreach (array_keys($groupedProfiles[$groupID][1]) as $profileID) {
+                    if (!in_array($profileID, $memberIDs)) {
+                        unset($groupedProfiles[$groupID][1][$profileID]);
+                    }
+                }
             }
         }
 

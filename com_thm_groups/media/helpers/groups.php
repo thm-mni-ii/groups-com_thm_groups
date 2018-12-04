@@ -105,18 +105,18 @@ class THM_GroupsHelperGroups
     }
 
     /**
-     * Get the ids of the group -> role associations for a particular group ordered by the role ordering.
+     * Get the ids of the role associations for a particular group ordered by the role ordering indexed by the roleID
      *
      * @param   int $groupID the group id
      *
-     * @return array the group -> role associations
+     * @return array the roleID => assocID
      * @throws Exception
      */
     public static function getRoleAssocIDs($groupID)
     {
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
-        $query->select('DISTINCT assoc.id')
+        $query->select('DISTINCT roles.id AS roleID, assoc.id AS assocID')
             ->from('#__thm_groups_role_associations AS assoc')
             ->innerJoin('#__thm_groups_roles AS roles ON assoc.roleID = roles.id')
             ->where("groupID = '$groupID'")
@@ -124,14 +124,23 @@ class THM_GroupsHelperGroups
         $dbo->setQuery($query);
 
         try {
-            $assocIDs = $dbo->loadColumn();
+            $associations = $dbo->loadAssocList();
         } catch (Exception $exception) {
             JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
             return [];
         }
 
-        return empty($assocIDs) ? [] : $assocIDs;
+        if (empty($associations)) {
+            return [];
+        }
+
+        $assocIDs = [];
+        foreach ($associations as $association) {
+            $assocIDs[$association['roleID']] = $association['assocID'];
+        }
+
+        return $assocIDs;
     }
 
     /**

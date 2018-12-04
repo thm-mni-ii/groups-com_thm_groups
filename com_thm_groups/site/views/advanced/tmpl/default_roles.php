@@ -21,7 +21,7 @@ foreach ($this->profiles as $roleAssociations) {
     foreach ($roleAssociations as $assocID => $role) {
 
         // The group name requires no further processing
-        if ($assocID == 'name') {
+        if ($assocID == 'name' or empty($role['profiles'])) {
             continue;
         }
 
