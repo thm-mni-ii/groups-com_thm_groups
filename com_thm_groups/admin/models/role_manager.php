@@ -24,6 +24,20 @@ class THM_GroupsModelRole_Manager extends THM_GroupsModelList
     protected $defaultDirection = 'ASC';
 
     /**
+     * Constructor
+     *
+     * @param   array $config config array
+     *
+     * @throws Exception
+     */
+    public function __construct($config = [])
+    {
+        parent::__construct($config);
+
+        $this->defaultLimit = 0;
+    }
+
+    /**
      * Returns all group of a role
      *
      * @param   int $roleID An id of the role

@@ -22,6 +22,20 @@ class THM_GroupsModelAttribute_Manager extends THM_GroupsModelList
     protected $defaultDirection = 'ASC';
 
     /**
+     * Constructor
+     *
+     * @param   array $config config array
+     *
+     * @throws Exception
+     */
+    public function __construct($config = [])
+    {
+        parent::__construct($config);
+
+        $this->defaultLimit = 0;
+    }
+
+    /**
      * Function to get table headers
      *
      * @return array including headers

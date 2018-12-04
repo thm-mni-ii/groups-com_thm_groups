@@ -32,6 +32,8 @@ class THM_GroupsModelTemplate_Manager extends THM_GroupsModelList
         $config['filter_fields'] = ['templateName'];
 
         parent::__construct($config);
+
+        $this->defaultLimit = 0;
     }
 
     /**

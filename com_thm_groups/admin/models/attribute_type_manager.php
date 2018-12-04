@@ -35,6 +35,8 @@ class THM_GroupsModelAttribute_Type_Manager extends THM_GroupsModelList
         }
 
         parent::__construct($config);
+
+        $this->defaultLimit = 0;
     }
 
     /**
