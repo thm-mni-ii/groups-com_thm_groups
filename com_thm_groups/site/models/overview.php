@@ -60,7 +60,7 @@ class THM_GroupsModelOverview extends JModelLegacy
             }
         }
 
-        $query->order("surname");
+        $query->order("surname, forename");
         $dbo->setQuery($query);
 
         try {
