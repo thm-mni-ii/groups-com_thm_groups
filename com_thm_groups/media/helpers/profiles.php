@@ -315,7 +315,7 @@ class THM_GroupsHelperProfiles
         $url   = JRoute::_("index.php?option=com_thm_groups&view=profile&profileID=$profileID&name=$alias");
         $link  = JHtml::link($url, $text, ['target' => '_blank']);
 
-        return '<div class="attribute-wrap">' . $link . '<div class="clearFix"></div></div>';
+        return '<div class="attribute-wrap attribute-header">' . $link . '<div class="clearFix"></div></div>';
     }
 
     /**

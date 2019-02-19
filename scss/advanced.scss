@@ -97,7 +97,11 @@ div.clearFix {
     font-size: 1.15rem;
   }
 
-  .attribute-title {
+  .attribute-header {
+    width: 100%;
+  }
+
+  .title-value {
     color: $font-color;
     font-size: .95rem;
     padding-top: .2rem;
@@ -130,7 +134,11 @@ div.clearFix {
   }
 
   &.half {
-    width: calc(50% - 1.2rem);
+    width: calc(50% - 1.2rem - 2px);
+
+    &:first-child {
+      border-right: $foreground-color 4px solid;
+    }
 
     .attribute-roles {
       max-width: 16rem;

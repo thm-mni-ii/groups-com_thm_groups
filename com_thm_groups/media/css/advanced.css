@@ -90,7 +90,11 @@ div.clearFix {
     font-size: 1.15rem;
 }
 
-.profile-container .attribute-title {
+.profile-container .attribute-header {
+    width: 100%;
+}
+
+.profile-container .title-value {
     color: #394a59;
     font-size: .95rem;
     padding-top: .2rem;
@@ -123,7 +127,11 @@ div.clearFix {
 }
 
 .profile-container.half {
-    width: calc(50% - 1.2rem);
+    width: calc(50% - 1.2rem - 2px);
+}
+
+.profile-container.half:first-child {
+    border-right: white 4px solid;
 }
 
 .profile-container.half .attribute-roles {

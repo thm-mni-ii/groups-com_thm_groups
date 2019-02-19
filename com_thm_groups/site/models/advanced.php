@@ -105,15 +105,22 @@ class THM_GroupsModelAdvanced extends JModelLegacy
 
                 $profileIDs = THM_GroupsHelperRoles::getProfileIDs($assocID);
 
+                // The role is not associated with any profiles in the group.
                 if (empty($profileIDs)) {
                     unset($groupedProfiles[$groupID][$roleID]);
+
+                    // Only the role name is left => the group itself is irrelevant
+                    if (count($groupedProfiles[$groupID]) === 1) {
+                        unset($groupedProfiles[$groupID]);
+                        break;
+                    }
                     continue;
                 }
 
-                if ($roleID !== 1) {
-                    $memberIDs = $profileIDs;
+                if ($roleID === 1) {
+                    $memberIDs = array_merge($memberIDs, $profileIDs);
                 } else {
-                    $nonMemberProfileIDs = array_merge($nonMemberIDs, $profileIDs);
+                    $nonMemberIDs = array_merge($nonMemberIDs, $profileIDs);
                 }
 
                 $roleName = THM_GroupsHelperRoles::getNameByAssoc($assocID, $sort);
@@ -135,15 +142,15 @@ class THM_GroupsModelAdvanced extends JModelLegacy
                 $groupedProfiles[$groupID][$roleID] = ['name' => $roleName, 'profiles' => $profiles];
             }
 
-            $memberIDs = array_diff($memberIDs, $nonMemberIDs);
+            $onlyMemberIDs = array_diff($memberIDs, $nonMemberIDs);
 
             // Every group member has is a part of a more specific group
-            if (empty($memberIDs)) {
+            if (empty($onlyMemberIDs)) {
                 unset($groupedProfiles[$groupID][1]);
             } else {
-                foreach (array_keys($groupedProfiles[$groupID][1]) as $profileID) {
-                    if (!in_array($profileID, $memberIDs)) {
-                        unset($groupedProfiles[$groupID][1][$profileID]);
+                foreach (array_keys($groupedProfiles[$groupID][1]['profiles']) as $profileID) {
+                    if (!in_array($profileID, $onlyMemberIDs)) {
+                        unset($groupedProfiles[$groupID][1]['profiles'][$profileID]);
                     }
                 }
             }
