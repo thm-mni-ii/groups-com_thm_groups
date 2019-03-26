@@ -92,7 +92,7 @@ class THM_GroupsViewOverview extends JViewLegacy
     }
 
     /**
-     * Creates a link to the parametrized profile target using the profile name
+     * Creates a link to the profile view for the given profile
      *
      * @param   int $profileID the profile id
      *
@@ -154,8 +154,7 @@ class THM_GroupsViewOverview extends JViewLegacy
 
         // If there is a group ID the view was called from a menu item
         if ($groupID) {
-            $title = (!empty($this->params->get('show_page_heading')) and !empty($this->params->get('page_title'))) ?
-                    $this->params->get('page_title') : THM_GroupsHelperGroups::getName($groupID);
+            $title = THM_GroupsHelperGroups::getName($groupID);
         } elseif (empty($input->get('search'))) {
             $title = JText::_('COM_THM_GROUPS_OVERVIEW');
         } else {

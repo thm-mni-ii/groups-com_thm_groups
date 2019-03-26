@@ -464,6 +464,37 @@ class THM_GroupsHelperProfiles
     }
 
     /**
+     * Retrieves the attributes for a given profile id in their raw format
+     *
+     * @param int  $profileID the id whose values are sought
+     * @param bool $published whether or not only published values should be returned
+     *
+     * @return array the profile attributes
+     * @throws Exception
+     */
+    public static function getRawProfile($profileID, $published = true)
+    {
+        $attributes           = [];
+        $attributeIDs         = THM_GroupsHelperAttributes::getAttributeIDs(true);
+        $authorizedViewAccess = JFactory::getUser()->getAuthorisedViewLevels();
+
+        foreach ($attributeIDs as $attributeID) {
+
+            $attribute = THM_GroupsHelperAttributes::getAttribute($attributeID, $profileID, $published);
+
+            $emptyValue   = (empty($attribute['value']) or empty(trim($attribute['value'])));
+            $unAuthorized = (empty($attribute['value']) or !in_array($attribute['viewLevelID'], $authorizedViewAccess));
+            if ($emptyValue or $unAuthorized) {
+                continue;
+            }
+
+            $attributes[$attribute['id']] = $attribute;
+        }
+
+        return $attributes;
+    }
+
+    /**
      * Gets the role association ids associated with the profile
      *
      * @param int $profileID the id of the profile
@@ -514,6 +545,22 @@ class THM_GroupsHelperProfiles
         $text .= '<span class="attribute-title">' . $title . '</span>';
 
         return '<div class="attribute-inline">' . JHtml::link($attributes['URL'], $text) . '</div>';
+    }
+
+    /**
+     * Creates the HTML for the name container
+     *
+     * @param int $profileID the id of the profile
+     *
+     * @return string the HTML string containing name information
+     * @throws Exception
+     */
+    public static function getVCardLink($profileID)
+    {
+        $icon = '<span class="icon-vcard" title="' . \JText::_('COM_THM_GROUPS_VCARD_DOWNLOAD') . '"></span>';
+        $url  = THM_GroupsHelperRouter::build(['view' => 'profile', 'profileID' => $profileID, 'format' => 'vcf']);
+
+        return JHtml::link($url, $icon);
     }
 
     /**

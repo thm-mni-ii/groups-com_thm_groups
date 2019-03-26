@@ -305,6 +305,36 @@ class THM_GroupsHelperContent
     }
 
     /**
+     * Retrieves the title for the given content id
+     *
+     * @param   int $contentID the id of the content
+     *
+     * @return  string the alias of the content
+     * @throws Exception
+     */
+    public static function getTitle($contentID)
+    {
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+
+        $query->select('cc.title')
+            ->from('#__content AS cc')
+            ->innerJoin('#__thm_groups_content AS gc ON gc.id = cc.id')
+            ->where("cc.id = '$contentID'");
+        $dbo->setQuery($query);
+
+        try {
+            $title = $dbo->loadResult();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+            return '';
+        }
+
+        return empty($title) ? '' : $title;
+    }
+
+    /**
      * Checks if the content is already associated with THM_Groups
      *
      * @param   int $contentID the id of the content
