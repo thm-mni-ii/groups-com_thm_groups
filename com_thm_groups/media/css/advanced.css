@@ -18,8 +18,9 @@ div.main .role-heading .group-title {
 
 div.main .row-container {
     clear: both;
-    background-color: #f2f5f6;
-    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 4px;
     overflow: auto;
 }
 
@@ -33,9 +34,14 @@ div.clearFix {
 }
 
 .profile-container {
+    background-color: #f2f5f6;
+    flex: 1;
     float: left;
     padding: .6rem;
-    width: calc(100% - 1.2rem);
+}
+
+.profile-container a span.icon-vcard {
+    margin-left: .5rem;
 }
 
 .profile-container .attribute-html, .profile-container .attribute-wrap, .profile-container .toggled-text-container {
@@ -81,7 +87,7 @@ div.clearFix {
 }
 
 .profile-container .attribute-name, .profile-container .attribute-title {
-    display: inline-block;
+    display: inline;
     float: left;
     font-family: "THM-Regular";
 }
@@ -91,6 +97,8 @@ div.clearFix {
 }
 
 .profile-container .attribute-header {
+    border-bottom: 1px solid #77858c;
+    height: 2.7rem;
     width: 100%;
 }
 
@@ -136,6 +144,19 @@ div.clearFix {
 
 .profile-container.half .attribute-roles {
     max-width: 16rem;
+}
+
+.module-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.module-box .profile-container {
+    background-color: inherit;
+}
+
+.module-box .profile-container .attribute-header {
+    height: auto;
 }
 
 .module-box .profile-container .suppress {

@@ -2,6 +2,19 @@
     margin-right: .5rem;
 }
 
+[class^="icon-vcard"], [class*=" icon-vcard"] {
+    margin-left: .5rem;
+    margin-right: 0;
+}
+
+#breadcrumbs {
+    margin-top: 1rem;
+}
+
+.module-box ul.menu li:last-child {
+    border-bottom: none;
+}
+
 .sidebar-nav {
     color: #394a59;
 }

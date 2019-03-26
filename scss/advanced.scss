@@ -23,8 +23,9 @@ div.main {
 
   .row-container {
     clear: both;
-    background-color: $background-color;
-    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 4px;
     overflow: auto;
   }
 
@@ -40,9 +41,14 @@ div.clearFix {
 }
 
 .profile-container {
+  background-color: $background-color;
+  flex: 1;
   float: left;
   padding: .6rem;
-  width: calc(100% - 1.2rem);
+
+  a span.icon-vcard {
+    margin-left: .5rem;
+  }
 
   .attribute-html, .attribute-wrap, .toggled-text-container {
     float: left;
@@ -88,7 +94,7 @@ div.clearFix {
   }
 
   .attribute-name, .attribute-title {
-    display: inline-block;
+    display: inline;
     float: left;
     font-family: $font-family-regular;
   }
@@ -98,6 +104,8 @@ div.clearFix {
   }
 
   .attribute-header {
+    border-bottom: $border-input;
+    height: 2.7rem;
     width: 100%;
   }
 
@@ -129,7 +137,7 @@ div.clearFix {
     }
   }
 
-  &.with-image .suppress{
+  &.with-image .suppress {
     width: 14rem;
   }
 
@@ -146,14 +154,26 @@ div.clearFix {
   }
 }
 
-.module-box .profile-container{
+.module-box {
 
-  .suppress {
-    width: 14rem;
-  }
+  display: flex;
+  flex-direction: column;
 
-  &.with-image .suppress{
-    width: 11rem;
+  .profile-container {
+
+    background-color: inherit;
+
+    .attribute-header {
+      height: auto;
+    }
+
+    .suppress {
+      width: 14rem;
+    }
+
+    &.with-image .suppress {
+      width: 11rem;
+    }
   }
 }
 
