@@ -7,7 +7,6 @@
                restriction="ra.groupID NOT IN (1,2,3,4,5,6,7,8)" onchange="repopulateProfiles();return false;"
                label="COM_THM_GROUPS_GROUP"  description="COM_THM_GROUPS_PROFILE_SELECT_GROUP_DESC">
             <option value="">JALL</option>
-            <option value="-1">JNONE</option>
         </field>
         <field name="templates" type="genericlist" valueColumn="id" textColumn="templateName" table="thm_groups_templates"
                label="COM_THM_GROUPS_TEMPLATES">

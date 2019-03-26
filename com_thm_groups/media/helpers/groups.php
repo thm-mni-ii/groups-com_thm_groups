@@ -45,16 +45,19 @@ class THM_GroupsHelperGroups
      * @return  array the profile ids for the given group, grouped by role id
      * @throws Exception
      */
-    public static function getProfileIDs($groupID)
+    public static function getProfileIDs($groupID = 0)
     {
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
         $query->select("DISTINCT p.id AS profileID")
-            ->from('#__thm_groups_role_associations as ra')
-            ->leftJoin('#__thm_groups_profile_associations as pa on ra.id = pa.role_associationID')
-            ->leftJoin('#__thm_groups_profiles as p on p.id = pa.profileID')
-            ->where("ra.groupID = '$groupID'")
+            ->from('#__thm_groups_role_associations AS ra')
+            ->innerJoin('#__thm_groups_profile_associations AS pa ON ra.id = pa.role_associationID')
+            ->innerJoin('#__thm_groups_profiles AS p ON p.id = pa.profileID')
             ->where("p.published = '1'");
+
+        if (!empty($groupID)) {
+            $query->where("ra.groupID = '$groupID'");
+        }
 
         $dbo->setQuery($query);
 

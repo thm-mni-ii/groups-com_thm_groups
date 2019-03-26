@@ -26,12 +26,7 @@ class THM_GroupsModelProfile_Ajax extends JModelLegacy
      */
     public function getContentOptions()
     {
-        $groupID = JFactory::getApplication()->input->getInt('groupID');
-
-        if (empty($groupID)) {
-            return '[]';
-        }
-
+        $groupID    = JFactory::getApplication()->input->getInt('groupID', 0);
         $profiles   = [];
         $profileIDs = THM_GroupsHelperGroups::getProfileIDs($groupID);
 
@@ -40,10 +35,20 @@ class THM_GroupsModelProfile_Ajax extends JModelLegacy
             if (empty($displayName)) {
                 continue;
             }
-            $link        = "?option=com_thm_groups&view=profile&profileID=$profileID";
 
-            $profiles[$profileID] = ['id' => $profileID, 'name' => $displayName, 'link' => $link];
+            $lnfName = THM_GroupsHelperProfiles::getLNFName($profileID);
+
+            $link = "index?option=com_thm_groups&view=profile&profileID=$profileID";
+
+            $profiles[$lnfName] = [
+                'id'           => $profileID,
+                'displayName' => $displayName,
+                'link'         => $link,
+                'sortName'    => $lnfName
+            ];
         }
+
+        ksort($profiles);
 
         return json_encode($profiles);
     }

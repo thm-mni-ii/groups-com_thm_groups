@@ -1,3 +1,7 @@
+jQuery(document).ready(function() {
+    repopulateProfiles();
+});
+
 /**
  * Clear the current list and add new profiles to it
  *
@@ -13,7 +17,7 @@ function addProfiles(profileEntries)
 
     jQuery.each(profiles, function (key, value) {
 
-        const rowID = 'profile' + key;
+        const rowID = 'profile' + value.id;
         let row;
 
         // Element already exists
@@ -25,18 +29,19 @@ function addProfiles(profileEntries)
         row = '<tr id="' + rowID + '">';
 
         row += '<td class="order nowrap center" style="width: 1rem;">';
-        row += '<span class="sortable-handler" style="cursor: move;"><span class="icon-menu"></span></span>';
+        row += '<span class="sortable-handler inactive" style="cursor: auto;"><span class="icon-menu"></span></span>';
         row += '</td>';
 
         row += '<td class="profile-data" style="text-align: left">';
-        row += '<span class="check-span icon-checkbox-checked" onclick="processProfileRow(\'' + rowID + '\')"></span>';
-        row += '<span class="profile-name">' + value.name + '</span>';
+        row += '<span class="check-span icon-checkbox-unchecked" onclick="processProfileRow(\'' + rowID + '\')"></span>';
+        row += '<span class="profile-sort-name">' + value.sortName + '</span>';
+        row += '<span class="profile-display-name" style="display: none;">' + value.displayName + '</span>';
         row += '<span class="profile-id" style="display: none;">' + value.id + '</span>';
         row += '<span class="profile-link" style="display: none;">' + value.link + '</span>';
         row += '</td>';
         row += '</tr>';
 
-        jQuery(row).appendTo('#selected-profiles');
+        jQuery(row).appendTo('#selectable-profiles');
     });
 }
 
@@ -52,9 +57,9 @@ function insertProfileLinks()
     const links = [];
 
     jQuery.each(jQuery('#selected-profiles td.profile-data'), function (key, value) {
-        const name = value.children[1].textContent,
-            link = value.children[3].textContent;
-        links.push('<a title="' + name + '"href="' + link + '">' + name + '</a>');
+        const name = value.children[2].textContent,
+            link = value.children[4].textContent;
+        links.push('<a title="' + name + '"href="' + link + '" target="_blank">' + name + '</a>');
     });
 
     jQuery('#selected-profiles').children().remove();
@@ -80,16 +85,14 @@ function insertProfileParameters()
         profileIDs.push(value.children[2].textContent);
     });
 
-    hook += profileIDs.length > 0 ? 'profileIDs=' + profileIDs.join(',') + '|' : '';
-    hook += groupID != '' ? 'groupID=' + groupID + '|' : '';
+    hook += profileIDs.length > 0 ? 'profileIDs=' + profileIDs.join(',') : '';
 
     // Without profile ids or a group id there is nothing to display
-    if (hook === '')
+    if (hook !== '')
     {
-        return;
+        hook += groupID != '' ? '|groupID=' + groupID + '' : '';
+        hook += templateID != '' ? '|templateID=' + templateID : '';
     }
-
-    hook += templateID != '' ? 'templateID=' + templateID : '';
 
     jQuery('#selected-profiles').children().remove();
     window.parent.jInsertEditorText('{thm_groups ' + hook + '}', editor);
@@ -117,6 +120,7 @@ function processProfileRow(rowID)
         checkSpan.addClass('icon-checkbox-unchecked');
 
         sortSpan.addClass('inactive');
+        sortSpan.css('cursor', 'auto');
 
         return;
     }
@@ -135,6 +139,7 @@ function processProfileRow(rowID)
     checkSpan.addClass('icon-checkbox-checked');
 
     sortSpan.removeClass('inactive');
+    sortSpan.css('cursor', 'move');
 }
 
 /**
