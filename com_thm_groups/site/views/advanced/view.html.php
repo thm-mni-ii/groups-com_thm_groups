@@ -88,6 +88,16 @@ class THM_GroupsViewAdvanced extends JViewLegacy
     public function getProfileContainer($profile, $half)
     {
         $container = '<div class="profile-containerCLASSX">PROFILEX<div class="clearFix"></div></div>';
+        $supplementalClasses = '';
+
+        if ($half) {
+            $supplementalClasses .= ' half';
+        }
+
+        if (empty($profile)) {
+            $container = str_replace('CLASSX', $supplementalClasses, $container);
+            return str_replace('PROFILEX', '', $container);
+        }
 
         $nameContainer = THM_GroupsHelperProfiles::getNameContainer($profile['id']);
 
@@ -99,11 +109,6 @@ class THM_GroupsViewAdvanced extends JViewLegacy
 
         $attributes = THM_GroupsHelperProfiles::getDisplay($profile['id'], $this->templateID, $this->suppress);
 
-        $supplementalClasses = '';
-
-        if ($half) {
-            $supplementalClasses .= ' half';
-        }
         if (strpos($attributes, 'attribute-image') !== false) {
             $supplementalClasses .= ' with-image';
         }
@@ -140,6 +145,10 @@ class THM_GroupsViewAdvanced extends JViewLegacy
             $lastItem    = $displayedProfiles == $lastProfile;
 
             if ($lastRowItem or $lastItem) {
+
+                if (!$lastRowItem) {
+                    $row .= $this->getProfileContainer([], $columns == 2);
+                }
                 // Ensure the row container wraps around the profiles
                 $row .= '<div class="clearFix"></div>';
 
