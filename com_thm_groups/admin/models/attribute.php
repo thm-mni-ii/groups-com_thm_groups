@@ -18,7 +18,7 @@ require_once HELPERS . 'fields.php';
  */
 class THM_GroupsModelAttribute extends JModelLegacy
 {
-    const IMAGE_PATH = JPATH_ROOT . '/images/com_thm_groups/profile';
+    const IMAGE_PATH = JPATH_ROOT . IMAGE_PATH;
 
     /**
      * Generates a row for this attribute's value for all existing user profiles

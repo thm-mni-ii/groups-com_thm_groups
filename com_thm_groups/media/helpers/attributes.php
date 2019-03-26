@@ -296,7 +296,7 @@ class THM_GroupsHelperAttributes
             return '';
         }
 
-        $relativePath = "images/com_thm_groups/profile/$value";
+        $relativePath = IMAGE_PATH . $value;
         $file         = JPATH_ROOT . "/$relativePath";
 
         if (file_exists($file)) {
@@ -515,7 +515,7 @@ class THM_GroupsHelperAttributes
             case IMAGE:
 
                 $fileName     = strtolower(trim($attribute['value']));
-                $relativePath = "images/com_thm_groups/profile/$fileName";
+                $relativePath = IMAGE_PATH . $fileName;
                 $file         = JPATH_ROOT . "/$relativePath";
 
                 if (file_exists($file)) {

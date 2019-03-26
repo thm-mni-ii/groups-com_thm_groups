@@ -19,7 +19,7 @@ require_once HELPERS . 'content.php';
  */
 class THM_GroupsModelProfile extends JModelLegacy
 {
-    const IMAGE_PATH = JPATH_ROOT . '/images/com_thm_groups/profile';
+    const IMAGE_PATH = JPATH_ROOT . IMAGE_PATH;
 
     /**
      * Associates a group and potentially multiple roles with the selected users

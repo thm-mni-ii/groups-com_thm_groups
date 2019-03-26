@@ -41,6 +41,7 @@ define('MEMBER', 1);
 
 // Base URLs for which are often used
 define('HELPERS', JPATH_ROOT . '/media/com_thm_groups/helpers/');
+define('IMAGE_PATH', '/images/com_thm_groups/profile/');
 
 /**
  * Class providing functions usefull to multiple component files
