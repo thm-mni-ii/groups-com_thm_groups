@@ -352,6 +352,11 @@ class THM_GroupsModelProfile extends JModelLegacy
             return false;
         }
 
+        THM_GroupsHelperProfiles::setAlias($profileID);
+        $user = \JFactory::getUser($profileID);
+        $user->name = THM_GroupsHelperProfiles::getDisplayName($profileID);
+        $user->save(true);
+
         $dbo->transactionCommit();
 
         return $profileID;
