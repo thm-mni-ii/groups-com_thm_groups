@@ -72,14 +72,14 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
         $protectedNotice = str_replace('XXXX', JText::_('COM_THM_GROUPS_DEFAULT_GROUP_NOTICE'), $protectedNotice);
 
         foreach ($items as &$item) {
-            $url = JRoute::_('index.php?option=com_users&task=group.edit&id=' . $item->id);
+            $url = JRoute::_("index.php?option=com_users&task=group.edit&id={$item->id}");
 
             $return[$index][0] = in_array($item->id, $defaultGroups) ?
                 $protectedNotice : JHtml::_('grid.id', $index, $item->id, false);
 
             $levelIndicator = str_repeat('<span class="gi">|&mdash;</span>', $item->level);
-            $groupText      = $canEditGroups ? JHtml::_('link', $url, $item->title,
-                ['target' => '_blank']) : $item->title;
+            $groupText      = $canEditGroups ?
+                JHtml::_('link', $url, $item->title, ['target' => '_blank']) : $item->title;
 
             $return[$index][1] = "$levelIndicator $groupText";
             $return[$index][2] = $this->getRoles($item->id);
@@ -105,9 +105,8 @@ class THM_GroupsModelGroup_Manager extends THM_GroupsModelList
 
         $headers['structure'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_ORDER', 'ug1.lft', $direction, 'ASC');
 
-        $headers['name']        = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_NAME', 'ug1.title', $direction,
-            $ordering);
-        $headers['roles']       = JText::_('COM_THM_GROUPS_ROLES');
+        $headers['name']    = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_NAME', 'ug1.title', $direction, $ordering);
+        $headers['roles']   = JText::_('COM_THM_GROUPS_ROLES');
         $headers['members'] = JHtml::_('searchtools.sort', 'COM_THM_GROUPS_MEMBERS', 'members',
             $direction,
             $ordering);

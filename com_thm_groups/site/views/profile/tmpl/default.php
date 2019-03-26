@@ -8,16 +8,17 @@
  * @link        www.thm.de
  */
 defined('_JEXEC') or die;
-$special = [TITLE, FORENAME, SURNAME, POSTTITLE];
+$name = THM_GroupsHelperProfiles::getDisplayName($this->profileID, true);
+$profile = THM_GroupsHelperProfiles::getDisplay($this->profileID);
 ?>
 <div class="toolbar">
-    <?php echo $this->getEditLink('class="btn btn-toolbar-thm"'); ?>
+    <?php echo $this->getEditLink(); ?>
 </div>
 <div id="profile-container" class="profile-container row-fluid">
     <div class="page-header">
-        <h2><?php echo THM_GroupsHelperProfiles::getDisplayName($this->profileID, true); ?></h2>
+        <h2><?php echo $name; ?></h2>
     </div>
-    <?php echo THM_GroupsHelperProfiles::getDisplay($this->profileID); ?>
+    <?php echo $profile; ?>
     <div class="clearFix"></div>
 </div>
 

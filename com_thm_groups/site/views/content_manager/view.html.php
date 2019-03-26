@@ -93,15 +93,12 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
     {
         if ($this->canCreate) {
             $return = base64_encode(Joomla\CMS\Uri\Uri::current());
-            $addURL = JRoute::_('index.php?option=com_content&view=form&layout=edit&catid='
-                . $this->categoryID . '&return=' . $return
-            );
 
+            $addURL  = "index.php?option=com_content&view=form&layout=edit&catid={$this->categoryID}&return={$return}";
             $attribs = ['title' => JText::_('COM_THM_GROUPS_NEW_ARTICLE'), 'class' => 'btn'];
+            $text    = '<span class="icon-new"></span> ' . JText::_('COM_THM_GROUPS_NEW_ARTICLE');
 
-            $text = '<span class="icon-new"></span> ' . JText::_('COM_THM_GROUPS_NEW_ARTICLE');
-
-            return JHTML::_('link', $addURL, $text, $attribs);
+            return JHTML::_('link', JRoute::_($addURL), $text, $attribs);
         } else {
             return '';
         }
@@ -212,7 +209,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
     /**
      * Returns a title of an article
      *
-     * @param int    $key   the key of the item being iterated
+     * @param int     $key  the key of the item being iterated
      * @param object &$item An object item
      *
      * @return  string the HTML for the title
@@ -262,23 +259,21 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
     public function getToggle($id, $value, $attribute)
     {
         if ($value) {
-            $colorClass = 'green';
-            $iconClass  = 'publish';
-            $tip        = 'COM_THM_GROUPS_PUBLISHED';
+            $iconClass = 'publish';
+            $tip       = 'COM_THM_GROUPS_PUBLISHED';
         } else {
-            $colorClass = 'red';
-            $iconClass  = 'unpublish';
-            $tip        = 'COM_THM_GROUPS_UNPUBLISHED';
+            $iconClass = 'unpublish';
+            $tip       = 'COM_THM_GROUPS_UNPUBLISHED';
         }
 
         $menuID     = JFactory::getApplication()->input->getInt('Itemid');
-        $url        = "index.php?option=com_thm_groups&task=content.toggle&id=$id&value=$value";
+        $url        = \JUri::base() . "?option=com_thm_groups&task=content.toggle&id=$id&value=$value";
         $url        .= empty($menuID) ? '' : "&Itemid=$menuID";
         $url        .= empty($attribute) ? '' : "&attribute=$attribute";
-        $icon       = '<span class="icon-' . $iconClass . ' ' . $colorClass . '"></span>';
+        $icon       = '<span class="icon-' . $iconClass . '"></span>';
         $attributes = ['title' => JText::_($tip), 'class' => 'btn', 'data-toggle' => 'tooltip'];
 
-        $link = JHtml::_('link', JRoute::_($url), $icon, $attributes);
+        $link = JHtml::_('link', $url, $icon, $attributes);
 
         return $link;
     }

@@ -21,8 +21,9 @@ class THM_GroupsHelperGroups
      * @return string the group's title on success, otherwise empty
      * @throws Exception
      */
-    public static function getName($groupID) {
-        $dbo = JFactory::getDbo();
+    public static function getName($groupID)
+    {
+        $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
         $query->select('title')->from('#__usergroups')->where("id = '$groupID'");
         $dbo->setQuery($query);
@@ -31,6 +32,7 @@ class THM_GroupsHelperGroups
             $title = $dbo->loadResult();
         } catch (Exception $exception) {
             JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
             return '';
         }
 
@@ -87,9 +89,9 @@ class THM_GroupsHelperGroups
         $query = $dbo->getQuery(true);
         $query
             ->select("p.id")
-            ->from('#__thm_groups_profiles as p')
-            ->innerJoin('#__thm_groups_profile_associations as pa on pa.profileID = p.id')
-            ->innerJoin('#__thm_groups_role_associations as ra on ra.id = pa.role_associationID');
+            ->from('#__thm_groups_profiles AS p')
+            ->innerJoin('#__thm_groups_profile_associations AS pa ON pa.profileID = p.id')
+            ->innerJoin('#__thm_groups_role_associations AS ra ON ra.id = pa.role_associationID');
 
         $query->where("ra.id = '$assocID'");
         $query->where("p.published = '1'");
@@ -185,7 +187,7 @@ class THM_GroupsHelperGroups
         $dbo   = JFactory::getDBO();
         $query = $dbo->getQuery(true);
 
-        $query->select("COUNT(distinct pa.profileID) AS total");
+        $query->select("COUNT(DISTINCT pa.profileID) AS total");
         $query->from("`#__thm_groups_role_associations` AS ra");
         $query->innerJoin("`#__thm_groups_profile_associations` AS pa ON ra.id = pa.role_associationID");
         $query->innerJoin("`#__thm_groups_profiles` AS p ON p.id = pa.profileID");

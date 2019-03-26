@@ -153,9 +153,9 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
             $canEdit = THM_GroupsHelperContent::canEdit($item->id);
 
             if ($canEdit) {
-                $url               = JRoute::_('index.php?option=com_content&task=article.edit&id=' . $item->id);
-                $return[$index][1] = JHtml::link($url, $item->title,
-                        ['target' => '_blank']) . " <span class=\"icon-edit\"></span>";
+                $url               = JRoute::_("index.php?option=com_content&task=article.edit&id={$item->id}");
+                $return[$index][1] = JHtml::link($url, $item->title, ['target' => '_blank']);
+                $return[$index][1] .= " <span class=\"icon-edit\"></span>";
             } else {
                 $return[$index][1] = $item->title;
             }
