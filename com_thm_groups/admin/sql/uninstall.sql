@@ -22,6 +22,7 @@ DROP TABLE IF EXISTS
 `#__thm_groups_number`,
 `#__thm_groups_picture`,
 `#__thm_groups_picture_extra`,
+`#__thm_groups_profile`,
 `#__thm_groups_profile_associations`,
 `#__thm_groups_profile_attribute`,
 `#__thm_groups_profile_attributes`,
