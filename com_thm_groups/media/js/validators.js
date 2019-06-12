@@ -14,7 +14,7 @@ jQuery(document).ready(function () {
         });
     document.formvalidator.setHandler('european_date',
         function (value) {
-            return (/^(0?[1-9]|[1,2]\d|3[0,1])\.(0?[1-9]|1[0-2])\.(((19|20)?\d{2}))$/).test(value);
+            return (/^(0?[1-9]|[1,2]\d|3[0,1])\.(0?[1-9]|1[0-2])\.((19|20)?\d{2})$/).test(value);
         });
     document.formvalidator.setHandler('european_telephone',
         function (value) {
@@ -22,7 +22,7 @@ jQuery(document).ready(function () {
         });
     document.formvalidator.setHandler('name',
         function (value) {
-            return (/^[A-ZÀ-ÖØ-Þ]{1}[a-zß-ÿ]+([ |-]{1}[A-ZÀ-ÖØ-Þ]{1}[a-zß-ÿ]+)*$/).test(value);
+            return (/^[A-ZÀ-ÖØ-Þ][a-zß-ÿ]+([ |-][A-ZÀ-ÖØ-Þ](\.|[a-zß-ÿ]+))*$/).test(value);
         });
     document.formvalidator.setHandler('name_supplement',
         function (value) {
