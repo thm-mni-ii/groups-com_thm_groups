@@ -22,7 +22,7 @@ jQuery(document).ready(function () {
         });
     document.formvalidator.setHandler('name',
         function (value) {
-            return (/^[A-ZÀ-ÖØ-Þ][a-zß-ÿ]+([ |-][A-ZÀ-ÖØ-Þ](\.|[a-zß-ÿ]+))*$/).test(value);
+            return (/^([a-zß-ÿ]+ )?([a-zß-ÿ]+')?[A-ZÀ-ÖØ-Þ](\.|[a-zß-ÿ]+)([ |-]([a-zß-ÿ]+ )?([a-zß-ÿ]+')?[A-ZÀ-ÖØ-Þ](\.|[a-zß-ÿ]+))*$/).test(value);
         });
     document.formvalidator.setHandler('name_supplement',
         function (value) {
