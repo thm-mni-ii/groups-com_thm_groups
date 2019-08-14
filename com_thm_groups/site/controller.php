@@ -19,13 +19,7 @@ require_once HELPERS . 'profiles.php';
  */
 class THM_GroupsController extends JControllerLegacy
 {
-    private $baseURL = 'index.php?option=com_thm_groups';
-
     private $profileID;
-
-    private $referrer;
-
-    private $surname;
 
     private $resource = '';
 
@@ -59,8 +53,6 @@ class THM_GroupsController extends JControllerLegacy
         $success = $model->save();
 
         $app = JFactory::getApplication();
-        $URL = "{$this->baseURL}&profileID={$this->profileID}&view=profile_edit&name=";
-        $URL .= THM_GroupsHelperProfiles::getAlias($this->profileID);
 
         if ($success) {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_SUCCESS'));
@@ -68,7 +60,9 @@ class THM_GroupsController extends JControllerLegacy
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'error');
         }
 
-        $app->redirect(JRoute::_($URL));
+        $params = ['profileID' => $this->profileID, 'view' => 'profile_edit'];
+        $url = THM_GroupsHelperRouter::build($params, true);
+        $app->redirect($url);
     }
 
     /**
@@ -81,10 +75,9 @@ class THM_GroupsController extends JControllerLegacy
     {
         $this->preProcess();
 
-        $URL = "{$this->baseURL}&profileID={$this->profileID}";
-        $URL .= "&view=profile&name=" . THM_GroupsHelperProfiles::getAlias($this->profileID);
-
-        JFactory::getApplication()->redirect(JRoute::_($URL));
+        $params = ['profileID' => $this->profileID, 'view' => 'profile'];
+        $url = THM_GroupsHelperRouter::build($params, true);
+        JFactory::getApplication()->redirect($url);
     }
 
     /**
@@ -144,12 +137,16 @@ class THM_GroupsController extends JControllerLegacy
         $data  = $input->get('jform', [], 'array');
 
         $this->profileID = $data['profileID'];
-        $this->referrer  = $data['referrer'];
-        $this->surname   = $data['name'];
 
         if (!THM_GroupsHelperProfiles::canEdit($this->profileID)) {
             JFactory::getApplication()->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
-            $this->redirectNoAccess();
+            $isPublished = THM_GroupsHelperProfiles::isPublished($this->profileID);
+            $profileAlias = THM_GroupsHelperProfiles::getAlias($this->profileID);
+            if ($isPublished and $profileAlias) {
+                $url = THM_GroupsHelperRouter::build(['profileID' => $this->profileID], true);
+                JFactory::getApplication()->redirect($url);
+            }
+            JFactory::getApplication()->redirect();
         }
 
         return;
@@ -184,20 +181,6 @@ class THM_GroupsController extends JControllerLegacy
     }
 
     /**
-     * Sets display parameters and redirects
-     *
-     * @return void redirects to the next page
-     */
-    public function redirectNoAccess()
-    {
-        $this->input->set('view', 'profile');
-        $this->input->set('profileID', $this->profileID);
-        $this->input->set('name', $this->surname);
-
-        parent::display();
-    }
-
-    /**
      * Saves changes to the profile and redirects to the profile on success
      *
      * @return  void
@@ -212,18 +195,18 @@ class THM_GroupsController extends JControllerLegacy
         $success = $model->save();
 
         $app = JFactory::getApplication();
-        $URL = "{$this->baseURL}&profileID={$this->profileID}&name=";
-        $URL .= THM_GroupsHelperProfiles::getAlias($this->profileID);
+        $params = ['profileID' => $this->profileID];
 
         if ($success) {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_SUCCESS'));
-            $URL .= "&view=profile";
+            $params['view'] = 'profile';
         } else {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_SAVE_FAIL'), 'error');
-            $URL .= "&view=profile_edit";
+            $params['view'] = 'profile_edit';
         }
 
-        $app->redirect(JRoute::_($URL));
+        $url = THM_GroupsHelperRouter::build($params, true);
+        $app->redirect($url);
     }
 
     /**

@@ -303,19 +303,24 @@ class THM_GroupsHelperProfiles
     /**
      * Creates the HTML for the name container
      *
-     * @param int $profileID the id of the profile
+     * @param int  $profileID the id of the profile
+     * @param bool $newTab    whether or not the profile should open in a new tab
      *
      * @return string the HTML string containing name information
      * @throws Exception
      */
-    public static function getNameContainer($profileID)
+    public static function getNameContainer($profileID, $newTab = false)
     {
-        $text  = '<span class="attribute-name">' . self::getDisplayName($profileID, true, true) . '</span>';
-        $alias = THM_GroupsHelperProfiles::getAlias($profileID);
-        $url   = JRoute::_("index.php?option=com_thm_groups&view=profile&profileID=$profileID&name=$alias");
-        $link  = JHtml::link($url, $text, ['target' => '_blank']);
+        $text    = self::getDisplayName($profileID, true, true);
+        $url     = THM_GroupsHelperRouter::build(['view' => 'profile', 'profileID' => $profileID]);
+        $attribs = [];
+        if ($newTab) {
+            $attribs['target'] = '_blank';
+        }
+        $link      = JHtml::link($url, $text, $attribs);
+        $vCardLink = self::getVCardLink($profileID);
 
-        return '<div class="attribute-wrap attribute-header">' . $link . '<div class="clearFix"></div></div>';
+        return '<div class="attribute-wrap attribute-header">' . $link . $vCardLink . '<div class="clearFix"></div></div>';
     }
 
     /**

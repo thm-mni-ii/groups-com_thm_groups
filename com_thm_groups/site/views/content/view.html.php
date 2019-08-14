@@ -193,16 +193,7 @@ class THM_GroupsViewContent extends JViewLegacy
             $this->document->setTitle($this->item->title);
         }
 
-        $pathway     = $app->getPathway();
-        if (empty($pathway->getPathway())) {
-            $pathway->addItem(JText::_('COM_THM_GROUPS_HOME'), JUri::base());
-        }
-        $profileID = $app->input->getInt('profileID');
-        $profileName = THM_GroupsHelperProfiles::getDisplayName($profileID);
-        $alias = THM_GroupsHelperProfiles::getAlias($profileID);
-        $profileURL = JRoute::_("index.php?option=com_thm_groups&view=profile&profileID=$this->profileID&name=$alias");
-        $pathway->addItem($profileName, $profileURL);
-        $pathway->addItem($this->item->title, '');
+        THM_GroupsHelperRouter::setPathway();
 
         if ($this->print) {
             $this->document->setMetaData('robots', 'noindex, nofollow');

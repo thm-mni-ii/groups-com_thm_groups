@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 require_once HELPERS . 'profiles.php';
+require_once HELPERS . 'router.php';
 
 /**
  * THMGroupsViewProfile class for component com_thm_groups
@@ -43,7 +44,7 @@ class THM_GroupsViewProfile extends JViewLegacy
 
         $this->canEdit = THM_GroupsHelperProfiles::canEdit($this->profileID);
 
-        $this->setPath();
+        THM_GroupsHelperRouter::setPathway();
         $this->modifyDocument();
         parent::display($tpl);
     }
@@ -51,35 +52,22 @@ class THM_GroupsViewProfile extends JViewLegacy
     /**
      * Gets a link to the profile edit view
      *
-     * @param mixed $attributes An associative array (or simple string) of attributes to add
-     *
      * @return  string  the Link HTML markup
      * @throws Exception
      */
-    public function getEditLink($attributes = null)
+    public function getEditLink()
     {
         $editLink = "";
 
         if ($this->canEdit) {
-            $alias    = THM_GroupsHelperProfiles::getAlias($this->profileID);
-            $path     = "index.php?option=com_thm_groups&view=profile_edit&profileID=$this->profileID&name=$alias";
-            $text     = '<span class="icon-edit"></span> ' . JText::_('COM_THM_GROUPS_EDIT');
-            $editLink .= JHtml::_('link', JRoute::_($path), $text, $attributes);
+            $query      = ['view' => 'profile_edit', 'profileID' => $this->profileID];
+            $url        = THM_GroupsHelperRouter::build($query, true);
+            $text       = '<span class="icon-edit"></span> ' . JText::_('COM_THM_GROUPS_EDIT');
+            $attributes = 'class="btn btn-toolbar-thm"';
+            $editLink   .= JHtml::_('link', $url, $text, $attributes);
         }
 
         return $editLink;
-    }
-
-    /**
-     * Adds the profile name to the breadcrumb
-     *
-     * @return void modifies the pathway object
-     * @throws Exception
-     */
-    private function setPath()
-    {
-        $pathway = JFactory::getApplication()->getPathway();
-        $pathway->addItem(THM_GroupsHelperProfiles::getDisplayName($this->profileID), false);
     }
 
     /**

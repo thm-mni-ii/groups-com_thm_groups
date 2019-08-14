@@ -82,13 +82,13 @@ class THM_GroupsViewProfile extends JViewLegacy
                 case TEXT:
                     if (in_array($ucLabel, $officeIdentifiers) and empty($office)) {
                         $office = $attribute['value'];
-                        echo "<pre>yes</pre>";
-                        continue;
+                        continue 2;
                     }
+                    break;
                 case URL:
                     if (in_array($ucLabel, $hpIdentifiers) and empty($homepage)) {
                         $homepage = $attribute['value'];
-                        continue;
+                        continue 2;
                     }
                     break;
             }

@@ -39,7 +39,6 @@
         <folder>models</folder>
         <folder>views</folder>
         <filename>controller.php</filename>
-        <filename>router.php</filename>
         <filename>thm_groups.php</filename>
     </files>
     <languages>

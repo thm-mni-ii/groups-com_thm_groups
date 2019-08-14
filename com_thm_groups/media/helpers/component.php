@@ -380,18 +380,4 @@ class THM_GroupsHelperComponent
     {
         return trim(preg_replace('/ +/u', ' ', $text));
     }
-
-    /**
-     * Redirects to the homepage and displays a message about missing access rights
-     *
-     * @return  void
-     * @throws Exception
-     */
-    public static function noAccess()
-    {
-        $app  = JFactory::getApplication();
-        $msg  = JText::_('JLIB_RULES_NOT_ALLOWED');
-        $link = JRoute:: _('index.php');
-        $app->Redirect($link, $msg);
-    }
 }

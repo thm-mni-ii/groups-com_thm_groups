@@ -13,6 +13,7 @@
 
 defined('_JEXEC') or die;
 require_once HELPERS . 'profiles.php';
+require_once HELPERS . 'router.php';
 
 /**
  * Class provides an overview of group profiles.
@@ -24,8 +25,6 @@ class THM_GroupsViewOverview extends JViewLegacy
     public $maxColumnSize;
 
     public $title = '';
-
-    public $profileLink = "index.php?option=com_thm_groups&view=profile";
 
     public $profiles = [];
 
@@ -66,7 +65,6 @@ class THM_GroupsViewOverview extends JViewLegacy
 
         $this->modifyDocument();
         $this->setTitle();
-        $this->setPathway();
 
         parent::display($tpl);
     }
@@ -101,13 +99,11 @@ class THM_GroupsViewOverview extends JViewLegacy
      */
     public function getProfileLink($profileID)
     {
-        $alias = THM_GroupsHelperProfiles::getAlias($profileID);
-        $url = $this->profileLink . "&profileID=$profileID&name=$alias";
-
+        $url           = THM_GroupsHelperRouter::build(['view' => 'profile', 'profileID' => $profileID], true);
         $showTitles    = $this->params->get('showTitles', 1);
         $displayedText = THM_GroupsHelperProfiles::getLNFName($profileID, $showTitles, true);
 
-        return JHtml::link(JRoute::_($url), $displayedText, ['target' => '_blank']);
+        return JHtml::link($url, $displayedText);
     }
 
     /**
@@ -120,25 +116,6 @@ class THM_GroupsViewOverview extends JViewLegacy
         $document = JFactory::getDocument();
         $document->addStyleSheet('media/com_thm_groups/css/overview.css');
         JHtml::_('bootstrap.framework');
-    }
-
-    /**
-     * Alters the breadcrumbs to reflect user profile selection
-     *
-     * @return  void
-     * @throws Exception
-     */
-    private function setPathway()
-    {
-        $app       = JFactory::getApplication();
-        $profileID = $app->input->getInt('profileID', 0);
-
-        if (empty($profileID)) {
-            return;
-        }
-
-        $pathway = $app->getPathway();
-        $pathway->addItem(THM_GroupsHelperProfiles::getDisplayName($profileID), '');
     }
 
     /**
