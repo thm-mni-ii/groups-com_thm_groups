@@ -82,7 +82,7 @@ function insertProfileParameters()
     let hook = '';
 
     jQuery.each(jQuery('#selected-profiles td.profile-data'), function (key, value) {
-        profileIDs.push(value.children[2].textContent);
+        profileIDs.push(value.children[3].textContent);
     });
 
     hook += profileIDs.length > 0 ? 'profileIDs=' + profileIDs.join(',') : '';
