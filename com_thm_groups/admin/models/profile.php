@@ -69,7 +69,7 @@ class THM_GroupsModelProfile extends JModelLegacy
     /**
      * Create content category for user(s)
      *
-     * @param   array $profileIDs array with ids
+     * @param array $profileIDs array with ids
      *
      * @return  void
      * @throws Exception
@@ -103,19 +103,21 @@ class THM_GroupsModelProfile extends JModelLegacy
         $profileID = $app->input->getInt('profileID', 0);
         $groupID   = $app->input->getInt('groupID', 0);
 
-        $profileAssocs    = THM_GroupsHelperProfiles::getRoleAssociations($profileID);
-        $groupAssocs      = THM_GroupsHelperGroups::getRoleAssocIDs($groupID);
-        $disposableAssocs = array_intersect($profileAssocs, $groupAssocs);
+        if (count(JFactory::getUser($profileID)->groups) < 2) {
+            $app->enqueueMessage(JText::_('COM_THM_GROUPS_CANNOT_DELETE_SOLE_GROUP'), 'error');
 
-        $groupsQuery = $this->_db->getQuery(true);
-        $groupsQuery->delete('#__thm_groups_profile_associations')
-            ->where("role_associationID IN ('" . implode("','", $disposableAssocs) . "')");
-        $this->_db->setQuery($groupsQuery);
+            return false;
+        }
+
+        // Allow deletion of Joomla user group association if the user is associated with more than one user group.
+        $joomlaQuery = $this->_db->getQuery(true);
+        $joomlaQuery->delete('#__user_usergroup_map')->where("user_id = $profileID AND group_id = $groupID");
+        $this->_db->setQuery($joomlaQuery);
 
         try {
-            $success = $this->_db->execute();
+            $success = (bool)$this->_db->execute();
         } catch (Exception $exception) {
-            $app->enqueueMessage($exception->getMessage(), 'error');
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
             return false;
         }
@@ -124,23 +126,26 @@ class THM_GroupsModelProfile extends JModelLegacy
             return false;
         }
 
-        // Allow deletion of Joomla user group association if the user is associated with more than one user group.
-        if (count(JFactory::getUser($profileID)->groups) > 1) {
-            $joomlaQuery = $this->_db->getQuery(true);
-            $joomlaQuery->delete('#__user_usergroup_map')->where("user_id = $profileID AND group_id = $groupID");
-            $this->_db->setQuery($joomlaQuery);
+        $profileAssocs = THM_GroupsHelperProfiles::getRoleAssociations($profileID);
+        $groupAssocs = THM_GroupsHelperGroups::getRoleAssocIDs($groupID);
+        $disposableAssocs = array_intersect($profileAssocs, $groupAssocs);
 
-            try {
-                $this->_db->execute();
-            } catch (Exception $exception) {
-                JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+        $groupsQuery = $this->_db->getQuery(true);
+        $groupsQuery->delete('#__thm_groups_profile_associations')
+            ->where("role_associationID IN ('" . implode("','", $disposableAssocs) . "')")
+            ->where("profileID = $profileID");
+        $this->_db->setQuery($groupsQuery);
 
-                return false;
-            }
+        try {
+            $success = (bool)$this->_db->execute();
+        } catch (Exception $exception) {
+            $app->enqueueMessage($exception->getMessage(), 'error');
 
-            if (empty($success)) {
-                return false;
-            }
+            return false;
+        }
+
+        if (empty($success)) {
+            return false;
         }
 
         return true;
@@ -257,7 +262,7 @@ class THM_GroupsModelProfile extends JModelLegacy
     /**
      * Returns a list of group assoc ids matching the request data
      *
-     * @param   array $requestedAssocs An array with groups and roles
+     * @param array $requestedAssocs An array with groups and roles
      *
      * @return  array with ids
      * @throws Exception
@@ -353,7 +358,7 @@ class THM_GroupsModelProfile extends JModelLegacy
         }
 
         THM_GroupsHelperProfiles::setAlias($profileID);
-        $user = \JFactory::getUser($profileID);
+        $user       = \JFactory::getUser($profileID);
         $user->name = THM_GroupsHelperProfiles::getDisplayName($profileID);
         $user->save(true);
 
@@ -430,7 +435,7 @@ class THM_GroupsModelProfile extends JModelLegacy
     /**
      * Updates all profile attribute values and publication statuses.
      *
-     * @param   array $formData the submitted form data
+     * @param array $formData the submitted form data
      *
      * @return  bool true on success, otherwise false
      * @throws Exception
@@ -480,8 +485,8 @@ class THM_GroupsModelProfile extends JModelLegacy
     /**
      * Associates the profile with the given groups/roles
      *
-     * @param   array $profileIDs      the profile IDs which assignments are being edited
-     * @param   array $requestedAssocs an array of groups and roles
+     * @param array $profileIDs      the profile IDs which assignments are being edited
+     * @param array $requestedAssocs an array of groups and roles
      *
      * @return  boolean  True on success, false on failure
      * @throws Exception
@@ -533,8 +538,8 @@ class THM_GroupsModelProfile extends JModelLegacy
     /**
      * Maps users to Joomla user groups.
      *
-     * @param   array $profileIDs an array with profile ids (joomla user ids)
-     * @param   array $batchData  an array with groups and roles
+     * @param array $profileIDs an array with profile ids (joomla user ids)
+     * @param array $batchData  an array with groups and roles
      *
      * @return bool true on success, otherwise false
      * @throws Exception
