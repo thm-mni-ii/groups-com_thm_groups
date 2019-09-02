@@ -26,7 +26,7 @@ class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
     /**
      * Method to get display
      *
-     * @param   Object $tpl template
+     * @param Object $tpl template
      *
      * @return void
      * @throws Exception
@@ -38,7 +38,10 @@ class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
             JErrorPage::render($exc);
         }
 
-        $this->batch = ['batch' => JPATH_COMPONENT_ADMINISTRATOR . '/views/profile_manager/tmpl/default_batch.php'];
+        $this->batch = [
+            'profiles' => JPATH_COMPONENT_ADMINISTRATOR . '/views/profile_manager/tmpl/default_profiles.php',
+            'roles'    => JPATH_COMPONENT_ADMINISTRATOR . '/views/profile_manager/tmpl/default_roles.php'
+        ];
 
         $this->groups = THM_GroupsHelperBatch::getGroupOptions();
 
@@ -54,6 +57,15 @@ class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
     {
         JToolBarHelper::title(JText::_('COM_THM_GROUPS_PROFILE_MANAGER_TITLE'), 'profile_manager');
 
+        $bar = JToolBar::getInstance('toolbar');
+
+        $script           = 'onclick="jQuery(\'#modal-profiles\').modal(\'show\'); return true;"';
+        $newProfileButton = '<button id="profiles" data-toggle="modal" class="btn btn-small" ' . $script . '>';
+        $title            = JText::_('COM_THM_GROUPS_ADD_PROFILES');
+        $newProfileButton .= '<span class="icon-new" title="' . $title . '"></span>' . " $title";
+        $newProfileButton .= '</button>';
+        $bar->appendButton('Custom', $newProfileButton, 'profiles');
+
         JToolBarHelper::editList('profile.edit');
         JToolBarHelper::publishList('profile.publish', 'COM_THM_GROUPS_PUBLISH_PROFILE');
         JToolBarHelper::unpublishList('profile.unpublish', 'COM_THM_GROUPS_UNPUBLISH_PROFILE');
@@ -64,8 +76,7 @@ class THM_GroupsViewProfile_Manager extends THM_GroupsViewList
         $title  = JText::_('COM_THM_GROUPS_ADD_ROLES');
         $batch  = $layout->render(['title' => $title]);
 
-        $bar = JToolBar::getInstance('toolbar');
-        $bar->appendButton('Custom', $batch, 'batch');
+        $bar->appendButton('Custom', $batch, 'roles');
 
         if (THM_GroupsHelperComponent::isAdmin()) {
             JToolBarHelper::preferences('com_thm_groups');

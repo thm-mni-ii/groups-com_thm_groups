@@ -8,11 +8,49 @@
  * @link        www.thm.de
  */
 
+require_once 'roles.php';
+
 /**
  * Class providing helper functions for batch select options
  */
 class THM_GroupsHelperGroups
 {
+    /**
+     * Associates a role with a given group, ignoring existing associations with the given role
+     *
+     * @param int   $roleID  the id of the role to be associated
+     * @param array $groupID the group with which the role ist to be associated
+     *
+     * @return bool true on success, otherwise false
+     * @throws Exception
+     */
+    public static function associateRole($roleID, $groupID)
+    {
+        // Standard groups are excluded.
+        if ($groupID < 9) {
+            return 0;
+        }
+
+        if ($existingID = THM_GroupsHelperRoles::getAssocID($roleID, $groupID, 'group')) {
+            return $existingID;
+        }
+
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query->insert('#__thm_groups_role_associations')->columns(['groupID', 'roleID'])->values("$groupID, $roleID");
+        $dbo->setQuery($query);
+
+        try {
+            $dbo->execute();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+            return 0;
+        }
+
+        return THM_GroupsHelperRoles::getAssocID($roleID, $groupID, 'group');
+    }
+
     /**
      * Gets the name of the usergroup requested
      *
@@ -42,7 +80,7 @@ class THM_GroupsHelperGroups
     /**
      * Retrieves profileIDs for the given group.
      *
-     * @param   int $groupID the id of the group
+     * @param int $groupID the id of the group
      *
      * @return  array the profile ids for the given group, grouped by role id
      * @throws Exception
@@ -77,7 +115,7 @@ class THM_GroupsHelperGroups
     /**
      * Retrieves profileIDs for the given group -> role association.
      *
-     * @param   int $assocID the id of the group -> role association
+     * @param int $assocID the id of the group -> role association
      *
      * @return  array the profile ids for the given association
      * @throws Exception
@@ -112,7 +150,7 @@ class THM_GroupsHelperGroups
     /**
      * Get the ids of the role associations for a particular group ordered by the role ordering indexed by the roleID
      *
-     * @param   int $groupID the group id
+     * @param int $groupID the group id
      *
      * @return array the roleID => assocID
      * @throws Exception
@@ -151,7 +189,7 @@ class THM_GroupsHelperGroups
     /**
      * Get the roles associated with a group
      *
-     * @param   int $groupID the group id
+     * @param int $groupID the group id
      *
      * @return array the associated roles
      * @throws Exception
@@ -177,7 +215,7 @@ class THM_GroupsHelperGroups
     /**
      * Gets the number of profiles associated with a given group
      *
-     * @param   int $groupID GroupID
+     * @param int $groupID GroupID
      *
      * @return  int  the number of profiles associated with the group
      * @throws Exception

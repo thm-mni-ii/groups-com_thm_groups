@@ -11,60 +11,13 @@
 
 defined('_JEXEC') or die;
 
+require_once HELPERS . 'groups.php';
+
 /**
  * Class provides functions for modifying
  */
 class THM_GroupsModelGroup extends JModelLegacy
 {
-    /**
-     * Associates a role with a given group, ignoring existing associations with the given role
-     *
-     * @param   int   $roleID  the id of the role to be associated
-     * @param   array $groupID the group with which the role ist to be associated
-     *
-     * @return bool true on success, otherwise false
-     * @throws Exception
-     */
-    private function associateRole($roleID, $groupID)
-    {
-        $existingQuery = $this->_db->getQuery(true);
-
-        // First, we need to check if the profile is already assigned to a group
-        $existingQuery->select('roleID')
-            ->from('#__thm_groups_role_associations')
-            ->where("groupID = '$groupID'")
-            ->where("roleID = '$roleID'");
-        $this->_db->setQuery($existingQuery);
-
-        try {
-            $exists = $this->_db->loadResult();
-        } catch (Exception $exception) {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-
-            return false;
-        }
-
-        if ($exists) {
-            return true;
-        }
-
-        $insertQuery = $this->_db->getQuery(true);
-
-        $insertQuery->insert('#__thm_groups_role_associations')->columns(['groupID', 'roleID']);
-        $insertQuery->values("$groupID, $roleID");
-        $this->_db->setQuery($insertQuery);
-
-        try {
-            $this->_db->execute();
-        } catch (Exception $exception) {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-
-            return false;
-        }
-
-        return true;
-    }
-
     /**
      * Method to perform batch operations on an item or a set of items.
      *
@@ -73,7 +26,7 @@ class THM_GroupsModelGroup extends JModelLegacy
      */
     public function batch()
     {
-        $app  = JFactory::getApplication();
+        $app = JFactory::getApplication();
 
         if (!THM_GroupsHelperComponent::isManager()) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
@@ -88,19 +41,13 @@ class THM_GroupsModelGroup extends JModelLegacy
             return false;
         }
 
-        // Role IDs selected in the batch modal
-        $batchSelected = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('batch', [], 'array'));
-
-        if (empty($batchSelected)) {
+        if (!$roleIDs = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('batch', [], 'array'))) {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_ROLE_SELECTED'), 'error');
 
             return false;
         }
 
-        $groupIDs = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('cid', [], 'array'));
-
-        // Should not be able to occur because of the checks before the batch is opened
-        if (empty($groupIDs)) {
+        if (!$groupIDs = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('cid', [], 'array'))) {
             $app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_GROUP_SELECTED'), 'error');
 
             return false;
@@ -108,17 +55,17 @@ class THM_GroupsModelGroup extends JModelLegacy
 
         $success = false;
 
-        foreach ($batchSelected as $selectedID) {
+        foreach ($roleIDs as $roleID) {
             foreach ($groupIDs as $groupID) {
                 switch ($action) {
                     case 'addRole':
 
-                        $success = $this->associateRole($selectedID, $groupID);
+                        $success = THM_GroupsHelperGroups::associateRole($roleID, $groupID);
                         break;
 
                     case 'deleteRoleAssociation':
 
-                        $success = $this->deleteRoleAssociation($selectedID, $groupID);
+                        $success = $this->deleteRoleAssociation($roleID, $groupID);
                         break;
                 }
 
@@ -136,15 +83,15 @@ class THM_GroupsModelGroup extends JModelLegacy
     /**
      * Removes the association of a role to a group. Triggered by the trash icon next to the name of the role in the list.
      *
-     * @param  int $roleID  the id of the role to be removed
-     * @param  int $groupID the id of the group to be removed
+     * @param int $roleID  the id of the role to be removed
+     * @param int $groupID the id of the group to be removed
      *
      * @return bool true if the association was successfully removed, otherwise false
      * @throws Exception
      */
     public function deleteRoleAssociation($roleID = 0, $groupID = 0)
     {
-        $app  = JFactory::getApplication();
+        $app = JFactory::getApplication();
 
         if (!THM_GroupsHelperComponent::isManager()) {
             $app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');

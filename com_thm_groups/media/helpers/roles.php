@@ -14,55 +14,32 @@
 class THM_GroupsHelperRoles
 {
     /**
-     * Associates a profile with a given group/role association
-     *
-     * @param int $profileID
-     * @param int $assocID
-     *
-     * @return bool
-     *
-     * @throws Exception
-     */
-    public static function associateProfile($profileID, $assocID)
-    {
-        $dbo   = JFactory::getDbo();
-        $query = $dbo->getQuery(true);
-
-        $query->insert('#__thm_groups_profile_associations')
-            ->columns(['profileID', 'role_associationID'])
-            ->values("$profileID, $assocID");
-        $dbo->setQuery($query);
-
-        try {
-            $success = $dbo->execute();
-        } catch (Exception $exception) {
-            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-
-            return false;
-        }
-
-        return empty($success) ? false : true;
-    }
-
-    /**
      * Retrieves the id of a specific group/role association.
      *
-     * @param   int $roleID  the id of the role
-     * @param   int $groupID the id of the Joomla / THM Groups user group
+     * @param int    $roleID     the id of the role
+     * @param int    $resourceID the id of the resource with which the role is associated
+     * @param string $resource   the context of
      *
      * @return int the id of the association on success, otherwise 0
      * @throws Exception
      */
-    public static function getAssocID($roleID, $groupID)
+    public static function getAssocID($roleID, $resourceID, $resource)
     {
         $dbo   = JFactory::getDbo();
         $query = $dbo->getQuery(true);
 
-        $query
-            ->select('id')
-            ->from('#__thm_groups_role_associations')
-            ->where("groupID = '$groupID'")
-            ->where("roleID = '$roleID'");
+        $query->select('id');
+        if ($resource === 'group') {
+            $query->from('#__thm_groups_role_associations')
+                ->where("groupID = '$resourceID'")
+                ->where("roleID = '$roleID'");
+        } elseif ($resource === 'profile') {
+            $query->from('#__thm_groups_profile_associations')
+                ->where("profileID = '$resourceID'")
+                ->where("role_associationID = '$roleID'");
+        } else {
+            return 0;
+        }
 
         $dbo->setQuery($query);
 
@@ -80,8 +57,8 @@ class THM_GroupsHelperRoles
     /**
      * Retrieves the name of the role by means of its association with a group.
      *
-     * @param   int  $assocID the id of the group -> role association
-     * @param   bool $block   whether redundant roles ('Mitglied') should be blocked
+     * @param int  $assocID the id of the group -> role association
+     * @param bool $block   whether redundant roles ('Mitglied') should be blocked
      *
      * @return  string the name of the role referenced in the association
      * @throws Exception
@@ -152,7 +129,7 @@ class THM_GroupsHelperRoles
     /**
      * Retrieves profileIDs for the given group/role association.
      *
-     * @param   int $assocID the id of the group/role association
+     * @param int $assocID the id of the group/role association
      *
      * @return  array the profile ids for the given association
      * @throws Exception

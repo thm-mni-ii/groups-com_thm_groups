@@ -51,7 +51,7 @@ class THM_GroupsHelperComponent
     /**
      * Configure the Linkbar.
      *
-     * @param   object &$view the view context calling the function
+     * @param object &$view the view context calling the function
      *
      * @return void
      */
@@ -95,8 +95,8 @@ class THM_GroupsHelperComponent
     /**
      * Checks access for edit views
      *
-     * @param   object &$model the model checking permissions
-     * @param   int    $itemID the id if the resource to be edited (empty for new entries)
+     * @param object &$model  the model checking permissions
+     * @param int     $itemID the id if the resource to be edited (empty for new entries)
      *
      * @return  bool  true if the user can access the edit view, otherwise false
      */
@@ -245,8 +245,10 @@ class THM_GroupsHelperComponent
      *
      * @return bool true if the user has admin access, otherwise false
      */
-    public static function isAdmin() {
+    public static function isAdmin()
+    {
         $user = JFactory::getUser();
+
         return ($user->authorise('core.admin') OR $user->authorise('core.admin', 'com_thm_groups'));
     }
 
@@ -255,7 +257,8 @@ class THM_GroupsHelperComponent
      *
      * @return bool true if the user has admin access, otherwise false
      */
-    public static function isManager() {
+    public static function isManager()
+    {
         return (self::isAdmin() or JFactory::getUser()->authorise('core.manage', 'com_thm_groups'));
     }
 
@@ -278,23 +281,6 @@ class THM_GroupsHelperComponent
 
         // There could still be further empty tags which encased the original empties.
         return self::removeEmptyTags($cleaned);
-    }
-
-    /**
-     * Creates a text which reverses transliteration to special characters
-     *
-     * @param string $text the text to resolve
-     *
-     * @return string the string where transliterations are replaced by special characters
-     */
-    public static function resolveTransliteration($text)
-    {
-        $text = str_replace('ae', 'ä', $text);
-        $text = str_replace('oe', 'ö', $text);
-        $text = str_replace('ss', 'ß', $text);
-        $text = str_replace('ue', 'ü', $text);
-
-        return $text;
     }
 
     /**

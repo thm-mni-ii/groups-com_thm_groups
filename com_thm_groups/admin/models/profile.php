@@ -9,10 +9,10 @@
  */
 
 defined('_JEXEC') or die;
+require_once HELPERS . 'content.php';
 require_once HELPERS . 'groups.php';
 require_once HELPERS . 'profiles.php';
 require_once HELPERS . 'roles.php';
-require_once HELPERS . 'content.php';
 
 /**
  * Class loads form data to edit an entry.
@@ -37,33 +37,62 @@ class THM_GroupsModelProfile extends JModelLegacy
             return false;
         }
 
-        $selectedUsers = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('cid', [], 'array'));
-
-        if (empty($selectedUsers)) {
-            $app->enqueueMessage(JText::_('COM_THM_GROUPS_NO_PROFILE_SELECTED'), 'error');
-
-            return false;
-        }
-
+        $newProfileData  = $app->getUserStateFromRequest('.profiles', 'profiles', [], 'array');
         $requestedAssocs = json_decode(urldecode($app->input->getString('batch-data')), true);
+        $selectedIDs     = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('cid', [], 'array'));
 
-        if (empty($requestedAssocs)) {
-            $app->enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
+        if (!empty($selectedIDs) and !empty($requestedAssocs)) {
+            return $this->batchRoles($selectedIDs, $requestedAssocs);
+        } elseif (!empty($newProfileData['groupIDs']) and !empty($newProfileData['profileIDs'])) {
+            return $this->batchProfiles($newProfileData['groupIDs'], $newProfileData['profileIDs']);
+        }
 
+        $app->enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'), 'error');
+
+        return false;
+    }
+
+    /**
+     * Associates the profiles with the given groups default group/role association.
+     *
+     * @param array $groupIDs   the ids of the selected groups
+     * @param array $profileIDs the ids of the selected profiles
+     *
+     * @return bool
+     * @throws Exception
+     */
+    private function batchProfiles($groupIDs, $profileIDs)
+    {
+        foreach ($groupIDs as $groupID) {
+            $memberAssocID = THM_GroupsHelperRoles::getAssocID(MEMBER, $groupID, 'group');
+
+            foreach ($profileIDs as $profileID) {
+                if (!THM_GroupsHelperProfiles::associateRole($profileID, $memberAssocID)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Associates the selected profiles with the selected group/role assocations.
+     *
+     * @param array $profileIDs      the selected profileIDs
+     * @param array $requestedAssocs the ids of the group/role association with which the profiles should be associated
+     *
+     * @return bool
+     * @throws Exception
+     */
+    private function batchRoles($profileIDs, $requestedAssocs)
+    {
+
+        if (!$this->setJoomlaAssociations($profileIDs, $requestedAssocs)) {
             return false;
         }
 
-        $usersMapped = $this->setJoomlaAssociations($selectedUsers, $requestedAssocs);
-
-        if (!$usersMapped) {
-            return false;
-        }
-
-        $success = $this->setGroupsAssociations($selectedUsers, $requestedAssocs);
-
-        $this->cleanCache();
-
-        return $success;
+        return $this->setGroupsAssociations($profileIDs, $requestedAssocs);
     }
 
     /**
@@ -84,7 +113,7 @@ class THM_GroupsModelProfile extends JModelLegacy
     }
 
     /**
-     * Deletes user from a group both in Joomla and in THM Groups
+     * Deletes user from a group both in Joomla and in THM Groups.
      *
      * @return bool
      *
@@ -126,8 +155,8 @@ class THM_GroupsModelProfile extends JModelLegacy
             return false;
         }
 
-        $profileAssocs = THM_GroupsHelperProfiles::getRoleAssociations($profileID);
-        $groupAssocs = THM_GroupsHelperGroups::getRoleAssocIDs($groupID);
+        $profileAssocs    = THM_GroupsHelperProfiles::getRoleAssociations($profileID);
+        $groupAssocs      = THM_GroupsHelperGroups::getRoleAssocIDs($groupID);
         $disposableAssocs = array_intersect($profileAssocs, $groupAssocs);
 
         $groupsQuery = $this->_db->getQuery(true);
@@ -146,6 +175,10 @@ class THM_GroupsModelProfile extends JModelLegacy
 
         if (empty($success)) {
             return false;
+        }
+
+        if (!THM_GroupsHelperProfiles::getRoleAssociations($profileID)) {
+            return THM_GroupsHelperProfiles::unpublish($profileID);
         }
 
         return true;
@@ -238,7 +271,7 @@ class THM_GroupsModelProfile extends JModelLegacy
         $profileID = $app->input->getInt('profileID', 0);
         $roleID    = $app->input->getInt('roleID', 0);
 
-        $idToDelete = THM_GroupsHelperRoles::getAssocID($roleID, $groupID);
+        $idToDelete = THM_GroupsHelperRoles::getAssocID($roleID, $groupID, 'group');
 
         $query = $this->_db->getQuery(true);
 
@@ -512,9 +545,9 @@ class THM_GroupsModelProfile extends JModelLegacy
 
             $profileAssociations = THM_GroupsHelperProfiles::getRoleAssociations($profileID);
 
-            foreach ($roleAssociations as $rAssoc) {
-                if (!in_array($rAssoc, $profileAssociations)) {
-                    $success         = THM_GroupsHelperRoles::associateProfile($profileID, $rAssoc);
+            foreach ($roleAssociations as $assocID) {
+                if (!in_array($assocID, $profileAssociations)) {
+                    $success         = THM_GroupsHelperProfiles::associateRole($profileID, $assocID);
                     $completeSuccess = ($completeSuccess and $success);
                     $partialSuccess  = ($partialSuccess or $success);
                 }
@@ -594,49 +627,42 @@ class THM_GroupsModelProfile extends JModelLegacy
             return false;
         }
 
-        $input         = $app->input;
-        $selectedUsers = THM_GroupsHelperComponent::cleanIntCollection($input->get('cid', [], 'array'));
-        $toggleID      = $input->getInt('id', 0);
-        $value         = $input->getBool('value', false);
+        $input = $app->input;
 
-        if (empty($selectedUsers) and empty($toggleID)) {
-            // No selection, should not occur.
+        $column     = $input->getCmd('attribute', '');
+        $profileIDs = THM_GroupsHelperComponent::cleanIntCollection($input->get('cid', [], 'array'));
+        $toggleID   = $input->getInt('id', 0);
+        $value      = $input->getBool('value', false);
+
+        $noSelection = (empty($profileIDs) and empty($toggleID));
+
+        // Invalid request
+        if ($noSelection or empty($column)) {
             return false;
-        } // Toggle button was used.
-        elseif (empty($selectedUsers)) {
-            $selectedUsers = [$toggleID];
-
-            // Toggled values reflect the current value not the desired value
-            $value = !$value;
-        }
-
-        // The binary attribute to toggle and the value to set it to
-        $column = $input->getString('attribute', '');
-
-        // We don't know what to toggle
-        if (empty($column)) {
-            return false;
+        } // Toggle button was used. Toggled values reflect the current value not the desired value.
+        elseif (empty($profileIDs)) {
+            $profileIDs = $toggleID;
+            $value      = !$value;
+        } // Toggle was used as a shortcut by a list button.
+        else {
+            $profileIDs = implode("','", $profileIDs);
         }
 
         if ($column == 'contentEnabled') {
-            $this->createCategory($selectedUsers);
+            $this->createCategory($profileIDs);
         }
 
         $query = $this->_db->getQuery(true);
-
-        $selectedString = implode("','", $selectedUsers);
-        $query->update('#__thm_groups_profiles')->set("$column = '$value'")->where("id IN ( '$selectedString' )");
+        $query->update('#__thm_groups_profiles')->set("$column = '$value'")->where("id IN ($profileIDs)");
         $this->_db->setQuery($query);
 
         try {
-            $success = $this->_db->execute();
+            return (bool)$this->_db->execute();
         } catch (Exception $exception) {
             JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
             return false;
         }
-
-        return empty($success) ? false : true;
     }
 
     /**
@@ -647,10 +673,14 @@ class THM_GroupsModelProfile extends JModelLegacy
      */
     public function unpublish()
     {
-        $input = JFactory::getApplication()->input;
-        $input->set('attribute', 'published');
-        $input->set('value', '0');
+        $input     = JFactory::getApplication()->input;
+        $profileID = 0;
+        if ($selectedUsers = THM_GroupsHelperComponent::cleanIntCollection($input->get('cid', [], 'array'))) {
+            $profileID = $selectedUsers[0];
+        } elseif ($toggleID = $input->getInt('id', 0)) {
+            $profileID = $toggleID;
+        }
 
-        return $this->toggle();
+        return $profileID ? THM_GroupsHelperProfiles::unpublish() : true;
     }
 }

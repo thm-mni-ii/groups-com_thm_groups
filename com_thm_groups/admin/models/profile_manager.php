@@ -26,7 +26,7 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
     /**
      * Constructor
      *
-     * @param   array $config config array
+     * @param array $config config array
      *
      * @throws Exception
      */
@@ -45,7 +45,7 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
     /**
      * Return groups with roles of a user by ID
      *
-     * @param   int profileID the user ID
+     * @param int profileID the user ID
      *
      * @return  array the association IDs
      * @throws Exception
@@ -81,8 +81,8 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
     /**
      * Generates HTML with links for disassociation of groups/roles with the user being iterated
      *
-     * @param   int  $profileID the id of the user being iterated
-     * @param   bool $canEdit   whether or not the user is authorized to edit associations
+     * @param int  $profileID the id of the user being iterated
+     * @param bool $canEdit   whether or not the user is authorized to edit associations
      *
      * @return  string the HTML output
      * @throws Exception
@@ -106,11 +106,6 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
         $rawGroupLink          .= '</a><strong>GROUPNAME</strong> : ';
 
         foreach ($associations as $association) {
-
-            // Don't show Public and Registered groups
-            if (($association['groupName'] == "Public" or $association['groupName'] == "Registered")) {
-                continue;
-            }
 
             $roles      = explode(', ', $association['roleName']);
             $groupRoles = [];
@@ -147,7 +142,7 @@ class THM_GroupsModelProfile_Manager extends THM_GroupsModelList
             if ($canEdit) {
 
                 // If the user is only in one group, do not allow the removal of the association in this component.
-                if (count($associations) === 1) {
+                if (count(JFactory::getUser($profileID)->groups) === 1) {
                     $groupLink = "<strong>$groupName</strong> : ";
                 } else {
                     $groupLink = str_replace('GROUPID', $association['groupID'], $rawGroupLink);

@@ -100,8 +100,8 @@ class Com_THM_GroupsInstallerScript
      */
     private function createProfiles()
     {
-        $dbo     = JFactory::getDbo();
-        $query   = $dbo->getQuery(true);
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
 
         // Get all users to import
         $query->select("id, name, email")
@@ -197,7 +197,7 @@ class Com_THM_GroupsInstallerScript
     /**
      * Get a variable from the manifest file (actually, from the manifest cache).
      *
-     * @param   string $name param what you need, for example version
+     * @param string $name param what you need, for example version
      *
      * @return mixed the parameter value at the named index
      */
@@ -211,45 +211,34 @@ class Com_THM_GroupsInstallerScript
     }
 
     /**
-     * Import all Groups that exist in Joomla to THM_Groups and
-     * set the member role as default.
+     * Import all Groups that exist in Joomla to THM_Groups and set the member role as default.
      *
+     * @return bool true on success (groups were actually associated), otherwise false
      * @throws Exception
      */
     private function importGroups()
     {
-        $dbo    = JFactory::getDbo();
-        $query  = $dbo->getQuery(true);
-        $groups = [];
-
-        $query->select("id")
-            ->from("#__usergroups")
-            ->where('id NOT IN (1,2,3,4,5,6,7,8)');
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query->select("id")->from("#__usergroups")->where('id > 8');
         $dbo->setQuery($query);
 
         try {
-            $groups = $dbo->loadAssocList();
+            $groupIDs = $dbo->loadColumn();
         } catch (RuntimeException $exception) {
             JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
         }
 
-        if (empty($groups)) {
-            return;
+        if (empty($groupIDs)) {
+            return false;
         }
 
+        require_once JPATH_ROOT . '/media/com_thm_groups/helpers/groups.php';
+
         // Set member role to all groups
-        foreach ($groups as $group) {
-            $query->clear();
-            $query->insert("#__thm_groups_role_associations")
-                ->columns("groupID, roleID")
-                ->values($group["id"] . ", 1");
-
-            $dbo->setQuery($query);
-
-            try {
-                $dbo->execute();
-            } catch (RuntimeException $exception) {
-                JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_GROUPS_ERROR'), 'error');
+        foreach ($groupIDs as $groupID) {
+            if (!THM_GroupsHelperGroups::associateRole(1, $groupID)) {
+                return false;
             }
         }
     }

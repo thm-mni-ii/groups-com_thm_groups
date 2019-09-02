@@ -9,9 +9,10 @@
  */
 
 require_once 'attributes.php';
-// Added here for calls from plugins
 require_once 'component.php';
 require_once 'groups.php';
+require_once JPATH_ROOT . '/administrator/components/com_thm_groups/tables/profiles.php';
+require_once JPATH_ROOT . '/administrator/components/com_thm_groups/tables/profile_attributes.php';
 
 
 /**
@@ -46,9 +47,64 @@ class THM_GroupsHelperProfiles
     }
 
     /**
+     * Associates a profile with a given group/role association
+     *
+     * @param int $profileID the id of the profile to associate
+     * @param int $assocID   the id of the group/role association with which to associate it
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public static function associateRole($profileID, $assocID)
+    {
+        if ($existingID = THM_GroupsHelperRoles::getAssocID($assocID, $profileID, 'profile')) {
+            return $existingID;
+        }
+
+        $profiles = JTable::getInstance('profiles', 'thm_groupsTable');
+
+        // Profile is new
+        if (!$profiles->load($profileID)) {
+
+            $user = JFactory::getUser($profileID);
+            if (!$userID = $user->id) {
+                return false;
+            }
+
+            list($forename, $surname) = self::resolveUserName($user->name);
+            $email = $user->email;
+
+            if (!self::createProfile($profileID, $forename, $surname, $email)) {
+                return false;
+            }
+
+
+        }
+
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query->insert('#__thm_groups_profile_associations')
+            ->columns(['profileID', 'role_associationID'])
+            ->values("$profileID, $assocID");
+        $dbo->setQuery($query);
+
+        try {
+            $dbo->execute();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+            return false;
+        }
+        $dbo->transactionCommit();
+
+        return THM_GroupsHelperRoles::getAssocID($assocID, $profileID, 'profile');
+    }
+
+    /**
      * Method to check if the current user can edit the profile
      *
-     * @param   int $profileID the id of the profile user
+     * @param int $profileID the id of the profile user
      *
      * @return  boolean  true if the current user is authorized to edit the profile, otherwise false
      * @throws Exception
@@ -105,22 +161,22 @@ class THM_GroupsHelperProfiles
         $dbo->setQuery($query);
 
         try {
-            $missingAssociations = $dbo->loadAssocList();
+            $missingAssocs = $dbo->loadAssocList();
         } catch (Exception $exception) {
             JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
             return;
         }
 
-        if (!empty($missingAssociations)) {
-            foreach ($missingAssociations as $missingAssociation) {
-                self::associateJoomlaGroup($missingAssociation['profileID'], $missingAssociation['groupID']);
+        if (!empty($missingAssocs)) {
+            foreach ($missingAssocs as $missingAssoc) {
+                self::associateJoomlaGroup($missingAssoc['profileID'], $missingAssoc['groupID']);
             }
         }
 
         // Associations that are in Joomla, but not in groups
         $query = $dbo->getQuery(true);
-        $query->select('DISTINCT uum.user_id AS profileID, ra.id AS role_associationID')
+        $query->select('DISTINCT uum.user_id AS profileID, ra.id AS assocID')
             ->from('#__user_usergroup_map AS uum')
             ->innerJoin('#__thm_groups_profiles AS profile ON profile.id = uum.user_id')
             ->innerJoin('#__thm_groups_role_associations AS ra ON ra.groupID = uum.group_id AND ra.roleID = 1')
@@ -130,17 +186,16 @@ class THM_GroupsHelperProfiles
         $dbo->setQuery($query);
 
         try {
-            $missingAssociations = $dbo->loadAssocList();
+            $missingAssocs = $dbo->loadAssocList();
         } catch (Exception $exception) {
             JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
             return;
         }
 
-        if (!empty($missingAssociations)) {
-            foreach ($missingAssociations as $missingAssociation) {
-                THM_GroupsHelperRoles::associateProfile($missingAssociation['profileID'],
-                    $missingAssociation['role_associationID']);
+        if ($missingAssocs) {
+            foreach ($missingAssocs as $missingAssoc) {
+                self::associateRole($missingAssoc['profileID'], $missingAssoc['assocID']);
             }
         }
     }
@@ -148,7 +203,7 @@ class THM_GroupsHelperProfiles
     /**
      * Checks whether the given user profile is present and published
      *
-     * @param   int $profileID the profile id
+     * @param int $profileID the profile id
      *
      * @return  bool  true if the profile exists and is published
      * @throws Exception
@@ -169,6 +224,106 @@ class THM_GroupsHelperProfiles
         }
 
         return (bool)$contentEnabled;
+    }
+
+    /**
+     * Creates a rudimentary profile based on Joomla user derived attributes.
+     *
+     * @param int    $profileID the id of the joomla user to use as the profile id
+     * @param string $forename  the forenames calculated based on the Joomla user name
+     * @param string $surname   the surnames calculated based on the Joomla user name
+     * @param string $email     the e-mail address with which the user registered
+     *
+     * @return bool true if the profile was successfully created, otherwise false
+     * @throws Exception
+     */
+    public static function createProfile($profileID, $forename, $surname, $email)
+    {
+        $dbo = JFactory::getDbo();
+        $dbo->transactionStart();
+        $query = $dbo->getQuery(true);
+        $query->insert("#__thm_groups_profiles")
+            ->columns("id, published, canEdit, contentEnabled")
+            ->values("$profileID, 1, 1, 0");
+        $dbo->setQuery($query);
+
+        try {
+            $dbo->execute();
+        } catch (RuntimeException $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+            $dbo->transactionRollback();
+
+            return false;
+        }
+
+        if (!self::fillAttributes($profileID, $forename, $surname, $email)) {
+            $dbo->transactionRollback();
+
+            return false;
+        }
+        $dbo->transactionCommit();
+
+        return true;
+    }
+
+    /**
+     * Sets the standard attribute values which can be derived from Joomla user information.
+     *
+     * @param int    $profileID the profile id
+     * @param string $forename  the forename
+     * @param string $surname   the surname
+     * @param string $email     the email
+     *
+     * @return bool true on success, otherwise false
+     * @throws Exception
+     */
+    public static function fillAttributes($profileID, $forename, $surname, $email)
+    {
+        $dbo   = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query->select('DISTINCT id')->from('#__thm_groups_attributes');
+        $dbo->setQuery($query);
+
+        try {
+            $attributeIDs = $dbo->loadColumn();
+        } catch (Exception $exception) {
+            JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+            return false;
+        }
+
+        $joomlaAttributes = [EMAIL => $email, FORENAME => $forename, SURNAME => $surname];
+        $success          = true;
+        foreach ($attributeIDs as $attributeID) {
+            $data = ['attributeID' => $attributeID, 'profileID' => $profileID];
+            $pa   = JTable::getInstance('profile_attributes', 'thm_groupsTable');
+
+            if (!empty($joomlaAttributes[$attributeID])) {
+                $value     = $joomlaAttributes[$attributeID];
+                $published = 1;
+            } else {
+                $value     = '';
+                $published = 0;
+            }
+
+            // Profile attribute exists
+            if ($pa->load($data)) {
+                if ($value) {
+                    $pa->value     = $value;
+                    $pa->published = $published;
+                    $success       = ($success and $pa->store());
+                } else {
+                    // No change to existing non-Joomla values.
+                    continue;
+                }
+            } else {
+                $data['value']     = $value;
+                $data['published'] = $published;
+                $success           = ($success and $pa->save($data));
+            }
+        }
+
+        return $success;
     }
 
     /**
@@ -214,9 +369,9 @@ class THM_GroupsHelperProfiles
     /**
      * Creates the name to be displayed
      *
-     * @param   int  $profileID the user id
-     * @param   bool $withTitle whether the titles should be displayed
-     * @param   bool $withSpan  whether the attributes should be contained in individual spans for style assignments
+     * @param int  $profileID the user id
+     * @param bool $withTitle whether the titles should be displayed
+     * @param bool $withSpan  whether the attributes should be contained in individual spans for style assignments
      *
      * @return  string  the profile name
      * @throws Exception
@@ -283,9 +438,9 @@ class THM_GroupsHelperProfiles
     /**
      * Creates the name to be displayed
      *
-     * @param   int  $profileID the user id
-     * @param   bool $withTitle whether the titles should be displayed
-     * @param   bool $withSpan  whether the attributes should be contained in individual spans for style assignments
+     * @param int  $profileID the user id
+     * @param bool $withTitle whether the titles should be displayed
+     * @param bool $withSpan  whether the attributes should be contained in individual spans for style assignments
      *
      * @return  string  the profile name
      * @throws Exception
@@ -326,9 +481,9 @@ class THM_GroupsHelperProfiles
     /**
      * Retrieves data to be used in functions returning profile names and titles
      *
-     * @param   int  $profileID the user id
-     * @param   bool $withTitle whether the titles should be displayed
-     * @param   bool $withSpan  whether the attributes should be contained in individual spans for style assignments
+     * @param int  $profileID the user id
+     * @param bool $withTitle whether the titles should be displayed
+     * @param bool $withSpan  whether the attributes should be contained in individual spans for style assignments
      *
      * @return  array the name and title data
      * @throws Exception
@@ -571,7 +726,7 @@ class THM_GroupsHelperProfiles
     /**
      * Determines whether a category entry exists for a user or group.
      *
-     * @param   int $profileID the user id to check against groups categories
+     * @param int $profileID the user id to check against groups categories
      *
      * @return  boolean  true, if a category exists, otherwise false
      * @throws Exception
@@ -600,7 +755,7 @@ class THM_GroupsHelperProfiles
     /**
      * Checks whether the given user profile is present and published
      *
-     * @param   int $profileID the profile id
+     * @param int $profileID the profile id
      *
      * @return  bool  true if the profile exists and is published
      * @throws Exception
@@ -621,6 +776,52 @@ class THM_GroupsHelperProfiles
         }
 
         return (bool)$published;
+    }
+
+    /**
+     * Resolves the user name attribute to forename and surnames
+     *
+     * @param string $name the name attribute of the Joomla user
+     *
+     * @return array the forename and surname of the user as they were resolved
+     */
+    public static function resolveUserName($name)
+    {
+        // Special case for adding deceased as part of the entered name
+        $name = htmlentities($name);
+        $name = str_replace('&dagger;', '', $name);
+        $name = html_entity_decode($name);
+
+        $name = preg_replace('/[^A-ZÀ-ÖØ-Þa-zß-ÿ\p{N}_.\-\']/', ' ', $name);
+        $name = preg_replace('/ +/', ' ', $name);
+        $name = trim($name);
+
+        $nameFragments = explode(" ", $name);
+        $nameFragments = array_filter($nameFragments);
+
+        $surname        = array_pop($nameFragments);
+        $nameSupplement = '';
+
+        // The next element is a supplementary preposition.
+        while (preg_match('/^[a-zß-ÿ]+$/', end($nameFragments))) {
+            $nameSupplement = array_pop($nameFragments);
+            $surname        = $nameSupplement . ' ' . $surname;
+        }
+
+        // These supplements indicate the existence of a further noun.
+        if (in_array($nameSupplement, ['zu', 'zum'])) {
+            $otherSurname = array_pop($nameFragments);
+            $surname      = $otherSurname . ' ' . $surname;
+
+            while (preg_match('/^[a-zß-ÿ]+$/', end($nameFragments))) {
+                $nameSupplement = array_pop($nameFragments);
+                $surname        = $nameSupplement . ' ' . $surname;
+            }
+        }
+
+        $forename = implode(" ", $nameFragments);
+
+        return [$forename, $surname];
     }
 
     /**
@@ -704,5 +905,24 @@ class THM_GroupsHelperProfiles
         }
 
         return empty($success) ? false : true;
+    }
+
+    /**
+     * Unpublishes the profile.
+     *
+     * @param int $profileID the id of the profile to unpublish
+     *
+     * @return bool true if the profile was unpublished or non-existent
+     */
+    public static function unpublish($profileID)
+    {
+        $profile = JTable::getInstance('profiles', 'thm_groupsTable');
+        if ($profile->load($profileID)) {
+            $profile->published = 0;
+
+            return $profile->store();
+        }
+
+        return true;
     }
 }
