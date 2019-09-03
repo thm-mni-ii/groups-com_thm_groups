@@ -11,6 +11,7 @@
 require_once 'attributes.php';
 require_once 'component.php';
 require_once 'groups.php';
+require_once 'router.php';
 require_once JPATH_ROOT . '/administrator/components/com_thm_groups/tables/profiles.php';
 require_once JPATH_ROOT . '/administrator/components/com_thm_groups/tables/profile_attributes.php';
 
