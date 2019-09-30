@@ -41,20 +41,14 @@ endif;
 if ($canEdit || $params->get('show_print_icon') || $params->get('show_email_icon')) {
     echo '<ul class="actions">';
 
-    if (!$this->print) {
-        if ($params->get('show_print_icon')) {
-            echo '<li class="print-icon">' . JHtml::_('icon.print_popup', $this->item, $params) . '</li>';
-        }
+    // TODO Add other article functions.
+    if (!$this->print and $canEdit) {
+        $edit    = JText::_('COM_THM_GROUPS_EDIT');
+        $editURL = "index.php?option=com_content&view=form&layout=edit&a_id={$this->item->id}&return=";
+        $editURL .= base64_encode(Joomla\CMS\Uri\Uri::current());
+        $text    = '<span class="icon-edit"></span> ' . $edit;
 
-        if ($params->get('show_email_icon')) {
-            echo '<li class="email-icon">' . JHtml::_('icon.email', $this->item, $params) . '</li>';
-        }
-
-        if ($canEdit) {
-            echo '<li class="edit-icon">' . JHtml::_('icon.edit', $this->item, $params) . '</li>';
-        }
-    } else {
-        echo '<li>' . JHtml::_('icon.print_screen', $this->item, $params) . '</li>';
+        echo '<li class="edit-icon">' . JHTML::_('link', JRoute::_($editURL), $text, ['title' => $edit]) . '</li>';
     }
 
     echo '</ul>';
