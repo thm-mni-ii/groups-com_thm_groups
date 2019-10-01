@@ -274,7 +274,6 @@ class Com_THM_GroupsInstallerScript
      */
     public function preflight($type, $parent)
     {
-
         echo '<hr>';
 
         // Installing component manifest file version
@@ -282,42 +281,6 @@ class Com_THM_GroupsInstallerScript
 
         if ($type == 'update') {
             $rel = $this->getParam('version') . ' &rArr; ' . $manifestVersion;
-
-            $adminFiles = JFolder::files(JPATH_ADMINISTRATOR . '/components/com_thm_groups');
-
-            foreach ($adminFiles as $adminFile) {
-                JFile::delete(JPATH_ADMINISTRATOR . '/components/com_thm_groups/' . $adminFile);
-            }
-
-            $adminFolders = JFolder::folders(JPATH_ADMINISTRATOR . '/components/com_thm_groups');
-
-            foreach ($adminFolders as $adminFolder) {
-                JFolder::delete(JPATH_ADMINISTRATOR . '/components/com_thm_groups/' . $adminFolder);
-            }
-
-            $siteFiles = JFolder::files(JPATH_SITE . '/components/com_thm_groups');
-
-            foreach ($siteFiles as $siteFile) {
-                JFile::delete(JPATH_SITE . '/components/com_thm_groups/' . $siteFile);
-            }
-
-            $siteFolders = JFolder::folders(JPATH_SITE . '/components/com_thm_groups');
-
-            foreach ($siteFolders as $siteFolder) {
-                JFolder::delete(JPATH_SITE . '/components/com_thm_groups/' . $siteFolder);
-            }
-
-            $mediaFiles = JFolder::files(JPATH_SITE . '/media/com_thm_groups');
-
-            foreach ($mediaFiles as $mediaFile) {
-                JFile::delete(JPATH_SITE . '/media/com_thm_groups/' . $mediaFile);
-            }
-
-            $mediaFolders = JFolder::folders(JPATH_SITE . '/media/com_thm_groups');
-
-            foreach ($mediaFolders as $mediaFolder) {
-                JFolder::delete(JPATH_SITE . '/media/com_thm_groups/' . $mediaFolder);
-            }
         } elseif ($type == 'install') {
             $rel = $manifestVersion;
         }
