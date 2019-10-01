@@ -44,7 +44,7 @@ if ($canEdit || $params->get('show_print_icon') || $params->get('show_email_icon
     // TODO Add other article functions.
     if (!$this->print and $canEdit) {
         $edit    = JText::_('COM_THM_GROUPS_EDIT');
-        $editURL = "index.php?option=com_content&view=form&layout=edit&a_id={$this->item->id}&return=";
+        $editURL = "index.php?option=com_content&task=article.edit&a_id={$this->item->id}&return=";
         $editURL .= base64_encode(Joomla\CMS\Uri\Uri::current());
         $text    = '<span class="icon-edit"></span> ' . $edit;
 

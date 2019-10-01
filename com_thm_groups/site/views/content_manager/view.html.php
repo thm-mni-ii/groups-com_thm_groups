@@ -30,7 +30,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 
     private $categoryID;
 
-    private $contentURL = 'index.php?option=com_content&view=form&layout=edit';
+    private $contentURL = 'index.php?option=com_content&task=article.edit';
 
     public $items;
 

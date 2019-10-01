@@ -99,7 +99,7 @@ class THM_GroupsViewOverview extends JViewLegacy
      */
     public function getProfileLink($profileID)
     {
-        $url           = THM_GroupsHelperRouter::build(['view' => 'profile', 'profileID' => $profileID], true);
+        $url           = THM_GroupsHelperRouter::build(['view' => 'profile', 'profileID' => $profileID]);
         $showTitles    = $this->params->get('showTitles', 1);
         $displayedText = THM_GroupsHelperProfiles::getLNFName($profileID, $showTitles, true);
 

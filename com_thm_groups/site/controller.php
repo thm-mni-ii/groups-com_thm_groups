@@ -61,7 +61,7 @@ class THM_GroupsController extends JControllerLegacy
         }
 
         $params = ['profileID' => $this->profileID, 'view' => 'profile_edit'];
-        $url = THM_GroupsHelperRouter::build($params, true);
+        $url = THM_GroupsHelperRouter::build($params);
         $app->redirect($url);
     }
 
@@ -76,7 +76,7 @@ class THM_GroupsController extends JControllerLegacy
         $this->preProcess();
 
         $params = ['profileID' => $this->profileID, 'view' => 'profile'];
-        $url = THM_GroupsHelperRouter::build($params, true);
+        $url = THM_GroupsHelperRouter::build($params);
         JFactory::getApplication()->redirect($url);
     }
 
@@ -143,7 +143,7 @@ class THM_GroupsController extends JControllerLegacy
             $isPublished = THM_GroupsHelperProfiles::isPublished($this->profileID);
             $profileAlias = THM_GroupsHelperProfiles::getAlias($this->profileID);
             if ($isPublished and $profileAlias) {
-                $url = THM_GroupsHelperRouter::build(['profileID' => $this->profileID], true);
+                $url = THM_GroupsHelperRouter::build(['profileID' => $this->profileID]);
                 JFactory::getApplication()->redirect($url);
             }
             JFactory::getApplication()->redirect();
@@ -205,7 +205,7 @@ class THM_GroupsController extends JControllerLegacy
             $params['view'] = 'profile_edit';
         }
 
-        $url = THM_GroupsHelperRouter::build($params, true);
+        $url = THM_GroupsHelperRouter::build($params);
         $app->redirect($url);
     }
 

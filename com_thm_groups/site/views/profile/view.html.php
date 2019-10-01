@@ -61,7 +61,7 @@ class THM_GroupsViewProfile extends JViewLegacy
 
         if ($this->canEdit) {
             $query      = ['view' => 'profile_edit', 'profileID' => $this->profileID];
-            $url        = THM_GroupsHelperRouter::build($query, true);
+            $url        = THM_GroupsHelperRouter::build($query);
             $text       = '<span class="icon-edit"></span> ' . JText::_('COM_THM_GROUPS_EDIT');
             $attributes = 'class="btn btn-toolbar-thm"';
             $editLink   .= JHtml::_('link', $url, $text, $attributes);

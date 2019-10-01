@@ -24,8 +24,8 @@ class THM_GroupsHelperContent
     /**
      * Associates content with a given profile
      *
-     * @param   int $contentID the id of the content
-     * @param   int $profileID the id of the profile to be associated with the content
+     * @param int $contentID the id of the content
+     * @param int $profileID the id of the profile to be associated with the content
      *
      * @return  bool  true if the content was associated, otherwise false
      * @throws Exception
@@ -86,7 +86,7 @@ class THM_GroupsHelperContent
     /**
      * Method which checks user edit state permissions for content.
      *
-     * @param   int $contentID the id of the content
+     * @param int $contentID the id of the content
      *
      * @return  boolean  True if allowed to change the state of the record.
      *          Defaults to the permission for the component.
@@ -131,8 +131,8 @@ class THM_GroupsHelperContent
     {
         $dbo         = JFactory::getDbo();
         $selectQuery = $dbo->getQuery(true);
-        $selectQuery->select('DISTINCT content.id as contentID, category.profileID as profileID')
-            ->from('#__content as content')
+        $selectQuery->select('DISTINCT content.id AS contentID, category.profileID AS profileID')
+            ->from('#__content AS content')
             ->innerJoin('#__thm_groups_categories as category ON content.catid = category.id')
             ->where('content.created_by != category.profileID');
         $dbo->setQuery($selectQuery);
@@ -158,7 +158,7 @@ class THM_GroupsHelperContent
     /**
      * Disassociates content
      *
-     * @param   int $contentID the id of the content
+     * @param int $contentID the id of the content
      *
      * @return  bool  true if the content was disassociated, otherwise false
      * @throws Exception
@@ -184,7 +184,7 @@ class THM_GroupsHelperContent
     /**
      * Retrieves the alias for the given content id
      *
-     * @param   int $contentID the id of the content
+     * @param int $contentID the id of the content
      *
      * @return  string the alias of the content
      * @throws Exception
@@ -246,7 +246,7 @@ class THM_GroupsHelperContent
     /**
      * Retrieves the profile id associated with the given content id
      *
-     * @param   int $contentID the id of the content
+     * @param int $contentID the id of the content
      *
      * @return  int the id of the associated profile
      * @throws Exception
@@ -275,8 +275,8 @@ class THM_GroupsHelperContent
     /**
      * Returns dropdown for changing content status
      *
-     * @param   int    $index the current row index
-     * @param   object $item  the content item being iterated
+     * @param int    $index the current row index
+     * @param object $item  the content item being iterated
      *
      * @return  string the HTML for the status selection dialog
      * @throws Exception
@@ -307,7 +307,7 @@ class THM_GroupsHelperContent
     /**
      * Retrieves the title for the given content id
      *
-     * @param   int $contentID the id of the content
+     * @param int $contentID the id of the content
      *
      * @return  string the alias of the content
      * @throws Exception
@@ -337,8 +337,8 @@ class THM_GroupsHelperContent
     /**
      * Checks if the content is already associated with THM_Groups
      *
-     * @param   int $contentID the id of the content
-     * @param   int $profileID the id of the profile associated with the content
+     * @param int $contentID the id of the content
+     * @param int $profileID the id of the profile associated with the content
      *
      * @return  int  the profileID of the associated profile if associated, otherwise 0
      * @throws Exception
@@ -432,8 +432,8 @@ class THM_GroupsHelperContent
     /**
      * Saves drag & drop ordering changes.
      *
-     * @param   array $contentIDs an array of primary content ids
-     * @param   array $order      the order for the content items
+     * @param array $contentIDs an array of primary content ids
+     * @param array $order      the order for the content items
      *
      * @return  bool true on success, otherwise false
      *
@@ -514,8 +514,8 @@ class THM_GroupsHelperContent
     /**
      * Checks the THM Groups featured value for the chosen content
      *
-     * @param   int $contentID the content id
-     * @param   int $value     the THM Groups featured flag for the given article
+     * @param int $contentID the content id
+     * @param int $value     the THM Groups featured flag for the given article
      *
      * @return  bool true if the value was successfully changed, otherwise false
      * @throws Exception

@@ -29,7 +29,7 @@ class THM_GroupsHelperRouter
      */
     public static function build($params, $complete = true)
     {
-        $return = [];
+        $return = $complete ? '' : [];
         if (empty($params['view']) or empty($params['profileID'])) {
             return $return;
         }
@@ -504,7 +504,7 @@ class THM_GroupsHelperRouter
         $contentID   = $app->input->getInt('id');
         $pathway     = $app->getPathway();
         $profileName = THM_GroupsHelperProfiles::getDisplayName($profileID);
-        $profileURL  = THM_GroupsHelperRouter::build(['view' => 'profile', 'profileID' => $profileID], true);
+        $profileURL  = THM_GroupsHelperRouter::build(['view' => 'profile', 'profileID' => $profileID]);
         $session     = JFactory::getSession();
 
         $pathway->setPathway([]);
@@ -550,7 +550,7 @@ class THM_GroupsHelperRouter
 
             $contentTitle  = THM_GroupsHelperContent::getTitle($contentID);
             $contentParams = ['view' => 'content', 'profileID' => $profileID, 'id' => $contentID];
-            $contentURL    = THM_GroupsHelperRouter::build($contentParams, true);
+            $contentURL    = THM_GroupsHelperRouter::build($contentParams);
             $pathway->addItem($contentTitle, $contentURL);
         }
     }
@@ -573,13 +573,13 @@ class THM_GroupsHelperRouter
 
         // Explicitly not a dynamic THM Groups view that would be called by query
         $dynamicViews = ['content', 'content_manager', 'profile', 'profile_edit'];
-        if (!empty($query['view'] and !in_array($query['view'], $dynamicViews))) {
+        if (!empty($query['view']) and !in_array($query['view'], $dynamicViews)) {
             return false;
         }
 
         // This is missing the required profileID parameter, which may be aliased in the url
         $pIDDependentViews = ['content_manager', 'profile', 'profile_edit'];
-        $pIDDependent      = in_array($query['view'], $pIDDependentViews);
+        $pIDDependent      = (!empty($query['view']) and in_array($query['view'], $pIDDependentViews));
         if ($pIDDependent and empty($query['profileID'])) {
             return 0;
         }
@@ -595,7 +595,7 @@ class THM_GroupsHelperRouter
         }
 
         // This is missing the required id parameter, which may be aliased in the url
-        $isContent = $query['view'] == 'content';
+        $isContent = (!empty($query['view']) and $query['view'] == 'content');
         if ($isContent and empty($query['id'])) {
             return 0;
         }
