@@ -68,7 +68,7 @@ function bindImageCropper(attributeID, uID, mode)
 
         jQuery.ajax({
             type: "POST",
-            url: "index.php?option=com_thm_groups&controller=profile&task=profile.saveCropped&tmpl=component&profileID="
+            url: rootURI +"?option=com_thm_groups&task=profile.saveCropped&tmpl=component&profileID="
                 + uID + "&attributeID=" + attributeID + "&filename="
                 + filename + "",
             data: fd,
