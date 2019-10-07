@@ -127,14 +127,16 @@ class THM_GroupsHelperContent
      *
      * @throws Exception
      */
-    public static function correctAuthors()
+    public static function correctContent()
     {
         $dbo         = JFactory::getDbo();
         $selectQuery = $dbo->getQuery(true);
-        $selectQuery->select('DISTINCT content.id AS contentID, category.profileID AS profileID')
+        $selectQuery->select('DISTINCT content.id AS contentID, content.created_by AS authorID')
             ->from('#__content AS content')
-            ->innerJoin('#__thm_groups_categories as category ON content.catid = category.id')
-            ->where('content.created_by != category.profileID');
+            ->select('groupsContent.profileID AS groupsContentAuthorID')
+            ->leftJoin('#__thm_groups_content AS groupsContent ON groupsContent.id = content.id')
+            ->select(' categories.profileID AS profileID')
+            ->innerJoin('#__thm_groups_categories AS categories ON categories.id = content.catid');
         $dbo->setQuery($selectQuery);
 
         try {
@@ -150,8 +152,14 @@ class THM_GroupsHelperContent
         }
 
         foreach ($associations as $association) {
-            THM_GroupsHelperContent::setAuthor($association['contentID'], $association['profileID']);
-            THM_GroupsHelperContent::associate($association['contentID'], $association['profileID']);
+            if ($association['authorID'] !== $association['profileID']) {
+                THM_GroupsHelperContent::setAuthor($association['contentID'], $association['profileID']);
+            }
+
+            if (empty($association['groupsContentAuthorID'])
+                OR $association['groupsContentAuthorID'] !== $association['authorID']) {
+                THM_GroupsHelperContent::associate($association['contentID'], $association['profileID']);
+            }
         }
     }
 

@@ -34,7 +34,7 @@ jQuery(document).ready(function () {
         });
     document.formvalidator.setHandler('url',
         function (value) {
-            return (/^((https?|ftp):\/\/)?([\w\d\-_]+\.)*([\w\d\-_]+\.[\w\d\-_]+)(\/[\w\d\-_]*)*(\?[\w\d\-_]+(=[\w\d\-_]+)?([&\;][\w\d\-_]+(=[\w\d\-_]+)?)*)?(#[\w\d\-_]+)?$/).test(value);
+            return (/^((https?|ftp):\/\/)?([\w\d\-_~]+\.)*([\w\d\-_~]+\.[\w\d\-_~]+)(\/[\w\d\-_~]*)*(\?[\w\d\-_~]+(=[\w\d\-_]+)?([&\;][\w\d\-_]+(=[\w\d\-_]+)?)*)?(#[\w\d\-_]+)?$/).test(value);
         });
 });
 

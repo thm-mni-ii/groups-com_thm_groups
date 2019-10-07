@@ -34,7 +34,7 @@ class THM_GroupsModelContent_Manager extends THM_GroupsModelList
     {
         parent::__construct($config);
 
-        THM_GroupsHelperContent::correctAuthors();
+        THM_GroupsHelperContent::correctContent();
     }
 
     /**

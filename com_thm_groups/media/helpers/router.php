@@ -22,50 +22,46 @@ class THM_GroupsHelperRouter
      * Method to build the displayed URL
      *
      * @param array $params   the parameters used to build internal links
-     * @param bool  $complete true if the url should be functional, false if an array of segments
+     * @param bool  $asString true if the url should be functional, false if an array of segments
      *
      * @return mixed string if the URL should be complete, otherwise an array of terms to use in the URL
      * @throws Exception
      */
-    public static function build($params, $complete = true)
+    public static function build($params, $asString = true)
     {
-        $return = $complete ? '' : [];
+        $default = $asString ? '' : [];
         if (empty($params['view']) or empty($params['profileID'])) {
-            return $return;
+            return $default;
         }
 
         $profileAlias = THM_GroupsHelperProfiles::getAlias($params['profileID']);
         if (empty($profileAlias)) {
-            return $return;
+            return $default;
         } elseif (empty($params['view'])) {
             $params['view'] = 'profile';
         }
 
-        $return[] = $profileAlias;
+        $path = [$profileAlias];
         switch ($params['view']) {
             case 'content':
                 if (!empty($params['id'])) {
-                    $return[] = THM_GroupsHelperContent::getAlias($params['id']);
+                    $path[] = THM_GroupsHelperContent::getAlias($params['id']);
                 }
                 break;
             case 'content_manager':
-                $return[] = JText::_('COM_THM_GROUPS_CONTENT_MANAGER_ALIAS');
+                $path[] = JText::_('COM_THM_GROUPS_CONTENT_MANAGER_ALIAS');
                 break;
             case 'profile':
                 if (!empty($params['format'])) {
-                    $return[] = $params['format'];
+                    $path[] = $params['format'];
                 }
                 break;
             case 'profile_edit':
-                $return[] = JText::_('COM_THM_GROUPS_EDIT_ALIAS');
+                $path[] = JText::_('COM_THM_GROUPS_EDIT_ALIAS');
                 break;
         }
 
-        if (!$complete) {
-            return $return;
-        }
-
-        return URI::base() . implode('/', $return);
+        return $asString ? URI::base() . implode('/', $path) : $path;
     }
 
     /**
