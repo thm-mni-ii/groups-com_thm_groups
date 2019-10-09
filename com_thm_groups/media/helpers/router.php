@@ -34,34 +34,80 @@ class THM_GroupsHelperRouter
             return $default;
         }
 
-        $profileAlias = THM_GroupsHelperProfiles::getAlias($params['profileID']);
-        if (empty($profileAlias)) {
+        $params['profileAlias'] = THM_GroupsHelperProfiles::getAlias($params['profileID']);
+        if (empty($params['profileAlias'])) {
             return $default;
         } elseif (empty($params['view'])) {
             $params['view'] = 'profile';
         }
 
-        $path = [$profileAlias];
+        return !empty(JFactory::getConfig()->get('sef')) ?
+            self::buildSEFURL($params, $asString) : self::buildRawURL($params, $asString);
+    }
+
+    /**
+     * Method to build the displayed raw URL
+     *
+     * @param array $params   the parameters used to build internal links
+     * @param bool  $complete true if the url should be functional, false if an array of segments
+     *
+     * @return mixed string if the URL should be complete, otherwise an array of terms to use in the URL
+     * @throws Exception
+     */
+    private static function buildRawURL($params, $complete)
+    {
+        $invalidContent = (empty($params['id']) or empty(THM_GroupsHelperContent::getAlias($params['id'])));
+        if ($params['view'] === 'content' AND $invalidContent) {
+            $params['view'] = 'profile';
+        }
+
+        $query = ['option' => 'com_thm_groups', 'view' => $params['view'], 'profileID' => $params['profileID']];
+        if ($query['view'] === 'content') {
+            $query['id'] = $params['id'];
+        } elseif ($query['view'] === 'profile' AND !empty($params['format'])) {
+            $query['format'] = $params['format'];
+        }
+
+        return $complete ? URI::base() . '?' . http_build_query($query) : $query;
+    }
+
+    /**
+     * Method to build the displayed SEF URL
+     *
+     * @param array $params   the parameters used to build internal links
+     * @param bool  $complete true if the url should be functional, false if an array of segments
+     *
+     * @return mixed string if the URL should be complete, otherwise an array of terms to use in the URL
+     * @throws Exception
+     */
+    private static function buildSEFURL($params, $complete)
+    {
+        $return   = [];
+        $return[] = $params['profileAlias'];
         switch ($params['view']) {
             case 'content':
                 if (!empty($params['id'])) {
-                    $path[] = THM_GroupsHelperContent::getAlias($params['id']);
+                    $return[] = THM_GroupsHelperContent::getAlias($params['id']);
                 }
                 break;
             case 'content_manager':
-                $path[] = JText::_('COM_THM_GROUPS_CONTENT_MANAGER_ALIAS');
+                $return[] = JText::_('COM_THM_GROUPS_CONTENT_MANAGER_ALIAS');
                 break;
             case 'profile':
                 if (!empty($params['format'])) {
-                    $path[] = $params['format'];
+                    $return[] = $params['format'];
                 }
                 break;
             case 'profile_edit':
-                $path[] = JText::_('COM_THM_GROUPS_EDIT_ALIAS');
+                $return[] = JText::_('COM_THM_GROUPS_EDIT_ALIAS');
                 break;
         }
 
-        return $asString ? URI::base() . implode('/', $path) : $path;
+        if (!$complete) {
+            return $return;
+        }
+
+        return URI::base() . implode('/', $return);
     }
 
     /**
@@ -102,7 +148,6 @@ class THM_GroupsHelperRouter
      */
     public static function getPathItems($url)
     {
-
         $rawPath = str_replace(URI::base(), '', $url);
 
         // The URL is external and therefore irrelevant
@@ -113,371 +158,10 @@ class THM_GroupsHelperRouter
         // Attempt to resolve using modern rules
         $queryFreePath     = preg_replace('/\?.+/', '', $rawPath);
         $extensionFreePath = str_replace(['.html', '.htm', '.php'], '', $queryFreePath);
-        $indexFreePath     = str_replace('/index', '', $extensionFreePath);
+        $indexFreePath     = preg_replace('/\/?index/', '', $extensionFreePath);
         $rawPathItems      = explode('/', $indexFreePath);
 
-        return array_filter($rawPathItems);
-    }
-
-    /**
-     * Checks whether the segments provide the information required for dynamic linking
-     *
-     * @param array $segments the segments of the path
-     *
-     * @return array the parameters which were able to be parsed from the given segments
-     * @throws Exception
-     */
-    public static function parse($segments)
-    {
-        $return         = [];
-        $lastItem       = rawurldecode(array_pop($segments));
-        $secondLastItem = rawurldecode(array_pop($segments));
-
-        $lang = JFactory::getLanguage();
-        $lang->load('com_thm_groups');
-
-        // Resolve modern sef links first
-        if ($lastItem === JText::_('COM_THM_GROUPS_OVERVIEW_ALIAS')) {
-            $return['view'] = 'overview';
-        } elseif ($secondLastItem === JText::_('COM_THM_GROUPS_DISAMBIGUATION_ALIAS')) {
-            $return['view']   = 'overview';
-            $return['search'] = $lastItem;
-        } elseif ($lastItem === JText::_('COM_THM_GROUPS_CONTENT_MANAGER_ALIAS')) {
-            $profileID = THM_GroupsHelperProfiles::getProfileIDByAlias($secondLastItem);
-            if (!empty($profileID)) {
-                $return['view']      = 'content_manager';
-                $return['profileID'] = $profileID;
-            }
-        } elseif ($lastItem === JText::_('COM_THM_GROUPS_EDIT_ALIAS')) {
-            $profileID = THM_GroupsHelperProfiles::getProfileIDByAlias($secondLastItem);
-            if (!empty($profileID)) {
-                $return['view']      = 'profile_edit';
-                $return['profileID'] = $profileID;
-            }
-        } elseif ($lastItem === 'vcf') {
-            $profileID = THM_GroupsHelperProfiles::getProfileIDByAlias($secondLastItem);
-            if (!empty($profileID)) {
-                $return['view']      = 'profile';
-                $return['profileID'] = $profileID;
-                $return['format']    = $lastItem;
-            }
-        } elseif (empty($secondLastItem)) {
-            $profileID = THM_GroupsHelperProfiles::getProfileIDByAlias($lastItem);
-            if (!empty($profileID)) {
-                $return['view']      = 'profile';
-                $return['profileID'] = $profileID;
-            }
-        } else {
-            $profileID = THM_GroupsHelperProfiles::getProfileIDByAlias($secondLastItem);
-            if (!empty($profileID)) {
-                if (is_numeric($profileID)) {
-                    $contentID = THM_GroupsHelperContent::getIDByAlias($lastItem, $profileID);
-                    if (empty($contentID)) {
-                        $return['view']      = 'profile';
-                        $return['profileID'] = $profileID;
-                    } else {
-                        $return['view']      = 'content';
-                        $return['id']        = $contentID;
-                        $return['profileID'] = $profileID;
-                    }
-                }
-            }
-        }
-
-        if (!empty($return['profileID']) and !is_numeric($return['profileID'])) {
-            $return['view']   = 'overview';
-            $return['search'] = $return['profileID'];
-            unset($return['profileID']);
-        }
-
-        if (empty($return['view'])) {
-            return $segments;
-        }
-
-        $return['option'] = 'com_thm_groups';
-
-        return $return;
-    }
-
-    /**
-     * Checks whether the segments provide the information required for dynamic linking via legacy configurations
-     *
-     * @param array $segments the segments of the path
-     *
-     * @return array the parameters which were able to be parsed from the given segments
-     * @throws Exception
-     */
-    public static function parseLegacy($segments)
-    {
-        $return        = [];
-        $dynamicViews  = ['articles', 'content', 'content_manager', 'profile', 'profile_edit', 'singlearticle'];
-        $allowedDepth2 = ['articles', 'content_manager', 'profile', 'profile_edit'];
-        $allowedDepth3 = ['content', 'singlearticle'];
-
-        // Remove the useless segment if existent
-        if ($layoutSegment = array_search('default', $segments)) {
-            unset($segments[$layoutSegment]);
-        }
-
-        $segmentCount = count($segments);
-
-        // Legacy SER URLs require at lease the view name and a resource ID
-        if ($segmentCount <= 2) {
-            return $return;
-        }
-
-        $lastItem = rawurldecode(array_pop($segments));
-
-        // The view name is positioned wrong
-        if (in_array($lastItem, $dynamicViews)) {
-            return $return;
-        }
-
-        $secondLastItem = rawurldecode(array_pop($segments));
-
-        // The views expected at a depth of two were not found.
-        if (!in_array($secondLastItem, $allowedDepth2) and $segmentCount >= 3) {
-            $thirdLastItem = rawurldecode(array_pop($segments));
-
-            // Depth exceeded
-            if (!in_array($thirdLastItem, $allowedDepth3)) {
-                return $return;
-            }
-        }
-
-        if (empty($thirdLastItem)) {
-            switch ($secondLastItem) {
-                case 'content':
-                case 'singlearticle':
-                    $return['id'] = self::parseContent($lastItem);
-
-                    if (empty($return['id'])) {
-                        return [];
-                    }
-
-                    $return['profileID'] = THM_GroupsHelperContent::getProfileID($return['id']);
-                    $return['view']      = 'content';
-
-                    $return['view'] = $segments[0];
-                    break;
-
-                case 'articles':
-                case 'content_manager':
-                    $return['profileID'] = self::parseProfile($lastItem);
-                    $return['view']      = 'content_manager';
-                    break;
-
-                case 'profile':
-                case 'profile_edit':
-                    $return['profileID'] = self::parseProfile($lastItem);
-                    $return['view']      = $secondLastItem;
-                    break;
-
-            }
-        } else {
-            $return['profileID'] = self::parseProfile($secondLastItem);
-            $return['id']        = self::parseContent($lastItem);
-
-            // Invalid profile id, but valid content id => use the profileID associated with the content
-            if (empty($return['profileID']) and !empty($return['id'])) {
-                $return['profileID'] = THM_GroupsHelperContent::getProfileID($return['id']);
-            }
-
-            $return['view'] = 'content';
-        }
-
-        return $return;
-    }
-
-    /**
-     * Parses the given string to check for a category associated with the component
-     *
-     * @param string $potentialCategory the segment being checked
-     *
-     * @return mixed true if the category is the root category, int the profile id if associated with a profile, false
-     *               if the category is not associated with groups
-     * @throws Exception
-     */
-    public static function parseCategory($potentialCategory)
-    {
-        if (is_numeric($potentialCategory)) {
-            $categoryID = $potentialCategory;
-        } elseif (preg_match('/(\d+)\-[a-zA-Z\-]+/', $potentialCategory, $matches)) {
-            $categoryID = $matches[1];
-        } else {
-            $categoryID = $potentialCategory;
-        }
-
-        if (empty($categoryID)) {
-            return $categoryID;
-        }
-
-        if (THM_GroupsHelperCategories::isRoot($categoryID)) {
-            return true;
-        }
-
-        $profileID = THM_GroupsHelperCategories::getProfileID($categoryID);
-
-        return empty($profileID) ? false : $profileID;
-    }
-
-    /**
-     * Parses the given string to check for content associated with the component
-     *
-     * @param string $potentialContent the segment being checked
-     * @param int    $profileID        the ID of the profile with which this content should be associated
-     *
-     * @return int the id of the associated content if existent, otherwise 0
-     * @throws Exception
-     */
-    public static function parseContent($potentialContent, $profileID = null)
-    {
-        $contentID = 0;
-        if (is_numeric($potentialContent)) {
-            $contentID = $potentialContent;
-        } elseif (preg_match('/(\d+)\-[a-zA-Z\-]+/', $potentialContent, $matches)) {
-            $contentID = $matches[1];
-        }
-
-        if (empty($contentID)) {
-            return $contentID;
-        }
-
-        $profileID = THM_GroupsHelperContent::isAssociated($contentID, $profileID);
-
-        return empty($profileID) ? 0 : $contentID;
-    }
-
-    /**
-     * Parses the given string to check for a valid profile
-     *
-     * @param string $potentialProfile the segment being checked
-     *
-     * @return mixed int the id if a distinct profile was found, string if no distinct profile was found, otherwise 0
-     * @throws Exception
-     * @throws Exception
-     * @throws Exception
-     */
-    public static function parseProfile($potentialProfile)
-    {
-        if (is_numeric($potentialProfile)) {
-            $profileID = $potentialProfile;
-        } // Corrected pre 3.8 URL formatting
-        elseif (preg_match('/(\d+)\-([a-zA-Z\-]+)-\d+/', $potentialProfile, $matches)) {
-            $profileID      = $matches[1];
-            $potentialAlias = $matches[2];
-        } // Original faulty URL formatting
-        elseif (preg_match('/\d+-(\d+)-([a-zA-Z\-]+)/', $potentialProfile, $matches)) {
-            $profileID      = $matches[1];
-            $potentialAlias = $matches[2];
-        } else {
-            $profileID = THM_GroupsHelperProfiles::getProfileIDByAlias($potentialProfile);
-        }
-
-        if ($profileID and is_numeric($profileID)) {
-            $profileAlias     = THM_GroupsHelperProfiles::getAlias($profileID);
-            $profilePublished = THM_GroupsHelperProfiles::isPublished($profileID);
-            $relevant         = empty($potentialAlias) ? true : strpos($profileAlias, $potentialAlias);
-
-            return ($relevant and $profilePublished and $profileAlias) ? $profileID : 0;
-        }
-
-        if ($profileID and is_string($profileID)) {
-            return $profileID;
-        }
-
-        return 0;
-    }
-
-    /**
-     * Redirects to a sef conform THM Groups URL
-     *
-     * @param $params
-     *
-     * @return void redirects to a sef conform url
-     * @throws Exception
-     */
-    public static function redirect($params)
-    {
-        $app  = JFactory::getApplication();
-        $lang = JFactory::getLanguage();
-        $lang->load('com_thm_groups');
-        $code    = empty($params['code']) ? false : $params['code'];
-        $msg     = false;
-        $msgType = 'message';
-
-        if (empty($params['view'])) {
-
-            if (empty($code)) {
-                return;
-            }
-
-            $code         = $params['code'];
-            $codeConstant = "COM_THM_GROUPS_ERROR_$code";
-            $msg          = JText::_($codeConstant);
-
-            switch ($code) {
-                case 401:
-                    $url     = URI::root();
-                    $msgType = 'error';
-                    break;
-                case 404:
-                    $url     = $app->input->server->getString('HTTP_REFERER');
-                    $msgType = 'warning';
-                    break;
-            }
-        } else {
-            switch ($params['view']) {
-                case 'profile':
-                    $profileAlias = THM_GroupsHelperProfiles::getAlias($params['profileID']);
-                    $url          = URI::root() . $profileAlias;
-                    $code         = $code ? $code : 301;
-                    break;
-                case 'profile_edit':
-                    $profileAlias = THM_GroupsHelperProfiles::getAlias($params['profileID']);
-                    $editAlias    = JText::_('COM_THM_GROUPS_EDIT_ALIAS');
-                    $url          = URI::root() . "$profileAlias/$editAlias";
-                    $code         = $code ? $code : 301;
-                    break;
-                case 'content':
-                    $profileAlias = THM_GroupsHelperProfiles::getAlias($params['profileID']);
-                    $contentAlias = THM_GroupsHelperContent::getAlias($params['id']);
-                    $url          = URI::root() . "$profileAlias/$contentAlias";
-                    $code         = $code ? $code : 301;
-                    break;
-                case 'content_manager':
-                    $profileAlias = THM_GroupsHelperProfiles::getAlias($params['profileID']);
-                    $managerAlias = JText::_('COM_THM_GROUPS_CONTENT_MANAGER_ALIAS');
-                    $url          = URI::root() . "$profileAlias/$managerAlias";
-                    $code         = $code ? $code : 301;
-                    break;
-                case 'overview':
-                    $lang->load('com_thm_groups');
-                    // Masks the root content category for profile content
-                    if (empty($params['search'])) {
-                        $overviewTitle = JText::_('COM_THM_GROUPS_OVERVIEW_ALIAS');
-                        $url           = URI::root() . $overviewTitle;
-                        $code          = $code ? $code : 301;
-                    } // The given names did not deliver a distinct result
-                    else {
-                        $disambiguationAlias = JText::_('COM_THM_GROUPS_DISAMBIGUATION_ALIAS');
-                        $cleanedSearch       = $params['search'];
-                        $url                 = URI::root() . "$disambiguationAlias/$cleanedSearch";
-                        $code                = $code ? $code : 409;
-                        $msg                 = JText::_('COM_THM_GROUPS_ERROR_409');
-                        $msgType             = 'notice';
-                    }
-                    break;
-            }
-        }
-
-        http_response_code($code);
-
-        if ($msg) {
-            $app->enqueueMessage($msg, $msgType);
-        }
-
-        $app->redirect($url, $code);
+        return is_array($rawPathItems) ? array_filter($rawPathItems) : [];
     }
 
     /**
@@ -551,81 +235,109 @@ class THM_GroupsHelperRouter
         }
     }
 
-    /**
-     * Validates the query against the dynamic content parameters
-     *
-     * @param array &$query the query parameters
-     *
-     * @return mixed true if the query has all required parameters and they are valid, false if the query is invalid,
-     *               int 0 if the validity could not be determined due to missing parameters.
-     * @throws Exception
-     */
-    public static function validateQuery(&$query)
-    {
-        // Explicitly not THM Groups
-        if (!empty($query['option']) and $query['option'] !== 'com_thm_groups') {
-            return false;
-        }
+	/**
+	 * Translates content parameters into Groups parameters as relevant.
+	 *
+	 * @param $query
+	 *
+	 * @return bool
+	 * @throws Exception
+	 */
+	public static function translateContent(&$query)
+	{
+		$relevantViews = ['article', 'category'];
+		if (!empty($query['view']) and !in_array($query['view'], $relevantViews))
+		{
+			return false;
+		}
 
-        // Explicitly not a dynamic THM Groups view that would be called by query
-        $dynamicViews = ['content', 'content_manager', 'profile', 'profile_edit'];
-        if (!empty($query['view']) and !in_array($query['view'], $dynamicViews)) {
-            return false;
-        }
+		if (empty($query['view']) or $query['view'] === 'article')
+		{
+			if (!empty($query['catid']))
+			{
+				if (is_numeric($query['catid']))
+				{
+					$profileID = THM_GroupsHelperContent::resolve($query['catid']);
+				}
+				elseif (preg_match('/^(\d+)/', $query['catid'], $matches))
+				{
+					// true for root, false for irrelevant, otherwise profileID
+					$profileID = THM_GroupsHelperCategories::resolve($matches[0]);
+				}
+			}
+			if (!empty($query['a_id']) or !empty($query['id']))
+			{
+				$tmpID = empty($query['a_id']) ? $query['id'] : $query['a_id'];
+				if (is_numeric($tmpID))
+				{
+					$contentID = THM_GroupsHelperContent::resolve($tmpID);
+				}
+				elseif (preg_match('/^(\d+)/', $tmpID, $matches))
+				{
+					//0 or contentID
+					$contentID = THM_GroupsHelperContent::resolve($matches[0]);
+				}
+			}
 
-        // This is missing the required profileID parameter, which may be aliased in the url
-        $pIDDependentViews = ['content_manager', 'profile', 'profile_edit'];
-        $pIDDependent      = (!empty($query['view']) and in_array($query['view'], $pIDDependentViews));
-        if ($pIDDependent and empty($query['profileID'])) {
-            return 0;
-        }
+			if (empty($profileID) and empty($contentID))
+			{
+				return false;
+			}
+			elseif ($contentID)
+			{
+				$query['id']        = $contentID;
+				$query['profileID'] = THM_GroupsHelperContent::getProfileID($contentID);
+				$query['view']      = 'content';
+				unset($query['catid']);
+			}
+			elseif ($profileID and $profileID === true)
+			{
+				$query['search'] = '';
+				$query['view']   = 'overview';
+				unset($query['id']);
+			}
+			else
+			{
+				$query['profileID'] = $profileID;
+				$query['view']      = 'profile';
+				unset($query['id']);
+			}
+			$query['option'] = 'com_thm_groups';
+			unset($query['a_id'], $query['catid'], $query['lang'], $query['layout']);
 
-        // Invalid Profile
-        $profileAlias = empty($query['profileID']) ? '' : THM_GroupsHelperProfiles::getAlias($query['profileID']);
-        if (!empty($query['profileID']) and empty($profileAlias)) {
-            return false;
-        } elseif ($pIDDependent and empty($profileAlias)) {
-            return false;
-        } elseif ($pIDDependent and !empty($profileAlias)) {
-            return true;
-        }
+			return true;
+		}
 
-        // This is missing the required id parameter, which may be aliased in the url
-        $isContent = (!empty($query['view']) and $query['view'] == 'content');
-        if ($isContent and empty($query['id'])) {
-            return 0;
-        }
+		if (!empty($query['id']))
+		{
+			if (is_numeric($query['id']))
+			{
+				$profileID = THM_GroupsHelperCategories::resolve($query['id']);
+			}
+			elseif (preg_match('/^(\d+)/', $query['id'], $matches))
+			{
+				// true for root, false for irrelevant, otherwise profileID
+				$profileID = THM_GroupsHelperCategories::resolveCategory($matches[0]);
+			}
+		}
 
-        // Invalid content
-        $contentAlias = empty($query['id']) ? '' : THM_GroupsHelperContent::getAlias($query['id']);
-        if (!empty($query['id']) and empty($contentAlias)) {
-            return false;
-        } elseif ($isContent and empty($contentAlias)) {
-            return false;
-        }
+		if (empty($profileID))
+		{
+			return false;
+		}
+		elseif ($profileID and $profileID === true)
+		{
+			$query['search'] = '';
+			$query['view']   = 'overview';
+		}
+		else
+		{
+			$query['profileID'] = $profileID;
+			$query['view']      = 'profile';
+		}
+		$query['option'] = 'com_thm_groups';
+		unset($query['a_id'], $query['id'], $query['lang'], $query['layout']);
 
-        // Nothing was explicitly invalid, but nothing was confirmed either
-        if (empty($profileAlias) and empty($contentAlias)) {
-            return 0;
-        }
-
-        if ($contentAlias) {
-            $profileID = empty($query['profileID']) ?
-                THM_GroupsHelperContent::isAssociated($query['id']) :
-                THM_GroupsHelperContent::isAssociated($query['id'], $query['profileID']);
-
-            if (empty($profileID)) {
-                return false;
-            }
-
-            $query['profileID'] = $profileID;
-            $query['view']      = 'content';
-
-            return true;
-        }
-
-        $query['view'] = 'profile';
-
-        return true;
-    }
+		return true;
+	}
 }

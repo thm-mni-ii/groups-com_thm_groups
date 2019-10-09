@@ -20,126 +20,143 @@ require_once HELPERS . 'router.php';
  */
 class THM_GroupsViewOverview extends JViewLegacy
 {
-    public $columnCount;
+	public $columnCount;
 
-    public $maxColumnSize;
+	public $maxColumnSize;
 
-    public $title = '';
+	public $title = '';
 
-    public $profiles = [];
+	public $profiles = [];
 
-    /**
-     * Method to get display
-     *
-     * @param   Object $tpl template
-     *
-     * @return void
-     * @throws Exception
-     */
-    public function display($tpl = null)
-    {
-        $app          = JFactory::getApplication();
-        $this->params = $app->getParams();
-        $input        = $app->input;
+	/**
+	 * Method to get display
+	 *
+	 * @param   Object  $tpl  template
+	 *
+	 * @return void
+	 * @throws Exception
+	 */
+	public function display($tpl = null)
+	{
+		$app          = JFactory::getApplication();
+		$this->params = $app->getParams();
+		$input        = $app->input;
 
-        $this->profiles = $this->getModel()->getProfiles();
-        $groupID        = $this->params->get('groupID');
-        if (empty($groupID)) {
-            $totalProfiles = 0;
-            foreach ($this->profiles as $letter => $profiles) {
-                $totalProfiles += count($profiles);
-            }
+		$this->profiles = $this->getModel()->getProfiles();
+		$groupID        = $this->params->get('groupID');
+		if (empty($groupID))
+		{
+			$totalProfiles = 0;
+			foreach ($this->profiles as $letter => $profiles)
+			{
+				$totalProfiles += count($profiles);
+			}
 
-            if (empty($input->get('search'))) {
-                $this->columnCount   = 3;
-                $this->maxColumnSize = ceil($totalProfiles / $this->columnCount) + $this->columnCount;
-            } else {
-                $this->columnCount   = 1;
-                $this->maxColumnSize = $totalProfiles;
-            }
-        } else {
-            $totalProfiles       = THM_GroupsHelperGroups::getProfileCount($groupID);
-            $this->columnCount   = $this->params->get('columnCount', 3);
-            $this->maxColumnSize = ceil($totalProfiles / $this->columnCount) + $this->columnCount;
-        }
+			if (empty($input->get('search')))
+			{
+				$this->columnCount   = 3;
+				$this->maxColumnSize = ceil($totalProfiles / $this->columnCount) + $this->columnCount;
+			}
+			else
+			{
+				$this->columnCount   = 1;
+				$this->maxColumnSize = $totalProfiles;
+			}
+		}
+		else
+		{
+			$totalProfiles       = THM_GroupsHelperGroups::getProfileCount($groupID);
+			$this->columnCount   = $this->params->get('columnCount', 3);
+			$this->maxColumnSize = ceil($totalProfiles / $this->columnCount) + $this->columnCount;
+		}
 
-        $this->modifyDocument();
-        $this->setTitle();
+		$this->modifyDocument();
+		$this->setTitle();
 
-        parent::display($tpl);
-    }
+		parent::display($tpl);
+	}
 
-    /**
-     * Generates the header image if set in the menu settings.
-     *
-     * @return string the html of the header image
-     */
-    public function getHeaderImage()
-    {
-        $headerImage = '';
-        if (!$this->params->get('jyaml_header_image_disable', false)
-            and !empty($this->params->get('jyaml_header_image'))) {
-            $path = $this->params->get('jyaml_header_image');
+	/**
+	 * Generates the header image if set in the menu settings.
+	 *
+	 * @return string the html of the header image
+	 */
+	public function getHeaderImage()
+	{
+		if (!$this->params->get('groupID')) {
+			return '';
+		}
 
-            $headerImage .= '<div class="headerimage" >';
-            $headerImage .= '<img src="' . $path . '" class="contentheaderimage nothumb" alt = "" />';
-            $headerImage .= '</div >';
-        }
+		$headerImage = '';
+		if (!$this->params->get('jyaml_header_image_disable', false)
+			and !empty($this->params->get('jyaml_header_image')))
+		{
+			$path = $this->params->get('jyaml_header_image');
 
-        return $headerImage;
-    }
+			$headerImage .= '<div class="headerimage" >';
+			$headerImage .= '<img src="' . $path . '" class="contentheaderimage nothumb" alt = "" />';
+			$headerImage .= '</div >';
+		}
 
-    /**
-     * Creates a link to the profile view for the given profile
-     *
-     * @param   int $profileID the profile id
-     *
-     * @return  string  the HTML output for the profile link
-     * @throws Exception
-     */
-    public function getProfileLink($profileID)
-    {
-        $url           = THM_GroupsHelperRouter::build(['view' => 'profile', 'profileID' => $profileID]);
-        $showTitles    = $this->params->get('showTitles', 1);
-        $displayedText = THM_GroupsHelperProfiles::getLNFName($profileID, $showTitles, true);
+		return $headerImage;
+	}
 
-        return JHtml::link($url, $displayedText);
-    }
+	/**
+	 * Creates a link to the profile view for the given profile
+	 *
+	 * @param   int  $profileID  the profile id
+	 *
+	 * @return  string  the HTML output for the profile link
+	 * @throws Exception
+	 */
+	public function getProfileLink($profileID)
+	{
+		$url           = THM_GroupsHelperRouter::build(['view' => 'profile', 'profileID' => $profileID]);
+		$showTitles    = $this->params->get('showTitles', 1);
+		$displayedText = THM_GroupsHelperProfiles::getLNFName($profileID, $showTitles, true);
 
-    /**
-     * Adds css and javascript files to the document
-     *
-     * @return  void  modifies the document
-     */
-    private function modifyDocument()
-    {
-        $document = JFactory::getDocument();
-        $document->addStyleSheet('media/com_thm_groups/css/overview.css');
-        JHtml::_('bootstrap.framework');
-    }
+		return JHtml::link($url, $displayedText);
+	}
 
-    /**
-     * Sets the page title
-     *
-     * @return void sets the title property of the document and the view object
-     * @throws Exception
-     */
-    private function setTitle()
-    {
-        $input = JFactory::getApplication()->input;
-        $groupID = $this->params->get('groupID');
+	/**
+	 * Adds css and javascript files to the document
+	 *
+	 * @return  void  modifies the document
+	 */
+	private function modifyDocument()
+	{
+		$document = JFactory::getDocument();
+		$document->addStyleSheet('media/com_thm_groups/css/overview.css');
+		JHtml::_('bootstrap.framework');
+	}
 
-        // If there is a group ID the view was called from a menu item
-        if ($groupID) {
-            $title = THM_GroupsHelperGroups::getName($groupID);
-        } elseif (empty($input->get('search'))) {
-            $title = JText::_('COM_THM_GROUPS_OVERVIEW');
-        } else {
-            $title = JText::_('COM_THM_GROUPS_DISAMBIGUATION');
-        }
+	/**
+	 * Sets the page title
+	 *
+	 * @return void sets the title property of the document and the view object
+	 * @throws Exception
+	 */
+	private function setTitle()
+	{
+		$input   = JFactory::getApplication()->input;
+		$groupID = $this->params->get('groupID');
 
-        //    show_title
-        $this->document->setTitle($title);
-        $this->title = $title;
-    }
+		// If there is a group ID the view was called from a menu item
+		if ($groupID)
+		{
+			$title = THM_GroupsHelperGroups::getName($groupID);
+		}
+		elseif (empty($input->get('search')))
+		{
+			$title = JText::_('COM_THM_GROUPS_OVERVIEW');
+		}
+		else
+		{
+			$title = JText::_('COM_THM_GROUPS_DISAMBIGUATION');
+		}
+
+		//    show_title
+		$this->document->setTitle($title);
+		$this->title = $title;
+	}
 }

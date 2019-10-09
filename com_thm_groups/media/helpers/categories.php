@@ -303,6 +303,45 @@ class THM_GroupsHelperCategories
         return empty($success) ? false : true;
     }
 
+	/**
+	 * Resolves the given string to  a category associated with the Groups if possible.
+	 *
+	 * @param   string  $potentialCategory  the segment being checked
+	 *
+	 * @return mixed true if the category is the root category, int the profile id if associated with a profile, false
+	 *               if the category is not associated with groups
+	 * @throws Exception
+	 */
+	public static function resolve($potentialCategory)
+	{
+		if (is_numeric($potentialCategory))
+		{
+			$categoryID = $potentialCategory;
+		}
+		elseif (preg_match('/(\d+)\-[a-zA-Z\-]+/', $potentialCategory, $matches))
+		{
+			$categoryID = $matches[1];
+		}
+		else
+		{
+			$categoryID = $potentialCategory;
+		}
+
+		if (empty($categoryID))
+		{
+			return $categoryID;
+		}
+
+		if (self::isRoot($categoryID))
+		{
+			return true;
+		}
+
+		$profileID = self::getProfileID($categoryID);
+
+		return empty($profileID) ? false : $profileID;
+	}
+
     /**
      * Set the created_user_id attribute for a category
      *

@@ -113,7 +113,7 @@ class THM_GroupsHelperContent
     private static function canReorder($contentIDs)
     {
         foreach ($contentIDs as $contentID) {
-            if (empty(THM_GroupsHelperContent::canEditState($contentID))) {
+            if (empty(self::canEditState($contentID))) {
                 return false;
             }
         }
@@ -153,12 +153,12 @@ class THM_GroupsHelperContent
 
         foreach ($associations as $association) {
             if ($association['authorID'] !== $association['profileID']) {
-                THM_GroupsHelperContent::setAuthor($association['contentID'], $association['profileID']);
+                self::setAuthor($association['contentID'], $association['profileID']);
             }
 
             if (empty($association['groupsContentAuthorID'])
                 OR $association['groupsContentAuthorID'] !== $association['authorID']) {
-                THM_GroupsHelperContent::associate($association['contentID'], $association['profileID']);
+                self::associate($association['contentID'], $association['profileID']);
             }
         }
     }
@@ -436,6 +436,37 @@ class THM_GroupsHelperContent
 
         return true;
     }
+
+	/**
+	 * Parses the given string to check for content associated with the component
+	 *
+	 * @param   string  $potentialContent  the segment being checked
+	 * @param   int     $profileID         the ID of the profile with which this content should be associated
+	 *
+	 * @return int the id of the associated content if existent, otherwise 0
+	 * @throws Exception
+	 */
+	public static function resolve($potentialContent, $profileID = null)
+	{
+		$contentID = 0;
+		if (is_numeric($potentialContent))
+		{
+			$contentID = $potentialContent;
+		}
+		elseif (preg_match('/(\d+)\-[a-zA-Z\-]+/', $potentialContent, $matches))
+		{
+			$contentID = $matches[1];
+		}
+
+		if (empty($contentID))
+		{
+			return $contentID;
+		}
+
+		$profileID = self::isAssociated($contentID, $profileID);
+
+		return empty($profileID) ? 0 : $contentID;
+	}
 
     /**
      * Saves drag & drop ordering changes.

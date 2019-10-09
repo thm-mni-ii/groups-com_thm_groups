@@ -779,6 +779,54 @@ class THM_GroupsHelperProfiles
         return (bool)$published;
     }
 
+	/**
+	 * Parses the given string to check for a valid profile
+	 *
+	 * @param   string  $potentialProfile  the segment being checked
+	 *
+	 * @return mixed int the id if a distinct profile was found, string if no distinct profile was found, otherwise 0
+	 * @throws Exception
+	 * @throws Exception
+	 * @throws Exception
+	 */
+	public static function resolve($potentialProfile)
+	{
+		if (is_numeric($potentialProfile))
+		{
+			$profileID = $potentialProfile;
+		} // Corrected pre 3.8 URL formatting
+		elseif (preg_match('/(\d+)\-([a-zA-Z\-]+)-\d+/', $potentialProfile, $matches))
+		{
+			$profileID      = $matches[1];
+			$potentialAlias = $matches[2];
+		} // Original faulty URL formatting
+		elseif (preg_match('/\d+-(\d+)-([a-zA-Z\-]+)/', $potentialProfile, $matches))
+		{
+			$profileID      = $matches[1];
+			$potentialAlias = $matches[2];
+		}
+		else
+		{
+			$profileID = self::getProfileIDByAlias($potentialProfile);
+		}
+
+		if ($profileID and is_numeric($profileID))
+		{
+			$profileAlias     = self::getAlias($profileID);
+			$profilePublished = self::isPublished($profileID);
+			$relevant         = empty($potentialAlias) ? true : strpos($profileAlias, $potentialAlias);
+
+			return ($relevant and $profilePublished and $profileAlias) ? $profileID : 0;
+		}
+
+		if ($profileID and is_string($profileID))
+		{
+			return $profileID;
+		}
+
+		return 0;
+	}
+
     /**
      * Resolves the user name attribute to forename and surnames
      *
