@@ -30,7 +30,7 @@ class THM_GroupsLayoutList
         $filters = $view->filterForm->getGroup('filter');
         ?>
         <div id="j-main-container" class="span10">
-            <form action="index.php?" id="adminForm" method="post" name="adminForm">
+            <form action="<?php echo JURI::base(); ?>" id="adminForm" method="post" name="adminForm">
                 <div class="searchArea">
                     <div class="js-stools clearFix">
                         <div class="clearFix">
@@ -57,8 +57,7 @@ class THM_GroupsLayoutList
                 </table>
                 <input type="hidden" name="task" value=""/>
                 <input type="hidden" name="boxchecked" value="0"/>
-                <input type="hidden" name="option"
-                       value="<?php echo JFactory::getApplication()->input->get('option'); ?>"/>
+                <input type="hidden" name="option" value="com_thm_groups"/>
                 <input type="hidden" name="view" value="<?php echo $view->get('name'); ?>"/>
                 <?php self::renderHiddenFields($view) ?>
                 <?php echo JHtml::_('form.token'); ?>

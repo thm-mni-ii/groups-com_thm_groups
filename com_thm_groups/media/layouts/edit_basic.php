@@ -24,7 +24,7 @@ class THM_GroupsLayoutEdit_Basic
     public static function render(&$view)
     {
         ?>
-        <form action="index.php?option=com_thm_groups"
+        <form action="<?php echo JURI::base(); ?>"
               enctype="multipart/form-data"
               method="post"
               name="adminForm"
@@ -33,6 +33,7 @@ class THM_GroupsLayoutEdit_Basic
             <fieldset class="adminform">
                 <?php echo $view->form->renderFieldset('details'); ?>
             </fieldset>
+            <input type="hidden" name="option" value="com_thm_groups"/>
             <?php echo $view->form->getInput('id'); ?>
             <?php echo JHtml::_('form.token'); ?>
             <input type="hidden" name="task" value=""/>

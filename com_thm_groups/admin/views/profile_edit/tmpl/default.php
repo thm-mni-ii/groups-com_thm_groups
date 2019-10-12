@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 ?>
 <form id="adminForm" name="adminForm" class="form-horizontal form-validate"
-      action="?option=com_thm_groups" method="post" enctype="multipart/form-data">
+      action="<?php echo JURI::base(); ?>" method="post" enctype="multipart/form-data">
     <div class="form-horizontal">
         <?php foreach (THM_GroupsHelperAttributes::getAttributeIDs() as $attributeID) : ?>
             <?php echo THM_GroupsHelperAttributes::getInput($attributeID, $this->profileID); ?>

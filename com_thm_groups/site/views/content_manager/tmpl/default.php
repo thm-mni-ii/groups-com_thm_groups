@@ -18,7 +18,7 @@ $rowClass = $this->canEdit ? 'order dndlist-sortable' : '';
 
 ?>
 <div id="j-main-container" class="manager-page">
-    <form action="index.php" id="adminForm" method="post" name="adminForm">
+    <form action="<?php echo JURI::base(); ?>" id="adminForm" method="post" name="adminForm">
         <div class="page-header">
             <h2 class="groups-toolbar">
                 <?php echo $this->pageTitle; ?>

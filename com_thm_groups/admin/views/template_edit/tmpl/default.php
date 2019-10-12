@@ -10,7 +10,7 @@
 
 defined('_JEXEC') or die;
 ?>
-<form action="?option=com_thm_groups" enctype="multipart/form-data" method="post" name="adminForm"
+<form action="<?php echo JURI::base(); ?>" enctype="multipart/form-data" method="post" name="adminForm"
       id="adminForm" class="form-horizontal form-validate">
     <div class="form-horizontal">
         <div class="span12">
@@ -57,6 +57,7 @@ defined('_JEXEC') or die;
         ?>
         </tbody>
     </table>
+    <input type="hidden" name="option" value="com_thm_groups"/>
     <?php echo $this->form->getInput('id'); ?>
     <?php echo JHtml::_('form.token'); ?>
     <input type="hidden" name="task" value=""/>
