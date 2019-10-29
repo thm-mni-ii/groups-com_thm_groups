@@ -890,12 +890,12 @@ class THM_GroupsHelperProfiles
 		{
 			$profileID = $potentialProfile;
 		} // Corrected pre 3.8 URL formatting
-		elseif (preg_match('/(\d+)\-([a-zA-Z\-]+)-\d+/', $potentialProfile, $matches))
+		elseif (preg_match('/^(\d+)\-([a-zA-Z\-]+)(\-\d+)*$/', $potentialProfile, $matches))
 		{
 			$profileID      = $matches[1];
 			$potentialAlias = $matches[2];
 		} // Original faulty URL formatting
-		elseif (preg_match('/\d+-(\d+)-([a-zA-Z\-]+)/', $potentialProfile, $matches))
+		elseif (preg_match('/^\d+-(\d+)-([a-zA-Z\-]+)$/', $potentialProfile, $matches))
 		{
 			$profileID      = $matches[1];
 			$potentialAlias = $matches[2];
