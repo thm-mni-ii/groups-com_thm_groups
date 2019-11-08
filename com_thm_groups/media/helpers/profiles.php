@@ -79,15 +79,13 @@ class THM_GroupsHelperProfiles
 				return false;
 			}
 
-			list($forename, $surname) = self::resolveUserName($user->name);
+			list($forename, $surname) = self::resolveUserName($user->id, $user->name);
 			$email = $user->email;
 
 			if (!self::createProfile($profileID, $forename, $surname, $email))
 			{
 				return false;
 			}
-
-
 		}
 
 		$dbo   = JFactory::getDbo();
@@ -550,7 +548,7 @@ class THM_GroupsHelperProfiles
 	 * @return  array the name and title data
 	 * @throws Exception
 	 */
-	private static function getNamesAndTitles($profileID, $withTitle, $withSpan)
+	private static function getNamesAndTitles($profileID, $withTitle = false, $withSpan = false)
 	{
 		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
@@ -918,18 +916,26 @@ class THM_GroupsHelperProfiles
 				return $profileID;
 			}
 		}
+
 		return 0;
 	}
 
 	/**
 	 * Resolves the user name attribute to forename and surnames
 	 *
+	 * @param   int     $id    the id of the profile user
 	 * @param   string  $name  the name attribute of the Joomla user
 	 *
 	 * @return array the forename and surname of the user as they were resolved
+	 * @throws Exception
 	 */
-	public static function resolveUserName($name)
+	public static function resolveUserName($id, $name)
 	{
+		if ($ntData = self::getNamesAndTitles($id) and $name === "{$ntData['forename']} {$ntData['surname']}")
+		{
+			return [$ntData['forename'], $ntData['surname']];
+		}
+
 		// Special case for adding deceased as part of the entered name
 		$name = htmlentities($name);
 		$name = str_replace('&dagger;', '', $name);
