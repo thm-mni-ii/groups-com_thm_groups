@@ -30,8 +30,6 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 
 	private $categoryID;
 
-	private $contentURL = 'index.php?option=com_content&task=article.edit';
-
 	public $items;
 
 	public $pageTitle;
@@ -102,9 +100,9 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 	{
 		if ($this->canCreate)
 		{
-			$return = base64_encode(Joomla\CMS\Uri\Uri::getInstance()->toString());
-
-			$addURL  = $this->contentURL . "&catid={$this->categoryID}&return={$return}";
+			$return  = base64_encode(Joomla\CMS\Uri\Uri::getInstance()->toString());
+			$addURL  = JUri::base() . '?option=com_content&task=article.edit';
+			$addURL  .= "&catid={$this->categoryID}&return=$return";
 			$attribs = ['title' => JText::_('COM_THM_GROUPS_NEW_ARTICLE'), 'class' => 'btn'];
 			$text    = '<span class="icon-new"></span> ' . JText::_('COM_THM_GROUPS_NEW_ARTICLE');
 
@@ -255,7 +253,8 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 			}
 
 			$returnURL = base64_encode(Joomla\CMS\Uri\Uri::getInstance()->toString());
-			$formURL   = JRoute::_($this->contentURL . "&a_id=$item->id&return=$returnURL");
+			$formURL   = JUri::base() . "?option=com_content&task=article.edit&a_id=$item->id&return=$returnURL";
+			$formURL   = JRoute::_($formURL);
 			$formLink  .= JHTML::_('link', $formURL, $item->title, ['title' => JText::_('COM_THM_GROUPS_EDIT')]);
 
 			$contentText = '<span class="icon-eye-open"></span>';
@@ -295,7 +294,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 		}
 
 		$menuID     = JFactory::getApplication()->input->getInt('Itemid');
-		$url        = \JUri::base() . "?option=com_thm_groups&task=content.toggle&id=$id&value=$value";
+		$url        = JUri::base() . "?option=com_thm_groups&task=content.toggle&id=$id&value=$value";
 		$url        .= empty($menuID) ? '' : "&Itemid=$menuID";
 		$url        .= empty($attribute) ? '' : "&attribute=$attribute";
 		$icon       = '<span class="icon-' . $iconClass . '"></span>';

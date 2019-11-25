@@ -1,4 +1,4 @@
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
     repopulateProfiles();
 });
 
@@ -149,7 +149,7 @@ function repopulateProfiles()
 {
     "use strict";
 
-    const componentParameters = 'index.php?option=com_thm_groups&view=profile_ajax&format=raw&task=getContentOptions',
+    const componentParameters = '?option=com_thm_groups&view=profile_ajax&format=raw&task=getContentOptions',
         selectionParameters = '&groupID=' + jQuery('#filter_groups').val();
 
     jQuery.ajax({

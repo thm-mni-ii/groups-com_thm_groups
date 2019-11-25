@@ -46,7 +46,7 @@ if ($canEdit || $params->get('show_print_icon') || $params->get('show_email_icon
 	if (!$this->print and $canEdit)
 	{
 		$edit    = JText::_('COM_THM_GROUPS_EDIT');
-		$editURL = "index.php?option=com_content&task=article.edit&a_id={$this->item->id}&return=";
+		$editURL = JUri::base() . "?option=com_content&task=article.edit&a_id={$this->item->id}&return=";
 		$editURL .= base64_encode(Joomla\CMS\Uri\Uri::getInstance()->toString());
 		$text    = '<span class="icon-edit"></span> ' . $edit;
 
@@ -134,7 +134,7 @@ elseif ($params->get('show_noauth') == true and $user->get('guest'))
 
 	if ($params->get('show_readmore') && $this->item->fulltext != null)
 	{
-		$link1 = JRoute::_('index.php?option=com_users&view=login');
+		$link1 = JRoute::_(JUri::root() . '?option=com_users&view=login');
 		$link  = new JURI($link1);
 
 		echo '<p class="readmore">';

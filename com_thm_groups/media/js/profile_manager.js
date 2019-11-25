@@ -11,7 +11,7 @@ jQuery(document).ready(function () {
     // Chained select field
     jQuery("#batch-roles-id").remoteChained({
         parents: "#batch-groups-id",
-        url: "index.php?option=com_thm_groups&view=role_ajax&format=raw"
+        url: rootURI + "?option=com_thm_groups&view=role_ajax&format=raw"
     });
 
     let gr = new BatchData();

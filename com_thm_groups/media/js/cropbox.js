@@ -68,7 +68,7 @@ function bindImageCropper(attributeID, uID, mode)
 
         jQuery.ajax({
             type: "POST",
-            url: rootURI +"?option=com_thm_groups&task=profile.saveCropped&tmpl=component&profileID="
+            url: rootURI + "?option=com_thm_groups&task=profile.saveCropped&tmpl=component&profileID="
                 + uID + "&attributeID=" + attributeID + "&filename="
                 + filename + "",
             data: fd,
@@ -121,7 +121,7 @@ function deletePic(attributeID, profileID)
 {
     jQuery.ajax({
         type: "POST",
-        url: "index.php?option=com_thm_groups&task=profile.deletePicture&tmpl=component&profileID="
+        url: rootURI + "?option=com_thm_groups&task=profile.deletePicture&tmpl=component&profileID="
             + profileID + "&attributeID=" + attributeID + "&tmpl=component",
         datatype: "HTML"
     }).success(function (response) {
@@ -299,7 +299,8 @@ const cropbox = function (options) {
         };
 
     obj.image.onload = function () {
-        if (options.mode === '-1') {
+        if (options.mode === '-1')
+        {
             obj.spinner.style.display = 'none';
         }
         setBackground();

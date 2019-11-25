@@ -18,38 +18,40 @@ require_once HELPERS . 'profiles.php';
 class THM_GroupsModelProfile_Ajax extends JModelLegacy
 {
 
-    /**
-     * Gets profile options for use in content
-     *
-     * @return string the concatenated profile options
-     * @throws Exception
-     */
-    public function getContentOptions()
-    {
-        $groupID    = JFactory::getApplication()->input->getInt('groupID', 0);
-        $profiles   = [];
-        $profileIDs = THM_GroupsHelperGroups::getProfileIDs($groupID);
+	/**
+	 * Gets profile options for use in content
+	 *
+	 * @return string the concatenated profile options
+	 * @throws Exception
+	 */
+	public function getContentOptions()
+	{
+		$groupID    = JFactory::getApplication()->input->getInt('groupID', 0);
+		$profiles   = [];
+		$profileIDs = THM_GroupsHelperGroups::getProfileIDs($groupID);
 
-        foreach ($profileIDs as $profileID) {
-            $displayName = THM_GroupsHelperProfiles::getDisplayName($profileID, true);
-            if (empty($displayName)) {
-                continue;
-            }
+		foreach ($profileIDs as $profileID)
+		{
+			$displayName = THM_GroupsHelperProfiles::getDisplayName($profileID, true);
+			if (empty($displayName))
+			{
+				continue;
+			}
 
-            $lnfName = THM_GroupsHelperProfiles::getLNFName($profileID);
+			$lnfName = THM_GroupsHelperProfiles::getLNFName($profileID);
 
-            $link = "index?option=com_thm_groups&view=profile&profileID=$profileID";
+			$link = JUri::root() . "?option=com_thm_groups&view=profile&profileID=$profileID";
 
-            $profiles[$lnfName] = [
-                'id'           => $profileID,
-                'displayName' => $displayName,
-                'link'         => $link,
-                'sortName'    => $lnfName
-            ];
-        }
+			$profiles[$lnfName] = [
+				'id'          => $profileID,
+				'displayName' => $displayName,
+				'link'        => $link,
+				'sortName'    => $lnfName
+			];
+		}
 
-        ksort($profiles);
+		ksort($profiles);
 
-        return json_encode($profiles);
-    }
+		return json_encode($profiles);
+	}
 }
