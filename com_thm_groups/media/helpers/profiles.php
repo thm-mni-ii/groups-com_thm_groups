@@ -879,8 +879,6 @@ class THM_GroupsHelperProfiles
 	 *
 	 * @return mixed int the id if a distinct profile was found, string if no distinct profile was found, otherwise 0
 	 * @throws Exception
-	 * @throws Exception
-	 * @throws Exception
 	 */
 	public static function resolve($potentialProfile)
 	{
@@ -897,6 +895,11 @@ class THM_GroupsHelperProfiles
 		{
 			$profileID      = $matches[1];
 			$potentialAlias = $matches[2];
+		}
+
+		if (!empty($profileID) and !empty($potentialAlias) and $profileID != self::getProfileIDByAlias($potentialAlias))
+		{
+			return 0;
 		}
 
 		$potentialAlias = empty($potentialAlias) ? $potentialProfile : $potentialAlias;
