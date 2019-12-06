@@ -28,12 +28,12 @@ class THM_GroupsViewProfile_Select extends JViewLegacy
     {
         JHtml::_('bootstrap.tooltip');
         JHtml::_('jquery.ui', ['core', 'sortable']);
-        $ownURI   = JUri::root();
+        $rootURI   = JUri::root();
         $document = JFactory::getDocument();
-        $document->addStyleSheet($ownURI . 'media/jui/css/icomoon.css');
-        $document->addStyleSheet($ownURI . 'media/jui/css/sortablelist.css');
-        $document->addStyleSheet($ownURI . 'media/com_thm_groups/css/profile_select.css');
-        $document->addScript($ownURI . 'media/com_thm_groups/js/profile_select.js');
+        $document->addStyleSheet($rootURI . 'media/jui/css/icomoon.css');
+        $document->addStyleSheet($rootURI . 'media/jui/css/sortablelist.css');
+        $document->addStyleSheet($rootURI . 'media/com_thm_groups/css/profile_select.css');
+        $document->addScript($rootURI . 'media/com_thm_groups/js/profile_select.js');
 
         $this->filterForm = $this->get('FilterForm');
 

@@ -40,7 +40,7 @@ class THM_GroupsModelProfile_Ajax extends JModelLegacy
 
 			$lnfName = THM_GroupsHelperProfiles::getLNFName($profileID);
 
-			$link = JUri::root() . "?option=com_thm_groups&view=profile&profileID=$profileID";
+			$link = JUri::base() . "?option=com_thm_groups&view=profile&profileID=$profileID";
 
 			$profiles[$lnfName] = [
 				'id'          => $profileID,

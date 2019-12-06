@@ -12,7 +12,7 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-$saveOrderingUrl = JUri::root() . '?option=com_thm_groups&task=content.saveOrderAjax&tmpl=component';
+$saveOrderingUrl = JUri::base() . '?option=com_thm_groups&task=content.saveOrderAjax&tmpl=component';
 JHtml::_('sortablelist.sortable', 'content_manager-list', 'adminForm', null, $saveOrderingUrl);
 $rowClass = $this->canEdit ? 'order dndlist-sortable' : '';
 

@@ -55,7 +55,7 @@ class THM_GroupsLayoutCropper
 	public static function getCropper($attribute)
 	{
 		$attributeID = $attribute['id'];
-		JFactory::getDocument()->addScriptDeclaration("const rootURI = '" . JUri::root() . "';");
+		JFactory::getDocument()->addScriptDeclaration("const rootURI = '" . JUri::base() . "';");
 
 		// This changes the crop direction display before the element is loaded.
 		if ($attribute['mode'] === '0')
