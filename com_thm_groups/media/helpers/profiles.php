@@ -327,7 +327,7 @@ class THM_GroupsHelperProfiles
 			return false;
 		}
 
-		$joomlaAttributes = [EMAIL => $email, FORENAME => $forename, SURNAME => $surname];
+		$joomlaAttributes = [EMAIL_ATTRIBUTE => $email, FORENAME => $forename, SURNAME => $surname];
 		$success          = true;
 		foreach ($attributeIDs as $attributeID)
 		{
