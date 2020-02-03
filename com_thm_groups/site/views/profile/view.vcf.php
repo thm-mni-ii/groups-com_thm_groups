@@ -10,6 +10,8 @@
 
 defined('_JEXEC') or die;
 
+require_once HELPERS . 'profiles.php';
+
 use \JFactory as Factory;
 
 /**

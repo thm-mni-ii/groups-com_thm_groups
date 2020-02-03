@@ -706,6 +706,41 @@ class THM_GroupsHelperProfiles
 	}
 
 	/**
+	 * Retrieves the id of the profile associated with the given alias.
+	 *
+	 * @param string $username the username
+	 *
+	 * @return mixed int the profile id on distinct success, string if multiple profiles were found inconclusively,
+	 * otherwise 0
+	 *
+	 * @throws Exception
+	 */
+	public static function getProfileIDByUserName($username)
+	{
+		$dbo   = JFactory::getDbo();
+		$query = $dbo->getQuery(true);
+		$query->select('DISTINCT p.id')
+			->from('#__thm_groups_profiles AS p')
+			->innerJoin('#__users AS u on u.id = p.id')
+			->where('u.username = ' . $dbo->quote($username));
+
+		$dbo->setQuery($query);
+
+		try
+		{
+			$profileID = $dbo->loadResult();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+			return 0;
+		}
+
+		return empty($profileID) ? 0 : $profileID;
+	}
+
+	/**
 	 * Retrieves the attributes for a given profile id in their raw format
 	 *
 	 * @param   int   $profileID  the id whose values are sought
