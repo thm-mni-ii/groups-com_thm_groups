@@ -661,8 +661,9 @@ class THM_GroupsHelperProfiles
 		$cleanedNames = THM_GroupsHelperComponent::filterText($tlNames);
 		$names        = explode(' ', $cleanedNames);
 
-		$aliasQuery->select('DISTINCT id, alias')->from('#__thm_groups_profiles');
+		$aliasQuery->select('DISTINCT id, alias')->from('#__thm_groups_profiles')->where('published = 1');
 		$dbo->setQuery($aliasQuery);
+
 		try
 		{
 			$profiles = $dbo->loadAssocList();
@@ -681,6 +682,7 @@ class THM_GroupsHelperProfiles
 			{
 				continue;
 			}
+
 			$found        = true;
 			$profileNames = explode('-', $profile['alias']);
 			foreach ($names as $name)

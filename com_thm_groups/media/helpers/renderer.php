@@ -56,8 +56,8 @@ class THM_GroupsHelperRenderer
 
 			if (THM_GroupsHelperRouter::translateContent($params))
 			{
-				$newURL  = THM_GroupsHelperRouter::build($params);
-				$html = str_replace($url, $newURL, $html);
+				$newURL = THM_GroupsHelperRouter::build($params);
+				$html   = str_replace($url, $newURL, $html);
 			}
 		}
 	}
@@ -104,14 +104,22 @@ class THM_GroupsHelperRenderer
 			return;
 		}
 
-		$queries = array_unique($matches[1]);
-		$uri     = Uri::getInstance();
+		$modalViews = ['profile_select'];
+		$queries    = array_unique($matches[1]);
+		$uri        = Uri::getInstance();
+
 		foreach ($queries as $query)
 		{
 			$uri->parse($query);
 			$params = $uri->getQuery(true);
-			$url    = THM_GroupsHelperRouter::build($params);
-			$html   = str_replace($query, $url, $html);
+
+			if (!empty($params['view']) and in_array($params['view'], $modalViews))
+			{
+				continue;
+			}
+
+			$url  = THM_GroupsHelperRouter::build($params);
+			$html = str_replace($query, $url, $html);
 		}
 	}
 
