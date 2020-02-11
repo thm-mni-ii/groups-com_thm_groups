@@ -418,6 +418,38 @@ class THM_GroupsHelperProfiles
 	}
 
 	/**
+	 * Determines whether a category entry exists for a user or group.
+	 *
+	 * @param   int  $profileID  the user id to check against groups categories
+	 *
+	 * @return  int  the id of the category associated with the profile
+	 * @throws Exception
+	 */
+	public static function getCategoryID($profileID)
+	{
+		$dbo   = JFactory::getDBO();
+		$query = $dbo->getQuery(true);
+		$query->select('cc.id')
+			->from('#__categories AS cc')
+			->innerJoin('#__thm_groups_categories AS gc ON gc.id = cc.id')
+			->where("profileID = '$profileID'");
+		$dbo->setQuery($query);
+
+		try
+		{
+			$result = $dbo->loadResult();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+			return false;
+		}
+
+		return empty($result) ? 0 : $result;
+	}
+
+	/**
 	 * Creates the name to be displayed
 	 *
 	 * @param   int   $profileID  the user id
@@ -710,7 +742,7 @@ class THM_GroupsHelperProfiles
 	/**
 	 * Retrieves the id of the profile associated with the given alias.
 	 *
-	 * @param string $username the username
+	 * @param   string  $username  the username
 	 *
 	 * @return mixed int the profile id on distinct success, string if multiple profiles were found inconclusively,
 	 * otherwise 0
@@ -846,38 +878,6 @@ class THM_GroupsHelperProfiles
 		$url  = THM_GroupsHelperRouter::build(['view' => 'profile', 'profileID' => $profileID, 'format' => 'vcf']);
 
 		return JHtml::link($url, $icon);
-	}
-
-	/**
-	 * Determines whether a category entry exists for a user or group.
-	 *
-	 * @param   int  $profileID  the user id to check against groups categories
-	 *
-	 * @return  boolean  true, if a category exists, otherwise false
-	 * @throws Exception
-	 */
-	public static function hasCategoryAssociation($profileID)
-	{
-		$dbo   = JFactory::getDBO();
-		$query = $dbo->getQuery(true);
-		$query->select('cc.id')
-			->from('#__categories AS cc')
-			->innerJoin('#__thm_groups_categories AS gc ON gc.id = cc.id')
-			->where("profileID = '$profileID'");
-		$dbo->setQuery($query);
-
-		try
-		{
-			$result = $dbo->loadResult();
-		}
-		catch (Exception $exception)
-		{
-			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-
-			return false;
-		}
-
-		return !empty($result);
 	}
 
 	/**
@@ -1111,25 +1111,5 @@ class THM_GroupsHelperProfiles
 		}
 
 		return empty($success) ? false : true;
-	}
-
-	/**
-	 * Unpublishes the profile.
-	 *
-	 * @param   int  $profileID  the id of the profile to unpublish
-	 *
-	 * @return bool true if the profile was unpublished or non-existent
-	 */
-	public static function unpublish($profileID)
-	{
-		$profile = JTable::getInstance('profiles', 'thm_groupsTable');
-		if ($profile->load($profileID))
-		{
-			$profile->published = 0;
-
-			return $profile->store();
-		}
-
-		return true;
 	}
 }

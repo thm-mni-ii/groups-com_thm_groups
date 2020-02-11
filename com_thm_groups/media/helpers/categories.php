@@ -77,12 +77,13 @@ class THM_GroupsHelperCategories
 	 *
 	 * @param   int  $profileID  the id of the user for whom the category is to be created
 	 *
-	 * @return void
+	 * @return int the id of the category if created
 	 * @throws Exception
 	 */
 	public static function create($profileID)
 	{
-		$parentID = self::getRoot();
+		$categoryID = 0;
+		$parentID   = self::getRoot();
 
 		if ($parentID > 0)
 		{
@@ -95,6 +96,8 @@ class THM_GroupsHelperCategories
 			// Map category to profile
 			self::mapProfile($profileID, $categoryID);
 		}
+
+		return $categoryID;
 	}
 
 	/**
