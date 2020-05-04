@@ -527,6 +527,44 @@ class THM_GroupsHelperProfiles
 	}
 
 	/**
+	 * Gets the group ids associated with the profile
+	 *
+	 * @param   int  $profileID  the id of the profile
+	 *
+	 * @return array the role association ids associated with the profile
+	 * @throws Exception
+	 */
+	public static function getGroupAssociations($profileID)
+	{
+		if (!$roleAssocIDs = self::getRoleAssociations($profileID))
+		{
+			return [];
+		}
+
+		$roleAssocIDs = implode(',', $roleAssocIDs);
+
+		$dbo   = JFactory::getDBO();
+		$query = $dbo->getQuery(true);
+		$query->select('DISTINCT groupID')
+			->from('#__thm_groups_role_associations')
+			->where("id IN ($roleAssocIDs)");
+		$dbo->setQuery($query);
+
+		try
+		{
+			$result = $dbo->loadColumn();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+			return false;
+		}
+
+		return empty($result) ? [] : $result;
+	}
+
+	/**
 	 * Creates the name to be displayed
 	 *
 	 * @param   int   $profileID  the user id
