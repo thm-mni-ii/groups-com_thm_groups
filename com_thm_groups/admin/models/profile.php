@@ -730,7 +730,6 @@ class THM_GroupsModelProfile extends JModelLegacy
 		switch ($input->getCmd('attribute'))
 		{
 			case 'canEdit':
-				$value = empty($value) ? 0 : 1;
 				return $this->updateBinaryValue($profileID, 'canEdit', $value);
 			case 'contentEnabled':
 
@@ -789,6 +788,7 @@ class THM_GroupsModelProfile extends JModelLegacy
 	 */
 	private function updateBinaryValue($profileID, $column, $value)
 	{
+		$value = empty($value) ? 0 : 1;
 		$query = $this->_db->getQuery(true);
 		$query->update('#__thm_groups_profiles')->set("$column = $value")->where("id = $profileID");
 		$this->_db->setQuery($query);
