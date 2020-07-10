@@ -317,7 +317,7 @@ class THM_GroupsHelperRouter
 			elseif (preg_match('/^(\d+)/', $query['id'], $matches))
 			{
 				// true for root, false for irrelevant, otherwise profileID
-				$profileID = THM_GroupsHelperCategories::resolveCategory($matches[0]);
+				$profileID = THM_GroupsHelperCategories::getProfileID($matches[0]);
 			}
 		}
 
