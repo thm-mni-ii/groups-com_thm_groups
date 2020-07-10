@@ -321,6 +321,7 @@ class THM_GroupsHelperRouter
 			}
 		}
 
+
 		if (empty($profileID))
 		{
 			return false;
