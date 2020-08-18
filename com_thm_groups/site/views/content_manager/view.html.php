@@ -101,7 +101,7 @@ class THM_GroupsViewContent_Manager extends JViewLegacy
 		if ($this->canCreate)
 		{
 			$return  = base64_encode(Joomla\CMS\Uri\Uri::getInstance()->toString());
-			$addURL  = JUri::base() . '?option=com_content&task=article.edit';
+			$addURL  = JUri::base() . '?option=com_content&task=article.add';
 			$addURL  .= "&catid={$this->categoryID}&return=$return";
 			$attribs = ['title' => JText::_('COM_THM_GROUPS_NEW_ARTICLE'), 'class' => 'btn'];
 			$text    = '<span class="icon-new"></span> ' . JText::_('COM_THM_GROUPS_NEW_ARTICLE');

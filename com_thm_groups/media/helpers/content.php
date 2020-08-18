@@ -173,7 +173,7 @@ class THM_GroupsHelperContent
 			}
 
 			if (empty($association['groupsContentAuthorID'])
-				OR $association['groupsContentAuthorID'] !== $association['authorID'])
+				or $association['groupsContentAuthorID'] !== $association['authorID'])
 			{
 				self::associate($association['contentID'], $association['profileID']);
 			}
@@ -219,13 +219,18 @@ class THM_GroupsHelperContent
 	 */
 	public static function getAlias($contentID)
 	{
+		if (!is_numeric($contentID))
+		{
+			return '';
+		}
+
 		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
 
 		$query->select('cc.alias')
 			->from('#__content AS cc')
 			->innerJoin('#__thm_groups_content AS gc ON gc.id = cc.id')
-			->where("cc.id = '$contentID'");
+			->where("cc.id = $contentID");
 		$dbo->setQuery($query);
 
 		try

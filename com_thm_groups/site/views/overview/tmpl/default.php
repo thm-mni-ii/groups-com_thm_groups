@@ -55,15 +55,19 @@ echo $this->getHeaderImage();
 						echo '</ul></div>';
 					}
 
+					$nextSize = 0;
+
 					if ($letterDone)
 					{
 						$currentProfilesCount = 0;
 						$totalLettersOutput++;
 
 						// A little more complicated then it should be because of associative array use
-						$temp     = array_slice($this->profiles, $totalLettersOutput, 1);
-						$next     = array_shift($temp);
-						$nextSize = count($next);
+						$temp = array_slice($this->profiles, $totalLettersOutput, 1);
+						if ($next = array_shift($temp))
+						{
+							$nextSize = count($next);
+						}
 					}
 
 					$currentRowCount++;
