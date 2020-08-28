@@ -113,7 +113,8 @@ class THM_GroupsHelperRenderer
 			$uri->parse($query);
 			$params = $uri->getQuery(true);
 
-			if (!empty($params['view']) and in_array($params['view'], $modalViews))
+			if ((!empty($params['view']) and in_array($params['view'], $modalViews))
+				or !empty($params['task']))
 			{
 				continue;
 			}
