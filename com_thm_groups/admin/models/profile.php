@@ -42,7 +42,7 @@ class THM_GroupsModelProfile extends JModelLegacy
 		$requestedAssocs = json_decode(urldecode($app->input->getString('batch-data')), true);
 		$selectedIDs     = THM_GroupsHelperComponent::cleanIntCollection($app->input->get('cid', [], 'array'));
 
-		if (!empty($selectedIDs) and !empty($requestedAssocs))
+		if ($selectedIDs and !empty($requestedAssocs))
 		{
 			return $this->batchRoles($selectedIDs, $requestedAssocs);
 		}
@@ -94,7 +94,6 @@ class THM_GroupsModelProfile extends JModelLegacy
 	 */
 	private function batchRoles($profileIDs, $requestedAssocs)
 	{
-
 		if (!$this->setJoomlaAssociations($profileIDs, $requestedAssocs))
 		{
 			return false;

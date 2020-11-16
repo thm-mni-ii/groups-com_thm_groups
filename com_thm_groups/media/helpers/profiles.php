@@ -639,13 +639,15 @@ class THM_GroupsHelperProfiles
 
 		try
 		{
-			$results = $dbo->loadAssoc();
+			if (!$results = $dbo->loadAssoc())
+			{
+				return [];
+			}
 		}
 		catch (Exception $exception)
 		{
 			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
 
-			return [];
 		}
 
 		if (empty($withTitle) or empty($results['prePublished']))

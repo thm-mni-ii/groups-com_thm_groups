@@ -41,10 +41,6 @@
         <filename>controller.php</filename>
         <filename>thm_groups.php</filename>
     </files>
-    <languages>
-        <language tag="en-GB" client="site">language/en-GB/en-GB.com_thm_groups.ini</language>
-        <language tag="de-DE" client="site">language/de-DE/de-DE.com_thm_groups.ini</language>
-    </languages>
     <administration>
         <menu>COM_THM_GROUPS</menu>
         <files folder="admin">
@@ -52,17 +48,12 @@
             <filename>controller.php</filename>
             <filename>access.xml</filename>
             <filename>config.xml</filename>
+            <folder>language</folder>
             <folder>models</folder>
             <folder>sql</folder>
             <folder>tables</folder>
             <folder>views</folder>
         </files>
-        <languages>
-            <language tag="en-GB">language/en-GB/en-GB.com_thm_groups.ini</language>
-            <language tag="en-GB">language/en-GB/en-GB.com_thm_groups.sys.ini</language>
-            <language tag="de-DE">language/de-DE/de-DE.com_thm_groups.ini</language>
-            <language tag="de-DE">language/de-DE/de-DE.com_thm_groups.sys.ini</language>
-        </languages>
     </administration>
     <updateservers>
         <server type="extension" priority="1" name="THM Groups Component Update Site">
