@@ -674,21 +674,22 @@ class THM_GroupsHelperContent
 			$value = !$value;
 		}
 
+		$user = JFactory::getUser();
+
 		foreach ($selectedContent as $contentID)
 		{
-			$canEditState = JFactory::getUser()->authorise('core.edit.state', "com_content.article.$contentID");
-
-			if (!$canEditState)
+			$asset = "com_content.article.$contentID";
+			if ($user->authorise('core.edit.own', $asset) or $user->authorise('core.edit.state', $asset))
+			{
+				if (!self::setFeatured($contentID, $value))
+				{
+					return false;
+				}
+			}
+			else
 			{
 				$app->enqueueMessage(JText::_('JLIB_RULES_NOT_ALLOWED'), 'error');
 
-				return false;
-			}
-
-			$success = self::setFeatured($contentID, $value);
-
-			if (!$success)
-			{
 				return false;
 			}
 		}
