@@ -106,10 +106,10 @@ class THM_GroupsHelperRenderer
 
 		$modalViews = ['profile_select'];
 		$queries    = array_unique($matches[1]);
-		$uri        = Uri::getInstance();
 
 		foreach ($queries as $query)
 		{
+			$uri = Uri::getInstance($query);
 			$uri->parse($query);
 			$params = $uri->getQuery(true);
 
@@ -119,8 +119,10 @@ class THM_GroupsHelperRenderer
 				continue;
 			}
 
-			$url  = THM_GroupsHelperRouter::build($params);
-			$html = str_replace($query, $url, $html);
+			if ($url  = THM_GroupsHelperRouter::build($params))
+			{
+				$html = str_replace($query, $url, $html);
+			}
 		}
 	}
 
