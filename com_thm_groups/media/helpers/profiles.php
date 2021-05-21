@@ -34,7 +34,7 @@ class THM_GroupsHelperProfiles
 	{
 		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
-		$query->insert('#__user_usergroup_map')->columns("user_id, group_id")->values("'$profileID', '$groupID'");
+		$query->insert('#__user_usergroup_map')->columns("user_id, group_id")->values("$profileID, $groupID");
 		$dbo->setQuery($query);
 
 		try
@@ -72,17 +72,7 @@ class THM_GroupsHelperProfiles
 		// Profile is new
 		if (!$profiles->load($profileID))
 		{
-
-			$user = JFactory::getUser($profileID);
-			if (!$userID = $user->id)
-			{
-				return false;
-			}
-
-			list($forename, $surname) = self::resolveUserName($user->id, $user->name);
-			$email = $user->email;
-
-			if (!self::createProfile($profileID, $forename, $surname, $email))
+			if (!self::createProfile($profileID))
 			{
 				return false;
 			}
@@ -105,7 +95,6 @@ class THM_GroupsHelperProfiles
 
 			return false;
 		}
-		$dbo->transactionCommit();
 
 		return THM_GroupsHelperRoles::getAssocID($assocID, $profileID, 'profile');
 	}
@@ -140,7 +129,7 @@ class THM_GroupsHelperProfiles
 
 		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
-		$query->select('canEdit')->from('#__thm_groups_profiles')->where("id = '$profileID'");
+		$query->select('canEdit')->from('#__thm_groups_profiles')->where("id = $profileID");
 		$dbo->setQuery($query);
 
 		try
@@ -158,6 +147,37 @@ class THM_GroupsHelperProfiles
 	}
 
 	/**
+	 * Supplements any profile entry with a blank alias Profile aliases are unique so there can only be one.
+	 *
+	 * @return void
+	 * @throws Exception
+	 */
+	private static function correctAlias()
+	{
+		$dbo = JFactory::getDbo();
+
+		$query = $dbo->getQuery(true);
+		$query->select('id')->from('#__thm_groups_profiles')->where("alias = ''");
+		$dbo->setQuery($query);
+
+		try
+		{
+			$incompleteID = $dbo->loadResult();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+			return;
+		}
+
+		if ($incompleteID)
+		{
+			self::setAlias($incompleteID);
+		}
+	}
+
+	/**
 	 * Corrects missing group associations caused by missing event triggers from batch processing in com_user.
 	 *
 	 * @return void if an exception occurs it is handled as such
@@ -165,8 +185,11 @@ class THM_GroupsHelperProfiles
 	 */
 	public static function correctGroups()
 	{
-		// Associations that are in groups, but not in Joomla
-		$dbo   = JFactory::getDbo();
+		self::correctMap();
+		self::correctAlias();
+		$dbo = JFactory::getDbo();
+
+		// Associations that are in Groups, but not in Joomla
 		$query = $dbo->getQuery(true);
 		$query->select('DISTINCT pAssoc.profileID, rAssoc.groupID, uum.user_id')
 			->from('#__thm_groups_profile_associations AS pAssoc')
@@ -194,14 +217,43 @@ class THM_GroupsHelperProfiles
 			}
 		}
 
-		// Associations that are in Joomla, but not in groups
+		$stdGroups = "1,2,3,4,5,6,7,8";
+
+		// Users in relevant groups are missing from Groups
+		$query = $dbo->getQuery(true);
+		$query->select('DISTINCT user_id')
+			->from('#__user_usergroup_map AS uum')
+			->where("group_id NOT IN ($stdGroups)")
+			->where('user_id NOT IN (SELECT id FROM #__thm_groups_profiles)');
+		$dbo->setQuery($query);
+
+		try
+		{
+			$missingIDs = $dbo->loadColumn();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+
+			return;
+		}
+
+		if ($missingIDs)
+		{
+			foreach ($missingIDs as $missingID)
+			{
+				self::createProfile($missingID);
+			}
+		}
+
+		// Associations that are in Joomla, but not in Groups
 		$query = $dbo->getQuery(true);
 		$query->select('DISTINCT uum.user_id AS profileID, ra.id AS assocID')
 			->from('#__user_usergroup_map AS uum')
 			->innerJoin('#__thm_groups_profiles AS profile ON profile.id = uum.user_id')
 			->innerJoin('#__thm_groups_role_associations AS ra ON ra.groupID = uum.group_id AND ra.roleID = 1')
 			->leftJoin('#__thm_groups_profile_associations AS pa ON pa.profileID = profile.id AND pa.role_associationID = ra.id')
-			->where('uum.group_id NOT IN (1,2,3,4,5,6,7,8)')
+			->where("uum.group_id NOT IN ($stdGroups)")
 			->where('pa.id IS NULL');
 		$dbo->setQuery($query);
 
@@ -226,6 +278,30 @@ class THM_GroupsHelperProfiles
 	}
 
 	/**
+	 * Removes deprecated entries from user_usergroup_map table.
+	 *
+	 * @return void
+	 * @throws Exception
+	 */
+	private static function correctMap()
+	{
+		$dbo = JFactory::getDbo();
+
+		$query = $dbo->getQuery(true);
+		$query->delete('#__user_usergroup_map')->where('user_id NOT IN (SELECT id FROM #__users)');
+		$dbo->setQuery($query);
+
+		try
+		{
+			$dbo->execute();
+		}
+		catch (Exception $exception)
+		{
+			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
+		}
+	}
+
+	/**
 	 * Checks whether the given user profile is present and published
 	 *
 	 * @param   int  $profileID  the profile id
@@ -237,7 +313,7 @@ class THM_GroupsHelperProfiles
 	{
 		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
-		$query->select('contentEnabled')->from('#__thm_groups_profiles')->where("id = '$profileID'");
+		$query->select('contentEnabled')->from('#__thm_groups_profiles')->where("id = $profileID");
 		$dbo->setQuery($query);
 
 		try
@@ -257,18 +333,24 @@ class THM_GroupsHelperProfiles
 	/**
 	 * Creates a rudimentary profile based on Joomla user derived attributes.
 	 *
-	 * @param   int     $profileID  the id of the joomla user to use as the profile id
-	 * @param   string  $forename   the forenames calculated based on the Joomla user name
-	 * @param   string  $surname    the surnames calculated based on the Joomla user name
-	 * @param   string  $email      the e-mail address with which the user registered
+	 * @param   int  $profileID  the id of the joomla user which will be identical with the profile id
 	 *
 	 * @return bool true if the profile was successfully created, otherwise false
 	 * @throws Exception
 	 */
-	public static function createProfile($profileID, $forename, $surname, $email)
+	public static function createProfile($profileID)
 	{
-		$dbo = JFactory::getDbo();
-		$dbo->transactionStart();
+		$user = JFactory::getUser($profileID);
+
+		if (!$user->id)
+		{
+			return false;
+		}
+
+		list($forename, $surname) = self::resolveUserName($user->id, $user->name);
+		$email = $user->email;
+
+		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
 		$query->insert("#__thm_groups_profiles")
 			->columns("id, published, canEdit, contentEnabled")
@@ -279,23 +361,19 @@ class THM_GroupsHelperProfiles
 		{
 			$dbo->execute();
 		}
-		catch (RuntimeException $exception)
+		catch (Exception $exception)
 		{
 			JFactory::getApplication()->enqueueMessage($exception->getMessage(), 'error');
-			$dbo->transactionRollback();
 
 			return false;
 		}
 
 		if (!self::fillAttributes($profileID, $forename, $surname, $email))
 		{
-			$dbo->transactionRollback();
-
 			return false;
 		}
-		$dbo->transactionCommit();
 
-		return true;
+		return self::setAlias($profileID);
 	}
 
 	/**
@@ -390,7 +468,7 @@ class THM_GroupsHelperProfiles
 		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
 
-		$query->select('alias')->from('#__thm_groups_profiles')->where("id = '$profileID'");
+		$query->select('alias')->from('#__thm_groups_profiles')->where("id = $profileID");
 		$dbo->setQuery($query);
 
 		try
@@ -432,7 +510,7 @@ class THM_GroupsHelperProfiles
 		$query->select('cc.id')
 			->from('#__categories AS cc')
 			->innerJoin('#__thm_groups_categories AS gc ON gc.id = cc.id')
-			->where("profileID = '$profileID'");
+			->where("profileID = $profileID");
 		$dbo->setQuery($query);
 
 		try
@@ -629,7 +707,7 @@ class THM_GroupsHelperProfiles
 			->leftJoin('#__thm_groups_profile_attributes AS fn ON fn.profileID = sn.profileID')
 			->leftJoin('#__thm_groups_profile_attributes AS prt ON prt.profileID = sn.profileID')
 			->leftJoin('#__thm_groups_profile_attributes AS pot ON pot.profileID = sn.profileID')
-			->where("sn.profileID = '$profileID'")
+			->where("sn.profileID = $profileID")
 			->where("sn.attributeID = " . SURNAME)
 			->where("fn.attributeID = " . FORENAME)
 			->where("prt.attributeID = " . TITLE)
@@ -932,7 +1010,7 @@ class THM_GroupsHelperProfiles
 	{
 		$dbo   = JFactory::getDbo();
 		$query = $dbo->getQuery(true);
-		$query->select('published')->from('#__thm_groups_profiles')->where("id = '$profileID'");
+		$query->select('published')->from('#__thm_groups_profiles')->where("id = $profileID");
 		$dbo->setQuery($query);
 
 		try
@@ -1072,7 +1150,7 @@ class THM_GroupsHelperProfiles
 		$searchQuery->select('DISTINCT sn.value AS surname, fn.value AS forename')
 			->from('#__thm_groups_profile_attributes AS sn')
 			->innerJoin('#__thm_groups_profile_attributes AS fn ON sn.profileID = fn.profileID')
-			->where("sn.profileID = '$profileID'")
+			->where("sn.profileID = $profileID")
 			->where("sn.attributeID = '2'")
 			->where("fn.attributeID = '1'");
 		$dbo->setQuery($searchQuery);
@@ -1109,7 +1187,7 @@ class THM_GroupsHelperProfiles
 			$uniqueQuery->select('id')
 				->from('#__thm_groups_profiles')
 				->where("alias = '$tempAlias'")
-				->where("id != '$profileID'");
+				->where("id != $profileID");
 			$dbo->setQuery($uniqueQuery);
 
 			try
@@ -1136,7 +1214,7 @@ class THM_GroupsHelperProfiles
 		}
 
 		$updateQuery = $dbo->getQuery(true);
-		$updateQuery->update('#__thm_groups_profiles')->set("alias = '$alias'")->where("id = '$profileID'");
+		$updateQuery->update('#__thm_groups_profiles')->set("alias = '$alias'")->where("id = $profileID");
 		$dbo->setQuery($updateQuery);
 
 		try
